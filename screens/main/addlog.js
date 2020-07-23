@@ -72,6 +72,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
+    backgroundColor: 'white',
   },
   headerText: {
     fontSize: 20,
@@ -101,7 +102,7 @@ const styles = StyleSheet.create({
     height: 120,
     opacity: 0.3,
     borderRadius: 20,
-    borderWidth: 0.2,
+    borderWidth: 0.4,
     overflow: 'hidden',
   },
   buttonText: {
