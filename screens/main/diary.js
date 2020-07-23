@@ -56,13 +56,10 @@ const DiaryScreen = (props) => {
         <FlatList
           data={itemList}
           renderItem={({item}) => (
-            <View
-              style={[
-                styles.diaryContentContainer,
-                styles.shadow,
-                {width: width},
-              ]}>
-              <Text style={styles.diaryDate}>{item.date}</Text>
+            <View style={[styles.diaryContentContainer, styles.shadow]}>
+              <Text style={[styles.diaryDate, {width: width}]}>
+                {item.date}
+              </Text>
               <View style={styles.diaryContent}>
                 <View style={styles.diaryContent1}>
                   <Text style={[styles.diaryContentHeader, {color: '#7d9a22'}]}>
