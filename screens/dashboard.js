@@ -26,6 +26,12 @@ function getMoreHeaderTitle(route) {
     }
 }
 
+// Method to reset the tab navigation when navigating through pages
+// Quite unclean during the development phase because of the warning shown.
+const handleTabPress = ({navigation}, pathName) => {
+    navigation.popToTop() && navigation.navigate(pathName);
+}
+
 const DashboardScreen = props => {
     return (
         <Tab.Navigator
@@ -38,6 +44,9 @@ const DashboardScreen = props => {
             <Tab.Screen
                 name="Home"
                 component={Home}
+                listeners={{
+                    tabPress: () => handleTabPress(props, "Home")
+                }}
                 options={{
                     title:"Home",
                     tabBarIcon: ({color, size}) => (
@@ -53,6 +62,9 @@ const DashboardScreen = props => {
             <Tab.Screen
                 name="Diary"
                 component={Diary}
+                listeners={{
+                    tabPress: () => handleTabPress(props, "Diary")
+                }}
                 options={{
                     title:"Diary",
                     tabBarIcon: ({color, size}) => (
@@ -63,6 +75,9 @@ const DashboardScreen = props => {
             <Tab.Screen
                 name="AddLog"
                 component={AddLog}
+                listeners={{
+                    tabPress: () => handleTabPress(props, "AddLog")
+                }}
                 options={{
                     title:"Add Log",
                     tabBarIcon: ({color, size}) => (
@@ -73,6 +88,9 @@ const DashboardScreen = props => {
             <Tab.Screen
                 name="More"
                 component={More}
+                listeners={{
+                    tabPress: () => handleTabPress(props, "More")
+                }}
                 options={{
                     title:'More',
                     tabBarIcon: ({color, size}) => (
