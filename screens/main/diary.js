@@ -10,23 +10,36 @@ import {
   Dimensions,
 } from 'react-native';
 import Legend from '../../components/legend';
+import DiaryContent from '../../components/diaryContent';
 
 const itemList = [
   {
     date: '22nd Feburary 2020',
-    glucoseC: '2',
-    foodIntakeC: '3',
-    activityC: '2',
-    medicationC: '2',
-    weightC: '2',
+    withinT: {
+      glucoseC: '2',
+      foodIntakeC: '3',
+    },
+    missed: {
+      activityC: '2',
+      medicationC: '2',
+    },
+    improve: {
+      weightC: '2',
+    },
   },
   {
     date: '21st Feburary 2020',
-    glucoseC: '4',
-    foodIntakeC: '3',
-    activityC: '2',
-    medicationC: '2',
-    weightC: '2',
+    withinT: {
+      glucoseC: '2',
+      foodIntakeC: '3',
+    },
+    missed: {
+      activityC: '2',
+      medicationC: '2',
+    },
+    improve: {
+      weightC: '2',
+    },
   },
 ];
 
@@ -43,20 +56,19 @@ const DiaryScreen = (props) => {
         <FlatList
           data={itemList}
           renderItem={({item}) => (
-            <View style={[styles.diaryContentContainer, styles.shadow]}>
-              <Text
-                style={{
-                  flex: 1,
-                  width: width,
-                  fontSize: 18,
-                }}>
-                {item.date}
-              </Text>
+            <View
+              style={[
+                styles.diaryContentContainer,
+                styles.shadow,
+                {width: width},
+              ]}>
+              <Text style={styles.diaryDate}>{item.date}</Text>
               <View style={styles.diaryContent}>
                 <View style={styles.diaryContent1}>
                   <Text style={[styles.diaryContentHeader, {color: '#7d9a22'}]}>
                     Within Targets{' '}
                   </Text>
+                  <DiaryContent item={item.withinT} />
                 </View>
                 <View style={styles.diaryContent2}>
                   <Text style={[styles.diaryContentHeader, {color: 'black'}]}>
@@ -88,6 +100,13 @@ const styles = StyleSheet.create({
   diaryContentContainer: {
     flex: 1,
     justifyContent: 'space-between',
+  },
+  diaryDate: {
+    flex: 1,
+    fontSize: 18,
+    marginTop: '2%',
+    backgroundColor: '#f5f5f5',
+    fontWeight: '700',
   },
   diaryContent: {
     flex: 1,
