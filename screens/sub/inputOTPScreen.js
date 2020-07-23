@@ -4,7 +4,8 @@ import {View, StyleSheet, Text} from 'react-native';
 const InputOTPScreen = (props) => {
   return (
     <View style={{...styles.otpScreen, ...props.style}}>
-      <Text>Input OTP Screen</Text>
+      <Text>Ask pop up?</Text>
+      <Text>Countdown to resend otp?</Text>
     </View>
   );
 };

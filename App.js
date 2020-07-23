@@ -84,6 +84,7 @@ export default function App() {
           component={ForgetPasswordScreen}
           options={{
             title: 'Forget Password',
+            headerRight: false, //for android
           }}
         />
         <Stack.Screen
@@ -91,6 +92,7 @@ export default function App() {
           component={InputOTPScreen}
           options={{
             title: 'Input OTP',
+            headerRight: false, //for android
             headerBackTitle: 'Back',
           }}
         />
