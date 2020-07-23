@@ -65,7 +65,7 @@ const DiaryScreen = (props) => {
                   <Text style={[styles.diaryContentHeader, {color: '#7d9a22'}]}>
                     Within Targets{' '}
                   </Text>
-                  <DiaryContent item={item.withinT} />
+                  <DiaryContent />
                 </View>
                 <View style={styles.diaryContent2}>
                   <Text style={[styles.diaryContentHeader, {color: 'black'}]}>

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {View} from 'react-native';
+import {View, Text} from 'react-native';
 import {
   NavigationContainer,
   getFocusedRouteNameFromRoute,
@@ -11,6 +11,8 @@ import HeaderIcon from './components/headerBtnIcon';
 import AlertsScreen from './screens/sub/alerts';
 import ChatScreen from './screens/sub/chat';
 import Login from './screens/sub/login';
+import ForgetPasswordScreen from './screens/sub/ForgetPasswordScreen';
+import InputOTPScreen from './screens/sub/inputOTPScreen';
 
 const Stack = createStackNavigator();
 
@@ -76,6 +78,21 @@ export default function App() {
           name="Login"
           component={Login}
           options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="ForgetPassword"
+          component={ForgetPasswordScreen}
+          options={{
+            title: 'Forget Password',
+          }}
+        />
+        <Stack.Screen
+          name="InputOTP"
+          component={InputOTPScreen}
+          options={{
+            title: 'Input OTP',
+            headerBackTitle: 'Back',
+          }}
         />
         <Stack.Screen
           name="Alerts"

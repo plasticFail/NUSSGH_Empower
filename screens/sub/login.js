@@ -83,7 +83,7 @@ function Login({navigation}) {
           marginVertical: 5,
           color: '#a1a3a0',
         }}
-        onPress={() => navigation.navigate('Forget Password')}>
+        onPress={() => navigation.navigate('ForgetPassword')}>
         Forget Password?
       </Text>
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
