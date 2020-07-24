@@ -38,6 +38,10 @@ export default class CreateMealLog extends React.Component {
         }
     }
 
+    redirectToFoodSearchEngine = () => {
+        this.props.navigation.push('FoodSearchEngine')
+    }
+
     render() {
         const {navigation} = this.props;
         return (
@@ -48,16 +52,16 @@ export default class CreateMealLog extends React.Component {
                 </View>
                 <ScrollView>
                     <ScrollView horizontal={true} contentContainerStyle={styles.rowContent}>
-                        <FoodItem type="create" />
+                        <FoodItem type="create" onPress={this.redirectToFoodSearchEngine} />
                     </ScrollView>
                     <ScrollView horizontal={true} contentContainerStyle={styles.rowContent}>
-                        <FoodItem type="create" />
+                        <FoodItem type="create" onPress={this.redirectToFoodSearchEngine} />
                     </ScrollView>
                     <ScrollView horizontal={true} contentContainerStyle={styles.rowContent}>
-                        <FoodItem type="create" />
+                        <FoodItem type="create" onPress={this.redirectToFoodSearchEngine} />
                     </ScrollView>
                     <ScrollView horizontal={true} contentContainerStyle={styles.rowContent}>
-                        <FoodItem type="create" />
+                        <FoodItem type="create" onPress={this.redirectToFoodSearchEngine} />
                     </ScrollView>
                     <TouchableHighlight
                         style={styles.button}

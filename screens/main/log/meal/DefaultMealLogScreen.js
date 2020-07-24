@@ -2,6 +2,7 @@ import React from 'react';
 import {View, StyleSheet, Text, TouchableHighlight} from 'react-native';
 import {createStackNavigator} from "@react-navigation/stack";
 import CreateMealLogScreen from "./CreateMealLog";
+import FoodSearchEngineScreen from './FoodSearchEngine';
 
 const Stack = createStackNavigator();
 const now = new Date();
@@ -39,6 +40,7 @@ const DefaultMealLogScreen = (props) => {
         <Stack.Screen name={'CreateMealLog'}
                       component={CreateMealLogScreen}
                       options={{title: "Create Meal Log", animationEnabled: false}}/>
+        <Stack.Screen name={'FoodSearchEngine'} options={{title: 'Search Food'}} component={FoodSearchEngineScreen} />
     </Stack.Navigator>
 }
 

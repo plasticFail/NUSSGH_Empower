@@ -1,0 +1,385 @@
+{
+    "data": [
+        {
+            "_id" : "5ec5d20e58b6bb55b5416bcd",
+            "category" : "FAST FOODS",
+            "food-name" : "quarter pounder with cheese, mcdonald's",
+            "description" : "Burger containing beef patty, pickles, onion, ketchup, mustard and cheese",
+            "edible-portion" : "100%",
+            "per-serving" : "199 g",
+            "household-measure" : "Whole",
+            "nutrients" : {
+                "energy" : {
+                    "amount" : "513.42",
+                    "unit" : "kcal",
+                    "rating" : "high"
+                },
+                "protein" : {
+                    "amount" : "29.03",
+                    "unit" : "g",
+                    "rating" : "high"
+                },
+                "total-fat" : {
+                    "amount" : "28.3",
+                    "unit" : "g",
+                    "rating" : "high"
+                },
+                "saturated-fat" : {
+                    "amount" : "11.23",
+                    "unit" : "g",
+                    "rating" : "high"
+                },
+                "dietary-fibre" : {
+                    "amount" : "2.79",
+                    "unit" : "g",
+                    "rating" : "medium"
+                },
+                "carbohydrate" : {
+                    "amount" : "39.7",
+                    "unit" : "g",
+                    "rating" : "medium"
+                },
+                "cholesterol" : {
+                    "amount" : "93.53",
+                    "unit" : "mg",
+                    "rating" : "medium"
+                },
+                "sodium" : {
+                    "amount" : "1152.21",
+                    "unit" : "mg",
+                    "rating" : "high"
+                }
+            },
+            "subcategory" : "All fast food outlets in alphabetical order",
+            "author" : "null",
+            "checked" : 1,
+            "imgUrl" : {
+                "url" : "https://upload.wikimedia.org/wikipedia/commons/c/ce/McDonald's_Quarter_Pounder_with_Cheese,_United_States.jpg",
+                "author" : "N.A"
+            }
+        },{
+            "_id" : "5ec5d2b358b6bb55b5416bd2",
+            "category" : "FAST FOODS",
+            "food-name" : "roller, kfc",
+            "description" : "Popcorn chicken, mozzarella cheese and mayonnaise wrapped in a tortilla",
+            "edible-portion" : "100%",
+            "per-serving" : "83 g",
+            "household-measure" : "Whole",
+            "nutrients" : {
+                "energy" : {
+                    "amount" : "317.06",
+                    "unit" : "kcal",
+                    "rating" : "high"
+                },
+                "protein" : {
+                    "amount" : "10.79",
+                    "unit" : "g",
+                    "rating" : "high"
+                },
+                "total-fat" : {
+                    "amount" : "19.1",
+                    "unit" : "g",
+                    "rating" : "high"
+                },
+                "saturated-fat" : {
+                    "amount" : "7.3",
+                    "unit" : "g",
+                    "rating" : "high"
+                },
+                "dietary-fibre" : {
+                    "amount" : "N.A",
+                    "unit" : "N.A"
+                },
+                "carbohydrate" : {
+                    "amount" : "24.6",
+                    "unit" : "g",
+                    "rating" : "high"
+                },
+                "cholesterol" : {
+                    "amount" : "N.A",
+                    "unit" : "N.A"
+                },
+                "sodium" : {
+                    "amount" : "332.83",
+                    "unit" : "mg",
+                    "rating" : "high"
+                }
+            },
+            "subcategory" : "All fast food outlets in alphabetical order",
+            "imgUrl" : {
+                "url" : "http://4.bp.blogspot.com/_W-pG7tUmJk0/S-c6YFumqFI/AAAAAAAAB5c/fO50kG4hvUQ/s400/kfc_aus_roller.gif"
+            }
+        },{
+            "_id" : "5ec561a169eef8907d7921b3",
+            "category" : "FAST FOODS",
+            "food-name" : "chicken, wing, hot and crispy, kfc",
+            "edible-portion" : "76%",
+            "per-serving" : "58 g",
+            "household-measure" : "Piece",
+            "nutrients" : {
+                "energy" : {
+                    "amount" : "144.58",
+                    "unit" : "kcal",
+                    "rating" : "high"
+                },
+                "protein" : {
+                    "amount" : "8.82",
+                    "unit" : "g",
+                    "rating" : "high"
+                },
+                "total-fat" : {
+                    "amount" : "13.3",
+                    "unit" : "g",
+                    "rating" : "high"
+                },
+                "saturated-fat" : {
+                    "amount" : "4.03",
+                    "unit" : "g",
+                    "rating" : "high"
+                },
+                "dietary-fibre" : {
+                    "amount" : "N.A",
+                    "unit" : "N.A"
+                },
+                "carbohydrate" : {
+                    "amount" : "4.56",
+                    "unit" : "g",
+                    "rating" : "medium"
+                },
+                "cholesterol" : {
+                    "amount" : "40.11",
+                    "unit" : "mg",
+                    "rating" : "high"
+                },
+                "sodium" : {
+                    "amount" : "270.86",
+                    "unit" : "mg",
+                    "rating" : "high"
+                }
+            },
+            "subcategory" : "All fast food outlets in alphabetical order",
+            "imgUrl" : {
+                "url" : "https://i.pinimg.com/736x/d9/aa/59/d9aa59148d70ff297f20c881af05ec0f--fast-food-menu-kentucky-fried.jpg"
+            }
+        },{
+            "_id" : "5ec569ce69eef8907d7921d9",
+            "category" : "FAST FOODS",
+            "food-name" : "french fries, medium, salted, burger king",
+            "edible-portion" : "100%",
+            "per-serving" : "103 g",
+            "household-measure" : "Packet",
+            "nutrients" : {
+                "energy" : {
+                    "amount" : "340.93",
+                    "unit" : "kcal",
+                    "rating" : "high"
+                },
+                "protein" : {
+                    "amount" : "4.12",
+                    "unit" : "g",
+                    "rating" : "medium"
+                },
+                "total-fat" : {
+                    "amount" : "17.92",
+                    "unit" : "g",
+                    "rating" : "high"
+                },
+                "saturated-fat" : {
+                    "amount" : "3.51",
+                    "unit" : "g",
+                    "rating" : "medium"
+                },
+                "dietary-fibre" : {
+                    "amount" : "2.99",
+                    "unit" : "g",
+                    "rating" : "high"
+                },
+                "carbohydrate" : {
+                    "amount" : "38.3",
+                    "unit" : "g",
+                    "rating" : "high"
+                },
+                "cholesterol" : {
+                    "amount" : "N.A",
+                    "unit" : "N.A"
+                },
+                "sodium" : {
+                    "amount" : "311.06",
+                    "unit" : "mg",
+                    "rating" : "medium"
+                }
+            },
+            "subcategory" : "All fast food outlets in alphabetical order",
+            "author" : "null",
+            "checked" : 1,
+            "imgUrl" : {
+                "url" : "https://upload.wikimedia.org/wikipedia/commons/5/56/BK-French-Fries.jpg",
+                "author" : "N.A"
+            }
+        },
+        {
+            "_id" : "5ec56ca569eef8907d7921e7",
+            "category" : "FAST FOODS",
+            "food-name" : "hawaiian 10\" regular crispy thin pizza, pizzahut",
+            "edible-portion" : "100%",
+            "per-serving" : "66 g",
+            "household-measure" : "Whole",
+            "nutrients" : {
+                "energy" : {
+                    "amount" : "155.76",
+                    "unit" : "kcal",
+                    "rating" : "medium"
+                },
+                "protein" : {
+                    "amount" : "9.24",
+                    "unit" : "g",
+                    "rating" : "high"
+                },
+                "total-fat" : {
+                    "amount" : "5.8",
+                    "unit" : "g",
+                    "rating" : "medium"
+                },
+                "saturated-fat" : {
+                    "amount" : "3.2",
+                    "unit" : "g",
+                    "rating" : "high"
+                },
+                "dietary-fibre" : {
+                    "amount" : "2.1",
+                    "unit" : "g",
+                    "rating" : "high"
+                },
+                "carbohydrate" : {
+                    "amount" : "17",
+                    "unit" : "g",
+                    "rating" : "medium"
+                },
+                "cholesterol" : {
+                    "amount" : "11.22",
+                    "unit" : "mg",
+                    "rating" : "low"
+                },
+                "sodium" : {
+                    "amount" : "333.96",
+                    "unit" : "mg",
+                    "rating" : "high"
+                }
+            },
+            "subcategory" : "All fast food outlets in alphabetical order",
+            "author" : "null",
+            "checked" : 1,
+            "imgUrl" : {
+                "url" : "https://www.publicdomainpictures.net/pictures/110000/velka/hawaiian-pizza-141707092467F.jpg",
+                "author" : "N.A"
+            }
+        },{
+            "_id" : "5ec56fa569eef8907d7921f7",
+            "category" : "FAST FOODS",
+            "food-name" : "mcflurry with oreo cookies, mcdonald's",
+            "description" : "Soft serve vanilla ice cream with oreo cookie bits",
+            "edible-portion" : "100%",
+            "per-serving" : "337 g",
+            "household-measure" : "Cup",
+            "nutrients" : {
+                "energy" : {
+                    "amount" : "401.03",
+                    "unit" : "kcal",
+                    "rating" : "medium"
+                },
+                "protein" : {
+                    "amount" : "6.74",
+                    "unit" : "g",
+                    "rating" : "low"
+                },
+                "total-fat" : {
+                    "amount" : "13.99",
+                    "unit" : "g",
+                    "rating" : "medium"
+                },
+                "saturated-fat" : {
+                    "amount" : "6.61",
+                    "unit" : "g",
+                    "rating" : "medium"
+                },
+                "dietary-fibre" : {
+                    "amount" : "7.99",
+                    "unit" : "g",
+                    "rating" : "medium"
+                },
+                "carbohydrate" : {
+                    "amount" : "62.01",
+                    "unit" : "g",
+                    "rating" : "medium"
+                },
+                "cholesterol" : {
+                    "amount" : "N.A",
+                    "unit" : "N.A"
+                },
+                "sodium" : {
+                    "amount" : "229.16",
+                    "unit" : "mg",
+                    "rating" : "low"
+                }
+            },
+            "subcategory" : "All fast food outlets in alphabetical order",
+            "imgUrl" : {
+                "url" : "http://www.mcdonalds.ie/content/iehome/food/more_food/deserts_treats/oreo_cookie_mcflurry/_jcr_content/genericpagecontent/columncontrol/columncontrol%20column2/everything/image.img.png/1546608387138.png"
+            }
+        },{
+            "_id" : "5ec571de69eef8907d792202",
+            "category" : "FAST FOODS",
+            "food-name" : "muffin, english-style, mcdonalds'",
+            "description" : "English muffin as purchased from McDonalds stores. Ready to eat.",
+            "edible-portion" : "100%",
+            "per-serving" : "67 g",
+            "household-measure" : "1 portion",
+            "nutrients" : {
+                "energy" : {
+                    "amount" : "187.6",
+                    "unit" : "kcal",
+                    "rating" : "high"
+                },
+                "protein" : {
+                    "amount" : "5.09",
+                    "unit" : "g",
+                    "rating" : "medium"
+                },
+                "total-fat" : {
+                    "amount" : "5.29",
+                    "unit" : "g",
+                    "rating" : "medium"
+                },
+                "saturated-fat" : {
+                    "amount" : "1.61",
+                    "unit" : "g",
+                    "rating" : "medium"
+                },
+                "dietary-fibre" : {
+                    "amount" : "2.41",
+                    "unit" : "g",
+                    "rating" : "high"
+                },
+                "carbohydrate" : {
+                    "amount" : "28.48",
+                    "unit" : "g",
+                    "rating" : "high"
+                },
+                "cholesterol" : {
+                    "amount" : "0.67",
+                    "unit" : "mg",
+                    "rating" : "low"
+                },
+                "sodium" : {
+                    "amount" : "309.54",
+                    "unit" : "mg",
+                    "rating" : "high"
+                }
+            },
+            "subcategory" : "All fast food outlets in alphabetical order",
+            "imgUrl" : {
+                "url" : "https://mcdonalds.com.au/sites/mcdonalds.com.au/files/hero_pdt_english_muffin.png"
+            }
+        }
+    ]
+}
