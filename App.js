@@ -13,6 +13,7 @@ import ChatScreen from './screens/sub/chat';
 import Login from './screens/sub/login';
 import ForgetPasswordScreen from './screens/sub/ForgetPasswordScreen';
 import InputOTPScreen from './screens/sub/inputOTPScreen';
+import ResetPasswordScreen from './screens/sub/resetPassword';
 
 const Stack = createStackNavigator();
 
@@ -94,6 +95,15 @@ export default function App() {
             title: 'Input OTP',
             headerRight: false, //for android
             headerBackTitle: 'Back',
+          }}
+        />
+        <Stack.Screen
+          name="ResetPasswordScreen"
+          component={ResetPasswordScreen}
+          options={{
+            title: 'Reset Password',
+            headerRight: false, //for android
+            headerLeft: false,
           }}
         />
         <Stack.Screen
