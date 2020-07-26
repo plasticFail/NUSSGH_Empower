@@ -46,8 +46,19 @@ export default class CreateMealLog extends React.Component {
         }
     }
 
-    redirectToFoodSearchEngine = () => {
-        this.props.navigation.push('FoodSearchEngine')
+    redirectToFoodSearchEngine = (type) => () => {
+        this.props.navigation.push('FoodSearchEngine', {
+            type: type
+        })
+    }
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.route.params?.item !== this.props.route.params?.item) {
+            const { type, item } = this.props.route.params;
+            const newState = {...this.state};
+            newState[type].push(item);
+            this.setState(newState, () => console.log(this.state));
+        }
     }
 
     handleMealNameChange = (text) => {
@@ -56,9 +67,19 @@ export default class CreateMealLog extends React.Component {
         })
     }
 
+    toggleFavouriteIcon = (event) => {
+        const toggledBoolean = !this.state.isFavourite;
+        this.setState({
+            isFavourite: toggledBoolean
+        })
+    }
+
     render() {
-        const {navigation} = this.props;
+        const {navigation, route} = this.props;
         const {isFavourite, mealName} = this.state;
+        // DO NOT UNPACKAGE or DECOMPOSE beverage, main, side and dessert from state here because the render function
+        // currently looks for the images beverage, main, side and dessert from imports.
+        // Outside this render function, it is safe to unpackage / decompose the state fields.
         return (
             <View style={styles.root}>
                 <View style={styles.mealNameTextAndIcon}>
@@ -68,7 +89,9 @@ export default class CreateMealLog extends React.Component {
                         value={mealName}
                         onChangeText={this.handleMealNameChange}
                     />
-                    <Icon name="star" size={40} color={isFavourite ? "#B3D14C" : "#e4e4e4"} style={styles.favouriteIcon}/>
+                    <Icon name="star" size={40} color={isFavourite ? "#B3D14C" : "#e4e4e4"}
+                          onPress={this.toggleFavouriteIcon}
+                          style={styles.favouriteIcon}/>
                 </View>
                 <ScrollView>
                     <ScrollView horizontal={true} contentContainerStyle={styles.rowContent}>
@@ -77,7 +100,10 @@ export default class CreateMealLog extends React.Component {
                             imageStyle={styles.foodImage}
                             alignment='center'
                             value="Beverage" img={beverage}/>
-                        <FoodItem type="create" onPress={this.redirectToFoodSearchEngine} />
+                        {
+                            this.state.beverage.map((food) => <FoodItem item={food} />)
+                        }
+                        <FoodItem type="create" onPress={this.redirectToFoodSearchEngine("beverage")} />
                     </ScrollView>
                     <ScrollView horizontal={true} contentContainerStyle={styles.rowContent}>
                         <FoodTypeLabel
@@ -85,7 +111,10 @@ export default class CreateMealLog extends React.Component {
                             imageStyle={styles.foodImage}
                             alignment='center'
                             value="Main" img={main}/>
-                        <FoodItem type="create" onPress={this.redirectToFoodSearchEngine} />
+                        {
+                            this.state.main.map((food) => <FoodItem item={food} />)
+                        }
+                        <FoodItem type="create" onPress={this.redirectToFoodSearchEngine("main")} />
                     </ScrollView>
                     <ScrollView horizontal={true} contentContainerStyle={styles.rowContent}>
                         <FoodTypeLabel
@@ -93,7 +122,10 @@ export default class CreateMealLog extends React.Component {
                             imageStyle={styles.foodImage}
                             alignment='center'
                             value="Side" img={side}/>
-                        <FoodItem type="create" onPress={this.redirectToFoodSearchEngine} />
+                        {
+                            this.state.side.map((food) => <FoodItem item={food} />)
+                        }
+                        <FoodItem type="create" onPress={this.redirectToFoodSearchEngine("side")} />
                     </ScrollView>
                     <ScrollView horizontal={true} contentContainerStyle={styles.rowContent}>
                         <FoodTypeLabel
@@ -101,7 +133,10 @@ export default class CreateMealLog extends React.Component {
                             imageStyle={styles.foodImage}
                             alignment='center'
                             value="Dessert" img={dessert}/>
-                        <FoodItem type="create" onPress={this.redirectToFoodSearchEngine} />
+                        {
+                            this.state.dessert.map((food) => <FoodItem item={food} />)
+                        }
+                        <FoodItem type="create" onPress={this.redirectToFoodSearchEngine("dessert")} />
                     </ScrollView>
                     <TouchableHighlight
                         style={styles.button}
@@ -125,7 +160,8 @@ function EmptyButton({onPress}) {
     )
 }
 
-function FoodItem({onPress, foodObj, type}) {
+function FoodItem({onPress, item, type}) {
+    // Item here refers to the food object.
     if (type === 'create' ) {
         return (
             <View style={styles.foodItem}>
@@ -134,10 +170,17 @@ function FoodItem({onPress, foodObj, type}) {
                 </View>
             </View>
         )
-    } else if (type === 'label') {
-        // render view labels (either beverage, main, side or dessert)
     } else {
         // render view for foodObj
+        const adjustedFontSize = item["food-name"].length > 15 ? 10 : 15;
+        return (
+            <View style={styles.foodItem}>
+                <Image source={{uri: item.imgUrl.url}} style={styles.foodImage} />
+                <View style={styles.foodTextWrapper}>
+                    <Text style={{fontSize: adjustedFontSize}}>{item["food-name"][0].toUpperCase() + item["food-name"].slice(1)}</Text>
+                </View>
+            </View>
+        )
     }
 }
 

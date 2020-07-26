@@ -45,7 +45,9 @@ class FoodSearchEngineScreen extends React.Component {
     }
 
     render() {
+        const { navigation, route } = this.props;
         const {query, isLoading, foodResults} = this.state;
+        const type = route.params.type;
         return (
             <View style={styles.root}>
                 <View style={styles.header}>
@@ -62,7 +64,7 @@ class FoodSearchEngineScreen extends React.Component {
                         <ActivityIndicator size="large" color="#B3D14C" />
                     </View> : // Render food result list
                     <View style={styles.foodSearchResults}>
-                        <FoodResultList foodList={foodResults} />
+                        <FoodResultList navigation={navigation} route={route} type={type} foodList={foodResults} />
                     </View>
                 }
             </View>
@@ -70,10 +72,14 @@ class FoodSearchEngineScreen extends React.Component {
     }
 }
 
-function FoodResultList({foodList}) {
+function FoodResultList({foodList, navigation, route, type}) {
     const renderFoodListItem = ({item}) => {
+        const itemCopy = {...item};
         return (
-            <TouchableOpacity style={listStyles.li}>
+            <TouchableOpacity style={listStyles.li} onPress={() => navigation.navigate('CreateMealLog', {
+                item: itemCopy,
+                type: type
+            })}>
                 <View style={listStyles.imageContainer}>
                     <Image style={listStyles.image} source={{uri: item.imgUrl.url}} />
                 </View>
