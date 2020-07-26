@@ -1,6 +1,12 @@
 import React from 'react';
-import {View, Text, StyleSheet, ScrollView, TouchableHighlight} from 'react-native';
+import {View, Text, StyleSheet, ScrollView, TouchableHighlight, TextInput, Image} from 'react-native';
+import Icon from 'react-native-vector-icons/dist/FontAwesome';
+import main from '../../../../resources/images/icons/meal.png';
+import beverage from '../../../../resources/images/icons/mug.png';
+import side from '../../../../resources/images/icons/salad.png';
+import dessert from '../../../../resources/images/icons/parfait.png';
 
+Icon.loadFont()
 // Any meal log selected (e.g Create, Recent or Favourites)
 // will be rendered to this page for confirmation before the submitting to database.
 
@@ -11,7 +17,9 @@ export default class CreateMealLog extends React.Component {
             beverage: [],
             main: [],
             side: [],
-            dessert: []
+            dessert: [],
+            isFavourite: false,
+            mealName: ""
         }
     }
 
@@ -42,25 +50,57 @@ export default class CreateMealLog extends React.Component {
         this.props.navigation.push('FoodSearchEngine')
     }
 
+    handleMealNameChange = (text) => {
+        this.setState({
+            mealName: text
+        })
+    }
+
     render() {
         const {navigation} = this.props;
+        const {isFavourite, mealName} = this.state;
         return (
             <View style={styles.root}>
                 <View style={styles.mealNameTextAndIcon}>
-                    <Text>Meal Name</Text>
-                    <Text>Favourite Icon</Text>
+                    <TextInput
+                        style={styles.mealNameTextInput}
+                        placeholder="Enter Meal Name (optional)"
+                        value={mealName}
+                        onChangeText={this.handleMealNameChange}
+                    />
+                    <Icon name="star" size={40} color={isFavourite ? "#B3D14C" : "#e4e4e4"} style={styles.favouriteIcon}/>
                 </View>
                 <ScrollView>
                     <ScrollView horizontal={true} contentContainerStyle={styles.rowContent}>
+                        <FoodTypeLabel
+                            containerStyle={styles.foodItem}
+                            imageStyle={styles.foodImage}
+                            alignment='center'
+                            value="Beverage" img={beverage}/>
                         <FoodItem type="create" onPress={this.redirectToFoodSearchEngine} />
                     </ScrollView>
                     <ScrollView horizontal={true} contentContainerStyle={styles.rowContent}>
+                        <FoodTypeLabel
+                            containerStyle={styles.foodItem}
+                            imageStyle={styles.foodImage}
+                            alignment='center'
+                            value="Main" img={main}/>
                         <FoodItem type="create" onPress={this.redirectToFoodSearchEngine} />
                     </ScrollView>
                     <ScrollView horizontal={true} contentContainerStyle={styles.rowContent}>
+                        <FoodTypeLabel
+                            containerStyle={styles.foodItem}
+                            imageStyle={styles.foodImage}
+                            alignment='center'
+                            value="Side" img={side}/>
                         <FoodItem type="create" onPress={this.redirectToFoodSearchEngine} />
                     </ScrollView>
                     <ScrollView horizontal={true} contentContainerStyle={styles.rowContent}>
+                        <FoodTypeLabel
+                            containerStyle={styles.foodItem}
+                            imageStyle={styles.foodImage}
+                            alignment='center'
+                            value="Dessert" img={dessert}/>
                         <FoodItem type="create" onPress={this.redirectToFoodSearchEngine} />
                     </ScrollView>
                     <TouchableHighlight
@@ -91,7 +131,6 @@ function FoodItem({onPress, foodObj, type}) {
             <View style={styles.foodItem}>
                 <EmptyButton onPress={onPress}/>
                 <View style={styles.foodTextWrapper}>
-
                 </View>
             </View>
         )
@@ -100,6 +139,18 @@ function FoodItem({onPress, foodObj, type}) {
     } else {
         // render view for foodObj
     }
+}
+
+function FoodTypeLabel({img, containerStyle, imageStyle, textStyle, alignment, value}) {
+
+    return (
+        <View style={containerStyle}>
+            <Image style={imageStyle} source={img}/>
+            <View style={alignment === "center" ? styles.foodTextWrapper : null}>
+                <Text style={textStyle}>{value}</Text>
+            </View>
+        </View>
+    )
 }
 
 const styles = StyleSheet.create({
@@ -112,6 +163,18 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         height: 80,
         padding: 20,
+        alignItems: 'center'
+    },
+    mealNameTextInput: {
+        height: 50,
+        padding: 10,
+        borderColor: '#4d4d4d',
+        borderWidth: 1,
+        borderRadius: 5,
+        flex: 1
+    },
+    favouriteIcon: {
+        paddingLeft: 20
     },
     rowContent: {
         display: 'flex',
@@ -133,6 +196,13 @@ const styles = StyleSheet.create({
         width: 80,
         height: 80,
         backgroundColor: '#e4e4e4',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    foodImage: {
+        width: 80,
+        height: 80,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center'
