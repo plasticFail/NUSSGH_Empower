@@ -1,6 +1,9 @@
 import React from 'react';
 import {View, StyleSheet, FlatList} from 'react-native';
 import MoreFunctionBlock from '../../components/moreFunctionBlock';
+import {connect} from 'react-redux';
+import {mapStateToProps, mapDispatchToProps} from '../../redux/reduxMapping';
+
 
 const MoreRootScreen = (props) => {
   const clickHandler = (id) => {
@@ -12,7 +15,7 @@ const MoreRootScreen = (props) => {
         props.navigation.navigate('Medication');
         break;
       case 3:
-        props.navigation.navigate('Login');
+        props.logout();
         break;
     }
   };
@@ -53,4 +56,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MoreRootScreen;
+export default connect(mapStateToProps, mapDispatchToProps)(MoreRootScreen);

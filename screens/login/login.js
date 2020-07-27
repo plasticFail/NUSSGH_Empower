@@ -1,4 +1,3 @@
-//import 'react-native-gesture-handler';
 import React, {useState} from 'react';
 import {
   View,
@@ -10,8 +9,11 @@ import {
   Alert,
 } from 'react-native';
 import Loading from '../../components/loading';
+import {connect} from 'react-redux';
+import {mapStateToProps, mapDispatchToProps} from '../../redux/reduxMapping';
 
-function Login({navigation}) {
+
+const Login = props => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -41,7 +43,7 @@ function Login({navigation}) {
       setIsLoading(false);
       if (responseJson.token != null) {
         setIsLoading(true);
-        navigation.navigate('Home');
+        props.login();
         setIsLoading(false);
       } else {
         Alert.alert('Error', 'Invalid username/password combination.', [
@@ -94,7 +96,7 @@ function Login({navigation}) {
   );
 }
 
-export default Login;
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
 
 const styles = StyleSheet.create({
   container: {

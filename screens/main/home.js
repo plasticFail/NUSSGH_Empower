@@ -153,8 +153,8 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   contentContainer: {
-    borderRadius: 300,
-    marginStart: '2%',
+    // borderRadius: 300,
+    // marginStart: '2%',
     borderRadius: 20,
     marginStart: '4%',
     marginBottom: '4%',
