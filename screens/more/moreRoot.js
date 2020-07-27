@@ -3,6 +3,7 @@ import {View, StyleSheet, FlatList} from 'react-native';
 import MoreFunctionBlock from '../../components/moreFunctionBlock';
 import {connect} from 'react-redux';
 import {mapStateToProps, mapDispatchToProps} from '../../redux/reduxMapping';
+import {storeToken} from '../../storage/asyncStorageFunctions'
 
 
 const MoreRootScreen = (props) => {
@@ -15,6 +16,7 @@ const MoreRootScreen = (props) => {
         props.navigation.navigate('Medication');
         break;
       case 3:
+        storeToken('');
         props.logout();
         break;
     }

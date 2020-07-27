@@ -1,42 +1,15 @@
-import React, {Component} from 'react';
-import {createStore} from 'redux';
+import React from 'react';
 import {Provider} from 'react-redux';
+import {store} from './redux/reduxInit';
 
 import AppRoot from './screens/appRoot';
 
 
-const initialState = {
-    isLogin: false
+export default function App(){
+    return (
+        <Provider store={store}>
+            <AppRoot/>
+        </Provider>
+    );
 }
 
-const reducer = (state = initialState,action) => {
-    switch (action.type) {
-        case 'LOGIN':
-            return {isLogin:true}
-        case 'LOGOUT':
-            return {isLogin:false}
-    }
-    return state;
-}
-
-const store = createStore(reducer);
-
-class App extends Component {
-    constructor(props) {
-        super(props);
-    }
-
-    componentDidMount() {
-
-    }
-
-    render() {
-        return (
-            <Provider store={store}>
-                <AppRoot/>
-            </Provider>
-        );
-    }
-}
-
-export default App;
