@@ -1,11 +1,22 @@
 import React from 'react';
-import {View, Text, StyleSheet, ScrollView, TouchableHighlight, TextInput, Image} from 'react-native';
+import {
+    View,
+    Text,
+    StyleSheet,
+    ScrollView,
+    TouchableHighlight,
+    TextInput,
+    Image,
+    TouchableWithoutFeedback,
+    TouchableOpacity, Modal
+} from 'react-native';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import main from '../../../../resources/images/icons/meal.png';
 import beverage from '../../../../resources/images/icons/mug.png';
 import side from '../../../../resources/images/icons/salad.png';
 import dessert from '../../../../resources/images/icons/parfait.png';
 import ImageWithBadge from "../../../../components/ImageWithBadge";
+import ProgressBar from "../../../../components/progressbar";
 
 Icon.loadFont()
 // Any meal log selected (e.g Create, Recent or Favourites)
@@ -20,30 +31,9 @@ export default class CreateMealLog extends React.Component {
             side: [],
             dessert: [],
             isFavourite: false,
-            mealName: ""
-        }
-    }
-
-    callbackFromFoodSearchEngine = (category) => (foodObj) => {
-        const previousList = this.state.category;
-        // append to list
-        previousList.push(foodObj);
-        if (category === 'beverage') {
-            this.setState({
-                beverage: previousList
-            });
-        } else if (category === 'main') {
-            this.setState({
-                main: previousList
-            });
-        } else if (category === 'side') {
-            this.setState({
-                side: previousList
-            });
-        } else if (category === 'dessert') {
-            this.setState({
-                dessert: previousList
-            });
+            mealName: "",
+            selected: null,
+            modalOpen: false
         }
     }
 
@@ -83,9 +73,23 @@ export default class CreateMealLog extends React.Component {
         this.setState(newState)
     }
 
+    handleModalOpen = (food) => {
+        this.setState({
+            selected: food,
+            modalOpen: true
+        })
+    }
+
+    handleCloseModal = () => {
+        this.setState({
+            selected: null,
+            modalOpen: false
+        })
+    }
+
     render() {
         const {navigation, route} = this.props;
-        const {isFavourite, mealName} = this.state;
+        const {isFavourite, mealName, selected, modalOpen} = this.state;
         // DO NOT UNPACKAGE or DECOMPOSE beverage, main, side and dessert from state here because the render function
         // currently looks for the images beverage, main, side and dessert from imports.
         // Outside this render function, it is safe to unpackage / decompose the state fields.
@@ -114,7 +118,7 @@ export default class CreateMealLog extends React.Component {
                                 // Handle delete for this food item in the cart.
                                     this.handleDelete(food, "beverage");
                                 }
-                            } />)
+                            } onPress={() => this.handleModalOpen(food)} />)
                         }
                         <FoodItem type="create" onPress={this.redirectToFoodSearchEngine("beverage")} />
                     </ScrollView>
@@ -129,7 +133,7 @@ export default class CreateMealLog extends React.Component {
                                 // Handle delete for this food item in the cart.
                                     this.handleDelete(food, "main");
                                 }
-                            } />)
+                            } onPress={() => this.handleModalOpen(food)} />)
                         }
                         <FoodItem type="create" onPress={this.redirectToFoodSearchEngine("main")} />
                     </ScrollView>
@@ -144,7 +148,7 @@ export default class CreateMealLog extends React.Component {
                                 // Handle delete for this food item in the cart.
                                     this.handleDelete(food, "side");
                                 }
-                            } />)
+                            } onPress={() => this.handleModalOpen(food)} />)
                         }
                         <FoodItem type="create" onPress={this.redirectToFoodSearchEngine("side")} />
                     </ScrollView>
@@ -159,7 +163,7 @@ export default class CreateMealLog extends React.Component {
                                 // Handle delete for this food item in the cart.
                                     this.handleDelete(food, "dessert");
                                 }
-                            } />)
+                            } onPress={() => this.handleModalOpen(food)} />)
                         }
                         <FoodItem type="create" onPress={this.redirectToFoodSearchEngine("dessert")} />
                     </ScrollView>
@@ -168,10 +172,82 @@ export default class CreateMealLog extends React.Component {
                         underlayColor='#fff'>
                         <Text style={styles.buttonText}>Submit Log!</Text>
                     </TouchableHighlight>
+                    <Modal visible={modalOpen} transparent={true}>
+                        {selected &&
+                        <View style={modalStyles.root}>
+                            <TouchableOpacity style={modalStyles.overlay} onPress={this.handleCloseModal} />
+                            <View style={modalStyles.paper}>
+                                <Image style={modalStyles.image} source={{uri: selected.imgUrl.url}}/>
+                                <View style={modalStyles.nutritionInfoContainer}>
+                                    <ScrollView contentContainerStyle={{padding: 15}}>
+                                        <Text>{selected["food-name"][0].toUpperCase() + selected["food-name"].slice(1)}</Text>
+                                        <Text>{selected["household-measure"]}</Text>
+                                        <Text>{selected["per-serving"]}</Text>
+                                        <Text>Nutritional Info</Text>
+                                        <View style={modalStyles.nutrientRow}>
+                                            {renderNutritionText(selected.nutrients["energy"], "Energy")}
+                                            <ProgressBar progress="30%" useIndicatorLevel={true}
+                                                         containerStyle={{height: 15, width: '100%'}} />
+                                        </View>
+                                        <View style={modalStyles.nutrientRow}>
+                                            {renderNutritionText(selected.nutrients["carbohydrate"], "Carbohydrate")}
+                                            <ProgressBar progress="60%" useIndicatorLevel={true}
+                                                         containerStyle={{height: 15, width: '100%'}} />
+                                        </View>
+                                        <View style={modalStyles.nutrientRow}>
+                                            {renderNutritionText(selected.nutrients["protein"], "Protein")}
+                                            <ProgressBar progress="90%" useIndicatorLevel={true} reverse={true}
+                                                         containerStyle={{height: 15, width: '100%'}} />
+                                        </View>
+                                        <View style={modalStyles.nutrientRow}>
+                                            {renderNutritionText(selected.nutrients["total-fat"], "Total Fat")}
+                                            <ProgressBar progress="60%" useIndicatorLevel={true}
+                                                         containerStyle={{height: 15, width: '100%'}} />
+                                        </View>
+                                        <View style={modalStyles.nutrientRow}>
+                                            {renderNutritionText(selected.nutrients["saturated-fat"], "Saturated Fat")}
+                                            <ProgressBar progress="60%" useIndicatorLevel={true}
+                                                         containerStyle={{height: 15, width: '100%'}} />
+                                        </View>
+                                        <View style={modalStyles.nutrientRow}>
+                                            {renderNutritionText(selected.nutrients["dietary-fibre"], "Dietary Fibre")}
+                                            <ProgressBar progress="30%" useIndicatorLevel={true} reverse={true}
+                                                         containerStyle={{height: 15, width: '100%'}} />
+                                        </View>
+                                        <View style={modalStyles.nutrientRow}>
+                                            {renderNutritionText(selected.nutrients["cholesterol"], "Cholesterol")}
+                                            <ProgressBar progress="60%" useIndicatorLevel={true}
+                                                         containerStyle={{height: 15, width: '100%'}} />
+                                        </View>
+                                        {   selected.nutrients.sodium &&
+                                        <View style={modalStyles.nutrientRow}>
+                                            {renderNutritionText(selected.nutrients["sodium"], "Sodium")}
+                                            <ProgressBar progress="90%" useIndicatorLevel={true}
+                                                         containerStyle={{height: 15, width: '100%'}} />
+                                        </View>
+                                        }
+                                    </ScrollView>
+                                </View>
+                            </View>
+                        </View>
+                        }
+                    </Modal>
                 </ScrollView>
             </View>
         )
     }
+}
+
+function renderNutritionText({amount, unit}, nutrient) {
+    return (
+        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <Text>{nutrient}</Text>
+            {
+                unit === "N.A" ? <Text>{unit}</Text>
+                    : <Text>{amount + " " + unit}</Text>
+            }
+        </View>
+    )
 }
 
 function EmptyButton({onPress}) {
@@ -199,17 +275,19 @@ function FoodItem({onPress, item, type, handleDelete}) {
         // render view for foodObj
         const adjustedFontSize = item["food-name"].length > 15 ? 10 : 15;
         return (
-            <View style={styles.foodItem}>
-                <ImageWithBadge
-                    containerStyle={styles.foodImage}
-                    imageProps={{source: {uri: item.imgUrl.url}}}
-                    badgeIcon={<Icon name="times" size={12.5} onPress={handleDelete} color='#fff'/>}
-                    badgeSize={12.5}
-                    badgeColor="red"/>
-                <View style={styles.foodTextWrapper}>
-                    <Text style={{fontSize: adjustedFontSize}}>{item["food-name"][0].toUpperCase() + item["food-name"].slice(1)}</Text>
+            <TouchableWithoutFeedback styles={styles.foodItem} onPress={onPress}>
+                <View style={styles.foodItem}>
+                    <ImageWithBadge
+                        containerStyle={styles.foodImage}
+                        imageProps={{source: {uri: item.imgUrl.url}}}
+                        badgeIcon={<Icon name="times" size={12.5} onPress={handleDelete} color='#fff'/>}
+                        badgeSize={12.5}
+                        badgeColor="red"/>
+                    <View style={styles.foodTextWrapper}>
+                        <Text style={{fontSize: adjustedFontSize}}>{item["food-name"][0].toUpperCase() + item["food-name"].slice(1)}</Text>
+                    </View>
                 </View>
-            </View>
+            </TouchableWithoutFeedback>
         )
     }
 }
@@ -225,6 +303,52 @@ function FoodTypeLabel({img, containerStyle, imageStyle, textStyle, alignment, v
         </View>
     )
 }
+
+const modalStyles = StyleSheet.create({
+    root: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    overlay: {
+        height: '100%',
+        width: '100%',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        position: 'absolute'
+    },
+    paper: {
+        backgroundColor: 'white',
+        width: '80%',
+        height: '70%'
+    },
+    image: {
+        width: '100%',
+        height: '40%'
+    },
+    nutritionInfoContainer: {
+        height: '53.5%',
+    },
+    button: {
+        marginRight:40,
+        marginLeft:40,
+        marginTop:10,
+        paddingTop:20,
+        paddingBottom:20,
+        backgroundColor:'#68a0cf',
+        borderRadius:10,
+        borderWidth: 1,
+        borderColor: '#fff',
+        //transform: [{"translateY": '+42%'}]
+    },
+    buttonText: {
+        color:'#fff',
+        textAlign:'center',
+    },
+    nutrientRow: {
+        width: '100%',
+        paddingTop: 10
+    }
+});
 
 const styles = StyleSheet.create({
     root: {

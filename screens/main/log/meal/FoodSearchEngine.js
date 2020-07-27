@@ -1,10 +1,22 @@
 import React from 'react';
-import {View, Text, StyleSheet, ActivityIndicator, FlatList, Image, TouchableOpacity} from 'react-native';
+import {
+    View,
+    Text,
+    StyleSheet,
+    ActivityIndicator,
+    FlatList,
+    Image,
+    TouchableOpacity,
+    Modal,
+    TouchableHighlight,
+    ScrollView
+} from 'react-native';
 import Searchbar from '../../../../components/Searchbar';
 import SampleFoodDB from './SampleFoodDB.json';
 import carbohydrate from '../../../../resources/images/icons/carbohydrate.png';
 import energy from '../../../../resources/images/icons/energy.png';
 import fat from '../../../../resources/images/icons/fat.png';
+import ProgressBar from "../../../../components/progressbar";
 
 class FoodSearchEngineScreen extends React.Component {
     constructor(props) {
@@ -73,15 +85,32 @@ class FoodSearchEngineScreen extends React.Component {
 }
 
 function FoodResultList({foodList, navigation, route, type}) {
+    const [modalOpen, setModalOpen] = React.useState(false);
+    const [selected, setSelected] = React.useState(null); // Selected food item modal to show.
+
+    const handleOpen = (item) => {
+        setModalOpen(true);
+        setSelected(item);
+    }
+
+    const handleClose = () => {
+        setModalOpen(false);
+        setSelected(null);
+    }
+
+    const navigateBackToCreateMealLog = () => {
+        navigation.navigate('CreateMealLog', {
+            item: {...selected},
+            type: type
+        });
+        handleClose();
+    };
+
     const renderFoodListItem = ({item}) => {
-        const itemCopy = {...item};
         return (
-            <TouchableOpacity style={listStyles.li} onPress={() => navigation.navigate('CreateMealLog', {
-                item: itemCopy,
-                type: type
-            })}>
+            <TouchableOpacity style={listStyles.li} onPress={() => handleOpen(item)}>
                 <View style={listStyles.imageContainer}>
-                    <Image style={listStyles.image} source={{uri: item.imgUrl.url}} />
+                    <Image style={listStyles.image} source={{uri: item.imgUrl.url}} key={item["food-name"]} />
                 </View>
                 <View style={listStyles.foodDescription}>
                     <Text style={listStyles.foodServingText}>{item["household-measure"]}</Text>
@@ -112,7 +141,89 @@ function FoodResultList({foodList, navigation, route, type}) {
             </TouchableOpacity>
         )
     }
-    return <FlatList style={listStyles.container} data={foodList} keyExtractor={item => item._id} renderItem={renderFoodListItem} />
+    return (
+        <React.Fragment>
+            <Modal visible={modalOpen} transparent={true}>
+                {selected &&
+                    <View style={modalStyles.root}>
+                        <TouchableOpacity style={modalStyles.overlay} onPress={handleClose} />
+                        <View style={modalStyles.paper}>
+                            <Image style={modalStyles.image} source={{uri: selected.imgUrl.url}}/>
+                            <View style={modalStyles.nutritionInfoContainer}>
+                                <ScrollView contentContainerStyle={{padding: 15}}>
+                                    <Text>{selected["food-name"][0].toUpperCase() + selected["food-name"].slice(1)}</Text>
+                                    <Text>{selected["household-measure"]}</Text>
+                                    <Text>{selected["per-serving"]}</Text>
+                                    <Text>Nutritional Info</Text>
+                                    <View style={modalStyles.nutrientRow}>
+                                        {renderNutritionText(selected.nutrients["energy"], "Energy")}
+                                        <ProgressBar progress="30%" useIndicatorLevel={true}
+                                                     containerStyle={{height: 15, width: '100%'}} />
+                                    </View>
+                                    <View style={modalStyles.nutrientRow}>
+                                        {renderNutritionText(selected.nutrients["carbohydrate"], "Carbohydrate")}
+                                        <ProgressBar progress="60%" useIndicatorLevel={true}
+                                                     containerStyle={{height: 15, width: '100%'}} />
+                                    </View>
+                                    <View style={modalStyles.nutrientRow}>
+                                        {renderNutritionText(selected.nutrients["protein"], "Protein")}
+                                        <ProgressBar progress="90%" useIndicatorLevel={true} reverse={true}
+                                                     containerStyle={{height: 15, width: '100%'}} />
+                                    </View>
+                                    <View style={modalStyles.nutrientRow}>
+                                        {renderNutritionText(selected.nutrients["total-fat"], "Total Fat")}
+                                        <ProgressBar progress="60%" useIndicatorLevel={true}
+                                                     containerStyle={{height: 15, width: '100%'}} />
+                                    </View>
+                                    <View style={modalStyles.nutrientRow}>
+                                        {renderNutritionText(selected.nutrients["saturated-fat"], "Saturated Fat")}
+                                        <ProgressBar progress="60%" useIndicatorLevel={true}
+                                                     containerStyle={{height: 15, width: '100%'}} />
+                                    </View>
+                                    <View style={modalStyles.nutrientRow}>
+                                        {renderNutritionText(selected.nutrients["dietary-fibre"], "Dietary Fibre")}
+                                        <ProgressBar progress="30%" useIndicatorLevel={true} reverse={true}
+                                                     containerStyle={{height: 15, width: '100%'}} />
+                                    </View>
+                                    <View style={modalStyles.nutrientRow}>
+                                        {renderNutritionText(selected.nutrients["cholesterol"], "Cholesterol")}
+                                        <ProgressBar progress="60%" useIndicatorLevel={true}
+                                                     containerStyle={{height: 15, width: '100%'}} />
+                                    </View>
+                                    {   selected.nutrients.sodium &&
+                                        <View style={modalStyles.nutrientRow}>
+                                            {renderNutritionText(selected.nutrients["sodium"], "Sodium")}
+                                            <ProgressBar progress="90%" useIndicatorLevel={true}
+                                                         containerStyle={{height: 15, width: '100%'}} />
+                                        </View>
+                                    }
+                                </ScrollView>
+                            </View>
+                            <TouchableHighlight
+                                style={modalStyles.button}
+                                underlayColor='#fff' onPress={navigateBackToCreateMealLog}>
+                                <Text style={modalStyles.buttonText}>Add</Text>
+                            </TouchableHighlight>
+                        </View>
+                    </View>
+                }
+            </Modal>
+            <FlatList style={listStyles.container} data={foodList}
+                      keyExtractor={item => item._id} renderItem={renderFoodListItem} />
+        </React.Fragment>
+    )
+}
+
+function renderNutritionText({amount, unit}, nutrient) {
+    return (
+        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <Text>{nutrient}</Text>
+            {
+                unit === "N.A" ? <Text>{unit}</Text>
+                    : <Text>{amount + " " + unit}</Text>
+            }
+        </View>
+    )
 }
 
 // Function to determine color of indicator. In general, red is bad, yellow/orange is okay and green is good.
@@ -149,6 +260,52 @@ function getColorFromNutrient({rating}, nutrientName) {
         }
     }
 }
+
+const modalStyles = StyleSheet.create({
+    root: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    overlay: {
+        height: '100%',
+        width: '100%',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        position: 'absolute'
+    },
+    paper: {
+        backgroundColor: 'white',
+        width: '80%',
+        height: '70%'
+    },
+    image: {
+        width: '100%',
+        height: '40%'
+    },
+    nutritionInfoContainer: {
+        height: '53.5%',
+    },
+    button: {
+        marginRight:40,
+        marginLeft:40,
+        marginTop:10,
+        paddingTop:20,
+        paddingBottom:20,
+        backgroundColor:'#68a0cf',
+        borderRadius:10,
+        borderWidth: 1,
+        borderColor: '#fff',
+        //transform: [{"translateY": '+42%'}]
+    },
+    buttonText: {
+        color:'#fff',
+        textAlign:'center',
+    },
+    nutrientRow: {
+        width: '100%',
+        paddingTop: 10
+    }
+});
 
 const listStyles = StyleSheet.create({
     container: {
