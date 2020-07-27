@@ -5,6 +5,7 @@ import main from '../../../../resources/images/icons/meal.png';
 import beverage from '../../../../resources/images/icons/mug.png';
 import side from '../../../../resources/images/icons/salad.png';
 import dessert from '../../../../resources/images/icons/parfait.png';
+import ImageWithBadge from "../../../../components/ImageWithBadge";
 
 Icon.loadFont()
 // Any meal log selected (e.g Create, Recent or Favourites)
@@ -74,6 +75,14 @@ export default class CreateMealLog extends React.Component {
         })
     }
 
+    handleDelete = (food, type) => {
+        // Copy the previous state
+        const newState = {...this.state};
+        // Filter the food item / delete the corresponding food
+        newState[type] = newState[type].filter(foodItem => foodItem !== food);
+        this.setState(newState)
+    }
+
     render() {
         const {navigation, route} = this.props;
         const {isFavourite, mealName} = this.state;
@@ -100,8 +109,12 @@ export default class CreateMealLog extends React.Component {
                             imageStyle={styles.foodImage}
                             alignment='center'
                             value="Beverage" img={beverage}/>
-                        {
-                            this.state.beverage.map((food) => <FoodItem item={food} />)
+                        {   // Render food list for cart items in beverage.
+                            this.state.beverage.map((food) => <FoodItem item={food} handleDelete={() => {
+                                // Handle delete for this food item in the cart.
+                                    this.handleDelete(food, "beverage");
+                                }
+                            } />)
                         }
                         <FoodItem type="create" onPress={this.redirectToFoodSearchEngine("beverage")} />
                     </ScrollView>
@@ -111,8 +124,12 @@ export default class CreateMealLog extends React.Component {
                             imageStyle={styles.foodImage}
                             alignment='center'
                             value="Main" img={main}/>
-                        {
-                            this.state.main.map((food) => <FoodItem item={food} />)
+                        {   // Render food list for cart items in main.
+                            this.state.main.map((food) => <FoodItem item={food} handleDelete={() => {
+                                // Handle delete for this food item in the cart.
+                                    this.handleDelete(food, "main");
+                                }
+                            } />)
                         }
                         <FoodItem type="create" onPress={this.redirectToFoodSearchEngine("main")} />
                     </ScrollView>
@@ -122,8 +139,12 @@ export default class CreateMealLog extends React.Component {
                             imageStyle={styles.foodImage}
                             alignment='center'
                             value="Side" img={side}/>
-                        {
-                            this.state.side.map((food) => <FoodItem item={food} />)
+                        {   // Render food list for cart items in side.
+                            this.state.side.map((food) => <FoodItem item={food} handleDelete={() => {
+                                // Handle delete for this food item in the cart.
+                                    this.handleDelete(food, "side");
+                                }
+                            } />)
                         }
                         <FoodItem type="create" onPress={this.redirectToFoodSearchEngine("side")} />
                     </ScrollView>
@@ -133,8 +154,12 @@ export default class CreateMealLog extends React.Component {
                             imageStyle={styles.foodImage}
                             alignment='center'
                             value="Dessert" img={dessert}/>
-                        {
-                            this.state.dessert.map((food) => <FoodItem item={food} />)
+                        {   // Render food list for cart items in dessert.
+                            this.state.dessert.map((food) => <FoodItem item={food} handleDelete={() => {
+                                // Handle delete for this food item in the cart.
+                                    this.handleDelete(food, "dessert");
+                                }
+                            } />)
                         }
                         <FoodItem type="create" onPress={this.redirectToFoodSearchEngine("dessert")} />
                     </ScrollView>
@@ -160,7 +185,7 @@ function EmptyButton({onPress}) {
     )
 }
 
-function FoodItem({onPress, item, type}) {
+function FoodItem({onPress, item, type, handleDelete}) {
     // Item here refers to the food object.
     if (type === 'create' ) {
         return (
@@ -175,7 +200,12 @@ function FoodItem({onPress, item, type}) {
         const adjustedFontSize = item["food-name"].length > 15 ? 10 : 15;
         return (
             <View style={styles.foodItem}>
-                <Image source={{uri: item.imgUrl.url}} style={styles.foodImage} />
+                <ImageWithBadge
+                    containerStyle={styles.foodImage}
+                    imageProps={{source: {uri: item.imgUrl.url}}}
+                    badgeIcon={<Icon name="times" size={12.5} onPress={handleDelete} color='#fff'/>}
+                    badgeSize={12.5}
+                    badgeColor="red"/>
                 <View style={styles.foodTextWrapper}>
                     <Text style={{fontSize: adjustedFontSize}}>{item["food-name"][0].toUpperCase() + item["food-name"].slice(1)}</Text>
                 </View>
