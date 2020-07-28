@@ -58,27 +58,45 @@ const AppRoot = (props) => {
             })}>
 
             {props.isLogin ? (
-                <Stack.Screen
-                    name="DashBoard"
-                    component={DashBoard}
-                    options={({route, navigation}) => ({
-                        title: getHeaderTitle(route),
-                        headerLeft: () => (
-                            <HeaderIcon
-                                iconName={'bell'}
-                                text={'Alerts'}
-                                clickFunc={() => navigation.navigate('Alerts')}
-                            />
-                        ),
-                        headerRight: () => (
-                            <HeaderIcon
-                                iconName={'comments'}
-                                text={'Chat'}
-                                clickFunc={() => navigation.navigate('Chat')}
-                            />
-                        ),
-                    })}
-                />
+                <>
+                    <Stack.Screen
+                        name="DashBoard"
+                        component={DashBoard}
+                        options={({route, navigation}) => ({
+                            title: getHeaderTitle(route),
+                            headerLeft: () => (
+                                <HeaderIcon
+                                    iconName={'bell'}
+                                    text={'Alerts'}
+                                    clickFunc={() => navigation.navigate('Alerts')}
+                                />
+                            ),
+                            headerRight: () => (
+                                <HeaderIcon
+                                    iconName={'comments'}
+                                    text={'Chat'}
+                                    clickFunc={() => navigation.navigate('Chat')}
+                                />
+                            ),
+                        })}
+                    />
+                    <Stack.Screen
+                        name="Alerts"
+                        component={AlertsScreen}
+                        options={{
+                            title: 'Alerts',
+                            headerRight: () => <View/>,
+                        }}
+                    />
+                    <Stack.Screen
+                        name="Chat"
+                        component={ChatScreen}
+                        options={{
+                        title: 'Chat',
+                            headerRight: () => <View/>,
+                        }}
+                    />
+                </>
             ):(
                 <>
                     <Stack.Screen
@@ -100,22 +118,6 @@ const AppRoot = (props) => {
                             title: 'Input OTP',
                             headerRight: false, //for android
                             headerBackTitle: 'Back',
-                        }}
-                    />
-                    <Stack.Screen
-                        name="Alerts"
-                        component={AlertsScreen}
-                        options={{
-                            title: 'Alerts',
-                            headerRight: () => <View/>,
-                        }}
-                    />
-                    <Stack.Screen
-                        name="Chat"
-                        component={ChatScreen}
-                        options={{
-                            title: 'Chat',
-                            headerRight: () => <View/>,
                         }}
                     />
                 </>
