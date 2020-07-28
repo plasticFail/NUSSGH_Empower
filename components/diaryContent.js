@@ -6,7 +6,7 @@ const DiaryContent = (props) => {
   return (
     <View style={{flex: 1, flexDirection: 'row'}}>
       <Image
-        source={require('../img/bloodglucose_logo.png')}
+        source={require('../resources/images/bloodglucose_logo.png')}
         style={styles.iconImg2}
       />
       <Text>Data</Text>

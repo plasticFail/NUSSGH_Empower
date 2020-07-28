@@ -105,7 +105,7 @@ class Login extends Component{
             Welcome!
           </Text>
           <Image
-              source={require('../../img/logo_v1.png')}
+              source={require('../../resources/images/logo_v1.png')}
               style={{width: 200, height: 200, marginBottom: 10}}
           />
           <TextInput
