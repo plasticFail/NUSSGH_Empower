@@ -40,7 +40,7 @@ const DefaultMealLogScreen = (props) => {
                       component={CreateMealLogScreen}
                       options={{animationEnabled: false}}/>
         <Stack.Screen name={'FoodSearchEngine'}
-                      component={FoodSearchEngineScreen} options={{headerShown: false}} />
+                      component={FoodSearchEngineScreen} />
     </Stack.Navigator>
 }
 
