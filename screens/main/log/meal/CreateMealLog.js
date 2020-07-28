@@ -114,7 +114,7 @@ export default class CreateMealLog extends React.Component {
                             alignment='center'
                             value="Beverage" img={beverage}/>
                         {   // Render food list for cart items in beverage.
-                            this.state.beverage.map((food) => <FoodItem item={food} handleDelete={() => {
+                            this.state.beverage.map((food, index) => <FoodItem item={food} handleDelete={() => {
                                 // Handle delete for this food item in the cart.
                                     this.handleDelete(food, "beverage");
                                 }

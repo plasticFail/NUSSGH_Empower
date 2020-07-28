@@ -46,16 +46,17 @@ class FoodSearchEngineScreen extends React.Component {
                 clearTimeout(this.timeout);
                 this.timeout = setTimeout(() => {
                     // Fetch api and load the response here.
-                    /*
+                    // For now this would be just simulating an async process.
                     setTimeout(() => {
                         this.setState({
                             isLoading: false,
                             foodResults: SampleFoodDB.data
                         })
-                    }, 2000) // simulate 2s for fetching request.
-                     */
-                    // For now fetch api from local backend server.
-                    fetch('http://192.168.1.8:5000/food/search', {
+                    }, 1000) // simulate 1s for fetching request.
+
+                    // Format to fetch the data
+                    /*
+                    fetch('http://ip:port/food/search', {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json"
@@ -67,6 +68,7 @@ class FoodSearchEngineScreen extends React.Component {
                             isLoading: false
                         })
                     })
+                      */
                 }, 500); // 500ms delay before loading API.
             })
         }
@@ -230,7 +232,7 @@ function FoodResultList({foodList, navigation, route, type}) {
                 }
             </Modal>
             <FlatList style={listStyles.container} data={foodList}
-                      keyExtractor={item => item._id} renderItem={renderFoodListItem} />
+                      keyExtractor={item => item["food-name"]} renderItem={renderFoodListItem} />
         </React.Fragment>
     )
 }

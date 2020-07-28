@@ -9,21 +9,20 @@ import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
 
 const Tab = createBottomTabNavigator();
 
-
 function getMoreHeaderTitle(route) {
-    const routeName = getFocusedRouteNameFromRoute(route) ?? 'More';
+  const routeName = getFocusedRouteNameFromRoute(route) ?? 'More';
 
-    switch (routeName) {
-        case 'More':
-            console.log('more')
-            return 'More';
-        case 'AccountDetail':
-            console.log('Account Detail')
-            return 'Account Detail';
-        case 'Medication':
-            console.log('Medication')
-            return 'Medication';
-    }
+  switch (routeName) {
+    case 'More':
+      console.log('more');
+      return 'More';
+    case 'AccountDetail':
+      console.log('Account Detail');
+      return 'Account Detail';
+    case 'Medication':
+      console.log('Medication');
+      return 'Medication';
+  }
 }
 
 // Method to reset the tab navigation when navigating through pages
@@ -33,6 +32,7 @@ const handleTabPress = ({navigation}, pathName) => {
 }
 
 const DashboardScreen = props => {
+    Icon.loadFont();
     return (
         <Tab.Navigator
             backBehavior='none'
