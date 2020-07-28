@@ -8,7 +8,6 @@ import {
   Image,
   FlatList,
 } from 'react-native';
-import {ScrollView} from 'react-native-gesture-handler';
 
 const buttonList = [
   {
@@ -16,6 +15,7 @@ const buttonList = [
     name: 'Blood Glucose',
     logo: require('../../img/bloodglucose_logo.png'),
     image: require('../../img/bloodglucose.jpg'),
+    navigate: 'BloodGlucoseLog',
   },
   {
     id: '2',
@@ -28,6 +28,7 @@ const buttonList = [
     name: 'Medication',
     logo: require('../../img/medication_logo.png'),
     image: require('../../img/medication.jpeg'),
+    navigate: 'Home',
   },
   {
     id: '4',
@@ -56,7 +57,11 @@ const AddLogScreen = (props) => {
         data={buttonList}
         width="100%"
         renderItem={({item}) => (
-          <TouchableOpacity style={styles.buttonStyle}>
+          <TouchableOpacity
+            style={styles.buttonStyle}
+            onPress={() => {
+              props.navigation.navigate(item.navigate);
+            }}>
             <Image source={item.logo} style={styles.iconImg} />
             <Text style={styles.buttonText1}>{item.name}</Text>
             <ImageBackground source={item.image} style={styles.backgroundImg} />

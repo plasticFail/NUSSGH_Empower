@@ -6,6 +6,7 @@ import Diary from './main/diary';
 import AddLog from './main/addlog';
 import More from './main/more';
 import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
+import AddLogRoot from './main/addLogRoot';
 
 const Tab = createBottomTabNavigator();
 
@@ -22,6 +23,8 @@ function getMoreHeaderTitle(route) {
     case 'Medication':
       console.log('Medication');
       return 'Medication';
+    case 'BloodGlucoseLog':
+      return 'Add Blood Glucose Log';
   }
 }
 
@@ -62,7 +65,7 @@ const DashboardScreen = (props) => {
       />
       <Tab.Screen
         name="AddLog"
-        component={AddLog}
+        component={AddLogRoot}
         options={{
           title: 'Add Log',
           tabBarIcon: ({color, size}) => (
