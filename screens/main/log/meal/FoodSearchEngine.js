@@ -29,6 +29,7 @@ class FoodSearchEngineScreen extends React.Component {
         this.timeout = setTimeout(() => {}, 0); //Initialise timeout for lazy loading
     }
 
+    // handler for making lazy requests.
     updateQuery = (text) => {
         if (text === "") {
             clearTimeout(this.timeout);
@@ -45,12 +46,27 @@ class FoodSearchEngineScreen extends React.Component {
                 clearTimeout(this.timeout);
                 this.timeout = setTimeout(() => {
                     // Fetch api and load the response here.
+                    /*
                     setTimeout(() => {
                         this.setState({
                             isLoading: false,
                             foodResults: SampleFoodDB.data
                         })
                     }, 2000) // simulate 2s for fetching request.
+                     */
+                    // For now fetch api from local backend server.
+                    fetch('http://192.168.1.8:5000/food/search', {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({query: this.state.query, type: this.props.route.params.type})
+                    }).then((res) => res.json()).then(data => {
+                        this.setState({
+                            foodResults: data.data,
+                            isLoading: false
+                        })
+                    })
                 }, 500); // 500ms delay before loading API.
             })
         }
@@ -74,9 +90,14 @@ class FoodSearchEngineScreen extends React.Component {
                     </View> : isLoading ? // Render loading progress
                     <View style={styles.searchLoading}>
                         <ActivityIndicator size="large" color="#B3D14C" />
-                    </View> : // Render food result list
+                    </View> : foodResults.length > 0 ?// Render food result list
                     <View style={styles.foodSearchResults}>
                         <FoodResultList navigation={navigation} route={route} type={type} foodList={foodResults} />
+                    </View> : // Render no search results
+                    <View style={styles.searchPromptBody}>
+                        <Text style={styles.searchPromptText}>No results for {query} :(</Text>
+                        <Text style={styles.searchHintText}>Try again with</Text>
+                        <Text style={styles.searchHintText}>another query!</Text>
                     </View>
                 }
             </View>
