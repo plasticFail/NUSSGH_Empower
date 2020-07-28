@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import OTPInputView from '@twotalltotems/react-native-otp-input';
 
 const InputOTPScreen = (props) => {
   Icon.loadFont();
@@ -17,13 +18,22 @@ const InputOTPScreen = (props) => {
         Enter the 6-digit One-Time Password (OTP) sent to your mobile number
         (**** 9876).
       </Text>
+
       <View style={[styles.formContainer, styles.shadow]}>
-        <TextInput
-          style={styles.inputBox}
-          placeholder="OTP"
-          placeholderTextColor="#a1a3a0"
+        <OTPInputView
+          pinCount={6}
+          style={{
+            width: '100%',
+            height: 100,
+            alignSelf: 'center',
+            fontWeight: '1000',
+          }}
+          placeholderTextColor="#000000"
+          autoFocusOnLoad
+          codeInputFieldStyle={styles.underlineStyleBase}
+          codeInputHighlightStyle={styles.underlineStyleHighLighted}
         />
-        <View style={{flexDirection: 'row'}}>
+        <View style={{flexDirection: 'row', alignItems: 'space-between'}}>
           <TouchableOpacity
             style={styles.buttonStyle}
             onPress={() => {
@@ -85,6 +95,17 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+  },
+  underlineStyleBase: {
+    width: 40,
+    height: 45,
+    borderWidth: 0,
+    borderBottomWidth: 3,
+    color: 'black',
+  },
+
+  underlineStyleHighLighted: {
+    borderColor: '#aad326',
   },
 });
 
