@@ -17,7 +17,7 @@ const handleSubmit = () => {};
 
 const BloodGlucoseLog = (props) => {
   const [visible, setVisible] = useState(false);
-  const [date, setDate] = useState('');
+  const [date, setDate] = useState(new Date());
   const [displaydate, setDisplayDate] = useState('');
   Moment.locale('en');
 
