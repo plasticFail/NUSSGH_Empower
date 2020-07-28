@@ -110,11 +110,10 @@ const styles = StyleSheet.create({
     color: '#133D2c',
   },
   buttonStyle: {
-    width: '80%',
-    height: '20%',
+    width: '80%', // This should be the same size as backgroundImg height
     alignSelf: 'center',
-    marginTop: '2%',
-    marginBottom: '6%',
+    paddingTop: 10,
+    paddingBottom: 10
   },
   backgroundImg: {
     width: '100%',
@@ -134,7 +133,7 @@ const styles = StyleSheet.create({
   },
   buttonText1: {
     position: 'absolute',
-    top: '280%',
+    top: '70%',
     right: '6%',
     fontSize: 20,
     fontWeight: '700',
@@ -142,7 +141,7 @@ const styles = StyleSheet.create({
   },
   iconImg: {
     position: 'absolute',
-    top: '150%',
+    top: '30%',
     right: '7%',
     width: 40,
     height: 40,
