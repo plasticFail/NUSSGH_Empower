@@ -9,6 +9,7 @@ import HeaderIcon from '../../components/headerBtnIcon';
 import AddLogScreen from './addlog';
 import BloodGlucoseLog from '../sub/bloodGlucoseLog';
 import {Header} from 'react-native/Libraries/NewAppScreen';
+import MedicationLog from '../sub/medicationLog';
 
 const Stack = createStackNavigator();
 
@@ -20,6 +21,7 @@ const AddLogRoot = (props) => {
       screenOptions={{animationEnabled: false}}>
       <Stack.Screen name="AddLog" component={AddLogScreen} headerMode="none" />
       <Stack.Screen name="BloodGlucoseLog" component={BloodGlucoseLog} />
+      <Stack.Screen name="MedicationLog" component={MedicationLog} />
     </Stack.Navigator>
   );
 };

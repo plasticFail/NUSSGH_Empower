@@ -22,19 +22,21 @@ const buttonList = [
     name: 'Food Intake',
     logo: require('../../img/foodintake_logo.png'),
     image: require('../../img/foodintake.jpg'),
+    navigate: 'Home',
   },
   {
     id: '3',
     name: 'Medication',
     logo: require('../../img/medication_logo.png'),
     image: require('../../img/medication.jpeg'),
-    navigate: 'Home',
+    navigate: 'MedicationLog',
   },
   {
     id: '4',
     name: 'Weight',
     logo: require('../../img/weight_logo.png'),
     image: require('../../img/weight.jpg'),
+    navigate: 'Home',
   },
 ];
 

@@ -6,13 +6,21 @@ import {
   TextInput,
   Modal,
   TouchableOpacity,
-  Picker,
+  Image,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import DropDownPicker from 'react-native-dropdown-picker';
+import DatePicker from 'react-native-date-picker';
+import Moment from 'moment';
+
+const handleSubmit = () => {};
 
 const BloodGlucoseLog = (props) => {
-  const [selectedValue, setSelectedValue] = useState('java');
+  const [visible, setVisible] = useState(false);
+  const [date, setDate] = useState('');
+  const [displaydate, setDisplayDate] = useState('');
+  Moment.locale('en');
+
   return (
     <Modal
       animationType="slide"
@@ -31,14 +39,31 @@ const BloodGlucoseLog = (props) => {
       </View>
       <View style={{flex: 2, alignItems: 'center'}}>
         <View style={{marginTop: '7%'}}>
-          <Text style={styles.inputHeader}>Record Time:</Text>
-          <TextInput
-            style={styles.inputBox}
-            placeholder=""
-            secureTextEntry={true}
-            placeholderTextColor="#a1a3a0"
-          />
+          <Text style={styles.inputHeader}>Record Date Time:</Text>
+          <View style={{flexDirection: 'row'}}>
+            <TextInput
+              style={styles.inputBox1}
+              value={Moment(date).format('LLLL')}
+              placeholderTextColor="#a1a3a0"></TextInput>
+            <Ionicons
+              name="calendar-outline"
+              size={20}
+              style={{marginTop: '7%', marginStart: '7%'}}
+              onPress={() => {
+                setVisible(!visible);
+              }}
+            />
+          </View>
+          {visible && (
+            <DatePicker
+              visible={visible}
+              date={date}
+              onDateChange={setDate}
+              mode="datetime"
+            />
+          )}
         </View>
+
         <View style={{marginTop: '7%'}}>
           <Text style={styles.inputHeader}>Period:</Text>
           <DropDownPicker
@@ -59,9 +84,6 @@ const BloodGlucoseLog = (props) => {
               width: 300,
               marginTop: '3%',
             }}
-            dropDownStyle={{
-              height: '700',
-            }}
             activeLabelStyle={{color: 'red'}}
             style={{backgroundColor: 'white'}}
             onChangeItem={(item) => console.log(item.label, item.value)}
@@ -75,9 +97,7 @@ const BloodGlucoseLog = (props) => {
             secureTextEntry={true}
             placeholderTextColor="#a1a3a0"
           />
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => props.navigation.navigate('AddLog')}>
+          <TouchableOpacity style={styles.button} onPress={handleSubmit}>
             <Text style={styles.buttonText}>Submit</Text>
           </TouchableOpacity>
         </View>
@@ -87,6 +107,13 @@ const BloodGlucoseLog = (props) => {
 };
 
 const styles = StyleSheet.create({
+  modalContent: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 4,
+    borderColor: 'rgba(0, 0, 0, 0.1)',
+    margin: 0,
+  },
   bloodGlucoseLogScreen: {
     flex: 1,
     padding: 10,
@@ -107,6 +134,13 @@ const styles = StyleSheet.create({
   },
   inputBox: {
     width: 300,
+    height: 40,
+    backgroundColor: '#EEF3BD',
+    paddingStart: 30, //position placeholder text
+    marginVertical: 10,
+  },
+  inputBox1: {
+    width: 250,
     height: 40,
     backgroundColor: '#EEF3BD',
     paddingStart: 30, //position placeholder text
