@@ -10,7 +10,7 @@ import ChatScreen from './sub/chat';
 import {getFocusedRouteNameFromRoute, NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {connect} from 'react-redux';
-import DefaultMealLogScreen from "./main/log/meal/DefaultMealLogScreen";
+import MealLogStack from "./main/log/meal/MealLogStack";
 
 
 const Stack = createStackNavigator();
@@ -31,32 +31,27 @@ function getHeaderTitle(route) {
 }
 
 function getHeaderTitleForMealLog(route) {
-    const routeName = getFocusedRouteNameFromRoute(route) ?? "MealLog";
+    const routeName = getFocusedRouteNameFromRoute(route) ?? "MealLogScreen";
     switch (routeName) {
-        case 'MealLog': // Default first page to render
+        case 'MealLogScreen':
             return 'Meal Log';
         case 'CreateMealLog':
             return 'Create Meal Log';
         case 'FoodSearchEngine':
             return 'Food Search';
-        case 'DefaultMealLog':
-            return 'Meal Log';
     }
 }
 
 function handleBackButtonForMealLog(route, navigation) {
-    const routeName = getFocusedRouteNameFromRoute(route) ?? "MealLog";
+    const routeName = getFocusedRouteNameFromRoute(route) ?? "MealLogScreen";
     switch (routeName) {
-        case 'MealLog': // Come out of stack.
-            navigation.goBack();
-            return;
         case 'CreateMealLog': // Go back to default meal log screen.
-            navigation.navigate("DefaultMealLog");
+            navigation.navigate("MealLogScreen");
             return;
         case 'FoodSearchEngine': // Go back to previous create meal log screen.
             navigation.navigate('CreateMealLog');
             return;
-        case 'DefaultMealLog': // Come out of stack.
+        default:
             navigation.goBack();
             return;
     }
@@ -129,8 +124,8 @@ const AppRoot = (props) => {
                             headerRight: () => <View/>,
                         }}
                     />
-                    <Stack.Screen name="MealLog"
-                                  component={DefaultMealLogScreen}
+                    <Stack.Screen name="MealLogRoot"
+                                  component={MealLogStack}
                                   options={({ route , navigation}) => ({
                                       headerTitle: getHeaderTitleForMealLog(route),
                                       headerLeft: () => (<HeaderIcon iconName="chevron-left"

@@ -7,7 +7,7 @@ import FoodSearchEngineScreen from './FoodSearchEngine';
 const Stack = createStackNavigator();
 const now = new Date();
 
-const DefaultMealLog = ({navigation}) => {
+const MealLogScreen = ({navigation}) => {
     return <View style={styles.root}>
         <Text>Log for {now.toLocaleString()}</Text>
         <Text>Where to find your meal?</Text>
@@ -32,10 +32,10 @@ const DefaultMealLog = ({navigation}) => {
     </View>
 }
 
-const DefaultMealLogScreen = (props) => {
+const MealLogStack = (props) => {
     return <Stack.Navigator>
-        <Stack.Screen name={'DefaultMealLog'}
-                      component={DefaultMealLog}/>
+        <Stack.Screen name={'MealLogScreen'}
+                      component={MealLogScreen}/>
         <Stack.Screen name={'CreateMealLog'}
                       component={CreateMealLogScreen}
                       options={{animationEnabled: false}}/>
@@ -66,4 +66,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default DefaultMealLogScreen;
+export default MealLogStack;
