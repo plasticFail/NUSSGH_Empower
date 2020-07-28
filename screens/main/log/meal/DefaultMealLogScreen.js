@@ -35,12 +35,12 @@ const DefaultMealLog = ({navigation}) => {
 const DefaultMealLogScreen = (props) => {
     return <Stack.Navigator>
         <Stack.Screen name={'DefaultMealLog'}
-                      component={DefaultMealLog}
-                      options={{title: "Meal Log"}}/>
+                      component={DefaultMealLog}/>
         <Stack.Screen name={'CreateMealLog'}
                       component={CreateMealLogScreen}
-                      options={{title: "Create Meal Log", animationEnabled: false}}/>
-        <Stack.Screen name={'FoodSearchEngine'} options={{title: 'Search Food'}} component={FoodSearchEngineScreen} />
+                      options={{animationEnabled: false}}/>
+        <Stack.Screen name={'FoodSearchEngine'}
+                      component={FoodSearchEngineScreen} options={{headerShown: false}} />
     </Stack.Navigator>
 }
 

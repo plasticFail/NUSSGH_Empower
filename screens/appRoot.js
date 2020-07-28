@@ -10,13 +10,13 @@ import ChatScreen from './sub/chat';
 import {getFocusedRouteNameFromRoute, NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {connect} from 'react-redux';
+import DefaultMealLogScreen from "./main/log/meal/DefaultMealLogScreen";
 
 
 const Stack = createStackNavigator();
 
 function getHeaderTitle(route) {
     const routeName = getFocusedRouteNameFromRoute(route) ?? 'Home';
-
     switch (routeName) {
         case 'Home':
             return 'Home';
@@ -26,6 +26,38 @@ function getHeaderTitle(route) {
             return 'Add Log';
         case 'More':
             return 'More';
+    }
+}
+
+function getHeaderTitleForMealLog(route) {
+    const routeName = getFocusedRouteNameFromRoute(route) ?? "MealLog";
+    switch (routeName) {
+        case 'MealLog': // Default first page to render
+            return 'Meal Log';
+        case 'CreateMealLog':
+            return 'Create Meal Log';
+        case 'FoodSearchEngine':
+            return 'Food Search';
+        case 'DefaultMealLog':
+            return 'Meal Log';
+    }
+}
+
+function handleBackButtonForMealLog(route, navigation) {
+    const routeName = getFocusedRouteNameFromRoute(route) ?? "MealLog";
+    switch (routeName) {
+        case 'MealLog': // Come out of stack.
+            navigation.goBack();
+            return;
+        case 'CreateMealLog': // Go back to default meal log screen.
+            navigation.navigate("DefaultMealLog");
+            return;
+        case 'FoodSearchEngine': // Go back to previous create meal log screen.
+            navigation.navigate('CreateMealLog');
+            return;
+        case 'DefaultMealLog': // Come out of stack.
+            navigation.goBack();
+            return;
     }
 }
 
@@ -56,8 +88,8 @@ const AppRoot = (props) => {
                     alignSelf: 'center',
                 },
             })}>
-
             {props.isLogin ? (
+                <>
                 <Stack.Screen
                     name="DashBoard"
                     component={DashBoard}
@@ -79,6 +111,18 @@ const AppRoot = (props) => {
                         ),
                     })}
                 />
+                <Stack.Screen name="MealLog"
+                              component={DefaultMealLogScreen}
+                              options={({ route , navigation}) => ({
+                                  headerTitle: getHeaderTitleForMealLog(route),
+                                  headerLeft: () => (<HeaderIcon iconName="chevron-left"
+                                                                 text="Back" clickFunc={() =>
+                                      handleBackButtonForMealLog(route, navigation)
+                                  }/>),
+                                  headerRight: () => (<View style={{width: 25, height: 25}}/>)
+                              })}
+                />
+                </>
             ):(
                 <>
                     <Stack.Screen

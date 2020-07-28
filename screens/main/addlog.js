@@ -8,11 +8,6 @@ import {
   Image,
   FlatList,
 } from 'react-native';
-import { createStackNavigator } from "@react-navigation/stack";
-import DefaultMealLogScreen from './log/meal/DefaultMealLogScreen';
-import StackNavigator from "@react-navigation/stack/src/navigators/createStackNavigator";
-
-const Stack = createStackNavigator();
 
 const buttonList = [
   {
@@ -45,18 +40,8 @@ const buttonList = [
   },
 ];
 
-// Controller for the navigation of add log tab. This one is exported
-function AddLogScreen({navigation}) {
-  return (
-      <Stack.Navigator>
-        <Stack.Screen name="AddLog" component={AddLog} />
-        <Stack.Screen name="MealLog" component={DefaultMealLogScreen} options={{animationEnabled: false}} />
-      </Stack.Navigator>
-  )
-}
-
 // AddLog view
-const AddLog = ({navigation}) => {
+const AddLogScreen = ({navigation}) => {
   return (
     <View style={styles.container}>
       <Text style={styles.headerText}>Choose from the following: </Text>
