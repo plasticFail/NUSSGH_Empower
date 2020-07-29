@@ -3,11 +3,13 @@ import {View, StyleSheet, Text, TouchableHighlight} from 'react-native';
 import {createStackNavigator} from "@react-navigation/stack";
 import CreateMealLogScreen from "./CreateMealLog";
 import FoodSearchEngineScreen from './FoodSearchEngine';
+import {getFocusedRouteNameFromRoute} from "@react-navigation/native";
+import HeaderIcon from "../../../../components/headerBtnIcon";
 
 const Stack = createStackNavigator();
 const now = new Date();
 
-const DefaultMealLog = ({navigation}) => {
+const MealLogScreen = ({navigation}) => {
     return <View style={styles.root}>
         <Text>Log for {now.toLocaleString()}</Text>
         <Text>Where to find your meal?</Text>
@@ -32,15 +34,33 @@ const DefaultMealLog = ({navigation}) => {
     </View>
 }
 
-const DefaultMealLogScreen = (props) => {
-    return <Stack.Navigator>
-        <Stack.Screen name={'DefaultMealLog'}
-                      component={DefaultMealLog}
-                      options={{title: "Meal Log"}}/>
+const MealLogStack = (props) => {
+    return <Stack.Navigator screenOptions={({route}) => ({
+                headerStyle: {
+                    backgroundColor: '#aad326',
+                },
+                headerTintColor: '#000',
+                headerTitleStyle: {
+                    fontWeight: 'bold',
+                    alignSelf: 'center',
+                },
+            })}>
+        <Stack.Screen name={'MealLogScreen'}
+                      component={MealLogScreen} options={{
+                          title: 'Meal Log'
+                        }}/>
         <Stack.Screen name={'CreateMealLog'}
                       component={CreateMealLogScreen}
-                      options={{title: "Create Meal Log", animationEnabled: false}}/>
-        <Stack.Screen name={'FoodSearchEngine'} options={{title: 'Search Food'}} component={FoodSearchEngineScreen} />
+                      options={({ route , navigation}) => (
+                          {   animationEnabled: false,
+                              title: "Create Meal Log",
+                              headerLeft: () => (<HeaderIcon iconName="chevron-left"
+                                                             text={null} clickFunc={navigation.goBack}/>),
+                              headerRight: () => (<View style={{width: 25, height: 25}} />)
+                          })}/>
+        <Stack.Screen name={'FoodSearchEngine'}
+                      component={FoodSearchEngineScreen}
+                      options={{headerShown: false}}/>
     </Stack.Navigator>
 }
 
@@ -66,4 +86,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default DefaultMealLogScreen;
+export default MealLogStack;

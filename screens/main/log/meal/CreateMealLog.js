@@ -39,7 +39,8 @@ export default class CreateMealLog extends React.Component {
 
     redirectToFoodSearchEngine = (type) => () => {
         this.props.navigation.push('FoodSearchEngine', {
-            type: type
+            type: type,
+            fullScreen: true
         })
     }
 
@@ -94,146 +95,148 @@ export default class CreateMealLog extends React.Component {
         // currently looks for the images beverage, main, side and dessert from imports.
         // Outside this render function, it is safe to unpackage / decompose the state fields.
         return (
-            <View style={styles.root}>
-                <View style={styles.mealNameTextAndIcon}>
-                    <TextInput
-                        style={styles.mealNameTextInput}
-                        placeholder="Enter Meal Name (optional)"
-                        value={mealName}
-                        onChangeText={this.handleMealNameChange}
-                    />
-                    <Icon name="star" size={40} color={isFavourite ? "#B3D14C" : "#e4e4e4"}
-                          onPress={this.toggleFavouriteIcon}
-                          style={styles.favouriteIcon}/>
-                </View>
-                <ScrollView>
-                    <ScrollView horizontal={true} contentContainerStyle={styles.rowContent}>
-                        <FoodTypeLabel
-                            containerStyle={styles.foodItem}
-                            imageStyle={styles.foodImage}
-                            alignment='center'
-                            value="Beverage" img={beverage}/>
-                        {   // Render food list for cart items in beverage.
-                            this.state.beverage.map((food, index) => <FoodItem item={food} handleDelete={() => {
-                                // Handle delete for this food item in the cart.
-                                    this.handleDelete(food, "beverage");
-                                }
-                            } onPress={() => this.handleModalOpen(food)} />)
-                        }
-                        <FoodItem type="create" onPress={this.redirectToFoodSearchEngine("beverage")} />
-                    </ScrollView>
-                    <ScrollView horizontal={true} contentContainerStyle={styles.rowContent}>
-                        <FoodTypeLabel
-                            containerStyle={styles.foodItem}
-                            imageStyle={styles.foodImage}
-                            alignment='center'
-                            value="Main" img={main}/>
-                        {   // Render food list for cart items in main.
-                            this.state.main.map((food) => <FoodItem item={food} handleDelete={() => {
-                                // Handle delete for this food item in the cart.
-                                    this.handleDelete(food, "main");
-                                }
-                            } onPress={() => this.handleModalOpen(food)} />)
-                        }
-                        <FoodItem type="create" onPress={this.redirectToFoodSearchEngine("main")} />
-                    </ScrollView>
-                    <ScrollView horizontal={true} contentContainerStyle={styles.rowContent}>
-                        <FoodTypeLabel
-                            containerStyle={styles.foodItem}
-                            imageStyle={styles.foodImage}
-                            alignment='center'
-                            value="Side" img={side}/>
-                        {   // Render food list for cart items in side.
-                            this.state.side.map((food) => <FoodItem item={food} handleDelete={() => {
-                                // Handle delete for this food item in the cart.
-                                    this.handleDelete(food, "side");
-                                }
-                            } onPress={() => this.handleModalOpen(food)} />)
-                        }
-                        <FoodItem type="create" onPress={this.redirectToFoodSearchEngine("side")} />
-                    </ScrollView>
-                    <ScrollView horizontal={true} contentContainerStyle={styles.rowContent}>
-                        <FoodTypeLabel
-                            containerStyle={styles.foodItem}
-                            imageStyle={styles.foodImage}
-                            alignment='center'
-                            value="Dessert" img={dessert}/>
-                        {   // Render food list for cart items in dessert.
-                            this.state.dessert.map((food) => <FoodItem item={food} handleDelete={() => {
-                                // Handle delete for this food item in the cart.
-                                    this.handleDelete(food, "dessert");
-                                }
-                            } onPress={() => this.handleModalOpen(food)} />)
-                        }
-                        <FoodItem type="create" onPress={this.redirectToFoodSearchEngine("dessert")} />
-                    </ScrollView>
-                    <TouchableHighlight
-                        style={styles.button}
-                        underlayColor='#fff'>
-                        <Text style={styles.buttonText}>Submit Log!</Text>
-                    </TouchableHighlight>
-                    <Modal visible={modalOpen} transparent={true}>
-                        {selected &&
-                        <View style={modalStyles.root}>
-                            <TouchableOpacity style={modalStyles.overlay} onPress={this.handleCloseModal} />
-                            <View style={modalStyles.paper}>
-                                <Image style={modalStyles.image} source={{uri: selected.imgUrl.url}}/>
-                                <View style={modalStyles.nutritionInfoContainer}>
-                                    <ScrollView contentContainerStyle={{padding: 15}}>
-                                        <Text>{selected["food-name"][0].toUpperCase() + selected["food-name"].slice(1)}</Text>
-                                        <Text>{selected["household-measure"]}</Text>
-                                        <Text>{selected["per-serving"]}</Text>
-                                        <Text>Nutritional Info</Text>
-                                        <View style={modalStyles.nutrientRow}>
-                                            {renderNutritionText(selected.nutrients["energy"], "Energy")}
-                                            <ProgressBar progress="30%" useIndicatorLevel={true}
-                                                         containerStyle={{height: 15, width: '100%'}} />
-                                        </View>
-                                        <View style={modalStyles.nutrientRow}>
-                                            {renderNutritionText(selected.nutrients["carbohydrate"], "Carbohydrate")}
-                                            <ProgressBar progress="60%" useIndicatorLevel={true}
-                                                         containerStyle={{height: 15, width: '100%'}} />
-                                        </View>
-                                        <View style={modalStyles.nutrientRow}>
-                                            {renderNutritionText(selected.nutrients["protein"], "Protein")}
-                                            <ProgressBar progress="90%" useIndicatorLevel={true} reverse={true}
-                                                         containerStyle={{height: 15, width: '100%'}} />
-                                        </View>
-                                        <View style={modalStyles.nutrientRow}>
-                                            {renderNutritionText(selected.nutrients["total-fat"], "Total Fat")}
-                                            <ProgressBar progress="60%" useIndicatorLevel={true}
-                                                         containerStyle={{height: 15, width: '100%'}} />
-                                        </View>
-                                        <View style={modalStyles.nutrientRow}>
-                                            {renderNutritionText(selected.nutrients["saturated-fat"], "Saturated Fat")}
-                                            <ProgressBar progress="60%" useIndicatorLevel={true}
-                                                         containerStyle={{height: 15, width: '100%'}} />
-                                        </View>
-                                        <View style={modalStyles.nutrientRow}>
-                                            {renderNutritionText(selected.nutrients["dietary-fibre"], "Dietary Fibre")}
-                                            <ProgressBar progress="30%" useIndicatorLevel={true} reverse={true}
-                                                         containerStyle={{height: 15, width: '100%'}} />
-                                        </View>
-                                        <View style={modalStyles.nutrientRow}>
-                                            {renderNutritionText(selected.nutrients["cholesterol"], "Cholesterol")}
-                                            <ProgressBar progress="60%" useIndicatorLevel={true}
-                                                         containerStyle={{height: 15, width: '100%'}} />
-                                        </View>
-                                        {   selected.nutrients.sodium &&
-                                        <View style={modalStyles.nutrientRow}>
-                                            {renderNutritionText(selected.nutrients["sodium"], "Sodium")}
-                                            <ProgressBar progress="90%" useIndicatorLevel={true}
-                                                         containerStyle={{height: 15, width: '100%'}} />
-                                        </View>
-                                        }
-                                    </ScrollView>
+            <ScrollView>
+                <View contentContainerStyle={styles.root}>
+                    <View style={styles.mealNameTextAndIcon}>
+                        <TextInput
+                            style={styles.mealNameTextInput}
+                            placeholder="Enter Meal Name (optional)"
+                            value={mealName}
+                            onChangeText={this.handleMealNameChange}
+                        />
+                        <Icon name="star" size={40} color={isFavourite ? "#B3D14C" : "#e4e4e4"}
+                              onPress={this.toggleFavouriteIcon}
+                              style={styles.favouriteIcon}/>
+                    </View>
+                    <View>
+                        <ScrollView horizontal={true} contentContainerStyle={styles.rowContent}>
+                            <FoodTypeLabel
+                                containerStyle={styles.foodItem}
+                                imageStyle={styles.foodImage}
+                                alignment='center'
+                                value="Beverage" img={beverage}/>
+                            {   // Render food list for cart items in beverage.
+                                this.state.beverage.map((food, index) => <FoodItem item={food} handleDelete={() => {
+                                    // Handle delete for this food item in the cart.
+                                        this.handleDelete(food, "beverage");
+                                    }
+                                } onPress={() => this.handleModalOpen(food)} />)
+                            }
+                            <FoodItem type="create" onPress={this.redirectToFoodSearchEngine("beverage")} />
+                        </ScrollView>
+                        <ScrollView horizontal={true} contentContainerStyle={styles.rowContent}>
+                            <FoodTypeLabel
+                                containerStyle={styles.foodItem}
+                                imageStyle={styles.foodImage}
+                                alignment='center'
+                                value="Main" img={main}/>
+                            {   // Render food list for cart items in main.
+                                this.state.main.map((food) => <FoodItem item={food} handleDelete={() => {
+                                    // Handle delete for this food item in the cart.
+                                        this.handleDelete(food, "main");
+                                    }
+                                } onPress={() => this.handleModalOpen(food)} />)
+                            }
+                            <FoodItem type="create" onPress={this.redirectToFoodSearchEngine("main")} />
+                        </ScrollView>
+                        <ScrollView horizontal={true} contentContainerStyle={styles.rowContent}>
+                            <FoodTypeLabel
+                                containerStyle={styles.foodItem}
+                                imageStyle={styles.foodImage}
+                                alignment='center'
+                                value="Side" img={side}/>
+                            {   // Render food list for cart items in side.
+                                this.state.side.map((food) => <FoodItem item={food} handleDelete={() => {
+                                    // Handle delete for this food item in the cart.
+                                        this.handleDelete(food, "side");
+                                    }
+                                } onPress={() => this.handleModalOpen(food)} />)
+                            }
+                            <FoodItem type="create" onPress={this.redirectToFoodSearchEngine("side")} />
+                        </ScrollView>
+                        <ScrollView horizontal={true} contentContainerStyle={styles.rowContent}>
+                            <FoodTypeLabel
+                                containerStyle={styles.foodItem}
+                                imageStyle={styles.foodImage}
+                                alignment='center'
+                                value="Dessert" img={dessert}/>
+                            {   // Render food list for cart items in dessert.
+                                this.state.dessert.map((food) => <FoodItem item={food} handleDelete={() => {
+                                    // Handle delete for this food item in the cart.
+                                        this.handleDelete(food, "dessert");
+                                    }
+                                } onPress={() => this.handleModalOpen(food)} />)
+                            }
+                            <FoodItem type="create" onPress={this.redirectToFoodSearchEngine("dessert")} />
+                        </ScrollView>
+                        <TouchableHighlight
+                            style={styles.button}
+                            underlayColor='#fff'>
+                            <Text style={styles.buttonText}>Submit Log!</Text>
+                        </TouchableHighlight>
+                        <Modal visible={modalOpen} transparent={true}>
+                            {selected &&
+                            <View style={modalStyles.root}>
+                                <TouchableOpacity style={modalStyles.overlay} onPress={this.handleCloseModal} />
+                                <View style={modalStyles.paper}>
+                                    <Image style={modalStyles.image} source={{uri: selected.imgUrl.url}}/>
+                                    <View style={modalStyles.nutritionInfoContainer}>
+                                        <ScrollView contentContainerStyle={{padding: 15}}>
+                                            <Text>{selected["food-name"][0].toUpperCase() + selected["food-name"].slice(1)}</Text>
+                                            <Text>{selected["household-measure"]}</Text>
+                                            <Text>{selected["per-serving"]}</Text>
+                                            <Text>Nutritional Info</Text>
+                                            <View style={modalStyles.nutrientRow}>
+                                                {renderNutritionText(selected.nutrients["energy"], "Energy")}
+                                                <ProgressBar progress="30%" useIndicatorLevel={true}
+                                                             containerStyle={{height: 15, width: '100%'}} />
+                                            </View>
+                                            <View style={modalStyles.nutrientRow}>
+                                                {renderNutritionText(selected.nutrients["carbohydrate"], "Carbohydrate")}
+                                                <ProgressBar progress="60%" useIndicatorLevel={true}
+                                                             containerStyle={{height: 15, width: '100%'}} />
+                                            </View>
+                                            <View style={modalStyles.nutrientRow}>
+                                                {renderNutritionText(selected.nutrients["protein"], "Protein")}
+                                                <ProgressBar progress="90%" useIndicatorLevel={true} reverse={true}
+                                                             containerStyle={{height: 15, width: '100%'}} />
+                                            </View>
+                                            <View style={modalStyles.nutrientRow}>
+                                                {renderNutritionText(selected.nutrients["total-fat"], "Total Fat")}
+                                                <ProgressBar progress="60%" useIndicatorLevel={true}
+                                                             containerStyle={{height: 15, width: '100%'}} />
+                                            </View>
+                                            <View style={modalStyles.nutrientRow}>
+                                                {renderNutritionText(selected.nutrients["saturated-fat"], "Saturated Fat")}
+                                                <ProgressBar progress="60%" useIndicatorLevel={true}
+                                                             containerStyle={{height: 15, width: '100%'}} />
+                                            </View>
+                                            <View style={modalStyles.nutrientRow}>
+                                                {renderNutritionText(selected.nutrients["dietary-fibre"], "Dietary Fibre")}
+                                                <ProgressBar progress="30%" useIndicatorLevel={true} reverse={true}
+                                                             containerStyle={{height: 15, width: '100%'}} />
+                                            </View>
+                                            <View style={modalStyles.nutrientRow}>
+                                                {renderNutritionText(selected.nutrients["cholesterol"], "Cholesterol")}
+                                                <ProgressBar progress="60%" useIndicatorLevel={true}
+                                                             containerStyle={{height: 15, width: '100%'}} />
+                                            </View>
+                                            {   selected.nutrients.sodium &&
+                                            <View style={modalStyles.nutrientRow}>
+                                                {renderNutritionText(selected.nutrients["sodium"], "Sodium")}
+                                                <ProgressBar progress="90%" useIndicatorLevel={true}
+                                                             containerStyle={{height: 15, width: '100%'}} />
+                                            </View>
+                                            }
+                                        </ScrollView>
+                                    </View>
                                 </View>
                             </View>
-                        </View>
-                        }
-                    </Modal>
-                </ScrollView>
-            </View>
+                            }
+                        </Modal>
+                    </View>
+                </View>
+            </ScrollView>
         )
     }
 }
@@ -358,8 +361,8 @@ const styles = StyleSheet.create({
     mealNameTextAndIcon: {
         display: 'flex',
         flexDirection: 'row',
-        height: 80,
         padding: 20,
+        paddingBottom: 45,
         alignItems: 'center'
     },
     mealNameTextInput: {
@@ -381,7 +384,7 @@ const styles = StyleSheet.create({
     button:{
         marginRight:40,
         marginLeft:40,
-        marginTop:10,
+        marginBottom:20,
         paddingTop:20,
         paddingBottom:20,
         backgroundColor:'#68a0cf',

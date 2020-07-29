@@ -10,6 +10,7 @@ import ChatScreen from './sub/chat';
 import {getFocusedRouteNameFromRoute, NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {connect} from 'react-redux';
+import MealLogStack from "./main/log/meal/MealLogStack";
 
 
 const Stack = createStackNavigator();
@@ -43,6 +44,7 @@ const mapStateToProps = state => {
 }
 
 const AppRoot = (props) => {
+
     return (<NavigationContainer>
         <Stack.Navigator
             screenOptions={({route}) => ({
@@ -95,6 +97,23 @@ const AppRoot = (props) => {
                         title: 'Chat',
                             headerRight: () => <View/>,
                         }}
+                    />
+                    <Stack.Screen name="MealLogRoot"
+                                  component={MealLogStack}
+                                  options={{headerShown: false}} // Need to hide this so that the stack
+                                                                 // navigator inside can show a different header
+                                  /*
+                                  options={({ route , navigation}) => ({
+                        headerTitle: getHeaderTitleForMealLog(route),
+                        headerLeft: () => (<HeaderIcon iconName="chevron-left"
+                                                       text="Back" clickFunc={() =>
+                            handleBackButtonForMealLog(route, navigation)
+                        }/>),
+                        headerRight: () => (<View style={{width: 25, height: 25}}/>)
+                    })}
+
+                                   */
+
                     />
                 </>
             ):(
