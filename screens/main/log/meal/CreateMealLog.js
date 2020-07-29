@@ -17,6 +17,7 @@ import side from '../../../../resources/images/icons/salad.png';
 import dessert from '../../../../resources/images/icons/parfait.png';
 import ImageWithBadge from "../../../../components/ImageWithBadge";
 import ProgressBar from "../../../../components/progressbar";
+import FoodModalContent from "./FoodModalContent";
 
 Icon.loadFont()
 // Any meal log selected (e.g Create, Recent or Favourites)
@@ -176,62 +177,7 @@ export default class CreateMealLog extends React.Component {
                         </TouchableHighlight>
                         <Modal visible={modalOpen} transparent={true}>
                             {selected &&
-                            <View style={modalStyles.root}>
-                                <TouchableOpacity style={modalStyles.overlay} onPress={this.handleCloseModal} />
-                                <View style={modalStyles.paper}>
-                                    <Image style={modalStyles.image} source={{uri: selected.imgUrl.url}}/>
-                                    <View style={modalStyles.nutritionInfoContainer}>
-                                        <ScrollView contentContainerStyle={{padding: 15}}>
-                                            <Text>{selected["food-name"][0].toUpperCase() + selected["food-name"].slice(1)}</Text>
-                                            <Text>{selected["household-measure"]}</Text>
-                                            <Text>{selected["per-serving"]}</Text>
-                                            <Text>Nutritional Info</Text>
-                                            <View style={modalStyles.nutrientRow}>
-                                                {renderNutritionText(selected.nutrients["energy"], "Energy")}
-                                                <ProgressBar progress="30%" useIndicatorLevel={true}
-                                                             containerStyle={{height: 15, width: '100%'}} />
-                                            </View>
-                                            <View style={modalStyles.nutrientRow}>
-                                                {renderNutritionText(selected.nutrients["carbohydrate"], "Carbohydrate")}
-                                                <ProgressBar progress="60%" useIndicatorLevel={true}
-                                                             containerStyle={{height: 15, width: '100%'}} />
-                                            </View>
-                                            <View style={modalStyles.nutrientRow}>
-                                                {renderNutritionText(selected.nutrients["protein"], "Protein")}
-                                                <ProgressBar progress="90%" useIndicatorLevel={true} reverse={true}
-                                                             containerStyle={{height: 15, width: '100%'}} />
-                                            </View>
-                                            <View style={modalStyles.nutrientRow}>
-                                                {renderNutritionText(selected.nutrients["total-fat"], "Total Fat")}
-                                                <ProgressBar progress="60%" useIndicatorLevel={true}
-                                                             containerStyle={{height: 15, width: '100%'}} />
-                                            </View>
-                                            <View style={modalStyles.nutrientRow}>
-                                                {renderNutritionText(selected.nutrients["saturated-fat"], "Saturated Fat")}
-                                                <ProgressBar progress="60%" useIndicatorLevel={true}
-                                                             containerStyle={{height: 15, width: '100%'}} />
-                                            </View>
-                                            <View style={modalStyles.nutrientRow}>
-                                                {renderNutritionText(selected.nutrients["dietary-fibre"], "Dietary Fibre")}
-                                                <ProgressBar progress="30%" useIndicatorLevel={true} reverse={true}
-                                                             containerStyle={{height: 15, width: '100%'}} />
-                                            </View>
-                                            <View style={modalStyles.nutrientRow}>
-                                                {renderNutritionText(selected.nutrients["cholesterol"], "Cholesterol")}
-                                                <ProgressBar progress="60%" useIndicatorLevel={true}
-                                                             containerStyle={{height: 15, width: '100%'}} />
-                                            </View>
-                                            {   selected.nutrients.sodium &&
-                                            <View style={modalStyles.nutrientRow}>
-                                                {renderNutritionText(selected.nutrients["sodium"], "Sodium")}
-                                                <ProgressBar progress="90%" useIndicatorLevel={true}
-                                                             containerStyle={{height: 15, width: '100%'}} />
-                                            </View>
-                                            }
-                                        </ScrollView>
-                                    </View>
-                                </View>
-                            </View>
+                            <FoodModalContent onClose={this.handleCloseModal} selected={selected}/>
                             }
                         </Modal>
                     </View>
@@ -239,18 +185,6 @@ export default class CreateMealLog extends React.Component {
             </ScrollView>
         )
     }
-}
-
-function renderNutritionText({amount, unit}, nutrient) {
-    return (
-        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <Text>{nutrient}</Text>
-            {
-                unit === "N.A" ? <Text>{unit}</Text>
-                    : <Text>{amount + " " + unit}</Text>
-            }
-        </View>
-    )
 }
 
 function EmptyButton({onPress}) {
@@ -306,54 +240,6 @@ function FoodTypeLabel({img, containerStyle, imageStyle, textStyle, alignment, v
         </View>
     )
 }
-
-const modalStyles = StyleSheet.create({
-    root: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    overlay: {
-        height: '100%',
-        width: '100%',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        position: 'absolute'
-    },
-    paper: {
-        backgroundColor: 'white',
-        width: '80%',
-        height: '70%'
-    },
-    image: {
-        width: '100%',
-        height: '40%'
-    },
-    nutritionInfoContainer: {
-        height: '53.5%',
-    },
-    button: {
-        marginRight:40,
-        marginLeft:40,
-        marginTop:10,
-        paddingTop:20,
-        paddingBottom:20,
-        backgroundColor:'#aad326',
-        borderRadius:10,
-        borderWidth: 1,
-        borderColor: '#fff',
-        //transform: [{"translateY": '+42%'}]
-    },
-    buttonText: {
-        color:'#fff',
-        textAlign:'center',
-        fontSize: 22,
-        fontWeight: 'bold'
-    },
-    nutrientRow: {
-        width: '100%',
-        paddingTop: 10
-    }
-});
 
 const styles = StyleSheet.create({
     root: {
