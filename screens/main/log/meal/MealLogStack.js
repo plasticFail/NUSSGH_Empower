@@ -3,6 +3,8 @@ import {View, StyleSheet, Text, TouchableHighlight} from 'react-native';
 import {createStackNavigator} from "@react-navigation/stack";
 import CreateMealLogScreen from "./CreateMealLog";
 import FoodSearchEngineScreen from './FoodSearchEngine';
+import {getFocusedRouteNameFromRoute} from "@react-navigation/native";
+import HeaderIcon from "../../../../components/headerBtnIcon";
 
 const Stack = createStackNavigator();
 const now = new Date();
@@ -33,14 +35,32 @@ const MealLogScreen = ({navigation}) => {
 }
 
 const MealLogStack = (props) => {
-    return <Stack.Navigator>
+    return <Stack.Navigator screenOptions={({route}) => ({
+                headerStyle: {
+                    backgroundColor: '#aad326',
+                },
+                headerTintColor: '#000',
+                headerTitleStyle: {
+                    fontWeight: 'bold',
+                    alignSelf: 'center',
+                },
+            })}>
         <Stack.Screen name={'MealLogScreen'}
-                      component={MealLogScreen}/>
+                      component={MealLogScreen} options={{
+                          title: 'Meal Log'
+                        }}/>
         <Stack.Screen name={'CreateMealLog'}
                       component={CreateMealLogScreen}
-                      options={{animationEnabled: false}}/>
+                      options={({ route , navigation}) => (
+                          {   animationEnabled: false,
+                              title: "Create Meal Log",
+                              headerLeft: () => (<HeaderIcon iconName="chevron-left"
+                                                             text={null} clickFunc={navigation.goBack}/>),
+                              headerRight: () => (<View style={{width: 25, height: 25}} />)
+                          })}/>
         <Stack.Screen name={'FoodSearchEngine'}
-                      component={FoodSearchEngineScreen} />
+                      component={FoodSearchEngineScreen}
+                      options={{headerShown: false}}/>
     </Stack.Navigator>
 }
 

@@ -30,33 +30,6 @@ function getHeaderTitle(route) {
     }
 }
 
-function getHeaderTitleForMealLog(route) {
-    const routeName = getFocusedRouteNameFromRoute(route) ?? "MealLogScreen";
-    switch (routeName) {
-        case 'MealLogScreen':
-            return 'Meal Log';
-        case 'CreateMealLog':
-            return 'Create Meal Log';
-        case 'FoodSearchEngine':
-            return 'Food Search';
-    }
-}
-
-function handleBackButtonForMealLog(route, navigation) {
-    const routeName = getFocusedRouteNameFromRoute(route) ?? "MealLogScreen";
-    switch (routeName) {
-        case 'CreateMealLog': // Go back to default meal log screen.
-            navigation.navigate("MealLogScreen");
-            return;
-        case 'FoodSearchEngine': // Go back to previous create meal log screen.
-            navigation.navigate('CreateMealLog');
-            return;
-        default:
-            navigation.goBack();
-            return;
-    }
-}
-
 function getHeaderShown(route) {
     if (getHeaderTitle(route) === 'More') {
         return false;
@@ -71,6 +44,7 @@ const mapStateToProps = state => {
 }
 
 const AppRoot = (props) => {
+
     return (<NavigationContainer>
         <Stack.Navigator
             screenOptions={({route}) => ({
@@ -126,14 +100,20 @@ const AppRoot = (props) => {
                     />
                     <Stack.Screen name="MealLogRoot"
                                   component={MealLogStack}
+                                  options={{headerShown: false}} // Need to hide this so that the stack
+                                                                 // navigator inside can show a different header
+                                  /*
                                   options={({ route , navigation}) => ({
-                                      headerTitle: getHeaderTitleForMealLog(route),
-                                      headerLeft: () => (<HeaderIcon iconName="chevron-left"
-                                                                     text="Back" clickFunc={() =>
-                                          handleBackButtonForMealLog(route, navigation)
-                                      }/>),
-                                      headerRight: () => (<View style={{width: 25, height: 25}}/>)
-                                  })}
+                        headerTitle: getHeaderTitleForMealLog(route),
+                        headerLeft: () => (<HeaderIcon iconName="chevron-left"
+                                                       text="Back" clickFunc={() =>
+                            handleBackButtonForMealLog(route, navigation)
+                        }/>),
+                        headerRight: () => (<View style={{width: 25, height: 25}}/>)
+                    })}
+
+                                   */
+
                     />
                 </>
             ):(

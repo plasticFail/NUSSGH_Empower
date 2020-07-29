@@ -39,7 +39,8 @@ export default class CreateMealLog extends React.Component {
 
     redirectToFoodSearchEngine = (type) => () => {
         this.props.navigation.push('FoodSearchEngine', {
-            type: type
+            type: type,
+            fullScreen: true
         })
     }
 
@@ -107,7 +108,7 @@ export default class CreateMealLog extends React.Component {
                               onPress={this.toggleFavouriteIcon}
                               style={styles.favouriteIcon}/>
                     </View>
-                    <ScrollView>
+                    <View>
                         <ScrollView horizontal={true} contentContainerStyle={styles.rowContent}>
                             <FoodTypeLabel
                                 containerStyle={styles.foodItem}
@@ -233,7 +234,7 @@ export default class CreateMealLog extends React.Component {
                             </View>
                             }
                         </Modal>
-                    </ScrollView>
+                    </View>
                 </View>
             </ScrollView>
         )
