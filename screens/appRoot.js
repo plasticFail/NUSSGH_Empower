@@ -14,6 +14,7 @@ import {
 import {createStackNavigator} from '@react-navigation/stack';
 import {connect} from 'react-redux';
 import ResetPasswordScreen from './login/resetPassword';
+import BloodGlucoseLog from './main/log/bloodGlucoseLog';
 
 const Stack = createStackNavigator();
 
@@ -129,6 +130,13 @@ const AppRoot = (props) => {
               options={{
                 title: 'Chat',
                 headerRight: () => <View />,
+              }}
+            />
+            <Stack.Screen
+              name="BloodGlucoseLog"
+              component={BloodGlucoseLog}
+              options={{
+                title: 'Add Blood Glucose Log',
               }}
             />
           </>
