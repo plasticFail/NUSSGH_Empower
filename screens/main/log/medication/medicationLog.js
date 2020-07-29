@@ -7,6 +7,7 @@ import Moment from 'moment';
 import {TouchableOpacity, ScrollView} from 'react-native-gesture-handler';
 import Entypo from 'react-native-vector-icons/Entypo';
 import DropDownPicker from 'react-native-dropdown-picker';
+import SuccessDialogue from '../../../../components/successDialogue';
 
 Entypo.loadFont();
 
@@ -20,6 +21,7 @@ export default class MedicationLog extends React.Component {
       selectedMedicationList: [],
       calendarVisible: false,
       modalOpen: false,
+      successShow: false,
     };
     this.addMedication = this.addMedication.bind(this);
   }
@@ -50,6 +52,7 @@ export default class MedicationLog extends React.Component {
       selectedDosage,
       calendarVisible,
       modalOpen,
+      successShow,
     } = this.state;
     const {navigation} = this.props;
 
@@ -119,10 +122,11 @@ export default class MedicationLog extends React.Component {
                   styles.shadow,
                   {backgroundColor: '#aad326'},
                 ]}
-                onPress={() => navigation.navigate('AddLog')}>
+                onPress={() => this.setState({successShow: true})}>
                 <Text style={styles.buttonText}>Submit</Text>
               </TouchableOpacity>
             )}
+            <SuccessDialogue visible={successShow} type="Medication" />
           </View>
         </View>
 

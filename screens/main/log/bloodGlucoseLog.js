@@ -12,14 +12,18 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import DropDownPicker from 'react-native-dropdown-picker';
 import DatePicker from 'react-native-date-picker';
 import Moment from 'moment';
-
-const handleSubmit = () => {};
+import SuccessDialogue from '../../../components/successDialogue';
 
 const BloodGlucoseLog = (props) => {
   const [visible, setVisible] = useState(false);
   const [date, setDate] = useState(new Date());
   const [displaydate, setDisplayDate] = useState('');
+  const [successShow, setSuccessShow] = useState(false);
   Moment.locale('en');
+
+  const handleSubmit = () => {
+    setSuccessShow(true);
+  };
 
   return (
     <Modal
@@ -101,6 +105,7 @@ const BloodGlucoseLog = (props) => {
             <Text style={styles.buttonText}>Submit</Text>
           </TouchableOpacity>
         </View>
+        <SuccessDialogue visible={successShow} type="Blood Glucose" />
       </View>
     </Modal>
   );
