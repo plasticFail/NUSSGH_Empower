@@ -120,11 +120,13 @@ const modalStyles = StyleSheet.create({
         paddingTop: 10
     },
     foodNameText: {
-        fontSize: 20,
-        fontWeight: 'bold'
+        fontSize: 24,
+        fontWeight: 'bold',
+        paddingBottom: 5
     },
     servingText: {
-        fontSize: 14
+        fontSize: 14,
+        paddingBottom: 5
     },
     nutrientHeaderText: {
         fontSize: 18,
