@@ -187,6 +187,9 @@ export default class MedicationLog extends React.Component {
                     marginTop: '3%',
                     backgroundColor: 'white',
                   }}
+                  itemStyle={{
+                    justifyContent: 'flex-start',
+                  }}
                   activeLabelStyle={{color: 'red'}}
                   onChangeItem={(item) => {
                     this.setState({selectedMedicine: item});
