@@ -4,12 +4,14 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import DatePicker from 'react-native-date-picker';
 import Moment from 'moment';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import SelectMedicine from './selectMedicine';
 
 const MedicationLog = (props) => {
   const [visible, setVisible] = useState(false);
   const [date, setDate] = useState(new Date());
+  const [modal, setModal] = useState(false);
 
-  const handleSubmit = () => {};
+  console.log(modal);
 
   return (
     <Modal
@@ -57,10 +59,13 @@ const MedicationLog = (props) => {
           <Text style={{fontSize: 20, fontWeight: '600', color: '#133d2c'}}>
             Start Adding A Medication:
           </Text>
-          <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => setModal(!modal)}>
             <Text style={styles.buttonText}>Add Medicine</Text>
           </TouchableOpacity>
         </View>
+        {modal && <SelectMedicine />}
       </View>
     </Modal>
   );
