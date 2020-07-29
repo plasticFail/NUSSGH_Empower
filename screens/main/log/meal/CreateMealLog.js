@@ -337,7 +337,7 @@ const modalStyles = StyleSheet.create({
         marginTop:10,
         paddingTop:20,
         paddingBottom:20,
-        backgroundColor:'#68a0cf',
+        backgroundColor:'#aad326',
         borderRadius:10,
         borderWidth: 1,
         borderColor: '#fff',
@@ -346,6 +346,8 @@ const modalStyles = StyleSheet.create({
     buttonText: {
         color:'#fff',
         textAlign:'center',
+        fontSize: 22,
+        fontWeight: 'bold'
     },
     nutrientRow: {
         width: '100%',
@@ -387,7 +389,7 @@ const styles = StyleSheet.create({
         marginBottom:20,
         paddingTop:20,
         paddingBottom:20,
-        backgroundColor:'#68a0cf',
+        backgroundColor:'#aad326',
         borderRadius:10,
         borderWidth: 1,
         borderColor: '#fff'
@@ -408,8 +410,10 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     buttonText:{
-        color:'#fff',
+        color:'#000',
         textAlign:'center',
+        fontSize: 22,
+        fontWeight: 'bold'
     },
     foodItem: {
         paddingLeft: 20,

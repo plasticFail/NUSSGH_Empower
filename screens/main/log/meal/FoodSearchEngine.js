@@ -77,6 +77,19 @@ class FoodSearchEngineScreen extends React.Component {
         }
     }
 
+    onSubmit = () => {
+        clearTimeout(this.timeout);
+        this.setState({
+            isLoading: true
+        }, () => {
+            // Fetch api here again
+            this.setState({
+                isLoading: false,
+                foodResults: SampleFoodDB.data
+            })
+        })
+    }
+
     render() {
         const { navigation, route } = this.props;
         const {query, isLoading, foodResults} = this.state;
@@ -88,7 +101,9 @@ class FoodSearchEngineScreen extends React.Component {
                         <Icon name="chevron-left" onPress={navigation.goBack} size={25}/>
                         <Text style={styles.searchText}>Search</Text>
                     </View>
-                    <Searchbar containerStyle={{marginTop: 10}} onChangeText={this.updateQuery} />
+                    <Searchbar containerStyle={{marginTop: 10}}
+                               onChangeText={this.updateQuery}
+                               onSubmit={this.onSubmit} />
                 </View>
                 { query === "" ? // Render search prompt "Begin your search"
                     <View style={styles.searchPromptBody}>
@@ -181,9 +196,8 @@ function FoodResultList({foodList, navigation, route, type}) {
                             <View style={modalStyles.nutritionInfoContainer}>
                                 <ScrollView contentContainerStyle={{padding: 15}}>
                                     <Text>{selected["food-name"][0].toUpperCase() + selected["food-name"].slice(1)}</Text>
-                                    <Text>{selected["household-measure"]}</Text>
-                                    <Text>{selected["per-serving"]}</Text>
-                                    <Text>Nutritional Info</Text>
+                                    <Text>{selected["household-measure"]}({selected["per-serving"]})</Text>
+                                    <Text>Nutritional Info per serving</Text>
                                     <View style={modalStyles.nutrientRow}>
                                         {renderNutritionText(selected.nutrients["energy"], "Energy")}
                                         <ProgressBar progress="30%" useIndicatorLevel={true}
