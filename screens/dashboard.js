@@ -6,7 +6,6 @@ import Diary from './main/diary';
 import AddLog from './main/addlog';
 import More from './main/more';
 import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
-import AddLogRoot from './main/addLogRoot';
 
 const Tab = createBottomTabNavigator();
 
@@ -23,13 +22,17 @@ function getMoreHeaderTitle(route) {
     case 'Medication':
       console.log('Medication');
       return 'Medication';
-    case 'BloodGlucoseLog':
-      return 'Add Blood Glucose Log';
   }
 }
 
+// Method to reset the tab navigation when navigating through pages
+// Quite unclean during the development phase because of the warning shown.
+const handleTabPress = ({navigation}, pathName) => {
+  navigation.popToTop() && navigation.navigate(pathName);
+};
+
 const DashboardScreen = (props) => {
-  Icon.loadFont(); //added
+  Icon.loadFont();
   return (
     <Tab.Navigator
       backBehavior="none"
@@ -41,6 +44,9 @@ const DashboardScreen = (props) => {
       <Tab.Screen
         name="Home"
         component={Home}
+        listeners={{
+          tabPress: () => handleTabPress(props, 'Home'),
+        }}
         options={{
           title: 'Home',
           tabBarIcon: ({color, size}) => (
@@ -56,6 +62,9 @@ const DashboardScreen = (props) => {
       <Tab.Screen
         name="Diary"
         component={Diary}
+        listeners={{
+          tabPress: () => handleTabPress(props, 'Diary'),
+        }}
         options={{
           title: 'Diary',
           tabBarIcon: ({color, size}) => (
@@ -65,7 +74,10 @@ const DashboardScreen = (props) => {
       />
       <Tab.Screen
         name="AddLog"
-        component={AddLogRoot}
+        component={AddLog}
+        listeners={{
+          tabPress: () => handleTabPress(props, 'AddLog'),
+        }}
         options={{
           title: 'Add Log',
           tabBarIcon: ({color, size}) => (
@@ -76,6 +88,9 @@ const DashboardScreen = (props) => {
       <Tab.Screen
         name="More"
         component={More}
+        listeners={{
+          tabPress: () => handleTabPress(props, 'More'),
+        }}
         options={{
           title: 'More',
           tabBarIcon: ({color, size}) => (

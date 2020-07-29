@@ -111,7 +111,7 @@ class Login extends Component {
           Welcome!
         </Text>
         <Image
-          source={require('../../img/logo_v1.png')}
+          source={require('../../resources/images/logo_v1.png')}
           style={{width: 200, height: 200, marginBottom: 10}}
         />
         <TextInput
@@ -135,7 +135,7 @@ class Login extends Component {
             marginVertical: 5,
             color: '#a1a3a0',
           }}
-          onPress={() => this.props.navigation.navigate('ForgetPassword')}>
+          onPress={() => props.navigation.navigate('ForgetPassword')}>
           Forget Password?
         </Text>
         <TouchableOpacity style={styles.button} onPress={this.handleLogin}>
