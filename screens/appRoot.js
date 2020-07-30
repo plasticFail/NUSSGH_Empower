@@ -15,6 +15,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {connect} from 'react-redux';
 import ResetPasswordScreen from './login/resetPassword';
 import BloodGlucoseLog from './main/log/bloodGlucoseLog';
+import MealLogStack from './main/log/meal/MealLogStack';
 
 const Stack = createStackNavigator();
 
@@ -62,27 +63,62 @@ const AppRoot = (props) => {
           },
         })}>
         {props.isLogin ? (
-          <Stack.Screen
-            name="DashBoard"
-            component={DashBoard}
-            options={({route, navigation}) => ({
-              title: getHeaderTitle(route),
-              headerLeft: () => (
-                <HeaderIcon
-                  iconName={'bell'}
-                  text={'Alerts'}
-                  clickFunc={() => navigation.navigate('Alerts')}
-                />
-              ),
-              headerRight: () => (
-                <HeaderIcon
-                  iconName={'comments'}
-                  text={'Chat'}
-                  clickFunc={() => navigation.navigate('Chat')}
-                />
-              ),
-            })}
-          />
+          <>
+            <Stack.Screen
+              name="DashBoard"
+              component={DashBoard}
+              options={({route, navigation}) => ({
+                title: getHeaderTitle(route),
+                headerLeft: () => (
+                  <HeaderIcon
+                    iconName={'bell'}
+                    text={'Alerts'}
+                    clickFunc={() => navigation.navigate('Alerts')}
+                  />
+                ),
+                headerRight: () => (
+                  <HeaderIcon
+                    iconName={'comments'}
+                    text={'Chat'}
+                    clickFunc={() => navigation.navigate('Chat')}
+                  />
+                ),
+              })}
+            />
+            <Stack.Screen
+              name="Alerts"
+              component={AlertsScreen}
+              options={{
+                title: 'Alerts',
+                headerRight: () => <View />,
+              }}
+            />
+            <Stack.Screen
+              name="Chat"
+              component={ChatScreen}
+              options={{
+                title: 'Chat',
+                headerRight: () => <View />,
+              }}
+            />
+            <Stack.Screen
+              name="MealLogRoot"
+              component={MealLogStack}
+              options={{headerShown: false}} // Need to hide this so that the stack
+              // navigator inside can show a different header
+              /*
+                                  options={({ route , navigation}) => ({
+                        headerTitle: getHeaderTitleForMealLog(route),
+                        headerLeft: () => (<HeaderIcon iconName="chevron-left"
+                                                       text="Back" clickFunc={() =>
+                            handleBackButtonForMealLog(route, navigation)
+                        }/>),
+                        headerRight: () => (<View style={{width: 25, height: 25}}/>)
+                    })}
+
+                                   */
+            />
+          </>
         ) : (
           <>
             <Stack.Screen
@@ -105,38 +141,6 @@ const AppRoot = (props) => {
                 title: 'Input OTP',
                 headerRight: false, //for android
                 headerBackTitle: 'Back',
-              }}
-            />
-            <Stack.Screen
-              name="ResetPasswordScreen"
-              component={ResetPasswordScreen}
-              options={{
-                title: 'Forget Password',
-                headerRight: false, //for android
-                headerLeft: false,
-              }}
-            />
-            <Stack.Screen
-              name="Alerts"
-              component={AlertsScreen}
-              options={{
-                title: 'Alerts',
-                headerRight: () => <View />,
-              }}
-            />
-            <Stack.Screen
-              name="Chat"
-              component={ChatScreen}
-              options={{
-                title: 'Chat',
-                headerRight: () => <View />,
-              }}
-            />
-            <Stack.Screen
-              name="BloodGlucoseLog"
-              component={BloodGlucoseLog}
-              options={{
-                title: 'Add Blood Glucose Log',
               }}
             />
           </>

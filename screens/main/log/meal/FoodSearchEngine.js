@@ -17,6 +17,9 @@ import carbohydrate from '../../../../resources/images/icons/carbohydrate.png';
 import energy from '../../../../resources/images/icons/energy.png';
 import fat from '../../../../resources/images/icons/fat.png';
 import ProgressBar from "../../../../components/progressbar";
+import Icon from 'react-native-vector-icons/dist/FontAwesome';
+
+Icon.loadFont();
 
 class FoodSearchEngineScreen extends React.Component {
     constructor(props) {
@@ -81,7 +84,10 @@ class FoodSearchEngineScreen extends React.Component {
         return (
             <View style={styles.root}>
                 <View style={styles.header}>
-                    <Text style={styles.searchText}>Search</Text>
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                        <Icon name="chevron-left" onPress={navigation.goBack} size={25}/>
+                        <Text style={styles.searchText}>Search</Text>
+                    </View>
                     <Searchbar containerStyle={{marginTop: 10}} onChangeText={this.updateQuery} />
                 </View>
                 { query === "" ? // Render search prompt "Begin your search"
@@ -400,11 +406,13 @@ const styles = StyleSheet.create({
     },
     header: {
         backgroundColor: "#B3D14C",
-        height: 120,
-        padding: 20
+        height: '18%',
+        padding: 20,
+        justifyContent: 'flex-end'
     },
     searchText: {
-        fontSize: 28
+        fontSize: 28,
+        paddingLeft: 15
     },
     searchPromptBody: {
         display: 'flex',

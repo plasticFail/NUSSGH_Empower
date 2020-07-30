@@ -29,7 +29,7 @@ const buttonList = [
     name: 'Food Intake',
     logo: require('../../resources/images/foodintake_logo.png'),
     image: require('../../resources/images/foodintake.jpg'),
-    route: 'MealLog', //Fill in the route yourself. If null, it does not redirect
+    route: 'MealLogRoot', //Fill in the route yourself. If null, it does not redirect
   },
   {
     id: '3',
@@ -47,32 +47,8 @@ const buttonList = [
   },
 ];
 
-// Controller for the navigation of add log tab. This one is exported
-function AddLogScreen({navigation}) {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen name="AddLog" component={AddLog} />
-      <Stack.Screen
-        name="MealLog"
-        component={DefaultMealLogScreen}
-        options={{animationEnabled: false}}
-      />
-      <Stack.Screen
-        name="BloodGlucoseLog"
-        component={BloodGlucoseLog}
-        options={{animationEnabled: false}}
-      />
-      <Stack.Screen
-        name="MedicationLog"
-        component={MedicationLog}
-        options={{animationEnabled: false}}
-      />
-    </Stack.Navigator>
-  );
-}
-
 // AddLog view
-const AddLog = ({navigation}) => {
+const AddLogScreen = ({navigation}) => {
   return (
     <View style={styles.container}>
       <Text style={styles.headerText}>Choose from the following: </Text>
