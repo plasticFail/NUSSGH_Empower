@@ -1,23 +1,29 @@
-import React from 'react';
-import {
-  View,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-} from 'react-native';
+import React, {useState} from 'react';
+import {View, StyleSheet, Text, Alert, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 
 const InputOTPScreen = (props) => {
   Icon.loadFont();
+  const [otp, setOtp] = useState('');
+
+  const handleSubmit = () => {
+    if (otp.length < 6) {
+      Alert.alert('Error', 'OTP not filled completely', [{text: 'Got It'}]);
+    }
+    if (otp.length == 6) {
+      props.navigation.navigate('ResetPasswordScreen');
+    }
+    //handle wrong otp here.
+  };
+
   return (
     <View style={{...styles.otpScreen, ...props.style}}>
       <Icon name="cellphone-message" size={300} />
-      <Text style={{fontWeight: '500', marginTop: '2%'}}>
+      <Text style={styles.text}>
         Enter the 6-digit One-Time Password (OTP) sent to your mobile number
-        (**** 9876).
       </Text>
+      <Text style={styles.text}> (**** 9876).</Text>
 
       <View style={[styles.formContainer, styles.shadow]}>
         <OTPInputView
@@ -32,13 +38,13 @@ const InputOTPScreen = (props) => {
           autoFocusOnLoad
           codeInputFieldStyle={styles.underlineStyleBase}
           codeInputHighlightStyle={styles.underlineStyleHighLighted}
+          onCodeFilled={(value) => {
+            setOtp(value);
+            console.log(otp);
+          }}
         />
         <View style={{flexDirection: 'row', alignItems: 'space-between'}}>
-          <TouchableOpacity
-            style={styles.buttonStyle}
-            onPress={() => {
-              props.navigation.navigate('ResetPasswordScreen');
-            }}>
+          <TouchableOpacity style={styles.buttonStyle} onPress={handleSubmit}>
             <Text style={styles.buttonText}>Submit</Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -57,6 +63,14 @@ const styles = StyleSheet.create({
     padding: 10,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  text: {
+    fontWeight: '500',
+    marginTop: '2%',
+    fontSize: 20,
+    textAlign: 'center',
+    marginStart: '2%',
+    marginEnd: '2%',
   },
   buttonStyle: {
     flex: 1,
@@ -102,6 +116,7 @@ const styles = StyleSheet.create({
     borderWidth: 0,
     borderBottomWidth: 3,
     color: 'black',
+    fontSize: 23,
   },
 
   underlineStyleHighLighted: {

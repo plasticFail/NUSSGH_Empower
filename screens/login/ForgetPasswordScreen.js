@@ -7,10 +7,29 @@ function ForgetPasswordScreen({navigation}) {
   Icon.loadFont();
   const [phoneNumber, setPhoneNumber] = useState('');
   const handleButtonPress = () => {
-    if (phoneNumber != '') {
-      navigation.navigate('InputOTP');
+    if (phoneNumber != '' && phoneNumber.length == 8) {
+      var first = phoneNumber.substring(0, 1);
+      if (first == '8' || first == '9') {
+        Alert.alert(
+          'Success',
+          'OTP has been sent to you via SMS',
+          [
+            {
+              text: 'Got It',
+              onPress: () => navigation.navigate('InputOTP'),
+            },
+          ],
+          {cancelable: false},
+        );
+      } else {
+        Alert.alert('Invalid', 'Please input a valid phone number', [
+          {text: 'Got It'},
+        ]);
+      }
     } else {
-      Alert.alert('Invalid', 'Please input a phone number', [{text: 'Got It'}]);
+      Alert.alert('Invalid', 'Please input a valid phone number', [
+        {text: 'Got It'},
+      ]);
     }
   };
 
@@ -26,7 +45,13 @@ function ForgetPasswordScreen({navigation}) {
           style={styles.inputBox}
           placeholder="Phone Number"
           placeholderTextColor="#a1a3a0"
-          onChangeText={setPhoneNumber}
+          onChangeText={(value) => {
+            var cleanNumber = value.replace(/[^0-9]/g, '');
+            setPhoneNumber(cleanNumber);
+            console.log('Cleaning phone number:' + phoneNumber);
+          }}
+          keyboardType="number-pad"
+          maxLength={8}
         />
         <TouchableOpacity
           style={styles.buttonStyle}
@@ -50,6 +75,8 @@ const styles = StyleSheet.create({
   textStyle: {
     margin: '5%',
     fontWeight: '600',
+    fontSize: 20,
+    textAlign: 'center',
   },
   buttonStyle: {
     backgroundColor: '#AAD326',

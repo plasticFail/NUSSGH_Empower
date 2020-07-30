@@ -156,6 +156,7 @@ const AppRoot = (props) => {
               component={InputOTPScreen}
               options={{
                 title: 'Input OTP',
+                headerBackTitle: 'Back',
                 headerRight: false, //for android
                 headerRight: () => <View />,
               }}
@@ -165,6 +166,7 @@ const AppRoot = (props) => {
               component={ResetPasswordScreen}
               options={{
                 title: 'Reset Password',
+                headerBackTitle: 'Back',
                 headerRight: false, //for android
                 headerRight: () => <View />,
               }}

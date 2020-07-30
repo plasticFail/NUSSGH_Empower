@@ -8,7 +8,6 @@ import {
   Image,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import DropDownPicker from 'react-native-dropdown-picker';
 import DatePicker from 'react-native-date-picker';
 import Moment from 'moment';
 import SuccessDialogue from '../../../components/successDialogue';
@@ -62,8 +61,8 @@ const BloodGlucoseLog = (props) => {
           <TextInput
             style={styles.inputBox}
             placeholder=""
-            secureTextEntry={true}
             placeholderTextColor="#a1a3a0"
+            keyboardType="number-pad"
           />
           <TouchableOpacity style={styles.button} onPress={handleSubmit}>
             <Text style={styles.buttonText}>Submit</Text>
@@ -114,8 +113,9 @@ const styles = StyleSheet.create({
     width: 250,
     height: 40,
     backgroundColor: '#EEF3BD',
-    paddingStart: 30, //position placeholder text
+    paddingStart: 20, //position placeholder text
     marginVertical: 10,
+    fontSize: 19,
   },
   button: {
     marginTop: '7%',

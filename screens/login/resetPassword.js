@@ -1,34 +1,64 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   StyleSheet,
   TextInput,
   TouchableOpacity,
   Text,
+  Alert,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const ResetPasswordScreen = (props) => {
+  const [pass1, setPass1] = useState('');
+  const [pass2, setPass2] = useState('');
+
+  const checkPassword = () => {
+    if (pass1.length > 8 && pass2.length > 8) {
+      if (pass1 == pass2) {
+        Alert.alert(
+          'Success',
+          'Password changed successfully',
+          [{text: 'Got It', onPress: () => props.navigation.navigate('Login')}],
+          {cancelable: false},
+        );
+      } else {
+        Alert.alert('Error', 'Passwords does not match', [{text: 'Got It'}]);
+      }
+    } else {
+      Alert.alert('Error', 'Please input a password of more than length 8', [
+        {text: 'Got It'},
+      ]);
+    }
+  };
+
   Icon.loadFont();
   return (
     <View style={{...styles.resetPasswordScreen, ...props.style}}>
       <Icon name="account-lock" size={300} />
+      <Text style={styles.text}>
+        Please ensure new password length is more than 8
+      </Text>
       <View style={[styles.formContainer, styles.shadow]}>
         <TextInput
           style={styles.inputBox}
           placeholder="New Password"
           placeholderTextColor="#a1a3a0"
+          secureTextEntry={true}
+          onChangeText={(value) => {
+            setPass1(value);
+          }}
         />
         <TextInput
           style={styles.inputBox}
           placeholder="Confirm New Password"
           placeholderTextColor="#a1a3a0"
+          secureTextEntry={true}
+          onChangeText={(value) => {
+            setPass2(value);
+          }}
         />
-        <TouchableOpacity
-          style={styles.buttonStyle}
-          onPress={() => {
-            props.navigation.navigate('Login');
-          }}>
+        <TouchableOpacity style={styles.buttonStyle} onPress={checkPassword}>
           <Text style={styles.buttonText}>Submit</Text>
         </TouchableOpacity>
       </View>
@@ -42,6 +72,14 @@ const styles = StyleSheet.create({
     padding: 10,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  text: {
+    fontWeight: '500',
+    marginTop: '2%',
+    fontSize: 20,
+    textAlign: 'center',
+    marginStart: '2%',
+    marginEnd: '2%',
   },
   formContainer: {
     margin: '7%',

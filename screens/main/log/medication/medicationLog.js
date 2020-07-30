@@ -8,6 +8,7 @@ import {TouchableOpacity, ScrollView} from 'react-native-gesture-handler';
 import Entypo from 'react-native-vector-icons/Entypo';
 import DropDownPicker from 'react-native-dropdown-picker';
 import SuccessDialogue from '../../../../components/successDialogue';
+import {getToken} from '../../../../storage/asyncStorageFunctions';
 
 Entypo.loadFont();
 
@@ -25,6 +26,7 @@ export default class MedicationLog extends React.Component {
       successShow: false,
     };
     this.addMedication = this.addMedication.bind(this);
+    console.log(getToken());
   }
 
   addMedication = (selectedMedicine, selectedDosage) => {
@@ -60,9 +62,9 @@ export default class MedicationLog extends React.Component {
     });
   };
 
-  componentDidUpdate() {
-    console.log(this.state.selectedMedicationList);
-  }
+  handleSubmit = () => {
+    this.setState({successShow: true});
+  };
 
   render() {
     const {
@@ -129,7 +131,6 @@ export default class MedicationLog extends React.Component {
                 <MedicationAdded
                   medication={item}
                   handleDelete={() => {
-                    // Handle delete for this food item in the cart.
                     this.handleDelete(item);
                   }}
                   handleEdit={() => {
@@ -150,7 +151,7 @@ export default class MedicationLog extends React.Component {
                   styles.shadow,
                   {backgroundColor: '#aad326'},
                 ]}
-                onPress={() => this.setState({successShow: true})}>
+                onPress={this.handleSubmit}>
                 <Text style={styles.buttonText}>Submit</Text>
               </TouchableOpacity>
             )}
@@ -165,95 +166,111 @@ export default class MedicationLog extends React.Component {
             onBackdropPress={() => this.setState({modalOpen: false})}
             onBackButtonPress={() => this.setState({modalOpen: false})}
             style={{backgroundColor: 'white'}}>
-            <View style={styles.header}>
-              <Entypo
-                name="cross"
-                size={30}
-                onPress={() => this.setState({modalOpen: false})}
-              />
-              <Text style={{fontWeight: '500', fontSize: 20}}>
-                Select Medicine
-              </Text>
-            </View>
-            <View style={{flex: 3, alignItems: 'center'}}>
-              <View style={{marginTop: '7%'}}>
-                <Text style={{fontWeight: '500', fontSize: 20}}>Name:</Text>
-                <DropDownPicker
-                  searchable={true}
-                  searchablePlaceholder="Search for a medication"
-                  items={[
-                    {
-                      label: 'Metformin - 1000 mg',
-                      value: 'id_1',
-                      icon: () => (
-                        <Image
-                          source={{
-                            uri:
-                              'https://img.medscapestatic.com/pi/features/drugdirectory/octupdate/AMN02200.jpg',
-                          }}
-                          style={{height: 50, width: 50}}
-                        />
-                      ),
-                    },
-                    {
-                      label: 'Metformin - 500 mg',
-                      value: 'id_2',
-                      icon: () => (
-                        <Image
-                          source={{
-                            uri:
-                              'https://img.medscapestatic.com/pi/features/drugdirectory/octupdate/GLN01590.jpg',
-                          }}
-                          style={{height: 50, width: 50}}
-                        />
-                      ),
-                    },
-                  ]}
-                  containerStyle={{
-                    height: 60,
-                    width: 300,
-                    marginTop: '3%',
-                    backgroundColor: 'white',
-                  }}
-                  itemStyle={{
-                    justifyContent: 'flex-start',
-                  }}
-                  activeLabelStyle={{color: 'red'}}
-                  onChangeItem={(item) => {
-                    this.setState({selectedMedicine: item});
-                  }}
+            <View style={{flex: 1}}>
+              <View
+                style={
+                  (styles.header,
+                  {flexDirection: 'row', backgroundColor: '#aad326'})
+                }>
+                <Text
+                  style={{
+                    fontWeight: '700',
+                    fontSize: 20,
+                    marginStart: '30%',
+                    marginTop: '2%',
+                    flex: 5,
+                  }}>
+                  Select Medicine
+                </Text>
+                <Entypo
+                  name="cross"
+                  size={30}
+                  style={{flex: 1, marginTop: '2%'}}
+                  onPress={() => this.setState({modalOpen: false})}
                 />
+              </View>
+              <View style={{flex: 3, alignItems: 'center'}}>
                 <View style={{marginTop: '7%'}}>
-                  <Text style={{fontWeight: '500', fontSize: 20}}>Dosage:</Text>
-                  <View style={{flexDirection: 'row'}}>
-                    <TextInput
-                      style={styles.inputBox}
-                      placeholder=""
-                      placeholderTextColor="#a1a3a0"
-                      onChangeText={(value) =>
-                        this.setState({selectedDosage: value})
-                      }
-                    />
-                    <Text
-                      style={{
-                        borderRadius: 20,
-                        borderWidth: 3,
-                        borderColor: '#AAd326',
-                        padding: 15,
-                        fontSize: 17,
-                      }}>
-                      Unit (s)
+                  <Text style={{fontWeight: '500', fontSize: 20}}>Name:</Text>
+                  <DropDownPicker
+                    searchable={true}
+                    searchablePlaceholder="Search for a medication"
+                    items={[
+                      {
+                        label: 'Metformin - 1000 mg',
+                        value: 'id_1',
+                        icon: () => (
+                          <Image
+                            source={{
+                              uri:
+                                'https://img.medscapestatic.com/pi/features/drugdirectory/octupdate/AMN02200.jpg',
+                            }}
+                            style={{height: 50, width: 50}}
+                          />
+                        ),
+                      },
+                      {
+                        label: 'Metformin - 500 mg',
+                        value: 'id_2',
+                        icon: () => (
+                          <Image
+                            source={{
+                              uri:
+                                'https://img.medscapestatic.com/pi/features/drugdirectory/octupdate/GLN01590.jpg',
+                            }}
+                            style={{height: 50, width: 50}}
+                          />
+                        ),
+                      },
+                    ]}
+                    containerStyle={{
+                      height: 60,
+                      width: 300,
+                      marginTop: '3%',
+                      backgroundColor: 'white',
+                    }}
+                    itemStyle={{
+                      justifyContent: 'flex-start',
+                    }}
+                    activeLabelStyle={{color: 'red'}}
+                    onChangeItem={(item) => {
+                      this.setState({selectedMedicine: item});
+                    }}
+                  />
+                  <View style={{marginTop: '7%'}}>
+                    <Text style={{fontWeight: '500', fontSize: 20}}>
+                      Dosage:
                     </Text>
+                    <View style={{flexDirection: 'row'}}>
+                      <TextInput
+                        style={styles.inputBox}
+                        placeholder=""
+                        placeholderTextColor="#a1a3a0"
+                        onChangeText={(value) =>
+                          this.setState({selectedDosage: value})
+                        }
+                      />
+                      <View
+                        style={{
+                          borderRadius: 20,
+                          borderWidth: 3,
+                          borderColor: '#AAd326',
+                          padding: 15,
+                          alignItems: 'center',
+                        }}>
+                        <Text style={{fontSize: 20}}>Unit (s)</Text>
+                      </View>
+                    </View>
                   </View>
-                </View>
-                <View>
-                  <TouchableOpacity
-                    style={[styles.button, {backgroundColor: '#aad326'}]}
-                    onPress={() =>
-                      this.addMedication(selectedMedicine, selectedDosage)
-                    }>
-                    <Text style={styles.buttonText}>Add Medicine</Text>
-                  </TouchableOpacity>
+                  <View>
+                    <TouchableOpacity
+                      style={[styles.button, {backgroundColor: '#aad326'}]}
+                      onPress={() =>
+                        this.addMedication(selectedMedicine, selectedDosage)
+                      }>
+                      <Text style={styles.buttonText}>Add Medicine</Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
               </View>
             </View>
@@ -266,51 +283,65 @@ export default class MedicationLog extends React.Component {
             onBackdropPress={() => this.setState({editModalOpen: false})}
             onBackButtonPress={() => this.setState({editModalOpen: false})}
             style={{backgroundColor: 'white'}}>
-            <View style={styles.header}>
-              <Entypo
-                name="cross"
-                size={30}
-                onPress={() => this.setState({editModalOpen: false})}
-              />
-              <Text style={{fontWeight: '500', fontSize: 20}}>
-                Edit Medicine
-              </Text>
-            </View>
-            <View style={{flex: 3, alignItems: 'center'}}>
-              <View style={{marginTop: '7%'}}>
-                <Text style={{fontWeight: '500', fontSize: 20}}>
-                  {selectedMedicine.name}
+            <View style={{flex: 1}}>
+              <View
+                style={
+                  (styles.header,
+                  {flexDirection: 'row', flex: 3, backgroundColor: '#aad326'})
+                }>
+                <Text
+                  style={{
+                    fontWeight: '700',
+                    fontSize: 20,
+                    marginStart: '30%',
+                    marginTop: '2%',
+                    flex: 5,
+                  }}>
+                  Edit Medicine
                 </Text>
+                <Entypo
+                  name="cross"
+                  size={30}
+                  style={{flex: 1, marginTop: '2%'}}
+                  onPress={() => this.setState({edi: false})}
+                />
               </View>
-              <View style={{marginTop: '7%'}}>
-                <Text style={{fontWeight: '500', fontSize: 20}}>Dosage:</Text>
-                <View style={{flexDirection: 'row'}}>
-                  <TextInput
-                    style={styles.inputBox}
-                    value={selectedDosage}
-                    placeholderTextColor="#a1a3a0"
-                    onChangeText={(value) =>
-                      this.setState({selectedDosage: value})
-                    }
-                  />
-                  <Text
-                    style={{
-                      borderRadius: 20,
-                      borderWidth: 3,
-                      borderColor: '#AAd326',
-                      padding: 15,
-                      fontSize: 17,
-                    }}>
-                    Unit (s)
+              <View style={{flex: 3, alignItems: 'center'}}>
+                <View style={{marginTop: '7%'}}>
+                  <Text style={{fontWeight: '500', fontSize: 20}}>
+                    {selectedMedicine.name}
                   </Text>
                 </View>
-                <TouchableOpacity
-                  style={[styles.button, {backgroundColor: '#aad326'}]}
-                  onPress={() =>
-                    this.editMedication(selectedMedicine, selectedDosage)
-                  }>
-                  <Text style={styles.buttonText}>Save Changes</Text>
-                </TouchableOpacity>
+                <View style={{marginTop: '7%'}}>
+                  <Text style={{fontWeight: '500', fontSize: 20}}>Dosage:</Text>
+                  <View style={{flexDirection: 'row'}}>
+                    <TextInput
+                      style={styles.inputBox}
+                      value={selectedDosage}
+                      placeholderTextColor="#a1a3a0"
+                      onChangeText={(value) =>
+                        this.setState({selectedDosage: value})
+                      }
+                    />
+                    <View
+                      style={{
+                        borderRadius: 20,
+                        borderWidth: 3,
+                        borderColor: '#AAd326',
+                        padding: 15,
+                        alignItems: 'center',
+                      }}>
+                      <Text style={{fontSize: 20}}>Unit (s)</Text>
+                    </View>
+                  </View>
+                  <TouchableOpacity
+                    style={[styles.button, {backgroundColor: '#aad326'}]}
+                    onPress={() =>
+                      this.editMedication(selectedMedicine, selectedDosage)
+                    }>
+                    <Text style={styles.buttonText}>Save Changes</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
           </Modal>
@@ -361,11 +392,12 @@ const styles = StyleSheet.create({
     marginEnd: '3%',
   },
   inputBox1: {
-    width: 250,
+    width: 300,
     height: 40,
     backgroundColor: '#EEF3BD',
     paddingStart: 30, //position placeholder text
     marginVertical: 10,
+    fontSize: 19,
   },
   button: {
     marginTop: '7%',
@@ -375,6 +407,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginVertical: 10,
     paddingVertical: 6,
+    alignSelf: 'center',
   },
   buttonText: {
     fontSize: 23,
