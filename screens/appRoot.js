@@ -1,19 +1,23 @@
 import React, {Component} from 'react';
+import {View} from 'react-native';
+//third party libs
+import {getFocusedRouteNameFromRoute, NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
+import {connect} from 'react-redux';
+//functions
+import {getToken} from '../storage/asyncStorageFunctions';
+import {mapStateToProps, mapDispatchToProps} from '../redux/reduxMapping';
+import {isTokenValidRequest} from '../netcalls/requestsAuth';
+//other screens
 import DashBoard from './dashboard';
-import HeaderIcon from '../components/headerBtnIcon';
 import Login from './login/login';
 import ForgetPasswordScreen from './login/ForgetPasswordScreen';
 import InputOTPScreen from './login/inputOTPScreen';
 import AlertsScreen from './sub/alerts';
-import {View} from 'react-native';
 import ChatScreen from './sub/chat';
-import {getFocusedRouteNameFromRoute, NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
-import {connect} from 'react-redux';
 import MealLogStack from "./main/log/meal/MealLogStack";
-import {getToken} from '../storage/asyncStorageFunctions';
-import {mapStateToProps, mapDispatchToProps} from '../redux/reduxMapping';
-import {isTokenValidRequest} from '../netcalls/requestsAuth';
+//components
+import HeaderIcon from '../components/headerBtnIcon';
 
 
 const Stack = createStackNavigator();

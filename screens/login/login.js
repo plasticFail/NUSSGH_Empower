@@ -8,11 +8,14 @@ import {
   Image,
   Alert,
 } from 'react-native';
-import Loading from '../../components/loading';
+//third party libs
 import {connect} from 'react-redux';
+//functions
 import {mapStateToProps, mapDispatchToProps} from '../../redux/reduxMapping';
-import {storeUsername, getUsername, storePassword, getPassword, storeToken, getToken} from '../../storage/asyncStorageFunctions'
+import {storeUsername, getUsername, storePassword, getPassword, storeToken} from '../../storage/asyncStorageFunctions'
 import {patientLoginRequest} from '../../netcalls/requestsAuth';
+//components
+import Loading from '../../components/loading';
 
 
 class Login extends Component{
