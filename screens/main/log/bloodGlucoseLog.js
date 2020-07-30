@@ -6,10 +6,8 @@ import {
   TextInput,
   Modal,
   TouchableOpacity,
-  Image,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import DropDownPicker from 'react-native-dropdown-picker';
 import DatePicker from 'react-native-date-picker';
 import Moment from 'moment';
 import SuccessDialogue from '../../../components/successDialogue';
@@ -71,29 +69,6 @@ const BloodGlucoseLog = (props) => {
         </View>
 
         <View style={{marginTop: '7%'}}>
-          <Text style={styles.inputHeader}>Period:</Text>
-          <DropDownPicker
-            items={[
-              {label: 'Before Breakfast', value: 'bBreakfast'},
-              {label: 'Breakfast', value: 'breakfast'},
-              {label: 'After Breakfast', value: 'abreakfast'},
-              {label: 'Before Lunch', value: 'bLunch'},
-              {label: 'Lunch', value: 'lunch'},
-              {label: 'After Lunch', value: 'aLunch'},
-              {label: 'Before Dinner', value: 'bDinner'},
-              {label: 'Dinner', value: 'dinner'},
-              {label: 'After Dinner', value: 'aDinner'},
-            ]}
-            defaultValue="bBreakfast"
-            containerStyle={{
-              height: 50,
-              width: 300,
-              marginTop: '3%',
-            }}
-            activeLabelStyle={{color: 'red'}}
-            style={{backgroundColor: 'white'}}
-            onChangeItem={(item) => console.log(item.label, item.value)}
-          />
           <Text style={[styles.inputHeader, {marginTop: '7%'}]}>
             Blood Glucose: (mmol/L)
           </Text>

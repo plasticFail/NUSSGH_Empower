@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet, TextInput, Image} from 'react-native';
+import {View, Text, StyleSheet, TextInput, Image, Alert} from 'react-native';
 import Modal from 'react-native-modal';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import DatePicker from 'react-native-date-picker';
@@ -21,6 +21,7 @@ export default class MedicationLog extends React.Component {
       selectedMedicationList: [],
       calendarVisible: false,
       modalOpen: false,
+      editModalOpen: false,
       successShow: false,
     };
     this.addMedication = this.addMedication.bind(this);
@@ -33,10 +34,29 @@ export default class MedicationLog extends React.Component {
     this.setState({modalOpen: false, selectedMedicationList: list});
   };
 
+  editMedication = (selectedMedicine, selectedDosage) => {
+    this.props.navigation.navigate('MedicationLog');
+    const elementIndex = this.state.selectedMedicationList.findIndex(
+      (element) => element.name == selectedMedicine.name,
+    );
+    console.log(elementIndex);
+    let newArr = [...this.state.selectedMedicationList];
+    newArr[elementIndex] = {...newArr[elementIndex], dosage: selectedDosage};
+    this.setState({selectedMedicationList: newArr, editModalOpen: false});
+  };
+
   handleDelete = (item) => {
     let list = this.state.selectedMedicationList;
     this.setState({
       selectedMedicationList: list.filter((medication) => medication != item),
+    });
+  };
+
+  handleEdit = (item) => {
+    this.setState({
+      editModalOpen: true,
+      selectedMedicine: item,
+      selectedDosage: item.dosage,
     });
   };
 
@@ -48,10 +68,10 @@ export default class MedicationLog extends React.Component {
     const {
       date,
       selectedMedicine,
-      selectedMedicationList,
       selectedDosage,
       calendarVisible,
       modalOpen,
+      editModalOpen,
       successShow,
     } = this.state;
     const {navigation} = this.props;
@@ -111,6 +131,9 @@ export default class MedicationLog extends React.Component {
                   handleDelete={() => {
                     // Handle delete for this food item in the cart.
                     this.handleDelete(item);
+                  }}
+                  handleEdit={() => {
+                    this.handleEdit(item);
                   }}
                 />
               ))
@@ -236,12 +259,68 @@ export default class MedicationLog extends React.Component {
             </View>
           </Modal>
         </View>
+        <View style={{flex: 1}}>
+          <Modal
+            isVisible={editModalOpen}
+            animationIn="slideInUp"
+            onBackdropPress={() => this.setState({editModalOpen: false})}
+            onBackButtonPress={() => this.setState({editModalOpen: false})}
+            style={{backgroundColor: 'white'}}>
+            <View style={styles.header}>
+              <Entypo
+                name="cross"
+                size={30}
+                onPress={() => this.setState({editModalOpen: false})}
+              />
+              <Text style={{fontWeight: '500', fontSize: 20}}>
+                Edit Medicine
+              </Text>
+            </View>
+            <View style={{flex: 3, alignItems: 'center'}}>
+              <View style={{marginTop: '7%'}}>
+                <Text style={{fontWeight: '500', fontSize: 20}}>
+                  {selectedMedicine.name}
+                </Text>
+              </View>
+              <View style={{marginTop: '7%'}}>
+                <Text style={{fontWeight: '500', fontSize: 20}}>Dosage:</Text>
+                <View style={{flexDirection: 'row'}}>
+                  <TextInput
+                    style={styles.inputBox}
+                    value={selectedDosage}
+                    placeholderTextColor="#a1a3a0"
+                    onChangeText={(value) =>
+                      this.setState({selectedDosage: value})
+                    }
+                  />
+                  <Text
+                    style={{
+                      borderRadius: 20,
+                      borderWidth: 3,
+                      borderColor: '#AAd326',
+                      padding: 15,
+                      fontSize: 17,
+                    }}>
+                    Unit (s)
+                  </Text>
+                </View>
+                <TouchableOpacity
+                  style={[styles.button, {backgroundColor: '#aad326'}]}
+                  onPress={() =>
+                    this.editMedication(selectedMedicine, selectedDosage)
+                  }>
+                  <Text style={styles.buttonText}>Save Changes</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
+        </View>
       </ScrollView>
     );
   }
 }
 
-function MedicationAdded({medication, handleDelete}) {
+function MedicationAdded({medication, handleDelete, handleEdit}) {
   return (
     <View style={[styles.addedMedicationView, styles.shadow]}>
       <View style={{flex: 3}}>
@@ -260,7 +339,7 @@ function MedicationAdded({medication, handleDelete}) {
           name="edit"
           color="black"
           style={{marginBottom: '20%'}}
-          onPress={handleDelete}
+          onPress={handleEdit}
           size={20}
         />
       </View>
