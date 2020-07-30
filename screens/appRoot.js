@@ -16,6 +16,7 @@ import {connect} from 'react-redux';
 import ResetPasswordScreen from './login/resetPassword';
 import BloodGlucoseLog from './main/log/bloodGlucoseLog';
 import MealLogStack from './main/log/meal/MealLogStack';
+import MedicationLog from './main/log/medication/medicationLog';
 
 const Stack = createStackNavigator();
 
@@ -118,6 +119,14 @@ const AppRoot = (props) => {
 
                                    */
             />
+            <Stack.Screen name="BloodGlucoseLog" component={BloodGlucoseLog} />
+            <Stack.Screen
+              name="MedicationLog"
+              component={MedicationLog}
+              options={{
+                title: 'Add Medication Log',
+              }}
+            />
           </>
         ) : (
           <>
@@ -139,6 +148,15 @@ const AppRoot = (props) => {
               component={InputOTPScreen}
               options={{
                 title: 'Input OTP',
+                headerRight: false, //for android
+                headerBackTitle: 'Back',
+              }}
+            />
+            <Stack.Screen
+              name="ResetPasswordScreen"
+              component={ResetPasswordScreen}
+              options={{
+                title: 'Reset Password',
                 headerRight: false, //for android
                 headerBackTitle: 'Back',
               }}

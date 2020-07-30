@@ -57,7 +57,12 @@ export default class MedicationLog extends React.Component {
     const {navigation} = this.props;
 
     return (
-      <ScrollView contentContainerStyle={{flex: 1, alignItems: 'center'}}>
+      <ScrollView
+        contentContainerStyle={{
+          flex: 1,
+          alignItems: 'center',
+          backgroundColor: 'white',
+        }}>
         <View style={{marginTop: '7%'}}>
           <Text style={styles.inputHeader}>Record Date Time:</Text>
           <View style={{flexDirection: 'row'}}>
@@ -70,7 +75,7 @@ export default class MedicationLog extends React.Component {
               size={20}
               style={{marginTop: '7%', marginStart: '7%'}}
               onPress={() => {
-                this.setState({calendarVisible: true});
+                this.setState({calendarVisible: !calendarVisible});
               }}
             />
           </View>

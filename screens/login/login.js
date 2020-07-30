@@ -105,6 +105,7 @@ class Login extends Component {
   };
 
   render() {
+    const {navigation} = this.props;
     return (
       <View style={styles.container}>
         <Text style={{fontSize: 30, marginBottom: 20, fontWeight: '500'}}>
@@ -135,7 +136,7 @@ class Login extends Component {
             marginVertical: 5,
             color: '#a1a3a0',
           }}
-          onPress={() => props.navigation.navigate('ForgetPassword')}>
+          onPress={() => navigation.navigate('ForgetPassword')}>
           Forget Password?
         </Text>
         <TouchableOpacity style={styles.button} onPress={this.handleLogin}>

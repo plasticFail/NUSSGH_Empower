@@ -9,7 +9,6 @@ import {
   FlatList,
 } from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
-import DefaultMealLogScreen from './log/meal/DefaultMealLogScreen';
 import StackNavigator from '@react-navigation/stack/src/navigators/createStackNavigator';
 import BloodGlucoseLog from './log/bloodGlucoseLog';
 import MedicationLog from './log/medication/medicationLog';
