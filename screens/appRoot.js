@@ -12,8 +12,8 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {connect} from 'react-redux';
 import MealLogStack from "./main/log/meal/MealLogStack";
 import {getToken} from '../storage/asyncStorageFunctions';
-import {mapStateToProps, mapDispatchToProps} from '../../redux/reduxMapping';
-import {isTokenValidRequest} from '../../netcalls/requestsAuth';
+import {mapStateToProps, mapDispatchToProps} from '../redux/reduxMapping';
+import {isTokenValidRequest} from '../netcalls/requestsAuth';
 
 
 const Stack = createStackNavigator();
