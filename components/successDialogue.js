@@ -24,6 +24,7 @@ function SuccessDialogue({visible, type}) {
           borderRadius: 30,
           alignItems: 'center',
         }}>
+        <Icon name="checkcircle" color="#aad326" size={100} />
         <Text style={{fontSize: 40, fontWeight: '500', marginTop: '3%'}}>
           {type} Log
         </Text>

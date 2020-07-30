@@ -90,7 +90,7 @@ export default class MedicationLog extends React.Component {
           <View style={{flexDirection: 'row'}}>
             <TextInput
               style={styles.inputBox1}
-              value={Moment(date).format('MMMM Do YYYY, h:mm:ss a')}
+              value={Moment(date).format('MMMM Do YYYY, h:mm a')}
               placeholderTextColor="#a1a3a0"></TextInput>
             <Ionicons
               name="calendar-outline"

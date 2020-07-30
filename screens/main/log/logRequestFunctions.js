@@ -17,9 +17,8 @@ const uploadBGLog = async (bgReading, date) => {
       }),
     });
     let responseJson = await response.json();
-
     if (responseJson.token != null) {
-      console.log('Auth Success');
+      console.log('Success');
       return true;
     }
     console.log(responseJson);
