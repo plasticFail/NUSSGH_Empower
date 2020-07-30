@@ -1,11 +1,15 @@
-import * as React from 'react';
+import React from 'react';
+//third party libs
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+//functions
+import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
+//other screens
 import Home from './main/home';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import Diary from './main/diary';
 import AddLog from './main/addlog';
 import More from './main/more';
-import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
+
 
 const Tab = createBottomTabNavigator();
 

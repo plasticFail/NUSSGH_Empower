@@ -8,8 +8,9 @@ import {
   Image,
   Alert,
 } from 'react-native';
-import Loading from '../../components/loading';
+//third party libs
 import {connect} from 'react-redux';
+//functions
 import {mapStateToProps, mapDispatchToProps} from '../../redux/reduxMapping';
 import {
   storeUsername,
@@ -17,10 +18,10 @@ import {
   storePassword,
   getPassword,
   storeToken,
-  getToken,
 } from '../../storage/asyncStorageFunctions';
-
-const url = 'https://sghempower.com/auth/patient-login';
+import {patientLoginRequest} from '../../netcalls/requestsAuth';
+//components
+import Loading from '../../components/loading';
 
 class Login extends Component {
   constructor(props) {
@@ -49,15 +50,25 @@ class Login extends Component {
       console.log('password : ' + password);
       this.setState({password: password});
     }
-    const token = await getToken();
-    if (token !== null && token !== '') {
-      console.log('token : ' + token);
-      this.props.login();
-    }
   };
 
-  handleLogin = () => {
-    this.makePostRequest(url);
+  handleLogin = async () => {
+    this.setState({isLoading: true});
+    let token = await patientLoginRequest(
+      this.state.username,
+      this.state.password,
+    );
+    if (token != null) {
+      await storeUsername(this.state.username);
+      await storePassword(this.state.password);
+      await storeToken(token);
+      this.props.login();
+    } else {
+      Alert.alert('Error', 'Invalid username/password combination.', [
+        {text: 'Got It'},
+      ]);
+    }
+    this.setState({isLoading: false});
   };
 
   handleUsernameInput = (inputText) => {
@@ -68,49 +79,16 @@ class Login extends Component {
     this.setState({password: inputText});
   };
 
-  makePostRequest = async (url) => {
-    try {
-      this.setState({isLoading: true});
-      let response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-type': 'application/json',
-        },
-        body: JSON.stringify({
-          remember: true,
-          password: this.state.password,
-          username: this.state.username,
-        }),
-      });
-      let responseJson = await response.json();
-      this.setState({isLoading: false});
-      if (responseJson.token != null) {
-        this.setState({isLoading: true});
-        await storeUsername(this.state.username);
-        await storePassword(this.state.password);
-        await storeToken(responseJson.token);
-        this.props.login();
-        this.setState({isLoading: false});
-      } else {
-        Alert.alert('Error', 'Invalid username/password combination.', [
-          {text: 'Got It'},
-        ]);
-      }
-
-      console.log(responseJson);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   render() {
     const {navigation} = this.props;
     return (
       <View style={styles.container}>
+        <Text style={{fontSize: 30, marginBottom: 20, fontWeight: '500'}}>
+          Welcome!
+        </Text>
         <Image
           source={require('../../resources/images/logo_v1.png')}
-          style={{width: 350, height: 350, marginBottom: 10}}
+          style={{width: 200, height: 200, marginBottom: 10}}
         />
         <TextInput
           style={styles.inputBox}
@@ -133,7 +111,7 @@ class Login extends Component {
             marginVertical: 5,
             color: '#a1a3a0',
           }}
-          onPress={() => navigation.navigate('ForgetPassword')}>
+          onPress={() => this.props.navigation.navigate('ForgetPassword')}>
           Forget Password?
         </Text>
         <TouchableOpacity style={styles.button} onPress={this.handleLogin}>

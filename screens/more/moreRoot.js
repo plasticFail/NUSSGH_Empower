@@ -1,9 +1,12 @@
 import React from 'react';
 import {View, StyleSheet, FlatList} from 'react-native';
-import MoreFunctionBlock from '../../components/moreFunctionBlock';
+//third party libs
 import {connect} from 'react-redux';
+//functions
 import {mapStateToProps, mapDispatchToProps} from '../../redux/reduxMapping';
 import {storeToken} from '../../storage/asyncStorageFunctions'
+//components
+import MoreFunctionBlock from '../../components/moreFunctionBlock';
 
 
 const MoreRootScreen = (props) => {
