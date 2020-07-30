@@ -12,8 +12,8 @@ import Loading from '../../components/loading';
 import {connect} from 'react-redux';
 import {mapStateToProps, mapDispatchToProps} from '../../redux/reduxMapping';
 import {storeUsername, getUsername, storePassword, getPassword, storeToken, getToken} from '../../storage/asyncStorageFunctions'
+import {patientLoginRequest} from '../../netcalls/requestsAuth';
 
-const url = 'https://sghempower.com/auth/patient-login';
 
 class Login extends Component{
 
@@ -43,15 +43,22 @@ class Login extends Component{
       console.log('password : ' + password);
       this.setState({password:password});
     }
-    const token = await getToken();
-    if(token !== null && token !== ''){
-      console.log('token : ' + token);
-      this.props.login();
-    }
   }
 
-  handleLogin = () => {
-    this.makePostRequest(url);
+  handleLogin = async() => {
+    this.setState({isLoading:true});
+    let token = await patientLoginRequest(this.state.username, this.state.password);
+    if (token != null) {
+      await storeUsername(this.state.username);
+      await storePassword(this.state.password);
+      await storeToken(token);
+      this.props.login();
+    }else {
+      Alert.alert('Error', 'Invalid username/password combination.', [
+        {text: 'Got It'},
+      ]);
+    }
+    this.setState({isLoading:false});
   };
 
   handleUsernameInput = inputText => {
@@ -60,42 +67,6 @@ class Login extends Component{
 
   handlePasswordInput = inputText => {
     this.setState({password: inputText});
-  }
-
-  makePostRequest = async(url) => {
-    try {
-      this.setState({isLoading:true});
-      let response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-type': 'application/json',
-        },
-        body: JSON.stringify({
-          remember: true,
-          password: this.state.password,
-          username: this.state.username,
-        }),
-      });
-      let responseJson = await response.json();
-      this.setState({isLoading:false});
-      if (responseJson.token != null) {
-        this.setState({isLoading:true});
-        await storeUsername(this.state.username);
-        await storePassword(this.state.password);
-        await storeToken(responseJson.token);
-        this.props.login();
-        this.setState({isLoading:false});
-      } else {
-        Alert.alert('Error', 'Invalid username/password combination.', [
-          {text: 'Got It'},
-        ]);
-      }
-
-      console.log(responseJson);
-    } catch (error) {
-      console.error(error);
-    }
   }
 
   render() {
@@ -129,7 +100,7 @@ class Login extends Component{
                 marginVertical: 5,
                 color: '#a1a3a0',
               }}
-              onPress={() => props.navigation.navigate('ForgetPassword')}>
+              onPress={() => this.props.navigation.navigate('ForgetPassword')}>
             Forget Password?
           </Text>
           <TouchableOpacity style={styles.button} onPress={this.handleLogin}>
