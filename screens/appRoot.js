@@ -119,12 +119,20 @@ const AppRoot = (props) => {
 
                                    */
             />
-            <Stack.Screen name="BloodGlucoseLog" component={BloodGlucoseLog} />
+            <Stack.Screen
+              name="BloodGlucoseLog"
+              component={BloodGlucoseLog}
+              options={{
+                title: 'Add Medication Log',
+                headerRight: () => <View />,
+              }}
+            />
             <Stack.Screen
               name="MedicationLog"
               component={MedicationLog}
               options={{
                 title: 'Add Medication Log',
+                headerRight: () => <View />,
               }}
             />
           </>
@@ -140,7 +148,7 @@ const AppRoot = (props) => {
               component={ForgetPasswordScreen}
               options={{
                 title: 'Forget Password',
-                headerRight: false, //for android
+                headerRight: () => <View />,
               }}
             />
             <Stack.Screen
@@ -149,7 +157,7 @@ const AppRoot = (props) => {
               options={{
                 title: 'Input OTP',
                 headerRight: false, //for android
-                headerBackTitle: 'Back',
+                headerRight: () => <View />,
               }}
             />
             <Stack.Screen
@@ -158,7 +166,7 @@ const AppRoot = (props) => {
               options={{
                 title: 'Reset Password',
                 headerRight: false, //for android
-                headerBackTitle: 'Back',
+                headerRight: () => <View />,
               }}
             />
           </>

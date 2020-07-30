@@ -4,10 +4,11 @@ import {
   StyleSheet,
   Text,
   TextInput,
-  Modal,
   TouchableOpacity,
+  Image,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import DropDownPicker from 'react-native-dropdown-picker';
 import DatePicker from 'react-native-date-picker';
 import Moment from 'moment';
 import SuccessDialogue from '../../../components/successDialogue';
@@ -26,21 +27,7 @@ const BloodGlucoseLog = (props) => {
   console.log(date.toString());
 
   return (
-    <Modal
-      animationType="slide"
-      visible={true}
-      style={{...styles.bloodGlucoseLogScreen, ...props.style}}>
-      <View style={styles.header}>
-        <Ionicons
-          name="backspace-sharp"
-          size={30}
-          onPress={() => props.navigation.goBack()}
-          style={{marginEnd: '3%'}}
-        />
-        <Text style={{fontWeight: '500', fontSize: 20}}>
-          Add Blood Glucose Log
-        </Text>
-      </View>
+    <View style={styles.bloodGlucoseLogScreen}>
       <View style={{flex: 2, alignItems: 'center'}}>
         <View style={{marginTop: '7%'}}>
           <Text style={styles.inputHeader}>Record Date Time:</Text>
@@ -84,7 +71,7 @@ const BloodGlucoseLog = (props) => {
         </View>
         <SuccessDialogue visible={successShow} type="Blood Glucose" />
       </View>
-    </Modal>
+    </View>
   );
 };
 
@@ -101,6 +88,8 @@ const styles = StyleSheet.create({
     padding: 10,
     alignItems: 'center',
     justifyContent: 'center',
+    height: 100,
+    backgroundColor: 'white',
   },
   header: {
     flex: 0.2,
