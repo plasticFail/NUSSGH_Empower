@@ -9,16 +9,6 @@ const HomeScreen = (props) => {
   Ionicon.loadFont();
   Icon.loadFont();
   Foundation.loadFont();
-  /*
-  const btnHandler = () => {
-    console.log('click xxx');
-    alert('test');
-  };
-
-  const clickHandler = () => {
-    props.navigation.navigate('Alerts');
-  };
-  */
 
   return (
     <ScrollView
