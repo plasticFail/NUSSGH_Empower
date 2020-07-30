@@ -18,15 +18,8 @@ import ForgetPasswordScreen from './login/ForgetPasswordScreen';
 import InputOTPScreen from './login/inputOTPScreen';
 import AlertsScreen from './sub/alerts';
 import ChatScreen from './sub/chat';
-import {
-  getFocusedRouteNameFromRoute,
-  NavigationContainer,
-} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
-import {connect} from 'react-redux';
 import ResetPasswordScreen from './login/resetPassword';
 import BloodGlucoseLog from './main/log/bloodGlucoseLog';
-import MealLogStack from './main/log/meal/MealLogStack';
 import MedicationLog from './main/log/medication/medicationLog';
 import MealLogStack from './main/log/meal/MealLogStack';
 //components
@@ -182,6 +175,22 @@ class AppRoot extends Component {
                 component={InputOTPScreen}
                 options={{
                   title: 'Input OTP',
+                  headerStyle: {
+                    backgroundColor: '#aad326',
+                  },
+                  headerTintColor: '#000',
+                  headerTitleStyle: {
+                    fontWeight: 'bold',
+                    alignSelf: 'center',
+                  },
+                  headerRight: () => <View />,
+                }}
+              />
+              <Stack.Screen
+                name="ResetPasswordScreen"
+                component={ResetPasswordScreen}
+                options={{
+                  title: 'Reset Password',
                   headerStyle: {
                     backgroundColor: '#aad326',
                   },
