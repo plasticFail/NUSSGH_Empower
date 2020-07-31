@@ -1,11 +1,17 @@
 import React from 'react';
 import {Image, ScrollView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import ProgressBar from "../../../../components/progressbar";
+import Icon from 'react-native-vector-icons/dist/FontAwesome';
+
+Icon.loadFont()
 
 export default function FoodModalContent({onClose, selected, children}) {
     return (<View style={modalStyles.root}>
         <TouchableOpacity style={modalStyles.overlay} onPress={onClose} />
         <View style={modalStyles.paper}>
+            <View style={modalStyles.header}>
+                <Icon name="times" size={25} onPress={onClose} style={modalStyles.closeButton}/>
+            </View>
             <Image style={modalStyles.image} source={{uri: selected.imgUrl.url}}/>
             <View style={modalStyles.nutritionInfoContainer}>
                 <ScrollView contentContainerStyle={{padding: 15}}>
@@ -89,6 +95,17 @@ const modalStyles = StyleSheet.create({
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
         position: 'absolute'
     },
+    closeButton: {
+        paddingRight: 3
+    },
+    header: {
+        height: '4%',
+        width: '100%',
+        backgroundColor: '#aad326',
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+        alignItems: 'center'
+    },
     paper: {
         backgroundColor: 'white',
         width: '80%',
@@ -99,37 +116,23 @@ const modalStyles = StyleSheet.create({
         height: '40%'
     },
     nutritionInfoContainer: {
-        height: '53.5%',
-    },
-    button: {
-        width: '100%',
-        height: 55,
-        backgroundColor:'#aad326',
-        justifyContent: 'center',
-        alignSelf: 'center',
-        transform: [{"translateY": 27.5}] // Half of height
-    },
-    buttonText: {
-        color:'#000',
-        textAlign:'center',
-        fontSize: 22,
-        fontWeight: 'bold'
+        flex: 1
     },
     nutrientRow: {
         width: '100%',
         paddingTop: 10
     },
     foodNameText: {
-        fontSize: 24,
+        fontSize: 26,
         fontWeight: 'bold',
-        paddingBottom: 5
+        paddingBottom: 10
     },
     servingText: {
-        fontSize: 14,
-        paddingBottom: 5
+        fontSize: 18,
+        paddingBottom: 10
     },
     nutrientHeaderText: {
-        fontSize: 18,
+        fontSize: 20,
         fontWeight: 'bold'
     },
     nutrientText: {

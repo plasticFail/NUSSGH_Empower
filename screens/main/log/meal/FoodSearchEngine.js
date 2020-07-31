@@ -376,7 +376,7 @@ const styles = StyleSheet.create({
         backgroundColor:'#aad326',
         justifyContent: 'center',
         alignSelf: 'center',
-        transform: [{"translateY": 27.5}] // Half of height
+        //transform: [{"translateY": 27.5}] // Half of height
     },
     buttonText: {
         color:'#000',
