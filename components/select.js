@@ -1,5 +1,6 @@
 import React from 'react';
 import {View, StyleSheet, Text, Platform, ActionSheetIOS, TouchableOpacity} from 'react-native';
+import Icon from 'react-native-vector-icons/dist/FontAwesome';
 
 // Determine what ui to render for select. Different os render different select types.
 export default class Select extends React.Component {
@@ -39,7 +40,7 @@ export default class Select extends React.Component {
     }
 
     render() {
-        const {options, onSelect, defaultValue, containerStyle, textStyle} = this.props;
+        const {options, onSelect, defaultValue, containerStyle, textStyle, rightIcon} = this.props;
         const {open, result} = this.state;
         if (Platform.OS === 'ios') {
             const openSelect = () => ActionSheetIOS.showActionSheetWithOptions(
@@ -59,9 +60,10 @@ export default class Select extends React.Component {
             return (
                 <TouchableOpacity style={{...iosStyles.container, ...containerStyle}} onPress={this.handleOpen}>
                     <Text style={{...iosStyles.textStyle, ...textStyle}}>{result}</Text>
+                    <Icon color="#000" name={rightIcon} size={20} />
                 </TouchableOpacity>
             )
-        } else {
+        } else { // return component for android. To be done.
             return null;
         }
     }
@@ -71,12 +73,15 @@ const iosStyles = StyleSheet.create({
     container: {
         width: '100%',
         height: 50,
-        justifyContent: 'center',
+        alignItems: 'center',
         backgroundColor: '#eff3bd',
-        borderRadius: 10
+        borderRadius: 10,
+        flexDirection: 'row',
+        paddingLeft: 10,
+        paddingRight: 10
     },
     textStyle: {
         fontSize: 24,
-        paddingLeft: 10
+        width: '90%'
     },
 })

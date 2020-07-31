@@ -9,7 +9,6 @@ import {
     TouchableOpacity,
     Modal,
     TouchableHighlight,
-    ScrollView
 } from 'react-native';
 import Searchbar from '../../../../components/Searchbar';
 import SampleFoodDB from './SampleFoodDB.json';
@@ -157,6 +156,17 @@ function FoodResultList({foodList, navigation, route, type}) {
         handleClose();
     };
 
+    const addFoodToLog = () => {
+        // Check if it already exists in the list. If yes, throw alert, otherwise navigate back to create meal log.
+        const selectedFoodName = selected["food-name"]
+        if (route.params.existingItems.indexOf(selectedFoodName) != -1) {
+            // We already have this food item in the cart.
+            alert(`${selectedFoodName} is already in your cart! Select something else.`);
+        } else {
+            navigateBackToCreateMealLog();
+        }
+    }
+
     const renderFoodListItem = ({item}) => {
         return (
             <TouchableOpacity style={listStyles.li} onPress={() => handleOpen(item)}>
@@ -199,7 +209,7 @@ function FoodResultList({foodList, navigation, route, type}) {
                        <FoodModalContent selected={selected} onClose={handleClose}>
                             <TouchableHighlight
                                 style={styles.button}
-                                underlayColor='#fff' onPress={navigateBackToCreateMealLog}>
+                                underlayColor='#fff' onPress={addFoodToLog}>
                                 <Text style={styles.buttonText}>Add</Text>
                             </TouchableHighlight>
                        </FoodModalContent>
@@ -269,6 +279,10 @@ const listStyles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: '#fff',
+        paddingLeft: 10,
+        paddingRight: 10,
+        paddingTop: 5,
+        paddingBottom: 5,
     },
     image: {
         width: 100,
@@ -284,18 +298,15 @@ const listStyles = StyleSheet.create({
         width: '60%',
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'flex-end',
+        justifyContent: 'center', // position of the food description
         height: '100%',
         padding: 10
     },
     nutrientIndicatorList: {
-        display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-around',
         height: '100%',
-        paddingTop: 5,
-        paddingBottom: 5,
-        width: 40
+        flex: 1
     },
     foodNameText: {
         fontWeight: 'bold'
@@ -307,8 +318,8 @@ const listStyles = StyleSheet.create({
         height: 25,
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'space-between',
-        width: '100%'
+        justifyContent: 'space-around',
+        width: '100%',
     },
     nutrientImageStyle: {
         height: 25,

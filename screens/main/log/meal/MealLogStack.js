@@ -19,7 +19,7 @@ class MealLogScreen extends React.Component {
         const now = new Date();
         const hours = now.getHours();
         let defaultMealType = null;
-        if (hours > 12 && hours < 18) {
+        if (hours >= 12 && hours < 18) {
             defaultMealType = 'lunch';
         } else if (hours >= 18 && hours < 22) {
             defaultMealType = 'dinner'
@@ -50,7 +50,8 @@ class MealLogScreen extends React.Component {
                     <Text style={{paddingRight: 15, fontSize: 20, fontWeight: 'bold'}}>Meal Type:</Text>
                     <Select defaultValue={selectedMealType}
                             options={options}
-                            onSelect={this.handleSelectChange} containerStyle={styles.selectStyle} />
+                            onSelect={this.handleSelectChange} containerStyle={styles.selectStyle}
+                            rightIcon="chevron-down"/>
                 </View>
                 <Text style={styles.textPrompt}>Where to find your meal?</Text>
                 <TouchableHighlight
@@ -65,7 +66,7 @@ class MealLogScreen extends React.Component {
                 </TouchableHighlight>
                 <TouchableHighlight
                     onPress={() => {
-                        navigation.push("CreateMealLog");
+                        navigation.push("CreateMealLog", { selectedMealType, currentDateTime: currentDateTime.toString()});
                     }}
                     style={styles.button}
                     underlayColor='#fff'>
