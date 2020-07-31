@@ -11,7 +11,8 @@ const Stack = createStackNavigator();
 const options = [{name: "Breakfast", value: "breakfast"},
     {name: "Lunch", value: "lunch"},
     {name: "Dinner", value: "dinner"},
-    {name: "Supper", value: "supper"}];
+    {name: "Supper", value: "supper"},
+    {name: "Snack / Tea", value: "snack"}];
 
 class MealLogScreen extends React.Component {
     constructor(props) {
