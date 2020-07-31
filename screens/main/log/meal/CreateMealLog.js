@@ -19,6 +19,7 @@ import side from '../../../../resources/images/icons/salad.png';
 import dessert from '../../../../resources/images/icons/parfait.png';
 import ImageWithBadge from "../../../../components/ImageWithBadge";
 import FoodModalContent from "./FoodModalContent";
+import IntegerQuantitySelector from "../../../../components/IntegerQuantitySelector";
 
 Icon.loadFont()
 // Any meal log selected (e.g Create, Recent or Favourites)
@@ -65,6 +66,8 @@ export default class CreateMealLog extends React.Component {
         if (prevProps.route.params?.item !== this.props.route.params?.item) {
             const { type, item } = this.props.route.params;
             const newState = {...this.state};
+            // Add a new field to the item, called quantity.
+            item.quantity = 1;
             newState[type].push(item);
             this.setState(newState, () => console.log(this.state));
         }
@@ -83,11 +86,23 @@ export default class CreateMealLog extends React.Component {
         })
     }
 
-    handleDelete = (food, type) => {
+    // Find the food item and its index, replace the index with a new food item.
+    // Update state with this new state.
+    onQuantityChange = (foodName, type) =>  (newQuantity) => {
+        const foodItem = this.state[type].filter(food => food["food-name"] === foodName)[0];
+        const index = this.state[type].indexOf(foodItem);
+        const newFoodItem = {...foodItem};
+        newFoodItem.quantity = newQuantity;
+        const newState = { ...this.state };
+        newState[type][index] = newFoodItem;
+        this.setState(newState);
+    }
+
+    handleDelete = (foodName, type) => {
         // Copy the previous state
         const newState = {...this.state};
         // Filter the food item / delete the corresponding food
-        newState[type] = newState[type].filter(foodItem => foodItem !== food);
+        newState[type] = newState[type].filter(foodItem => foodItem["food-name"] !== foodName);
         this.setState(newState, this.setAnimation);
     }
 
@@ -116,6 +131,7 @@ export default class CreateMealLog extends React.Component {
         this.props.navigation.popToTop();
         this.props.navigation.goBack();
         //this.props.navigation.navigate('AddLog');
+        console.log(this.state);
         alert(`Log submitted! for ${JSON.stringify(dataToLog)}`);
     }
 
@@ -156,9 +172,11 @@ export default class CreateMealLog extends React.Component {
                                 this.state.beverage.map((food) => <FoodItem key={food["food-name"]}
                                                                             item={food} handleDelete={() => {
                                     // Handle delete for this food item in the cart.
-                                    this.handleDelete(food, "beverage");
+                                    this.handleDelete(food["food-name"], "beverage");
                                 }
-                                } onPress={() => this.handleModalOpen(food)} />)
+                                }
+                                                                            onPress={() => this.handleModalOpen(food)}
+                                                                            onQuantityChange={this.onQuantityChange(food["food-name"], "beverage")} />)
                             }
 
                             <CreateButton onPress={this.redirectToFoodSearchEngine("beverage")} />
@@ -179,9 +197,11 @@ export default class CreateMealLog extends React.Component {
                                 this.state.main.map((food) => <FoodItem key={food["food-name"]}
                                                                         item={food} handleDelete={() => {
                                     // Handle delete for this food item in the cart.
-                                        this.handleDelete(food, "main");
+                                        this.handleDelete(food["food-name"], "main");
                                     }
-                                } onPress={() => this.handleModalOpen(food)} />)
+                                }
+                                                                        onPress={() => this.handleModalOpen(food)}
+                                                                        onQuantityChange={this.onQuantityChange(food["food-name"], "main")}/>)
                             }
                             <CreateButton onPress={this.redirectToFoodSearchEngine("main")} />
                         </ScrollView>
@@ -202,9 +222,11 @@ export default class CreateMealLog extends React.Component {
                                 this.state.side.map((food) => <FoodItem key={food["food-name"]}
                                                                         item={food} handleDelete={() => {
                                     // Handle delete for this food item in the cart.
-                                        this.handleDelete(food, "side");
+                                        this.handleDelete(food["food-name"], "side");
                                     }
-                                } onPress={() => this.handleModalOpen(food)} />)
+                                }
+                                                                        onPress={() => this.handleModalOpen(food)}
+                                                                        onQuantityChange={this.onQuantityChange(food["food-name"], "side")} />)
                             }
                             <CreateButton onPress={this.redirectToFoodSearchEngine("side")} />
                         </ScrollView>
@@ -225,9 +247,11 @@ export default class CreateMealLog extends React.Component {
                                 this.state.dessert.map((food) => <FoodItem key={food["food-name"]}
                                                                            item={food} handleDelete={() => {
                                     // Handle delete for this food item in the cart.
-                                        this.handleDelete(food, "dessert");
+                                        this.handleDelete(food["food-name"], "dessert");
                                     }
-                                } onPress={() => this.handleModalOpen(food)} />)
+                                }
+                                                                           onPress={() => this.handleModalOpen(food)}
+                                                                           onQuantityChange={this.onQuantityChange(food["food-name"], "dessert")}/>)
                             }
                             <CreateButton onPress={this.redirectToFoodSearchEngine("dessert")} />
                         </ScrollView>
@@ -263,15 +287,13 @@ function CreateButton({onPress}) {
     return (
         <View style={styles.foodItem}>
             <EmptyButton onPress={onPress}/>
-            <View style={styles.foodTextWrapper}>
-            </View>
         </View>
     )
 }
 
 // Handle delete should:
 // Box out animation before calling handleDelete method. Shrink size animated can do the trick.
-function FoodItem({onPress, item, handleDelete}) {
+function FoodItem({onPress, item, handleDelete, onQuantityChange}) {
     // Item here refers to the food object.
     // render view for foodObj
     const boxOutAnimation = React.useRef(new Animated.Value(1)).current;
@@ -290,7 +312,7 @@ function FoodItem({onPress, item, handleDelete}) {
 
     const adjustedFontSize = item["food-name"].length > 15 ? 10 : 15;
     return (
-        <TouchableWithoutFeedback styles={styles.foodItem} onPress={onPress}>
+        <TouchableWithoutFeedback>
             <Animated.View style={[styles.foodItem,
                 {   opacity: boxOutAnimation,
                     transform: [ {scaleX: boxOutAnimation},
@@ -302,10 +324,16 @@ function FoodItem({onPress, item, handleDelete}) {
                     imageProps={{source: {uri: item.imgUrl.url}}}
                     badgeIcon={<Icon name="times" size={12.5} onPress={handleDeleteWithAnimation} color='#fff'/>}
                     badgeSize={12.5}
-                    badgeColor="red"/>
+                    badgeColor="red"
+                    onPressImage={onPress} />
                 <View style={styles.foodTextWrapper}>
                     <Text style={{fontSize: adjustedFontSize}}>{item["food-name"][0].toUpperCase() + item["food-name"].slice(1)}</Text>
                 </View>
+                <IntegerQuantitySelector defaultValue={1}
+                                         changeAmount={1}
+                                         minValue={1}
+                                         maxValue={50}
+                                         buttonColor="#288259" onChange={onQuantityChange} />
             </Animated.View>
         </TouchableWithoutFeedback>
     )
@@ -349,7 +377,8 @@ const styles = StyleSheet.create({
     rowContent: {
         display: 'flex',
         flexDirection: 'row',
-        height: 150,
+        height: 180,
+        paddingTop: 10
     },
     button:{
         marginRight:40,
@@ -373,9 +402,6 @@ const styles = StyleSheet.create({
     foodImage: {
         width: 80,
         height: 80,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
     },
     buttonText:{
         color:'#000',
@@ -386,13 +412,12 @@ const styles = StyleSheet.create({
     foodItem: {
         paddingLeft: 20,
         paddingRight: 20,
-        display: 'flex',
+        width: 120,
         alignItems: 'center',
     },
     foodTextWrapper: {
-        display: 'flex',
         paddingTop: 8,
         alignItems: 'center',
-        width: 80
+        width: 80,
     }
 });

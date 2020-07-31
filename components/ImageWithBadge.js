@@ -1,12 +1,12 @@
 import React from 'react';
 import {StyleSheet, View, Text, TouchableOpacity, Image} from "react-native";
 
-export default function ImageWithBadge({imageProps, badgeColor, badgeIcon, containerStyle, badgeSize}) {
+export default function ImageWithBadge({imageProps, badgeColor, badgeIcon, containerStyle, badgeSize, onPressImage}) {
     const finalContainerStyle = {
         ...styles.container,
         ...containerStyle
     }
-    const imageSize = Math.min(finalContainerStyle.width, finalContainerStyle.height) - badgeSize;
+    const imageSize = Math.min(finalContainerStyle.width, finalContainerStyle.height);
     const badgeTranslatedPositionX = imageSize / 2;
     const badgeTranslatedPositionY = - imageSize / 2;
     const finalBadgeStyle = {
@@ -16,12 +16,12 @@ export default function ImageWithBadge({imageProps, badgeColor, badgeIcon, conta
         borderRadius: badgeSize / 2
     };
     return (
-        <View style={finalContainerStyle}>
+        <TouchableOpacity style={finalContainerStyle} onPress={onPressImage}>
             <Image {...imageProps} style={{width: imageSize, height: imageSize}}/>
             <TouchableOpacity style={finalBadgeStyle}>
                 {badgeIcon}
             </TouchableOpacity>
-        </View>
+        </TouchableOpacity>
     )
 }
 
