@@ -384,7 +384,7 @@ const styles = StyleSheet.create({
     rowContent: {
         display: 'flex',
         flexDirection: 'row',
-        height: 180,
+        height: 185,
         paddingTop: 10
     },
     button:{

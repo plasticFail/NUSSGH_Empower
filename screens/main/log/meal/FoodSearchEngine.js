@@ -49,7 +49,6 @@ class FoodSearchEngineScreen extends React.Component {
                 this.timeout = setTimeout(() => {
                     // Fetch api and load the response here.
                     // For now this would be just simulating an async process.
-                    /*
                     setTimeout(() => {
                         this.setState({
                             isLoading: false,
@@ -57,11 +56,9 @@ class FoodSearchEngineScreen extends React.Component {
                         })
                     }, 1000) // simulate 1s for fetching request.
 
-
-                     */
                     // Format to fetch the data
-
-                    fetch('http://192.168.1.8:5000/food/search', {
+                    /*
+                    fetch('http://<IP, PORT>/food/search', {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json"
@@ -77,7 +74,7 @@ class FoodSearchEngineScreen extends React.Component {
                             isLoading: false
                         }, () => alert(err.message))
                     })
-
+                     */
                 }, 500); // 500ms delay before loading API.
             })
         }
