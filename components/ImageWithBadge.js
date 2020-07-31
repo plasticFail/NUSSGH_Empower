@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View, Text, TouchableOpacity, Image} from "react-native";
+import {StyleSheet, TouchableOpacity, Image} from "react-native";
 
 export default function ImageWithBadge({imageProps, badgeColor, badgeIcon, containerStyle, badgeSize, onPressImage}) {
     const finalContainerStyle = {

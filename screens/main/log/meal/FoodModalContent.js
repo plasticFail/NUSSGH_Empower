@@ -1,6 +1,8 @@
 import React from 'react';
 import {Image, ScrollView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+// Components
 import ProgressBar from "../../../../components/progressbar";
+// Others
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 
 Icon.loadFont()

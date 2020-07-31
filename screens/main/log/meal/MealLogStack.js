@@ -1,10 +1,14 @@
 import React from 'react';
 import {View, StyleSheet, Text, TouchableHighlight} from 'react-native';
+// Third-party lib
 import {createStackNavigator} from "@react-navigation/stack";
+// Screen
 import CreateMealLogScreen from "./CreateMealLog";
 import FoodSearchEngineScreen from './FoodSearchEngine';
-import HeaderIcon from "../../../../components/headerBtnIcon";
+// Components
 import Select from "../../../../components/select";
+// Others
+import HeaderIcon from "../../../../components/headerBtnIcon";
 
 const Stack = createStackNavigator();
 

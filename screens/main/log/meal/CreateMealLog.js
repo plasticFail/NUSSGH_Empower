@@ -12,14 +12,16 @@ import {
     Animated, LayoutAnimation,
     Platform, UIManager
 } from 'react-native';
+// Components
+import ImageWithBadge from "../../../../components/ImageWithBadge";
+import FoodModalContent from "./FoodModalContent";
+import IntegerQuantitySelector from "../../../../components/IntegerQuantitySelector";
+// Others such as images, icons.
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import main from '../../../../resources/images/icons/meal.png';
 import beverage from '../../../../resources/images/icons/mug.png';
 import side from '../../../../resources/images/icons/salad.png';
 import dessert from '../../../../resources/images/icons/parfait.png';
-import ImageWithBadge from "../../../../components/ImageWithBadge";
-import FoodModalContent from "./FoodModalContent";
-import IntegerQuantitySelector from "../../../../components/IntegerQuantitySelector";
 
 Icon.loadFont()
 // Any meal log selected (e.g Create, Recent or Favourites)

@@ -4,9 +4,6 @@ import {
   StyleSheet,
   Text,
   FlatList,
-  TouchableOpacity,
-  Button,
-  Image,
   Dimensions,
 } from 'react-native';
 import Legend from '../../components/legend';

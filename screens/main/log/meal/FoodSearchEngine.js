@@ -10,13 +10,15 @@ import {
     Modal,
     TouchableHighlight,
 } from 'react-native';
+// Components
 import Searchbar from '../../../../components/Searchbar';
+import FoodModalContent from "./FoodModalContent";
+// Others
 import SampleFoodDB from './SampleFoodDB.json';
 import carbohydrate from '../../../../resources/images/icons/carbohydrate.png';
 import energy from '../../../../resources/images/icons/energy.png';
 import fat from '../../../../resources/images/icons/fat.png';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
-import FoodModalContent from "./FoodModalContent";
 
 Icon.loadFont();
 

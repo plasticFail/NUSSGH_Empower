@@ -1,5 +1,6 @@
 import React from 'react';
 import {View, StyleSheet, Text, Platform, ActionSheetIOS, TouchableOpacity} from 'react-native';
+// Others
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 
 // Determine what ui to render for select. Different os render different select types.
