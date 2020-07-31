@@ -32,9 +32,16 @@ if (
     UIManager.setLayoutAnimationEnabledExperimental(true);
 }
 
+// Keywords for state items
+const BEVERAGE_KEY_WORD = 'beverage';
+const MAIN_KEY_WORD = 'main';
+const SIDE_KEY_WORD = 'side';
+const DESSERT_KEY_WORD = 'dessert';
+
 export default class CreateMealLog extends React.Component {
     constructor(props) {
         super(props);
+        // NAMING MUST FOLLOW KEYWORDS FOR STATE ITEMS.
         this.state = {
             beverage: [],
             main: [],
@@ -172,11 +179,11 @@ export default class CreateMealLog extends React.Component {
                                 this.state.beverage.map((food) => <FoodItem key={food["food-name"]}
                                                                             item={food} handleDelete={() => {
                                     // Handle delete for this food item in the cart.
-                                    this.handleDelete(food["food-name"], "beverage");
+                                    this.handleDelete(food["food-name"], BEVERAGE_KEY_WORD);
                                 }
                                 }
                                                                             onPress={() => this.handleModalOpen(food)}
-                                                                            onQuantityChange={this.onQuantityChange(food["food-name"], "beverage")} />)
+                                                                            onQuantityChange={this.onQuantityChange(food["food-name"], BEVERAGE_KEY_WORD)} />)
                             }
 
                             <CreateButton onPress={this.redirectToFoodSearchEngine("beverage")} />
@@ -197,13 +204,13 @@ export default class CreateMealLog extends React.Component {
                                 this.state.main.map((food) => <FoodItem key={food["food-name"]}
                                                                         item={food} handleDelete={() => {
                                     // Handle delete for this food item in the cart.
-                                        this.handleDelete(food["food-name"], "main");
+                                        this.handleDelete(food["food-name"], MAIN_KEY_WORD);
                                     }
                                 }
                                                                         onPress={() => this.handleModalOpen(food)}
-                                                                        onQuantityChange={this.onQuantityChange(food["food-name"], "main")}/>)
+                                                                        onQuantityChange={this.onQuantityChange(food["food-name"], MAIN_KEY_WORD)}/>)
                             }
-                            <CreateButton onPress={this.redirectToFoodSearchEngine("main")} />
+                            <CreateButton onPress={this.redirectToFoodSearchEngine(MAIN_KEY_WORD)} />
                         </ScrollView>
                         <ScrollView horizontal={true}
                                     // Refs to provide auto scroll to end for easier adding.
@@ -222,13 +229,13 @@ export default class CreateMealLog extends React.Component {
                                 this.state.side.map((food) => <FoodItem key={food["food-name"]}
                                                                         item={food} handleDelete={() => {
                                     // Handle delete for this food item in the cart.
-                                        this.handleDelete(food["food-name"], "side");
+                                        this.handleDelete(food["food-name"], SIDE_KEY_WORD);
                                     }
                                 }
                                                                         onPress={() => this.handleModalOpen(food)}
-                                                                        onQuantityChange={this.onQuantityChange(food["food-name"], "side")} />)
+                                                                        onQuantityChange={this.onQuantityChange(food["food-name"], SIDE_KEY_WORD)} />)
                             }
-                            <CreateButton onPress={this.redirectToFoodSearchEngine("side")} />
+                            <CreateButton onPress={this.redirectToFoodSearchEngine(SIDE_KEY_WORD)} />
                         </ScrollView>
                         <ScrollView horizontal={true}
                                     // Refs to provide auto scroll to end for easier adding.
@@ -247,13 +254,13 @@ export default class CreateMealLog extends React.Component {
                                 this.state.dessert.map((food) => <FoodItem key={food["food-name"]}
                                                                            item={food} handleDelete={() => {
                                     // Handle delete for this food item in the cart.
-                                        this.handleDelete(food["food-name"], "dessert");
+                                        this.handleDelete(food["food-name"], DESSERT_KEY_WORD);
                                     }
                                 }
                                                                            onPress={() => this.handleModalOpen(food)}
-                                                                           onQuantityChange={this.onQuantityChange(food["food-name"], "dessert")}/>)
+                                                                           onQuantityChange={this.onQuantityChange(food["food-name"], DESSERT_KEY_WORD)}/>)
                             }
-                            <CreateButton onPress={this.redirectToFoodSearchEngine("dessert")} />
+                            <CreateButton onPress={this.redirectToFoodSearchEngine(DESSERT_KEY_WORD)} />
                         </ScrollView>
                         <TouchableHighlight
                             style={styles.button}
