@@ -8,6 +8,12 @@ import {
   Image,
   FlatList,
 } from 'react-native';
+import {createStackNavigator} from '@react-navigation/stack';
+import StackNavigator from '@react-navigation/stack/src/navigators/createStackNavigator';
+import BloodGlucoseLog from './log/bloodGlucoseLog';
+import MedicationLog from './log/medication/medicationLog';
+
+const Stack = createStackNavigator();
 
 const buttonList = [
   {
@@ -15,28 +21,28 @@ const buttonList = [
     name: 'Blood Glucose',
     logo: require('../../resources/images/bloodglucose_logo.png'),
     image: require('../../resources/images/bloodglucose.jpg'),
-    route: null //Fill in the route yourself. If null, it does not redirect
+    route: 'BloodGlucoseLog', //Fill in the route yourself. If null, it does not redirect
   },
   {
     id: '2',
     name: 'Food Intake',
     logo: require('../../resources/images/foodintake_logo.png'),
     image: require('../../resources/images/foodintake.jpg'),
-    route: "MealLogRoot" //Fill in the route yourself. If null, it does not redirect
+    route: 'MealLogRoot', //Fill in the route yourself. If null, it does not redirect
   },
   {
     id: '3',
     name: 'Medication',
     logo: require('../../resources/images/medication_logo.png'),
     image: require('../../resources/images/medication.jpeg'),
-    route: null //Fill in the route yourself. If null, it does not redirect
+    route: 'MedicationLog', //Fill in the route yourself. If null, it does not redirect
   },
   {
     id: '4',
     name: 'Weight',
     logo: require('../../resources/images/weight_logo.png'),
     image: require('../../resources/images/weight.jpg'),
-    route: null //Fill in the route yourself. If null, it does not redirect
+    route: null, //Fill in the route yourself. If null, it does not redirect
   },
 ];
 
@@ -60,7 +66,11 @@ const AddLogScreen = ({navigation}) => {
         data={buttonList}
         width="100%"
         renderItem={({item}) => (
-          <TouchableOpacity style={styles.buttonStyle} onPress={() => {item.route ? navigation.push(item.route) : null}}>
+          <TouchableOpacity
+            style={styles.buttonStyle}
+            onPress={() => {
+              item.route ? navigation.push(item.route) : null;
+            }}>
             <Image source={item.logo} style={styles.iconImg} />
             <Text style={styles.buttonText1}>{item.name}</Text>
             <ImageBackground source={item.image} style={styles.backgroundImg} />
@@ -98,7 +108,7 @@ const styles = StyleSheet.create({
     width: '80%', // This should be the same size as backgroundImg height
     alignSelf: 'center',
     paddingTop: 10,
-    paddingBottom: 10
+    paddingBottom: 10,
   },
   backgroundImg: {
     width: '100%',

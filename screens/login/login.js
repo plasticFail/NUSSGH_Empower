@@ -12,23 +12,27 @@ import {
 import {connect} from 'react-redux';
 //functions
 import {mapStateToProps, mapDispatchToProps} from '../../redux/reduxMapping';
-import {storeUsername, getUsername, storePassword, getPassword, storeToken} from '../../storage/asyncStorageFunctions'
+import {
+  storeUsername,
+  getUsername,
+  storePassword,
+  getPassword,
+  storeToken,
+} from '../../storage/asyncStorageFunctions';
 import {patientLoginRequest} from '../../netcalls/requestsAuth';
 //components
 import Loading from '../../components/loading';
 
-
-class Login extends Component{
-
+class Login extends Component {
   constructor(props) {
     super(props);
     this.props = props;
 
     this.state = {
-      username: "",
-      password: "",
+      username: '',
+      password: '',
       isLoading: false,
-    }
+    };
   }
 
   componentDidMount() {
@@ -37,80 +41,84 @@ class Login extends Component{
 
   init = async () => {
     const username = await getUsername();
-    if(username !== null && username !== ''){
+    if (username !== null && username !== '') {
       console.log('username : ' + username);
-      this.setState({username:username});
+      this.setState({username: username});
     }
     const password = await getPassword();
-    if(password !== null && password !== ''){
+    if (password !== null && password !== '') {
       console.log('password : ' + password);
-      this.setState({password:password});
+      this.setState({password: password});
     }
-  }
+  };
 
-  handleLogin = async() => {
-    this.setState({isLoading:true});
-    let token = await patientLoginRequest(this.state.username, this.state.password);
+  handleLogin = async () => {
+    this.setState({isLoading: true});
+    let token = await patientLoginRequest(
+      this.state.username,
+      this.state.password,
+    );
     if (token != null) {
       await storeUsername(this.state.username);
       await storePassword(this.state.password);
       await storeToken(token);
       this.props.login();
-    }else {
+    } else {
       Alert.alert('Error', 'Invalid username/password combination.', [
         {text: 'Got It'},
       ]);
     }
-    this.setState({isLoading:false});
+    this.setState({isLoading: false});
   };
 
-  handleUsernameInput = inputText => {
+  handleUsernameInput = (inputText) => {
     this.setState({username: inputText});
-  }
+  };
 
-  handlePasswordInput = inputText => {
+  handlePasswordInput = (inputText) => {
     this.setState({password: inputText});
-  }
+  };
 
   render() {
+    const {navigation} = this.props;
     return (
-        <View style={styles.container}>
-          <Text style={{fontSize: 30, marginBottom: 20, fontWeight: '500'}}>
-            Welcome!
-          </Text>
-          <Image
-              source={require('../../resources/images/logo_v1.png')}
-              style={{width: 200, height: 200, marginBottom: 10}}
-          />
-          <TextInput
-              style={styles.inputBox}
-              placeholder="Username"
-              placeholderTextColor="#a1a3a0"
-              value={this.state.username}
-              onChangeText={this.handleUsernameInput}
-          />
-          <TextInput
-              style={styles.inputBox}
-              placeholder="Password"
-              secureTextEntry={true}
-              placeholderTextColor="#a1a3a0"
-              value={this.state.password}
-              onChangeText={this.handlePasswordInput}
-          />
-          <Text
-              style={{
-                marginLeft: '40%',
-                marginVertical: 5,
-                color: '#a1a3a0',
-              }}
-              onPress={() => this.props.navigation.navigate('ForgetPassword')}>
-            Forget Password?
-          </Text>
-          <TouchableOpacity style={styles.button} onPress={this.handleLogin}>
-            <Text style={styles.buttonText}>Login</Text>
-          </TouchableOpacity>
-          <Loading isLoading={this.state.isLoading}/>
-        </View>
+      <View style={styles.container}>
+        <Text style={{fontSize: 30, marginBottom: 20, fontWeight: '500'}}>
+          Welcome!
+        </Text>
+        <Image
+          source={require('../../resources/images/logo_v1.png')}
+          style={{width: 200, height: 200, marginBottom: 10}}
+        />
+        <TextInput
+          style={styles.inputBox}
+          placeholder="Username"
+          placeholderTextColor="#a1a3a0"
+          value={this.state.username}
+          onChangeText={this.handleUsernameInput}
+        />
+        <TextInput
+          style={styles.inputBox}
+          placeholder="Password"
+          secureTextEntry={true}
+          placeholderTextColor="#a1a3a0"
+          value={this.state.password}
+          onChangeText={this.handlePasswordInput}
+        />
+        <Text
+          style={{
+            marginLeft: '40%',
+            marginVertical: 5,
+            color: '#a1a3a0',
+          }}
+          onPress={() => this.props.navigation.navigate('ForgetPassword')}>
+          Forget Password?
+        </Text>
+        <TouchableOpacity style={styles.button} onPress={this.handleLogin}>
+          <Text style={styles.buttonText}>Login</Text>
+        </TouchableOpacity>
+        <Loading isLoading={this.state.isLoading} />
+      </View>
     );
   }
 }
