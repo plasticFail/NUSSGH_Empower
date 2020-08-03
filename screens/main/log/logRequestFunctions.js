@@ -1,4 +1,5 @@
 import {getToken} from '../../../storage/asyncStorageFunctions';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const uploadBGLog = async (bgReading, date) => {
   const url = 'https://sghempower.com/log/glucose/add-log';
@@ -7,7 +8,7 @@ const uploadBGLog = async (bgReading, date) => {
     let response = await fetch(url, {
       method: 'POST',
       headers: {
-        Authorization: 'Bearer ' + getToken(),
+        Authorization: 'Bearer ' + (await getToken()),
         Accept: 'application/json',
         'Content-type': 'application/json',
       },
@@ -28,4 +29,30 @@ const uploadBGLog = async (bgReading, date) => {
   }
 };
 
-export {uploadBGLog};
+const storeMedications = async () => {
+  const url = 'https://sghempower.com/log/medication/list';
+  try {
+    let response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        Authorization: 'Bearer ' + (await getToken()),
+        Accept: 'application/json',
+        'Content-type': 'application/json',
+      },
+    });
+    let responseJson = await response.json();
+    AsyncStorage.setItem(
+      'medications',
+      JSON.stringify(responseJson.medications),
+    );
+    if (responseJson.token != null) {
+      console.log('Success');
+      return true;
+    }
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+};
+
+export {uploadBGLog, storeMedications};

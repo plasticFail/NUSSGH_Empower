@@ -8,7 +8,11 @@ import {TouchableOpacity, ScrollView} from 'react-native-gesture-handler';
 import Entypo from 'react-native-vector-icons/Entypo';
 import DropDownPicker from 'react-native-dropdown-picker';
 import SuccessDialogue from '../../../../components/successDialogue';
-import {getToken} from '../../../../storage/asyncStorageFunctions';
+import {getMedications} from '../../../../storage/asyncStorageFunctions';
+import {storeMedications} from '../logRequestFunctions';
+import AsyncStorage from '@react-native-community/async-storage';
+import {medicationList} from '../../../../netcalls/urls';
+import Loading from '../../../../components/loading';
 
 Entypo.loadFont();
 
@@ -24,10 +28,51 @@ export default class MedicationLog extends React.Component {
       modalOpen: false,
       editModalOpen: false,
       successShow: false,
+      searchMedicineQuery: '',
+      medicationResult: [],
+      isLoading: false,
     };
+    this.timeout = setTimeout(() => {}, 0);
     this.addMedication = this.addMedication.bind(this);
-    console.log(getToken());
   }
+
+  searchMedicine = (text) => {
+    // handler for making lazy requests.
+    if (text === '') {
+      clearTimeout(this.timeout);
+      this.setState({
+        searchMedicineQuery: text,
+        isLoading: false,
+        medicationResult: [],
+      });
+    } else {
+      // Do lazy loading
+      this.setState(
+        {
+          searchMedicineQuery: text,
+          isLoading: true,
+        },
+        () => {
+          clearTimeout(this.timeout);
+          this.timeout = setTimeout(() => {
+            setTimeout(() => {
+              this.setState({
+                isLoading: false,
+              });
+            }, 1000); // simulate 1s for fetching request.
+            // Format to fetch the data
+            storeMedications();
+            getMedications().then((response) => {
+              let arr = [];
+              for (var x in response) {
+                arr.push(x);
+              }
+            });
+          }, 500); // 500ms delay before loading API.
+        },
+      );
+    }
+  };
 
   addMedication = (selectedMedicine, selectedDosage) => {
     this.props.navigation.navigate('MedicationLog');
@@ -75,6 +120,8 @@ export default class MedicationLog extends React.Component {
       modalOpen,
       editModalOpen,
       successShow,
+      isLoading,
+      searchMedicineQuery,
     } = this.state;
     const {navigation} = this.props;
 
@@ -158,7 +205,7 @@ export default class MedicationLog extends React.Component {
             <SuccessDialogue visible={successShow} type="Medication" />
           </View>
         </View>
-
+        {/* Select Medicine Pop up*/}
         <View style={{flex: 1}}>
           <Modal
             isVisible={modalOpen}
@@ -192,85 +239,53 @@ export default class MedicationLog extends React.Component {
               <View style={{flex: 3, alignItems: 'center'}}>
                 <View style={{marginTop: '7%'}}>
                   <Text style={{fontWeight: '500', fontSize: 20}}>Name:</Text>
-                  <DropDownPicker
-                    searchable={true}
-                    searchablePlaceholder="Search for a medication"
-                    items={[
-                      {
-                        label: 'Metformin - 1000 mg',
-                        value: 'id_1',
-                        icon: () => (
-                          <Image
-                            source={{
-                              uri:
-                                'https://img.medscapestatic.com/pi/features/drugdirectory/octupdate/AMN02200.jpg',
-                            }}
-                            style={{height: 50, width: 50}}
-                          />
-                        ),
-                      },
-                      {
-                        label: 'Metformin - 500 mg',
-                        value: 'id_2',
-                        icon: () => (
-                          <Image
-                            source={{
-                              uri:
-                                'https://img.medscapestatic.com/pi/features/drugdirectory/octupdate/GLN01590.jpg',
-                            }}
-                            style={{height: 50, width: 50}}
-                          />
-                        ),
-                      },
-                    ]}
-                    containerStyle={{
-                      height: 60,
-                      width: 300,
-                      marginTop: '3%',
-                      backgroundColor: 'white',
-                    }}
-                    itemStyle={{
-                      justifyContent: 'flex-start',
-                    }}
-                    activeLabelStyle={{color: 'red'}}
-                    onChangeItem={(item) => {
-                      this.setState({selectedMedicine: item});
+                  <TextInput
+                    style={[styles.inputBox, {width: 300}]}
+                    placeholder=""
+                    placeholderTextColor="#a1a3a0"
+                    onChangeText={(value) => {
+                      this.searchMedicine(value);
                     }}
                   />
-                  <View style={{marginTop: '7%'}}>
-                    <Text style={{fontWeight: '500', fontSize: 20}}>
-                      Dosage:
-                    </Text>
-                    <View style={{flexDirection: 'row'}}>
-                      <TextInput
-                        style={styles.inputBox}
-                        placeholder=""
-                        placeholderTextColor="#a1a3a0"
-                        onChangeText={(value) =>
-                          this.setState({selectedDosage: value})
-                        }
-                      />
-                      <View
-                        style={{
-                          borderRadius: 20,
-                          borderWidth: 3,
-                          borderColor: '#AAd326',
-                          padding: 15,
-                          alignItems: 'center',
-                        }}>
-                        <Text style={{fontSize: 20}}>Unit (s)</Text>
-                      </View>
+                  <Loading isLoading={isLoading} />
+                </View>
+                <View style={{marginTop: '7%'}}>
+                  <Text
+                    style={{
+                      fontWeight: '500',
+                      fontSize: 20,
+                    }}>
+                    Dosage:
+                  </Text>
+                  <View style={{flexDirection: 'row'}}>
+                    <TextInput
+                      style={styles.inputBox}
+                      placeholder=""
+                      placeholderTextColor="#a1a3a0"
+                      onChangeText={(value) =>
+                        this.setState({selectedDosage: value})
+                      }
+                    />
+                    <View
+                      style={{
+                        borderRadius: 20,
+                        borderWidth: 3,
+                        borderColor: '#AAd326',
+                        padding: 15,
+                        alignItems: 'center',
+                      }}>
+                      <Text style={{fontSize: 20}}>Unit (s)</Text>
                     </View>
                   </View>
-                  <View>
-                    <TouchableOpacity
-                      style={[styles.button, {backgroundColor: '#aad326'}]}
-                      onPress={() =>
-                        this.addMedication(selectedMedicine, selectedDosage)
-                      }>
-                      <Text style={styles.buttonText}>Add Medicine</Text>
-                    </TouchableOpacity>
-                  </View>
+                </View>
+                <View>
+                  <TouchableOpacity
+                    style={[styles.button, {backgroundColor: '#aad326'}]}
+                    onPress={() =>
+                      this.addMedication(selectedMedicine, selectedDosage)
+                    }>
+                    <Text style={styles.buttonText}>Add Medicine</Text>
+                  </TouchableOpacity>
                 </View>
               </View>
             </View>
@@ -349,6 +364,10 @@ export default class MedicationLog extends React.Component {
       </ScrollView>
     );
   }
+}
+
+function SearchResults({}) {
+  return;
 }
 
 function MedicationAdded({medication, handleDelete, handleEdit}) {
