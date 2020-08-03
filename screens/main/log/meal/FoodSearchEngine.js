@@ -13,6 +13,8 @@ import {
 // Components
 import Searchbar from '../../../../components/Searchbar';
 import FoodModalContent from "./FoodModalContent";
+// Functions
+import {getToken} from "../../../../storage/asyncStorageFunctions";
 // Others
 import SampleFoodDB from './SampleFoodDB.json';
 import carbohydrate from '../../../../resources/images/icons/carbohydrate.png';
@@ -49,37 +51,29 @@ class FoodSearchEngineScreen extends React.Component {
             }, () => {
                 clearTimeout(this.timeout);
                 this.timeout = setTimeout(() => {
-                    // Fetch api and load the response here.
-                    // For now this would be just simulating an async process.
-                    /*
-                    setTimeout(() => {
-                        this.setState({
-                            isLoading: false,
-                            foodResults: SampleFoodDB.data
-                        })
-                    }, 1000) // simulate 1s for fetching request.
-
-                     */
-
-                    // Format to fetch the data
-                    fetch('http://192.168.1.8:5000/food/search', {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify({query: this.state.query, type: this.props.route.params.type})
-                    }).then((res) => res.json()).then(data => {
-                        this.setState({
-                            foodResults: data.data,
-                            isLoading: false
-                        })
-                    }).catch(err => {
-                        this.setState({
-                            isLoading: false
-                        }, () => alert(err.message))
+                    // Get token.
+                    getToken().then(token => {
+                        // Fetch api and load the response here.
+                        fetch('https://sghempower.com/food/search', {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                Authorization: "Bearer " + token
+                            },
+                            body: JSON.stringify({query: this.state.query, type: this.props.route.params.type})
+                        }).then((res) => res.json()).then(data => {
+                            this.setState({
+                                foodResults: data.data,
+                                isLoading: false
+                            })
+                        }).catch(err => {
+                            this.setState({
+                                isLoading: false
+                            }, () => alert(err.message))
+                        });
                     })
                 }, 500); // 500ms delay before loading API.
-            })
+            });
         }
     }
 
