@@ -338,7 +338,7 @@ function FoodItem({onPress, item, handleDelete, onQuantityChange}) {
                 <View style={styles.foodTextWrapper}>
                     <Text style={{fontSize: adjustedFontSize}}>{item["food-name"][0].toUpperCase() + item["food-name"].slice(1)}</Text>
                 </View>
-                <IntegerQuantitySelector defaultValue={1}
+                <IntegerQuantitySelector defaultValue={item.quantity}
                                          changeAmount={1}
                                          minValue={1}
                                          maxValue={50}
