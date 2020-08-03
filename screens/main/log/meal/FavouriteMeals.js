@@ -26,7 +26,6 @@ export default class FavouriteMealScreen extends React.Component {
 
     navigateToCreateMealLogPage = (selectedMeal) => {
         const { selectedMealType, selectedDateTime } = this.props.route.params;
-        this.props.navigation.goBack();
         this.props.navigation.navigate("CreateMealLog", {
             meal: selectedMeal,
             selectedMealType,
@@ -46,7 +45,7 @@ export default class FavouriteMealScreen extends React.Component {
                           keyExtractor={item => item.mealName}
                           style={styles.listContainer} renderItem={({item}) =>
                     (<RenderMealItem item={item}
-                                    onPressSelect={this.navigateToCreateMealLogPage} />)}
+                                    onPressSelect={() => this.navigateToCreateMealLogPage(item)} />)}
                 />
             </View>
         );
@@ -59,7 +58,7 @@ function RenderMealItem({item, onPressSelect}) {
         <View style={styles.mealItem}>
             <View style={styles.mealNameContainer}>
                 <Text style={styles.mealNameText}>{item.mealName}</Text>
-                <TouchableOpacity style={styles.selectButton} onPress={() => onPressSelect(item)}>
+                <TouchableOpacity style={styles.selectButton} onPress={onPressSelect}>
                     <Text style={styles.selectButtonText}>Select</Text>
                 </TouchableOpacity>
             </View>
