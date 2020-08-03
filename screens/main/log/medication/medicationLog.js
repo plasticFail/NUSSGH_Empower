@@ -25,6 +25,9 @@ export default class MedicationLog extends React.Component {
       successShow: false,
     };
     console.log(this.state.date);
+    this.getSelectedMedicineFromModal = this.getSelectedMedicineFromModal.bind(
+      this,
+    );
   }
 
   setCalendarVisible() {
@@ -36,9 +39,13 @@ export default class MedicationLog extends React.Component {
     console.log(this.state.date);
   }
 
-  getSelectedMedicineFromModal(medicine) {
-    console.log('Setting selected medication:');
-    console.log(medicine);
+  //get and add selected medicine
+  getSelectedMedicineFromModal(medicineObj) {
+    console.log('Setting selected medication: ' + medicineObj);
+    let list = this.state.selectedMedicationList;
+    list.push(medicineObj);
+    this.setState({selectModalOpen: false, selectedMedicationList: list});
+    console.log(list);
   }
 
   closeModal() {
