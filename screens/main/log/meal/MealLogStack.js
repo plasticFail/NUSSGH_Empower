@@ -1,7 +1,7 @@
 import React from 'react';
-import {View, StyleSheet, Text, TouchableHighlight, TouchableOpacity, Modal} from 'react-native';
+import {View, StyleSheet, Text, TouchableHighlight, TouchableOpacity, Modal, Platform} from 'react-native';
 // Third-party lib
-import {createStackNavigator} from "@react-navigation/stack";
+import {createStackNavigator, TransitionPresets} from "@react-navigation/stack";
 import DatePicker from 'react-native-date-picker';
 import Moment from 'moment';
 // Screen
@@ -165,10 +165,11 @@ const MealLogStack = (props) => {
         <Stack.Screen name={'FavouriteMeal'}
                       component={FavouriteMealScreen}
                       options={({ route , navigation}) => (
-                          {     title: "My Favourite Meals",
+                          {   title: "My Favourite Meals",
                               headerLeft: () => (<HeaderIcon iconName="chevron-left"
                                                              text={null} clickFunc={navigation.goBack}/>),
-                              headerRight: () => (<View style={{width: 25, height: 25}} />)
+                              headerRight: () => (<View style={{width: 25, height: 25}} />),
+                              ...TransitionPresets.ModalTransition,
                           })}/>
         <Stack.Screen name={'FoodSearchEngine'}
                       component={FoodSearchEngineScreen}
