@@ -130,11 +130,11 @@ export default class CreateMealLog extends React.Component {
     }
 
     handleSubmitLog = () => {
-        const { selectedMealType, currentDateTime } = this.props.route.params;
+        const { selectedMealType, selectedDateTime } = this.props.route.params;
         const { beverage, main, side, dessert, isFavourite, mealName } = this.state;
         const dataToLog = {
             mealType: selectedMealType,
-            dateTime: currentDateTime,
+            dateTime: selectedDateTime,
             // And all the food items, not yet decided on how to log
         }
         this.props.navigation.popToTop();
