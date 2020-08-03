@@ -27,13 +27,8 @@ export default class MedicationLog extends React.Component {
     console.log(this.state.date);
   }
 
-  setCalendarVisible(boolVal) {
-    if (boolVal == true) {
-      this.setState({calendarVisible: !this.state.calendarVisible});
-    }
-    if (boolVal == false) {
-      this.setState({calendarVisible: !this.state.calendarVisible});
-    }
+  setCalendarVisible() {
+    this.setState({calendarVisible: !this.state.calendarVisible});
   }
 
   setDate(date) {
@@ -44,6 +39,11 @@ export default class MedicationLog extends React.Component {
   getSelectedMedicineFromModal(medicine) {
     console.log('Setting selected medication:');
     console.log(medicine);
+  }
+
+  closeModal() {
+    console.log('Closing Modal');
+    this.setState({selectModalOpen: !this.state.selectModalOpen});
   }
 
   render() {
@@ -73,7 +73,22 @@ export default class MedicationLog extends React.Component {
         </TouchableOpacity>
 
         {/* Select Medicine Modal*/}
-        <Modal isVisible={selectModalOpen} animationIn="slideInUp">
+        <Modal
+          isVisible={selectModalOpen}
+          animationIn="slideInUp"
+          onBackdropPress={() => this.setState({selectModalOpen: false})}
+          onBackButtonPress={() => this.setState({selectModalOpen: false})}>
+          <View style={styles.container}>
+            <View style={styles.header}>
+              <Text style={styles.headerTitle}>Select Medicine</Text>
+              <Entypo
+                name="cross"
+                size={30}
+                style={{marginTop: '1%', marginStart: '20%'}}
+                onPress={() => this.setState({selectModalOpen: false})}
+              />
+            </View>
+          </View>
           <SelectMedicationModalContent
             setMedicine={this.getSelectedMedicineFromModal}
           />
@@ -81,6 +96,14 @@ export default class MedicationLog extends React.Component {
       </ScrollView>
     );
   }
+}
+
+function RenderMedicationAdded({selectedMedicationList}) {
+  return (
+    <View>
+      <Text>Hi</Text>
+    </View>
+  );
 }
 
 function RenderDateTime({date, calendarVisible, setDate, setCalendarVisible}) {
@@ -103,7 +126,7 @@ function RenderDateTime({date, calendarVisible, setDate, setCalendarVisible}) {
           size={20}
           style={{marginTop: '7%', marginStart: '7%'}}
           onPress={() => {
-            setCalendarVisible(!calendarVisible);
+            setCalendarVisible();
           }}
         />
       </View>
@@ -118,14 +141,6 @@ function RenderDateTime({date, calendarVisible, setDate, setCalendarVisible}) {
           mode="datetime"
         />
       )}
-    </View>
-  );
-}
-
-function RenderMedicationAdded({selectedMedicationList}) {
-  return (
-    <View>
-      <Text>Hi</Text>
     </View>
   );
 }
@@ -150,6 +165,7 @@ const styles = StyleSheet.create({
     paddingStart: 30, //position placeholder text
     marginVertical: 10,
     marginEnd: '3%',
+    fontSize: 17,
   },
   button: {
     marginTop: '4%',
@@ -175,5 +191,20 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+  },
+  container: {
+    backgroundColor: 'white',
+    borderRadius: 3,
+  },
+  header: {
+    backgroundColor: '#aad326',
+    padding: '4%',
+    flexDirection: 'row',
+  },
+  headerTitle: {
+    fontWeight: '700',
+    fontSize: 20,
+    marginStart: '30%',
+    marginTop: '2%',
   },
 });
