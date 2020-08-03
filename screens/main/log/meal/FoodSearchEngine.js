@@ -9,14 +9,15 @@ import {
     TouchableOpacity,
     Modal,
     TouchableHighlight,
-    ScrollView
 } from 'react-native';
+// Components
 import Searchbar from '../../../../components/Searchbar';
+import FoodModalContent from "./FoodModalContent";
+// Others
 import SampleFoodDB from './SampleFoodDB.json';
 import carbohydrate from '../../../../resources/images/icons/carbohydrate.png';
 import energy from '../../../../resources/images/icons/energy.png';
 import fat from '../../../../resources/images/icons/fat.png';
-import ProgressBar from "../../../../components/progressbar";
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 
 Icon.loadFont();
@@ -59,7 +60,7 @@ class FoodSearchEngineScreen extends React.Component {
 
                     // Format to fetch the data
                     /*
-                    fetch('http://ip:port/food/search', {
+                    fetch('http://<IP, PORT>/food/search', {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json"
@@ -70,11 +71,28 @@ class FoodSearchEngineScreen extends React.Component {
                             foodResults: data.data,
                             isLoading: false
                         })
+                    }).catch(err => {
+                        this.setState({
+                            isLoading: false
+                        }, () => alert(err.message))
                     })
-                      */
+                     */
                 }, 500); // 500ms delay before loading API.
             })
         }
+    }
+
+    onSubmit = () => {
+        clearTimeout(this.timeout);
+        this.setState({
+            isLoading: true
+        }, () => {
+            // Fetch api here again
+            this.setState({
+                isLoading: false,
+                foodResults: SampleFoodDB.data
+            })
+        })
     }
 
     render() {
@@ -88,7 +106,9 @@ class FoodSearchEngineScreen extends React.Component {
                         <Icon name="chevron-left" onPress={navigation.goBack} size={25}/>
                         <Text style={styles.searchText}>Search</Text>
                     </View>
-                    <Searchbar containerStyle={{marginTop: 10}} onChangeText={this.updateQuery} />
+                    <Searchbar containerStyle={{marginTop: 10}}
+                               onChangeText={this.updateQuery}
+                               onSubmit={this.onSubmit} />
                 </View>
                 { query === "" ? // Render search prompt "Begin your search"
                     <View style={styles.searchPromptBody}>
@@ -135,6 +155,17 @@ function FoodResultList({foodList, navigation, route, type}) {
         handleClose();
     };
 
+    const addFoodToLog = () => {
+        // Check if it already exists in the list. If yes, throw alert, otherwise navigate back to create meal log.
+        const selectedFoodName = selected["food-name"]
+        if (route.params.existingItems.indexOf(selectedFoodName) != -1) {
+            // We already have this food item in the cart.
+            alert(`${selectedFoodName} is already in your cart! Select something else.`);
+        } else {
+            navigateBackToCreateMealLog();
+        }
+    }
+
     const renderFoodListItem = ({item}) => {
         return (
             <TouchableOpacity style={listStyles.li} onPress={() => handleOpen(item)}>
@@ -174,67 +205,13 @@ function FoodResultList({foodList, navigation, route, type}) {
         <React.Fragment>
             <Modal visible={modalOpen} transparent={true}>
                 {selected &&
-                    <View style={modalStyles.root}>
-                        <TouchableOpacity style={modalStyles.overlay} onPress={handleClose} />
-                        <View style={modalStyles.paper}>
-                            <Image style={modalStyles.image} source={{uri: selected.imgUrl.url}}/>
-                            <View style={modalStyles.nutritionInfoContainer}>
-                                <ScrollView contentContainerStyle={{padding: 15}}>
-                                    <Text>{selected["food-name"][0].toUpperCase() + selected["food-name"].slice(1)}</Text>
-                                    <Text>{selected["household-measure"]}</Text>
-                                    <Text>{selected["per-serving"]}</Text>
-                                    <Text>Nutritional Info</Text>
-                                    <View style={modalStyles.nutrientRow}>
-                                        {renderNutritionText(selected.nutrients["energy"], "Energy")}
-                                        <ProgressBar progress="30%" useIndicatorLevel={true}
-                                                     containerStyle={{height: 15, width: '100%'}} />
-                                    </View>
-                                    <View style={modalStyles.nutrientRow}>
-                                        {renderNutritionText(selected.nutrients["carbohydrate"], "Carbohydrate")}
-                                        <ProgressBar progress="60%" useIndicatorLevel={true}
-                                                     containerStyle={{height: 15, width: '100%'}} />
-                                    </View>
-                                    <View style={modalStyles.nutrientRow}>
-                                        {renderNutritionText(selected.nutrients["protein"], "Protein")}
-                                        <ProgressBar progress="90%" useIndicatorLevel={true} reverse={true}
-                                                     containerStyle={{height: 15, width: '100%'}} />
-                                    </View>
-                                    <View style={modalStyles.nutrientRow}>
-                                        {renderNutritionText(selected.nutrients["total-fat"], "Total Fat")}
-                                        <ProgressBar progress="60%" useIndicatorLevel={true}
-                                                     containerStyle={{height: 15, width: '100%'}} />
-                                    </View>
-                                    <View style={modalStyles.nutrientRow}>
-                                        {renderNutritionText(selected.nutrients["saturated-fat"], "Saturated Fat")}
-                                        <ProgressBar progress="60%" useIndicatorLevel={true}
-                                                     containerStyle={{height: 15, width: '100%'}} />
-                                    </View>
-                                    <View style={modalStyles.nutrientRow}>
-                                        {renderNutritionText(selected.nutrients["dietary-fibre"], "Dietary Fibre")}
-                                        <ProgressBar progress="30%" useIndicatorLevel={true} reverse={true}
-                                                     containerStyle={{height: 15, width: '100%'}} />
-                                    </View>
-                                    <View style={modalStyles.nutrientRow}>
-                                        {renderNutritionText(selected.nutrients["cholesterol"], "Cholesterol")}
-                                        <ProgressBar progress="60%" useIndicatorLevel={true}
-                                                     containerStyle={{height: 15, width: '100%'}} />
-                                    </View>
-                                    {   selected.nutrients.sodium &&
-                                        <View style={modalStyles.nutrientRow}>
-                                            {renderNutritionText(selected.nutrients["sodium"], "Sodium")}
-                                            <ProgressBar progress="90%" useIndicatorLevel={true}
-                                                         containerStyle={{height: 15, width: '100%'}} />
-                                        </View>
-                                    }
-                                </ScrollView>
-                            </View>
+                       <FoodModalContent selected={selected} onClose={handleClose}>
                             <TouchableHighlight
-                                style={modalStyles.button}
-                                underlayColor='#fff' onPress={navigateBackToCreateMealLog}>
-                                <Text style={modalStyles.buttonText}>Add</Text>
+                                style={styles.button}
+                                underlayColor='#fff' onPress={addFoodToLog}>
+                                <Text style={styles.buttonText}>Add</Text>
                             </TouchableHighlight>
-                        </View>
-                    </View>
+                       </FoodModalContent>
                 }
             </Modal>
             <FlatList style={listStyles.container} data={foodList}
@@ -246,7 +223,7 @@ function FoodResultList({foodList, navigation, route, type}) {
 function renderNutritionText({amount, unit}, nutrient) {
     return (
         <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <Text>{nutrient}</Text>
+            <Text style={modalStyles.nutrientText}>{nutrient}</Text>
             {
                 unit === "N.A" ? <Text>{unit}</Text>
                     : <Text>{amount + " " + unit}</Text>
@@ -290,52 +267,6 @@ function getColorFromNutrient({rating}, nutrientName) {
     }
 }
 
-const modalStyles = StyleSheet.create({
-    root: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    overlay: {
-        height: '100%',
-        width: '100%',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        position: 'absolute'
-    },
-    paper: {
-        backgroundColor: 'white',
-        width: '80%',
-        height: '70%'
-    },
-    image: {
-        width: '100%',
-        height: '40%'
-    },
-    nutritionInfoContainer: {
-        height: '53.5%',
-    },
-    button: {
-        marginRight:40,
-        marginLeft:40,
-        marginTop:10,
-        paddingTop:20,
-        paddingBottom:20,
-        backgroundColor:'#68a0cf',
-        borderRadius:10,
-        borderWidth: 1,
-        borderColor: '#fff',
-        //transform: [{"translateY": '+42%'}]
-    },
-    buttonText: {
-        color:'#fff',
-        textAlign:'center',
-    },
-    nutrientRow: {
-        width: '100%',
-        paddingTop: 10
-    }
-});
-
 const listStyles = StyleSheet.create({
     container: {
         width: '100%'
@@ -347,6 +278,10 @@ const listStyles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: '#fff',
+        paddingLeft: 10,
+        paddingRight: 10,
+        paddingTop: 5,
+        paddingBottom: 5,
     },
     image: {
         width: 100,
@@ -362,18 +297,15 @@ const listStyles = StyleSheet.create({
         width: '60%',
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'flex-end',
+        justifyContent: 'center', // position of the food description
         height: '100%',
         padding: 10
     },
     nutrientIndicatorList: {
-        display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-around',
         height: '100%',
-        paddingTop: 5,
-        paddingBottom: 5,
-        width: 40
+        flex: 1
     },
     foodNameText: {
         fontWeight: 'bold'
@@ -385,8 +317,8 @@ const listStyles = StyleSheet.create({
         height: 25,
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'space-between',
-        width: '100%'
+        justifyContent: 'space-around',
+        width: '100%',
     },
     nutrientImageStyle: {
         height: 25,
@@ -436,7 +368,21 @@ const styles = StyleSheet.create({
     foodSearchResults: {
         flex: 1,
         alignItems: 'center'
-    }
+    },
+    button: {
+        width: '100%',
+        height: 55,
+        backgroundColor:'#aad326',
+        justifyContent: 'center',
+        alignSelf: 'center',
+        //transform: [{"translateY": 27.5}] // Half of height
+    },
+    buttonText: {
+        color:'#000',
+        textAlign:'center',
+        fontSize: 22,
+        fontWeight: 'bold'
+    },
 })
 
 export default FoodSearchEngineScreen;

@@ -8,23 +8,42 @@ import {
     TextInput,
     Image,
     TouchableWithoutFeedback,
-    TouchableOpacity, Modal
+    Modal,
+    Animated, LayoutAnimation,
+    Platform, UIManager
 } from 'react-native';
+// Components
+import ImageWithBadge from "../../../../components/ImageWithBadge";
+import FoodModalContent from "./FoodModalContent";
+import IntegerQuantitySelector from "../../../../components/IntegerQuantitySelector";
+// Others such as images, icons.
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import main from '../../../../resources/images/icons/meal.png';
 import beverage from '../../../../resources/images/icons/mug.png';
 import side from '../../../../resources/images/icons/salad.png';
 import dessert from '../../../../resources/images/icons/parfait.png';
-import ImageWithBadge from "../../../../components/ImageWithBadge";
-import ProgressBar from "../../../../components/progressbar";
 
 Icon.loadFont()
 // Any meal log selected (e.g Create, Recent or Favourites)
 // will be rendered to this page for confirmation before the submitting to database.
 
+if (
+    Platform.OS === "android" &&
+    UIManager.setLayoutAnimationEnabledExperimental
+) {
+    UIManager.setLayoutAnimationEnabledExperimental(true);
+}
+
+// Keywords for state items
+const BEVERAGE_KEY_WORD = 'beverage';
+const MAIN_KEY_WORD = 'main';
+const SIDE_KEY_WORD = 'side';
+const DESSERT_KEY_WORD = 'dessert';
+
 export default class CreateMealLog extends React.Component {
     constructor(props) {
         super(props);
+        // NAMING MUST FOLLOW KEYWORDS FOR STATE ITEMS.
         this.state = {
             beverage: [],
             main: [],
@@ -37,10 +56,18 @@ export default class CreateMealLog extends React.Component {
         }
     }
 
+    // Animation property for items when they are deleted.
+    setAnimation = () => {
+        LayoutAnimation.configureNext({ duration: 300,
+            update: { type: LayoutAnimation.Types.easeInEaseOut, springDamping: 0.4 },
+        });
+    };
+
     redirectToFoodSearchEngine = (type) => () => {
         this.props.navigation.push('FoodSearchEngine', {
             type: type,
-            fullScreen: true
+            // Send in existing items belonging to this food type (beverage, main, side, dessert so that it can be checked).
+            existingItems: this.state[type].map(foodItem => foodItem["food-name"])
         })
     }
 
@@ -48,6 +75,8 @@ export default class CreateMealLog extends React.Component {
         if (prevProps.route.params?.item !== this.props.route.params?.item) {
             const { type, item } = this.props.route.params;
             const newState = {...this.state};
+            // Add a new field to the item, called quantity.
+            item.quantity = 1;
             newState[type].push(item);
             this.setState(newState, () => console.log(this.state));
         }
@@ -66,12 +95,24 @@ export default class CreateMealLog extends React.Component {
         })
     }
 
-    handleDelete = (food, type) => {
+    // Find the food item and its index, replace the index with a new food item.
+    // Update state with this new state.
+    onQuantityChange = (foodName, type) =>  (newQuantity) => {
+        const foodItem = this.state[type].filter(food => food["food-name"] === foodName)[0];
+        const index = this.state[type].indexOf(foodItem);
+        const newFoodItem = {...foodItem};
+        newFoodItem.quantity = newQuantity;
+        const newState = { ...this.state };
+        newState[type][index] = newFoodItem;
+        this.setState(newState);
+    }
+
+    handleDelete = (foodName, type) => {
         // Copy the previous state
         const newState = {...this.state};
         // Filter the food item / delete the corresponding food
-        newState[type] = newState[type].filter(foodItem => foodItem !== food);
-        this.setState(newState)
+        newState[type] = newState[type].filter(foodItem => foodItem["food-name"] !== foodName);
+        this.setState(newState, this.setAnimation);
     }
 
     handleModalOpen = (food) => {
@@ -86,6 +127,21 @@ export default class CreateMealLog extends React.Component {
             selected: null,
             modalOpen: false
         })
+    }
+
+    handleSubmitLog = () => {
+        const { selectedMealType, currentDateTime } = this.props.route.params;
+        const { beverage, main, side, dessert, isFavourite, mealName } = this.state;
+        const dataToLog = {
+            mealType: selectedMealType,
+            dateTime: currentDateTime,
+            // And all the food items, not yet decided on how to log
+        }
+        this.props.navigation.popToTop();
+        this.props.navigation.goBack();
+        //this.props.navigation.navigate('AddLog');
+        console.log(this.state);
+        alert(`Log submitted! for ${JSON.stringify(dataToLog)}`);
     }
 
     render() {
@@ -109,129 +165,113 @@ export default class CreateMealLog extends React.Component {
                               style={styles.favouriteIcon}/>
                     </View>
                     <View>
-                        <ScrollView horizontal={true} contentContainerStyle={styles.rowContent}>
+                        <ScrollView horizontal={true} contentContainerStyle={styles.rowContent}
+                                    // Refs to provide auto scroll to end for easier adding.
+                                    ref={beverageScrollView => this.beverageScrollView = beverageScrollView}
+                                    onContentSizeChange={() => {
+                                        this.beverageScrollView.scrollToEnd();
+                                    }}>
                             <FoodTypeLabel
                                 containerStyle={styles.foodItem}
                                 imageStyle={styles.foodImage}
                                 alignment='center'
                                 value="Beverage" img={beverage}/>
                             {   // Render food list for cart items in beverage.
-                                this.state.beverage.map((food, index) => <FoodItem item={food} handleDelete={() => {
+                                // Note that key must be specified otherwise everything will re-render.
+                                this.state.beverage.map((food) => <FoodItem key={food["food-name"]}
+                                                                            item={food} handleDelete={() => {
                                     // Handle delete for this food item in the cart.
-                                        this.handleDelete(food, "beverage");
-                                    }
-                                } onPress={() => this.handleModalOpen(food)} />)
+                                    this.handleDelete(food["food-name"], BEVERAGE_KEY_WORD);
+                                }
+                                }
+                                                                            onPress={() => this.handleModalOpen(food)}
+                                                                            onQuantityChange={this.onQuantityChange(food["food-name"], BEVERAGE_KEY_WORD)} />)
                             }
-                            <FoodItem type="create" onPress={this.redirectToFoodSearchEngine("beverage")} />
+
+                            <CreateButton onPress={this.redirectToFoodSearchEngine("beverage")} />
                         </ScrollView>
-                        <ScrollView horizontal={true} contentContainerStyle={styles.rowContent}>
+                        <ScrollView horizontal={true} contentContainerStyle={styles.rowContent}
+                                    // Refs to provide auto scroll to end for easier adding.
+                                    ref={mainScrollView => this.mainScrollView = mainScrollView}
+                                    onContentSizeChange={() => {
+                                        this.mainScrollView.scrollToEnd();
+                                    }}>
                             <FoodTypeLabel
                                 containerStyle={styles.foodItem}
                                 imageStyle={styles.foodImage}
                                 alignment='center'
                                 value="Main" img={main}/>
                             {   // Render food list for cart items in main.
-                                this.state.main.map((food) => <FoodItem item={food} handleDelete={() => {
+                                // Note that key must be specified otherwise everything will re-render.
+                                this.state.main.map((food) => <FoodItem key={food["food-name"]}
+                                                                        item={food} handleDelete={() => {
                                     // Handle delete for this food item in the cart.
-                                        this.handleDelete(food, "main");
+                                        this.handleDelete(food["food-name"], MAIN_KEY_WORD);
                                     }
-                                } onPress={() => this.handleModalOpen(food)} />)
+                                }
+                                                                        onPress={() => this.handleModalOpen(food)}
+                                                                        onQuantityChange={this.onQuantityChange(food["food-name"], MAIN_KEY_WORD)}/>)
                             }
-                            <FoodItem type="create" onPress={this.redirectToFoodSearchEngine("main")} />
+                            <CreateButton onPress={this.redirectToFoodSearchEngine(MAIN_KEY_WORD)} />
                         </ScrollView>
-                        <ScrollView horizontal={true} contentContainerStyle={styles.rowContent}>
+                        <ScrollView horizontal={true}
+                                    // Refs to provide auto scroll to end for easier adding.
+                                    ref={sideScrollView => this.sideScrollView = sideScrollView}
+                                    onContentSizeChange={() => {
+                                        this.sideScrollView.scrollToEnd();
+                                    }}
+                                    contentContainerStyle={styles.rowContent}>
                             <FoodTypeLabel
                                 containerStyle={styles.foodItem}
                                 imageStyle={styles.foodImage}
                                 alignment='center'
                                 value="Side" img={side}/>
                             {   // Render food list for cart items in side.
-                                this.state.side.map((food) => <FoodItem item={food} handleDelete={() => {
+                                // Note that key must be specified otherwise everything will re-render.
+                                this.state.side.map((food) => <FoodItem key={food["food-name"]}
+                                                                        item={food} handleDelete={() => {
                                     // Handle delete for this food item in the cart.
-                                        this.handleDelete(food, "side");
+                                        this.handleDelete(food["food-name"], SIDE_KEY_WORD);
                                     }
-                                } onPress={() => this.handleModalOpen(food)} />)
+                                }
+                                                                        onPress={() => this.handleModalOpen(food)}
+                                                                        onQuantityChange={this.onQuantityChange(food["food-name"], SIDE_KEY_WORD)} />)
                             }
-                            <FoodItem type="create" onPress={this.redirectToFoodSearchEngine("side")} />
+                            <CreateButton onPress={this.redirectToFoodSearchEngine(SIDE_KEY_WORD)} />
                         </ScrollView>
-                        <ScrollView horizontal={true} contentContainerStyle={styles.rowContent}>
+                        <ScrollView horizontal={true}
+                                    // Refs to provide auto scroll to end for easier adding.
+                                    ref={dessertScrollView => this.dessertScrollView = dessertScrollView}
+                                    onContentSizeChange={() => {
+                                        this.dessertScrollView.scrollToEnd();
+                                    }}
+                                    contentContainerStyle={styles.rowContent}>
                             <FoodTypeLabel
                                 containerStyle={styles.foodItem}
                                 imageStyle={styles.foodImage}
                                 alignment='center'
                                 value="Dessert" img={dessert}/>
                             {   // Render food list for cart items in dessert.
-                                this.state.dessert.map((food) => <FoodItem item={food} handleDelete={() => {
+                                // Note that key must be specified otherwise everything will re-render.
+                                this.state.dessert.map((food) => <FoodItem key={food["food-name"]}
+                                                                           item={food} handleDelete={() => {
                                     // Handle delete for this food item in the cart.
-                                        this.handleDelete(food, "dessert");
+                                        this.handleDelete(food["food-name"], DESSERT_KEY_WORD);
                                     }
-                                } onPress={() => this.handleModalOpen(food)} />)
+                                }
+                                                                           onPress={() => this.handleModalOpen(food)}
+                                                                           onQuantityChange={this.onQuantityChange(food["food-name"], DESSERT_KEY_WORD)}/>)
                             }
-                            <FoodItem type="create" onPress={this.redirectToFoodSearchEngine("dessert")} />
+                            <CreateButton onPress={this.redirectToFoodSearchEngine(DESSERT_KEY_WORD)} />
                         </ScrollView>
                         <TouchableHighlight
                             style={styles.button}
-                            underlayColor='#fff'>
+                            underlayColor='#fff' onPress={this.handleSubmitLog}>
                             <Text style={styles.buttonText}>Submit Log!</Text>
                         </TouchableHighlight>
                         <Modal visible={modalOpen} transparent={true}>
                             {selected &&
-                            <View style={modalStyles.root}>
-                                <TouchableOpacity style={modalStyles.overlay} onPress={this.handleCloseModal} />
-                                <View style={modalStyles.paper}>
-                                    <Image style={modalStyles.image} source={{uri: selected.imgUrl.url}}/>
-                                    <View style={modalStyles.nutritionInfoContainer}>
-                                        <ScrollView contentContainerStyle={{padding: 15}}>
-                                            <Text>{selected["food-name"][0].toUpperCase() + selected["food-name"].slice(1)}</Text>
-                                            <Text>{selected["household-measure"]}</Text>
-                                            <Text>{selected["per-serving"]}</Text>
-                                            <Text>Nutritional Info</Text>
-                                            <View style={modalStyles.nutrientRow}>
-                                                {renderNutritionText(selected.nutrients["energy"], "Energy")}
-                                                <ProgressBar progress="30%" useIndicatorLevel={true}
-                                                             containerStyle={{height: 15, width: '100%'}} />
-                                            </View>
-                                            <View style={modalStyles.nutrientRow}>
-                                                {renderNutritionText(selected.nutrients["carbohydrate"], "Carbohydrate")}
-                                                <ProgressBar progress="60%" useIndicatorLevel={true}
-                                                             containerStyle={{height: 15, width: '100%'}} />
-                                            </View>
-                                            <View style={modalStyles.nutrientRow}>
-                                                {renderNutritionText(selected.nutrients["protein"], "Protein")}
-                                                <ProgressBar progress="90%" useIndicatorLevel={true} reverse={true}
-                                                             containerStyle={{height: 15, width: '100%'}} />
-                                            </View>
-                                            <View style={modalStyles.nutrientRow}>
-                                                {renderNutritionText(selected.nutrients["total-fat"], "Total Fat")}
-                                                <ProgressBar progress="60%" useIndicatorLevel={true}
-                                                             containerStyle={{height: 15, width: '100%'}} />
-                                            </View>
-                                            <View style={modalStyles.nutrientRow}>
-                                                {renderNutritionText(selected.nutrients["saturated-fat"], "Saturated Fat")}
-                                                <ProgressBar progress="60%" useIndicatorLevel={true}
-                                                             containerStyle={{height: 15, width: '100%'}} />
-                                            </View>
-                                            <View style={modalStyles.nutrientRow}>
-                                                {renderNutritionText(selected.nutrients["dietary-fibre"], "Dietary Fibre")}
-                                                <ProgressBar progress="30%" useIndicatorLevel={true} reverse={true}
-                                                             containerStyle={{height: 15, width: '100%'}} />
-                                            </View>
-                                            <View style={modalStyles.nutrientRow}>
-                                                {renderNutritionText(selected.nutrients["cholesterol"], "Cholesterol")}
-                                                <ProgressBar progress="60%" useIndicatorLevel={true}
-                                                             containerStyle={{height: 15, width: '100%'}} />
-                                            </View>
-                                            {   selected.nutrients.sodium &&
-                                            <View style={modalStyles.nutrientRow}>
-                                                {renderNutritionText(selected.nutrients["sodium"], "Sodium")}
-                                                <ProgressBar progress="90%" useIndicatorLevel={true}
-                                                             containerStyle={{height: 15, width: '100%'}} />
-                                            </View>
-                                            }
-                                        </ScrollView>
-                                    </View>
-                                </View>
-                            </View>
+                            <FoodModalContent onClose={this.handleCloseModal} selected={selected}/>
                             }
                         </Modal>
                     </View>
@@ -241,58 +281,71 @@ export default class CreateMealLog extends React.Component {
     }
 }
 
-function renderNutritionText({amount, unit}, nutrient) {
-    return (
-        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <Text>{nutrient}</Text>
-            {
-                unit === "N.A" ? <Text>{unit}</Text>
-                    : <Text>{amount + " " + unit}</Text>
-            }
-        </View>
-    )
-}
-
 function EmptyButton({onPress}) {
     return (
         <TouchableHighlight
             style={styles.emptyButton}
             underlayColor='#fff'
             onPress={onPress}>
-            <Text style={styles.buttonText}>+</Text>
+            <Icon name='plus' color='#fff' size={25} />
         </TouchableHighlight>
     )
 }
 
-function FoodItem({onPress, item, type, handleDelete}) {
+function CreateButton({onPress}) {
+    return (
+        <View style={styles.foodItem}>
+            <EmptyButton onPress={onPress}/>
+        </View>
+    )
+}
+
+// Handle delete should:
+// Box out animation before calling handleDelete method. Shrink size animated can do the trick.
+function FoodItem({onPress, item, handleDelete, onQuantityChange}) {
     // Item here refers to the food object.
-    if (type === 'create' ) {
-        return (
-            <View style={styles.foodItem}>
-                <EmptyButton onPress={onPress}/>
-                <View style={styles.foodTextWrapper}>
-                </View>
-            </View>
-        )
-    } else {
-        // render view for foodObj
-        const adjustedFontSize = item["food-name"].length > 15 ? 10 : 15;
-        return (
-            <TouchableWithoutFeedback styles={styles.foodItem} onPress={onPress}>
-                <View style={styles.foodItem}>
-                    <ImageWithBadge
-                        containerStyle={styles.foodImage}
-                        imageProps={{source: {uri: item.imgUrl.url}}}
-                        badgeIcon={<Icon name="times" size={12.5} onPress={handleDelete} color='#fff'/>}
-                        badgeSize={12.5}
-                        badgeColor="red"/>
-                    <View style={styles.foodTextWrapper}>
-                        <Text style={{fontSize: adjustedFontSize}}>{item["food-name"][0].toUpperCase() + item["food-name"].slice(1)}</Text>
-                    </View>
-                </View>
-            </TouchableWithoutFeedback>
-        )
+    // render view for foodObj
+    const boxOutAnimation = React.useRef(new Animated.Value(1)).current;
+
+    const handleDeleteWithAnimation = () => {
+        // Run animation first.
+        Animated.timing(boxOutAnimation, {
+            toValue: 0,
+            duration: 500, // 0.5 second box out time
+            useNativeDriver: false
+        }).start(()=> {
+            handleDelete();
+            boxOutAnimation.setValue(1);
+        });
     }
+
+    const adjustedFontSize = item["food-name"].length > 15 ? 10 : 15;
+    return (
+        <TouchableWithoutFeedback>
+            <Animated.View style={[styles.foodItem,
+                {   opacity: boxOutAnimation,
+                    transform: [ {scaleX: boxOutAnimation},
+                                 {scaleY: boxOutAnimation}
+                                 ]
+                }]}>
+                <ImageWithBadge
+                    containerStyle={styles.foodImage}
+                    imageProps={{source: {uri: item.imgUrl.url}}}
+                    badgeIcon={<Icon name="times" size={12.5} onPress={handleDeleteWithAnimation} color='#fff'/>}
+                    badgeSize={12.5}
+                    badgeColor="red"
+                    onPressImage={onPress} />
+                <View style={styles.foodTextWrapper}>
+                    <Text style={{fontSize: adjustedFontSize}}>{item["food-name"][0].toUpperCase() + item["food-name"].slice(1)}</Text>
+                </View>
+                <IntegerQuantitySelector defaultValue={1}
+                                         changeAmount={1}
+                                         minValue={1}
+                                         maxValue={50}
+                                         buttonColor="#288259" onChange={onQuantityChange} />
+            </Animated.View>
+        </TouchableWithoutFeedback>
+    )
 }
 
 function FoodTypeLabel({img, containerStyle, imageStyle, textStyle, alignment, value}) {
@@ -306,52 +359,6 @@ function FoodTypeLabel({img, containerStyle, imageStyle, textStyle, alignment, v
         </View>
     )
 }
-
-const modalStyles = StyleSheet.create({
-    root: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    overlay: {
-        height: '100%',
-        width: '100%',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        position: 'absolute'
-    },
-    paper: {
-        backgroundColor: 'white',
-        width: '80%',
-        height: '70%'
-    },
-    image: {
-        width: '100%',
-        height: '40%'
-    },
-    nutritionInfoContainer: {
-        height: '53.5%',
-    },
-    button: {
-        marginRight:40,
-        marginLeft:40,
-        marginTop:10,
-        paddingTop:20,
-        paddingBottom:20,
-        backgroundColor:'#68a0cf',
-        borderRadius:10,
-        borderWidth: 1,
-        borderColor: '#fff',
-        //transform: [{"translateY": '+42%'}]
-    },
-    buttonText: {
-        color:'#fff',
-        textAlign:'center',
-    },
-    nutrientRow: {
-        width: '100%',
-        paddingTop: 10
-    }
-});
 
 const styles = StyleSheet.create({
     root: {
@@ -379,7 +386,8 @@ const styles = StyleSheet.create({
     rowContent: {
         display: 'flex',
         flexDirection: 'row',
-        height: 150,
+        height: 185,
+        paddingTop: 10
     },
     button:{
         marginRight:40,
@@ -387,7 +395,7 @@ const styles = StyleSheet.create({
         marginBottom:20,
         paddingTop:20,
         paddingBottom:20,
-        backgroundColor:'#68a0cf',
+        backgroundColor:'#aad326',
         borderRadius:10,
         borderWidth: 1,
         borderColor: '#fff'
@@ -403,24 +411,22 @@ const styles = StyleSheet.create({
     foodImage: {
         width: 80,
         height: 80,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
     },
     buttonText:{
-        color:'#fff',
+        color:'#000',
         textAlign:'center',
+        fontSize: 22,
+        fontWeight: 'bold'
     },
     foodItem: {
         paddingLeft: 20,
         paddingRight: 20,
-        display: 'flex',
+        width: 120,
         alignItems: 'center',
     },
     foodTextWrapper: {
-        display: 'flex',
         paddingTop: 8,
         alignItems: 'center',
-        width: 80
+        width: 80,
     }
 });
