@@ -62,7 +62,7 @@ const BloodGlucoseLog = (props) => {
             style={styles.inputBox}
             placeholder=""
             placeholderTextColor="#a1a3a0"
-            keyboardType="number-pad"
+            keyboardType="decimal-pad"
           />
           <TouchableOpacity style={styles.button} onPress={handleSubmit}>
             <Text style={styles.buttonText}>Submit</Text>

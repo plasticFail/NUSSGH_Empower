@@ -37,6 +37,7 @@ export default class SelectMedicationModalContent extends React.Component {
     this.setResults = this.setResults.bind(this);
     this.setDosage = this.setDosage.bind(this);
     this.submit = this.submit.bind(this);
+    this.checkRepeat = this.checkRepeat.bind(this);
   }
 
   searchMedication(searchKey) {
@@ -96,24 +97,41 @@ export default class SelectMedicationModalContent extends React.Component {
   submit() {
     if (
       this.state.selectedMedicineName.length != 0 &&
-      this.state.dosage.length != 0 &&
-      this.state.query.length != 0
+      this.state.dosage.length != 0
     ) {
-      console.log(
-        'Adding Medicine: ' +
-          this.state.selectedMedicineName +
-          ' Dosage: ' +
-          this.state.dosage,
-      );
-      this.props.setMedicine({
-        name: this.state.selectedMedicineName,
-        dosage: this.state.dosage,
-      }); //use to send the selected medicine back
+      var check = this.checkRepeat(this.state.selectedMedicineName);
+      //if repeated
+      if (check) {
+        console.log('Duplicate detected');
+        Alert.alert('Error', 'Medication added previously', [{text: 'Got It'}]);
+      } else {
+        console.log(
+          'Adding Medicine: ' +
+            this.state.selectedMedicineName +
+            ' Dosage: ' +
+            this.state.dosage,
+        );
+        //use to send the selected medicine back to 'parent'
+        this.props.setMedicine({
+          name: this.state.selectedMedicineName,
+          dosage: this.state.dosage,
+        });
+      }
     } else {
       Alert.alert('Invalid', 'Please make sure all fields are filled', [
         {text: 'Got It'},
       ]);
     }
+  }
+
+  checkRepeat(medicationName) {
+    var arr = this.props.selectedMedicationList;
+    for (var x of arr) {
+      if (x.name == medicationName) {
+        return true;
+      }
+    }
+    return false;
   }
 
   render() {
@@ -124,6 +142,7 @@ export default class SelectMedicationModalContent extends React.Component {
           searchMedication={this.searchMedication}
           query={query}
           setQuery={this.setQuery}
+          setMedication={this.setMedication}
           setResults={this.setResults}
         />
         {searchMedicineResults.length > 0 && (

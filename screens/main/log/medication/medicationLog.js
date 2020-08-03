@@ -19,7 +19,9 @@ export default class MedicationLog extends React.Component {
     super(props);
     this.state = {
       date: new Date(),
-      selectedMedicationList: [],
+      selectedMedicationList: [
+        {dosage: '2', name: 'Actrapid HM PEN 100 IU/ml (3ml) - INJ'},
+      ],
       calendarVisible: false,
       selectModalOpen: false,
       successShow: false,
@@ -128,6 +130,7 @@ export default class MedicationLog extends React.Component {
           </View>
           <SelectMedicationModalContent
             setMedicine={this.getSelectedMedicineFromModal}
+            selectedMedicationList={selectedMedicationList}
           />
         </Modal>
       </ScrollView>
@@ -147,6 +150,7 @@ function MedicationAdded({medication, handleDelete}) {
           marginEnd: '4%',
           position: 'absolute',
           zIndex: 2,
+          elevation: 2,
         }}
         onPress={handleDelete}
       />
@@ -154,7 +158,7 @@ function MedicationAdded({medication, handleDelete}) {
         style={[
           styles.addedMedicationView,
           styles.shadow,
-          {paddingTop: '3%', zIndex: 1},
+          {paddingTop: '3%', zIndex: 1, elevation: 1},
         ]}>
         <View style={{flexDirection: 'row'}}>
           <Image
