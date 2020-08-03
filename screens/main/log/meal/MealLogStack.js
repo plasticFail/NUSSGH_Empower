@@ -1,9 +1,7 @@
 import React from 'react';
-import {View, StyleSheet, Text, TouchableHighlight, TouchableOpacity, Modal} from 'react-native';
+import {View, StyleSheet, Text, TouchableHighlight} from 'react-native';
 // Third-party lib
 import {createStackNavigator} from "@react-navigation/stack";
-import DatePicker from 'react-native-date-picker';
-import Moment from 'moment';
 // Screen
 import CreateMealLogScreen from "./CreateMealLog";
 import FoodSearchEngineScreen from './FoodSearchEngine';
@@ -11,10 +9,6 @@ import FoodSearchEngineScreen from './FoodSearchEngine';
 import Select from "../../../../components/select";
 // Others
 import HeaderIcon from "../../../../components/headerBtnIcon";
-import Entypo from 'react-native-vector-icons/Entypo';
-import Ionicons from "react-native-vector-icons/Ionicons";
-
-Entypo.loadFont();
 
 const Stack = createStackNavigator();
 
@@ -40,9 +34,8 @@ class MealLogScreen extends React.Component {
             defaultMealType = 'breakfast'
         }
         this.state = {
-            selectedDateTime: now,
-            selectedMealType: defaultMealType,
-            datepickerModalOpen: false
+            currentDateTime: now,
+            selectedMealType: defaultMealType
         }
     }
 
@@ -52,55 +45,14 @@ class MealLogScreen extends React.Component {
         })
     }
 
-    handleOpenDatePickerModal = () => {
-        this.setState({
-            datepickerModalOpen: true
-        })
-    }
-
-    handleCloseDatePickerModal = () => {
-        this.setState({
-            datepickerModalOpen: false
-        })
-    }
-
     render() {
         const {navigation} = this.props;
-        const {selectedDateTime, selectedMealType, datepickerModalOpen} = this.state;
+        const {currentDateTime, selectedMealType} = this.state;
         return (
             <View style={styles.root}>
-                <Modal visible={datepickerModalOpen} transparent={true}>
-                    <View style={modalStyles.root}>
-                        <TouchableOpacity style={modalStyles.overlay} onPress={this.handleCloseDatePickerModal} />
-                        <View style={modalStyles.paper}>
-                            <DatePicker
-                                visible={datepickerModalOpen}
-                                date={selectedDateTime}
-                                onDateChange={(date) => this.setState({selectedDateTime: date})}
-                                mode="datetime"
-                            />
-                            <TouchableOpacity style={modalStyles.okayButton} onPress={this.handleCloseDatePickerModal}>
-                                <Text style={modalStyles.okayButtonText}>Okay</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </Modal>
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <Text style={{paddingRight: 10, fontSize: 20, fontWeight: 'bold',  width: 120}}>Log time:</Text>
-                    <TouchableOpacity style={styles.datePickerInput} onPress={this.handleOpenDatePickerModal}>
-                        <Text style={styles.dateInputText}>
-                            {Moment(selectedDateTime).format('MMM Do YY, h:mm a')}
-                        </Text>
-                        <Ionicons
-                            name="calendar-outline"
-                            size={20}
-                            onPress={this.handleOpenDatePickerModal}
-                            style={{marginRight: 10}}
-                        />
-                    </TouchableOpacity>
-                </View>
+                <Text>Log for {currentDateTime.toString()}</Text>
                 <View style={{flexDirection: 'row', alignItems: 'center', paddingTop: 30, paddingBottom: 30}}>
-                    <Text style={{paddingRight: 10, fontSize: 20, fontWeight: 'bold', width: 120}}>Meal Type:</Text>
+                    <Text style={{paddingRight: 15, fontSize: 20, fontWeight: 'bold'}}>Meal Type:</Text>
                     <Select defaultValue={selectedMealType}
                             options={options}
                             onSelect={this.handleSelectChange} containerStyle={styles.selectStyle}
@@ -119,7 +71,7 @@ class MealLogScreen extends React.Component {
                 </TouchableHighlight>
                 <TouchableHighlight
                     onPress={() => {
-                        navigation.push("CreateMealLog", { selectedMealType, selectedDateTime: selectedDateTime.toString()});
+                        navigation.push("CreateMealLog", { selectedMealType, currentDateTime: currentDateTime.toString()});
                     }}
                     style={styles.button}
                     underlayColor='#fff'>
@@ -164,35 +116,6 @@ const MealLogStack = (props) => {
     </Stack.Navigator>
 }
 
-const modalStyles = StyleSheet.create({
-    root: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        flex: 1
-    },
-    overlay: {
-        position: 'absolute',
-        height: '100%',
-        width: '100%',
-        backgroundColor: 'rgba(0,0,0, 0.5)'
-    },
-    paper: {
-        backgroundColor: '#fff',
-        width: '80%'
-    },
-    okayButton: {
-        width: '100%',
-        height: 50,
-        backgroundColor: '#288259',
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    okayButtonText: {
-        color: '#fff',
-        fontSize: 20
-    }
-})
-
 const styles = StyleSheet.create({
     root: {
         display: 'flex',
@@ -222,18 +145,6 @@ const styles = StyleSheet.create({
         color:'#fff',
         textAlign:'center',
         fontSize: 26
-    },
-    datePickerInput: {
-        backgroundColor: '#eff3bd',
-        height: 50,
-        alignItems: 'center',
-        flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'space-between'
-    },
-    dateInputText: {
-        fontSize: 20,
-        marginLeft: 10
     }
 })
 
