@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {View, Text, StyleSheet, TextInput, Image, Alert} from 'react-native';
 import Modal from 'react-native-modal';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import Entypo from 'react-native-vector-icons/Entypo';
 import DatePicker from 'react-native-date-picker';
 import Moment from 'moment';
 import {
@@ -9,7 +10,6 @@ import {
   ScrollView,
   FlatList,
 } from 'react-native-gesture-handler';
-import Entypo from 'react-native-vector-icons/Entypo';
 import SelectMedicationModalContent from './selectMedicationModalContent';
 
 Entypo.loadFont();
@@ -28,6 +28,7 @@ export default class MedicationLog extends React.Component {
     this.getSelectedMedicineFromModal = this.getSelectedMedicineFromModal.bind(
       this,
     );
+    this.handleDelete = this.handleDelete.bind(this);
   }
 
   setCalendarVisible() {
@@ -53,6 +54,13 @@ export default class MedicationLog extends React.Component {
     this.setState({selectModalOpen: !this.state.selectModalOpen});
   }
 
+  handleDelete = (item) => {
+    let list = this.state.selectedMedicationList;
+    this.setState({
+      selectedMedicationList: list.filter((medication) => medication != item),
+    });
+  };
+
   render() {
     const {
       date,
@@ -73,11 +81,33 @@ export default class MedicationLog extends React.Component {
         ) : (
           <Text style={styles.headerStyle}>Medication Added:</Text>
         )}
+
+        {
+          //render selected medication
+          selectedMedicationList.map((item) => {
+            return (
+              <MedicationAdded
+                medication={item}
+                handleDelete={() => this.handleDelete(item)}
+              />
+            );
+          })
+        }
         <TouchableOpacity
           style={[styles.button, styles.shadow]}
           onPress={() => this.setState({selectModalOpen: true})}>
           <Text style={styles.buttonText}>Add Medicine</Text>
         </TouchableOpacity>
+        {this.state.selectedMedicationList != 0 && (
+          <TouchableOpacity
+            style={[
+              styles.button,
+              styles.shadow,
+              {backgroundColor: '#aad326'},
+            ]}>
+            <Text style={styles.buttonText}>Submit</Text>
+          </TouchableOpacity>
+        )}
 
         {/* Select Medicine Modal*/}
         <Modal
@@ -105,10 +135,56 @@ export default class MedicationLog extends React.Component {
   }
 }
 
-function RenderMedicationAdded({selectedMedicationList}) {
+function MedicationAdded({medication, handleDelete}) {
   return (
     <View>
-      <Text>Hi</Text>
+      <Entypo
+        name="circle-with-cross"
+        color={'red'}
+        size={30}
+        style={{
+          alignSelf: 'flex-end',
+          marginEnd: '4%',
+          position: 'absolute',
+          zIndex: 2,
+        }}
+        onPress={handleDelete}
+      />
+      <View
+        style={[
+          styles.addedMedicationView,
+          styles.shadow,
+          {paddingTop: '3%', zIndex: 1},
+        ]}>
+        <View style={{flexDirection: 'row'}}>
+          <Image
+            style={[styles.medicineImg, {flex: 1}]}
+            source={{
+              uri:
+                'https://assets.nst.com.my/images/articles/ondontmiss1_1589162412.jpg',
+            }}
+          />
+          <View style={{flex: 4, padding: '3%'}}>
+            <Text style={[styles.addedMedicationText]}>{medication.name}</Text>
+            <View style={{flexDirection: 'row'}}>
+              <Text style={[styles.addedMedicationText, {color: '#ca17d4'}]}>
+                {medication.dosage} Units
+              </Text>
+              <TouchableOpacity
+                style={[
+                  styles.button,
+                  {
+                    width: 90,
+                    alignSelf: 'flex-end',
+                    backgroundColor: '#aad326',
+                  },
+                ]}>
+                <Text style={styles.buttonText}>Edit</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </View>
     </View>
   );
 }
@@ -130,8 +206,8 @@ function RenderDateTime({date, calendarVisible, setDate, setCalendarVisible}) {
           placeholderTextColor="#a1a3a0"></TextInput>
         <Ionicons
           name="calendar-outline"
-          size={20}
-          style={{marginTop: '7%', marginStart: '7%'}}
+          size={30}
+          style={{marginTop: '4%', marginStart: '4%'}}
           onPress={() => {
             setCalendarVisible();
           }}
@@ -213,5 +289,23 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginStart: '30%',
     marginTop: '2%',
+  },
+  addedMedicationView: {
+    borderRadius: 25,
+    backgroundColor: '#f5f5f5',
+    padding: 10,
+    margin: '3%',
+  },
+  medicineImg: {
+    width: 80,
+    height: 80,
+    margin: '3%',
+  },
+  addedMedicationText: {
+    fontSize: 19,
+    marginBottom: '2%',
+    flex: 2,
+    flexWrap: 'wrap',
+    fontWeight: '600',
   },
 });

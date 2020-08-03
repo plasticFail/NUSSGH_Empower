@@ -177,16 +177,18 @@ function DosageInput({setDosage}) {
 function SearchMedicineResults({searchMedicineResults, selectFromList}) {
   return (
     <View
-      style={{
-        height: '37%',
-        marginStart: '2%',
-        borderRadius: 20,
-      }}>
+      style={[
+        styles.resultItemContainer,
+        {
+          height: '38%',
+          marginStart: '5%',
+          marginEnd: '5%',
+        },
+      ]}>
       <Text style={{fontSize: 19, marginStart: '2%', marginBottom: '2%'}}>
         Results: {searchMedicineResults.length}
       </Text>
       <FlatList
-        contentContainerStyle={styles.resultList}
         data={searchMedicineResults}
         renderItem={({item}) => (
           <View style={styles.resultItem}>
@@ -285,15 +287,20 @@ const styles = StyleSheet.create({
   resultList: {
     width: 340,
     flexGrow: 0,
-    alignSelf: 'center',
     marginStart: '3%',
     marginEnd: '4%',
   },
   resultItem: {
-    borderWidth: 1,
+    borderBottomWidth: 1,
     borderColor: '#707070',
     padding: '3%',
     flexDirection: 'row',
+    paddingStart: '2%',
+  },
+  resultItemContainer: {
+    borderWidth: 1,
+    borderColor: '#707070',
+    padding: '3%',
     paddingStart: '2%',
   },
   medicineImg: {
