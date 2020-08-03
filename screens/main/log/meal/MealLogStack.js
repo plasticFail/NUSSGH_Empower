@@ -13,6 +13,7 @@ import Select from "../../../../components/select";
 import HeaderIcon from "../../../../components/headerBtnIcon";
 import Entypo from 'react-native-vector-icons/Entypo';
 import Ionicons from "react-native-vector-icons/Ionicons";
+import FavouriteMealScreen from "./FavouriteMeals";
 
 Entypo.loadFont();
 
@@ -108,6 +109,9 @@ class MealLogScreen extends React.Component {
                 </View>
                 <Text style={styles.textPrompt}>Where to find your meal?</Text>
                 <TouchableHighlight
+                    onPress={() => {
+                        navigation.push("FavouriteMeal", { selectedMealType, selectedDateTime: selectedDateTime.toString()});
+                    }}
                     style={styles.button}
                     underlayColor='#fff'>
                     <Text style={styles.buttonText}>Favourites</Text>
@@ -154,6 +158,14 @@ const MealLogStack = (props) => {
                       options={({ route , navigation}) => (
                           {   animationEnabled: false,
                               title: "Create Meal Log",
+                              headerLeft: () => (<HeaderIcon iconName="chevron-left"
+                                                             text={null} clickFunc={navigation.goBack}/>),
+                              headerRight: () => (<View style={{width: 25, height: 25}} />)
+                          })}/>
+        <Stack.Screen name={'FavouriteMeal'}
+                      component={FavouriteMealScreen}
+                      options={({ route , navigation}) => (
+                          {     title: "My Favourite Meals",
                               headerLeft: () => (<HeaderIcon iconName="chevron-left"
                                                              text={null} clickFunc={navigation.goBack}/>),
                               headerRight: () => (<View style={{width: 25, height: 25}} />)

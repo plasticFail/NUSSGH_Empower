@@ -16,7 +16,6 @@ import FoodModalContent from "./FoodModalContent";
 // Functions
 import {getToken} from "../../../../storage/asyncStorageFunctions";
 // Others
-import SampleFoodDB from './SampleFoodDB.json';
 import carbohydrate from '../../../../resources/images/icons/carbohydrate.png';
 import energy from '../../../../resources/images/icons/energy.png';
 import fat from '../../../../resources/images/icons/fat.png';
@@ -51,27 +50,7 @@ class FoodSearchEngineScreen extends React.Component {
             }, () => {
                 clearTimeout(this.timeout);
                 this.timeout = setTimeout(() => {
-                    // Get token.
-                    getToken().then(token => {
-                        // Fetch api and load the response here.
-                        fetch('https://sghempower.com/food/search', {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                                Authorization: "Bearer " + token
-                            },
-                            body: JSON.stringify({query: this.state.query, type: this.props.route.params.type})
-                        }).then((res) => res.json()).then(data => {
-                            this.setState({
-                                foodResults: data.data,
-                                isLoading: false
-                            })
-                        }).catch(err => {
-                            this.setState({
-                                isLoading: false
-                            }, () => alert(err.message))
-                        });
-                    })
+                    this.makeApiCallToFoodSearchEngine()
                 }, 500); // 500ms delay before loading API.
             });
         }
@@ -83,11 +62,32 @@ class FoodSearchEngineScreen extends React.Component {
             isLoading: true
         }, () => {
             // Fetch api here again
-            this.setState({
-                isLoading: false,
-                foodResults: SampleFoodDB.data
-            })
+            this.makeApiCallToFoodSearchEngine();
         })
+    }
+
+    makeApiCallToFoodSearchEngine = () => {
+        // Get token.
+        getToken().then(token => {
+            // Fetch api and load the response here.
+            fetch('https://sghempower.com/food/search', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: "Bearer " + token
+                },
+                body: JSON.stringify({query: this.state.query, type: this.props.route.params.type})
+            }).then((res) => res.json()).then(data => {
+                this.setState({
+                    foodResults: data.data,
+                    isLoading: false
+                })
+            }).catch(err => {
+                this.setState({
+                    isLoading: false
+                }, () => alert(err.message))
+            });
+        });
     }
 
     render() {
