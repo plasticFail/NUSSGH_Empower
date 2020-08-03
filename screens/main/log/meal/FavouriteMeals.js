@@ -24,6 +24,16 @@ export default class FavouriteMealScreen extends React.Component {
         }, 1000); // 1s simulation to fetch the user's favourited meals.
     }
 
+    navigateToCreateMealLogPage = (selectedMeal) => {
+        const { selectedMealType, selectedDateTime } = this.props.route.params;
+        this.props.navigation.goBack();
+        this.props.navigation.navigate("CreateMealLog", {
+            meal: selectedMeal,
+            selectedMealType,
+            selectedDateTime
+        });
+    }
+
     render() {
         const {isLoading, favouriteMeals} = this.state;
         return (
@@ -34,19 +44,22 @@ export default class FavouriteMealScreen extends React.Component {
             <View style={styles.root}>
                 <FlatList data={favouriteMeals}
                           keyExtractor={item => item.mealName}
-                          style={styles.listContainer} renderItem={renderMealItem}/>
+                          style={styles.listContainer} renderItem={({item}) =>
+                    (<RenderMealItem item={item}
+                                    onPressSelect={this.navigateToCreateMealLogPage} />)}
+                />
             </View>
         );
     }
 }
 
-function renderMealItem({item}) {
+function RenderMealItem({item, onPressSelect}) {
     const combinedMealItems = item.beverage.concat(item.main, item.side, item.dessert);
     return (
         <View style={styles.mealItem}>
             <View style={styles.mealNameContainer}>
                 <Text style={styles.mealNameText}>{item.mealName}</Text>
-                <TouchableOpacity style={styles.selectButton}>
+                <TouchableOpacity style={styles.selectButton} onPress={() => onPressSelect(item)}>
                     <Text style={styles.selectButtonText}>Select</Text>
                 </TouchableOpacity>
             </View>
@@ -60,12 +73,12 @@ function renderMealItem({item}) {
 }
 
 function FoodItem({food}) {
-    const foodNameFontSize = food["food-name"].length > 15 ? 12 : 15;
+    const adjustedFontSize = food["food-name"].length > 20 ? 12 : 15;
     return (
         <View style={styles.foodItem}>
             <Image source={{uri: food.imgUrl.url}} style={styles.foodImage} />
             <View style={{justifyContent: 'center', flex: 1, alignItems: 'center'}}>
-                <Text style={{fontSize: foodNameFontSize}}>
+                <Text style={{fontSize: adjustedFontSize}}>
                     {food["food-name"][0].toUpperCase() + food["food-name"].slice(1)}
                 </Text>
             </View>

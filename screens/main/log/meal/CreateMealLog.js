@@ -56,6 +56,18 @@ export default class CreateMealLog extends React.Component {
         }
     }
 
+    componentDidMount() {
+        if (this.props.route.params?.meal) {
+            const {meal} = this.props.route.params;
+            this.setState({
+                beverage: meal.beverage,
+                main: meal.main,
+                side: meal.side,
+                dessert: meal.dessert
+            });
+        }
+    }
+
     // Animation property for items when they are deleted.
     setAnimation = () => {
         LayoutAnimation.configureNext({ duration: 300,
@@ -319,7 +331,7 @@ function FoodItem({onPress, item, handleDelete, onQuantityChange}) {
         });
     }
 
-    const adjustedFontSize = item["food-name"].length > 15 ? 10 : 15;
+    const adjustedFontSize = item["food-name"].length > 20 ? 12 : 15;
     return (
         <TouchableWithoutFeedback>
             <Animated.View style={[styles.foodItem,

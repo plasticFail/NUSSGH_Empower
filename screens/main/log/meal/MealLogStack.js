@@ -165,8 +165,8 @@ const MealLogStack = (props) => {
         <Stack.Screen name={'FavouriteMeal'}
                       component={FavouriteMealScreen}
                       options={({ route , navigation}) => (
-                          {   title: "My Favourite Meals",
-                              headerLeft: () => (<HeaderIcon iconName="chevron-left"
+                          {   title: "Favourites",
+                              headerLeft: () => (<HeaderIcon iconName="times"
                                                              text={null} clickFunc={navigation.goBack}/>),
                               headerRight: () => (<View style={{width: 25, height: 25}} />),
                               ...TransitionPresets.ModalTransition,
