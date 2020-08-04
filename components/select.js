@@ -1,9 +1,24 @@
 import React from 'react';
-import {View, StyleSheet, Text, Platform, ActionSheetIOS, TouchableOpacity} from 'react-native';
+import {View, StyleSheet, Text, Platform, ActionSheetIOS, TouchableOpacity, Modal, Animated, TouchableWithoutFeedback} from 'react-native';
 // Others
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 
 // Determine what ui to render for select. Different os render different select types.
+// Props description for customizability.
+// options: An array of options that can be selected from. Each option should have a name and a value field.
+//          example of options that can be passed: [ {name: 'First Option', value: 'firstOption'} ]. Only the name
+//          of the options will be displayed in the user interface.
+//
+// defaultValue: The default value that is set for the select. It is the value of the option, not the name.
+//
+// containerStyle: style for the select input. Not the popup/modal.
+//
+// textStyle: style for the text input in the select.
+//
+// onSelect: callback function fired when an option is selected. This function will take in the value of the option
+//           that is selected.
+//           Example: onSelect={(value) => alert(value)} will alert the value of the option when that option has been
+//           selected.
 export default class Select extends React.Component {
     constructor(props) {
         super(props);
@@ -65,10 +80,128 @@ export default class Select extends React.Component {
                 </TouchableOpacity>
             )
         } else { // return component for android. To be done.
-            return null;
+            return (
+                <TouchableOpacity style={{...iosStyles.container, ...containerStyle}} onPress={this.handleOpen}>
+                    { open && <SelectModal visible={open}
+                                 options={options}
+                                 onSelectOptionCallback={this.handleCloseAfterSelect}
+                                 onCancel={this.handleClose}/> }
+                    <Text style={{...iosStyles.textStyle, ...textStyle}}>{result}</Text>
+                    <Icon color="#000" name={rightIcon} size={20} />
+                </TouchableOpacity>
+            )
         }
     }
 }
+
+class SelectModal extends React.Component {
+    state = {
+        slideAnimation: new Animated.Value(0),
+    }
+
+    constructor(props) {
+        super(props);
+    }
+
+    componentDidMount() {
+        this.state.slideAnimation.setValue(0);
+        Animated.timing(this.state.slideAnimation, {
+            toValue: 1,
+            duration: 200, // 200ms slide up animation.
+            useNativeDriver: false
+        }).start();
+    }
+
+    // Some magic happening in the animation callback.
+    // This function basically takes in a callback function (once the animation is finished) and optional arguments.
+    // Optional arguments will then be passed to the callback.
+    // Callbacks are for either onCancel events or onSelect.
+    handleCloseWithAnimation = (callback) => (arg) => {
+        Animated.timing(this.state.slideAnimation, {
+            toValue: 0,
+            duration: 200, // 200ms slide down animation.
+            useNativeDriver: false
+        }).start(() => callback(arg));
+    }
+
+    render() {
+        const {visible, options, onCancel, onSelectOptionCallback} = this.props;
+        const heightOfOptions = (options.length + 1) * modalStyles.option.height;
+
+        const yInterpolate = this.state.slideAnimation.interpolate({
+            inputRange: [0, 1],
+            outputRange: [heightOfOptions, 0], // From hidden underneath to translateY: 0.
+            extrapolate: 'clamp'
+        })
+        const optionsContainerStyle = {
+            ...modalStyles.optionsContainer,
+            transform: [{translateY: yInterpolate}]
+        }
+        return (
+            <Modal visible={visible} transparent={true}>
+                <View style={modalStyles.root}>
+                    <TouchableWithoutFeedback onPress={this.handleCloseWithAnimation(onCancel)}>
+                        <View style={modalStyles.overlay} />
+                    </TouchableWithoutFeedback>
+                    <Animated.View style={optionsContainerStyle}>
+                        {
+                            options.map(option => (
+                                <TouchableOpacity
+                                    style={modalStyles.option}
+                                    key={option.name}
+                                    onPress={() => this.handleCloseWithAnimation(onSelectOptionCallback)(option)}>
+                                    <Text style={modalStyles.optionText}>{option.name}</Text>
+                                </TouchableOpacity>
+                            ))
+                        }
+                        <TouchableOpacity
+                            style={modalStyles.option}
+                            key='cancel'
+                            onPress={this.handleCloseWithAnimation(onCancel)}>
+                            <Text style={modalStyles.cancelOptionText}>Cancel</Text>
+                        </TouchableOpacity>
+                    </Animated.View>
+                </View>
+            </Modal>
+        );
+    }
+}
+
+const modalStyles = StyleSheet.create({
+    root: {
+        width: '100%',
+        height: '100%',
+        justifyContent: 'flex-end',
+        alignItems: 'center'
+    },
+    overlay: {
+        width: '100%',
+        height: '100%',
+        position: 'absolute',
+        backgroundColor: 'rgba(0,0,0,0.5)'
+    },
+    optionsContainer: {
+        backgroundColor: '#fff',
+        borderRadius: 10,
+        width: '95%',
+        marginBottom: 20
+    },
+    option: {
+        height: 60,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderBottomWidth: 0.7,
+        borderColor: '#cdcdcd'
+    },
+    optionText: {
+        fontSize: 20,
+        color: '#007aff'
+    },
+    cancelOptionText: {
+        fontSize: 20,
+        color: 'rgb(255,59,48)'
+    },
+})
 
 const iosStyles = StyleSheet.create({
     container: {

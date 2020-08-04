@@ -1,15 +1,21 @@
 import React from 'react';
-import {View, StyleSheet, Text, ActivityIndicator, FlatList, ScrollView, TouchableOpacity, Image} from 'react-native';
+import {View, StyleSheet, Text, ActivityIndicator, FlatList, ScrollView, TouchableOpacity, Image, Dimensions} from 'react-native';
 // Others
 import SampleFavouriteMeal from './SampleFavouriteMeal.json';
+import MealList from "./MealList";
+import Searchbar from "../../../../components/Searchbar";
 
+const windowHeight = Dimensions.get('window').height;
+const windowWidth = Dimensions.get('window').width;
+const suggestedButtonRatio = [0.7, 0.8]; // Fraction of screen width and height that it needs to be translated to.
 // The screen that contains a list of the user's favourite meals.
 export default class FavouriteMealScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             isLoading: true,
-            favouriteMeals: []
+            favouriteMeals: [],
+            filterQuery: ''
         }
     }
 
@@ -33,56 +39,33 @@ export default class FavouriteMealScreen extends React.Component {
         });
     }
 
+    handleChangeFilterQuery = (text) => {
+        this.setState({
+            filterQuery: text
+        })
+    }
+
     render() {
-        const {isLoading, favouriteMeals} = this.state;
+        const {isLoading, favouriteMeals, filterQuery} = this.state;
+        const filteredMeals = favouriteMeals.filter(meal =>
+            meal.mealName.toLowerCase().indexOf(filterQuery.toLowerCase()) > -1);
         return (
             isLoading ?
             <View style={styles.loadingContainer}>
                 <ActivityIndicator size="large" color="#B3D14C" />
             </View> :
             <View style={styles.root}>
-                <FlatList data={favouriteMeals}
-                          keyExtractor={item => item.mealName}
-                          style={styles.listContainer} renderItem={({item}) =>
-                    (<RenderMealItem item={item}
-                                    onPressSelect={() => this.navigateToCreateMealLogPage(item)} />)}
-                />
+                <Searchbar containerStyle={{height: 50}} onChangeText={this.handleChangeFilterQuery}
+                           onSubmit={() => {}}/>
+                <MealList meals={filteredMeals}
+                          onSelectMeal={this.navigateToCreateMealLogPage}
+                          />
+                <TouchableOpacity style={styles.suggestedButton}>
+                    <Text style={styles.suggestedButtonText}>Suggested</Text>
+                </TouchableOpacity>
             </View>
         );
     }
-}
-
-function RenderMealItem({item, onPressSelect}) {
-    const combinedMealItems = item.beverage.concat(item.main, item.side, item.dessert);
-    return (
-        <View style={styles.mealItem}>
-            <View style={styles.mealNameContainer}>
-                <Text style={styles.mealNameText}>{item.mealName}</Text>
-                <TouchableOpacity style={styles.selectButton} onPress={onPressSelect}>
-                    <Text style={styles.selectButtonText}>Select</Text>
-                </TouchableOpacity>
-            </View>
-            <ScrollView showsHorizontalScrollIndicator={false} contentContainerStyle={{flexDirection: 'row'}} horizontal={true}>
-                {
-                    combinedMealItems.map(food => <FoodItem food={food} />)
-                }
-            </ScrollView>
-        </View>
-    )
-}
-
-function FoodItem({food}) {
-    const adjustedFontSize = food["food-name"].length > 20 ? 12 : 15;
-    return (
-        <View style={styles.foodItem}>
-            <Image source={{uri: food.imgUrl.url}} style={styles.foodImage} />
-            <View style={{justifyContent: 'center', flex: 1, alignItems: 'center'}}>
-                <Text style={{fontSize: adjustedFontSize}}>
-                    {food["food-name"][0].toUpperCase() + food["food-name"].slice(1)}
-                </Text>
-            </View>
-        </View>
-    )
 }
 
 const styles = StyleSheet.create({
@@ -92,49 +75,22 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     root: {
-        backgroundColor: '#fff'
+        //backgroundColor: '#fff'
     },
-    listContainer: {
-        padding: 20,
-        borderTopWidth: 1,
-        borderColor: '#cfcfcf',
-    },
-    mealItem: {
-        borderBottomWidth: 0.5,
-        borderTopWidth: 0.5,
-        borderColor: '#cfcfcf',
-        height: 200
-    },
-    mealNameContainer: {
-        height: '30%',
-        width: '100%',
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between'
-    },
-    mealNameText: {
-        fontSize: 20,
-        fontWeight: 'bold'
-    },
-    selectButton: {
+    suggestedButton: {
+        position: 'absolute',
+        width: 100,
+        height: 40,
         backgroundColor: '#288259',
-        width: 60,
-        height: 35,
-        justifyContent: 'center',
         alignItems: 'center',
-        borderRadius: 10
+        justifyContent: 'center',
+        borderRadius: 12.5,
+        transform: [{translateX: suggestedButtonRatio[0] * windowWidth},
+            {translateY: suggestedButtonRatio[1] * windowHeight}]
     },
-    selectButtonText: {
+    suggestedButtonText: {
         fontSize: 15,
         fontWeight: 'bold',
-        color: "#fff"
-    },
-    foodImage: {
-        width: 80,
-        height: 80
-    },
-    foodItem: {
-        width: 80,
-        marginRight: 20
+        color: '#fff'
     }
 })

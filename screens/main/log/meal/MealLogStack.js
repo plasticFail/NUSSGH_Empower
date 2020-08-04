@@ -7,13 +7,14 @@ import Moment from 'moment';
 // Screen
 import CreateMealLogScreen from "./CreateMealLog";
 import FoodSearchEngineScreen from './FoodSearchEngine';
+import FavouriteMealScreen from "./FavouriteMeals";
+import RecentMealScreen from "./RecentMeal";
 // Components
 import Select from "../../../../components/select";
 // Others
 import HeaderIcon from "../../../../components/headerBtnIcon";
 import Entypo from 'react-native-vector-icons/Entypo';
 import Ionicons from "react-native-vector-icons/Ionicons";
-import FavouriteMealScreen from "./FavouriteMeals";
 
 Entypo.loadFont();
 
@@ -117,6 +118,9 @@ class MealLogScreen extends React.Component {
                     <Text style={styles.buttonText}>Favourites</Text>
                 </TouchableHighlight>
                 <TouchableHighlight
+                    onPress={() => {
+                        navigation.push("RecentMeal", { selectedMealType, selectedDateTime: selectedDateTime.toString()});
+                    }}
                     style={styles.button}
                     underlayColor='#fff'>
                     <Text style={styles.buttonText}>Recent</Text>
@@ -166,6 +170,15 @@ const MealLogStack = (props) => {
                       component={FavouriteMealScreen}
                       options={({ route , navigation}) => (
                           {   title: "Favourites",
+                              headerLeft: () => (<HeaderIcon iconName="times"
+                                                             text={null} clickFunc={navigation.goBack}/>),
+                              headerRight: () => (<View style={{width: 25, height: 25}} />),
+                              ...TransitionPresets.ModalTransition,
+                          })}/>
+        <Stack.Screen name={'RecentMeal'}
+                      component={RecentMealScreen}
+                      options={({ route , navigation}) => (
+                          {   title: "Recent",
                               headerLeft: () => (<HeaderIcon iconName="times"
                                                              text={null} clickFunc={navigation.goBack}/>),
                               headerRight: () => (<View style={{width: 25, height: 25}} />),
