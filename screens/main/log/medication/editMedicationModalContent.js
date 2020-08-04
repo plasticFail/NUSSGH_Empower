@@ -68,7 +68,7 @@ export default class EditMedicationModalContent extends React.Component {
 }
 
 function DosageInput({setDosage, oldDosage}) {
-  const [dosageInput, setDosageInput] = useState(oldDosage);
+  const [dosageInput, setDosageInput] = useState(oldDosage.toString());
   return (
     <View style={styles.componentContainer}>
       <Text style={styles.inputHeader}>Dosage: </Text>

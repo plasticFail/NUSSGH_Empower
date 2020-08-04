@@ -22,7 +22,14 @@ export default class MedicationLog extends React.Component {
     super(props);
     this.state = {
       date: new Date(),
-      selectedMedicationList: [],
+      selectedMedicationList: [
+        {
+          dosage: 2,
+          drugName: 'Actrapid HM PEN 100 IU/ml (3ml) - INJ',
+          recordDate: '',
+          unit: 'unit',
+        },
+      ],
       calendarVisible: false,
       selectModalOpen: false,
       editModalOpen: false,
@@ -82,13 +89,23 @@ export default class MedicationLog extends React.Component {
     console.log('Editing: ' + medicineToEdit + ' New Dosage: ' + newDosage);
     if (newDosage == '') {
       Alert.alert('Error', 'Dosage not filled', [{text: 'Got It'}]);
-    } else {
+    } else if (
+      newDosage.length != 0 &&
+      !newDosage.includes('.') &&
+      !newDosage.includes('-') &&
+      !newDosage.includes(',')
+    ) {
       const elementIndex = this.state.selectedMedicationList.findIndex(
-        (element) => element.name == medicineToEdit,
+        (element) => element.drugName == medicineToEdit,
       );
       let newArr = [...this.state.selectedMedicationList];
-      newArr[elementIndex] = {...newArr[elementIndex], dosage: newDosage};
+      newArr[elementIndex] = {
+        ...newArr[elementIndex],
+        dosage: Number(newDosage),
+      };
       this.setState({editModalOpen: false, selectedMedicationList: newArr});
+    } else {
+      Alert.alert('Error', 'Invalid Dosage', [{text: 'Got It'}]);
     }
   }
 
