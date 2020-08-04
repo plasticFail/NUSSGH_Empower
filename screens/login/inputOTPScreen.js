@@ -11,8 +11,10 @@ const InputOTPScreen = (props) => {
     if (otp.length < 6) {
       Alert.alert('Error', 'OTP not filled completely', [{text: 'Got It'}]);
     }
-    if (otp.length == 6) {
+    if (otp.length == 6 && !otp.includes(',') && !otp.includes('-')) {
       props.navigation.navigate('ResetPasswordScreen');
+    } else {
+      Alert.alert('Error', 'Invalid OTP', [{text: 'Got It'}]);
     }
     //handle wrong otp here.
   };
