@@ -1,5 +1,6 @@
 import React from 'react';
 import {TextInput, StyleSheet, View} from 'react-native';
+// Others
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 
 Icon.loadFont();
