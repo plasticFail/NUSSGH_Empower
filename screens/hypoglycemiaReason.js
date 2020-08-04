@@ -72,7 +72,7 @@ export default class HypoglycemiaReason extends React.Component {
   }
 
   handleSubmit() {
-    this.props.navigation.navigate('DashBoard');
+    this.props.navigation.navigate('Home');
   }
 
   render() {
@@ -93,7 +93,7 @@ export default class HypoglycemiaReason extends React.Component {
             <TouchableOpacity style={styles.button} onPress={this.handleSubmit}>
               <Text style={styles.buttonText}>Submit</Text>
             </TouchableOpacity>
-            <Text style={{margin: '1%'}}>
+            <Text style={{marginStart: '2%', marginEnd: '2%'}}>
               *Click 'Submit' to view list of fast acting carbohydrate list that
               you should consume immediately!
             </Text>
