@@ -5,25 +5,70 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  Image,
+  Alert,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import DatePicker from 'react-native-date-picker';
 import Moment from 'moment';
 import SuccessDialogue from '../../../components/successDialogue';
+import {uploadBGLog} from './logRequestFunctions';
+import {useNavigation} from '@react-navigation/native';
 
 const BloodGlucoseLog = (props) => {
+  const navigation = useNavigation();
   const [visible, setVisible] = useState(false);
   const [date, setDate] = useState(new Date());
+  const [bloodGlucose, setBloodGlucose] = useState('');
   const [displaydate, setDisplayDate] = useState('');
   const [successShow, setSuccessShow] = useState(false);
   Moment.locale('en');
+  console.log(bloodGlucose);
 
   const handleSubmit = () => {
-    setSuccessShow(true);
+    if (checkTime()) {
+      if (Number(bloodGlucose) >= 30 || Number(bloodGlucose) <= 0) {
+        Alert.alert('Error', 'Invalid Blood Glucose Level', [{text: 'Got It'}]);
+      } else if (bloodGlucose.match(/\d{1,2}\.|\d{1,2}$/g)) {
+        var formatDate = Moment(date).format('DD/MM/YYYY HH:mm:ss');
+        uploadBGLog(Number(bloodGlucose), formatDate).then((value) => {
+          if (value == true) {
+            if (bloodGlucose == '3.2') {
+              navigation.navigate('HypoglycemiaReason');
+            } else {
+              setSuccessShow(true);
+            }
+          } else {
+            Alert.alert('Error', 'Unexpected Error Occured', [
+              {text: 'Try Again later'},
+            ]);
+          }
+        });
+      } else {
+        Alert.alert(
+          'Error',
+          'Invalid Blood Glucose Input. Make sure at most 2 decimal place',
+          [{text: 'Got It'}],
+        );
+      }
+    }
   };
 
-  console.log(date.toString());
+  const checkTime = () => {
+    var format = 'hh:mm';
+    var timeNow = Moment(new Date(), format);
+    var timeInput = Moment(date, format);
+    if (date.toDateString() != new Date().toDateString()) {
+      Alert.alert(
+        'Error',
+        'Invalid date. Make sure date selected is not after today. ',
+        [{text: 'Got It'}],
+      );
+      return false;
+    } else if (timeInput.isAfter(timeNow)) {
+      return false;
+    }
+    return true;
+  };
 
   return (
     <View style={styles.bloodGlucoseLogScreen}>
@@ -54,15 +99,18 @@ const BloodGlucoseLog = (props) => {
           )}
         </View>
 
-        <View style={{marginTop: '7%'}}>
+        <View style={{marginTop: '3%'}}>
           <Text style={[styles.inputHeader, {marginTop: '7%'}]}>
             Blood Glucose: (mmol/L)
           </Text>
           <TextInput
             style={styles.inputBox}
-            placeholder=""
             placeholderTextColor="#a1a3a0"
             keyboardType="decimal-pad"
+            value={bloodGlucose}
+            onChangeText={(value) => {
+              setBloodGlucose(value);
+            }}
           />
           <TouchableOpacity style={styles.button} onPress={handleSubmit}>
             <Text style={styles.buttonText}>Submit</Text>
@@ -103,14 +151,14 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   inputBox: {
-    width: 300,
+    width: 350,
     height: 40,
     backgroundColor: '#EEF3BD',
-    paddingStart: 30, //position placeholder text
+    paddingStart: 20, //position placeholder text
     marginVertical: 10,
   },
   inputBox1: {
-    width: 250,
+    width: 300,
     height: 40,
     backgroundColor: '#EEF3BD',
     paddingStart: 20, //position placeholder text
@@ -118,13 +166,14 @@ const styles = StyleSheet.create({
     fontSize: 19,
   },
   button: {
-    marginTop: '7%',
+    marginTop: '9%',
     backgroundColor: '#AAD326',
-    width: 300,
+    width: 200,
     height: 40,
     borderRadius: 20,
     marginVertical: 10,
     paddingVertical: 6,
+    alignSelf: 'center',
   },
   buttonText: {
     fontSize: 23,
