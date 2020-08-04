@@ -65,6 +65,11 @@ const BloodGlucoseLog = (props) => {
       );
       return false;
     } else if (timeInput.isAfter(timeNow)) {
+      Alert.alert(
+        'Error',
+        'Invalid date. Make sure time selected is not after current time. ',
+        [{text: 'Got It'}],
+      );
       return false;
     }
     return true;

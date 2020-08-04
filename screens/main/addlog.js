@@ -42,7 +42,7 @@ const buttonList = [
     name: 'Weight',
     logo: require('../../resources/images/weight_logo.png'),
     image: require('../../resources/images/weight.jpg'),
-    route: null, //Fill in the route yourself. If null, it does not redirect
+    route: 'WeightLog', //Fill in the route yourself. If null, it does not redirect
   },
 ];
 

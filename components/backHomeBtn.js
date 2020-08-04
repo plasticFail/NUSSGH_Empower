@@ -17,7 +17,7 @@ function BackHomeBtn() {
       <Text
         style={{fontSize: 18, flex: 1, marginTop: 3}}
         onPress={() => navigation.navigate('DashBoard')}>
-        Home
+        Back
       </Text>
     </View>
   );

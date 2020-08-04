@@ -38,9 +38,8 @@ const InputOTPScreen = (props) => {
           autoFocusOnLoad
           codeInputFieldStyle={styles.underlineStyleBase}
           codeInputHighlightStyle={styles.underlineStyleHighLighted}
-          onCodeFilled={(value) => {
+          onCodeChanged={(value) => {
             setOtp(value);
-            console.log(otp);
           }}
         />
         <View style={{flexDirection: 'row', alignItems: 'space-between'}}>

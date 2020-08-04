@@ -28,6 +28,7 @@ import HypoglycemiaReason from './hypoglycemiaReason';
 
 import Entypo from 'react-native-vector-icons/Entypo';
 import BackHomeBtn from '../components/backHomeBtn';
+import WeightLog from './main/log/weightLog';
 Entypo.loadFont();
 
 const Stack = createStackNavigator();
@@ -152,6 +153,14 @@ class AppRoot extends Component {
                 }}
               />
               <Stack.Screen
+                name="WeightLog"
+                component={WeightLog}
+                options={{
+                  title: 'Add Weight Log',
+                  headerRight: () => <View />,
+                }}
+              />
+              <Stack.Screen
                 name="HypoglycemiaReason"
                 component={HypoglycemiaReason}
                 options={({navigation}) => ({
@@ -159,7 +168,6 @@ class AppRoot extends Component {
                   headerStyle: {
                     backgroundColor: '#eb90d6',
                   },
-                  headerLeft: () => <BackHomeBtn />,
                   headerRight: () => <View />,
                 })}
               />
@@ -201,6 +209,7 @@ class AppRoot extends Component {
                     alignSelf: 'center',
                   },
                   headerRight: () => <View />,
+                  headerBackTitle: 'Back',
                 }}
               />
               <Stack.Screen

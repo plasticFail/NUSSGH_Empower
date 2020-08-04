@@ -14,11 +14,13 @@ export default class HypoglycemiaReason extends React.Component {
     this.setExercise = this.setExercise.bind(this);
     this.setAlcohol = this.setAlcohol.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    /*
     this.handleBackButtonPressAndroid = this.handleBackButtonPressAndroid.bind(
       this,
     );
+    */
   }
-
+  /*
   componentDidMount() {
     BackHandler.addEventListener(
       'hardwareBackPress',
@@ -38,8 +40,9 @@ export default class HypoglycemiaReason extends React.Component {
       // The screen is not focused, so don't do anything
       return false;
     }
-    this.props.navigation.navigate('DashBoard');
+    this.props.navigation.navigate('BloodGlucoseLog');
   }
+  */
 
   setEatLess(selectedItem) {
     console.log('Eat');
