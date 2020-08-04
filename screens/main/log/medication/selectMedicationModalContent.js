@@ -38,12 +38,17 @@ export default class SelectMedicationModalContent extends React.Component {
     this.setDosage = this.setDosage.bind(this);
     this.submit = this.submit.bind(this);
     this.checkRepeat = this.checkRepeat.bind(this);
+
+    storeMedications().then((data) => {
+      AsyncStorage.setItem('medications', JSON.stringify(data.medications));
+    });
   }
 
   searchMedication(searchKey) {
     if (searchKey === '') {
       clearTimeout(this.timeout);
       this.setState({loading: false});
+      this.setState({query: '', selectedMedicineName: ''});
       this.setState({searchMedicineResults: []});
     } else {
       this.setState({loading: true});
@@ -56,22 +61,22 @@ export default class SelectMedicationModalContent extends React.Component {
     }
   }
 
+  //search
   callMedicationAPI(searchKey) {
-    if (AsyncStorage.getItem('medications') == null) {
-      storeMedications();
-    } else {
-      getMedications();
-      let arr = [];
-      AsyncStorage.getItem('medications').then((response) => {
-        for (var x of JSON.parse(response)) {
-          arr.push(x);
-        }
-        var result = arr.filter((medication) =>
-          medication.toLowerCase().includes(searchKey.toLowerCase()),
-        );
-        this.setState({searchMedicineResults: result});
-      });
-    }
+    getMedications();
+    let arr = [];
+    AsyncStorage.getItem('medications').then((response) => {
+      for (var x of JSON.parse(response)) {
+        arr.push(x);
+      }
+      var result = arr.filter((medication) =>
+        medication
+          .toLowerCase()
+          .replaceAll(/\s{1,2}\[|\]/g, ' ') //replace all double space, [] to single space
+          .includes(searchKey.toLowerCase()),
+      );
+      this.setState({searchMedicineResults: result});
+    });
   }
 
   setQuery() {
@@ -95,6 +100,11 @@ export default class SelectMedicationModalContent extends React.Component {
   }
 
   submit() {
+    if (this.state.selectedMedicineName.length == 0) {
+      Alert.alert('Error', 'Please input a valid medication', [
+        {text: 'Got It'},
+      ]);
+    }
     if (
       this.state.selectedMedicineName.length != 0 &&
       this.state.dosage.length != 0
@@ -113,8 +123,10 @@ export default class SelectMedicationModalContent extends React.Component {
         );
         //use to send the selected medicine back to 'parent'
         this.props.setMedicine({
-          name: this.state.selectedMedicineName,
-          dosage: this.state.dosage,
+          drugName: this.state.selectedMedicineName,
+          unit: 'unit',
+          dosage: Number(this.state.dosage),
+          recordDate: '',
         });
       }
     } else {
@@ -252,7 +264,7 @@ function SearchMedicine({searchMedication, query, setQuery, setResults}) {
           placeholder="Type a medication..."
           placeholderTextColor="#a1a3a0"
           onChangeText={(text) => {
-            searchMedication(text.trim());
+            searchMedication(text);
           }}
         />
       )}

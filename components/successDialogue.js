@@ -15,27 +15,25 @@ function SuccessDialogue({visible, type}) {
   console.log({visible});
   Icon.loadFont();
   return (
-    <View>
-      <Modal
-        isVisible={visible}
-        animationIn="slideInUp"
-        style={{
-          backgroundColor: 'white',
-          borderRadius: 30,
-          alignItems: 'center',
-        }}>
-        <Icon name="checkcircle" color="#aad326" size={100} />
-        <Text style={{fontSize: 40, fontWeight: '500', marginTop: '3%'}}>
-          {type} Log
-        </Text>
-        <Text>Completed successfully</Text>
-        <TouchableOpacity
-          style={[styles.button, {backgroundColor: '#aad326'}]}
-          onPress={() => navigation.navigate('AddLog')}>
-          <Text style={styles.buttonText}>Got It</Text>
-        </TouchableOpacity>
-      </Modal>
-    </View>
+    <Modal
+      isVisible={visible}
+      animationIn="slideInUp"
+      style={{
+        backgroundColor: 'white',
+        borderRadius: 30,
+        alignItems: 'center',
+      }}>
+      <Icon name="checkcircle" color="#aad326" size={100} />
+      <Text style={{fontSize: 40, fontWeight: '500', marginTop: '3%'}}>
+        {type} Log
+      </Text>
+      <Text style={{fontSize: 18}}>Completed successfully</Text>
+      <TouchableOpacity
+        style={[styles.button, {backgroundColor: '#aad326'}]}
+        onPress={() => navigation.navigate('AddLog')}>
+        <Text style={styles.buttonText}>Got It</Text>
+      </TouchableOpacity>
+    </Modal>
   );
 }
 

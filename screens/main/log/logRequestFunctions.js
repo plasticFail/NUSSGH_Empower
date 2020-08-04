@@ -41,18 +41,34 @@ const storeMedications = async () => {
       },
     });
     let responseJson = await response.json();
-    AsyncStorage.setItem(
-      'medications',
-      JSON.stringify(responseJson.medications),
-    );
-    if (responseJson.token != null) {
-      console.log('Success');
-      return true;
-    }
+    return responseJson;
   } catch (error) {
     console.error(error);
     return false;
   }
 };
 
-export {uploadBGLog, storeMedications};
+const uploadMedicationLog = async (data) => {
+  const url = 'https://sghempower.com/log/medication/add-log';
+  try {
+    let response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        Authorization: 'Bearer ' + (await getToken()),
+        Accept: 'application/json',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        logs: data,
+      }),
+    });
+    let responseJson = await response.json();
+    console.log(responseJson);
+    return true;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+};
+
+export {uploadBGLog, storeMedications, uploadMedicationLog};
