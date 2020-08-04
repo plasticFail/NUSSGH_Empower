@@ -22,14 +22,7 @@ export default class MedicationLog extends React.Component {
     super(props);
     this.state = {
       date: new Date(),
-      selectedMedicationList: [
-        {
-          dosage: 2,
-          drugName: 'Actrapid HM PEN 100 IU/ml (3ml) - INJ',
-          recordDate: '',
-          unit: 'unit',
-        },
-      ],
+      selectedMedicationList: [],
       calendarVisible: false,
       selectModalOpen: false,
       editModalOpen: false,
@@ -125,7 +118,14 @@ export default class MedicationLog extends React.Component {
       for (var x of this.state.selectedMedicationList) {
         x.recordDate = Moment(this.state.date).format('DD/MM/YYYY HH:mm:ss');
       }
-      console.log(JSON.stringify(this.state.selectedMedicationList));
+
+      this.state.selectedMedicationList.map(function (item) {
+        delete item.image_url;
+        return item;
+      });
+
+      console.log(this.state.selectedMedicationList);
+
       uploadMedicationLog(this.state.selectedMedicationList).then((value) => {
         if (value == true) {
           this.setState({showSuccess: true});
@@ -269,8 +269,7 @@ function MedicationAdded({medication, handleDelete, openEditModal}) {
           <Image
             style={[styles.medicineImg, {flex: 1}]}
             source={{
-              uri:
-                'https://assets.nst.com.my/images/articles/ondontmiss1_1589162412.jpg',
+              uri: medication.image_url,
             }}
           />
           <View style={{flex: 4, padding: '3%'}}>
@@ -410,8 +409,8 @@ const styles = StyleSheet.create({
     margin: '3%',
   },
   medicineImg: {
-    width: 80,
-    height: 80,
+    width: 100,
+    height: 100,
     margin: '3%',
   },
   addedMedicationText: {

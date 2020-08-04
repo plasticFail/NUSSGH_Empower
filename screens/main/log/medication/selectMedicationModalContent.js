@@ -28,6 +28,7 @@ export default class SelectMedicationModalContent extends React.Component {
       dosage: '',
       loading: false,
       noResult: false,
+      selectedDrugImgURL: '',
     };
     this.timeout = setTimeout(() => {}, 0);
     this.searchMedication = this.searchMedication.bind(this);
@@ -70,7 +71,7 @@ export default class SelectMedicationModalContent extends React.Component {
         arr.push(x);
       }
       var result = arr.filter((medication) =>
-        medication
+        medication.drug_name
           .replace(/\s{1,2}\[|\]/g, ' ')
           .toLowerCase() //replace all double space, [] to single space
           .includes(searchKey.toLowerCase()),
@@ -89,9 +90,10 @@ export default class SelectMedicationModalContent extends React.Component {
 
   selectFromList(item) {
     console.log('Selected Item: ' + item);
-    this.setState({query: item});
-    this.setState({selectedMedicineName: item});
+    this.setState({query: item.drug_name});
+    this.setState({selectedMedicineName: item.drug_name});
     this.setState({searchMedicineResults: []});
+    this.setState({selectedDrugImgURL: item.image_url});
   }
 
   setDosage(dosage) {
@@ -130,6 +132,7 @@ export default class SelectMedicationModalContent extends React.Component {
           unit: 'unit',
           dosage: Number(this.state.dosage),
           recordDate: '',
+          image_url: this.state.selectedDrugImgURL,
         });
       }
     } else {
@@ -231,11 +234,10 @@ function SearchMedicineResults({searchMedicineResults, selectFromList}) {
             <Image
               style={styles.medicineImg}
               source={{
-                uri:
-                  'https://assets.nst.com.my/images/articles/ondontmiss1_1589162412.jpg',
+                uri: item.image_url,
               }}
             />
-            <Text style={{flex: 3, flexWrap: 'wrap'}}>{item}</Text>
+            <Text style={{flex: 3, flexWrap: 'wrap'}}>{item.drug_name}</Text>
             <TouchableOpacity
               style={[styles.button, styles.shadow, {flex: 1}]}
               onPress={() => selectFromList(item)}>
@@ -340,8 +342,8 @@ const styles = StyleSheet.create({
     paddingStart: '2%',
   },
   medicineImg: {
-    width: 40,
-    height: 40,
+    width: 98,
+    height: 98,
     marginEnd: '3%',
   },
   button: {

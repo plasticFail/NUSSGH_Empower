@@ -16,6 +16,7 @@ export default class EditMedicationModalContent extends React.Component {
       editMedicineName: this.props.medicineToEdit.drugName,
       oldMedicineDosage: this.props.medicineToEdit.dosage,
       newMedicineDosage: this.props.medicineToEdit.dosage,
+      image: this.props.medicineToEdit.image_url,
     };
     this.setNewDosage = this.setNewDosage.bind(this);
     this.sendChanges = this.sendChanges.bind(this);
@@ -34,14 +35,13 @@ export default class EditMedicationModalContent extends React.Component {
   }
 
   render() {
-    const {editMedicineName, oldMedicineDosage} = this.state;
+    const {editMedicineName, oldMedicineDosage, image} = this.state;
     return (
       <View style={styles.container}>
         <Image
           style={styles.medicineImg}
           source={{
-            uri:
-              'https://assets.nst.com.my/images/articles/ondontmiss1_1589162412.jpg',
+            uri: image,
           }}
         />
         <Text style={styles.header}>{editMedicineName}</Text>
