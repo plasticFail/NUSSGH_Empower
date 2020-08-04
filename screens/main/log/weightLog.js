@@ -10,6 +10,8 @@ import {
 import DatePicker from 'react-native-date-picker';
 import Moment from 'moment';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {uploadWeightLog} from './logRequestFunctions';
+import SuccessDialogue from '../../../components/successDialogue';
 
 export default class WeightLog extends React.Component {
   constructor(props) {
@@ -18,10 +20,12 @@ export default class WeightLog extends React.Component {
       weight: '',
       date: new Date(),
       calendarVisible: false,
+      showSucess: false,
     };
     this.setDate = this.setDate.bind(this);
     this.checkTime = this.checkTime.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.checkInputFormat = this.checkInputFormat.bind(this);
   }
 
   setCalendarVisible() {
@@ -34,11 +38,20 @@ export default class WeightLog extends React.Component {
   }
 
   handleSubmit() {
-    //check date valid
-    if (this.checkTime()) {
-      console.log('oka');
+    //check date valid and weight format (1 dp)
+    console.log('---' + Number(this.state.weight));
+    if (this.checkTime() && this.checkInputFormat(this.state.weight)) {
+      var formatDate = Moment(this.state.date).format('DD/MM/YYYY HH:mm:ss');
+      uploadWeightLog(Number(this.state.weight), formatDate).then((value) => {
+        if (value == true) {
+          this.setState({showSucess: true});
+        } else {
+          Alert.alert('Error', 'Unexpected Error Occured ', [
+            {text: 'Try Again Later'},
+          ]);
+        }
+      });
     }
-    //check weight (2dp)
   }
 
   checkTime() {
@@ -63,8 +76,27 @@ export default class WeightLog extends React.Component {
     return true;
   }
 
+  checkInputFormat() {
+    if (
+      this.state.weight.match(/^[0-9]+(\.[0-9]{1})?$/g) &&
+      !this.state.weight.includes(',') &&
+      !this.state.weight.includes('-') &&
+      Number(this.state.weight) <= 200 &&
+      Number(this.state.weight) >= 40
+    ) {
+      return true;
+    } else {
+      Alert.alert(
+        'Error',
+        'Invalid Weight. Make sure weight input is at most 1 decimal place, no spaces or special character between numbers, between 40 to 200kg. ',
+        [{text: 'Got It'}],
+      );
+      return false;
+    }
+  }
+
   render() {
-    const {weight, date, calendarVisible} = this.state;
+    const {date, calendarVisible, showSucess} = this.state;
     return (
       <View style={styles.container}>
         <View
@@ -86,9 +118,9 @@ export default class WeightLog extends React.Component {
             style={styles.inputBox}
             keyboardType="decimal-pad"
             placeholderTextColor="#a1a3a0"
-            onChangeText={(value) =>
-              this.setState({weight: value})
-            }></TextInput>
+            onChangeText={(value) => {
+              this.setState({weight: value.trim().replace(/\s+/g, '')});
+            }}></TextInput>
         </View>
         <TouchableOpacity
           style={[
@@ -99,6 +131,7 @@ export default class WeightLog extends React.Component {
           onPress={this.handleSubmit}>
           <Text style={styles.buttonText}>Submit</Text>
         </TouchableOpacity>
+        <SuccessDialogue visible={showSucess} type={'Weight'} />
       </View>
     );
   }

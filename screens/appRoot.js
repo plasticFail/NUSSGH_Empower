@@ -27,7 +27,6 @@ import HeaderIcon from '../components/headerBtnIcon';
 import HypoglycemiaReason from './hypoglycemiaReason';
 
 import Entypo from 'react-native-vector-icons/Entypo';
-import BackHomeBtn from '../components/backHomeBtn';
 import WeightLog from './main/log/weightLog';
 Entypo.loadFont();
 

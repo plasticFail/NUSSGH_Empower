@@ -28,7 +28,11 @@ const BloodGlucoseLog = (props) => {
     if (checkTime()) {
       if (Number(bloodGlucose) >= 30 || Number(bloodGlucose) <= 0) {
         Alert.alert('Error', 'Invalid Blood Glucose Level', [{text: 'Got It'}]);
-      } else if (bloodGlucose.match(/\d{1,2}\.|\d{1,2}$/g)) {
+      } else if (
+        bloodGlucose.match(/^[0-9]+(\.[0-9]{1,2})?$/g) &&
+        !bloodGlucose.includes(',') &&
+        !bloodGlucose.includes('-')
+      ) {
         var formatDate = Moment(date).format('DD/MM/YYYY HH:mm:ss');
         uploadBGLog(Number(bloodGlucose), formatDate).then((value) => {
           if (value == true) {

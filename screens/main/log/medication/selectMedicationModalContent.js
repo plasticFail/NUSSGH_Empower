@@ -71,8 +71,8 @@ export default class SelectMedicationModalContent extends React.Component {
       }
       var result = arr.filter((medication) =>
         medication
-          .toLowerCase()
-          .replaceAll(/\s{1,2}\[|\]/g, ' ') //replace all double space, [] to single space
+          .replace(/\s{1,2}\[|\]/g, ' ')
+          .toLowerCase() //replace all double space, [] to single space
           .includes(searchKey.toLowerCase()),
       );
       this.setState({searchMedicineResults: result});
@@ -107,7 +107,9 @@ export default class SelectMedicationModalContent extends React.Component {
     }
     if (
       this.state.selectedMedicineName.length != 0 &&
-      this.state.dosage.length != 0
+      this.state.dosage.length != 0 &&
+      !this.state.dosage.includes('.') &&
+      !this.state.dosage.includes('-')
     ) {
       var check = this.checkRepeat(this.state.selectedMedicineName);
       //if repeated
@@ -130,9 +132,11 @@ export default class SelectMedicationModalContent extends React.Component {
         });
       }
     } else {
-      Alert.alert('Invalid', 'Please make sure all fields are filled', [
-        {text: 'Got It'},
-      ]);
+      Alert.alert(
+        'Invalid',
+        'Please make sure all fields are filled correctly. Medication from database selection, dosage in full numbers',
+        [{text: 'Got It'}],
+      );
     }
   }
 
