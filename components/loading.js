@@ -2,7 +2,11 @@ import React from 'react';
 import {View, ActivityIndicator, StyleSheet} from 'react-native';
 
 function Loading({isLoading}) {
-  return <ActivityIndicator animating={isLoading}></ActivityIndicator>;
+  return (
+    <ActivityIndicator
+      animating={isLoading}
+      style={{marginTop: '5%'}}></ActivityIndicator>
+  );
 }
 
 export default Loading;

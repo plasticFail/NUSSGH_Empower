@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View} from 'react-native';
+import {View, Text} from 'react-native';
 //third party libs
 import {
   getFocusedRouteNameFromRoute,
@@ -24,6 +24,11 @@ import MedicationLog from './main/log/medication/medicationLog';
 import MealLogStack from './main/log/meal/MealLogStack';
 //components
 import HeaderIcon from '../components/headerBtnIcon';
+import HypoglycemiaReason from './hypoglycemiaReason';
+
+import Entypo from 'react-native-vector-icons/Entypo';
+import WeightLog from './main/log/weightLog';
+Entypo.loadFont();
 
 const Stack = createStackNavigator();
 
@@ -146,6 +151,25 @@ class AppRoot extends Component {
                   headerRight: () => <View />,
                 }}
               />
+              <Stack.Screen
+                name="WeightLog"
+                component={WeightLog}
+                options={{
+                  title: 'Add Weight Log',
+                  headerRight: () => <View />,
+                }}
+              />
+              <Stack.Screen
+                name="HypoglycemiaReason"
+                component={HypoglycemiaReason}
+                options={({navigation}) => ({
+                  title: 'WARNING',
+                  headerStyle: {
+                    backgroundColor: '#eb90d6',
+                  },
+                  headerRight: () => <View />,
+                })}
+              />
             </>
           ) : (
             <>
@@ -184,6 +208,7 @@ class AppRoot extends Component {
                     alignSelf: 'center',
                   },
                   headerRight: () => <View />,
+                  headerBackTitle: 'Back',
                 }}
               />
               <Stack.Screen

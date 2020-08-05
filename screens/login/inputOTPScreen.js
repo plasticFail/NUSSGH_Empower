@@ -11,8 +11,10 @@ const InputOTPScreen = (props) => {
     if (otp.length < 6) {
       Alert.alert('Error', 'OTP not filled completely', [{text: 'Got It'}]);
     }
-    if (otp.length == 6) {
+    if (otp.length == 6 && !otp.includes(',') && !otp.includes('-')) {
       props.navigation.navigate('ResetPasswordScreen');
+    } else {
+      Alert.alert('Error', 'Invalid OTP', [{text: 'Got It'}]);
     }
     //handle wrong otp here.
   };
@@ -38,9 +40,8 @@ const InputOTPScreen = (props) => {
           autoFocusOnLoad
           codeInputFieldStyle={styles.underlineStyleBase}
           codeInputHighlightStyle={styles.underlineStyleHighLighted}
-          onCodeFilled={(value) => {
+          onCodeChanged={(value) => {
             setOtp(value);
-            console.log(otp);
           }}
         />
         <View style={{flexDirection: 'row', alignItems: 'space-between'}}>
