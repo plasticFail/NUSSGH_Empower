@@ -11,7 +11,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import DatePicker from 'react-native-date-picker';
 import Moment from 'moment';
 import SuccessDialogue from '../../../components/successDialogue';
-import {uploadBGLog} from './logRequestFunctions';
+import {glucoseAddLogRequest} from '../../../netcalls/requestsLog';
 import {useNavigation} from '@react-navigation/native';
 
 const BloodGlucoseLog = (props) => {
@@ -34,7 +34,7 @@ const BloodGlucoseLog = (props) => {
         !bloodGlucose.includes('-')
       ) {
         var formatDate = Moment(date).format('DD/MM/YYYY HH:mm:ss');
-        uploadBGLog(Number(bloodGlucose), formatDate).then((value) => {
+        glucoseAddLogRequest(Number(bloodGlucose), formatDate).then((value) => {
           if (value == true) {
             if (bloodGlucose == '3.2') {
               navigation.navigate('HypoglycemiaReason');

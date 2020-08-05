@@ -12,7 +12,7 @@ import {
 } from 'react-native-gesture-handler';
 import SelectMedicationModalContent from './selectMedicationModalContent';
 import EditMedicationModalContent from './editMedicationModalContent';
-import {uploadMedicationLog} from '../logRequestFunctions';
+import {medicationAddLogRequest} from '../../../../netcalls/requestsLog';
 import SuccessDialogue from '../../../../components/successDialogue';
 
 Entypo.loadFont();
@@ -126,15 +126,17 @@ export default class MedicationLog extends React.Component {
 
       console.log(this.state.selectedMedicationList);
 
-      uploadMedicationLog(this.state.selectedMedicationList).then((value) => {
-        if (value == true) {
-          this.setState({showSuccess: true});
-        } else {
-          Alert.alert('Error', 'Unexpected Error Occured', [
-            {text: 'Try again later'},
-          ]);
-        }
-      });
+      medicationAddLogRequest(this.state.selectedMedicationList).then(
+        (value) => {
+          if (value == true) {
+            this.setState({showSuccess: true});
+          } else {
+            Alert.alert('Error', 'Unexpected Error Occured', [
+              {text: 'Try again later'},
+            ]);
+          }
+        },
+      );
     } else {
       Alert.alert(
         'Error',

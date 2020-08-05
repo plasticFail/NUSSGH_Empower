@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import Entypo from 'react-native-vector-icons/Entypo';
 import {getMedications} from '../../../../storage/asyncStorageFunctions';
-import {storeMedications} from '../logRequestFunctions';
+import {storeMedications} from '../../../../netcalls/requestsLog';
 
 import {FlatList} from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-community/async-storage';
