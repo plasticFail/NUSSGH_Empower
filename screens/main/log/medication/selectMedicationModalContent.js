@@ -124,7 +124,8 @@ export default class SelectMedicationModalContent extends React.Component {
       !this.state.dosage.includes('.') &&
       !this.state.dosage.includes('-') &&
       !this.state.dosage.includes(',') &&
-      Number(this.state.dosage) <= 5
+      Number(this.state.dosage) <= 5 &&
+      Number(this.state.dosage) > 0
     ) {
       var check = this.checkRepeat(this.state.selectedMedicineName);
       //if repeated
