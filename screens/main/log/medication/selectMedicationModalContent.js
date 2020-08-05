@@ -151,7 +151,7 @@ export default class SelectMedicationModalContent extends React.Component {
     } else {
       Alert.alert(
         'Invalid',
-        'Please make sure all fields are filled correctly. Medication from database selection, dosage in full numbers and less than 20',
+        'Please make sure all fields are filled correctly. Medication from database selection, dosage in full numbers and at most 5',
         [{text: 'Got It'}],
       );
     }
