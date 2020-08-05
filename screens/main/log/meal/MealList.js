@@ -32,7 +32,7 @@ function RenderMealItem({item, onPressSelect, showMealName}) {
                     showMealName ? <Text style={styles.mealNameText}>{item.mealName}</Text> :
                                    <Text style={styles.recordDateText}>
                                        {
-                                           Moment(new Date(item['record_date']["$date"])).subtract(8, 'hours')
+                                           Moment(new Date(item['record_date']["$date"]))
                                            .format("DD/MM/YYYY HH:mm:ss")}
                                    </Text>
                 }
