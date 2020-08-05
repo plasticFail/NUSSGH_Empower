@@ -15,7 +15,25 @@ export default class MedicationLogBlok extends React.Component {
       medicineToEdit: {},
       showSuccess: false,
     };
+    this.getMedicationListFromBlock = this.getMedicationListFromBlock.bind(
+      this,
+    );
+    this.getDateSelected = this.getDateSelected.bind(this);
   }
+
+  //get selected list past from the log block
+  getMedicationListFromBlock(medicineList) {
+    console.log('hihi');
+    this.setState({selectedMedicationList: medicineList});
+    console.log(this.state.selectedMedicationList);
+  }
+
+  //get selected date
+  getDateSelected(date) {
+    console.log('hihi2');
+    this.setState({date: date});
+  }
+
   render() {
     const {
       date,
@@ -45,6 +63,8 @@ export default class MedicationLogBlok extends React.Component {
             selectModalOpen={selectModalOpen}
             editModalOpen={editModalOpen}
             medicineToEdit={medicineToEdit}
+            getMedicationList={this.getMedicationListFromBlock}
+            getDateSelected={this.getDateSelected}
           />
         </ScrollView>
       </View>
