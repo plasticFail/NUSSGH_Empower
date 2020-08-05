@@ -70,12 +70,23 @@ export default class SelectMedicationModalContent extends React.Component {
       for (var x of JSON.parse(response)) {
         arr.push(x);
       }
-      var result = arr.filter((medication) =>
-        medication.drug_name
+
+      var result = arr.filter((medication) => {
+        var medicine = medication.drug_name
           .replace(/\s{1,2}\[|\]/g, ' ')
-          .toLowerCase() //replace all double space, [] to single space
-          .includes(searchKey.toLowerCase()),
-      );
+          .toLowerCase();
+        var searchArr = String(searchKey).split(' ');
+        var count = 0;
+        for (var x of searchArr) {
+          if (medicine.includes(x.toLowerCase())) {
+            count += 1;
+          }
+        }
+        if (count == searchArr.length) {
+          return medication;
+        }
+      });
+
       this.setState({searchMedicineResults: result});
     });
   }
@@ -238,7 +249,7 @@ function SearchMedicineResults({searchMedicineResults, selectFromList}) {
                 uri: item.image_url,
               }}
             />
-            <Text style={{flex: 3, flexWrap: 'wrap'}}>{item.drug_name}</Text>
+            <Text style={{flex: 2, flexWrap: 'wrap'}}>{item.drug_name}</Text>
             <TouchableOpacity
               style={[styles.button, styles.shadow, {flex: 1}]}
               onPress={() => selectFromList(item)}>
