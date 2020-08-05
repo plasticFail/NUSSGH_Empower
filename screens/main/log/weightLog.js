@@ -10,7 +10,7 @@ import {
 import DatePicker from 'react-native-date-picker';
 import Moment from 'moment';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {uploadWeightLog} from './logRequestFunctions';
+import {weightAddLogRequest} from '../../../netcalls/requestsLog';
 import SuccessDialogue from '../../../components/successDialogue';
 
 export default class WeightLog extends React.Component {
@@ -42,15 +42,17 @@ export default class WeightLog extends React.Component {
     console.log('---' + Number(this.state.weight));
     if (this.checkTime() && this.checkInputFormat(this.state.weight)) {
       var formatDate = Moment(this.state.date).format('DD/MM/YYYY HH:mm:ss');
-      uploadWeightLog(Number(this.state.weight), formatDate).then((value) => {
-        if (value == true) {
-          this.setState({showSucess: true});
-        } else {
-          Alert.alert('Error', 'Unexpected Error Occured ', [
-            {text: 'Try Again Later'},
-          ]);
-        }
-      });
+      weightAddLogRequest(Number(this.state.weight), formatDate).then(
+        (value) => {
+          if (value == true) {
+            this.setState({showSucess: true});
+          } else {
+            Alert.alert('Error', 'Unexpected Error Occured ', [
+              {text: 'Try Again Later'},
+            ]);
+          }
+        },
+      );
     }
   }
 

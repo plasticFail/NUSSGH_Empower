@@ -12,7 +12,7 @@ import {
 } from 'react-native-gesture-handler';
 import SelectMedicationModalContent from './selectMedicationModalContent';
 import EditMedicationModalContent from './editMedicationModalContent';
-import {uploadMedicationLog} from '../logRequestFunctions';
+import {medicationAddLogRequest} from '../../../../netcalls/requestsLog';
 import SuccessDialogue from '../../../../components/successDialogue';
 
 Entypo.loadFont();
@@ -86,7 +86,9 @@ export default class MedicationLog extends React.Component {
       newDosage.length != 0 &&
       !newDosage.includes('.') &&
       !newDosage.includes('-') &&
-      !newDosage.includes(',')
+      !newDosage.includes(',') &&
+      Number(newDosage) <= 5 &&
+      Number(newDosage) > 0
     ) {
       const elementIndex = this.state.selectedMedicationList.findIndex(
         (element) => element.drugName == medicineToEdit,
@@ -126,15 +128,17 @@ export default class MedicationLog extends React.Component {
 
       console.log(this.state.selectedMedicationList);
 
-      uploadMedicationLog(this.state.selectedMedicationList).then((value) => {
-        if (value == true) {
-          this.setState({showSuccess: true});
-        } else {
-          Alert.alert('Error', 'Unexpected Error Occured', [
-            {text: 'Try again later'},
-          ]);
-        }
-      });
+      medicationAddLogRequest(this.state.selectedMedicationList).then(
+        (value) => {
+          if (value == true) {
+            this.setState({showSuccess: true});
+          } else {
+            Alert.alert('Error', 'Unexpected Error Occured', [
+              {text: 'Try again later'},
+            ]);
+          }
+        },
+      );
     } else {
       Alert.alert(
         'Error',

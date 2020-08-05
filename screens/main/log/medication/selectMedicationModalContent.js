@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import Entypo from 'react-native-vector-icons/Entypo';
 import {getMedications} from '../../../../storage/asyncStorageFunctions';
-import {storeMedications} from '../logRequestFunctions';
+import {storeMedications} from '../../../../netcalls/requestsLog';
 
 import {FlatList} from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -70,12 +70,23 @@ export default class SelectMedicationModalContent extends React.Component {
       for (var x of JSON.parse(response)) {
         arr.push(x);
       }
-      var result = arr.filter((medication) =>
-        medication.drug_name
+
+      var result = arr.filter((medication) => {
+        var medicine = medication.drug_name
           .replace(/\s{1,2}\[|\]/g, ' ')
-          .toLowerCase() //replace all double space, [] to single space
-          .includes(searchKey.toLowerCase()),
-      );
+          .toLowerCase();
+        var searchArr = String(searchKey).split(' ');
+        var count = 0;
+        for (var x of searchArr) {
+          if (medicine.includes(x.toLowerCase())) {
+            count += 1;
+          }
+        }
+        if (count == searchArr.length) {
+          return medication;
+        }
+      });
+
       this.setState({searchMedicineResults: result});
     });
   }
@@ -112,7 +123,9 @@ export default class SelectMedicationModalContent extends React.Component {
       this.state.dosage.length != 0 &&
       !this.state.dosage.includes('.') &&
       !this.state.dosage.includes('-') &&
-      !this.state.dosage.includes(',')
+      !this.state.dosage.includes(',') &&
+      Number(this.state.dosage) <= 5 &&
+      Number(this.state.dosage) > 0
     ) {
       var check = this.checkRepeat(this.state.selectedMedicineName);
       //if repeated
@@ -138,7 +151,7 @@ export default class SelectMedicationModalContent extends React.Component {
     } else {
       Alert.alert(
         'Invalid',
-        'Please make sure all fields are filled correctly. Medication from database selection, dosage in full numbers',
+        'Please make sure all fields are filled correctly. Medication from database selection, dosage in full numbers and at most 5',
         [{text: 'Got It'}],
       );
     }
@@ -237,7 +250,7 @@ function SearchMedicineResults({searchMedicineResults, selectFromList}) {
                 uri: item.image_url,
               }}
             />
-            <Text style={{flex: 3, flexWrap: 'wrap'}}>{item.drug_name}</Text>
+            <Text style={{flex: 2, flexWrap: 'wrap'}}>{item.drug_name}</Text>
             <TouchableOpacity
               style={[styles.button, styles.shadow, {flex: 1}]}
               onPress={() => selectFromList(item)}>
