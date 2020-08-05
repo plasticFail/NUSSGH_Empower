@@ -178,10 +178,10 @@ const modalStyles = StyleSheet.create({
         width: '100%',
         height: '100%',
         position: 'absolute',
-        backgroundColor: 'rgba(0,0,0,0.5)'
+        backgroundColor: 'rgba(0,0,0,0.15)'
     },
     optionsContainer: {
-        backgroundColor: '#fff',
+        backgroundColor: 'rgba(255,255,255, 0.96)',
         borderRadius: 10,
         width: '95%',
         marginBottom: 20

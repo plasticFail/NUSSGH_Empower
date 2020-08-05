@@ -7,6 +7,7 @@ import Icon from 'react-native-vector-icons/dist/FontAwesome';
 
 Icon.loadFont()
 
+// Children prop is any react component passed to serve as a button at the bottom of the modal paper.
 export default function FoodModalContent({onClose, selected, children}) {
     return (<View style={modalStyles.root}>
         <TouchableOpacity style={modalStyles.overlay} onPress={onClose} />
@@ -115,11 +116,114 @@ const modalStyles = StyleSheet.create({
     }
 });
 
-const dailyNutritionalValues = {
-    male: {
-        // daily nutritional values for men.
-    },
-    female: {
-        // daily nutritional values for women.
+// Nutritiona values obtained from: https://www.healthhub.sg/programmes/57/nutrition-101
+function getDailyNutritionalValueFor(gender, age, nutrient) {
+    if (gender === 'female') {
+        if (age < 30) {
+            switch(nutrient) {
+                case 'energy':
+                    return { amount: 2070, unit: 'kcal' }
+                case 'protein':
+                    return { amount: 62.6, unit: 'g' }
+                case 'total-fat':
+                    return { amount: 69, unit: 'g' }
+                case 'saturated-fat':
+                    return { amount: 23, unit: 'g' }
+                case 'carbohydrate':
+                    return { amount: 300, unit: 'g' }
+                case 'dietary-fibre':
+                    return { amount: 21, unit: 'g' }
+                case 'sodium':
+                    return { amount: 2000, unit: 'mg' }
+            }
+        } else if (age < 60) {
+            switch(nutrient) {
+                case 'energy':
+                    return { amount: 2035, unit: 'kcal' }
+                case 'protein':
+                    return { amount: 62.6, unit: 'g' }
+                case 'total-fat':
+                    return { amount: 68, unit: 'g' }
+                case 'saturated-fat':
+                    return { amount: 23, unit: 'g' }
+                case 'carbohydrate':
+                    return { amount: 294, unit: 'g' }
+                case 'dietary-fibre':
+                    return { amount: 20, unit: 'g' }
+                case 'sodium':
+                    return { amount: 2000, unit: 'mg' }
+            }
+        } else {
+            switch(nutrient) {
+                case 'energy':
+                    return { amount: 1865, unit: 'kcal' }
+                case 'protein':
+                    return { amount: 62.6, unit: 'g' }
+                case 'total-fat':
+                    return { amount: 62, unit: 'g' }
+                case 'saturated-fat':
+                    return { amount: 21, unit: 'g' }
+                case 'carbohydrate':
+                    return { amount: 264, unit: 'g' }
+                case 'dietary-fibre':
+                    return { amount: 19, unit: 'g' }
+                case 'sodium':
+                    return { amount: 2000, unit: 'mg' }
+            }
+        }
+    } else if (gender === 'male') {
+        if (age < 30) {
+            switch(nutrient) {
+                case 'energy':
+                    return { amount: 2700, unit: 'kcal' }
+                case 'protein':
+                    return { amount: 76.3, unit: 'g' }
+                case 'total-fat':
+                    return { amount: 90, unit: 'g' }
+                case 'saturated-fat':
+                    return { amount: 30, unit: 'g' }
+                case 'carbohydrate':
+                    return { amount: 396, unit: 'g' }
+                case 'dietary-fibre':
+                    return { amount: 27, unit: 'g' }
+                case 'sodium':
+                    return { amount: 2000, unit: 'mg' }
+            }
+        } else if (age < 60) {
+            switch(nutrient) {
+                case 'energy':
+                    return { amount: 2590, unit: 'kcal' }
+                case 'protein':
+                    return { amount: 76.3, unit: 'g' }
+                case 'total-fat':
+                    return { amount: 86, unit: 'g' }
+                case 'saturated-fat':
+                    return { amount: 29, unit: 'g' }
+                case 'carbohydrate':
+                    return { amount: 377, unit: 'g' }
+                case 'dietary-fibre':
+                    return { amount: 26, unit: 'g' }
+                case 'sodium':
+                    return { amount: 2000, unit: 'mg' }
+            }
+        } else {
+            switch(nutrient) {
+                case 'energy':
+                    return { amount: 2235, unit: 'kcal' }
+                case 'protein':
+                    return { amount: 76.3, unit: 'g' }
+                case 'total-fat':
+                    return { amount: 75, unit: 'g' }
+                case 'saturated-fat':
+                    return { amount: 25, unit: 'g' }
+                case 'carbohydrate':
+                    return { amount: 315, unit: 'g' }
+                case 'dietary-fibre':
+                    return { amount: 22, unit: 'g' }
+                case 'sodium':
+                    return { amount: 2000, unit: 'mg' }
+            }
+        }
     }
+    return null;
 }

@@ -9,7 +9,7 @@ const HeaderIcon = props => {
         <TouchableOpacity activeOpacity={0.3} onPress={props.clickFunc}>
             <View style={styles.container}>
                 <Icon name={props.iconName} size={25} color={'#000'}/>
-                <Text>{props.text}</Text>
+                { props.text && <Text>{props.text}</Text> }
             </View>
         </TouchableOpacity>
     );
