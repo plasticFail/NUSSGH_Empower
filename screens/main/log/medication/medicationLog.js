@@ -86,7 +86,8 @@ export default class MedicationLog extends React.Component {
       newDosage.length != 0 &&
       !newDosage.includes('.') &&
       !newDosage.includes('-') &&
-      !newDosage.includes(',')
+      !newDosage.includes(',') &&
+      Number(newDosage) <= 5
     ) {
       const elementIndex = this.state.selectedMedicationList.findIndex(
         (element) => element.drugName == medicineToEdit,

@@ -112,7 +112,8 @@ export default class SelectMedicationModalContent extends React.Component {
       this.state.dosage.length != 0 &&
       !this.state.dosage.includes('.') &&
       !this.state.dosage.includes('-') &&
-      !this.state.dosage.includes(',')
+      !this.state.dosage.includes(',') &&
+      Number(this.state.dosage) <= 5
     ) {
       var check = this.checkRepeat(this.state.selectedMedicineName);
       //if repeated
@@ -138,7 +139,7 @@ export default class SelectMedicationModalContent extends React.Component {
     } else {
       Alert.alert(
         'Invalid',
-        'Please make sure all fields are filled correctly. Medication from database selection, dosage in full numbers',
+        'Please make sure all fields are filled correctly. Medication from database selection, dosage in full numbers and less than 20',
         [{text: 'Got It'}],
       );
     }
