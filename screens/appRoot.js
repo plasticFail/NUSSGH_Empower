@@ -28,7 +28,7 @@ import WeightLog from './main/log/weightLog';
 //components
 import HeaderIcon from '../components/headerBtnIcon';
 import HypoglycemiaReason from './hypoglycemiaReason';
-
+import DailyLog3 from './main/log/dailyLog/dailyLog3';
 
 Entypo.loadFont();
 
@@ -132,12 +132,20 @@ class AppRoot extends Component {
                 }}
               />
               <Stack.Screen
-                  name="DailyLog"
-                  component={DailyLog1}
-                  options={{
-                    title: 'Daily Log',
-                    headerRight: () => <View />,
-                  }}
+                name="DailyLog"
+                component={DailyLog1}
+                options={{
+                  title: 'Daily Log',
+                  headerRight: () => <View />,
+                }}
+              />
+              <Stack.Screen
+                name="DailyLog3"
+                component={DailyLog3}
+                options={{
+                  title: 'Daily Log',
+                  headerRight: () => <View />,
+                }}
               />
               <Stack.Screen
                 name="MealLogRoot"

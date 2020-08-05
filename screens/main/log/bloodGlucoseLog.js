@@ -1,11 +1,5 @@
 import React, {useState} from 'react';
-import {
-  View,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  Alert,
-} from 'react-native';
+import {View, StyleSheet, Text, TouchableOpacity, Alert} from 'react-native';
 import Moment from 'moment';
 import SuccessDialogue from '../../../components/successDialogue';
 import {glucoseAddLogRequest} from '../../../netcalls/requestsLog';
@@ -77,7 +71,12 @@ const BloodGlucoseLog = (props) => {
 
   return (
     <View style={styles.screen}>
-      <BloodGlucoseLogBlock date={date} setDate={setDate} bloodGlucose={bloodGlucose} setBloodGlucose={setBloodGlucose}/>
+      <BloodGlucoseLogBlock
+        date={date}
+        setDate={setDate}
+        bloodGlucose={bloodGlucose}
+        setBloodGlucose={setBloodGlucose}
+      />
 
       <TouchableOpacity style={styles.button} onPress={handleSubmit}>
         <Text style={styles.buttonText}>Submit</Text>
@@ -95,6 +94,7 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     padding: 20,
+    backgroundColor: 'white',
   },
   button: {
     marginTop: '9%',
