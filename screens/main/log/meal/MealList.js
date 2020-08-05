@@ -1,5 +1,7 @@
 import React from 'react';
 import {FlatList, View, Text, TouchableOpacity, ScrollView, Image, StyleSheet} from "react-native";
+// Third party lib
+import Moment from 'moment';
 
 // Props description
 // onSelectMeal is a callback function when a meal is selected
@@ -13,7 +15,6 @@ export default function MealList({onSelectMeal, meals, options}) {
     const showMealName = options?.mode === 'recent' ? false : true;
     return (
         <FlatList data={meals}
-                  keyExtractor={item => item.mealName}
                   style={styles.listContainer} renderItem={({item}) =>
             (<RenderMealItem item={item} showMealName={showMealName}
                              onPressSelect={() => onSelectMeal(item)} />)}
@@ -23,12 +24,17 @@ export default function MealList({onSelectMeal, meals, options}) {
 
 function RenderMealItem({item, onPressSelect, showMealName}) {
     const combinedMealItems = item.beverage.concat(item.main, item.side, item.dessert);
+
     return (
         <View style={styles.mealItem}>
             <View style={styles.mealNameContainer}>
                 {
                     showMealName ? <Text style={styles.mealNameText}>{item.mealName}</Text> :
-                                   <Text style={styles.recordDateText}>{item.recordDate}</Text>
+                                   <Text style={styles.recordDateText}>
+                                       {
+                                           Moment(new Date(item['record_date']["$date"])).subtract(8, 'hours')
+                                           .format("DD/MM/YYYY HH:mm:ss")}
+                                   </Text>
                 }
                 <TouchableOpacity style={styles.selectButton} onPress={onPressSelect}>
                     <Text style={styles.selectButtonText}>Select</Text>

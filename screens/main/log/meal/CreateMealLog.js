@@ -12,10 +12,14 @@ import {
     Animated, LayoutAnimation,
     Platform, UIManager
 } from 'react-native';
+// Third-party lib
+import Moment from 'moment';
 // Components
 import ImageWithBadge from "../../../../components/ImageWithBadge";
 import FoodModalContent from "./FoodModalContent";
 import IntegerQuantitySelector from "../../../../components/IntegerQuantitySelector";
+// Functions
+import {getToken} from "../../../../storage/asyncStorageFunctions";
 // Others such as images, icons.
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import main from '../../../../resources/images/icons/meal.png';
@@ -142,18 +146,40 @@ export default class CreateMealLog extends React.Component {
     }
 
     handleSubmitLog = () => {
+        // selectedMealType is one of breakfast, lunch, dinner, supper or snack.
+        // selectedDateTime is javascript's default Date object.toString().
         const { selectedMealType, selectedDateTime } = this.props.route.params;
         const { beverage, main, side, dessert, isFavourite, mealName } = this.state;
-        const dataToLog = {
-            mealType: selectedMealType,
-            dateTime: selectedDateTime,
-            // And all the food items, not yet decided on how to log
-        }
-        this.props.navigation.popToTop();
-        this.props.navigation.goBack();
-        //this.props.navigation.navigate('AddLog');
-        console.log(this.state);
-        alert(`Log submitted! for ${JSON.stringify(dataToLog)}`);
+
+        const add_meal_log_endpoint = 'https://sghempower.com/log/meal/add-log';
+        const recordDate = Moment(new Date(selectedDateTime)).format("DD/MM/YYYY HH:mm:ss");
+        // console.log(recordDate);
+        getToken().then(token => {
+                fetch(add_meal_log_endpoint, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: "Bearer " + token
+                    },
+                    body: JSON.stringify({
+                        isFavourite,
+                        beverage,
+                        main,
+                        side,
+                        dessert,
+                        mealName,
+                        mealType: selectedMealType,
+                        recordDate
+                    })
+                }).then(resp => resp.json()).then(data => {
+                    this.props.navigation.popToTop();
+                    this.props.navigation.goBack();
+                    alert(data.message);
+                }).catch(err => {
+                    alert(err.message);
+                });
+            }
+        )
     }
 
     render() {

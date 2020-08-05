@@ -3,6 +3,7 @@ import {View, Text, StyleSheet, TouchableOpacity, ActivityIndicator} from "react
 // Other
 import SampleFavouriteMeal from './SampleFavouriteMeal.json';
 import MealList from "./MealList";
+import {getToken} from "../../../../storage/asyncStorageFunctions";
 
 export default class RecentMealScreen extends React.Component {
     constructor(props) {
@@ -14,13 +15,22 @@ export default class RecentMealScreen extends React.Component {
     }
 
     componentDidMount() {
-        // Simulate 1 seconds for calling api
-        setTimeout(() => {
-            this.setState({
-                isLoading: false,
-                recentMeals: SampleFavouriteMeal.data
+        // Fetch recently logged meals.
+        const mealListEndpoint = 'https://sghempower.com/log/meal/list';
+        getToken().then(token => {
+                fetch(mealListEndpoint, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: "Bearer " + token
+                    }
+                }).then(resp => resp.json()).then(data => {
+                    this.setState({
+                        isLoading: false,
+                        recentMeals: data.data
+                    });
+                }).catch(err => alert(err.message));
             })
-        }, 1000);
     }
 
     navigateToCreateMealLogPage = (selectedMeal) => {
@@ -50,7 +60,8 @@ export default class RecentMealScreen extends React.Component {
 
 const styles = StyleSheet.create({
     root: {
-        backgroundColor: '#fff'
+        backgroundColor: '#fff',
+        height: '100%'
     },
     loadingContainer: {
         width: '100%',
