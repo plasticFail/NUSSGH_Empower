@@ -57,11 +57,6 @@ const DashboardScreen = (props) => {
             <Icon name="home" size={size} color={color} />
           ),
         }}
-        // listeners={{
-        //     tabPress: e => {
-        //         props.navigation.setOptions({ title: 'Home' });
-        //     },
-        // }}
       />
       <Tab.Screen
         name="Diary"

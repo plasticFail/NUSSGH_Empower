@@ -7,6 +7,7 @@ import {
 } from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {connect} from 'react-redux';
+import Entypo from 'react-native-vector-icons/Entypo';
 //functions
 import {getToken} from '../storage/asyncStorageFunctions';
 import {mapStateToProps, mapDispatchToProps} from '../redux/reduxMapping';
@@ -19,15 +20,16 @@ import InputOTPScreen from './login/inputOTPScreen';
 import AlertsScreen from './sub/alerts';
 import ChatScreen from './sub/chat';
 import ResetPasswordScreen from './login/resetPassword';
+import DailyLog1 from './main/log/dailyLog/dailyLog1';
 import BloodGlucoseLog from './main/log/bloodGlucoseLog';
 import MedicationLog from './main/log/medication/medicationLog';
 import MealLogStack from './main/log/meal/MealLogStack';
+import WeightLog from './main/log/weightLog';
 //components
 import HeaderIcon from '../components/headerBtnIcon';
 import HypoglycemiaReason from './hypoglycemiaReason';
 
-import Entypo from 'react-native-vector-icons/Entypo';
-import WeightLog from './main/log/weightLog';
+
 Entypo.loadFont();
 
 const Stack = createStackNavigator();
@@ -128,6 +130,14 @@ class AppRoot extends Component {
                   title: 'Chat',
                   headerRight: () => <View />,
                 }}
+              />
+              <Stack.Screen
+                  name="DailyLog"
+                  component={DailyLog1}
+                  options={{
+                    title: 'Daily Log',
+                    headerRight: () => <View />,
+                  }}
               />
               <Stack.Screen
                 name="MealLogRoot"

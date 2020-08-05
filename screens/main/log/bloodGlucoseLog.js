@@ -3,23 +3,19 @@ import {
   View,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   Alert,
 } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import DatePicker from 'react-native-date-picker';
 import Moment from 'moment';
 import SuccessDialogue from '../../../components/successDialogue';
 import {glucoseAddLogRequest} from '../../../netcalls/requestsLog';
 import {useNavigation} from '@react-navigation/native';
+import BloodGlucoseLogBlock from '../../../components/logs/bloodGlucoseLogBlock';
 
 const BloodGlucoseLog = (props) => {
   const navigation = useNavigation();
-  const [visible, setVisible] = useState(false);
   const [date, setDate] = useState(new Date());
   const [bloodGlucose, setBloodGlucose] = useState('');
-  const [displaydate, setDisplayDate] = useState('');
   const [successShow, setSuccessShow] = useState(false);
   Moment.locale('en');
   console.log(bloodGlucose);
@@ -33,10 +29,10 @@ const BloodGlucoseLog = (props) => {
         !bloodGlucose.includes(',') &&
         !bloodGlucose.includes('-')
       ) {
-        var formatDate = Moment(date).format('DD/MM/YYYY HH:mm:ss');
+        let formatDate = Moment(date).format('DD/MM/YYYY HH:mm:ss');
         glucoseAddLogRequest(Number(bloodGlucose), formatDate).then((value) => {
-          if (value == true) {
-            if (bloodGlucose == '3.2') {
+          if (value === true) {
+            if (bloodGlucose === '3.2') {
               navigation.navigate('HypoglycemiaReason');
             } else {
               setSuccessShow(true);
@@ -58,10 +54,10 @@ const BloodGlucoseLog = (props) => {
   };
 
   const checkTime = () => {
-    var format = 'hh:mm';
-    var timeNow = Moment(new Date(), format);
-    var timeInput = Moment(date, format);
-    if (date.toDateString() != new Date().toDateString()) {
+    let format = 'hh:mm';
+    let timeNow = Moment(new Date(), format);
+    let timeInput = Moment(date, format);
+    if (date.toDateString() !== new Date().toDateString()) {
       Alert.alert(
         'Error',
         'Invalid date. Make sure date selected is not after today. ',
@@ -80,107 +76,32 @@ const BloodGlucoseLog = (props) => {
   };
 
   return (
-    <View style={styles.bloodGlucoseLogScreen}>
-      <View style={{flex: 2, alignItems: 'center'}}>
-        <View style={{marginTop: '7%'}}>
-          <Text style={styles.inputHeader}>Record Date Time:</Text>
-          <View style={{flexDirection: 'row'}}>
-            <TextInput
-              style={styles.inputBox1}
-              value={Moment(date).format('MMMM Do YYYY, h:mm a')}
-              placeholderTextColor="#a1a3a0"></TextInput>
-            <Ionicons
-              name="calendar-outline"
-              size={20}
-              style={{marginTop: '7%', marginStart: '7%'}}
-              onPress={() => {
-                setVisible(!visible);
-              }}
-            />
-          </View>
-          {visible && (
-            <DatePicker
-              visible={visible}
-              date={date}
-              onDateChange={setDate}
-              mode="datetime"
-            />
-          )}
-        </View>
+    <View style={styles.screen}>
+      <BloodGlucoseLogBlock date={date} setDate={setDate} bloodGlucose={bloodGlucose} setBloodGlucose={setBloodGlucose}/>
 
-        <View style={{marginTop: '3%'}}>
-          <Text style={[styles.inputHeader, {marginTop: '7%'}]}>
-            Blood Glucose: (mmol/L)
-          </Text>
-          <TextInput
-            style={styles.inputBox}
-            placeholderTextColor="#a1a3a0"
-            keyboardType="decimal-pad"
-            value={bloodGlucose}
-            onChangeText={(value) => {
-              setBloodGlucose(value);
-            }}
-          />
-          <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-            <Text style={styles.buttonText}>Submit</Text>
-          </TouchableOpacity>
-        </View>
-        <SuccessDialogue visible={successShow} type="Blood Glucose" />
-      </View>
+      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+        <Text style={styles.buttonText}>Submit</Text>
+      </TouchableOpacity>
+
+      <SuccessDialogue visible={successShow} type="Blood Glucose" />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  modalContent: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 4,
-    borderColor: 'rgba(0, 0, 0, 0.1)',
-    margin: 0,
-  },
-  bloodGlucoseLogScreen: {
+  screen: {
     flex: 1,
-    padding: 10,
+    flexDirection: 'column',
+    width: '100%',
     alignItems: 'center',
-    justifyContent: 'center',
-    height: 100,
-    backgroundColor: 'white',
-  },
-  header: {
-    flex: 0.2,
-    flexDirection: 'row',
-    backgroundColor: '#aad326',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingTop: 20,
-  },
-  inputHeader: {
-    fontSize: 18,
-    fontWeight: '500',
-  },
-  inputBox: {
-    width: 350,
-    height: 40,
-    backgroundColor: '#EEF3BD',
-    paddingStart: 20, //position placeholder text
-    marginVertical: 10,
-  },
-  inputBox1: {
-    width: 300,
-    height: 40,
-    backgroundColor: '#EEF3BD',
-    paddingStart: 20, //position placeholder text
-    marginVertical: 10,
-    fontSize: 19,
+    padding: 20,
   },
   button: {
     marginTop: '9%',
     backgroundColor: '#AAD326',
-    width: 200,
-    height: 40,
     borderRadius: 20,
     marginVertical: 10,
+    paddingHorizontal: 40,
     paddingVertical: 6,
     alignSelf: 'center',
   },
