@@ -3,10 +3,22 @@ import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
 //other screens
 import BloodGlucoseLog from '../bloodGlucoseLog';
 import BloodGlucoseLogBlock from '../../../../components/logs/bloodGlucoseLogBlock';
+import FormBlock from '../../../../components/logs/formBlock';
 
 const DailyLog1 = (props) => {
   const [date, setDate] = useState(new Date());
   const [bloodGlucose, setBloodGlucose] = useState('');
+  const [show, setShow] = useState(false);
+
+  //get form selection
+  const getFormSelection = (boolValue) => {
+    console.log(boolValue);
+    if (boolValue == true) {
+      setShow(true);
+    } else {
+      setShow(false);
+    }
+  };
 
   return (
     <View style={styles.screen}>
@@ -18,13 +30,25 @@ const DailyLog1 = (props) => {
         resizeMode="contain"
         source={require('../../../../resources/images/progress1.png')}
       />
-      <BloodGlucoseLogBlock
-        date={date}
-        setDate={setDate}
-        bloodGlucose={bloodGlucose}
-        setBloodGlucose={setBloodGlucose}
-      />
-      <TouchableOpacity onPress={() => props.navigation.navigate('DailyLog3')}>
+      <View style={[styles.container, styles.shadow, {marginBottom: '4%'}]}>
+        <FormBlock
+          question={'Did you take any medication today?'}
+          getFormSelection={getFormSelection}
+          selectNo={false}
+        />
+      </View>
+      {show && (
+        <BloodGlucoseLogBlock
+          date={date}
+          setDate={setDate}
+          bloodGlucose={bloodGlucose}
+          setBloodGlucose={setBloodGlucose}
+        />
+      )}
+
+      <TouchableOpacity
+        style={{marginTop: '4%'}}
+        onPress={() => props.navigation.navigate('DailyLog3')}>
         <Text>Next</Text>
       </TouchableOpacity>
     </View>
@@ -49,6 +73,23 @@ const styles = StyleSheet.create({
   progress: {
     width: '100%',
     height: 100,
+  },
+  container: {
+    backgroundColor: 'white',
+    alignItems: 'center',
+    width: '100%',
+    paddingBottom: '5%',
+    borderRadius: 20,
+  },
+  shadow: {
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
 });
 
