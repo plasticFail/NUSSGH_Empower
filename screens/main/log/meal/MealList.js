@@ -6,6 +6,7 @@ import {getToken} from "../../../../storage/asyncStorageFunctions";
 import Moment from 'moment';
 // Others
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
+import {unfavouriteMealEndpoint} from '../../../../netcalls/urls';
 
 Icon.loadFont();
 
@@ -32,9 +33,8 @@ function RenderMealItem({item, onPressSelect, showMealName}) {
     const combinedMealItems = item.beverage.concat(item.main, item.side, item.dessert);
 
     const handleUnfavourite = () => {
-        const unfavouriteEndPoint = 'https://sghempower.com/log/meal/unfavourite-meal';
         getToken().then(token => {
-            fetch(unfavouriteEndPoint, {
+            fetch(unfavouriteMealEndpoint, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -45,7 +45,6 @@ function RenderMealItem({item, onPressSelect, showMealName}) {
                 })
             }).then(resp => resp.json()).then(data => {
                 // unfavourite the item from local state.
-                console.log(data);
                 item.unfavourite();
             }).catch(err => alert(err.message));
         })
@@ -64,9 +63,11 @@ function RenderMealItem({item, onPressSelect, showMealName}) {
                                    </Text>
                 }
                 <View style={{flexDirection: 'row'}}>
-                    { showMealName && <TouchableOpacity style={styles.deleteButton} onPress={handleUnfavourite}>
+                    {   // If it is in 'favourite' mode, show the unfavourite button.
+                        showMealName && <TouchableOpacity style={styles.deleteButton} onPress={handleUnfavourite}>
                         <Icon name='trash' size={20} color='#fff'/>
-                    </TouchableOpacity> }
+                    </TouchableOpacity>
+                    }
                     <TouchableOpacity style={styles.selectButton} onPress={onPressSelect}>
                         <Text style={styles.selectButtonText}>Select</Text>
                     </TouchableOpacity>

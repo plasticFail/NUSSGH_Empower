@@ -1,9 +1,10 @@
 import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, ActivityIndicator} from "react-native";
-// Other
-import SampleFavouriteMeal from './SampleFavouriteMeal.json';
-import MealList from "./MealList";
+import {View, StyleSheet, ActivityIndicator} from "react-native";
+// Functions
 import {getToken} from "../../../../storage/asyncStorageFunctions";
+// Other
+import {mealListEndpoint} from "../../../../netcalls/urls";
+import MealList from "./MealList";
 
 export default class RecentMealScreen extends React.Component {
     constructor(props) {
@@ -16,7 +17,6 @@ export default class RecentMealScreen extends React.Component {
 
     componentDidMount() {
         // Fetch recently logged meals.
-        const mealListEndpoint = 'https://sghempower.com/log/meal/list';
         getToken().then(token => {
                 fetch(mealListEndpoint, {
                     method: "GET",

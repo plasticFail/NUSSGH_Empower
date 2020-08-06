@@ -1,11 +1,11 @@
 import React from 'react';
-import {View, StyleSheet, Text, ActivityIndicator, FlatList, ScrollView, TouchableOpacity, Image, Dimensions} from 'react-native';
+import {View, StyleSheet, ActivityIndicator} from 'react-native';
 // Functions
 import {getToken} from "../../../../storage/asyncStorageFunctions";
 // Others
-import SampleFavouriteMeal from './SampleFavouriteMeal.json';
 import MealList from "./MealList";
 import Searchbar from "../../../../components/Searchbar";
+import {favouriteMealListEndpoint} from "../../../../netcalls/urls";
 
 // The screen that contains a list of the user's favourite meals.
 export default class FavouriteMealScreen extends React.Component {
@@ -21,8 +21,7 @@ export default class FavouriteMealScreen extends React.Component {
     componentDidMount() {
         // Get user's favourite meal.
         getToken().then(token => {
-            const url = "https://sghempower.com/log/meal/favourite-list";
-            fetch(url, {
+            fetch(favouriteMealListEndpoint, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",

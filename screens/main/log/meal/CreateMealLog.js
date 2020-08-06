@@ -21,6 +21,7 @@ import IntegerQuantitySelector from "../../../../components/IntegerQuantitySelec
 // Functions
 import {getToken} from "../../../../storage/asyncStorageFunctions";
 // Others such as images, icons.
+import {mealAddLogEndpoint} from "../../../../netcalls/urls";
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import main from '../../../../resources/images/icons/meal.png';
 import beverage from '../../../../resources/images/icons/mug.png';
@@ -158,13 +159,12 @@ export default class CreateMealLog extends React.Component {
             alert('Please give your favourite meal a name');
             return;
         }
-        const add_meal_log_endpoint = 'https://sghempower.com/log/meal/add-log';
         // Need to subtract 8 hours from the current time because mongo db tracks UTC+0 time zone.
         const recordDate = Moment(new Date(selectedDateTime)).subtract(8, 'hours')
             .format("DD/MM/YYYY HH:mm:ss");
         // console.log(recordDate);
         getToken().then(token => {
-                fetch(add_meal_log_endpoint, {
+                fetch(mealAddLogEndpoint, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -332,21 +332,15 @@ export default class CreateMealLog extends React.Component {
     }
 }
 
-function EmptyButton({onPress}) {
-    return (
-        <TouchableHighlight
-            style={styles.emptyButton}
-            underlayColor='#fff'
-            onPress={onPress}>
-            <Icon name='plus' color='#fff' size={25} />
-        </TouchableHighlight>
-    )
-}
-
 function CreateButton({onPress}) {
     return (
         <View style={styles.foodItem}>
-            <EmptyButton onPress={onPress}/>
+            <TouchableHighlight
+                style={styles.emptyButton}
+                underlayColor='#fff'
+                onPress={onPress}>
+                <Icon name='plus' color='#fff' size={25} />
+            </TouchableHighlight>
         </View>
     )
 }
@@ -370,7 +364,11 @@ function FoodItem({onPress, item, handleDelete, onQuantityChange}) {
         });
     }
 
-    const adjustedFontSize = item["food-name"].length > 20 ? 12 : 15;
+    let foodName = item["food-name"][0].toUpperCase() + item["food-name"].slice(1);
+    const adjustedFontSize = 13;
+    if (foodName.length > 20) {
+        foodName = foodName.slice(0, 20) + "...";
+    }
     return (
         <TouchableWithoutFeedback>
             <Animated.View style={[styles.foodItem,
@@ -387,7 +385,7 @@ function FoodItem({onPress, item, handleDelete, onQuantityChange}) {
                     badgeColor="red"
                     onPressImage={onPress} />
                 <View style={styles.foodTextWrapper}>
-                    <Text style={{fontSize: adjustedFontSize}}>{item["food-name"][0].toUpperCase() + item["food-name"].slice(1)}</Text>
+                    <Text style={{fontSize: adjustedFontSize}}>{foodName}</Text>
                 </View>
                 <IntegerQuantitySelector defaultValue={item.quantity}
                                          changeAmount={1}
@@ -479,5 +477,7 @@ const styles = StyleSheet.create({
         paddingTop: 8,
         alignItems: 'center',
         width: 80,
+        height: 40,
+        justifyContent: 'center'
     }
 });

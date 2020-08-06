@@ -20,6 +20,7 @@ import carbohydrate from '../../../../resources/images/icons/carbohydrate.png';
 import energy from '../../../../resources/images/icons/energy.png';
 import fat from '../../../../resources/images/icons/fat.png';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
+import {foodSearchEndpoint} from "../../../../netcalls/urls";
 
 Icon.loadFont();
 
@@ -70,7 +71,7 @@ class FoodSearchEngineScreen extends React.Component {
         // Get token.
         getToken().then(token => {
             // Fetch api and load the response here.
-            fetch('https://sghempower.com/food/search', {
+            fetch(foodSearchEndpoint, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

@@ -61,11 +61,11 @@ export default class IntegerQuantitySelector extends React.Component {
 const styles = StyleSheet.create({
     container: {
         width: 100,
-        height: 50,
+        height: 35,
         flexDirection: 'row',
         justifyContent: 'space-around',
         alignItems: 'center',
         paddingLeft: 5,
-        paddingRight: 5
+        paddingRight: 5,
     }
 });
