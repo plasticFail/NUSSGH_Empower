@@ -32,7 +32,7 @@ const DailyLog1 = (props) => {
       />
       <View style={[styles.container, styles.shadow, {marginBottom: '4%'}]}>
         <FormBlock
-          question={'Did you take any medication today?'}
+          question={'Did your blood glucose reading today?'}
           getFormSelection={getFormSelection}
           selectNo={false}
         />
