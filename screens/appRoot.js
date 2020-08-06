@@ -28,7 +28,7 @@ import WeightLog from './main/log/weightLog';
 //components
 import HeaderIcon from '../components/headerBtnIcon';
 import HypoglycemiaReason from './hypoglycemiaReason';
-
+import DailyLog3 from './main/log/dailyLog/dailyLog3';
 
 Entypo.loadFont();
 
@@ -132,12 +132,20 @@ class AppRoot extends Component {
                 }}
               />
               <Stack.Screen
-                  name="DailyLog"
-                  component={DailyLog1}
-                  options={{
-                    title: 'Daily Log',
-                    headerRight: () => <View />,
-                  }}
+                name="DailyLog"
+                component={DailyLog1}
+                options={{
+                  title: 'Daily Log',
+                  headerRight: () => <View />,
+                }}
+              />
+              <Stack.Screen
+                name="DailyLog3"
+                component={DailyLog3}
+                options={{
+                  title: 'Daily Log',
+                  headerRight: () => <View />,
+                }}
               />
               <Stack.Screen
                 name="MealLogRoot"
@@ -149,7 +157,7 @@ class AppRoot extends Component {
                 name="BloodGlucoseLog"
                 component={BloodGlucoseLog}
                 options={{
-                  title: 'Add Medication Log',
+                  title: 'Blood Glucose Log',
                   headerRight: () => <View />,
                 }}
               />
@@ -157,7 +165,7 @@ class AppRoot extends Component {
                 name="MedicationLog"
                 component={MedicationLog}
                 options={{
-                  title: 'Add Medication Log',
+                  title: 'Medication Log',
                   headerRight: () => <View />,
                 }}
               />
@@ -165,7 +173,7 @@ class AppRoot extends Component {
                 name="WeightLog"
                 component={WeightLog}
                 options={{
-                  title: 'Add Weight Log',
+                  title: 'Weight Log',
                   headerRight: () => <View />,
                 }}
               />

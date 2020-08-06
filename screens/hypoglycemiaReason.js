@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, BackHandler} from 'react-native';
-import RadioButton from '../components/radioButton';
+import {View, Text, StyleSheet, Alert} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import FormBlock from '../components/logs/formBlock';
 export default class HypoglycemiaReason extends React.Component {
   constructor(props) {
     super(props);
@@ -72,7 +72,12 @@ export default class HypoglycemiaReason extends React.Component {
   }
 
   handleSubmit() {
-    this.props.navigation.navigate('Home');
+    Alert.alert(
+      'Thank you for filling the survey',
+      'Please click to view the list of fast acting carbohydrates!',
+      [{text: 'Got It', onPress: () => this.props.navigation.navigate('Home')}],
+      {cancelable: false},
+    );
   }
 
   render() {
@@ -116,85 +121,36 @@ function RenderForm({setEatLess, setExercise, setAlcohol}) {
 }
 
 function FormQuestion({type, setRespective}) {
-  const [selectYes, setSelectedYes] = useState(false);
-  const [selectNo, setSelectedNo] = useState(false);
-
-  const handleButtonPress = (selectItem) => {
-    if (selectItem == 'yes') {
-      setSelectedYes(true);
-      setSelectedNo(false);
-      setRespective(true);
-    }
-    if (selectItem == 'no') {
-      setSelectedYes(false);
-      setSelectedNo(true);
-      setRespective(false);
-    }
-  };
   if (type == 'eat') {
     return (
       <View style={styles.questionContainer}>
-        <Text style={styles.questionHeader}>
-          Did you eat lesser than usual today?
-        </Text>
-        <View style={styles.buttonGroupStyle}>
-          <TouchableOpacity onPress={() => handleButtonPress('yes')}>
-            <RadioButton
-              btnText={'Yes'}
-              color={'#e958c8'}
-              selected={selectYes}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{marginStart: '40%'}}
-            onPress={() => handleButtonPress('no')}>
-            <RadioButton btnText={'No'} color={'#e958c8'} selected={selectNo} />
-          </TouchableOpacity>
-        </View>
+        <FormBlock
+          question={'Did you eat lesser than usual today?'}
+          getFormSelection={setRespective}
+          selectNo={true}
+        />
       </View>
     );
   }
   if (type == 'exercise') {
     return (
       <View style={styles.questionContainer}>
-        <Text style={styles.questionHeader}>Did you exercise today?</Text>
-        <View style={styles.buttonGroupStyle}>
-          <TouchableOpacity onPress={() => handleButtonPress('yes')}>
-            <RadioButton
-              btnText={'Yes'}
-              color={'#e958c8'}
-              selected={selectYes}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{marginStart: '40%'}}
-            onPress={() => handleButtonPress('no')}>
-            <RadioButton btnText={'No'} color={'#e958c8'} selected={selectNo} />
-          </TouchableOpacity>
-        </View>
+        <FormBlock
+          question={'Did you exercise today?'}
+          getFormSelection={setRespective}
+          selectNo={true}
+        />
       </View>
     );
   }
   if (type == 'alcohol') {
     return (
       <View style={styles.questionContainer}>
-        <Text style={styles.questionHeader}>
-          Did you have any alcholic beverages today?
-        </Text>
-        <View style={styles.buttonGroupStyle}>
-          <TouchableOpacity onPress={() => handleButtonPress('yes')}>
-            <RadioButton
-              btnText={'Yes'}
-              color={'#e958c8'}
-              selected={selectYes}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{marginStart: '40%'}}
-            onPress={() => handleButtonPress('no')}>
-            <RadioButton btnText={'No'} color={'#e958c8'} selected={selectNo} />
-          </TouchableOpacity>
-        </View>
+        <FormBlock
+          question={'Did you have any alcoholic beverages today?'}
+          getFormSelection={setRespective}
+          selectNo={true}
+        />
       </View>
     );
   }
@@ -228,15 +184,7 @@ const styles = StyleSheet.create({
     color: 'black',
     marginStart: '5%',
   },
-  questionHeader: {
-    fontSize: 17,
-    fontWeight: '500',
-    color: 'black',
-    marginTop: '5%',
-    marginStart: '2%',
-  },
-  questionContainer: {marginStart: '2%'},
-  buttonGroupStyle: {flexDirection: 'row', marginTop: ' 5%', marginStart: '5%'},
+  questionContainer: {marginStart: '2%', marginBottom: '4%'},
   button: {
     marginTop: '9%',
     backgroundColor: '#eb90d6',

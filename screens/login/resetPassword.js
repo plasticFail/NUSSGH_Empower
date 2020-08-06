@@ -1,11 +1,13 @@
 import React, {useState} from 'react';
 import {
   View,
+  ScrollView,
   StyleSheet,
   TextInput,
   TouchableOpacity,
   Text,
   Alert,
+  Dimensions,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -34,42 +36,44 @@ const ResetPasswordScreen = (props) => {
 
   Icon.loadFont();
   return (
-    <View style={{...styles.resetPasswordScreen, ...props.style}}>
-      <Icon name="account-lock" size={300} />
-      <Text style={styles.text}>
-        Please ensure new password length is more than 8
-      </Text>
-      <View style={[styles.formContainer, styles.shadow]}>
-        <TextInput
-          style={styles.inputBox}
-          placeholder="New Password"
-          placeholderTextColor="#a1a3a0"
-          secureTextEntry={true}
-          onChangeText={(value) => {
-            setPass1(value);
-          }}
-        />
-        <TextInput
-          style={styles.inputBox}
-          placeholder="Confirm New Password"
-          placeholderTextColor="#a1a3a0"
-          secureTextEntry={true}
-          onChangeText={(value) => {
-            setPass2(value);
-          }}
-        />
-        <TouchableOpacity style={styles.buttonStyle} onPress={checkPassword}>
-          <Text style={styles.buttonText}>Submit</Text>
-        </TouchableOpacity>
+    <ScrollView contentContainerStyle={{paddingBottom: ' 4%'}}>
+      <View style={{...styles.resetPasswordScreen, ...props.style}}>
+        <Icon name="account-lock" size={270} />
+        <Text style={styles.text}>
+          Please ensure new password length is more than 8
+        </Text>
+        <View style={[styles.formContainer, styles.shadow]}>
+          <TextInput
+            style={styles.inputBox}
+            placeholder="New Password"
+            placeholderTextColor="#a1a3a0"
+            secureTextEntry={true}
+            onChangeText={(value) => {
+              setPass1(value);
+            }}
+          />
+          <TextInput
+            style={styles.inputBox}
+            placeholder="Confirm New Password"
+            placeholderTextColor="#a1a3a0"
+            secureTextEntry={true}
+            onChangeText={(value) => {
+              setPass2(value);
+            }}
+          />
+          <TouchableOpacity style={styles.buttonStyle} onPress={checkPassword}>
+            <Text style={styles.buttonText}>Submit</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   resetPasswordScreen: {
     flex: 1,
-    padding: 10,
+    padding: 4,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -88,8 +92,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
   },
   inputBox: {
-    width: 300,
-    height: 40,
+    width: Dimensions.get('window').width - 70,
     borderRadius: 20,
     backgroundColor: '#EEF3BD',
     paddingStart: 30, //position placeholder text

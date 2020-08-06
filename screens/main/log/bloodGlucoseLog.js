@@ -15,7 +15,6 @@ import {useNavigation} from '@react-navigation/native';
 import SuccessDialogue from '../../../components/successDialogue';
 import BloodGlucoseLogBlock from '../../../components/logs/bloodGlucoseLogBlock';
 
-
 const BloodGlucoseLog = (props) => {
   const navigation = useNavigation();
   const [date, setDate] = useState(new Date());
@@ -80,17 +79,22 @@ const BloodGlucoseLog = (props) => {
   };
 
   return (
-      <ScrollView>
-        <View style={styles.screen}>
-          <BloodGlucoseLogBlock date={date} setDate={setDate} bloodGlucose={bloodGlucose} setBloodGlucose={setBloodGlucose}/>
+    <ScrollView>
+      <View style={styles.screen}>
+        <BloodGlucoseLogBlock
+          date={date}
+          setDate={setDate}
+          bloodGlucose={bloodGlucose}
+          setBloodGlucose={setBloodGlucose}
+        />
 
-          <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-            <Text style={styles.buttonText}>Submit</Text>
-          </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+          <Text style={styles.buttonText}>Submit</Text>
+        </TouchableOpacity>
 
-          <SuccessDialogue visible={successShow} type="Blood Glucose" />
-        </View>
-      </ScrollView>
+        <SuccessDialogue visible={successShow} type="Blood Glucose" />
+      </View>
+    </ScrollView>
   );
 };
 
@@ -101,6 +105,7 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     padding: 20,
+    backgroundColor: 'white',
   },
   button: {
     marginTop: '9%',
