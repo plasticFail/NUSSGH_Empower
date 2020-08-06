@@ -1,13 +1,12 @@
 import React from 'react';
 import {View, StyleSheet, Text, ActivityIndicator, FlatList, ScrollView, TouchableOpacity, Image, Dimensions} from 'react-native';
+// Functions
+import {getToken} from "../../../../storage/asyncStorageFunctions";
 // Others
 import SampleFavouriteMeal from './SampleFavouriteMeal.json';
 import MealList from "./MealList";
 import Searchbar from "../../../../components/Searchbar";
 
-const windowHeight = Dimensions.get('window').height;
-const windowWidth = Dimensions.get('window').width;
-const suggestedButtonRatio = [0.7, 0.8]; // Fraction of screen width and height that it needs to be translated to.
 // The screen that contains a list of the user's favourite meals.
 export default class FavouriteMealScreen extends React.Component {
     constructor(props) {
@@ -20,14 +19,32 @@ export default class FavouriteMealScreen extends React.Component {
     }
 
     componentDidMount() {
-        // Load data from api here.
-        // For now I'll simulate the loading
-        setTimeout(() => {
-            this.setState({
-                favouriteMeals: SampleFavouriteMeal.data,
-                isLoading: false
+        // Get user's favourite meal.
+        getToken().then(token => {
+            const url = "https://sghempower.com/log/meal/favourite-list";
+            fetch(url, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: "Bearer " + token
+                }
+            }).then(resp => resp.json()).then(data => {
+                // Create this temporary observer pattern to handle unfavouriting.
+                const d = data.data.map(meal => {
+                    meal['unfavourite'] = () => {
+                        const mealsAfterUnfavouriting = this.state.favouriteMeals.filter(m => m !== meal);
+                        this.setState({
+                            favouriteMeals: mealsAfterUnfavouriting
+                        })
+                    };
+                    return meal;
+                });
+                this.setState({
+                    isLoading: false,
+                    favouriteMeals: d
+                })
             })
-        }, 1000); // 1s simulation to fetch the user's favourited meals.
+        })
     }
 
     navigateToCreateMealLogPage = (selectedMeal) => {
@@ -60,9 +77,6 @@ export default class FavouriteMealScreen extends React.Component {
                 <MealList meals={filteredMeals}
                           onSelectMeal={this.navigateToCreateMealLogPage}
                           />
-                <TouchableOpacity style={styles.suggestedButton}>
-                    <Text style={styles.suggestedButtonText}>Suggested</Text>
-                </TouchableOpacity>
             </View>
         );
     }
@@ -76,21 +90,6 @@ const styles = StyleSheet.create({
     },
     root: {
         //backgroundColor: '#fff'
-    },
-    suggestedButton: {
-        position: 'absolute',
-        width: 100,
-        height: 40,
-        backgroundColor: '#288259',
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: 12.5,
-        transform: [{translateX: suggestedButtonRatio[0] * windowWidth},
-            {translateY: suggestedButtonRatio[1] * windowHeight}]
-    },
-    suggestedButtonText: {
-        fontSize: 15,
-        fontWeight: 'bold',
-        color: '#fff'
+        height: '100%'
     }
 })

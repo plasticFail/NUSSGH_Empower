@@ -154,7 +154,10 @@ export default class CreateMealLog extends React.Component {
         // selectedDateTime is javascript's default Date object.toString().
         const { selectedMealType, selectedDateTime } = this.props.route.params;
         const { beverage, main, side, dessert, isFavourite, mealName } = this.state;
-
+        if (mealName.trim() === '' && isFavourite) {
+            alert('Please give your favourite meal a name');
+            return;
+        }
         const add_meal_log_endpoint = 'https://sghempower.com/log/meal/add-log';
         // Need to subtract 8 hours from the current time because mongo db tracks UTC+0 time zone.
         const recordDate = Moment(new Date(selectedDateTime)).subtract(8, 'hours')
@@ -178,6 +181,10 @@ export default class CreateMealLog extends React.Component {
                         recordDate
                     })
                 }).then(resp => resp.json()).then(data => {
+                    if (data.statusCode === 400) {
+                        alert(data.message);
+                        return;
+                    }
                     this.props.navigation.popToTop();
                     this.props.navigation.goBack();
                     alert(`Your meal log for ${selectedDateTime} has been recorded!`);
@@ -375,8 +382,8 @@ function FoodItem({onPress, item, handleDelete, onQuantityChange}) {
                 <ImageWithBadge
                     containerStyle={styles.foodImage}
                     imageProps={{source: {uri: item.imgUrl.url}}}
-                    badgeIcon={<Icon name="times" size={12.5} onPress={handleDeleteWithAnimation} color='#fff'/>}
-                    badgeSize={12.5}
+                    badgeIcon={<Icon name="times" size={19} onPress={handleDeleteWithAnimation} color='#fff'/>}
+                    badgeSize={19}
                     badgeColor="red"
                     onPressImage={onPress} />
                 <View style={styles.foodTextWrapper}>
