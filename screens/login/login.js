@@ -83,12 +83,11 @@ class Login extends Component {
     const {navigation} = this.props;
     return (
       <View style={styles.container}>
-        <Text style={{fontSize: 30, marginBottom: 20, fontWeight: '500'}}>
-          Welcome!
-        </Text>
+        <Text
+          style={{fontSize: 30, marginBottom: 20, fontWeight: '500'}}></Text>
         <Image
           source={require('../../resources/images/logo_v1.png')}
-          style={{width: 200, height: 200, marginBottom: 10}}
+          style={{width: 300, height: 300, marginBottom: 10}}
         />
         <TextInput
           style={styles.inputBox}

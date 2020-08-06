@@ -1,6 +1,13 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, Alert} from 'react-native';
-import {TextInput} from 'react-native-gesture-handler';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Alert,
+  Dimensions,
+} from 'react-native';
+import {TextInput, ScrollView} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 function ForgetPasswordScreen({navigation}) {
@@ -34,32 +41,34 @@ function ForgetPasswordScreen({navigation}) {
   };
 
   return (
-    <View style={styles.container}>
-      <Icon name="mobile-phone" size={300} />
-      <Text style={styles.textStyle}>
-        Input your phone number and your login credentials will be sent to you
-        via sms
-      </Text>
-      <View style={[styles.formContainer, styles.shadow]}>
-        <TextInput
-          style={styles.inputBox}
-          placeholder="Phone Number"
-          placeholderTextColor="#a1a3a0"
-          onChangeText={(value) => {
-            var cleanNumber = value.replace(/[^0-9]/g, '');
-            setPhoneNumber(cleanNumber);
-            console.log('Cleaning phone number:' + phoneNumber);
-          }}
-          keyboardType="number-pad"
-          maxLength={8}
-        />
-        <TouchableOpacity
-          style={styles.buttonStyle}
-          onPress={handleButtonPress}>
-          <Text style={styles.buttonText}>Recover Password</Text>
-        </TouchableOpacity>
+    <ScrollView>
+      <View style={{alignItems: 'center', flex: 1}}>
+        <Icon name="mobile-phone" size={300} />
+        <Text style={styles.textStyle}>
+          Input your phone number and your login credentials will be sent to you
+          via sms
+        </Text>
+        <View style={[styles.formContainer, styles.shadow]}>
+          <TextInput
+            style={styles.inputBox}
+            placeholder="Phone Number"
+            placeholderTextColor="#a1a3a0"
+            onChangeText={(value) => {
+              var cleanNumber = value.replace(/[^0-9]/g, '');
+              setPhoneNumber(cleanNumber);
+              console.log('Cleaning phone number:' + phoneNumber);
+            }}
+            keyboardType="number-pad"
+            maxLength={8}
+          />
+          <TouchableOpacity
+            style={styles.buttonStyle}
+            onPress={handleButtonPress}>
+            <Text style={styles.buttonText}>Recover Password</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -67,7 +76,7 @@ export default ForgetPasswordScreen;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 30,
@@ -79,9 +88,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   buttonStyle: {
+    width: Dimensions.get('window').width - 70,
     backgroundColor: '#AAD326',
-    width: 300,
-    height: 40,
     borderRadius: 20,
     alignSelf: 'center',
     padding: '2%',
@@ -98,8 +106,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
   },
   inputBox: {
-    width: 300,
-    height: 40,
+    width: Dimensions.get('window').width - 70,
     borderRadius: 20,
     backgroundColor: '#EEF3BD',
     paddingStart: 30, //position placeholder text

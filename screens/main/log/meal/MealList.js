@@ -84,7 +84,7 @@ function RenderMealItem({item, onPressSelect, showMealName}) {
 
 function FoodItem({food}) {
     let foodName = food["food-name"][0].toUpperCase() + food["food-name"].slice(1);
-    const adjustedFontSize = 15;
+    const adjustedFontSize = 13;
     if (foodName.length > 20) {
         foodName = foodName.slice(0, 20) + "...";
     }

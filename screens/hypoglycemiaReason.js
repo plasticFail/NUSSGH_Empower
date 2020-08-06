@@ -1,0 +1,202 @@
+import React, {useState} from 'react';
+import {View, Text, StyleSheet, Alert} from 'react-native';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import FormBlock from '../components/logs/formBlock';
+export default class HypoglycemiaReason extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      eatLess: true,
+      doExercise: true,
+      haveAlchol: true,
+    };
+    this.setEatLess = this.setEatLess.bind(this);
+    this.setExercise = this.setExercise.bind(this);
+    this.setAlcohol = this.setAlcohol.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    /*
+    this.handleBackButtonPressAndroid = this.handleBackButtonPressAndroid.bind(
+      this,
+    );
+    */
+  }
+  /*
+  componentDidMount() {
+    BackHandler.addEventListener(
+      'hardwareBackPress',
+      this.handleBackButtonPressAndroid,
+    );
+  }
+
+  componentWillUnmount() {
+    BackHandler.removeEventListener(
+      'hardwareBackPress',
+      this.handleBackButtonPressAndroid,
+    );
+  }
+
+  handleBackButtonPressAndroid() {
+    if (!this.props.navigation.isFocused()) {
+      // The screen is not focused, so don't do anything
+      return false;
+    }
+    this.props.navigation.navigate('BloodGlucoseLog');
+  }
+  */
+
+  setEatLess(selectedItem) {
+    console.log('Eat');
+    if (selectedItem == true) {
+      this.setState({eatLess: true});
+    } else {
+      this.setState({eatLess: false});
+    }
+  }
+
+  setExercise(selectedItem) {
+    console.log('Excercise');
+    if (selectedItem == true) {
+      this.setState({doExercise: true});
+    } else {
+      this.setState({doExercise: false});
+    }
+  }
+
+  setAlcohol(selectedItem) {
+    console.log('Alcohol');
+    if (selectedItem == true) {
+      this.setState({haveAlchol: true});
+    } else {
+      this.setState({haveAlchol: false});
+    }
+  }
+
+  handleSubmit() {
+    Alert.alert(
+      'Thank you for filling the survey',
+      'Please click to view the list of fast acting carbohydrates!',
+      [{text: 'Got It', onPress: () => this.props.navigation.navigate('Home')}],
+      {cancelable: false},
+    );
+  }
+
+  render() {
+    return (
+      <View style={{flex: 1, alignItems: 'center', backgroundColor: 'white'}}>
+        <Text style={styles.header}>
+          We are very concerned about your submitted blood glucose reading which
+          is lower than your target minimum blood glucose
+        </Text>
+
+        <View style={[styles.formContainer, {flex: 2}]}>
+          <RenderForm
+            setEatLess={this.setEatLess}
+            setExercise={this.setExercise}
+            setAlcohol={this.setAlcohol}
+          />
+          <View style={{flex: 1, alignItems: 'center'}}>
+            <TouchableOpacity style={styles.button} onPress={this.handleSubmit}>
+              <Text style={styles.buttonText}>Submit</Text>
+            </TouchableOpacity>
+            <Text style={{marginStart: '2%', marginEnd: '2%'}}>
+              *Click 'Submit' to view list of fast acting carbohydrate list that
+              you should consume immediately!
+            </Text>
+          </View>
+        </View>
+      </View>
+    );
+  }
+}
+
+function RenderForm({setEatLess, setExercise, setAlcohol}) {
+  return (
+    <View>
+      <Text style={styles.formTitle}>Finding out why: </Text>
+      <FormQuestion type={'eat'} setRespective={setEatLess} />
+      <FormQuestion type={'exercise'} setRespective={setExercise} />
+      <FormQuestion type={'alcohol'} setRespective={setAlcohol} />
+    </View>
+  );
+}
+
+function FormQuestion({type, setRespective}) {
+  if (type == 'eat') {
+    return (
+      <View style={styles.questionContainer}>
+        <FormBlock
+          question={'Did you eat lesser than usual today?'}
+          getFormSelection={setRespective}
+          selectNo={true}
+        />
+      </View>
+    );
+  }
+  if (type == 'exercise') {
+    return (
+      <View style={styles.questionContainer}>
+        <FormBlock
+          question={'Did you exercise today?'}
+          getFormSelection={setRespective}
+          selectNo={true}
+        />
+      </View>
+    );
+  }
+  if (type == 'alcohol') {
+    return (
+      <View style={styles.questionContainer}>
+        <FormBlock
+          question={'Did you have any alcoholic beverages today?'}
+          getFormSelection={setRespective}
+          selectNo={true}
+        />
+      </View>
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+  header: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#5f7b70',
+    alignSelf: 'center',
+    marginTop: '5%',
+    marginStart: '2%',
+    marginEnd: '2%',
+    marginBottom: '7%',
+  },
+  formContainer: {},
+  shadow: {
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  formTitle: {
+    fontSize: 19,
+    fontWeight: '700',
+    color: 'black',
+    marginStart: '5%',
+  },
+  questionContainer: {marginStart: '2%', marginBottom: '4%'},
+  button: {
+    marginTop: '9%',
+    backgroundColor: '#eb90d6',
+    width: 300,
+    height: 40,
+    borderRadius: 20,
+    marginVertical: 10,
+    paddingVertical: 6,
+  },
+  buttonText: {
+    fontSize: 23,
+    fontWeight: '500',
+    textAlign: 'center',
+  },
+});
