@@ -238,7 +238,7 @@ function MedicationAdded({medication, handleDelete, openEditModal}) {
               uri: medication.image_url,
             }}
           />
-          <View style={{flex: 4, padding: '3%'}}>
+          <View style={{flex: 2, padding: '3%'}}>
             <Text style={[styles.addedMedicationText]}>
               {medication.drugName}
             </Text>
@@ -389,9 +389,9 @@ const styles = StyleSheet.create({
     width: Dimensions.width,
   },
   medicineImg: {
-    width: 100,
-    height: 100,
-    margin: '3%',
+    width: '100%',
+    height: '100%',
+    resizeMode: 'contain',
   },
   addedMedicationText: {
     fontSize: 19,
