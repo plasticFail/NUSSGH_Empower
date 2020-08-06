@@ -5,12 +5,16 @@ import {
   Text,
   TouchableOpacity,
   Alert,
+  ScrollView,
 } from 'react-native';
+//third party libs
 import Moment from 'moment';
-import SuccessDialogue from '../../../components/successDialogue';
 import {glucoseAddLogRequest} from '../../../netcalls/requestsLog';
 import {useNavigation} from '@react-navigation/native';
+//components
+import SuccessDialogue from '../../../components/successDialogue';
 import BloodGlucoseLogBlock from '../../../components/logs/bloodGlucoseLogBlock';
+
 
 const BloodGlucoseLog = (props) => {
   const navigation = useNavigation();
@@ -76,15 +80,17 @@ const BloodGlucoseLog = (props) => {
   };
 
   return (
-    <View style={styles.screen}>
-      <BloodGlucoseLogBlock date={date} setDate={setDate} bloodGlucose={bloodGlucose} setBloodGlucose={setBloodGlucose}/>
+      <ScrollView>
+        <View style={styles.screen}>
+          <BloodGlucoseLogBlock date={date} setDate={setDate} bloodGlucose={bloodGlucose} setBloodGlucose={setBloodGlucose}/>
 
-      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-        <Text style={styles.buttonText}>Submit</Text>
-      </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+            <Text style={styles.buttonText}>Submit</Text>
+          </TouchableOpacity>
 
-      <SuccessDialogue visible={successShow} type="Blood Glucose" />
-    </View>
+          <SuccessDialogue visible={successShow} type="Blood Glucose" />
+        </View>
+      </ScrollView>
   );
 };
 
