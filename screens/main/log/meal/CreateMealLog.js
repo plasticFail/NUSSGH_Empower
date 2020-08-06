@@ -56,7 +56,7 @@ export default class CreateMealLog extends React.Component {
             isFavourite: false,
             mealName: "",
             selected: null,
-            modalOpen: false
+            modalOpen: false,
         }
     }
 
@@ -94,6 +94,10 @@ export default class CreateMealLog extends React.Component {
             // Add a new field to the item, called quantity.
             item.quantity = 1;
             newState[type].push(item);
+            // Update navigation prop param.
+            this.props.navigation.setParams({
+                edited: true
+            });
             this.setState(newState, () => console.log(this.state));
         }
     }

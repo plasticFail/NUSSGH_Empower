@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, Text, TouchableHighlight, TouchableOpacity, Modal, Platform} from 'react-native';
+import {View, StyleSheet, Text, TouchableHighlight, TouchableOpacity, Modal, Alert} from 'react-native';
 // Third-party lib
 import {createStackNavigator, TransitionPresets} from "@react-navigation/stack";
 import DatePicker from 'react-native-date-picker';
@@ -78,6 +78,8 @@ class MealLogScreen extends React.Component {
                             <DatePicker
                                 visible={datepickerModalOpen}
                                 date={selectedDateTime}
+                                minimumDate={Moment(new Date()).subtract(10, 'days').toDate()}
+                                maximumDate={Moment(new Date()).add(10, 'minutes').toDate()}
                                 onDateChange={(date) => this.setState({selectedDateTime: date})}
                                 mode="datetime"
                             />
@@ -163,7 +165,27 @@ const MealLogStack = (props) => {
                           {   animationEnabled: false,
                               title: "Create Meal Log",
                               headerLeft: () => (<HeaderIcon iconName="chevron-left"
-                                                             text={null} clickFunc={navigation.goBack}/>),
+                                                             text={null} clickFunc={() => {
+                                                                                if (route.params.edited) {
+                                                                                    // Confirmation message before going back.
+                                                                                    // If the meal has been edited, this dialogue will be popped.
+                                                                                    // otherwise the user will be sent back to the previous page.
+                                                                                    Alert.alert('Going back?', 'You have not submitted your meal log. Are you sure you want to leave this page?',
+                                                                                        [
+                                                                                            {
+                                                                                                text: 'Ok',
+                                                                                                onPress: navigation.goBack
+                                                                                            },
+                                                                                            {
+                                                                                                text: 'Cancel',
+                                                                                                onPress: () => {}
+                                                                                            }
+                                                                                        ])
+                                                                                } else {
+                                                                                    navigation.goBack()
+                                                                                }
+                                                                            }
+                              }/>),
                               headerRight: () => (<View style={{width: 25, height: 25}} />)
                           })}/>
         <Stack.Screen name={'FavouriteMeal'}
