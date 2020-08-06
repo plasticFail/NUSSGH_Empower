@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, Image} from 'react-native';
+import {View, Text, StyleSheet, Image, Dimensions} from 'react-native';
 import MedicationLogBlock from '../../../../components/logs/medicationLogBlock';
 import {ScrollView} from 'react-native-gesture-handler';
 import FormBlock from '../../../../components/logs/formBlock';
@@ -77,7 +77,10 @@ export default class MedicationLogBlok extends React.Component {
           />
         </View>
         {show == true && (
-          <ScrollView>
+          <ScrollView
+            style={{
+              width: Dimensions.get('window').width - 40,
+            }}>
             <MedicationLogBlock
               calendarVisible={calendarVisible}
               selectedMedicationList={selectedMedicationList}
