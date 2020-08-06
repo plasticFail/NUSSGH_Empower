@@ -30,6 +30,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#EEF3BD',
     paddingStart: 20, //position placeholder text
     marginVertical: 10,
+    paddingBottom: '2%',
+  },
+  inputHeader: {
+    fontSize: 18,
+    fontWeight: '500',
   },
 });
 

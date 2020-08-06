@@ -36,14 +36,12 @@ export default class MedicationLogBlok extends React.Component {
 
   //get selected list past from the log block
   getMedicationListFromBlock(medicineList) {
-    console.log('hihi');
     this.setState({selectedMedicationList: medicineList});
     console.log(this.state.selectedMedicationList);
   }
 
   //get selected date
   getDateSelected(date) {
-    console.log('hihi2');
     this.setState({date: date});
   }
 

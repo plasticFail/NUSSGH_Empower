@@ -14,6 +14,7 @@ import DatePicker from 'react-native-date-picker';
 import Moment from 'moment';
 import Modal from 'react-native-modal';
 import Entypo from 'react-native-vector-icons/Entypo';
+import DateSelectionBlock from '../logs/dateSelectionBlock';
 
 // content
 import SelectMedicationModalContent from '../../screens/main/log/medication/selectMedicationModalContent';
@@ -130,12 +131,7 @@ export default class MedicationLogBlock extends React.Component {
     } = this.state;
     return (
       <View style={{flex: 1, width: '100%'}}>
-        <RenderDateTime
-          date={date}
-          setDate={this.setDate}
-          calendarVisible={calendarVisible}
-          setCalendarVisible={this.setCalendarVisible}
-        />
+        <DateSelectionBlock date={date} setDate={this.setDate} />
         {selectedMedicationList <= 0 ? (
           <Text style={styles.headerStyle}>Start Adding A Medication:</Text>
         ) : (
@@ -261,40 +257,6 @@ function MedicationAdded({medication, handleDelete, openEditModal}) {
           </View>
         </View>
       </View>
-    </View>
-  );
-}
-
-function RenderDateTime({date, calendarVisible, setDate, setCalendarVisible}) {
-  const [dateSelected, setDateSelected] = useState(date);
-  return (
-    <View style={{marginTop: '7%', flex: 1}}>
-      <Text style={styles.inputHeader}>Record Date Time:</Text>
-      <View style={styles.subContainer}>
-        <TextInput
-          style={styles.inputBoxFill1}
-          value={Moment(dateSelected).format('MMMM Do YYYY, h:mm a')}
-          placeholderTextColor="#a1a3a0"></TextInput>
-        <Ionicons
-          name="calendar-outline"
-          size={30}
-          style={{marginTop: '2%', marginStart: '5%', marginEnd: '2%'}}
-          onPress={() => {
-            setCalendarVisible();
-          }}
-        />
-      </View>
-      {calendarVisible && (
-        <DatePicker
-          visible={calendarVisible}
-          date={dateSelected}
-          onDateChange={(date) => {
-            setDateSelected(date);
-            setDate(date);
-          }}
-          mode="datetime"
-        />
-      )}
     </View>
   );
 }
