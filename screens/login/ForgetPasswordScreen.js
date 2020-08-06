@@ -50,7 +50,7 @@ function ForgetPasswordScreen({navigation}) {
         </Text>
         <View style={[styles.formContainer, styles.shadow]}>
           <TextInput
-            style={styles.inputBox}
+            style={[styles.inputBox, {padding: '4%'}]}
             placeholder="Phone Number"
             placeholderTextColor="#a1a3a0"
             onChangeText={(value) => {
