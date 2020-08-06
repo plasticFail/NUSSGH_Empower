@@ -85,7 +85,6 @@ export default class MedicationLog extends React.Component {
 
   render() {
     const {
-      date,
       calendarVisible,
       selectedMedicationList,
       selectModalOpen,

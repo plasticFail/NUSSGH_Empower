@@ -10,10 +10,18 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import {ScrollView} from 'react-native-gesture-handler';
+import CountdownTimer from '../../components/countdownTimer';
 
 const InputOTPScreen = (props) => {
   Icon.loadFont();
   const [otp, setOtp] = useState('');
+  const [disabled, setDisable] = useState(false);
+  const [countdownVisible, setCountdownVisible] = useState(false);
+
+  const handleTimout = () => {
+    setCountdownVisible(false);
+    setDisable(false);
+  };
 
   const handleSubmit = () => {
     if (otp.length < 6) {
@@ -32,6 +40,14 @@ const InputOTPScreen = (props) => {
     //handle wrong otp here.
   };
 
+  const resendOTP = () => {
+    setCountdownVisible(true);
+    setDisable(true);
+    Alert.alert('Success', 'Please check if your SMS for new OTP', [
+      {text: 'Got It'},
+    ]);
+  };
+
   return (
     <ScrollView>
       <View style={{...styles.otpScreen, ...props.style}}>
@@ -41,6 +57,7 @@ const InputOTPScreen = (props) => {
           (**** 9876).
         </Text>
         <View style={[styles.formContainer, styles.shadow]}>
+          {countdownVisible && <CountdownTimer handleTimout={handleTimout} />}
           <OTPInputView
             pinCount={6}
             style={{
@@ -61,10 +78,21 @@ const InputOTPScreen = (props) => {
             <TouchableOpacity style={styles.buttonStyle} onPress={handleSubmit}>
               <Text style={styles.buttonText}>Submit</Text>
             </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.buttonStyle, {backgroundColor: '#cdd4e4'}]}>
-              <Text style={styles.buttonText}>Resend OTP</Text>
-            </TouchableOpacity>
+            {countdownVisible ? (
+              <TouchableOpacity
+                disabled={disabled}
+                style={[styles.buttonStyle, {backgroundColor: '#cdd4e4'}]}
+                onPress={resendOTP}>
+                <Text style={styles.buttonText}>Resend OTP</Text>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                disabled={disabled}
+                style={[styles.buttonStyle, {backgroundColor: '#FFB6C1'}]}
+                onPress={resendOTP}>
+                <Text style={styles.buttonText}>Resend OTP</Text>
+              </TouchableOpacity>
+            )}
           </View>
         </View>
       </View>
