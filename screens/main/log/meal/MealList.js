@@ -15,7 +15,7 @@ export default function MealList({onSelectMeal, meals, options}) {
     const showMealName = options?.mode === 'recent' ? false : true;
     return (
         <FlatList data={meals}
-                  style={styles.listContainer} renderItem={({item}) =>
+                  contentContainerStyle={styles.listContainer} renderItem={({item}) =>
             (<RenderMealItem item={item} showMealName={showMealName}
                              onPressSelect={() => onSelectMeal(item)} />)}
         />
