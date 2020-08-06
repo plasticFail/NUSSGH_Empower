@@ -35,18 +35,12 @@ export default class MedicationLogBlock extends React.Component {
       showSuccess: false,
     };
     this.setDate = this.setDate.bind(this);
-    this.setCalendarVisible = this.setCalendarVisible.bind(this);
     this.openEditModal = this.openEditModal.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.getMedicineToEdit = this.getMedicineToEdit.bind(this);
     this.getSelectedMedicineFromModal = this.getSelectedMedicineFromModal.bind(
       this,
     );
-    console.log('---' + this.state.date);
-  }
-
-  setCalendarVisible() {
-    this.setState({calendarVisible: !this.state.calendarVisible});
   }
 
   setDate(date) {
@@ -122,7 +116,6 @@ export default class MedicationLogBlock extends React.Component {
   render() {
     const {
       date,
-      calendarVisible,
       selectedMedicationList,
       selectModalOpen,
       editModalOpen,
