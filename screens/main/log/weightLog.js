@@ -2,10 +2,10 @@ import React, {useState} from 'react';
 import {
   View,
   Text,
-  TextInput,
   StyleSheet,
   TouchableOpacity,
-  Alert, ScrollView,
+  Alert,
+  ScrollView,
 } from 'react-native';
 //third party libs
 import Moment from 'moment';
