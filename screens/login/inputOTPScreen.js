@@ -1,7 +1,15 @@
 import React, {useState} from 'react';
-import {View, StyleSheet, Text, Alert, TouchableOpacity} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Text,
+  Alert,
+  TouchableOpacity,
+  Dimensions,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
+import {ScrollView} from 'react-native-gesture-handler';
 
 const InputOTPScreen = (props) => {
   Icon.loadFont();
@@ -11,7 +19,12 @@ const InputOTPScreen = (props) => {
     if (otp.length < 6) {
       Alert.alert('Error', 'OTP not filled completely', [{text: 'Got It'}]);
     }
-    if (otp.length == 6 && !otp.includes(',') && !otp.includes('-')) {
+    if (
+      otp.length == 6 &&
+      !otp.includes(',') &&
+      !otp.includes('-') &&
+      !otp.includes('.')
+    ) {
       props.navigation.navigate('ResetPasswordScreen');
     } else {
       Alert.alert('Error', 'Invalid OTP', [{text: 'Got It'}]);
@@ -20,48 +33,48 @@ const InputOTPScreen = (props) => {
   };
 
   return (
-    <View style={{...styles.otpScreen, ...props.style}}>
-      <Icon name="cellphone-message" size={300} />
-      <Text style={styles.text}>
-        Enter the 6-digit One-Time Password (OTP) sent to your mobile number
-      </Text>
-      <Text style={styles.text}> (**** 9876).</Text>
-
-      <View style={[styles.formContainer, styles.shadow]}>
-        <OTPInputView
-          pinCount={6}
-          style={{
-            width: '100%',
-            height: 100,
-            alignSelf: 'center',
-            fontWeight: '1000',
-          }}
-          placeholderTextColor="#000000"
-          autoFocusOnLoad
-          codeInputFieldStyle={styles.underlineStyleBase}
-          codeInputHighlightStyle={styles.underlineStyleHighLighted}
-          onCodeChanged={(value) => {
-            setOtp(value);
-          }}
-        />
-        <View style={{flexDirection: 'row', alignItems: 'space-between'}}>
-          <TouchableOpacity style={styles.buttonStyle} onPress={handleSubmit}>
-            <Text style={styles.buttonText}>Submit</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.buttonStyle, {backgroundColor: '#cdd4e4'}]}>
-            <Text style={styles.buttonText}>Resend OTP</Text>
-          </TouchableOpacity>
+    <ScrollView>
+      <View style={{...styles.otpScreen, ...props.style}}>
+        <Icon name="cellphone-message" size={300} />
+        <Text style={styles.text}>
+          Enter the 6-digit One-Time Password (OTP) sent to your mobile number
+          (**** 9876).
+        </Text>
+        <View style={[styles.formContainer, styles.shadow]}>
+          <OTPInputView
+            pinCount={6}
+            style={{
+              width: '100%',
+              height: 100,
+              alignSelf: 'center',
+              fontWeight: '1000',
+            }}
+            placeholderTextColor="#000000"
+            autoFocusOnLoad
+            codeInputFieldStyle={styles.underlineStyleBase}
+            codeInputHighlightStyle={styles.underlineStyleHighLighted}
+            onCodeChanged={(value) => {
+              setOtp(value);
+            }}
+          />
+          <View style={{flexDirection: 'row', alignItems: 'space-between'}}>
+            <TouchableOpacity style={styles.buttonStyle} onPress={handleSubmit}>
+              <Text style={styles.buttonText}>Submit</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.buttonStyle, {backgroundColor: '#cdd4e4'}]}>
+              <Text style={styles.buttonText}>Resend OTP</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   otpScreen: {
-    flex: 1,
-    padding: 10,
+    width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -93,8 +106,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
   },
   inputBox: {
-    width: 300,
-    height: 40,
+    width: Dimensions.get('window').width - 70,
     borderRadius: 20,
     backgroundColor: '#EEF3BD',
     paddingStart: 30, //position placeholder text
@@ -119,7 +131,6 @@ const styles = StyleSheet.create({
     color: 'black',
     fontSize: 23,
   },
-
   underlineStyleHighLighted: {
     borderColor: '#aad326',
   },
