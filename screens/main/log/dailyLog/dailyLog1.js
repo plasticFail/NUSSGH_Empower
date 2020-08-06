@@ -30,9 +30,14 @@ const DailyLog1 = (props) => {
         resizeMode="contain"
         source={require('../../../../resources/images/progress1.png')}
       />
-      <View style={[styles.container, styles.shadow, {marginBottom: '4%'}]}>
+      <View
+        style={[
+          styles.container,
+          styles.shadow,
+          {marginBottom: '4%', paddingEnd: '1%'},
+        ]}>
         <FormBlock
-          question={'Did your blood glucose reading today?'}
+          question={'Did you take your blood glucose reading today?'}
           getFormSelection={getFormSelection}
           selectNo={false}
         />
