@@ -157,7 +157,7 @@ class AppRoot extends Component {
                 name="BloodGlucoseLog"
                 component={BloodGlucoseLog}
                 options={{
-                  title: 'Add Medication Log',
+                  title: 'Blood Glucose Log',
                   headerRight: () => <View />,
                 }}
               />
@@ -165,7 +165,7 @@ class AppRoot extends Component {
                 name="MedicationLog"
                 component={MedicationLog}
                 options={{
-                  title: 'Add Medication Log',
+                  title: 'Medication Log',
                   headerRight: () => <View />,
                 }}
               />
@@ -173,7 +173,7 @@ class AppRoot extends Component {
                 name="WeightLog"
                 component={WeightLog}
                 options={{
-                  title: 'Add Weight Log',
+                  title: 'Weight Log',
                   headerRight: () => <View />,
                 }}
               />
