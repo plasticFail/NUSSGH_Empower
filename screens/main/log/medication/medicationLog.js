@@ -1,5 +1,5 @@
 import React from 'react';
-import {TouchableOpacity, Text, StyleSheet, Alert} from 'react-native';
+import {View, TouchableOpacity, Text, StyleSheet, Alert} from 'react-native';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Moment from 'moment';
 import {ScrollView} from 'react-native-gesture-handler';
@@ -48,7 +48,7 @@ export default class MedicationLog extends React.Component {
     if (this.state.date.toDateString() != new Date().toDateString()) {
       Alert.alert(
         'Error',
-        'Invalid date. Make sure date selected is not after today. ',
+        'Invalid date. Make sure date selected is not after or before today. ',
         [{text: 'Got It'}],
       );
     } else if (timeInput.isBefore(timeNow) || timeInput.isSame(timeNow)) {
@@ -95,22 +95,28 @@ export default class MedicationLog extends React.Component {
     } = this.state;
     return (
       <ScrollView style={{backgroundColor: 'white'}}>
-        <MedicationLogBlock
-          calendarVisible={calendarVisible}
-          selectedMedicationList={selectedMedicationList}
-          selectModalOpen={selectModalOpen}
-          editModalOpen={editModalOpen}
-          medicineToEdit={medicineToEdit}
-          getMedicationList={this.getMedicationListFromBlock}
-          getDateSelected={this.getDateSelected}
-        />
-        {this.state.selectedMedicationList != 0 && (
-          <TouchableOpacity
-            style={[styles.button, styles.shadow, {backgroundColor: '#aad326'}]}
-            onPress={this.handleSubmit}>
-            <Text style={styles.buttonText}>Submit</Text>
-          </TouchableOpacity>
-        )}
+        <View style={{marginStart: '7%', marginEnd: '7%'}}>
+          <MedicationLogBlock
+            calendarVisible={calendarVisible}
+            selectedMedicationList={selectedMedicationList}
+            selectModalOpen={selectModalOpen}
+            editModalOpen={editModalOpen}
+            medicineToEdit={medicineToEdit}
+            getMedicationList={this.getMedicationListFromBlock}
+            getDateSelected={this.getDateSelected}
+          />
+          {this.state.selectedMedicationList != 0 && (
+            <TouchableOpacity
+              style={[
+                styles.button,
+                styles.shadow,
+                {backgroundColor: '#aad326'},
+              ]}
+              onPress={this.handleSubmit}>
+              <Text style={styles.buttonText}>Submit</Text>
+            </TouchableOpacity>
+          )}
+        </View>
         <SuccessDialogue visible={showSuccess} type="Medication" />
       </ScrollView>
     );
@@ -124,6 +130,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingStart: '20%',
     paddingEnd: '20%',
+    alignSelf: 'stretch',
     borderRadius: 20,
     marginVertical: 10,
     paddingVertical: 6,

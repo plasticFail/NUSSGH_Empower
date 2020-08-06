@@ -129,7 +129,7 @@ export default class MedicationLogBlock extends React.Component {
       showSuccess,
     } = this.state;
     return (
-      <View>
+      <View style={{flex: 1, width: '100%'}}>
         <RenderDateTime
           date={date}
           setDate={this.setDate}
@@ -248,9 +248,8 @@ function MedicationAdded({medication, handleDelete, openEditModal}) {
               </Text>
               <TouchableOpacity
                 style={[
-                  styles.button,
+                  styles.editButton,
                   {
-                    width: 90,
                     alignSelf: 'flex-end',
                     backgroundColor: '#aad326',
                   },
@@ -269,11 +268,11 @@ function MedicationAdded({medication, handleDelete, openEditModal}) {
 function RenderDateTime({date, calendarVisible, setDate, setCalendarVisible}) {
   const [dateSelected, setDateSelected] = useState(date);
   return (
-    <View style={{marginTop: '7%', marginStart: '3%'}}>
+    <View style={{marginTop: '7%', flex: 1}}>
       <Text style={styles.inputHeader}>Record Date Time:</Text>
       <View style={styles.subContainer}>
         <TextInput
-          style={styles.inputBoxFill}
+          style={styles.inputBoxFill1}
           value={Moment(dateSelected).format('MMMM Do YYYY, h:mm a')}
           placeholderTextColor="#a1a3a0"></TextInput>
         <Ionicons
@@ -318,19 +317,14 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '500',
   },
-  inputBox: {
-    fontSize: 19,
-    backgroundColor: '#EEF3BD',
-    paddingStart: 20, //position placeholder text
-    marginVertical: 10,
-  },
-  inputBoxFill: {
+  inputBoxFill1: {
+    //*diff*//
     flex: 1,
     backgroundColor: '#EEF3BD',
-    paddingStart: 20, //position placeholder text
+    paddingStart: 13, //position placeholder text
     marginVertical: 10,
-    padding: '3%',
-    fontSize: 19,
+    padding: '4%',
+    fontSize: 18,
     color: 'black',
   },
   button: {
@@ -339,6 +333,18 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingStart: '20%',
     paddingEnd: '20%',
+    alignSelf: 'stretch',
+    borderRadius: 20,
+    marginVertical: 10,
+    paddingVertical: 6,
+    alignSelf: 'center',
+  },
+  editButton: {
+    marginTop: '4%',
+    backgroundColor: '#EEF3BD',
+    flex: 1,
+    paddingStart: '5%',
+    paddingEnd: '5%',
     alignSelf: 'stretch',
     borderRadius: 20,
     marginVertical: 10,
@@ -392,6 +398,5 @@ const styles = StyleSheet.create({
     marginBottom: '2%',
     flex: 2,
     flexWrap: 'wrap',
-    fontWeight: '600',
   },
 });
