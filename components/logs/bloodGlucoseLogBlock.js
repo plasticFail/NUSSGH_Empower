@@ -40,7 +40,7 @@ const BloodGlucoseLogBlock = (props) => {
         Blood Glucose: (mmol/L)
       </Text>
       <TextInput
-        style={styles.inputBox}
+        style={[styles.inputBox, {paddingBottom: '3%'}]}
         placeholderTextColor="#a1a3a0"
         keyboardType="decimal-pad"
         value={props.bloodGlucose}
