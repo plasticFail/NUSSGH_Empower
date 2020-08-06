@@ -2,12 +2,14 @@ import React, {useState} from 'react';
 import {View, Text, StyleSheet, Image} from 'react-native';
 import MedicationLogBlock from '../../../../components/logs/medicationLogBlock';
 import {ScrollView} from 'react-native-gesture-handler';
+import FormBlock from '../../../../components/logs/formBlock';
 
 export default class MedicationLogBlok extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       date: new Date(),
+      show: false,
       selectedMedicationList: [],
       calendarVisible: false,
       selectModalOpen: false,
@@ -19,6 +21,17 @@ export default class MedicationLogBlok extends React.Component {
       this,
     );
     this.getDateSelected = this.getDateSelected.bind(this);
+    this.getFormSelection = this.getFormSelection.bind(this);
+  }
+
+  //get form selection
+  getFormSelection(boolValue) {
+    console.log(boolValue);
+    if (boolValue == true) {
+      this.setState({show: true});
+    } else {
+      this.setState({show: false});
+    }
   }
 
   //get selected list past from the log block
@@ -42,7 +55,7 @@ export default class MedicationLogBlok extends React.Component {
       selectModalOpen,
       editModalOpen,
       medicineToEdit,
-      showSuccess,
+      show,
     } = this.state;
     return (
       <View style={styles.screen}>
@@ -56,17 +69,26 @@ export default class MedicationLogBlok extends React.Component {
           resizeMode="contain"
           source={require('../../../../resources/images/progress3.png')}
         />
-        <ScrollView>
-          <MedicationLogBlock
-            calendarVisible={calendarVisible}
-            selectedMedicationList={selectedMedicationList}
-            selectModalOpen={selectModalOpen}
-            editModalOpen={editModalOpen}
-            medicineToEdit={medicineToEdit}
-            getMedicationList={this.getMedicationListFromBlock}
-            getDateSelected={this.getDateSelected}
+        <View style={[styles.container, styles.shadow]}>
+          <FormBlock
+            question={'Did you take any medication today?'}
+            getFormSelection={this.getFormSelection}
+            selectNo={false}
           />
-        </ScrollView>
+        </View>
+        {show == true && (
+          <ScrollView>
+            <MedicationLogBlock
+              calendarVisible={calendarVisible}
+              selectedMedicationList={selectedMedicationList}
+              selectModalOpen={selectModalOpen}
+              editModalOpen={editModalOpen}
+              medicineToEdit={medicineToEdit}
+              getMedicationList={this.getMedicationListFromBlock}
+              getDateSelected={this.getDateSelected}
+            />
+          </ScrollView>
+        )}
       </View>
     );
   }
@@ -90,5 +112,22 @@ const styles = StyleSheet.create({
   progress: {
     width: '100%',
     height: 100,
+  },
+  container: {
+    backgroundColor: 'white',
+    alignItems: 'center',
+    width: '100%',
+    paddingBottom: '5%',
+    borderRadius: 20,
+  },
+  shadow: {
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
 });
