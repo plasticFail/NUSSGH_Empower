@@ -52,11 +52,13 @@ const ResetPasswordScreen = (props) => {
   return (
     <ScrollView contentContainerStyle={{paddingBottom: ' 8%'}}>
       <Icon name="account-lock" size={180} style={{alignSelf: 'center'}} />
-      <Text style={{alignSelf: 'center', margin: '3%', fontSize: 20}}>
-        Set a password that has a mixture of alphabets, numbers and special
-        characters.
+      <Text style={styles.headerText}>
+        Set a password that is not easily guessable with a mixture of :
       </Text>
-      <View style={[styles.formContainer, styles.shadow]}>
+      <Text style={styles.headerText}>{'\u2713'}Alphabets</Text>
+      <Text style={styles.headerText}>{'\u2713'}Numbers</Text>
+      <Text style={styles.headerText}>{'\u2713'}Special Characters</Text>
+      <View style={[styles.formContainer, styles.shadow, {marginTop: '3%'}]}>
         <PasswordStrengthMeter setPassword={setPassword} />
         <TextInput
           style={styles.inputBox}
@@ -88,6 +90,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginStart: '2%',
     marginEnd: '2%',
+  },
+  headerText: {
+    alignSelf: 'center',
   },
   formContainer: {
     width: Dimensions.get('window').width,
