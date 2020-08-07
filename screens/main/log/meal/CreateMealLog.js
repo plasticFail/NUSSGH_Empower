@@ -180,7 +180,8 @@ export default class CreateMealLog extends React.Component {
                         recordDate
                     })
                 }).then(resp => resp.json()).then(data => {
-                    if (data.statusCode === 400) {
+                    if (data.statusCode === 403) {
+                        // There is another favourite meal with the same name as this favourite meal.
                         alert(data.message);
                         return;
                     }
