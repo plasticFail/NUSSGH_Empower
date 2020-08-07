@@ -180,7 +180,8 @@ class MealLogRoot extends React.Component {
                             onSelect={this.handleSelectChange} containerStyle={styles.selectStyle}
                             rightIcon="chevron-down"/>
                 </View>
-                {
+                {   // If meal is not selected, display options (create, recent or favourites) for
+                    // user to select a meal from.
                   !selectedMeal ? (
                       <React.Fragment>
                           <Text style={styles.textPrompt}>Where to find your meal?</Text>
@@ -209,7 +210,7 @@ class MealLogRoot extends React.Component {
                         <Text style={styles.buttonText}>Create</Text>
                         </TouchableHighlight>
                       </React.Fragment>
-                  ) :
+                  ) : // Meal has been selected, render a preview of the meal for confirmation before submitting.
                       <View style={{width: '100%', flex: 1}}>
                           <MealList meals={[selectedMeal]}
                                     options={{
@@ -230,7 +231,8 @@ class MealLogRoot extends React.Component {
                                       header: (meal) => meal.mealName
                                     }}
                           />
-                          {   this.props.parentScreen !== 'DailyLog2' &&
+                          {   // If parent screen is from daily log, don't render the submit button.
+                              this.props.parentScreen !== 'DailyLog2' &&
                               <TouchableOpacity style={styles.submitButton} onPress={this.handleSubmitLog}>
                                   <Text style={styles.submitButtonText}>Submit Log!</Text>
                               </TouchableOpacity>

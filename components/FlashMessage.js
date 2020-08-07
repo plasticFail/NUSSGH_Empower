@@ -4,6 +4,15 @@ import {View, Text, StyleSheet, Dimensions, Animated} from 'react-native';
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
 
+/*
+Props description for customisability.
+slideUpDuration: <Float>: Duration in milliseconds when the flash message appears (slides up).
+slideDownDuration: <Float>: Duration in milliseconds when the flash message disappears (slides down).
+delay: <Float>: Duration in milliseconds that the flash message will stay on the screen before disappearing.
+messageComponentHeight: <Float>: Specify the height of the flash message so that this component can calculate how much to translate.
+triggerValue: <Any>: Whenever this value changes, it will trigger the flash message.
+renderFlashMessageComponent: Function<same type as trigger value>: The component to show when the trigger value changes.
+ */
 export default class FlashMessage extends React.Component {
     state = {
         flashMessageAnimation: new Animated.Value(0),

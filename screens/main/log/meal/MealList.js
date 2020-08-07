@@ -15,6 +15,22 @@ Icon.loadFont();
 // meals is a list of the user's meals, already filtered by record date or favourites.
 // options is an object:
 //      keys            value description
+//      buttons         List<Object> A list of button properties. Example usage:
+//                      [
+//                          {
+//                              icon: {
+//                                         name: <String>: Icon name
+//                                         color: <String>: Color of icon
+//                                     },
+//                              onPress: Function<Meal>: Callback when this button for a meal is clicked. E.g. (meal) => alert(meal.mealName)
+//                              buttonStyle: <Styles to override button, can specify background color, width and height here>
+//                           },
+//                           {
+//                               text: <String>: Text in button,
+//                           }
+//                      ]
+//
+//       header        Function<Meal>: Function that takes in a Meal Object and returns a string to render in the Meal header.
 export default function MealList({onSelectMeal, meals, options}) {
     return (
         <FlatList data={meals}
