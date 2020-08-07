@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
-import {View} from 'react-native';
+import {Alert, View} from 'react-native';
 //third party libs
 import {
   getFocusedRouteNameFromRoute,
   NavigationContainer,
 } from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
+import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
 import {connect} from 'react-redux';
 import Entypo from 'react-native-vector-icons/Entypo';
 //functions
@@ -23,12 +23,17 @@ import ResetPasswordScreen from './login/resetPassword';
 import DailyLog1 from './main/log/dailyLog/dailyLog1';
 import BloodGlucoseLog from './main/log/bloodGlucoseLog';
 import MedicationLog from './main/log/medication/medicationLog';
-import MealLogStack from './main/log/meal/MealLogStack';
+import MealLogRoot from './main/log/meal/MealLogRoot';
 import WeightLog from './main/log/weightLog';
 //components
 import HeaderIcon from '../components/headerBtnIcon';
 import HypoglycemiaReason from './hypoglycemiaReason';
+import DailyLogForFood from "./main/log/dailyLog/dailyLog2";
 import DailyLog3 from './main/log/dailyLog/dailyLog3';
+import CreateMealLogScreen from "./main/log/meal/CreateMealLog";
+import FavouriteMealScreen from "./main/log/meal/FavouriteMeals";
+import RecentMealScreen from "./main/log/meal/RecentMeal";
+import FoodSearchEngineScreen from "./main/log/meal/FoodSearchEngine";
 
 Entypo.loadFont();
 
@@ -140,6 +145,15 @@ class AppRoot extends Component {
                 }}
               />
               <Stack.Screen
+                  name="DailyLog2"
+                  component={DailyLogForFood}
+                  options={{
+                    title: 'Daily Log',
+                    animationEnabled: false,
+                    headerRight: () => <View />,
+                  }}
+              />
+              <Stack.Screen
                 name="DailyLog3"
                 component={DailyLog3}
                 options={{
@@ -149,10 +163,63 @@ class AppRoot extends Component {
               />
               <Stack.Screen
                 name="MealLogRoot"
-                component={MealLogStack}
-                options={{headerShown: false}} // Need to hide this so that the stack
-                // navigator inside can show a different header
-              />
+                component={MealLogRoot}
+                options={({ route , navigation}) => (
+                    {     title: "Meal Log",
+                      headerLeft: () => (<HeaderIcon iconName="chevron-left"
+                                                     text={null} clickFunc={navigation.goBack}/>),
+                      headerRight: () => (<View />)
+                    })}/>
+              <Stack.Screen name={'CreateMealLog'}
+                            component={CreateMealLogScreen}
+                            options={({ route , navigation}) => (
+                                {   animationEnabled: true,
+                                  title: "Create Meal Log",
+                                  headerLeft: () => (<HeaderIcon iconName="chevron-left"
+                                                                 text={null} clickFunc={() => {
+                                    if (route.params.edited) {
+                                      // Confirmation message before going back.
+                                      // If the meal has been edited, this dialogue will be popped.
+                                      // otherwise the user will be sent back to the previous page.
+                                      Alert.alert('Going back?', 'You have not submitted your meal log. Are you sure you want to leave this page?',
+                                          [
+                                            {
+                                              text: 'Ok',
+                                              onPress: navigation.goBack
+                                            },
+                                            {
+                                              text: 'Cancel',
+                                              onPress: () => {}
+                                            }
+                                          ])
+                                    } else {
+                                      navigation.goBack()
+                                    }
+                                  }
+                                  }/>),
+                                  headerRight: () => (<View />)
+                                })}/>
+              <Stack.Screen name={'FavouriteMeal'}
+                            component={FavouriteMealScreen}
+                            options={({ route , navigation}) => (
+                                {   title: "Favourites",
+                                  headerLeft: () => (<HeaderIcon iconName="times"
+                                                                 text={null} clickFunc={navigation.goBack}/>),
+                                  headerRight: () => (<View />),
+                                  ...TransitionPresets.ModalTransition,
+                                })}/>
+              <Stack.Screen name={'RecentMeal'}
+                            component={RecentMealScreen}
+                            options={({ route , navigation}) => (
+                                {   title: "Recent",
+                                  headerLeft: () => (<HeaderIcon iconName="times"
+                                                                 text={null} clickFunc={navigation.goBack}/>),
+                                  headerRight: () => (<View />),
+                                  ...TransitionPresets.ModalTransition,
+                                })}/>
+              <Stack.Screen name={'FoodSearchEngine'}
+                            component={FoodSearchEngineScreen}
+                            options={{headerShown: false}}/>
               <Stack.Screen
                 name="BloodGlucoseLog"
                 component={BloodGlucoseLog}

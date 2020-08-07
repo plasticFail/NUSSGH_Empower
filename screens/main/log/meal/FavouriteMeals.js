@@ -47,11 +47,10 @@ export default class FavouriteMealScreen extends React.Component {
     }
 
     navigateToCreateMealLogPage = (selectedMeal) => {
-        const { selectedMealType, selectedDateTime } = this.props.route.params;
+        const { parentScreen } = this.props.route.params;
         this.props.navigation.navigate("CreateMealLog", {
             meal: selectedMeal,
-            selectedMealType,
-            selectedDateTime
+            parentScreen
         });
     }
 

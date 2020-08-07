@@ -8,7 +8,7 @@ import {
     Image,
     TouchableOpacity,
     Modal,
-    TouchableHighlight,
+    TouchableHighlight, Alert,
 } from 'react-native';
 // Components
 import Searchbar from '../../../../components/Searchbar';
@@ -156,7 +156,8 @@ function FoodResultList({foodList, navigation, route, type}) {
         const selectedFoodName = selected["food-name"]
         if (route.params.existingItems.indexOf(selectedFoodName) != -1) {
             // We already have this food item in the cart.
-            alert(`${selectedFoodName} is already in your cart! Select something else.`);
+            Alert.alert("Error", `${selectedFoodName} is already in your cart! Select something else.`,
+                [ { text: 'Ok' }]);
         } else {
             navigateBackToCreateMealLog();
         }
@@ -213,18 +214,6 @@ function FoodResultList({foodList, navigation, route, type}) {
             <FlatList style={listStyles.container} data={foodList}
                       keyExtractor={item => item["food-name"]} renderItem={renderFoodListItem} />
         </React.Fragment>
-    )
-}
-
-function renderNutritionText({amount, unit}, nutrient) {
-    return (
-        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <Text style={modalStyles.nutrientText}>{nutrient}</Text>
-            {
-                unit === "N.A" ? <Text>{unit}</Text>
-                    : <Text>{amount + " " + unit}</Text>
-            }
-        </View>
     )
 }
 

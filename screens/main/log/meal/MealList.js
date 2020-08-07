@@ -1,9 +1,9 @@
 import React from 'react';
-import {FlatList, View, Text, TouchableOpacity, ScrollView, Image, StyleSheet} from "react-native";
+import {FlatList, View, Text, TouchableOpacity, ScrollView, Image, StyleSheet, Alert, Dimensions} from "react-native";
 // Functions
 import {getToken} from "../../../../storage/asyncStorageFunctions";
-// Third party lib
-import Moment from 'moment';
+// Components
+import FoodItem from "./FoodItem";
 // Others
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import {unfavouriteMealEndpoint} from '../../../../netcalls/urls';
@@ -19,19 +19,19 @@ Icon.loadFont();
 //                      not be shown. The record date of the meal log will be shown instead.
 //                      defaults to showing meal name
 export default function MealList({onSelectMeal, meals, options}) {
-    const showMealName = options?.mode !== 'recent';
+    const favouriteMode = options?.mode !== 'recent';
     return (
         <FlatList data={meals}
                   keyExtractor={meal => meal._id}
                   contentContainerStyle={styles.listContainer} renderItem={({item}) =>
-            (<RenderMealItem item={item} showMealName={showMealName}
+            (<RenderMealItem item={item} favouriteMode={favouriteMode}
                              onPressSelect={() => onSelectMeal(item)} />)}
         />
     )
 }
 
-function RenderMealItem({item, onPressSelect, showMealName}) {
-    const combinedMealItems = item.beverage.concat(item.main, item.side, item.dessert);
+function RenderMealItem({item, onPressSelect, favouriteMode}) {
+    const combinedMealItems = item.beverage.map(x => x).concat(item.main, item.side, item.dessert);
 
     const handleUnfavourite = () => {
         getToken().then(token => {
@@ -47,7 +47,8 @@ function RenderMealItem({item, onPressSelect, showMealName}) {
             }).then(resp => resp.json()).then(data => {
                 // unfavourite the item from local state.
                 item.unfavourite();
-            }).catch(err => alert(err.message));
+            }).catch(err => Alert.alert("Error", err.message,
+                [ { text: 'Ok' }]));
         })
     }
 
@@ -55,7 +56,7 @@ function RenderMealItem({item, onPressSelect, showMealName}) {
         <View style={styles.mealItem}>
             <View style={styles.mealNameContainer}>
                 {
-                    showMealName ? <Text style={styles.mealNameText}>{item.mealName}</Text> :
+                    favouriteMode ? <Text style={styles.mealNameText}>{item.mealName}</Text> :
                                    <Text style={styles.recordDateText}>
                                        {
                                            item.record_date
@@ -64,7 +65,7 @@ function RenderMealItem({item, onPressSelect, showMealName}) {
                 }
                 <View style={{flexDirection: 'row'}}>
                     {   // If it is in 'favourite' mode, show the unfavourite button.
-                        showMealName && <TouchableOpacity style={styles.deleteButton} onPress={handleUnfavourite}>
+                        favouriteMode && <TouchableOpacity style={styles.deleteButton} onPress={handleUnfavourite}>
                         <Icon name='trash' size={20} color='#fff'/>
                     </TouchableOpacity>
                     }
@@ -82,25 +83,6 @@ function RenderMealItem({item, onPressSelect, showMealName}) {
     )
 }
 
-function FoodItem({food}) {
-    let foodName = food["food-name"][0].toUpperCase() + food["food-name"].slice(1);
-    const adjustedFontSize = 13;
-    if (foodName.length > 20) {
-        foodName = foodName.slice(0, 20) + "...";
-    }
-    return (
-        <View style={styles.foodItem}>
-            <Image source={{uri: food.imgUrl.url}} style={styles.foodImage} />
-            <View style={{justifyContent: 'center', flex: 1, alignItems: 'center'}}>
-                <Text style={{fontSize: adjustedFontSize, height: 50}}>
-                    {foodName}
-                </Text>
-                <Text>{"Qty: " + food["quantity"]}</Text>
-            </View>
-        </View>
-    )
-}
-
 const styles = StyleSheet.create({
     listContainer: {
         padding: 20,
@@ -110,14 +92,14 @@ const styles = StyleSheet.create({
         borderBottomWidth: 0.5,
         borderTopWidth: 0.5,
         borderColor: '#cfcfcf',
-        height: 250
+        height: 250,
     },
     mealNameContainer: {
         height: '30%',
-        width: '100%',
+        flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
     },
     mealNameText: {
         fontSize: 20,
@@ -147,14 +129,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 10,
-        marginRight: 20
-    },
-    foodImage: {
-        width: 80,
-        height: 80
-    },
-    foodItem: {
-        width: 80,
         marginRight: 20
     },
 })
