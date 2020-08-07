@@ -6,7 +6,7 @@ import ProgressBar from './progressbar';
 const PasswordStrengthMeter = (props) => {
   const [progress, setProgress] = useState('0%');
   const [score, setScore] = useState(0);
-  const [rank, setRank] = useState(''); //weak, fair, good, strong
+  const [rank, setRank] = useState('Strength'); //weak, fair, good, strong
   // const [suggestion, setSuggestion] = useState('');
   const [color, setColor] = useState('red');
 
@@ -53,9 +53,10 @@ const PasswordStrengthMeter = (props) => {
           reverse={true}
           containerStyle={{
             height: 9,
-            width: '80%',
+            width: '75%',
             alignSelf: 'center',
             marginStart: '2%',
+            marginEnd: '1%',
           }}
         />
         {color === 'green' ? (

@@ -57,7 +57,7 @@ const ResetPasswordScreen = (props) => {
       behavior={Platform.OS === 'ios' ? 'padding' : null}>
       <SafeAreaView style={{flex: 1}}>
         <View style={styles.inner}>
-          <Icon name="account-lock" size={280} style={{alignSelf: 'center'}} />
+          <Icon name="account-lock" size={200} style={{alignSelf: 'center'}} />
           <Text style={styles.headerText}>
             Set a password that is not easily guessable which can be a mix of :
           </Text>
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
   subText: {
     fontSize: 18,
     marginStart: '3%',
-    marginTop: '2%',
+    marginTop: '1%',
   },
   formContainer: {
     width: Dimensions.get('window').width - 20,
