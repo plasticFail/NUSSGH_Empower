@@ -53,7 +53,8 @@ const ResetPasswordScreen = (props) => {
     <ScrollView contentContainerStyle={{paddingBottom: ' 8%'}}>
       <Icon name="account-lock" size={180} style={{alignSelf: 'center'}} />
       <Text style={{alignSelf: 'center', margin: '3%', fontSize: 20}}>
-        Set a password that has a mixture of alphabets, special characters (!,-)
+        Set a password that has a mixture of alphabets, numbers and special
+        characters.
       </Text>
       <View style={[styles.formContainer, styles.shadow]}>
         <PasswordStrengthMeter setPassword={setPassword} />
