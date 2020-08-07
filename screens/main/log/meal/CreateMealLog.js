@@ -12,11 +12,16 @@ import {
     Animated, LayoutAnimation,
     Platform, UIManager
 } from 'react-native';
+// Third-party lib
+import Moment from 'moment';
 // Components
 import ImageWithBadge from "../../../../components/ImageWithBadge";
 import FoodModalContent from "./FoodModalContent";
 import IntegerQuantitySelector from "../../../../components/IntegerQuantitySelector";
+// Functions
+import {getToken} from "../../../../storage/asyncStorageFunctions";
 // Others such as images, icons.
+import {mealAddLogEndpoint} from "../../../../netcalls/urls";
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import main from '../../../../resources/images/icons/meal.png';
 import beverage from '../../../../resources/images/icons/mug.png';
@@ -52,7 +57,19 @@ export default class CreateMealLog extends React.Component {
             isFavourite: false,
             mealName: "",
             selected: null,
-            modalOpen: false
+            modalOpen: false,
+        }
+    }
+
+    componentDidMount() {
+        if (this.props.route.params?.meal) {
+            const {meal} = this.props.route.params;
+            this.setState({
+                beverage: meal.beverage,
+                main: meal.main,
+                side: meal.side,
+                dessert: meal.dessert
+            });
         }
     }
 
@@ -78,6 +95,10 @@ export default class CreateMealLog extends React.Component {
             // Add a new field to the item, called quantity.
             item.quantity = 1;
             newState[type].push(item);
+            // Update navigation prop param.
+            this.props.navigation.setParams({
+                edited: true
+            });
             this.setState(newState, () => console.log(this.state));
         }
     }
@@ -130,18 +151,48 @@ export default class CreateMealLog extends React.Component {
     }
 
     handleSubmitLog = () => {
-        const { selectedMealType, currentDateTime } = this.props.route.params;
+        // selectedMealType is one of breakfast, lunch, dinner, supper or snack.
+        // selectedDateTime is javascript's default Date object.toString().
+        const { selectedMealType, selectedDateTime } = this.props.route.params;
         const { beverage, main, side, dessert, isFavourite, mealName } = this.state;
-        const dataToLog = {
-            mealType: selectedMealType,
-            dateTime: currentDateTime,
-            // And all the food items, not yet decided on how to log
+        if (mealName.trim() === '' && isFavourite) {
+            alert('Please give your favourite meal a name');
+            return;
         }
-        this.props.navigation.popToTop();
-        this.props.navigation.goBack();
-        //this.props.navigation.navigate('AddLog');
-        console.log(this.state);
-        alert(`Log submitted! for ${JSON.stringify(dataToLog)}`);
+        // Need to subtract 8 hours from the current time because mongo db tracks UTC+0 time zone.
+        const recordDate = Moment(new Date(selectedDateTime)).format("DD/MM/YYYY HH:mm:ss");
+        // console.log(recordDate);
+        getToken().then(token => {
+                fetch(mealAddLogEndpoint, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: "Bearer " + token
+                    },
+                    body: JSON.stringify({
+                        isFavourite,
+                        beverage,
+                        main,
+                        side,
+                        dessert,
+                        mealName,
+                        mealType: selectedMealType,
+                        recordDate
+                    })
+                }).then(resp => resp.json()).then(data => {
+                    if (data.statusCode === 403) {
+                        // There is another favourite meal with the same name as this favourite meal.
+                        alert(data.message);
+                        return;
+                    }
+                    this.props.navigation.popToTop();
+                    this.props.navigation.goBack();
+                    alert(`Your meal log for ${selectedDateTime} has been recorded!`);
+                }).catch(err => {
+                    alert(err.message);
+                });
+            }
+        )
     }
 
     render() {
@@ -281,21 +332,15 @@ export default class CreateMealLog extends React.Component {
     }
 }
 
-function EmptyButton({onPress}) {
-    return (
-        <TouchableHighlight
-            style={styles.emptyButton}
-            underlayColor='#fff'
-            onPress={onPress}>
-            <Icon name='plus' color='#fff' size={25} />
-        </TouchableHighlight>
-    )
-}
-
 function CreateButton({onPress}) {
     return (
         <View style={styles.foodItem}>
-            <EmptyButton onPress={onPress}/>
+            <TouchableHighlight
+                style={styles.emptyButton}
+                underlayColor='#fff'
+                onPress={onPress}>
+                <Icon name='plus' color='#fff' size={25} />
+            </TouchableHighlight>
         </View>
     )
 }
@@ -319,7 +364,11 @@ function FoodItem({onPress, item, handleDelete, onQuantityChange}) {
         });
     }
 
-    const adjustedFontSize = item["food-name"].length > 15 ? 10 : 15;
+    let foodName = item["food-name"][0].toUpperCase() + item["food-name"].slice(1);
+    const adjustedFontSize = 13;
+    if (foodName.length > 20) {
+        foodName = foodName.slice(0, 20) + "...";
+    }
     return (
         <TouchableWithoutFeedback>
             <Animated.View style={[styles.foodItem,
@@ -331,14 +380,14 @@ function FoodItem({onPress, item, handleDelete, onQuantityChange}) {
                 <ImageWithBadge
                     containerStyle={styles.foodImage}
                     imageProps={{source: {uri: item.imgUrl.url}}}
-                    badgeIcon={<Icon name="times" size={12.5} onPress={handleDeleteWithAnimation} color='#fff'/>}
-                    badgeSize={12.5}
+                    badgeIcon={<Icon name="times" size={19} onPress={handleDeleteWithAnimation} color='#fff'/>}
+                    badgeSize={19}
                     badgeColor="red"
                     onPressImage={onPress} />
                 <View style={styles.foodTextWrapper}>
-                    <Text style={{fontSize: adjustedFontSize}}>{item["food-name"][0].toUpperCase() + item["food-name"].slice(1)}</Text>
+                    <Text style={{fontSize: adjustedFontSize}}>{foodName}</Text>
                 </View>
-                <IntegerQuantitySelector defaultValue={1}
+                <IntegerQuantitySelector defaultValue={item.quantity}
                                          changeAmount={1}
                                          minValue={1}
                                          maxValue={50}
@@ -428,5 +477,7 @@ const styles = StyleSheet.create({
         paddingTop: 8,
         alignItems: 'center',
         width: 80,
+        height: 40,
+        justifyContent: 'center'
     }
 });

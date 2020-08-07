@@ -13,12 +13,14 @@ import {
 // Components
 import Searchbar from '../../../../components/Searchbar';
 import FoodModalContent from "./FoodModalContent";
+// Functions
+import {getToken} from "../../../../storage/asyncStorageFunctions";
 // Others
-import SampleFoodDB from './SampleFoodDB.json';
 import carbohydrate from '../../../../resources/images/icons/carbohydrate.png';
 import energy from '../../../../resources/images/icons/energy.png';
 import fat from '../../../../resources/images/icons/fat.png';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
+import {foodSearchEndpoint} from "../../../../netcalls/urls";
 
 Icon.loadFont();
 
@@ -49,36 +51,9 @@ class FoodSearchEngineScreen extends React.Component {
             }, () => {
                 clearTimeout(this.timeout);
                 this.timeout = setTimeout(() => {
-                    // Fetch api and load the response here.
-                    // For now this would be just simulating an async process.
-                    setTimeout(() => {
-                        this.setState({
-                            isLoading: false,
-                            foodResults: SampleFoodDB.data
-                        })
-                    }, 1000) // simulate 1s for fetching request.
-
-                    // Format to fetch the data
-                    /*
-                    fetch('http://<IP, PORT>/food/search', {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify({query: this.state.query, type: this.props.route.params.type})
-                    }).then((res) => res.json()).then(data => {
-                        this.setState({
-                            foodResults: data.data,
-                            isLoading: false
-                        })
-                    }).catch(err => {
-                        this.setState({
-                            isLoading: false
-                        }, () => alert(err.message))
-                    })
-                     */
+                    this.makeApiCallToFoodSearchEngine()
                 }, 500); // 500ms delay before loading API.
-            })
+            });
         }
     }
 
@@ -88,11 +63,32 @@ class FoodSearchEngineScreen extends React.Component {
             isLoading: true
         }, () => {
             // Fetch api here again
-            this.setState({
-                isLoading: false,
-                foodResults: SampleFoodDB.data
-            })
+            this.makeApiCallToFoodSearchEngine();
         })
+    }
+
+    makeApiCallToFoodSearchEngine = () => {
+        // Get token.
+        getToken().then(token => {
+            // Fetch api and load the response here.
+            fetch(foodSearchEndpoint, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: "Bearer " + token
+                },
+                body: JSON.stringify({query: this.state.query, type: this.props.route.params.type})
+            }).then((res) => res.json()).then(data => {
+                this.setState({
+                    foodResults: data.data,
+                    isLoading: false
+                })
+            }).catch(err => {
+                this.setState({
+                    isLoading: false
+                }, () => alert(err.message))
+            });
+        });
     }
 
     render() {

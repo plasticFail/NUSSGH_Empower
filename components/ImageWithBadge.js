@@ -12,6 +12,8 @@ export default function ImageWithBadge({imageProps, badgeColor, badgeIcon, conta
     const finalBadgeStyle = {
         ...styles.badge,
         backgroundColor: badgeColor,
+        width: badgeSize,
+        height: badgeSize,
         transform: [{translateX: badgeTranslatedPositionX}, {translateY: badgeTranslatedPositionY}],
         borderRadius: badgeSize / 2
     };
@@ -35,9 +37,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     badge: {
-        width: 12.5,
-        height: 12.5,
-        borderRadius: 6.25,
         position: 'absolute',
         alignItems: 'center',
         justifyContent: 'center'

@@ -7,7 +7,7 @@ Icon.loadFont();
 
 function Searchbar({onSubmit, textInputStyle,
                        containerStyle,
-                       delayBeforeSubmit, placeholder, onChangeText}) {
+                       placeholder, onChangeText}) {
     const [value, setValue] = React.useState("");
 
     const handleChangeText = (text) => {
@@ -27,7 +27,7 @@ function Searchbar({onSubmit, textInputStyle,
 
 const styles = StyleSheet.create({
     root: {
-        height: 40,
+        height: 45,
         backgroundColor: '#fff',
         borderRadius: 10,
         paddingLeft: 10,

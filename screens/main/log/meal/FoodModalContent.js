@@ -7,6 +7,7 @@ import Icon from 'react-native-vector-icons/dist/FontAwesome';
 
 Icon.loadFont()
 
+// Children prop is any react component passed to serve as a button at the bottom of the modal paper.
 export default function FoodModalContent({onClose, selected, children}) {
     return (<View style={modalStyles.root}>
         <TouchableOpacity style={modalStyles.overlay} onPress={onClose} />
@@ -24,48 +25,16 @@ export default function FoodModalContent({onClose, selected, children}) {
                         {selected["household-measure"]}({selected["per-serving"]})
                     </Text>
                     <Text style={modalStyles.nutrientHeaderText}>Nutrition per serving</Text>
-                    <View style={modalStyles.nutrientRow}>
-                        {renderNutritionText(selected.nutrients["energy"], "Energy")}
-                        <ProgressBar progress="30%" useIndicatorLevel={true}
-                                     containerStyle={{height: 15, width: '100%'}} />
-                    </View>
-                    <View style={modalStyles.nutrientRow}>
-                        {renderNutritionText(selected.nutrients["carbohydrate"], "Carbohydrate")}
-                        <ProgressBar progress="60%" useIndicatorLevel={true}
-                                     containerStyle={{height: 15, width: '100%'}} />
-                    </View>
-                    <View style={modalStyles.nutrientRow}>
-                        {renderNutritionText(selected.nutrients["protein"], "Protein")}
-                        <ProgressBar progress="90%" useIndicatorLevel={true} reverse={true}
-                                     containerStyle={{height: 15, width: '100%'}} />
-                    </View>
-                    <View style={modalStyles.nutrientRow}>
-                        {renderNutritionText(selected.nutrients["total-fat"], "Total Fat")}
-                        <ProgressBar progress="60%" useIndicatorLevel={true}
-                                     containerStyle={{height: 15, width: '100%'}} />
-                    </View>
-                    <View style={modalStyles.nutrientRow}>
-                        {renderNutritionText(selected.nutrients["saturated-fat"], "Saturated Fat")}
-                        <ProgressBar progress="60%" useIndicatorLevel={true}
-                                     containerStyle={{height: 15, width: '100%'}} />
-                    </View>
-                    <View style={modalStyles.nutrientRow}>
-                        {renderNutritionText(selected.nutrients["dietary-fibre"], "Dietary Fibre")}
-                        <ProgressBar progress="30%" useIndicatorLevel={true} reverse={true}
-                                     containerStyle={{height: 15, width: '100%'}} />
-                    </View>
-                    <View style={modalStyles.nutrientRow}>
-                        {renderNutritionText(selected.nutrients["cholesterol"], "Cholesterol")}
-                        <ProgressBar progress="60%" useIndicatorLevel={true}
-                                     containerStyle={{height: 15, width: '100%'}} />
-                    </View>
-                    {   selected.nutrients.sodium &&
-                    <View style={modalStyles.nutrientRow}>
-                        {renderNutritionText(selected.nutrients["sodium"], "Sodium")}
-                        <ProgressBar progress="90%" useIndicatorLevel={true}
-                                     containerStyle={{height: 15, width: '100%'}} />
-                    </View>
-                    }
+                        {renderNutritionRow(selected.nutrients["energy"], "Energy")}
+                        {renderNutritionRow(selected.nutrients["carbohydrate"], "Carbohydrate")}
+                        {renderNutritionRow(selected.nutrients["protein"], "Protein")}
+                        {renderNutritionRow(selected.nutrients["total-fat"], "Total Fat")}
+                        {renderNutritionRow(selected.nutrients["saturated-fat"], "Saturated Fat")}
+                        {renderNutritionRow(selected.nutrients["dietary-fibre"], "Dietary Fibre")}
+                        {renderNutritionRow(selected.nutrients["cholesterol"], "Cholesterol")}
+                        {   selected.nutrients.sodium &&
+                            renderNutritionRow(selected.nutrients["sodium"], "Sodium")
+                        }
                 </ScrollView>
             </View>
             {children}
@@ -73,14 +42,19 @@ export default function FoodModalContent({onClose, selected, children}) {
     </View>)
 }
 
-function renderNutritionText({amount, unit}, nutrient) {
-    return (
+function renderNutritionRow({amount, unit}, nutrient) {
+    // for now generate a random % and use that as the percentage for the progressbar.
+    const percent = (Math.random() * 100).toString() + "%";
+    return (<View style={modalStyles.nutrientRow}>
         <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <Text>{nutrient}</Text>
             {
                 unit === "N.A" ? <Text>{unit}</Text>
                     : <Text>{amount + " " + unit}</Text>
             }
+        </View>
+        <ProgressBar progress={percent} useIndicatorLevel={true}
+                     containerStyle={{height: 15, width: '100%'}} />
         </View>
     )
 }
@@ -141,3 +115,115 @@ const modalStyles = StyleSheet.create({
         fontSize: 14
     }
 });
+
+// Nutritiona values obtained from: https://www.healthhub.sg/programmes/57/nutrition-101
+function getDailyNutritionalValueFor(gender, age, nutrient) {
+    if (gender === 'female') {
+        if (age < 30) {
+            switch(nutrient) {
+                case 'energy':
+                    return { amount: 2070, unit: 'kcal' }
+                case 'protein':
+                    return { amount: 62.6, unit: 'g' }
+                case 'total-fat':
+                    return { amount: 69, unit: 'g' }
+                case 'saturated-fat':
+                    return { amount: 23, unit: 'g' }
+                case 'carbohydrate':
+                    return { amount: 300, unit: 'g' }
+                case 'dietary-fibre':
+                    return { amount: 21, unit: 'g' }
+                case 'sodium':
+                    return { amount: 2000, unit: 'mg' }
+            }
+        } else if (age < 60) {
+            switch(nutrient) {
+                case 'energy':
+                    return { amount: 2035, unit: 'kcal' }
+                case 'protein':
+                    return { amount: 62.6, unit: 'g' }
+                case 'total-fat':
+                    return { amount: 68, unit: 'g' }
+                case 'saturated-fat':
+                    return { amount: 23, unit: 'g' }
+                case 'carbohydrate':
+                    return { amount: 294, unit: 'g' }
+                case 'dietary-fibre':
+                    return { amount: 20, unit: 'g' }
+                case 'sodium':
+                    return { amount: 2000, unit: 'mg' }
+            }
+        } else {
+            switch(nutrient) {
+                case 'energy':
+                    return { amount: 1865, unit: 'kcal' }
+                case 'protein':
+                    return { amount: 62.6, unit: 'g' }
+                case 'total-fat':
+                    return { amount: 62, unit: 'g' }
+                case 'saturated-fat':
+                    return { amount: 21, unit: 'g' }
+                case 'carbohydrate':
+                    return { amount: 264, unit: 'g' }
+                case 'dietary-fibre':
+                    return { amount: 19, unit: 'g' }
+                case 'sodium':
+                    return { amount: 2000, unit: 'mg' }
+            }
+        }
+    } else if (gender === 'male') {
+        if (age < 30) {
+            switch(nutrient) {
+                case 'energy':
+                    return { amount: 2700, unit: 'kcal' }
+                case 'protein':
+                    return { amount: 76.3, unit: 'g' }
+                case 'total-fat':
+                    return { amount: 90, unit: 'g' }
+                case 'saturated-fat':
+                    return { amount: 30, unit: 'g' }
+                case 'carbohydrate':
+                    return { amount: 396, unit: 'g' }
+                case 'dietary-fibre':
+                    return { amount: 27, unit: 'g' }
+                case 'sodium':
+                    return { amount: 2000, unit: 'mg' }
+            }
+        } else if (age < 60) {
+            switch(nutrient) {
+                case 'energy':
+                    return { amount: 2590, unit: 'kcal' }
+                case 'protein':
+                    return { amount: 76.3, unit: 'g' }
+                case 'total-fat':
+                    return { amount: 86, unit: 'g' }
+                case 'saturated-fat':
+                    return { amount: 29, unit: 'g' }
+                case 'carbohydrate':
+                    return { amount: 377, unit: 'g' }
+                case 'dietary-fibre':
+                    return { amount: 26, unit: 'g' }
+                case 'sodium':
+                    return { amount: 2000, unit: 'mg' }
+            }
+        } else {
+            switch(nutrient) {
+                case 'energy':
+                    return { amount: 2235, unit: 'kcal' }
+                case 'protein':
+                    return { amount: 76.3, unit: 'g' }
+                case 'total-fat':
+                    return { amount: 75, unit: 'g' }
+                case 'saturated-fat':
+                    return { amount: 25, unit: 'g' }
+                case 'carbohydrate':
+                    return { amount: 315, unit: 'g' }
+                case 'dietary-fibre':
+                    return { amount: 22, unit: 'g' }
+                case 'sodium':
+                    return { amount: 2000, unit: 'mg' }
+            }
+        }
+    }
+    return null;
+}
