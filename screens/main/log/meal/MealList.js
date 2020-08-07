@@ -22,6 +22,7 @@ export default function MealList({onSelectMeal, meals, options}) {
     const showMealName = options?.mode !== 'recent';
     return (
         <FlatList data={meals}
+                  keyExtractor={meal => meal._id}
                   contentContainerStyle={styles.listContainer} renderItem={({item}) =>
             (<RenderMealItem item={item} showMealName={showMealName}
                              onPressSelect={() => onSelectMeal(item)} />)}
@@ -57,8 +58,7 @@ function RenderMealItem({item, onPressSelect, showMealName}) {
                     showMealName ? <Text style={styles.mealNameText}>{item.mealName}</Text> :
                                    <Text style={styles.recordDateText}>
                                        {
-                                           Moment(new Date(item['record_date']["$date"]))
-                                           .format("DD/MM/YYYY HH:mm:ss") + " (" + item['mealType'] + ")"
+                                           item.record_date
                                        }
                                    </Text>
                 }

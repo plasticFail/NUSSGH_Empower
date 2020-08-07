@@ -160,8 +160,7 @@ export default class CreateMealLog extends React.Component {
             return;
         }
         // Need to subtract 8 hours from the current time because mongo db tracks UTC+0 time zone.
-        const recordDate = Moment(new Date(selectedDateTime)).subtract(8, 'hours')
-            .format("DD/MM/YYYY HH:mm:ss");
+        const recordDate = Moment(new Date(selectedDateTime)).format("DD/MM/YYYY HH:mm:ss");
         // console.log(recordDate);
         getToken().then(token => {
                 fetch(mealAddLogEndpoint, {
