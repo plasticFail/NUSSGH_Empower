@@ -8,6 +8,8 @@ import {
   Text,
   Alert,
   Dimensions,
+  SafeAreaView,
+  KeyboardAvoidingView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import PasswordStrengthMeter from '../../components/passwordStrengthMeter';
@@ -50,30 +52,40 @@ const ResetPasswordScreen = (props) => {
 
   Icon.loadFont();
   return (
-    <ScrollView contentContainerStyle={{paddingBottom: ' 8%'}}>
-      <Icon name="account-lock" size={180} style={{alignSelf: 'center'}} />
-      <Text style={styles.headerText}>
-        Set a password that is not easily guessable with a mixture of :
-      </Text>
-      <Text style={styles.headerText}>{'\u2713'}Alphabets</Text>
-      <Text style={styles.headerText}>{'\u2713'}Numbers</Text>
-      <Text style={styles.headerText}>{'\u2713'}Special Characters</Text>
-      <View style={[styles.formContainer, styles.shadow, {marginTop: '3%'}]}>
-        <PasswordStrengthMeter setPassword={setPassword} />
-        <TextInput
-          style={styles.inputBox}
-          placeholder="Confirm New Password"
-          placeholderTextColor="#a1a3a0"
-          secureTextEntry={true}
-          onChangeText={(value) => {
-            setPass2(value);
-          }}
-        />
-        <TouchableOpacity style={styles.buttonStyle} onPress={checkPassword}>
-          <Text style={styles.buttonText}>Submit</Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+    <KeyboardAvoidingView
+      style={{flex: 1}}
+      behavior={Platform.OS === 'ios' ? 'padding' : null}>
+      <SafeAreaView style={{flex: 1}}>
+        <View style={styles.inner}>
+          <Icon name="account-lock" size={280} style={{alignSelf: 'center'}} />
+          <Text style={styles.headerText}>
+            Set a password that is not easily guessable which can be a mix of :
+          </Text>
+          <Text style={styles.subText}>{'\u2713'} Alphabets</Text>
+          <Text style={styles.subText}>{'\u2713'} Numbers</Text>
+          <Text style={styles.subText}>{'\u2713'} Special Characters</Text>
+          <View
+            style={[styles.formContainer, styles.shadow, {marginTop: '3%'}]}>
+            <PasswordStrengthMeter setPassword={setPassword} />
+            <TextInput
+              style={styles.inputBox}
+              placeholder="Confirm New Password"
+              placeholderTextColor="#a1a3a0"
+              secureTextEntry={true}
+              onChangeText={(value) => {
+                setPass2(value);
+              }}
+            />
+            <TouchableOpacity
+              style={styles.buttonStyle}
+              onPress={checkPassword}>
+              <Text style={styles.buttonText}>Submit</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={{flex: 1}} />
+        </View>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -82,6 +94,11 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  inner: {
+    padding: 10,
+    flex: 1,
+    justifyContent: 'flex-end',
   },
   text: {
     fontWeight: '500',
@@ -93,12 +110,18 @@ const styles = StyleSheet.create({
   },
   headerText: {
     alignSelf: 'center',
+    fontSize: 18,
+  },
+  subText: {
+    fontSize: 18,
+    marginStart: '3%',
+    marginTop: '2%',
   },
   formContainer: {
-    width: Dimensions.get('window').width,
+    width: Dimensions.get('window').width - 20,
     backgroundColor: 'white',
     borderRadius: 25,
-    paddingTop: '3%',
+    paddingTop: '5%',
     paddingBottom: '3%',
   },
   inputBox: {

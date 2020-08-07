@@ -6,6 +6,9 @@ import {
   Alert,
   TouchableOpacity,
   Dimensions,
+  Platform,
+  KeyboardAvoidingView,
+  SafeAreaView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
@@ -49,62 +52,76 @@ const InputOTPScreen = (props) => {
   };
 
   return (
-    <ScrollView>
-      <View style={{...styles.otpScreen, ...props.style}}>
-        <Icon name="cellphone-message" size={300} />
-        <Text style={styles.text}>
-          Enter the 6-digit One-Time Password (OTP) sent to your mobile number
-          (**** 9876).
-        </Text>
-        <View style={[styles.formContainer, styles.shadow]}>
-          {countdownVisible && <CountdownTimer handleTimout={handleTimout} />}
-          <OTPInputView
-            pinCount={6}
-            style={{
-              width: '100%',
-              height: 100,
-              alignSelf: 'center',
-              fontWeight: '1000',
-            }}
-            placeholderTextColor="#000000"
-            autoFocusOnLoad
-            codeInputFieldStyle={styles.underlineStyleBase}
-            codeInputHighlightStyle={styles.underlineStyleHighLighted}
-            onCodeChanged={(value) => {
-              setOtp(value);
-            }}
-          />
-          <View style={{flexDirection: 'row', alignItems: 'space-between'}}>
-            <TouchableOpacity style={styles.buttonStyle} onPress={handleSubmit}>
-              <Text style={styles.buttonText}>Submit</Text>
-            </TouchableOpacity>
-            {countdownVisible ? (
+    <KeyboardAvoidingView
+      style={{flex: 1}}
+      behavior={Platform.OS === 'ios' ? 'padding' : null}>
+      <SafeAreaView style={{flex: 1}}>
+        <View style={styles.inner}>
+          <Icon name="cellphone-message" size={300} />
+          <Text style={styles.text}>
+            Enter the 6-digit One-Time Password (OTP) sent to your mobile number
+            (**** 9876).
+          </Text>
+          <View style={[styles.formContainer, styles.shadow]}>
+            {countdownVisible && <CountdownTimer handleTimout={handleTimout} />}
+            <OTPInputView
+              pinCount={6}
+              style={{
+                width: '100%',
+                height: 100,
+                alignSelf: 'center',
+                fontWeight: '1000',
+              }}
+              placeholderTextColor="#000000"
+              autoFocusOnLoad
+              codeInputFieldStyle={styles.underlineStyleBase}
+              codeInputHighlightStyle={styles.underlineStyleHighLighted}
+              onCodeChanged={(value) => {
+                setOtp(value);
+              }}
+            />
+            <View style={{flexDirection: 'row', alignItems: 'space-between'}}>
               <TouchableOpacity
-                disabled={disabled}
-                style={[styles.buttonStyle, {backgroundColor: '#cdd4e4'}]}
-                onPress={resendOTP}>
-                <Text style={styles.buttonText}>Resend OTP</Text>
+                style={styles.buttonStyle}
+                onPress={handleSubmit}>
+                <Text style={styles.buttonText}>Submit</Text>
               </TouchableOpacity>
-            ) : (
-              <TouchableOpacity
-                disabled={disabled}
-                style={[styles.buttonStyle, {backgroundColor: '#FFB6C1'}]}
-                onPress={resendOTP}>
-                <Text style={styles.buttonText}>Resend OTP</Text>
-              </TouchableOpacity>
-            )}
+              {countdownVisible ? (
+                <TouchableOpacity
+                  disabled={disabled}
+                  style={[styles.buttonStyle, {backgroundColor: '#cdd4e4'}]}
+                  onPress={resendOTP}>
+                  <Text style={styles.buttonText}>Resend OTP</Text>
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  disabled={disabled}
+                  style={[styles.buttonStyle, {backgroundColor: '#FFB6C1'}]}
+                  onPress={resendOTP}>
+                  <Text style={styles.buttonText}>Resend OTP</Text>
+                </TouchableOpacity>
+              )}
+            </View>
           </View>
+          <View style={{flex: 1}} />
         </View>
-      </View>
-    </ScrollView>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
   otpScreen: {
+    flex: 1,
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  inner: {
+    padding: 20,
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'flex-end',
   },
   text: {
     fontWeight: '500',

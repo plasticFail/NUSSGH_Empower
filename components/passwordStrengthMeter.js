@@ -46,8 +46,18 @@ const PasswordStrengthMeter = (props) => {
           props?.setPassword(value, result.score);
         }}
       />
-      <View style={{flexDirection: 'row', justifyContent: 'center'}}>
-        <Text style={styles.strengthText}>Strength:</Text>
+      <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+        <ProgressBar
+          progress={progress}
+          useIndicatorLevel={true}
+          reverse={true}
+          containerStyle={{
+            height: 9,
+            width: '80%',
+            alignSelf: 'center',
+            marginStart: '2%',
+          }}
+        />
         {color === 'green' ? (
           <Text style={[styles.rankStyle, {color: '#60a354'}]}>{rank}</Text>
         ) : color === 'yellow' ? (
@@ -56,17 +66,6 @@ const PasswordStrengthMeter = (props) => {
           <Text style={[styles.rankStyle, {color: '#dc143c'}]}>{rank}</Text>
         )}
       </View>
-      <ProgressBar
-        progress={progress}
-        useIndicatorLevel={true}
-        reverse={true}
-        containerStyle={{
-          height: 9,
-          width: '70%',
-          alignSelf: 'center',
-          margin: '2%',
-        }}
-      />
     </>
   );
 };
@@ -75,10 +74,10 @@ export default PasswordStrengthMeter;
 
 const styles = StyleSheet.create({
   rankStyle: {
-    fontSize: 17,
+    fontSize: 16,
     alignSelf: 'flex-end',
     fontWeight: 'bold',
-    marginStart: '2%',
+    marginEnd: '3%',
   },
   strengthText: {
     fontSize: 17,
