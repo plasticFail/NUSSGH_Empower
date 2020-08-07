@@ -46,9 +46,14 @@ class MealLogRoot extends React.Component {
 
     // Listen to updates from route.
     componentDidUpdate(prevProps, prevState) {
-        if (this.props.route.params.meal && this.state.selectedMeal === null) {
+        if (this.props.route.params.meal && this.props.route.params.meal !== this.state.selectedMeal) {
+            const newMeal = this.props.route.params.meal;
             this.setState({
-                selectedMeal: this.props.route.params.meal
+                selectedMeal: newMeal
+            }, () => {
+                if (this.props.onMealUpdateListener) {
+                    this.props.onMealUpdateListener(newMeal);
+                }
             });
         }
     }
@@ -118,6 +123,17 @@ class MealLogRoot extends React.Component {
                 });
             }
         )
+    }
+
+    navigateToCreateMealLogPage = (selectedMeal) => {
+        const { parentScreen } = this.props.route.params;
+        const meal = {...selectedMeal};
+        // remove unfavourite key from the selected meal.
+        delete meal['unfavourite'];
+        this.props.navigation.navigate("CreateMealLog", {
+            meal,
+            parentScreen
+        });
     }
 
     render() {
@@ -195,7 +211,25 @@ class MealLogRoot extends React.Component {
                       </React.Fragment>
                   ) :
                       <View style={{width: '100%', flex: 1}}>
-                          <MealList meals={[selectedMeal]} onSelectMeal={() => {}} />
+                          <MealList meals={[selectedMeal]}
+                                    options={{
+                                      buttons: [
+                                          {
+                                              text: 'Remove',
+                                              onPress: this.handleDeleteMeal,
+                                              buttonStyle: {
+                                                  backgroundColor: 'red',
+                                                  width: 80
+                                              }
+                                          },
+                                          {
+                                              text: 'Edit',
+                                              onPress: this.navigateToCreateMealLogPage
+                                          }
+                                      ],
+                                      header: (meal) => meal.mealName
+                                    }}
+                          />
                           {   this.props.parentScreen !== 'DailyLog2' &&
                               <TouchableOpacity style={styles.submitButton} onPress={this.handleSubmitLog}>
                                   <Text style={styles.submitButtonText}>Submit Log!</Text>

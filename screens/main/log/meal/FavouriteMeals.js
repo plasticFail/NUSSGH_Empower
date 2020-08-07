@@ -1,11 +1,11 @@
 import React from 'react';
-import {View, StyleSheet, ActivityIndicator} from 'react-native';
+import {View, StyleSheet, ActivityIndicator, Alert} from 'react-native';
 // Functions
 import {getToken} from "../../../../storage/asyncStorageFunctions";
 // Others
 import MealList from "./MealList";
 import Searchbar from "../../../../components/Searchbar";
-import {favouriteMealListEndpoint} from "../../../../netcalls/urls";
+import {favouriteMealListEndpoint, unfavouriteMealEndpoint} from "../../../../netcalls/urls";
 
 // The screen that contains a list of the user's favourite meals.
 export default class FavouriteMealScreen extends React.Component {
@@ -48,8 +48,13 @@ export default class FavouriteMealScreen extends React.Component {
 
     navigateToCreateMealLogPage = (selectedMeal) => {
         const { parentScreen } = this.props.route.params;
+        const meal = {...selectedMeal};
+        meal.isFavourite = false;
+        meal.mealName = "";
+        // remove unfavourite key from the selected meal.
+        delete meal['unfavourite'];
         this.props.navigation.navigate("CreateMealLog", {
-            meal: selectedMeal,
+            meal,
             parentScreen
         });
     }
@@ -57,6 +62,25 @@ export default class FavouriteMealScreen extends React.Component {
     handleChangeFilterQuery = (text) => {
         this.setState({
             filterQuery: text
+        })
+    }
+
+    handleUnfavouriteMeal = (meal) => {
+        getToken().then(token => {
+            fetch(unfavouriteMealEndpoint, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: "Bearer " + token
+                },
+                body: JSON.stringify({
+                    mealName: meal.mealName
+                })
+            }).then(resp => resp.json()).then(data => {
+                // unfavourite the item from local state.
+                meal.unfavourite();
+            }).catch(err => Alert.alert("Error", err.message,
+                [ { text: 'Ok' }]));
         })
     }
 
@@ -74,6 +98,26 @@ export default class FavouriteMealScreen extends React.Component {
                            onSubmit={() => {}}/>
                 <MealList meals={filteredMeals}
                           onSelectMeal={this.navigateToCreateMealLogPage}
+                          options={{
+                                buttons: [
+                                    {
+                                        icon: {
+                                            name: 'trash',
+                                            color: '#fff'
+                                        },
+                                        onPress: this.handleUnfavouriteMeal,
+                                        buttonStyle: {
+                                            backgroundColor: 'red',
+                                            width: 40
+                                        }
+                                    },
+                                    {
+                                        text: 'Select',
+                                        onPress: this.navigateToCreateMealLogPage
+                                    }
+                                ],
+                                header: (meal) => meal.mealName,
+                            }}
                           />
             </View>
         );

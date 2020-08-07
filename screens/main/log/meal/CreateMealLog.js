@@ -71,7 +71,9 @@ export default class CreateMealLog extends React.Component {
                 beverage: meal.beverage.map(x => x),
                 main: meal.main.map(x => x),
                 side: meal.side.map(x => x),
-                dessert: meal.dessert.map(x => x)
+                dessert: meal.dessert.map(x => x),
+                isFavourite: meal.isFavourite,
+                mealName: meal.mealName
             });
         }
     }
@@ -187,7 +189,8 @@ export default class CreateMealLog extends React.Component {
                     // Otherwise send back and update.
                     if (this.props.route.params.parentScreen) {
                         this.props.navigation.navigate(this.props.route.params.parentScreen,{
-                            meal
+                            meal,
+                            parentScreen: this.props.route.params.parentScreen
                         });
                     } else {
                         this.props.navigation.navigate('MealLogRoot', {
@@ -197,9 +200,11 @@ export default class CreateMealLog extends React.Component {
                 }).catch(err => alert(err.message));
             })
         } else {
+            // Not favourited meals can just be sent back to parentScreen.
             if (this.props.route.params.parentScreen) {
                 this.props.navigation.navigate(this.props.route.params.parentScreen,{
-                    meal: meal
+                    meal: meal,
+                    parentScreen: this.props.route.params.parentScreen
                 });
             } else {
                 this.props.navigation.navigate('MealLogRoot', {

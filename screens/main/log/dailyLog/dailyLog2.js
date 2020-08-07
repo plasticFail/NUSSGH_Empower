@@ -60,9 +60,12 @@ export default class DailyLogForFood extends React.Component {
                     </View>
                 </View>
                 {
-                    mealTaken && mealSelected ? <Text>Done</Text> :
-                        mealTaken ? <MealLogRoot navigation={navigation} route={route} parentScreen='DailyLog2' /> :
-                            null
+                    mealTaken ? <MealLogRoot navigation={navigation}
+                                             route={route}
+                                             parentScreen='DailyLog2'
+                                             onMealUpdateListener={this.setMealCallback}
+                        /> :
+                        null
                 }
                 <View style={{flex: 1, justifyContent: 'flex-end'}}>
                     <View style={styles.buttonContainer}>

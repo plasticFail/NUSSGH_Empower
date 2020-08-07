@@ -35,8 +35,11 @@ export default class RecentMealScreen extends React.Component {
 
     navigateToCreateMealLogPage = (selectedMeal) => {
         const { parentScreen } = this.props.route.params;
+        const meal = {...selectedMeal};
+        meal.isFavourite = false;
+        meal.mealName = "";
         this.props.navigation.navigate("CreateMealLog", {
-            meal: selectedMeal,
+            meal,
             parentScreen
         });
     }
@@ -49,8 +52,15 @@ export default class RecentMealScreen extends React.Component {
                 </View> :
                 <View style={styles.root}>
                     <MealList meals={recentMeals}
-                              onSelectMeal={this.navigateToCreateMealLogPage}
-                              options={{mode: 'recent'}}
+                              options={{
+                                  buttons: [
+                                      {
+                                          text: 'Select',
+                                          onPress: this.navigateToCreateMealLogPage
+                                      }
+                                  ],
+                                  header: (meal) => meal.record_date
+                              }}
                     />
                 </View>
         );
