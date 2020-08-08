@@ -53,7 +53,11 @@ const DailyLog1 = (props) => {
 
       <TouchableOpacity
         style={{marginTop: '4%'}}
-        onPress={() => props.navigation.navigate('DailyLog2')}>
+        onPress={() =>
+        { const states = props.route.params
+          console.log(states);
+          props.navigation.navigate('DailyLog2', states)
+        }}>
         <Text>Next</Text>
       </TouchableOpacity>
     </View>

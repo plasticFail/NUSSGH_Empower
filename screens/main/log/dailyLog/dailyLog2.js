@@ -6,10 +6,17 @@ import MealLogRoot from "../meal/MealLogRoot";
 export default class DailyLogForFood extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            mealTaken: false,
-            mealSelected: null
+        if (this.props.route.params?.dailyLog2Cache) {
+            this.state = this.props.route.params.dailyLog2Cache.state;
+        } else {
+            this.state = {
+                mealTaken: false,
+                mealSelected: null,
+                recordDate: null,
+                mealType: null
+            }
         }
+
     }
 
     setMealTaken = (bool) => {
@@ -24,6 +31,18 @@ export default class DailyLogForFood extends React.Component {
         })
     }
 
+    setMealTypeCallback = (mealType) => {
+        this.setState({
+            mealType: mealType
+        })
+    }
+
+    setRecordDateCallback = (date) => {
+        this.setState({
+            recordDate: date
+        })
+    }
+
     goNext = () => {
         const {mealTaken, mealSelected} = this.state;
         if (mealTaken && mealSelected === null) {
@@ -32,16 +51,25 @@ export default class DailyLogForFood extends React.Component {
             }])
             return;
         }
-        this.props.navigation.navigate('DailyLog3');
+        this.props.navigation.navigate('DailyLog3', {
+            dailyLog2Cache: {
+                state: {...this.state}
+            }
+        });
     }
 
     goBack = () => {
-        this.props.navigation.goBack();
+        this.props.navigation.navigate('DailyLog', {
+            dailyLog2Cache: {
+                state: {...this.state}
+            }
+        });
     }
 
     render() {
         const {navigation, route} = this.props;
-        const {mealTaken, mealSelected} = this.state;
+        const {mealTaken, mealSelected, recordDate, mealType} = this.state;
+
         return (
             <ScrollView contentContainerStyle={styles.root}>
                 <View style={{padding: 20}}>
@@ -56,14 +84,21 @@ export default class DailyLogForFood extends React.Component {
                     <View style={styles.formBlockContainer}>
                         <FormBlock question='Have you had your meal?'
                                    getFormSelection={this.setMealTaken}
-                                   selectNo={true} />
+                                   selectNo={false}
+                                   defaultValue={mealTaken ? 'yes' : 'no'} />
                     </View>
                 </View>
                 {
-                    mealTaken ? <MealLogRoot navigation={navigation}
-                                             route={route}
+                    mealTaken ? <MealLogRoot
                                              parentScreen='DailyLog2'
                                              onMealUpdateListener={this.setMealCallback}
+                                             onMealTypeUpdateListener={this.setMealTypeCallback}
+                                             onDateTimeUpdateListener={this.setRecordDateCallback}
+                                             recordDate={recordDate}
+                                             mealType={mealType}
+                                             selectedMeal={mealSelected}
+                                             navigation={navigation}
+                                             route={route}
                         /> :
                         null
                 }

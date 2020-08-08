@@ -5,12 +5,11 @@ import DatePicker from 'react-native-date-picker';
 import Moment from 'moment';
 // Components
 import Select from "../../../../components/select";
-import FoodItem from "./FoodItem";
 // Others
 import Entypo from 'react-native-vector-icons/Entypo';
 import Ionicons from "react-native-vector-icons/Ionicons";
 import {getToken} from "../../../../storage/asyncStorageFunctions";
-import {mealAddLogEndpoint, unfavouriteMealEndpoint} from "../../../../netcalls/urls";
+import {mealAddLogEndpoint} from "../../../../netcalls/urls";
 import MealList from "./MealList";
 
 Entypo.loadFont();
@@ -26,27 +25,33 @@ class MealLogRoot extends React.Component {
         super(props);
         const now = new Date();
         const hours = now.getHours();
-        let defaultMealType = null;
-        if (hours >= 12 && hours < 18) {
-            defaultMealType = 'lunch';
-        } else if (hours >= 18 && hours < 22) {
-            defaultMealType = 'dinner'
-        } else if (hours >= 22 || hours < 5) {
-            defaultMealType = 'supper'
-        } else {
-            defaultMealType = 'breakfast'
-        }
+
         this.state = {
             selectedDateTime: now,
-            selectedMealType: defaultMealType,
+            selectedMealType: getDefaultMealType(hours),
             datepickerModalOpen: false,
             selectedMeal: null
         }
     }
 
-    // Listen to updates from route.
+    // Check for props. if there are props then load them.
+    componentDidMount() {
+        const {selectedMeal, mealType, recordDate} = this.props;
+        this.setState(prevState => {
+            return {
+                selectedMeal: selectedMeal || prevState.selectedMeal,
+                mealType: mealType || prevState.mealType,
+                selectedDateTime: recordDate || prevState.selectedDateTime
+            }
+        })
+    }
+
+    // Listen to updates from route, date time and meal type
     componentDidUpdate(prevProps, prevState) {
-        if (this.props.route.params.meal && this.props.route.params.meal !== this.state.selectedMeal) {
+
+        // MEAL CHANGED. CALL PARENT PROPS IF THERE IS ANY.
+        if (this.props.route.params?.meal && this.props.route.params.meal !== this.state.selectedMeal) {
+            console.log(this.props.route.params);
             const newMeal = this.props.route.params.meal;
             this.setState({
                 selectedMeal: newMeal
@@ -55,6 +60,20 @@ class MealLogRoot extends React.Component {
                     this.props.onMealUpdateListener(newMeal);
                 }
             });
+        }
+
+        // DATE TIME CHANGED. CALL PARENT PROPS IF THERE IS ANY.
+        if (prevState.selectedDateTime !== this.state.selectedDateTime) {
+            if (this.props.onDateTimeUpdateListener) {
+                this.props.onDateTimeUpdateListener(this.state.selectedDateTime)
+            }
+        }
+
+        // MEAL TYPE CHANGED. CALL PARENT PROPS IF THERE IS ANY.
+        if (prevState.selectedMealType !== this.state.selectedMealType) {
+            if (this.props.onMealTypeUpdateListener) {
+                this.props.onMealTypeUpdateListener(this.state.selectedMealType);
+            }
         }
     }
 
@@ -242,6 +261,20 @@ class MealLogRoot extends React.Component {
             </View>
         )
     }
+}
+
+function getDefaultMealType(hours) {
+    let defaultMealType = null;
+    if (hours >= 12 && hours < 18) {
+        defaultMealType = 'lunch';
+    } else if (hours >= 18 && hours < 22) {
+        defaultMealType = 'dinner'
+    } else if (hours >= 22 || hours < 5) {
+        defaultMealType = 'supper'
+    } else {
+        defaultMealType = 'breakfast'
+    }
+    return defaultMealType;
 }
 
 // Date picker modal
