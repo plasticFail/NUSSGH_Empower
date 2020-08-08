@@ -10,7 +10,7 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import Ionicons from "react-native-vector-icons/Ionicons";
 import {getToken} from "../../../../storage/asyncStorageFunctions";
 import {mealAddLogEndpoint} from "../../../../netcalls/urls";
-import MealList from "./MealList";
+import RenderMealItem from "./RenderMealItem";
 
 Entypo.loadFont();
 
@@ -231,25 +231,27 @@ class MealLogRoot extends React.Component {
                       </React.Fragment>
                   ) : // Meal has been selected, render a preview of the meal for confirmation before submitting.
                       <View style={{width: '100%', flex: 1}}>
-                          <MealList meals={[selectedMeal]}
-                                    options={{
-                                      buttons: [
-                                          {
-                                              text: 'Remove',
-                                              onPress: this.handleDeleteMeal,
-                                              buttonStyle: {
-                                                  backgroundColor: 'red',
-                                                  width: 80
-                                              }
-                                          },
-                                          {
-                                              text: 'Edit',
-                                              onPress: this.navigateToCreateMealLogPage
-                                          }
-                                      ],
-                                      header: (meal) => meal.mealName
-                                    }}
-                          />
+                          <View style={{flex: 1, justifyContent: 'center'}}>
+                              <RenderMealItem item={selectedMeal}
+                                              options={{
+                                                  buttons: [
+                                                      {
+                                                          text: 'Remove',
+                                                          onPress: this.handleDeleteMeal,
+                                                          buttonStyle: {
+                                                              backgroundColor: 'red',
+                                                              width: 80
+                                                          }
+                                                      },
+                                                      {
+                                                          text: 'Edit',
+                                                          onPress: this.navigateToCreateMealLogPage
+                                                      }
+                                                  ],
+                                                  header: (meal) => meal.mealName
+                                              }}
+                              />
+                          </View>
                           {   // If parent screen is from daily log, don't render the submit button.
                               this.props.parentScreen !== 'DailyLog2' &&
                               <TouchableOpacity style={styles.submitButton} onPress={this.handleSubmitLog}>

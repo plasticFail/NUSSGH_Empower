@@ -54,8 +54,8 @@ const DailyLog1 = (props) => {
       <TouchableOpacity
         style={{marginTop: '4%'}}
         onPress={() =>
-        { const states = props.route.params
-          console.log(states);
+        { // pass states to other screens to maintain persistent storage.
+          const states = props.route.params
           props.navigation.navigate('DailyLog2', states)
         }}>
         <Text>Next</Text>
