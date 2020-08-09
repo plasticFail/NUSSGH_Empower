@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, ActivityIndicator} from "react-native";
+import {View, StyleSheet, ActivityIndicator, Alert} from "react-native";
 // Functions
 import {getToken} from "../../../../storage/asyncStorageFunctions";
 // Other
@@ -29,16 +29,18 @@ export default class RecentMealScreen extends React.Component {
                         isLoading: false,
                         recentMeals: data.data
                     });
-                }).catch(err => alert(err.message));
+                }).catch(err => Alert.alert('Error',err.message, [ { text: 'Ok' }]));
             })
     }
 
     navigateToCreateMealLogPage = (selectedMeal) => {
-        const { selectedMealType, selectedDateTime } = this.props.route.params;
+        const { parentScreen } = this.props.route.params;
+        const meal = {...selectedMeal};
+        meal.isFavourite = false;
+        meal.mealName = "";
         this.props.navigation.navigate("CreateMealLog", {
-            meal: selectedMeal,
-            selectedMealType,
-            selectedDateTime
+            meal,
+            parentScreen
         });
     }
 
@@ -50,8 +52,15 @@ export default class RecentMealScreen extends React.Component {
                 </View> :
                 <View style={styles.root}>
                     <MealList meals={recentMeals}
-                              onSelectMeal={this.navigateToCreateMealLogPage}
-                              options={{mode: 'recent'}}
+                              options={{
+                                  buttons: [
+                                      {
+                                          text: 'Select',
+                                          onPress: this.navigateToCreateMealLogPage
+                                      }
+                                  ],
+                                  header: (meal) => meal.record_date
+                              }}
                     />
                 </View>
         );

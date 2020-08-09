@@ -10,7 +10,8 @@ import {
     TouchableWithoutFeedback,
     Modal,
     Animated, LayoutAnimation,
-    Platform, UIManager
+    Platform, UIManager,
+    Alert
 } from 'react-native';
 // Third-party lib
 import Moment from 'moment';
@@ -21,12 +22,13 @@ import IntegerQuantitySelector from "../../../../components/IntegerQuantitySelec
 // Functions
 import {getToken} from "../../../../storage/asyncStorageFunctions";
 // Others such as images, icons.
-import {mealAddLogEndpoint} from "../../../../netcalls/urls";
+import {favouriteMealListEndpoint, mealAddLogEndpoint} from "../../../../netcalls/urls";
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import main from '../../../../resources/images/icons/meal.png';
 import beverage from '../../../../resources/images/icons/mug.png';
 import side from '../../../../resources/images/icons/salad.png';
 import dessert from '../../../../resources/images/icons/parfait.png';
+import FlashMessage from "../../../../components/FlashMessage";
 
 Icon.loadFont()
 // Any meal log selected (e.g Create, Recent or Favourites)
@@ -65,10 +67,13 @@ export default class CreateMealLog extends React.Component {
         if (this.props.route.params?.meal) {
             const {meal} = this.props.route.params;
             this.setState({
-                beverage: meal.beverage,
-                main: meal.main,
-                side: meal.side,
-                dessert: meal.dessert
+                // Mount a copy of the meal items.
+                beverage: meal.beverage.map(x => x),
+                main: meal.main.map(x => x),
+                side: meal.side.map(x => x),
+                dessert: meal.dessert.map(x => x),
+                isFavourite: meal.isFavourite,
+                mealName: meal.mealName
             });
         }
     }
@@ -99,7 +104,7 @@ export default class CreateMealLog extends React.Component {
             this.props.navigation.setParams({
                 edited: true
             });
-            this.setState(newState, () => console.log(this.state));
+            this.setState(newState);
         }
     }
 
@@ -150,49 +155,63 @@ export default class CreateMealLog extends React.Component {
         })
     }
 
-    handleSubmitLog = () => {
-        // selectedMealType is one of breakfast, lunch, dinner, supper or snack.
-        // selectedDateTime is javascript's default Date object.toString().
-        const { selectedMealType, selectedDateTime } = this.props.route.params;
-        const { beverage, main, side, dessert, isFavourite, mealName } = this.state;
+    // Check if meal name is not duplicate (if it is favourited).
+    // navigate back to root for confirmation.
+    onDone = () => {
+        const {mealName, isFavourite, beverage, main, side, dessert} = this.state;
         if (mealName.trim() === '' && isFavourite) {
-            alert('Please give your favourite meal a name');
+            Alert.alert('Error','Please give your favourite meal a name', [ { text: 'Ok' }]);
             return;
         }
-        // Need to subtract 8 hours from the current time because mongo db tracks UTC+0 time zone.
-        const recordDate = Moment(new Date(selectedDateTime)).format("DD/MM/YYYY HH:mm:ss");
-        // console.log(recordDate);
-        getToken().then(token => {
-                fetch(mealAddLogEndpoint, {
-                    method: "POST",
+        const meal = {
+            mealName,
+            isFavourite,
+            beverage,
+            main,
+            side,
+            dessert
+        };
+        if (isFavourite) {
+            getToken().then(token => {
+                fetch(favouriteMealListEndpoint, {
+                    method: "GET",
                     headers: {
                         "Content-Type": "application/json",
                         Authorization: "Bearer " + token
-                    },
-                    body: JSON.stringify({
-                        isFavourite,
-                        beverage,
-                        main,
-                        side,
-                        dessert,
-                        mealName,
-                        mealType: selectedMealType,
-                        recordDate
-                    })
+                    }
                 }).then(resp => resp.json()).then(data => {
-                    if (data.statusCode === 403) {
-                        // There is another favourite meal with the same name as this favourite meal.
-                        alert(data.message);
+                    // Duplicate favourite meal name
+                    if (data.data.filter(m => m.mealName === mealName).length != 0) {
+                        Alert.alert('Error', `There is already another favourite meal with the same name as ${mealName}`,
+                            [ { text: 'Ok' }]);
                         return;
                     }
-                    this.props.navigation.popToTop();
-                    this.props.navigation.goBack();
-                    alert(`Your meal log for ${selectedDateTime} has been recorded!`);
-                }).catch(err => {
-                    alert(err.message);
+                    // Otherwise send back and update.
+                    if (this.props.route.params.parentScreen) {
+                        this.props.navigation.navigate(this.props.route.params.parentScreen,{
+                            meal,
+                            parentScreen: this.props.route.params.parentScreen
+                        });
+                    } else {
+                        this.props.navigation.navigate('MealLogRoot', {
+                            meal
+                        });
+                    }
+                }).catch(err => alert(err.message));
+            })
+        } else {
+            // Not favourited meals can just be sent back to parentScreen.
+            if (this.props.route.params.parentScreen) {
+                this.props.navigation.navigate(this.props.route.params.parentScreen,{
+                    meal: meal,
+                    parentScreen: this.props.route.params.parentScreen
+                });
+            } else {
+                this.props.navigation.navigate('MealLogRoot', {
+                    meal: meal
                 });
             }
-        )
+        }
     }
 
     render() {
@@ -202,132 +221,149 @@ export default class CreateMealLog extends React.Component {
         // currently looks for the images beverage, main, side and dessert from imports.
         // Outside this render function, it is safe to unpackage / decompose the state fields.
         return (
-            <ScrollView>
-                <View contentContainerStyle={styles.root}>
-                    <View style={styles.mealNameTextAndIcon}>
-                        <TextInput
-                            style={styles.mealNameTextInput}
-                            placeholder="Enter Meal Name (optional)"
-                            value={mealName}
-                            onChangeText={this.handleMealNameChange}
-                        />
-                        <Icon name="star" size={40} color={isFavourite ? "#B3D14C" : "#e4e4e4"}
-                              onPress={this.toggleFavouriteIcon}
-                              style={styles.favouriteIcon}/>
-                    </View>
-                    <View>
-                        <ScrollView horizontal={true} contentContainerStyle={styles.rowContent}
-                                    // Refs to provide auto scroll to end for easier adding.
-                                    ref={beverageScrollView => this.beverageScrollView = beverageScrollView}
-                                    onContentSizeChange={() => {
-                                        this.beverageScrollView.scrollToEnd();
-                                    }}>
-                            <FoodTypeLabel
-                                containerStyle={styles.foodItem}
-                                imageStyle={styles.foodImage}
-                                alignment='center'
-                                value="Beverage" img={beverage}/>
-                            {   // Render food list for cart items in beverage.
-                                // Note that key must be specified otherwise everything will re-render.
-                                this.state.beverage.map((food) => <FoodItem key={food["food-name"]}
-                                                                            item={food} handleDelete={() => {
-                                    // Handle delete for this food item in the cart.
-                                    this.handleDelete(food["food-name"], BEVERAGE_KEY_WORD);
+            <View>
+                <ScrollView>
+                    <View contentContainerStyle={styles.root}>
+                        <View style={styles.mealNameTextAndIcon}>
+                            <TextInput
+                                style={styles.mealNameTextInput}
+                                placeholder="Enter Meal Name (optional)"
+                                value={mealName}
+                                onChangeText={this.handleMealNameChange}
+                            />
+                            <Icon name="star" size={40} color={isFavourite ? "#B3D14C" : "#e4e4e4"}
+                                  onPress={this.toggleFavouriteIcon}
+                                  style={styles.favouriteIcon}/>
+                        </View>
+                        <View>
+                            <ScrollView horizontal={true} contentContainerStyle={styles.rowContent}
+                                        // Refs to provide auto scroll to end for easier adding.
+                                        ref={beverageScrollView => this.beverageScrollView = beverageScrollView}
+                                        onContentSizeChange={() => {
+                                            this.beverageScrollView.scrollToEnd();
+                                        }}>
+                                <FoodTypeLabel
+                                    containerStyle={styles.foodItem}
+                                    imageStyle={styles.foodImage}
+                                    alignment='center'
+                                    value="Beverage" img={beverage}/>
+                                {   // Render food list for cart items in beverage.
+                                    // Note that key must be specified otherwise everything will re-render.
+                                    this.state.beverage.map((food) => <FoodItem key={food["food-name"]}
+                                                                                item={food} handleDelete={() => {
+                                        // Handle delete for this food item in the cart.
+                                        this.handleDelete(food["food-name"], BEVERAGE_KEY_WORD);
+                                    }
+                                    }
+                                                                                onPress={() => this.handleModalOpen(food)}
+                                                                                onQuantityChange={this.onQuantityChange(food["food-name"], BEVERAGE_KEY_WORD)} />)
                                 }
-                                }
-                                                                            onPress={() => this.handleModalOpen(food)}
-                                                                            onQuantityChange={this.onQuantityChange(food["food-name"], BEVERAGE_KEY_WORD)} />)
-                            }
 
-                            <CreateButton onPress={this.redirectToFoodSearchEngine("beverage")} />
-                        </ScrollView>
-                        <ScrollView horizontal={true} contentContainerStyle={styles.rowContent}
-                                    // Refs to provide auto scroll to end for easier adding.
-                                    ref={mainScrollView => this.mainScrollView = mainScrollView}
-                                    onContentSizeChange={() => {
-                                        this.mainScrollView.scrollToEnd();
-                                    }}>
-                            <FoodTypeLabel
-                                containerStyle={styles.foodItem}
-                                imageStyle={styles.foodImage}
-                                alignment='center'
-                                value="Main" img={main}/>
-                            {   // Render food list for cart items in main.
-                                // Note that key must be specified otherwise everything will re-render.
-                                this.state.main.map((food) => <FoodItem key={food["food-name"]}
-                                                                        item={food} handleDelete={() => {
-                                    // Handle delete for this food item in the cart.
-                                        this.handleDelete(food["food-name"], MAIN_KEY_WORD);
+                                <CreateButton onPress={this.redirectToFoodSearchEngine("beverage")} />
+                            </ScrollView>
+                            <ScrollView horizontal={true} contentContainerStyle={styles.rowContent}
+                                        // Refs to provide auto scroll to end for easier adding.
+                                        ref={mainScrollView => this.mainScrollView = mainScrollView}
+                                        onContentSizeChange={() => {
+                                            this.mainScrollView.scrollToEnd();
+                                        }}>
+                                <FoodTypeLabel
+                                    containerStyle={styles.foodItem}
+                                    imageStyle={styles.foodImage}
+                                    alignment='center'
+                                    value="Main" img={main}/>
+                                {   // Render food list for cart items in main.
+                                    // Note that key must be specified otherwise everything will re-render.
+                                    this.state.main.map((food) => <FoodItem key={food["food-name"]}
+                                                                            item={food} handleDelete={() => {
+                                        // Handle delete for this food item in the cart.
+                                            this.handleDelete(food["food-name"], MAIN_KEY_WORD);
+                                        }
                                     }
+                                                                            onPress={() => this.handleModalOpen(food)}
+                                                                            onQuantityChange={this.onQuantityChange(food["food-name"], MAIN_KEY_WORD)}/>)
                                 }
-                                                                        onPress={() => this.handleModalOpen(food)}
-                                                                        onQuantityChange={this.onQuantityChange(food["food-name"], MAIN_KEY_WORD)}/>)
-                            }
-                            <CreateButton onPress={this.redirectToFoodSearchEngine(MAIN_KEY_WORD)} />
-                        </ScrollView>
-                        <ScrollView horizontal={true}
-                                    // Refs to provide auto scroll to end for easier adding.
-                                    ref={sideScrollView => this.sideScrollView = sideScrollView}
-                                    onContentSizeChange={() => {
-                                        this.sideScrollView.scrollToEnd();
-                                    }}
-                                    contentContainerStyle={styles.rowContent}>
-                            <FoodTypeLabel
-                                containerStyle={styles.foodItem}
-                                imageStyle={styles.foodImage}
-                                alignment='center'
-                                value="Side" img={side}/>
-                            {   // Render food list for cart items in side.
-                                // Note that key must be specified otherwise everything will re-render.
-                                this.state.side.map((food) => <FoodItem key={food["food-name"]}
-                                                                        item={food} handleDelete={() => {
-                                    // Handle delete for this food item in the cart.
-                                        this.handleDelete(food["food-name"], SIDE_KEY_WORD);
+                                <CreateButton onPress={this.redirectToFoodSearchEngine(MAIN_KEY_WORD)} />
+                            </ScrollView>
+                            <ScrollView horizontal={true}
+                                        // Refs to provide auto scroll to end for easier adding.
+                                        ref={sideScrollView => this.sideScrollView = sideScrollView}
+                                        onContentSizeChange={() => {
+                                            this.sideScrollView.scrollToEnd();
+                                        }}
+                                        contentContainerStyle={styles.rowContent}>
+                                <FoodTypeLabel
+                                    containerStyle={styles.foodItem}
+                                    imageStyle={styles.foodImage}
+                                    alignment='center'
+                                    value="Side" img={side}/>
+                                {   // Render food list for cart items in side.
+                                    // Note that key must be specified otherwise everything will re-render.
+                                    this.state.side.map((food) => <FoodItem key={food["food-name"]}
+                                                                            item={food} handleDelete={() => {
+                                        // Handle delete for this food item in the cart.
+                                            this.handleDelete(food["food-name"], SIDE_KEY_WORD);
+                                        }
                                     }
+                                                                            onPress={() => this.handleModalOpen(food)}
+                                                                            onQuantityChange={this.onQuantityChange(food["food-name"], SIDE_KEY_WORD)} />)
                                 }
-                                                                        onPress={() => this.handleModalOpen(food)}
-                                                                        onQuantityChange={this.onQuantityChange(food["food-name"], SIDE_KEY_WORD)} />)
-                            }
-                            <CreateButton onPress={this.redirectToFoodSearchEngine(SIDE_KEY_WORD)} />
-                        </ScrollView>
-                        <ScrollView horizontal={true}
-                                    // Refs to provide auto scroll to end for easier adding.
-                                    ref={dessertScrollView => this.dessertScrollView = dessertScrollView}
-                                    onContentSizeChange={() => {
-                                        this.dessertScrollView.scrollToEnd();
-                                    }}
-                                    contentContainerStyle={styles.rowContent}>
-                            <FoodTypeLabel
-                                containerStyle={styles.foodItem}
-                                imageStyle={styles.foodImage}
-                                alignment='center'
-                                value="Dessert" img={dessert}/>
-                            {   // Render food list for cart items in dessert.
-                                // Note that key must be specified otherwise everything will re-render.
-                                this.state.dessert.map((food) => <FoodItem key={food["food-name"]}
-                                                                           item={food} handleDelete={() => {
-                                    // Handle delete for this food item in the cart.
-                                        this.handleDelete(food["food-name"], DESSERT_KEY_WORD);
+                                <CreateButton onPress={this.redirectToFoodSearchEngine(SIDE_KEY_WORD)} />
+                            </ScrollView>
+                            <ScrollView horizontal={true}
+                                        // Refs to provide auto scroll to end for easier adding.
+                                        ref={dessertScrollView => this.dessertScrollView = dessertScrollView}
+                                        onContentSizeChange={() => {
+                                            this.dessertScrollView.scrollToEnd();
+                                        }}
+                                        contentContainerStyle={styles.rowContent}>
+                                <FoodTypeLabel
+                                    containerStyle={styles.foodItem}
+                                    imageStyle={styles.foodImage}
+                                    alignment='center'
+                                    value="Dessert" img={dessert}/>
+                                {   // Render food list for cart items in dessert.
+                                    // Note that key must be specified otherwise everything will re-render.
+                                    this.state.dessert.map((food) => <FoodItem key={food["food-name"]}
+                                                                               item={food} handleDelete={() => {
+                                        // Handle delete for this food item in the cart.
+                                            this.handleDelete(food["food-name"], DESSERT_KEY_WORD);
+                                        }
                                     }
+                                                                               onPress={() => this.handleModalOpen(food)}
+                                                                               onQuantityChange={this.onQuantityChange(food["food-name"], DESSERT_KEY_WORD)}/>)
                                 }
-                                                                           onPress={() => this.handleModalOpen(food)}
-                                                                           onQuantityChange={this.onQuantityChange(food["food-name"], DESSERT_KEY_WORD)}/>)
-                            }
-                            <CreateButton onPress={this.redirectToFoodSearchEngine(DESSERT_KEY_WORD)} />
-                        </ScrollView>
-                        <TouchableHighlight
-                            style={styles.button}
-                            underlayColor='#fff' onPress={this.handleSubmitLog}>
-                            <Text style={styles.buttonText}>Submit Log!</Text>
-                        </TouchableHighlight>
-                        <Modal visible={modalOpen} transparent={true}>
-                            {selected &&
-                            <FoodModalContent onClose={this.handleCloseModal} selected={selected}/>
-                            }
-                        </Modal>
+                                <CreateButton onPress={this.redirectToFoodSearchEngine(DESSERT_KEY_WORD)} />
+                            </ScrollView>
+                            <TouchableHighlight
+                                style={styles.button}
+                                underlayColor='#fff' onPress={this.onDone}>
+                                <Text style={styles.buttonText}>Done</Text>
+                            </TouchableHighlight>
+                            <Modal visible={modalOpen} transparent={true}>
+                                {selected &&
+                                <FoodModalContent onClose={this.handleCloseModal} selected={selected}/>
+                                }
+                            </Modal>
+                        </View>
                     </View>
-                </View>
-            </ScrollView>
+                </ScrollView>
+                <FlashMessage triggerValue={this.state.isFavourite}
+                              renderFlashMessageComponent={(val) => val ? <View
+                                      style={{height: 40, width: 150, borderRadius: 10,
+                                          backgroundColor:'#288259', justifyContent: 'center', alignItems: 'center'}}
+                                  >
+                                    <Text style={{color: '#fff', fontSize: 20}}>Favourited!</Text>
+                                  </View>:
+                                  <View
+                                      style={{height: 40, width: 150, borderRadius: 10,
+                                          backgroundColor:'red', justifyContent: 'center', alignItems: 'center'}}
+                                  >
+                                      <Text style={{color: '#fff', fontSize: 20}}>Unfavourited</Text>
+                                  </View>}
+                              messageComponentHeight={40}
+                />
+            </View>
         )
     }
 }
