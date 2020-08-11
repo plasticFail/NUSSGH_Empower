@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 
 const CountdownTimer = (props) => {
-  const [counter, setCounter] = useState(60);
+  const [counter, setCounter] = useState(120);
 
   //run set timeout function whenever component state is updated, counter value change
   useEffect(() => {

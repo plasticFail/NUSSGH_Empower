@@ -340,7 +340,7 @@ class AppRoot extends Component {
                     fontWeight: 'bold',
                     alignSelf: 'center',
                   },
-                  headerRight: () => <View />,
+                  headerLeft: false,
                 }}
               />
             </>

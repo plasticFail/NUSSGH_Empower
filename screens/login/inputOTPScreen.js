@@ -14,15 +14,18 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import {ScrollView} from 'react-native-gesture-handler';
 import CountdownTimer from '../../components/countdownTimer';
+import {verifyOTPRequest} from '../../netcalls/requestsPasswordReset';
 
 const InputOTPScreen = (props) => {
+  const {phoneNumber} = props.route.params;
+  console.log(phoneNumber);
   Icon.loadFont();
   const [otp, setOtp] = useState('');
   const [disabled, setDisable] = useState(false);
-  const [countdownVisible, setCountdownVisible] = useState(false);
+  const [countdownVisible, setCountdownVisible] = useState(true);
 
   const handleTimout = () => {
-    setCountdownVisible(false);
+    setCountdownVisible(true);
     setDisable(false);
   };
 
@@ -36,11 +39,14 @@ const InputOTPScreen = (props) => {
       !otp.includes('-') &&
       !otp.includes('.')
     ) {
-      props.navigation.navigate('ResetPasswordScreen');
-    } else {
-      Alert.alert('Error', 'Invalid OTP', [{text: 'Got It'}]);
+      verifyOTPRequest(phoneNumber, otp).then((response) => {
+        if (response.message != null) {
+          Alert.alert('Error', response.message, [{text: 'Got It'}]);
+        } else {
+          props.navigation.navigate('ResetPasswordScreen');
+        }
+      });
     }
-    //handle wrong otp here.
   };
 
   const resendOTP = () => {
@@ -57,7 +63,7 @@ const InputOTPScreen = (props) => {
       behavior={Platform.OS === 'ios' ? 'padding' : null}>
       <SafeAreaView style={{flex: 1}}>
         <View style={styles.inner}>
-          <Icon name="cellphone-message" size={300} />
+          <Icon name="cellphone-message" size={260} />
           <Text style={styles.text}>
             Enter the 6-digit One-Time Password (OTP) sent to your mobile number
             (**** 9876).
