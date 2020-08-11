@@ -10,18 +10,25 @@ import {
     TouchableWithoutFeedback,
     Modal,
     Animated, LayoutAnimation,
-    Platform, UIManager
+    Platform, UIManager,
+    Alert
 } from 'react-native';
+// Third-party lib
+import Moment from 'moment';
 // Components
 import ImageWithBadge from "../../../../components/ImageWithBadge";
 import FoodModalContent from "./FoodModalContent";
 import IntegerQuantitySelector from "../../../../components/IntegerQuantitySelector";
+// Functions
+import {getToken} from "../../../../storage/asyncStorageFunctions";
 // Others such as images, icons.
+import {favouriteMealListEndpoint, mealAddLogEndpoint} from "../../../../netcalls/urls";
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import main from '../../../../resources/images/icons/meal.png';
 import beverage from '../../../../resources/images/icons/mug.png';
 import side from '../../../../resources/images/icons/salad.png';
 import dessert from '../../../../resources/images/icons/parfait.png';
+import FlashMessage from "../../../../components/FlashMessage";
 
 Icon.loadFont()
 // Any meal log selected (e.g Create, Recent or Favourites)
@@ -52,7 +59,22 @@ export default class CreateMealLog extends React.Component {
             isFavourite: false,
             mealName: "",
             selected: null,
-            modalOpen: false
+            modalOpen: false,
+        }
+    }
+
+    componentDidMount() {
+        if (this.props.route.params?.meal) {
+            const {meal} = this.props.route.params;
+            this.setState({
+                // Mount a copy of the meal items.
+                beverage: meal.beverage.map(x => x),
+                main: meal.main.map(x => x),
+                side: meal.side.map(x => x),
+                dessert: meal.dessert.map(x => x),
+                isFavourite: meal.isFavourite,
+                mealName: meal.mealName
+            });
         }
     }
 
@@ -78,7 +100,11 @@ export default class CreateMealLog extends React.Component {
             // Add a new field to the item, called quantity.
             item.quantity = 1;
             newState[type].push(item);
-            this.setState(newState, () => console.log(this.state));
+            // Update navigation prop param.
+            this.props.navigation.setParams({
+                edited: true
+            });
+            this.setState(newState);
         }
     }
 
@@ -129,19 +155,63 @@ export default class CreateMealLog extends React.Component {
         })
     }
 
-    handleSubmitLog = () => {
-        const { selectedMealType, currentDateTime } = this.props.route.params;
-        const { beverage, main, side, dessert, isFavourite, mealName } = this.state;
-        const dataToLog = {
-            mealType: selectedMealType,
-            dateTime: currentDateTime,
-            // And all the food items, not yet decided on how to log
+    // Check if meal name is not duplicate (if it is favourited).
+    // navigate back to root for confirmation.
+    onDone = () => {
+        const {mealName, isFavourite, beverage, main, side, dessert} = this.state;
+        if (mealName.trim() === '' && isFavourite) {
+            Alert.alert('Error','Please give your favourite meal a name', [ { text: 'Ok' }]);
+            return;
         }
-        this.props.navigation.popToTop();
-        this.props.navigation.goBack();
-        //this.props.navigation.navigate('AddLog');
-        console.log(this.state);
-        alert(`Log submitted! for ${JSON.stringify(dataToLog)}`);
+        const meal = {
+            mealName,
+            isFavourite,
+            beverage,
+            main,
+            side,
+            dessert
+        };
+        if (isFavourite) {
+            getToken().then(token => {
+                fetch(favouriteMealListEndpoint, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: "Bearer " + token
+                    }
+                }).then(resp => resp.json()).then(data => {
+                    // Duplicate favourite meal name
+                    if (data.data.filter(m => m.mealName === mealName).length != 0) {
+                        Alert.alert('Error', `There is already another favourite meal with the same name as ${mealName}`,
+                            [ { text: 'Ok' }]);
+                        return;
+                    }
+                    // Otherwise send back and update.
+                    if (this.props.route.params.parentScreen) {
+                        this.props.navigation.navigate(this.props.route.params.parentScreen,{
+                            meal,
+                            parentScreen: this.props.route.params.parentScreen
+                        });
+                    } else {
+                        this.props.navigation.navigate('MealLogRoot', {
+                            meal
+                        });
+                    }
+                }).catch(err => alert(err.message));
+            })
+        } else {
+            // Not favourited meals can just be sent back to parentScreen.
+            if (this.props.route.params.parentScreen) {
+                this.props.navigation.navigate(this.props.route.params.parentScreen,{
+                    meal: meal,
+                    parentScreen: this.props.route.params.parentScreen
+                });
+            } else {
+                this.props.navigation.navigate('MealLogRoot', {
+                    meal: meal
+                });
+            }
+        }
     }
 
     render() {
@@ -151,151 +221,162 @@ export default class CreateMealLog extends React.Component {
         // currently looks for the images beverage, main, side and dessert from imports.
         // Outside this render function, it is safe to unpackage / decompose the state fields.
         return (
-            <ScrollView>
-                <View contentContainerStyle={styles.root}>
-                    <View style={styles.mealNameTextAndIcon}>
-                        <TextInput
-                            style={styles.mealNameTextInput}
-                            placeholder="Enter Meal Name (optional)"
-                            value={mealName}
-                            onChangeText={this.handleMealNameChange}
-                        />
-                        <Icon name="star" size={40} color={isFavourite ? "#B3D14C" : "#e4e4e4"}
-                              onPress={this.toggleFavouriteIcon}
-                              style={styles.favouriteIcon}/>
-                    </View>
-                    <View>
-                        <ScrollView horizontal={true} contentContainerStyle={styles.rowContent}
-                                    // Refs to provide auto scroll to end for easier adding.
-                                    ref={beverageScrollView => this.beverageScrollView = beverageScrollView}
-                                    onContentSizeChange={() => {
-                                        this.beverageScrollView.scrollToEnd();
-                                    }}>
-                            <FoodTypeLabel
-                                containerStyle={styles.foodItem}
-                                imageStyle={styles.foodImage}
-                                alignment='center'
-                                value="Beverage" img={beverage}/>
-                            {   // Render food list for cart items in beverage.
-                                // Note that key must be specified otherwise everything will re-render.
-                                this.state.beverage.map((food) => <FoodItem key={food["food-name"]}
-                                                                            item={food} handleDelete={() => {
-                                    // Handle delete for this food item in the cart.
-                                    this.handleDelete(food["food-name"], BEVERAGE_KEY_WORD);
+            <View>
+                <ScrollView>
+                    <View contentContainerStyle={styles.root}>
+                        <View style={styles.mealNameTextAndIcon}>
+                            <TextInput
+                                style={styles.mealNameTextInput}
+                                placeholder="Enter Meal Name (optional)"
+                                value={mealName}
+                                onChangeText={this.handleMealNameChange}
+                            />
+                            <Icon name="star" size={40} color={isFavourite ? "#B3D14C" : "#e4e4e4"}
+                                  onPress={this.toggleFavouriteIcon}
+                                  style={styles.favouriteIcon}/>
+                        </View>
+                        <View>
+                            <ScrollView horizontal={true} contentContainerStyle={styles.rowContent}
+                                        // Refs to provide auto scroll to end for easier adding.
+                                        ref={beverageScrollView => this.beverageScrollView = beverageScrollView}
+                                        onContentSizeChange={() => {
+                                            this.beverageScrollView.scrollToEnd();
+                                        }}>
+                                <FoodTypeLabel
+                                    containerStyle={styles.foodItem}
+                                    imageStyle={styles.foodImage}
+                                    alignment='center'
+                                    value="Beverage" img={beverage}/>
+                                {   // Render food list for cart items in beverage.
+                                    // Note that key must be specified otherwise everything will re-render.
+                                    this.state.beverage.map((food) => <FoodItem key={food["food-name"]}
+                                                                                item={food} handleDelete={() => {
+                                        // Handle delete for this food item in the cart.
+                                        this.handleDelete(food["food-name"], BEVERAGE_KEY_WORD);
+                                    }
+                                    }
+                                                                                onPress={() => this.handleModalOpen(food)}
+                                                                                onQuantityChange={this.onQuantityChange(food["food-name"], BEVERAGE_KEY_WORD)} />)
                                 }
-                                }
-                                                                            onPress={() => this.handleModalOpen(food)}
-                                                                            onQuantityChange={this.onQuantityChange(food["food-name"], BEVERAGE_KEY_WORD)} />)
-                            }
 
-                            <CreateButton onPress={this.redirectToFoodSearchEngine("beverage")} />
-                        </ScrollView>
-                        <ScrollView horizontal={true} contentContainerStyle={styles.rowContent}
-                                    // Refs to provide auto scroll to end for easier adding.
-                                    ref={mainScrollView => this.mainScrollView = mainScrollView}
-                                    onContentSizeChange={() => {
-                                        this.mainScrollView.scrollToEnd();
-                                    }}>
-                            <FoodTypeLabel
-                                containerStyle={styles.foodItem}
-                                imageStyle={styles.foodImage}
-                                alignment='center'
-                                value="Main" img={main}/>
-                            {   // Render food list for cart items in main.
-                                // Note that key must be specified otherwise everything will re-render.
-                                this.state.main.map((food) => <FoodItem key={food["food-name"]}
-                                                                        item={food} handleDelete={() => {
-                                    // Handle delete for this food item in the cart.
-                                        this.handleDelete(food["food-name"], MAIN_KEY_WORD);
+                                <CreateButton onPress={this.redirectToFoodSearchEngine("beverage")} />
+                            </ScrollView>
+                            <ScrollView horizontal={true} contentContainerStyle={styles.rowContent}
+                                        // Refs to provide auto scroll to end for easier adding.
+                                        ref={mainScrollView => this.mainScrollView = mainScrollView}
+                                        onContentSizeChange={() => {
+                                            this.mainScrollView.scrollToEnd();
+                                        }}>
+                                <FoodTypeLabel
+                                    containerStyle={styles.foodItem}
+                                    imageStyle={styles.foodImage}
+                                    alignment='center'
+                                    value="Main" img={main}/>
+                                {   // Render food list for cart items in main.
+                                    // Note that key must be specified otherwise everything will re-render.
+                                    this.state.main.map((food) => <FoodItem key={food["food-name"]}
+                                                                            item={food} handleDelete={() => {
+                                        // Handle delete for this food item in the cart.
+                                            this.handleDelete(food["food-name"], MAIN_KEY_WORD);
+                                        }
                                     }
+                                                                            onPress={() => this.handleModalOpen(food)}
+                                                                            onQuantityChange={this.onQuantityChange(food["food-name"], MAIN_KEY_WORD)}/>)
                                 }
-                                                                        onPress={() => this.handleModalOpen(food)}
-                                                                        onQuantityChange={this.onQuantityChange(food["food-name"], MAIN_KEY_WORD)}/>)
-                            }
-                            <CreateButton onPress={this.redirectToFoodSearchEngine(MAIN_KEY_WORD)} />
-                        </ScrollView>
-                        <ScrollView horizontal={true}
-                                    // Refs to provide auto scroll to end for easier adding.
-                                    ref={sideScrollView => this.sideScrollView = sideScrollView}
-                                    onContentSizeChange={() => {
-                                        this.sideScrollView.scrollToEnd();
-                                    }}
-                                    contentContainerStyle={styles.rowContent}>
-                            <FoodTypeLabel
-                                containerStyle={styles.foodItem}
-                                imageStyle={styles.foodImage}
-                                alignment='center'
-                                value="Side" img={side}/>
-                            {   // Render food list for cart items in side.
-                                // Note that key must be specified otherwise everything will re-render.
-                                this.state.side.map((food) => <FoodItem key={food["food-name"]}
-                                                                        item={food} handleDelete={() => {
-                                    // Handle delete for this food item in the cart.
-                                        this.handleDelete(food["food-name"], SIDE_KEY_WORD);
+                                <CreateButton onPress={this.redirectToFoodSearchEngine(MAIN_KEY_WORD)} />
+                            </ScrollView>
+                            <ScrollView horizontal={true}
+                                        // Refs to provide auto scroll to end for easier adding.
+                                        ref={sideScrollView => this.sideScrollView = sideScrollView}
+                                        onContentSizeChange={() => {
+                                            this.sideScrollView.scrollToEnd();
+                                        }}
+                                        contentContainerStyle={styles.rowContent}>
+                                <FoodTypeLabel
+                                    containerStyle={styles.foodItem}
+                                    imageStyle={styles.foodImage}
+                                    alignment='center'
+                                    value="Side" img={side}/>
+                                {   // Render food list for cart items in side.
+                                    // Note that key must be specified otherwise everything will re-render.
+                                    this.state.side.map((food) => <FoodItem key={food["food-name"]}
+                                                                            item={food} handleDelete={() => {
+                                        // Handle delete for this food item in the cart.
+                                            this.handleDelete(food["food-name"], SIDE_KEY_WORD);
+                                        }
                                     }
+                                                                            onPress={() => this.handleModalOpen(food)}
+                                                                            onQuantityChange={this.onQuantityChange(food["food-name"], SIDE_KEY_WORD)} />)
                                 }
-                                                                        onPress={() => this.handleModalOpen(food)}
-                                                                        onQuantityChange={this.onQuantityChange(food["food-name"], SIDE_KEY_WORD)} />)
-                            }
-                            <CreateButton onPress={this.redirectToFoodSearchEngine(SIDE_KEY_WORD)} />
-                        </ScrollView>
-                        <ScrollView horizontal={true}
-                                    // Refs to provide auto scroll to end for easier adding.
-                                    ref={dessertScrollView => this.dessertScrollView = dessertScrollView}
-                                    onContentSizeChange={() => {
-                                        this.dessertScrollView.scrollToEnd();
-                                    }}
-                                    contentContainerStyle={styles.rowContent}>
-                            <FoodTypeLabel
-                                containerStyle={styles.foodItem}
-                                imageStyle={styles.foodImage}
-                                alignment='center'
-                                value="Dessert" img={dessert}/>
-                            {   // Render food list for cart items in dessert.
-                                // Note that key must be specified otherwise everything will re-render.
-                                this.state.dessert.map((food) => <FoodItem key={food["food-name"]}
-                                                                           item={food} handleDelete={() => {
-                                    // Handle delete for this food item in the cart.
-                                        this.handleDelete(food["food-name"], DESSERT_KEY_WORD);
+                                <CreateButton onPress={this.redirectToFoodSearchEngine(SIDE_KEY_WORD)} />
+                            </ScrollView>
+                            <ScrollView horizontal={true}
+                                        // Refs to provide auto scroll to end for easier adding.
+                                        ref={dessertScrollView => this.dessertScrollView = dessertScrollView}
+                                        onContentSizeChange={() => {
+                                            this.dessertScrollView.scrollToEnd();
+                                        }}
+                                        contentContainerStyle={styles.rowContent}>
+                                <FoodTypeLabel
+                                    containerStyle={styles.foodItem}
+                                    imageStyle={styles.foodImage}
+                                    alignment='center'
+                                    value="Dessert" img={dessert}/>
+                                {   // Render food list for cart items in dessert.
+                                    // Note that key must be specified otherwise everything will re-render.
+                                    this.state.dessert.map((food) => <FoodItem key={food["food-name"]}
+                                                                               item={food} handleDelete={() => {
+                                        // Handle delete for this food item in the cart.
+                                            this.handleDelete(food["food-name"], DESSERT_KEY_WORD);
+                                        }
                                     }
+                                                                               onPress={() => this.handleModalOpen(food)}
+                                                                               onQuantityChange={this.onQuantityChange(food["food-name"], DESSERT_KEY_WORD)}/>)
                                 }
-                                                                           onPress={() => this.handleModalOpen(food)}
-                                                                           onQuantityChange={this.onQuantityChange(food["food-name"], DESSERT_KEY_WORD)}/>)
-                            }
-                            <CreateButton onPress={this.redirectToFoodSearchEngine(DESSERT_KEY_WORD)} />
-                        </ScrollView>
-                        <TouchableHighlight
-                            style={styles.button}
-                            underlayColor='#fff' onPress={this.handleSubmitLog}>
-                            <Text style={styles.buttonText}>Submit Log!</Text>
-                        </TouchableHighlight>
-                        <Modal visible={modalOpen} transparent={true}>
-                            {selected &&
-                            <FoodModalContent onClose={this.handleCloseModal} selected={selected}/>
-                            }
-                        </Modal>
+                                <CreateButton onPress={this.redirectToFoodSearchEngine(DESSERT_KEY_WORD)} />
+                            </ScrollView>
+                            <TouchableHighlight
+                                style={styles.button}
+                                underlayColor='#fff' onPress={this.onDone}>
+                                <Text style={styles.buttonText}>Done</Text>
+                            </TouchableHighlight>
+                            <Modal visible={modalOpen} transparent={true}>
+                                {selected &&
+                                <FoodModalContent onClose={this.handleCloseModal} selected={selected}/>
+                                }
+                            </Modal>
+                        </View>
                     </View>
-                </View>
-            </ScrollView>
+                </ScrollView>
+                <FlashMessage triggerValue={this.state.isFavourite}
+                              renderFlashMessageComponent={(val) => val ? <View
+                                      style={{height: 40, width: 150, borderRadius: 10,
+                                          backgroundColor:'#288259', justifyContent: 'center', alignItems: 'center'}}
+                                  >
+                                    <Text style={{color: '#fff', fontSize: 20}}>Favourited!</Text>
+                                  </View>:
+                                  <View
+                                      style={{height: 40, width: 150, borderRadius: 10,
+                                          backgroundColor:'red', justifyContent: 'center', alignItems: 'center'}}
+                                  >
+                                      <Text style={{color: '#fff', fontSize: 20}}>Unfavourited</Text>
+                                  </View>}
+                              messageComponentHeight={40}
+                />
+            </View>
         )
     }
-}
-
-function EmptyButton({onPress}) {
-    return (
-        <TouchableHighlight
-            style={styles.emptyButton}
-            underlayColor='#fff'
-            onPress={onPress}>
-            <Icon name='plus' color='#fff' size={25} />
-        </TouchableHighlight>
-    )
 }
 
 function CreateButton({onPress}) {
     return (
         <View style={styles.foodItem}>
-            <EmptyButton onPress={onPress}/>
+            <TouchableHighlight
+                style={styles.emptyButton}
+                underlayColor='#fff'
+                onPress={onPress}>
+                <Icon name='plus' color='#fff' size={25} />
+            </TouchableHighlight>
         </View>
     )
 }
@@ -319,7 +400,11 @@ function FoodItem({onPress, item, handleDelete, onQuantityChange}) {
         });
     }
 
-    const adjustedFontSize = item["food-name"].length > 15 ? 10 : 15;
+    let foodName = item["food-name"][0].toUpperCase() + item["food-name"].slice(1);
+    const adjustedFontSize = 13;
+    if (foodName.length > 20) {
+        foodName = foodName.slice(0, 20) + "...";
+    }
     return (
         <TouchableWithoutFeedback>
             <Animated.View style={[styles.foodItem,
@@ -331,14 +416,14 @@ function FoodItem({onPress, item, handleDelete, onQuantityChange}) {
                 <ImageWithBadge
                     containerStyle={styles.foodImage}
                     imageProps={{source: {uri: item.imgUrl.url}}}
-                    badgeIcon={<Icon name="times" size={12.5} onPress={handleDeleteWithAnimation} color='#fff'/>}
-                    badgeSize={12.5}
+                    badgeIcon={<Icon name="times" size={19} onPress={handleDeleteWithAnimation} color='#fff'/>}
+                    badgeSize={19}
                     badgeColor="red"
                     onPressImage={onPress} />
                 <View style={styles.foodTextWrapper}>
-                    <Text style={{fontSize: adjustedFontSize}}>{item["food-name"][0].toUpperCase() + item["food-name"].slice(1)}</Text>
+                    <Text style={{fontSize: adjustedFontSize}}>{foodName}</Text>
                 </View>
-                <IntegerQuantitySelector defaultValue={1}
+                <IntegerQuantitySelector defaultValue={item.quantity}
                                          changeAmount={1}
                                          minValue={1}
                                          maxValue={50}
@@ -428,5 +513,7 @@ const styles = StyleSheet.create({
         paddingTop: 8,
         alignItems: 'center',
         width: 80,
+        height: 40,
+        justifyContent: 'center'
     }
 });
