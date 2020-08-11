@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Image,
   Alert,
+  KeyboardAvoidingView,
 } from 'react-native';
 //third party libs
 import {connect} from 'react-redux';
@@ -82,42 +83,46 @@ class Login extends Component {
   render() {
     const {navigation} = this.props;
     return (
-      <View style={styles.container}>
-        <Text
-          style={{fontSize: 30, marginBottom: 20, fontWeight: '500'}}></Text>
-        <Image
-          source={require('../../resources/images/logo_v1.png')}
-          style={{width: 300, height: 300, marginBottom: 10}}
-        />
-        <TextInput
-          style={styles.inputBox}
-          placeholder="Username"
-          placeholderTextColor="#a1a3a0"
-          value={this.state.username}
-          onChangeText={this.handleUsernameInput}
-        />
-        <TextInput
-          style={styles.inputBox}
-          placeholder="Password"
-          secureTextEntry={true}
-          placeholderTextColor="#a1a3a0"
-          value={this.state.password}
-          onChangeText={this.handlePasswordInput}
-        />
-        <Text
-          style={{
-            marginLeft: '40%',
-            marginVertical: 5,
-            color: '#a1a3a0',
-          }}
-          onPress={() => this.props.navigation.navigate('ForgetPassword')}>
-          Forget Password?
-        </Text>
-        <TouchableOpacity style={styles.button} onPress={this.handleLogin}>
-          <Text style={styles.buttonText}>Login</Text>
-        </TouchableOpacity>
-        <Loading isLoading={this.state.isLoading} />
-      </View>
+      <KeyboardAvoidingView
+        style={{flex: 1}}
+        behavior={Platform.OS === 'ios' ? 'padding' : null}>
+        <View style={styles.container}>
+          <Text
+            style={{fontSize: 30, marginBottom: 20, fontWeight: '500'}}></Text>
+          <Image
+            source={require('../../resources/images/logo_v1.png')}
+            style={{width: 300, height: 300, marginBottom: 10}}
+          />
+          <TextInput
+            style={styles.inputBox}
+            placeholder="Username"
+            placeholderTextColor="#a1a3a0"
+            value={this.state.username}
+            onChangeText={this.handleUsernameInput}
+          />
+          <TextInput
+            style={styles.inputBox}
+            placeholder="Password"
+            secureTextEntry={true}
+            placeholderTextColor="#a1a3a0"
+            value={this.state.password}
+            onChangeText={this.handlePasswordInput}
+          />
+          <Text
+            style={{
+              marginLeft: '40%',
+              marginVertical: 5,
+              color: '#a1a3a0',
+            }}
+            onPress={() => this.props.navigation.navigate('ForgetPassword')}>
+            Forget Password?
+          </Text>
+          <TouchableOpacity style={styles.button} onPress={this.handleLogin}>
+            <Text style={styles.buttonText}>Login</Text>
+          </TouchableOpacity>
+          <Loading isLoading={this.state.isLoading} />
+        </View>
+      </KeyboardAvoidingView>
     );
   }
 }

@@ -1,4 +1,4 @@
-import {requestOTP, verifyOTP} from './urls';
+import {requestOTP, verifyOTP, postNewPassword} from './urls';
 import {Alert} from 'react-native';
 
 const sendOTPRequest = async (phoneNumber) => {
@@ -40,4 +40,25 @@ const verifyOTPRequest = async (phoneNumber, otp) => {
   }
 };
 
-export {sendOTPRequest, verifyOTPRequest};
+const resetPassword = async (password, token) => {
+  try {
+    let response = await fetch(postNewPassword, {
+      method: 'POST',
+      headers: {
+        Authorization: 'Bearer ' + token,
+        Accept: 'application/json',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        newPassword: password,
+      }),
+    });
+    let responseJson = await response.json();
+    console.log(responseJson);
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
+
+export {sendOTPRequest, verifyOTPRequest, resetPassword};

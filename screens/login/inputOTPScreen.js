@@ -48,7 +48,9 @@ const InputOTPScreen = (props) => {
         if (response.message != null) {
           Alert.alert('Error', response.message, [{text: 'Got It'}]);
         } else {
-          props.navigation.navigate('ResetPasswordScreen');
+          props.navigation.navigate('ResetPasswordScreen', {
+            token: response.token,
+          });
         }
       });
     }
