@@ -12,25 +12,17 @@ import {
 import {TextInput, ScrollView} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import {sendOTPRequest} from '../../netcalls/requestsPasswordReset';
 
 function ForgetPasswordScreen({navigation}) {
   Icon.loadFont();
   const [phoneNumber, setPhoneNumber] = useState('');
+
   const handleButtonPress = () => {
     if (phoneNumber != '' && phoneNumber.length == 8) {
       var first = phoneNumber.substring(0, 1);
       if (first == '8' || first == '9') {
-        Alert.alert(
-          'Success',
-          'OTP has been sent to you via SMS',
-          [
-            {
-              text: 'Got It',
-              onPress: () => navigation.navigate('InputOTP'),
-            },
-          ],
-          {cancelable: false},
-        );
+        sendOTPRequest(phoneNumber);
       } else {
         Alert.alert('Invalid', 'Please input a valid phone number', [
           {text: 'Got It'},

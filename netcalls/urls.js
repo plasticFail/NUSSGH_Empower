@@ -11,17 +11,23 @@ const unfavouriteMealEndpoint = server + 'log/meal/unfavourite-meal';
 const mealListEndpoint = server + 'log/meal/list';
 const favouriteMealListEndpoint = server + 'log/meal/favourite-list';
 const foodSearchEndpoint = server + 'food/search';
+const requestOTP = server + 'auth/patient/password-reset/request-otp';
+const verifyOTP = server + 'auth/patient/password-reset/verify-otp';
+const postNewPassword = server + 'auth/patient/password-reset/reset';
 
 export {
-    patientLogin,
-    isTokenValid,
-    glucoseAddLog,
-    medicationAddLog,
-    medicationList,
-    weightAddLog,
-    mealAddLogEndpoint,
-    mealListEndpoint,
-    favouriteMealListEndpoint,
-    unfavouriteMealEndpoint,
-    foodSearchEndpoint
+  patientLogin,
+  isTokenValid,
+  glucoseAddLog,
+  medicationAddLog,
+  medicationList,
+  weightAddLog,
+  mealAddLogEndpoint,
+  mealListEndpoint,
+  favouriteMealListEndpoint,
+  unfavouriteMealEndpoint,
+  foodSearchEndpoint,
+  requestOTP,
+  verifyOTP,
+  postNewPassword,
 };
