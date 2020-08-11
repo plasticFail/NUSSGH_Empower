@@ -23,24 +23,33 @@ export default class ProgressBar extends React.Component {
     componentDidMount() {
         this.state.animation.setValue(0);
         Animated.timing(this.state.animation, {
-            toValue: 1,
+            toValue: parseFloat(this.props.progress.split("%")[0]) / 100,
             duration: 1000,
             useNativeDriver: false
         }).start();
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (this.props.progress && prevProps.progress !== this.props.progress) {
+            Animated.timing(this.state.animation, {
+                toValue: parseFloat(this.props.progress.split("%")[0]) / 100,
+                duration: 1000,
+                useNativeDriver: false
+            }).start();
+        }
     }
 
     render() {
 
         const widthInterpolate = this.state.animation.interpolate({
             inputRange: [0, 1],
-            outputRange: ['0%', this.props.progress]
+            outputRange: ['0%', '100%']
         });
 
         const colorInterpolate = this.state.animation.interpolate({
-            inputRange: [0, 0.33, 0.66, 1],
-            outputRange: this.props.reverse ? getReverseColorRange(this.props.progress)
-                : getColorRange(this.props.progress)
-            // green green yellow red
+            inputRange: [0, 0.25, 0.5, 0.75, 1],
+            outputRange: this.props.reverse ? getReverseColorRange()
+                : getColorRange()
         })
 
         const progressBarStyle = {
@@ -74,29 +83,13 @@ export default class ProgressBar extends React.Component {
 }
 
 // method to retrieve animated color range from a given percentage.
-function getColorRange(percentage) {
-    // convert percentage to decimal. percentage argument is a string. example: "73%"
-    const decimal = parseFloat(percentage.split("%")[0]) / 100;
-    if (decimal < 0.33) {
-        return ['rgb(96, 163, 84)', 'rgb(96, 163, 84)', 'rgb(96, 163, 84)', 'rgb(96, 163, 84)'];
-    } else if (decimal < 0.66) {
-        return ['rgb(96, 163, 84)', 'rgb(96, 163, 84)', 'rgb(245, 196, 68)', 'rgb(245, 196, 68)'];
-    } else {
-        return ['rgb(96, 163, 84)', 'rgb(245, 196, 68)', 'rgb(245, 196, 68)', 'rgb(220,20,60)'];
-    }
+function getColorRange() {
+    return ['rgb(96, 163, 84)', 'rgb(96, 163, 84)', 'rgb(245, 196, 68)', 'rgb(220,20,60)', 'rgb(220,20,60)'];
 }
 
 // method to retrieve animated color range for reversed indicator.
-function getReverseColorRange(percentage) {
-    // convert percentage to decimal. percentage argument is a string. example: "73%"
-    const decimal = parseFloat(percentage.split("%")[0]) / 100;
-    if (decimal < 0.33) {
-        return ['rgb(220,20,60)', 'rgb(220,20,60)', 'rgb(220,20,60)', 'rgb(220,20,60)'];
-    } else if (decimal < 0.66) {
-        return ['rgb(220,20,60)', 'rgb(220,20,60)', 'rgb(245, 196, 68)', 'rgb(245, 196, 68)'];
-    } else {
-        return ['rgb(220,20,60)', 'rgb(245, 196, 68)', 'rgb(96, 163, 84)', 'rgb(96, 163, 84)'];
-    }
+function getReverseColorRange() {
+    return ['rgb(220,20,60)', 'rgb(220,20,60)', 'rgb(245, 196, 68)', 'rgb(96, 163, 84)', 'rgb(96, 163, 84)'];
 }
 
 // default values
