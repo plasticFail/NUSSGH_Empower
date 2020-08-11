@@ -25,4 +25,21 @@ const checkTime = (dateToCheck) => {
   return true;
 };
 
-export {checkTime};
+const checkDosage = (dosageString) => {
+  var dosageS = String(dosageString);
+  if (
+    dosageString.length != 0 &&
+    !dosageS.includes('.') &&
+    !dosageS.includes('-') &&
+    !dosageS.includes(',') &&
+    Number(dosageS) <= 5 &&
+    Number(dosageS) > 0
+  ) {
+    return true;
+  } else {
+    Alert.alert('Error', 'Invalid dosage input.', [{text: 'Got It'}]);
+    return false;
+  }
+};
+
+export {checkTime, checkDosage};

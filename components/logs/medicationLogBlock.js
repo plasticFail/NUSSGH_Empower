@@ -9,9 +9,6 @@ import {
   Dimensions,
   Alert,
 } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import DatePicker from 'react-native-date-picker';
-import Moment from 'moment';
 import Modal from 'react-native-modal';
 import Entypo from 'react-native-vector-icons/Entypo';
 import DateSelectionBlock from '../logs/dateSelectionBlock';
@@ -19,6 +16,7 @@ import DateSelectionBlock from '../logs/dateSelectionBlock';
 // content
 import SelectMedicationModalContent from '../../screens/main/log/medication/selectMedicationModalContent';
 import EditMedicationModalContent from '../../screens/main/log/medication/editMedicationModalContent';
+import {checkDosage} from '../../commonFunctions/logFunctions';
 
 Entypo.loadFont();
 
@@ -27,15 +25,15 @@ const MedicationLogBlock = (props) => {
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [medicineToEdit, setMedicineToEdit] = useState({});
 
+  console.log('---In Medication Log Block');
+
   const getSelectedMedicineFromModal = (medicineObj) => {
     console.log('Setting selected medication: ' + medicineObj);
     let list = props.selectedMedicationList;
     list.push(medicineObj);
-
     //set new states
     setSelectModalOpen(false);
-    props.setSelectedMedicationList(list);
-    console.log(props.selectedMedicationList);
+    props.onListChange(list);
   };
 
   const openEditModal = (item) => {
@@ -48,17 +46,7 @@ const MedicationLogBlock = (props) => {
   //get and edit new dosage to medicine
   const handleEditMedicine = (medicineToEdit, newDosage) => {
     console.log('Editing: ' + medicineToEdit + ' New Dosage: ' + newDosage);
-    let newDosageS = String(newDosage);
-    if (newDosage == '') {
-      Alert.alert('Error', 'Dosage not filled', [{text: 'Got It'}]);
-    } else if (
-      newDosage.length != 0 &&
-      !newDosageS.includes('.') &&
-      !newDosageS.includes('-') &&
-      !newDosageS.includes(',') &&
-      Number(newDosage) <= 5 &&
-      Number(newDosage) > 0
-    ) {
+    if (checkDosage(newDosage)) {
       const elementIndex = props.selectedMedicationList.findIndex(
         (element) => element.drugName == medicineToEdit,
       );
@@ -70,7 +58,7 @@ const MedicationLogBlock = (props) => {
 
       //set state
       setEditModalOpen(false);
-      props.setSelectedMedicationList(newArr);
+      props.onListChange(newArr);
     } else {
       Alert.alert('Error', 'Invalid Dosage', [{text: 'Got It'}]);
     }
@@ -78,9 +66,7 @@ const MedicationLogBlock = (props) => {
 
   const handleDelete = (item) => {
     let list = props.selectedMedicationList;
-    props.setSelectedMedicationList(
-      list.filter((medication) => medication != item),
-    );
+    props.onListChange(list.filter((medication) => medication != item));
   };
 
   return (
@@ -167,13 +153,7 @@ function MedicationAdded({medication, handleDelete, openEditModal}) {
         name="circle-with-cross"
         color={'red'}
         size={30}
-        style={{
-          alignSelf: 'flex-end',
-          marginEnd: '4%',
-          position: 'absolute',
-          zIndex: 2,
-          elevation: 2,
-        }}
+        style={styles.deleteIcon}
         onPress={handleDelete}
       />
       <View
@@ -313,6 +293,13 @@ const styles = StyleSheet.create({
     marginBottom: '2%',
     flex: 2,
     flexWrap: 'wrap',
+  },
+  deleteIcon: {
+    alignSelf: 'flex-end',
+    marginEnd: '4%',
+    position: 'absolute',
+    zIndex: 2,
+    elevation: 2,
   },
 });
 

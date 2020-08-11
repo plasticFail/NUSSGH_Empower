@@ -8,68 +8,52 @@ import {
   Alert,
   TouchableOpacity,
 } from 'react-native';
+import {checkDosage} from '../../../../commonFunctions/logFunctions';
 
-export default class EditMedicationModalContent extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      editMedicineName: this.props.medicineToEdit.drugName,
-      oldMedicineDosage: this.props.medicineToEdit.dosage,
-      newMedicineDosage: this.props.medicineToEdit.dosage,
-      image: this.props.medicineToEdit.image_url,
-    };
-    console.log('-----In Edit Medication' + this.props.medicineToEdit.drugName);
-    this.setNewDosage = this.setNewDosage.bind(this);
-    this.sendChanges = this.sendChanges.bind(this);
-  }
+const EditMedicationModalContent = (props) => {
+  const [dosage, setDosage] = useState(props.medicineToEdit.dosage);
 
-  setNewDosage(newDosage) {
+  const setNewDosage = (newDosage) => {
     if (newDosage == '') {
-      newDosage = oldMedicineDosage;
+      newDosage = dosage;
     }
     console.log('Setting new dosage ' + newDosage);
-    this.setState({newMedicineDosage: newDosage});
-  }
+    setDosage(newDosage);
+  };
 
-  sendChanges() {
-    this.props.editedMedicine(
-      this.state.editMedicineName,
-      this.state.newMedicineDosage,
-    );
-  }
+  const sendChanges = () => {
+    if (checkDosage(dosage)) {
+      props.editedMedicine(props.medicineToEdit.drugName, dosage);
+    }
+  };
 
-  render() {
-    const {editMedicineName, oldMedicineDosage, image} = this.state;
-    return (
-      <View style={styles.container}>
-        <Image
-          style={styles.medicineImg}
-          source={{
-            uri: image,
-          }}
-        />
-        <Text style={styles.header}>{editMedicineName}</Text>
-        <DosageInput
-          setDosage={this.setNewDosage}
-          oldDosage={oldMedicineDosage}
-        />
-        <View style={{paddingBottom: '4%'}}>
-          <TouchableOpacity
-            style={[
-              styles.button,
-              styles.shadow,
-              {width: 200, height: 40, backgroundColor: '#aad326'},
-            ]}
-            onPress={this.sendChanges}>
-            <Text style={[styles.buttonText, {fontSize: 22}]}>
-              Edit Medicine
-            </Text>
-          </TouchableOpacity>
-        </View>
+  return (
+    <View style={styles.container}>
+      <Image
+        style={styles.medicineImg}
+        source={{
+          uri: props.medicineToEdit.image_url,
+        }}
+      />
+      <Text style={styles.header}>{props.medicineToEdit.drugName}</Text>
+      <DosageInput
+        setDosage={setNewDosage}
+        oldDosage={props.medicineToEdit.dosage}
+      />
+      <View style={{paddingBottom: '4%'}}>
+        <TouchableOpacity
+          style={[
+            styles.button,
+            styles.shadow,
+            {width: 200, height: 40, backgroundColor: '#aad326'},
+          ]}
+          onPress={sendChanges}>
+          <Text style={[styles.buttonText, {fontSize: 22}]}>Edit Medicine</Text>
+        </TouchableOpacity>
       </View>
-    );
-  }
-}
+    </View>
+  );
+};
 
 function DosageInput({setDosage, oldDosage}) {
   const [dosageInput, setDosageInput] = useState(String(oldDosage));
@@ -94,6 +78,8 @@ function DosageInput({setDosage, oldDosage}) {
     </View>
   );
 }
+
+export default EditMedicationModalContent;
 
 const styles = StyleSheet.create({
   container: {

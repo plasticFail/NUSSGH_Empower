@@ -58,22 +58,20 @@ const BloodGlucoseLog = (props) => {
   };
 
   return (
-    <ScrollView>
-      <View style={styles.screen}>
-        <BloodGlucoseLogBlock
-          date={date}
-          setDate={setDate}
-          bloodGlucose={bloodGlucose}
-          setBloodGlucose={setBloodGlucose}
-        />
+    <View style={styles.screen}>
+      <BloodGlucoseLogBlock
+        date={date}
+        setDate={setDate}
+        bloodGlucose={bloodGlucose}
+        setBloodGlucose={setBloodGlucose}
+      />
 
-        <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-          <Text style={styles.buttonText}>Submit</Text>
-        </TouchableOpacity>
+      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+        <Text style={styles.buttonText}>Submit</Text>
+      </TouchableOpacity>
 
-        <SuccessDialogue visible={successShow} type="Blood Glucose" />
-      </View>
-    </ScrollView>
+      <SuccessDialogue visible={successShow} type="Blood Glucose" />
+    </View>
   );
 };
 

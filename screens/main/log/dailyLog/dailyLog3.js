@@ -4,96 +4,64 @@ import MedicationLogBlock from '../../../../components/logs/medicationLogBlock';
 import {ScrollView} from 'react-native-gesture-handler';
 import FormBlock from '../../../../components/logs/formBlock';
 
-export default class MedicationLogBlok extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      date: new Date(),
-      show: false,
-      selectedMedicationList: [],
-      calendarVisible: false,
-      selectModalOpen: false,
-      editModalOpen: false,
-      medicineToEdit: {},
-      showSuccess: false,
-    };
-    this.getMedicationListFromBlock = this.getMedicationListFromBlock.bind(
-      this,
-    );
-    this.getDateSelected = this.getDateSelected.bind(this);
-    this.getFormSelection = this.getFormSelection.bind(this);
-  }
-
+const DailyLog3 = (props) => {
+  const [date, setDate] = useState(new Date());
+  const [selectedMedicationList, setSelectedMedicationList] = useState([]);
+  const [show, setShow] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
   //get form selection
-  getFormSelection(boolValue) {
+  const getFormSelection = (boolValue) => {
     console.log(boolValue);
     if (boolValue == true) {
-      this.setState({show: true});
+      setShow(true);
     } else {
-      this.setState({show: false});
+      setShow(false);
     }
-  }
+  };
 
-  //get selected list past from the log block
-  getMedicationListFromBlock(medicineList) {
-    this.setState({selectedMedicationList: medicineList});
-    console.log(this.state.selectedMedicationList);
-  }
+  const onListChange = (list) => {
+    console.log('Calling');
+    setSelectedMedicationList(list);
+    console.log(selectedMedicationList);
+  };
 
-  //get selected date
-  getDateSelected(date) {
-    this.setState({date: date});
-  }
-
-  render() {
-    const {
-      date,
-      calendarVisible,
-      selectedMedicationList,
-      selectModalOpen,
-      editModalOpen,
-      medicineToEdit,
-      show,
-    } = this.state;
-    return (
-      <View style={styles.screen}>
-        <View style={styles.textContainer}>
-          <Text style={[styles.text, {alignSelf: 'center'}]}>
-            Step 3: Medication Log
-          </Text>
-        </View>
-        <Image
-          style={styles.progress}
-          resizeMode="contain"
-          source={require('../../../../resources/images/progress3.png')}
-        />
-        <View style={[styles.container, styles.shadow]}>
-          <FormBlock
-            question={'Did you take any medication today?'}
-            getFormSelection={this.getFormSelection}
-            selectNo={false}
-          />
-        </View>
-        {show == true && (
-          <ScrollView
-            style={{
-              width: Dimensions.get('window').width - 40,
-            }}>
-            <MedicationLogBlock
-              calendarVisible={calendarVisible}
-              selectedMedicationList={selectedMedicationList}
-              selectModalOpen={selectModalOpen}
-              editModalOpen={editModalOpen}
-              medicineToEdit={medicineToEdit}
-              getMedicationList={this.getMedicationListFromBlock}
-              getDateSelected={this.getDateSelected}
-            />
-          </ScrollView>
-        )}
+  return (
+    <View style={styles.screen}>
+      <View style={styles.textContainer}>
+        <Text style={[styles.text, {alignSelf: 'center'}]}>
+          Step 3: Medication Log
+        </Text>
       </View>
-    );
-  }
-}
+      <Image
+        style={styles.progress}
+        resizeMode="contain"
+        source={require('../../../../resources/images/progress3.png')}
+      />
+      <View style={[styles.container, styles.shadow]}>
+        <FormBlock
+          question={'Did you take any medication today?'}
+          getFormSelection={getFormSelection}
+          selectNo={false}
+        />
+      </View>
+      {show == true && (
+        <ScrollView
+          style={{
+            width: Dimensions.get('window').width - 20,
+          }}>
+          <MedicationLogBlock
+            date={date}
+            setDate={setDate}
+            selectedMedicationList={selectedMedicationList}
+            onListChange={onListChange}
+          />
+        </ScrollView>
+      )}
+    </View>
+  );
+};
+
+export default DailyLog3;
 
 const styles = StyleSheet.create({
   screen: {

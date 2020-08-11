@@ -15,56 +15,32 @@ import {storeMedications} from '../../../../netcalls/requestsLog';
 
 import {FlatList} from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-community/async-storage';
+import {checkDosage} from '../../../../commonFunctions/logFunctions';
 
 Entypo.loadFont();
 
-export default class SelectMedicationModalContent extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      query: '',
-      selectedMedicineName: '',
-      searchMedicineResults: [],
-      dosage: '',
-      loading: false,
-      noResult: false,
-      selectedDrugImgURL: '',
-    };
-    this.timeout = setTimeout(() => {}, 0);
-    this.searchMedication = this.searchMedication.bind(this);
-    this.callMedicationAPI = this.callMedicationAPI.bind(this);
-    this.selectFromList = this.selectFromList.bind(this);
-    this.setQuery = this.setQuery.bind(this);
-    this.setResults = this.setResults.bind(this);
-    this.setDosage = this.setDosage.bind(this);
-    this.submit = this.submit.bind(this);
-    this.checkRepeat = this.checkRepeat.bind(this);
+const SelectMedicationModalContent = (props) => {
+  const [query, setQuery] = useState('');
+  const [selectedMedicineName, setSelectedMedicineName] = useState('');
+  const [selectedMedicine, setSelectedMedicine] = useState([]);
+  const [searchMedicationResults, setSearchMedicationResult] = useState([]);
+  const [dosage, setDosage] = useState('');
 
-    //need get medication first*
-    storeMedications().then((data) => {
-      AsyncStorage.setItem('medications', JSON.stringify(data.medications));
-    });
-  }
-
-  searchMedication(searchKey) {
+  const searchMedication = (searchKey) => {
     if (searchKey === '') {
-      clearTimeout(this.timeout);
-      this.setState({loading: false});
-      this.setState({query: '', selectedMedicineName: ''});
-      this.setState({searchMedicineResults: []});
+      //set seleted medication name : '
+      setSearchMedicationResult([]);
     } else {
-      this.setState({loading: true});
       //set for 1 second
       setTimeout(() => {
-        this.setState({loading: false});
         //data
-        this.callMedicationAPI(searchKey);
+        returnSearchResult(searchKey);
       }, 500);
     }
-  }
+  };
 
   //search
-  callMedicationAPI(searchKey) {
+  const returnSearchResult = (searchKey) => {
     getMedications();
     let arr = [];
     AsyncStorage.getItem('medications').then((response) => {
@@ -87,125 +63,93 @@ export default class SelectMedicationModalContent extends React.Component {
           return medication;
         }
       });
-
-      this.setState({searchMedicineResults: result});
+      setSearchMedicationResult(result);
     });
-  }
+  };
 
-  setQuery() {
-    this.setState({query: ''});
-  }
-
-  setResults() {
-    this.setState({searchMedicineResults: []});
-  }
-
-  selectFromList(item) {
+  const selectFromList = (item) => {
     console.log('Selected Item: ' + item);
-    this.setState({query: item.drug_name});
-    this.setState({selectedMedicineName: item.drug_name});
-    this.setState({searchMedicineResults: []});
-    this.setState({selectedDrugImgURL: item.image_url});
-  }
+    setQuery(item.drug_name);
+    setSelectedMedicineName(item.drug_name);
+    setSearchMedicationResult([]);
+    setSelectedMedicine(item);
+  };
 
-  setDosage(dosage) {
-    console.log('Setting dosage: ' + dosage);
-    this.setState({dosage: dosage});
-  }
-
-  submit() {
-    if (this.state.selectedMedicineName.length == 0) {
-      Alert.alert('Error', 'Please input a valid medication', [
-        {text: 'Got It'},
-      ]);
-    }
-    if (
-      this.state.selectedMedicineName.length != 0 &&
-      this.state.dosage.length != 0 &&
-      !this.state.dosage.includes('.') &&
-      !this.state.dosage.includes('-') &&
-      !this.state.dosage.includes(',') &&
-      Number(this.state.dosage) <= 5 &&
-      Number(this.state.dosage) > 0
-    ) {
-      var check = this.checkRepeat(this.state.selectedMedicineName);
+  const submit = () => {
+    if (checkDosage(dosage) && selectedMedicineName.length != 0) {
       //if repeated
-      if (check) {
+      if (checkRepeat(selectedMedicine.drug_name)) {
         console.log('Duplicate detected');
         Alert.alert('Error', 'Medication added previously', [{text: 'Got It'}]);
       } else {
         console.log(
           'Adding Medicine: ' +
-            this.state.selectedMedicineName +
+            selectedMedicine.drug_name +
             ' Dosage: ' +
-            this.state.dosage,
+            dosage,
         );
         //use to send the selected medicine back to 'parent'
-        this.props.setMedicine({
-          drugName: this.state.selectedMedicineName,
+        props.setMedicine({
+          drugName: selectedMedicine.drug_name,
           unit: 'unit',
-          dosage: Number(this.state.dosage),
+          dosage: Number(dosage),
           recordDate: '',
-          image_url: this.state.selectedDrugImgURL,
+          image_url: selectedMedicine.image_url,
         });
+        setQuery('');
       }
-    } else {
-      Alert.alert(
-        'Invalid',
-        'Please make sure all fields are filled correctly. Medication from database selection, dosage in full numbers and at most 5',
-        [{text: 'Got It'}],
-      );
     }
-  }
 
-  checkRepeat(medicationName) {
-    var arr = this.props.selectedMedicationList;
+    if (selectedMedicineName.length == 0) {
+      Alert.alert('Error', 'Please select a medication from the database', [
+        {text: 'Got It'},
+      ]);
+    }
+  };
+
+  const checkRepeat = (medicationName) => {
+    var arr = props.selectedMedicationList;
+    console.log('Checking');
+    console.log(arr);
     for (var x of arr) {
-      if (x.name == medicationName) {
+      console.log(x.drug_name);
+      if (x.drugName === medicationName) {
         return true;
       }
     }
     return false;
-  }
+  };
 
-  render() {
-    const {query, loading, searchMedicineResults} = this.state;
-    return (
-      <View style={styles.container}>
-        <SearchMedicine
-          searchMedication={this.searchMedication}
-          query={query}
-          setQuery={this.setQuery}
-          setMedication={this.setMedication}
-          setResults={this.setResults}
+  return (
+    <View style={styles.container}>
+      <SearchMedicine
+        searchMedication={searchMedication}
+        query={query}
+        setQuery={setQuery}
+        setSelectedMedicineName={setSelectedMedicineName}
+      />
+      {searchMedicationResults.length > 0 && (
+        <SearchMedicineResults
+          searchMedicineResults={searchMedicationResults}
+          selectFromList={selectFromList}
         />
-        {searchMedicineResults.length > 0 && (
-          <SearchMedicineResults
-            searchMedicineResults={searchMedicineResults}
-            selectFromList={this.selectFromList}
-          />
-        )}
-        {loading && <ActivityIndicator animating={loading} />}
+      )}
+      <DosageInput setDosage={setDosage} />
 
-        <DosageInput setDosage={this.setDosage} />
-
-        <View style={{paddingBottom: '4%'}}>
-          <TouchableOpacity
-            style={[
-              styles.button,
-              styles.shadow,
-              {width: 200, height: 40, backgroundColor: '#aad326'},
-            ]}
-            onPress={this.submit}>
-            <Text style={[styles.buttonText, {fontSize: 22}]}>
-              Add Medicine
-            </Text>
-          </TouchableOpacity>
-        </View>
+      <View style={{paddingBottom: '4%'}}>
+        <TouchableOpacity
+          style={[
+            styles.button,
+            styles.shadow,
+            {width: 200, height: 40, backgroundColor: '#aad326'},
+          ]}
+          onPress={submit}>
+          <Text style={[styles.buttonText, {fontSize: 22}]}>Add Medicine</Text>
+        </TouchableOpacity>
       </View>
-    );
-  }
-}
+    </View>
+  );
+};
 
 function DosageInput({setDosage}) {
   return (
@@ -264,7 +208,12 @@ function SearchMedicineResults({searchMedicineResults, selectFromList}) {
   );
 }
 
-function SearchMedicine({searchMedication, query, setQuery, setResults}) {
+function SearchMedicine({
+  searchMedication,
+  query,
+  setQuery,
+  setSelectedMedicineName,
+}) {
   return (
     <View style={styles.componentContainer}>
       <Text style={styles.inputHeader}>Name:</Text>
@@ -274,9 +223,8 @@ function SearchMedicine({searchMedication, query, setQuery, setResults}) {
           value={query}
           placeholderTextColor="#a1a3a0"
           onChangeText={(text) => {
-            setQuery();
-            setResults();
-            searchMedication(text);
+            setQuery('');
+            setSelectedMedicineName('');
           }}
         />
       ) : (
@@ -393,3 +341,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
+
+export default SelectMedicationModalContent;

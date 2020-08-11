@@ -6,6 +6,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {medicationAddLogRequest} from '../../../../netcalls/requestsLog';
 import SuccessDialogue from '../../../../components/successDialogue';
 import MedicationLogBlock from '../../../../components/logs/medicationLogBlock';
+import {checkTime} from '../../../../commonFunctions/logFunctions';
 
 Entypo.loadFont();
 
@@ -14,7 +15,32 @@ const MedicationLog = (props) => {
   const [selectedMedicationList, setSelectedMedicationList] = useState([]);
   const [showSuccess, setShowSuccess] = useState(false);
 
-  console.log('--In Medication Logs' + selectedMedicationList);
+  console.log('--In Medication Log');
+
+  const onListChange = (list) => {
+    setSelectedMedicationList([...list]);
+  };
+
+  const handleSubmit = () => {
+    if (checkTime(date)) {
+      for (var x of selectedMedicationList) {
+        x.recordDate = Moment(date).format('DD/MM/YYYY HH:mm:ss');
+      }
+      selectedMedicationList.map(function (item) {
+        delete item.image_url;
+        return item;
+      });
+      medicationAddLogRequest(selectedMedicationList).then((value) => {
+        if (value == true) {
+          setShowSuccess(true);
+        } else {
+          Alert.alert('Error', 'Unexpected Error Occured', [
+            {text: 'Try again later'},
+          ]);
+        }
+      });
+    }
+  };
 
   return (
     <ScrollView style={{backgroundColor: 'white'}}>
@@ -23,15 +49,12 @@ const MedicationLog = (props) => {
           date={date}
           setDate={setDate}
           selectedMedicationList={selectedMedicationList}
-          setSelectedMedicationList={setSelectedMedicationList}
+          onListChange={onListChange}
         />
         {selectedMedicationList.length != 0 && (
           <TouchableOpacity
-            style={[
-              styles.button,
-              styles.shadow,
-              {backgroundColor: '#aad326'},
-            ]}>
+            style={[styles.button, styles.shadow, {backgroundColor: '#aad326'}]}
+            onPress={handleSubmit}>
             <Text style={styles.buttonText}>Submit</Text>
           </TouchableOpacity>
         )}

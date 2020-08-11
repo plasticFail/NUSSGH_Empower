@@ -14,6 +14,7 @@ import {weightAddLogRequest} from '../../../netcalls/requestsLog';
 //components
 import SuccessDialogue from '../../../components/successDialogue';
 import WeightLogBlock from '../../../components/logs/weightLogBlock';
+import {checkTime} from '../../../commonFunctions/logFunctions';
 
 const WeightLog = (props) => {
   const [date, setDate] = useState(new Date());
@@ -23,7 +24,7 @@ const WeightLog = (props) => {
   const handleSubmit = () => {
     //check date valid and weight format (1 dp)
     console.log('---' + Number(weight));
-    if (checkTime() && checkInputFormat(weight)) {
+    if (checkTime(date) && checkInputFormat(weight)) {
       let formatDate = Moment(date).format('DD/MM/YYYY HH:mm:ss');
       weightAddLogRequest(Number(weight), formatDate).then((value) => {
         if (value === true) {
@@ -35,28 +36,6 @@ const WeightLog = (props) => {
         }
       });
     }
-  };
-
-  const checkTime = () => {
-    let format = 'hh:mm';
-    let timeNow = Moment(new Date(), format);
-    let timeInput = Moment(date, format);
-    if (date.toDateString() !== new Date().toDateString()) {
-      Alert.alert(
-        'Error',
-        'Invalid date. Make sure date selected is not after today. ',
-        [{text: 'Got It'}],
-      );
-      return false;
-    } else if (timeInput.isAfter(timeNow)) {
-      Alert.alert(
-        'Error',
-        'Invalid date. Make sure time selected is not after current time. ',
-        [{text: 'Got It'}],
-      );
-      return false;
-    }
-    return true;
   };
 
   const checkInputFormat = () => {
@@ -79,21 +58,19 @@ const WeightLog = (props) => {
   };
 
   return (
-    <ScrollView>
-      <View style={styles.screen}>
-        <WeightLogBlock
-          date={date}
-          setDate={setDate}
-          weight={weight}
-          setWeight={setWeight}
-        />
+    <View style={styles.screen}>
+      <WeightLogBlock
+        date={date}
+        setDate={setDate}
+        weight={weight}
+        setWeight={setWeight}
+      />
 
-        <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-          <Text style={styles.buttonText}>Submit</Text>
-        </TouchableOpacity>
-        <SuccessDialogue visible={successShow} type="Weight" />
-      </View>
-    </ScrollView>
+      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+        <Text style={styles.buttonText}>Submit</Text>
+      </TouchableOpacity>
+      <SuccessDialogue visible={successShow} type="Weight" />
+    </View>
   );
 };
 
@@ -104,6 +81,7 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     padding: 20,
+    backgroundColor: 'white',
   },
   button: {
     marginTop: '9%',
