@@ -18,17 +18,21 @@ export default class EditMedicationModalContent extends React.Component {
       newMedicineDosage: this.props.medicineToEdit.dosage,
       image: this.props.medicineToEdit.image_url,
     };
+    console.log('-----In Edit Medication' + this.props.medicineToEdit.drugName);
     this.setNewDosage = this.setNewDosage.bind(this);
     this.sendChanges = this.sendChanges.bind(this);
   }
 
   setNewDosage(newDosage) {
+    if (newDosage == '') {
+      newDosage = oldMedicineDosage;
+    }
     console.log('Setting new dosage ' + newDosage);
     this.setState({newMedicineDosage: newDosage});
   }
 
   sendChanges() {
-    this.props.editMedicine(
+    this.props.editedMedicine(
       this.state.editMedicineName,
       this.state.newMedicineDosage,
     );
@@ -68,7 +72,7 @@ export default class EditMedicationModalContent extends React.Component {
 }
 
 function DosageInput({setDosage, oldDosage}) {
-  const [dosageInput, setDosageInput] = useState(oldDosage.toString());
+  const [dosageInput, setDosageInput] = useState(String(oldDosage));
   return (
     <View style={styles.componentContainer}>
       <Text style={styles.inputHeader}>Dosage: </Text>

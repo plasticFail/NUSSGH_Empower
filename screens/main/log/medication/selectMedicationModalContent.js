@@ -40,6 +40,7 @@ export default class SelectMedicationModalContent extends React.Component {
     this.submit = this.submit.bind(this);
     this.checkRepeat = this.checkRepeat.bind(this);
 
+    //need get medication first*
     storeMedications().then((data) => {
       AsyncStorage.setItem('medications', JSON.stringify(data.medications));
     });
