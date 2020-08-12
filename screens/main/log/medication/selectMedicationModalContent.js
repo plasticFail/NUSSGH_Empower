@@ -40,13 +40,7 @@ const SelectMedicationModalContent = (props) => {
       for (var x of response.medications) {
         arr.push(x);
       }
-      if (searchKey.length == 0) {
-        console.log('hi2');
-        setSearchMedicationResult([]);
-        return;
-      }
       if (searchKey.length >= 1) {
-        console.log('hihi1');
         result = arr.filter((medication) => {
           var medicine = medication.drug_name
             .replace(/\s{1,2}\[|\]/g, ' ')
