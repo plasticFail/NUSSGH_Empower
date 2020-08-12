@@ -5,7 +5,6 @@ import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
 import MoreRootScreen from '../more/moreRoot';
 import AccountDetailScreen from '../more/accountDetails';
 import MedicationScreen from '../more/medications';
-import HeaderIcon from '../../components/headerBtnIcon';
 import HypocorrectionFood from '../more/hypocorrectionFood';
 import AppointmentScreen from '../more/appointments';
 import ViewMore from '../../components/hypofood/viewMore';
