@@ -29,6 +29,10 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     paddingBottom: '2%',
   },
+  inputHeader: {
+    fontSize: 18,
+    fontWeight: '500',
+  },
 });
 
 export default WeightLogBlock;

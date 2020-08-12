@@ -30,6 +30,7 @@ const MedicationLog = (props) => {
         delete item.image_url;
         return item;
       });
+      console.log(selectedMedicationList);
       medicationAddLogRequest(selectedMedicationList).then((value) => {
         if (value == true) {
           setShowSuccess(true);
