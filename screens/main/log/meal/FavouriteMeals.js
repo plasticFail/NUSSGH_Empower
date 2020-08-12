@@ -1,11 +1,10 @@
 import React from 'react';
 import {View, StyleSheet, ActivityIndicator, Alert} from 'react-native';
 // Functions
-import {getToken} from "../../../../storage/asyncStorageFunctions";
+import {requestUnfavouriteMeal, requestFavouriteMealList} from "../../../../netcalls/mealEndpoints/requestMealLog";
 // Others
 import MealList from "../../../../components/logs/meal/MealList";
 import Searchbar from "../../../../components/Searchbar";
-import {favouriteMealListEndpoint, unfavouriteMealEndpoint} from "../../../../netcalls/urls";
 
 // The screen that contains a list of the user's favourite meals.
 export default class FavouriteMealScreen extends React.Component {
@@ -20,30 +19,22 @@ export default class FavouriteMealScreen extends React.Component {
 
     componentDidMount() {
         // Get user's favourite meal.
-        getToken().then(token => {
-            fetch(favouriteMealListEndpoint, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: "Bearer " + token
-                }
-            }).then(resp => resp.json()).then(data => {
-                // Create this temporary observer pattern to handle unfavouriting.
-                const d = data.data.map(meal => {
-                    meal['unfavourite'] = () => {
-                        const mealsAfterUnfavouriting = this.state.favouriteMeals.filter(m => m !== meal);
-                        this.setState({
-                            favouriteMeals: mealsAfterUnfavouriting
-                        })
-                    };
-                    return meal;
-                });
-                this.setState({
-                    isLoading: false,
-                    favouriteMeals: d
-                })
+        requestFavouriteMealList().then(data => {
+            // Create this temporary observer pattern to handle unfavouriting.
+            const d = data.data.map(meal => {
+                meal['unfavourite'] = () => {
+                    const mealsAfterUnfavouriting = this.state.favouriteMeals.filter(m => m !== meal);
+                    this.setState({
+                        favouriteMeals: mealsAfterUnfavouriting
+                    })
+                };
+                return meal;
+            });
+            this.setState({
+                isLoading: false,
+                favouriteMeals: d
             })
-        })
+        }).catch(err => alert(err.message));
     }
 
     navigateToCreateMealLogPage = (selectedMeal) => {
@@ -66,22 +57,12 @@ export default class FavouriteMealScreen extends React.Component {
     }
 
     handleUnfavouriteMeal = (meal) => {
-        getToken().then(token => {
-            fetch(unfavouriteMealEndpoint, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: "Bearer " + token
-                },
-                body: JSON.stringify({
-                    mealName: meal.mealName
-                })
-            }).then(resp => resp.json()).then(data => {
+        requestUnfavouriteMeal(meal.mealName)
+            .then(data => {
                 // unfavourite the item from local state.
                 meal.unfavourite();
-            }).catch(err => Alert.alert("Error", err.message,
-                [ { text: 'Ok' }]));
-        })
+            })
+            .catch(err => Alert.alert("Error", err.message, [ { text: 'Ok' }]));
     }
 
     render() {

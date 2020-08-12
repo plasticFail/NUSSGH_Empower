@@ -1,4 +1,4 @@
-import {favouriteMealListEndpoint, mealListEndpoint} from "../urls";
+import {favouriteMealListEndpoint, mealListEndpoint, unfavouriteMealEndpoint} from "../urls";
 import {getToken} from "../../storage/asyncStorageFunctions";
 
 const requestFavouriteMealList = async () => {
@@ -27,4 +27,19 @@ const requestMealLogList = async () => {
     return responseJson;
 }
 
-export {requestFavouriteMealList, requestMealLogList};
+const requestUnfavouriteMeal = async (mealName) => {
+    let response = await fetch(unfavouriteMealEndpoint, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + (await getToken())
+        },
+        body: JSON.stringify({
+            mealName
+        })
+    });
+    let responseJson = await response.json();
+    return responseJson;
+}
+
+export {requestFavouriteMealList, requestMealLogList, requestUnfavouriteMeal};
