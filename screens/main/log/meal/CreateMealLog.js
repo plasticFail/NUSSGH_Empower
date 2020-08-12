@@ -64,6 +64,7 @@ export default class CreateMealLog extends React.Component {
     }
 
     componentDidMount() {
+        console.log(this.props.route.params);
         if (this.props.route.params?.meal) {
             const {meal} = this.props.route.params;
             this.setState({

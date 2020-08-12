@@ -52,7 +52,7 @@ export default class DailyLogForFood extends React.Component {
             }])
             return;
         }
-        this.props.navigation.navigate('DailyLog3', {
+        this.props.navigation.navigate('DailyLog3', {...this.props.route.params,
             dailyLog2Cache: {
                 state: serializeState({...this.state})
             }
@@ -60,8 +60,7 @@ export default class DailyLogForFood extends React.Component {
     }
 
     goBack = () => {
-        console.log(this.props.route.params);
-        this.props.navigation.navigate('DailyLog', {
+        this.props.navigation.navigate('DailyLog', {...this.props.route.params,
             dailyLog2Cache: {
                 state: serializeState({...this.state})
             }
@@ -148,7 +147,8 @@ function deserializeState(serializedState) {
 
 const styles = StyleSheet.create({
     root: {
-        minHeight: '100%'
+        minHeight: '100%',
+        backgroundColor: '#fff'
     },
     headerTextContainer: {
         width: '100%',
