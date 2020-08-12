@@ -108,7 +108,7 @@ class SelectModal extends React.Component {
         Animated.timing(this.state.slideAnimation, {
             toValue: 1,
             duration: 200, // 200ms slide up animation.
-            useNativeDriver: false
+            useNativeDriver: true
         }).start();
     }
 
@@ -120,7 +120,7 @@ class SelectModal extends React.Component {
         Animated.timing(this.state.slideAnimation, {
             toValue: 0,
             duration: 200, // 200ms slide down animation.
-            useNativeDriver: false
+            useNativeDriver: true
         }).start(() => callback(arg));
     }
 
