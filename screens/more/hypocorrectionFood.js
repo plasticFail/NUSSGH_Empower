@@ -1,28 +1,38 @@
-import React from 'react';
-import {View, StyleSheet, Text, ScrollView} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {View, StyleSheet, SectionList, Text} from 'react-native';
+import Carousel from '../../components/hypofood/carousel';
+import SampleData from './sampleHypoList.json';
+import {FlatList} from 'react-native-gesture-handler';
 
 const HypocorrectionFood = (props) => {
+  /*
+  const [categoryList, setCategoryList] = useState([]);
+  console.log(categoryList);
+  //init
+  useEffect(() => {
+    let uniqueList = new Set(SampleData.data.map((food) => food.category));
+    setCategoryList([...uniqueList]);
+  }, []);
+  */
+
   return (
     <View style={styles.screen}>
-      <ScrollView horizontal contentContainerStyle={styles.itemRow}>
-        <Text>Child 1</Text>
-        <Text>Child 2</Text>
-        <Text>Child 3</Text>
-      </ScrollView>
+      <FlatList
+        data={SampleData.data}
+        renderItem={({item}) => (
+          <>
+            <Text>{item.category}</Text>
+            <Carousel items={item.foodItems} itemsPerInterval={3} />
+          </>
+        )}
+      />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   screen: {
-    padding: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  itemRow: {
-    display: 'flex',
-    justifyContent: 'space-around',
-    padding: '2%',
+    width: '100%',
   },
 });
 
