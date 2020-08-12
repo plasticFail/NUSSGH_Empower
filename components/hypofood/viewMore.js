@@ -4,8 +4,6 @@ import {View, StyleSheet, Text, Image} from 'react-native';
 const ViewMore = (props) => {
   const {category} = props;
 
-  //use effect
-
   return (
     <View style={styles.screen}>
       <Text>hihi</Text>

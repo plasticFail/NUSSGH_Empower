@@ -5,16 +5,18 @@ import {useNavigation} from '@react-navigation/native';
 
 const Carousel = (props) => {
   //basic carousel set up
-  const {items, category} = props;
+  const {category} = props;
   const itemsPerInterval =
     props.itemsPerInterval === undefined ? 1 : props.itemsPerInterval;
   const [intervals, setIntervals] = useState(1);
   const [width, setWidth] = useState(0);
+  const [items, setItems] = useState(props.items);
 
   const navigation = useNavigation();
 
   const init = (width) => {
     const totalItems = items.length;
+    console.log(totalItems);
     // initialise width
     setWidth(width);
     // initialise total intervals
@@ -25,11 +27,12 @@ const Carousel = (props) => {
   const randomiseBool = props.random === undefined ? false : props.random;
   const [randomBool, setRandomBool] = useState(randomiseBool);
 
+  //show only 5 random items
   useEffect(() => {
     if (randomBool) {
       shuffleArray(items);
       if (items.length > 5) {
-        items.slice(1, 6);
+        setItems(items.slice(1, 6));
       }
     }
   }, []);
@@ -99,5 +102,6 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
     color: '#3D5E50',
     margin: '3%',
+    fontSize: 17,
   },
 });
