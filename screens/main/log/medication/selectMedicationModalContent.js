@@ -9,12 +9,9 @@ import {
   Alert,
   TouchableOpacity,
 } from 'react-native';
-import Entypo from 'react-native-vector-icons/Entypo';
-import {getMedications} from '../../../../storage/asyncStorageFunctions';
-import {storeMedications} from '../../../../netcalls/requestsLog';
-
 import {FlatList} from 'react-native-gesture-handler';
-import AsyncStorage from '@react-native-community/async-storage';
+import Entypo from 'react-native-vector-icons/Entypo';
+import {storeMedications} from '../../../../netcalls/requestsLog';
 import {checkDosage} from '../../../../commonFunctions/logFunctions';
 
 Entypo.loadFont();
@@ -41,10 +38,9 @@ const SelectMedicationModalContent = (props) => {
 
   //search
   const returnSearchResult = (searchKey) => {
-    getMedications();
     let arr = [];
-    AsyncStorage.getItem('medications').then((response) => {
-      for (var x of JSON.parse(response)) {
+    storeMedications().then((response) => {
+      for (var x of response.medications) {
         arr.push(x);
       }
 
