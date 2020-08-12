@@ -13,8 +13,10 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import PasswordStrengthMeter from '../../components/passwordStrengthMeter';
+import {resetPassword} from '../../netcalls/requestsPasswordReset';
 
 const ResetPasswordScreen = (props) => {
+  const {token} = props.route.params;
   const [pass1, setPass1] = useState('');
   const [pass2, setPass2] = useState('');
   const [strong, setStrong] = useState(false);
@@ -32,12 +34,21 @@ const ResetPasswordScreen = (props) => {
   const checkPassword = () => {
     if (strong) {
       if (pass1 == pass2) {
-        Alert.alert(
-          'Success',
-          'Password changed successfully',
-          [{text: 'Got It', onPress: () => props.navigation.navigate('Login')}],
-          {cancelable: false},
-        );
+        resetPassword(pass1, token).then((response) => {
+          if (response) {
+            Alert.alert(
+              'Success',
+              'Password changed successfully',
+              [
+                {
+                  text: 'Got It',
+                  onPress: () => props.navigation.navigate('Login'),
+                },
+              ],
+              {cancelable: false},
+            );
+          }
+        });
       } else {
         Alert.alert('Error', 'Passwords does not match', [{text: 'Got It'}]);
       }

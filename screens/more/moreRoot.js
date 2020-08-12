@@ -4,10 +4,9 @@ import {View, StyleSheet, FlatList} from 'react-native';
 import {connect} from 'react-redux';
 //functions
 import {mapStateToProps, mapDispatchToProps} from '../../redux/reduxMapping';
-import {storeToken} from '../../storage/asyncStorageFunctions'
+import {storeToken} from '../../storage/asyncStorageFunctions';
 //components
 import MoreFunctionBlock from '../../components/moreFunctionBlock';
-
 
 const MoreRootScreen = (props) => {
   const clickHandler = (id) => {
@@ -18,7 +17,16 @@ const MoreRootScreen = (props) => {
       case 2:
         props.navigation.navigate('Medication');
         break;
+
       case 3:
+        props.navigation.navigate('Appointments');
+        break;
+
+      case 4:
+        props.navigation.navigate('HypocorrectionFood');
+        break;
+
+      case 5:
         storeToken('');
         props.logout();
         break;
@@ -28,7 +36,9 @@ const MoreRootScreen = (props) => {
   const functionList = [
     {id: 1, value: 'View Account Details'},
     {id: 2, value: 'View My Medications'},
-    {id: 3, value: 'Logout'},
+    {id: 3, value: 'View My Appointments'},
+    {id: 4, value: 'View Hypo-correction Food'},
+    {id: 5, value: 'Logout'},
   ];
 
   return (

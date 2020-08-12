@@ -1,4 +1,4 @@
-import {requestOTP} from './urls';
+import {requestOTP, verifyOTP, postNewPassword} from './urls';
 import {Alert} from 'react-native';
 
 const sendOTPRequest = async (phoneNumber) => {
@@ -10,35 +10,55 @@ const sendOTPRequest = async (phoneNumber) => {
         'Content-type': 'application/json',
       },
       body: JSON.stringify({
-        phoneNumber: phoneNumber,
+        phoneNumber: String(phoneNumber),
       }),
     });
     let responseJson = await response.json();
-    msg = JSON.parse(responseJson).message;
-    Alert.alert(
-      'Success',
-      'OTP has been sent to you via SMS',
-      [
-        {
-          text: 'Got It',
-          onPress: () => navigation.navigate('InputOTP'),
-        },
-      ],
-      {cancelable: false},
-    );
+    return responseJson;
   } catch (error) {
-    Alert.alert(
-      'Error',
-      'Phone number not registered',
-      [
-        {
-          text: 'Got It',
-        },
-      ],
-      {cancelable: false},
-    );
+    return 'Unexpected Network Error';
+  }
+};
+
+const verifyOTPRequest = async (phoneNumber, otp) => {
+  try {
+    let response = await fetch(verifyOTP, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        phoneNumber: String(phoneNumber),
+        code: otp,
+      }),
+    });
+    let responseJson = await response.json();
+    return responseJson;
+  } catch (error) {
+    return 'Unexpected Network Error Occured.';
+  }
+};
+
+const resetPassword = async (password, token) => {
+  try {
+    let response = await fetch(postNewPassword, {
+      method: 'POST',
+      headers: {
+        Authorization: 'Bearer ' + token,
+        Accept: 'application/json',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        newPassword: password,
+      }),
+    });
+    let responseJson = await response.json();
+    console.log(responseJson);
+    return true;
+  } catch (error) {
     return false;
   }
 };
 
-export {sendOTPRequest};
+export {sendOTPRequest, verifyOTPRequest, resetPassword};

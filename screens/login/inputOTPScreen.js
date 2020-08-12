@@ -14,16 +14,24 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import {ScrollView} from 'react-native-gesture-handler';
 import CountdownTimer from '../../components/countdownTimer';
+import {
+  verifyOTPRequest,
+  sendOTPRequest,
+} from '../../netcalls/requestsPasswordReset';
 
 const InputOTPScreen = (props) => {
+  const {phoneNumber} = props.route.params;
+  console.log(phoneNumber);
   Icon.loadFont();
   const [otp, setOtp] = useState('');
-  const [disabled, setDisable] = useState(false);
-  const [countdownVisible, setCountdownVisible] = useState(false);
+  const [disabled, setDisable] = useState(true);
+  const [countdownVisible, setCountdownVisible] = useState(true);
+  const [countdownTime, setCountdownTime] = useState(120);
 
   const handleTimout = () => {
-    setCountdownVisible(false);
+    setCountdownVisible(true);
     setDisable(false);
+    setCountdownTime(0);
   };
 
   const handleSubmit = () => {
@@ -36,19 +44,28 @@ const InputOTPScreen = (props) => {
       !otp.includes('-') &&
       !otp.includes('.')
     ) {
-      props.navigation.navigate('ResetPasswordScreen');
-    } else {
-      Alert.alert('Error', 'Invalid OTP', [{text: 'Got It'}]);
+      verifyOTPRequest(phoneNumber, otp).then((response) => {
+        if (response.message != null) {
+          Alert.alert('Error', response.message, [{text: 'Got It'}]);
+        } else {
+          props.navigation.navigate('ResetPasswordScreen', {
+            token: response.token,
+          });
+        }
+      });
     }
-    //handle wrong otp here.
   };
 
   const resendOTP = () => {
-    setCountdownVisible(true);
+    console.log('here');
     setDisable(true);
-    Alert.alert('Success', 'Please check if your SMS for new OTP', [
-      {text: 'Got It'},
-    ]);
+    setCountdownVisible(true);
+    sendOTPRequest(phoneNumber).then(() => {
+      setCountdownTime(120);
+      Alert.alert('Success', 'Please check if your SMS for new OTP', [
+        {text: 'Got It'},
+      ]);
+    });
   };
 
   return (
@@ -57,13 +74,17 @@ const InputOTPScreen = (props) => {
       behavior={Platform.OS === 'ios' ? 'padding' : null}>
       <SafeAreaView style={{flex: 1}}>
         <View style={styles.inner}>
-          <Icon name="cellphone-message" size={300} />
+          <Icon name="cellphone-message" size={260} />
           <Text style={styles.text}>
             Enter the 6-digit One-Time Password (OTP) sent to your mobile number
             (**** 9876).
           </Text>
           <View style={[styles.formContainer, styles.shadow]}>
-            {countdownVisible && <CountdownTimer handleTimout={handleTimout} />}
+            <CountdownTimer
+              handleTimout={handleTimout}
+              countdownTime={countdownTime}
+              key={countdownTime}
+            />
             <OTPInputView
               pinCount={6}
               style={{
@@ -86,7 +107,7 @@ const InputOTPScreen = (props) => {
                 onPress={handleSubmit}>
                 <Text style={styles.buttonText}>Submit</Text>
               </TouchableOpacity>
-              {countdownVisible ? (
+              {disabled ? (
                 <TouchableOpacity
                   disabled={disabled}
                   style={[styles.buttonStyle, {backgroundColor: '#cdd4e4'}]}

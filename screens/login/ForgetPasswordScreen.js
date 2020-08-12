@@ -22,7 +22,33 @@ function ForgetPasswordScreen({navigation}) {
     if (phoneNumber != '' && phoneNumber.length == 8) {
       var first = phoneNumber.substring(0, 1);
       if (first == '8' || first == '9') {
-        sendOTPRequest(phoneNumber);
+        sendOTPRequest(phoneNumber).then((response) => {
+          if (response.message === 'OTP sent.') {
+            Alert.alert(
+              'Success',
+              'OTP has been sent to you via SMS',
+              [
+                {
+                  text: 'Got It',
+                  onPress: () =>
+                    navigation.navigate('InputOTP', {phoneNumber: phoneNumber}),
+                },
+              ],
+              {cancelable: false},
+            );
+          } else {
+            Alert.alert(
+              'Error',
+              'Phone number is not registered.',
+              [
+                {
+                  text: 'Got It',
+                },
+              ],
+              {cancelable: false},
+            );
+          }
+        });
       } else {
         Alert.alert('Invalid', 'Please input a valid phone number', [
           {text: 'Got It'},
