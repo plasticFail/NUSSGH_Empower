@@ -27,6 +27,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#EEF3BD',
     paddingStart: 20, //position placeholder text
     marginVertical: 10,
+    paddingBottom: '2%',
   },
 });
 
