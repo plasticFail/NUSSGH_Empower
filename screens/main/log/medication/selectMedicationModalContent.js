@@ -24,7 +24,7 @@ const SelectMedicationModalContent = (props) => {
   const [dosage, setDosage] = useState('');
 
   const searchMedication = (searchKey) => {
-    if (searchKey.length == 0) {
+    if (searchKey.length === 0) {
       //set seleted medication name : '
       setSearchMedicationResult([]);
     } else {
