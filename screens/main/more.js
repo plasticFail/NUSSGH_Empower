@@ -5,7 +5,7 @@ import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import MoreRootScreen from '../more/moreRoot';
 import AccountDetailScreen from '../more/accountDetails';
 import MedicationScreen from '../more/medications';
-import HeaderIcon from '../../components/headerBtnIcon';
+import HeaderIcon from '../../components/common/headerBtnIcon';
 
 const Stack = createStackNavigator();
 
