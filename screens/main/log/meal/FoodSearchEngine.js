@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 // Components
 import Searchbar from '../../../../components/Searchbar';
-import FoodModalContent from "./FoodModalContent";
+import FoodModalContent from "../../../../components/logs/meal/FoodModalContent";
 // Functions
 import {getToken} from "../../../../storage/asyncStorageFunctions";
 // Others
@@ -21,6 +21,7 @@ import energy from '../../../../resources/images/icons/energy.png';
 import fat from '../../../../resources/images/icons/fat.png';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import {foodSearchEndpoint} from "../../../../netcalls/urls";
+import requestFoodSearch from "../../../../netcalls/foodEndpoints/requestFoodSearch";
 
 Icon.loadFont();
 
@@ -68,17 +69,7 @@ class FoodSearchEngineScreen extends React.Component {
     }
 
     makeApiCallToFoodSearchEngine = () => {
-        // Get token.
-        getToken().then(token => {
-            // Fetch api and load the response here.
-            fetch(foodSearchEndpoint, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: "Bearer " + token
-                },
-                body: JSON.stringify({query: this.state.query, type: this.props.route.params.type})
-            }).then((res) => res.json()).then(data => {
+        requestFoodSearch(this.state.query, this.props.route.params.type || 'ALL').then(data => {
                 this.setState({
                     foodResults: data.data,
                     isLoading: false
@@ -88,7 +79,6 @@ class FoodSearchEngineScreen extends React.Component {
                     isLoading: false
                 }, () => alert(err.message))
             });
-        });
     }
 
     render() {

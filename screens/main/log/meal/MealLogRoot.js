@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, Text, TouchableHighlight, TouchableOpacity, Modal, Alert} from 'react-native';
+import {View, StyleSheet, Text, TouchableHighlight, TouchableOpacity, ScrollView, Alert} from 'react-native';
 // Third-party lib
 import DatePicker from 'react-native-date-picker';
 import Moment from 'moment';
@@ -10,7 +10,9 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import Ionicons from "react-native-vector-icons/Ionicons";
 import {getToken} from "../../../../storage/asyncStorageFunctions";
 import {mealAddLogEndpoint} from "../../../../netcalls/urls";
-import RenderMealItem from "./RenderMealItem";
+import RenderMealItem from "../../../../components/logs/meal/RenderMealItem";
+import {mealAddLogRequest} from "../../../../netcalls/requestsLog";
+import DateSelectionBlock from "../../../../components/logs/dateSelectionBlock";
 
 Entypo.loadFont();
 
@@ -88,18 +90,6 @@ class MealLogRoot extends React.Component {
         })
     }
 
-    handleOpenDatePickerModal = () => {
-        this.setState({
-            datepickerModalOpen: true
-        })
-    }
-
-    handleCloseDatePickerModal = () => {
-        this.setState({
-            datepickerModalOpen: false
-        })
-    }
-
     handleDeleteMeal = () => {
         // Clear the parameters and then set selected meal to be null.
         this.props.navigation.setParams({meal: null});
@@ -114,39 +104,29 @@ class MealLogRoot extends React.Component {
         const { selectedMealType, selectedDateTime } = this.state;
         const { beverage, main, side, dessert, isFavourite, mealName } = this.state.selectedMeal;
         const recordDate = Moment(new Date(selectedDateTime)).format("DD/MM/YYYY HH:mm:ss");
-
-        getToken().then(token => {
-                fetch(mealAddLogEndpoint, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: "Bearer " + token
-                    },
-                    body: JSON.stringify({
-                        isFavourite,
-                        beverage,
-                        main,
-                        side,
-                        dessert,
-                        mealName,
-                        mealType: selectedMealType,
-                        recordDate
-                    })
-                }).then(resp => resp.json()).then(data => {
-                    if (data.statusCode === 403) {
-                        // There is another favourite meal with the same name as this favourite meal.
-                        Alert.alert('Error',data.message, [ { text: 'Ok' }]);
-                        return;
-                    }
-                    this.props.navigation.goBack();
-                    Alert.alert("Log Success!", data.message,
-                        [ { text: 'Ok' }]);
-                }).catch(err => {
-                    Alert.alert("Error", err.message,
-                        [ { text: 'Ok' }]);
-                });
+        const mealData = {
+            isFavourite,
+            beverage,
+            main,
+            side,
+            dessert,
+            mealName,
+            mealType: selectedMealType,
+            recordDate
+        };
+        mealAddLogRequest(mealData).then(data => {
+            if (data.statusCode === 403) {
+                // There is another favourite meal with the same name as this favourite meal.
+                Alert.alert('Error',data.message, [ { text: 'Ok' }]);
+                return;
             }
-        )
+            this.props.navigation.goBack();
+            Alert.alert("Log Success!", data.message,
+                [ { text: 'Ok' }]);
+        }).catch(err => {
+            Alert.alert("Error", err.message,
+                [ { text: 'Ok' }]);
+        });
     }
 
     navigateToCreateMealLogPage = (selectedMeal) => {
@@ -162,44 +142,15 @@ class MealLogRoot extends React.Component {
 
     render() {
         const {navigation} = this.props;
-        const {selectedDateTime, selectedMealType, datepickerModalOpen, selectedMeal} = this.state;
+        const {selectedDateTime, selectedMealType, selectedMeal} = this.state;
         return (
             <View style={styles.root}>
-                <Modal visible={datepickerModalOpen} transparent={true}>
-                    <View style={modalStyles.root}>
-                        <TouchableOpacity style={modalStyles.overlay} onPress={this.handleCloseDatePickerModal} />
-                        <View style={modalStyles.paper}>
-                            <DatePicker
-                                visible={datepickerModalOpen}
-                                date={selectedDateTime}
-                                minimumDate={Moment(new Date()).subtract(10, 'days').toDate()}
-                                maximumDate={Moment(new Date()).add(10, 'minutes').toDate()}
-                                onDateChange={(date) => this.setState({selectedDateTime: date})}
-                                mode="datetime"
-                            />
-                            <TouchableOpacity style={modalStyles.okayButton} onPress={this.handleCloseDatePickerModal}>
-                                <Text style={modalStyles.okayButtonText}>Okay</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </Modal>
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <Text style={{paddingRight: 10, fontSize: 20, fontWeight: 'bold',  width: 120}}>Log time:</Text>
-                    <TouchableOpacity style={styles.datePickerInput} onPress={this.handleOpenDatePickerModal}>
-                        <Text style={styles.dateInputText}>
-                            {Moment(selectedDateTime).format('MMM Do YY, h:mm a')}
-                        </Text>
-                        <Ionicons
-                            name="calendar-outline"
-                            size={20}
-                            onPress={this.handleOpenDatePickerModal}
-                            style={{marginRight: 10}}
-                        />
-                    </TouchableOpacity>
-                </View>
-                <View style={{flexDirection: 'row', alignItems: 'center', paddingTop: 30, paddingBottom: 30}}>
-                    <Text style={{paddingRight: 10, fontSize: 20, fontWeight: 'bold', width: 120}}>Meal Type:</Text>
-                    <Select defaultValue={selectedMealType}
+                <ScrollView style={{flex: 1}} contentContainerStyle={{alignItems: 'center', padding: 20, flexGrow: 1}}>
+                <DateSelectionBlock date={selectedDateTime} setDate={(date) => this.setState({selectedDateTime : date})} />
+                <View style={{flexDirection: 'column', alignItems: 'center', paddingTop: 30, paddingBottom: 30, width: '100%'}}>
+                    <Text style={{paddingBottom: 10, fontSize: 20}}>Meal Type:</Text>
+                    <Select
+                            defaultValue={selectedMealType}
                             options={options}
                             onSelect={this.handleSelectChange} containerStyle={styles.selectStyle}
                             rightIcon="chevron-down"/>
@@ -265,6 +216,7 @@ class MealLogRoot extends React.Component {
                           }
                       </View>
                 }
+                </ScrollView>
             </View>
         )
     }
@@ -284,45 +236,12 @@ function getDefaultMealType(hours) {
     return defaultMealType;
 }
 
-// Date picker modal
-const modalStyles = StyleSheet.create({
-    root: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        flex: 1
-    },
-    overlay: {
-        position: 'absolute',
-        height: '100%',
-        width: '100%',
-        backgroundColor: 'rgba(0,0,0, 0.5)'
-    },
-    paper: {
-        backgroundColor: '#fff',
-        width: '80%'
-    },
-    okayButton: {
-        width: '100%',
-        height: 50,
-        backgroundColor: '#288259',
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    okayButtonText: {
-        color: '#fff',
-        fontSize: 30
-    },
-})
-
 const styles = StyleSheet.create({
     root: {
-        display: 'flex',
-        margin: 20,
         flex: 1,
-        alignItems: 'center',
     },
     selectStyle: {
-        flex: 1
+        height: 43,
     },
     textPrompt: {
         fontWeight: "bold",

@@ -211,8 +211,8 @@ const iosStyles = StyleSheet.create({
         backgroundColor: '#eff3bd',
         borderRadius: 10,
         flexDirection: 'row',
-        paddingLeft: 10,
-        paddingRight: 10
+        paddingLeft: '7%',
+        paddingRight: '3%'
     },
     textStyle: {
         fontSize: 24,

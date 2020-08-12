@@ -1,12 +1,12 @@
 import React from 'react';
 import {FlatList, View, Text, TouchableOpacity, ScrollView, Image, StyleSheet, Alert, Dimensions} from "react-native";
 // Functions
-import {getToken} from "../../../../storage/asyncStorageFunctions";
+import {getToken} from "../../../storage/asyncStorageFunctions";
 // Components
 import RenderMealItem from './RenderMealItem';
 // Others
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
-import {unfavouriteMealEndpoint} from '../../../../netcalls/urls';
+import {unfavouriteMealEndpoint} from '../../../netcalls/urls';
 
 Icon.loadFont();
 

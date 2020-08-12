@@ -3,7 +3,7 @@ import {View, StyleSheet, ActivityIndicator, Alert} from 'react-native';
 // Functions
 import {getToken} from "../../../../storage/asyncStorageFunctions";
 // Others
-import MealList from "./MealList";
+import MealList from "../../../../components/logs/meal/MealList";
 import Searchbar from "../../../../components/Searchbar";
 import {favouriteMealListEndpoint, unfavouriteMealEndpoint} from "../../../../netcalls/urls";
 

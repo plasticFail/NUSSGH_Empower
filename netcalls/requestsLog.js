@@ -1,5 +1,5 @@
 import {
-  glucoseAddLog,
+  glucoseAddLog, mealAddLogEndpoint,
   medicationAddLog,
   medicationList,
   weightAddLog,
@@ -93,9 +93,24 @@ const weightAddLogRequest = async (weight, date) => {
   }
 };
 
+const mealAddLogRequest = async (mealData) => {
+  let response = await fetch(mealAddLogEndpoint, {
+    method: 'POST',
+    headers: {
+      Authorization: 'Bearer ' + (await getToken()),
+      Accept: 'application/json',
+      'Content-type': 'application/json',
+    },
+    body: JSON.stringify(mealData),
+  });
+  let responseJson = await response.json();
+  return responseJson;
+}
+
 export {
   glucoseAddLogRequest,
   storeMedications,
   medicationAddLogRequest,
   weightAddLogRequest,
+  mealAddLogRequest
 };
