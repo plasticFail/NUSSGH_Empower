@@ -49,6 +49,15 @@
           "imgUrl": {
             "url": "http://www.mcdonalds.ie/content/iehome/food/more_food/deserts_treats/oreo_cookie_mcflurry/_jcr_content/genericpagecontent/columncontrol/columncontrol%20column2/everything/image.img.png/1546608387138.png"
           }
+        },
+        {
+          "_id": "5ec56fa569eef8907d7921f7",
+          "category": "FAST FOODS",
+          "food-name": "mcflurry with oreo cookies, mcdonald's",
+          "serving-hypo": "128g",
+          "imgUrl": {
+            "url": "http://www.mcdonalds.ie/content/iehome/food/more_food/deserts_treats/oreo_cookie_mcflurry/_jcr_content/genericpagecontent/columncontrol/columncontrol%20column2/everything/image.img.png/1546608387138.png"
+          }
         }
       ]
     },
@@ -58,7 +67,16 @@
         {
           "_id": "5ec56fa569eef8907d7921f7",
           "category": "FAST FOODS",
-          "food-name": "mcflurry with oreo cookies, mcdonald's",
+          "food-name": "A",
+          "serving-hypo": "128g",
+          "imgUrl": {
+            "url": "http://www.mcdonalds.ie/content/iehome/food/more_food/deserts_treats/oreo_cookie_mcflurry/_jcr_content/genericpagecontent/columncontrol/columncontrol%20column2/everything/image.img.png/1546608387138.png"
+          }
+        },
+        {
+          "_id": "5ec56fa569eef8907d7921f7",
+          "category": "FAST FOODS",
+          "food-name": "B",
           "serving-hypo": "128g",
           "imgUrl": {
             "url": "http://www.mcdonalds.ie/content/iehome/food/more_food/deserts_treats/oreo_cookie_mcflurry/_jcr_content/genericpagecontent/columncontrol/columncontrol%20column2/everything/image.img.png/1546608387138.png"

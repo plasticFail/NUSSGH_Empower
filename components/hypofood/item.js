@@ -5,8 +5,13 @@ const Item = (props) => {
   const {content} = props;
   return (
     <View style={[styles.contentContainer, styles.shadow]}>
-      <Image source={{uri: content.imgUrl.url}} style={styles.contentImg} />
-      <Text>{content['food-name']}</Text>
+      <Image
+        source={{uri: content.imgUrl.url}}
+        style={styles.contentImg}
+        resizeMode="cover"
+      />
+      <Text style={styles.foodName}>{content['food-name']}</Text>
+      <Text style={styles.hyposerving}>{content['serving-hypo']}</Text>
     </View>
   );
 };
@@ -16,6 +21,9 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     width: '100%',
+    backgroundColor: '#f5f5f5',
+    margin: '1%',
+    borderRadius: 20,
   },
   shadow: {
     shadowColor: '#000',
@@ -30,6 +38,18 @@ const styles = StyleSheet.create({
   contentImg: {
     height: 110,
     width: 110,
+    borderRadius: 50,
+    borderColor: '#aad326',
+    borderWidth: 3,
+  },
+  foodName: {
+    fontWeight: '700',
+    color: '#0f0f0f',
+    fontSize: 17,
+  },
+  hyposerving: {
+    fontWeight: '500',
+    color: '#0f0f0f',
   },
 });
 

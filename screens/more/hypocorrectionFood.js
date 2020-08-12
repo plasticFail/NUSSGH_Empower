@@ -13,8 +13,7 @@ const HypocorrectionFood = (props) => {
     let uniqueList = new Set(SampleData.data.map((food) => food.category));
     setCategoryList([...uniqueList]);
   }, []);
-  */
-
+*/
   return (
     <View style={styles.screen}>
       <FlatList
@@ -22,7 +21,12 @@ const HypocorrectionFood = (props) => {
         renderItem={({item}) => (
           <>
             <Text>{item.category}</Text>
-            <Carousel items={item.foodItems} itemsPerInterval={3} />
+            <Carousel
+              items={item.foodItems}
+              itemsPerInterval={3}
+              random={true}
+              category={item.category}
+            />
           </>
         )}
       />
@@ -33,6 +37,7 @@ const HypocorrectionFood = (props) => {
 const styles = StyleSheet.create({
   screen: {
     width: '100%',
+    backgroundColor: 'white',
   },
 });
 

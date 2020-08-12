@@ -1,23 +1,47 @@
-import React, {useState} from 'react';
-import {View, ScrollView, StyleSheet, Text} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {View, ScrollView, StyleSheet, Text, Dimensions} from 'react-native';
 import Item from './item';
+import {useNavigation} from '@react-navigation/native';
 
 const Carousel = (props) => {
-  const {items} = props;
+  //basic carousel set up
+  const {items, category} = props;
   const itemsPerInterval =
     props.itemsPerInterval === undefined ? 1 : props.itemsPerInterval;
-  const [intervals, setIntervals] = React.useState(1);
-  const [width, setWidth] = React.useState(0);
+  const [intervals, setIntervals] = useState(1);
+  const [width, setWidth] = useState(0);
+
+  const navigation = useNavigation();
 
   const init = (width) => {
+    const totalItems = items.length;
     // initialise width
     setWidth(width);
     // initialise total intervals
-    const totalItems = items.length;
-    console.log('---' + totalItems);
     setIntervals(Math.ceil(totalItems / itemsPerInterval));
-    console.log('--' + intervals);
   };
+
+  //if pass in random prop
+  const randomiseBool = props.random === undefined ? false : props.random;
+  const [randomBool, setRandomBool] = useState(randomiseBool);
+
+  useEffect(() => {
+    if (randomBool) {
+      shuffleArray(items);
+      if (items.length > 5) {
+        items.slice(1, 6);
+      }
+    }
+  }, []);
+
+  const shuffleArray = (array) => {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+  };
+
+  //if pass in random prop.
 
   return (
     <View style={[styles.container, styles.shadow]}>
@@ -30,13 +54,18 @@ const Carousel = (props) => {
         onContentSizeChange={(w, h) => init(w)}
         scrollEventThrottle={200}
         pagingEnabled
-        snapToAlignment="start"
-        snapToAlignment="center"
         decelerationRate="fast">
         {items.map((item, index) => {
           return <Item content={item} />;
         })}
       </ScrollView>
+      <Text
+        style={styles.hyperLinkStyle}
+        onPress={() => {
+          navigation.navigate('ViewMore', {category});
+        }}>
+        View More
+      </Text>
     </View>
   );
 };
@@ -45,15 +74,16 @@ export default Carousel;
 
 const styles = StyleSheet.create({
   container: {
-    width: '100%',
+    width: Dimensions.width,
     alignItems: 'center',
-    borderColor: '#ebebeb',
-    borderWidth: 1,
+    backgroundColor: 'white',
+    margin: '2%',
   },
   scrollView: {
     display: 'flex',
     flexDirection: 'row',
     overflow: 'hidden',
+    padding: '1%',
   },
   shadow: {
     shadowColor: '#000',
@@ -65,13 +95,9 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
-  bullets: {
-    display: 'flex',
-    justifyContent: 'center',
-    flexDirection: 'row',
-  },
-  bullet: {
-    paddingHorizontal: 5,
-    fontSize: 30,
+  hyperLinkStyle: {
+    alignSelf: 'flex-end',
+    color: '#3D5E50',
+    margin: '3%',
   },
 });

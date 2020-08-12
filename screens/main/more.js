@@ -8,6 +8,7 @@ import MedicationScreen from '../more/medications';
 import HeaderIcon from '../../components/headerBtnIcon';
 import HypocorrectionFood from '../more/hypocorrectionFood';
 import AppointmentScreen from '../more/appointments';
+import ViewMore from '../../components/hypofood/viewMore';
 
 const Stack = createStackNavigator();
 
@@ -99,6 +100,14 @@ const MoreScreen = (props) => {
           title: 'Hypo-correction Food',
           headerRight: () => <View />,
         }}
+      />
+      <Stack.Screen
+        name="ViewMore"
+        component={ViewMore}
+        options={({route, navigation}) => ({
+          title: route.params.category,
+          headerRight: () => <View />,
+        })}
       />
     </Stack.Navigator>
   );
