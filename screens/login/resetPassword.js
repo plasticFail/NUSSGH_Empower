@@ -8,15 +8,29 @@ import {
   Text,
   Alert,
   Dimensions,
+  SafeAreaView,
+  KeyboardAvoidingView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import PasswordStrengthMeter from '../../components/passwordStrengthMeter';
 
 const ResetPasswordScreen = (props) => {
   const [pass1, setPass1] = useState('');
   const [pass2, setPass2] = useState('');
+  const [strong, setStrong] = useState(false);
+
+  const setPassword = (password, score) => {
+    setPass1(password);
+    console.log(score);
+    if (Number(score) >= 2) {
+      setStrong(true);
+    } else {
+      setStrong(false);
+    }
+  };
 
   const checkPassword = () => {
-    if (pass1.length > 8 && pass2.length > 8) {
+    if (strong) {
       if (pass1 == pass2) {
         Alert.alert(
           'Success',
@@ -28,54 +42,63 @@ const ResetPasswordScreen = (props) => {
         Alert.alert('Error', 'Passwords does not match', [{text: 'Got It'}]);
       }
     } else {
-      Alert.alert('Error', 'Please input a password of more than length 8', [
-        {text: 'Got It'},
-      ]);
+      Alert.alert(
+        'Error',
+        'Please input a password that has a strength of at least fair',
+        [{text: 'Got It'}],
+      );
     }
   };
 
   Icon.loadFont();
   return (
-    <ScrollView contentContainerStyle={{paddingBottom: ' 4%'}}>
-      <View style={{...styles.resetPasswordScreen, ...props.style}}>
-        <Icon name="account-lock" size={270} />
-        <Text style={styles.text}>
-          Please ensure new password length is more than 8
-        </Text>
-        <View style={[styles.formContainer, styles.shadow]}>
-          <TextInput
-            style={styles.inputBox}
-            placeholder="New Password"
-            placeholderTextColor="#a1a3a0"
-            secureTextEntry={true}
-            onChangeText={(value) => {
-              setPass1(value);
-            }}
-          />
-          <TextInput
-            style={styles.inputBox}
-            placeholder="Confirm New Password"
-            placeholderTextColor="#a1a3a0"
-            secureTextEntry={true}
-            onChangeText={(value) => {
-              setPass2(value);
-            }}
-          />
-          <TouchableOpacity style={styles.buttonStyle} onPress={checkPassword}>
-            <Text style={styles.buttonText}>Submit</Text>
-          </TouchableOpacity>
+    <KeyboardAvoidingView
+      style={{flex: 1}}
+      behavior={Platform.OS === 'ios' ? 'padding' : null}>
+      <SafeAreaView style={{flex: 1}}>
+        <View style={styles.inner}>
+          <Icon name="account-lock" size={200} style={{alignSelf: 'center'}} />
+          <Text style={styles.headerText}>
+            Set a password that is not easily guessable which can be a mix of :
+          </Text>
+          <Text style={styles.subText}>{'\u2713'} Alphabets</Text>
+          <Text style={styles.subText}>{'\u2713'} Numbers</Text>
+          <Text style={styles.subText}>{'\u2713'} Special Characters</Text>
+          <View
+            style={[styles.formContainer, styles.shadow, {marginTop: '3%'}]}>
+            <PasswordStrengthMeter setPassword={setPassword} />
+            <TextInput
+              style={styles.inputBox}
+              placeholder="Confirm New Password"
+              placeholderTextColor="#a1a3a0"
+              secureTextEntry={true}
+              onChangeText={(value) => {
+                setPass2(value);
+              }}
+            />
+            <TouchableOpacity
+              style={styles.buttonStyle}
+              onPress={checkPassword}>
+              <Text style={styles.buttonText}>Submit</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={{flex: 1}} />
         </View>
-      </View>
-    </ScrollView>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
   resetPasswordScreen: {
     flex: 1,
-    padding: 4,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  inner: {
+    padding: 10,
+    flex: 1,
+    justifyContent: 'flex-end',
   },
   text: {
     fontWeight: '500',
@@ -85,19 +108,30 @@ const styles = StyleSheet.create({
     marginStart: '2%',
     marginEnd: '2%',
   },
+  headerText: {
+    alignSelf: 'center',
+    fontSize: 18,
+  },
+  subText: {
+    fontSize: 18,
+    marginStart: '3%',
+    marginTop: '1%',
+  },
   formContainer: {
-    margin: '7%',
-    padding: '4%',
+    width: Dimensions.get('window').width - 20,
     backgroundColor: 'white',
     borderRadius: 25,
+    paddingTop: '5%',
+    paddingBottom: '3%',
   },
   inputBox: {
-    width: Dimensions.get('window').width - 70,
+    width: Dimensions.get('window').width - 30,
     borderRadius: 20,
     backgroundColor: '#EEF3BD',
     paddingStart: 30, //position placeholder text
     marginVertical: 10,
     alignSelf: 'center',
+    padding: '3%',
   },
   shadow: {
     shadowColor: '#000',

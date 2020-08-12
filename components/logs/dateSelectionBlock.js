@@ -59,6 +59,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     fontSize: 19,
     color: 'black',
+    padding: '2%',
   },
 });
 

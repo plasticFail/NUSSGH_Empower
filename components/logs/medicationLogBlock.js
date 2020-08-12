@@ -9,9 +9,6 @@ import {
   Dimensions,
   Alert,
 } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import DatePicker from 'react-native-date-picker';
-import Moment from 'moment';
 import Modal from 'react-native-modal';
 import Entypo from 'react-native-vector-icons/Entypo';
 import DateSelectionBlock from '../logs/dateSelectionBlock';
@@ -19,191 +16,135 @@ import DateSelectionBlock from '../logs/dateSelectionBlock';
 // content
 import SelectMedicationModalContent from '../../screens/main/log/medication/selectMedicationModalContent';
 import EditMedicationModalContent from '../../screens/main/log/medication/editMedicationModalContent';
+import {checkDosage} from '../../commonFunctions/logFunctions';
 
 Entypo.loadFont();
 
-export default class MedicationLogBlock extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      date: new Date(),
-      calendarVisible: this.props.calendarVisible,
-      selectedMedicationList: this.props.selectedMedicationList,
-      selectModalOpen: this.props.selectModalOpen,
-      editModalOpen: this.props.editModalOpen,
-      medicineToEdit: this.props.medicineToEdit,
-      showSuccess: false,
-    };
-    this.setDate = this.setDate.bind(this);
-    this.setCalendarVisible = this.setCalendarVisible.bind(this);
-    this.openEditModal = this.openEditModal.bind(this);
-    this.handleDelete = this.handleDelete.bind(this);
-    this.getMedicineToEdit = this.getMedicineToEdit.bind(this);
-    this.getSelectedMedicineFromModal = this.getSelectedMedicineFromModal.bind(
-      this,
-    );
-    console.log('---' + this.state.date);
-  }
+const MedicationLogBlock = (props) => {
+  const [selectModalOpen, setSelectModalOpen] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [medicineToEdit, setMedicineToEdit] = useState({});
 
-  setCalendarVisible() {
-    this.setState({calendarVisible: !this.state.calendarVisible});
-  }
+  console.log('---In Medication Log Block');
 
-  setDate(date) {
-    this.setState({date: date});
-    this.props.getDateSelected(date);
-    console.log(this.state.date);
-  }
-
-  getSelectedMedicineFromModal(medicineObj) {
+  const getSelectedMedicineFromModal = (medicineObj) => {
     console.log('Setting selected medication: ' + medicineObj);
-    let list = this.state.selectedMedicationList;
+    let list = props.selectedMedicationList;
     list.push(medicineObj);
-    this.setState({selectModalOpen: false, selectedMedicationList: list});
-    console.log(list);
-    console.log('----' + this.state.date);
+    //set new states
+    setSelectModalOpen(false);
+    props.onListChange(list);
+  };
 
-    //send to component using the block to render submit/next
-    this.props.getMedicationList(this.state.selectedMedicationList);
-  }
-
-  closeModal() {
-    console.log('Closing Modal');
-    this.setState({selectModalOpen: !this.state.selectModalOpen});
-  }
-
-  openEditModal(item) {
+  const openEditModal = (item) => {
     console.log('Opening Edit Modal');
-    this.setState({editModalOpen: true});
+    setEditModalOpen(true);
     console.log('Setting Edit object: ' + item);
-    this.setState({medicineToEdit: item});
-  }
-
-  handleDelete(item) {
-    let list = this.state.selectedMedicationList;
-    this.setState({
-      selectedMedicationList: list.filter((medication) => medication != item),
-    });
-    //send to component using the block to render submit/next
-    this.props.getMedicationList(
-      list.filter((medication) => medication != item),
-    );
-  }
+    setMedicineToEdit(item);
+  };
 
   //get and edit new dosage to medicine
-  getMedicineToEdit(medicineToEdit, newDosage) {
+  const handleEditMedicine = (medicineToEdit, newDosage) => {
     console.log('Editing: ' + medicineToEdit + ' New Dosage: ' + newDosage);
-    if (newDosage == '') {
-      Alert.alert('Error', 'Dosage not filled', [{text: 'Got It'}]);
-    } else if (
-      newDosage.length != 0 &&
-      !newDosage.includes('.') &&
-      !newDosage.includes('-') &&
-      !newDosage.includes(',') &&
-      Number(newDosage) <= 5 &&
-      Number(newDosage) > 0
-    ) {
-      const elementIndex = this.state.selectedMedicationList.findIndex(
+    if (checkDosage(newDosage)) {
+      const elementIndex = props.selectedMedicationList.findIndex(
         (element) => element.drugName == medicineToEdit,
       );
-      let newArr = [...this.state.selectedMedicationList];
+      let newArr = [...props.selectedMedicationList];
       newArr[elementIndex] = {
         ...newArr[elementIndex],
         dosage: Number(newDosage),
       };
-      this.setState({editModalOpen: false, selectedMedicationList: newArr});
-      //send to component using the block to render submit/next
-      this.props.getMedicationList(newArr);
+
+      //set state
+      setEditModalOpen(false);
+      props.onListChange(newArr);
     } else {
       Alert.alert('Error', 'Invalid Dosage', [{text: 'Got It'}]);
     }
-  }
+  };
 
-  render() {
-    const {
-      date,
-      calendarVisible,
-      selectedMedicationList,
-      selectModalOpen,
-      editModalOpen,
-      medicineToEdit,
-      showSuccess,
-    } = this.state;
-    return (
-      <View style={{flex: 1, width: '100%'}}>
-        <DateSelectionBlock date={date} setDate={this.setDate} />
-        {selectedMedicationList <= 0 ? (
-          <Text style={styles.headerStyle}>Start Adding A Medication:</Text>
-        ) : (
-          <Text style={styles.headerStyle}>Medication Added:</Text>
-        )}
+  const handleDelete = (item) => {
+    let list = props.selectedMedicationList;
+    props.onListChange(list.filter((medication) => medication != item));
+  };
 
-        {
-          //render selected medication
-          selectedMedicationList.map((item) => {
-            return (
-              <MedicationAdded
-                medication={item}
-                handleDelete={() => this.handleDelete(item)}
-                openEditModal={() => this.openEditModal(item)}
-              />
-            );
-          })
-        }
-        <TouchableOpacity
-          style={[styles.button, styles.shadow]}
-          onPress={() => this.setState({selectModalOpen: true})}>
-          <Text style={styles.buttonText}>Add Medicine</Text>
-        </TouchableOpacity>
+  return (
+    <View style={{flex: 1, width: '100%'}}>
+      <DateSelectionBlock date={props.date} setDate={props.setDate} />
+      {props.selectedMedicationList <= 0 ? (
+        <Text style={styles.headerStyle}>Start Adding A Medication:</Text>
+      ) : (
+        <Text style={styles.headerStyle}>Medication Added:</Text>
+      )}
 
-        {/* Select Medicine Modal*/}
-        <Modal
-          isVisible={selectModalOpen}
-          animationIn="slideInUp"
-          onBackdropPress={() => this.setState({selectModalOpen: false})}
-          onBackButtonPress={() => this.setState({selectModalOpen: false})}>
-          <View style={styles.container}>
-            <View style={styles.header}>
-              <Text style={styles.headerTitle}>Select Medicine</Text>
-              <Entypo
-                name="cross"
-                size={30}
-                style={{marginTop: '1%', marginStart: '20%'}}
-                onPress={() => this.setState({selectModalOpen: false})}
-              />
-            </View>
-          </View>
-          <SelectMedicationModalContent
-            setMedicine={this.getSelectedMedicineFromModal}
-            selectedMedicationList={selectedMedicationList}
-          />
-        </Modal>
-        {/* Edit Medicine (Dosage) Modal*/}
-        <Modal
-          isVisible={editModalOpen}
-          animationIn="slideInUp"
-          onBackdropPress={() => this.setState({editModalOpen: false})}
-          onBackButtonPress={() => this.setState({editModalOpen: false})}>
-          <View style={styles.container}>
-            <View style={styles.header}>
-              <Text style={styles.headerTitle}>Edit Medicine</Text>
-              <Entypo
-                name="cross"
-                size={30}
-                style={{marginTop: '1%', marginStart: '20%'}}
-                onPress={() => this.setState({editModalOpen: false})}
-              />
-            </View>
-            <EditMedicationModalContent
-              medicineToEdit={medicineToEdit}
-              editMedicine={this.getMedicineToEdit}
+      {
+        //render selected medication
+        props.selectedMedicationList.map((item) => {
+          return (
+            <MedicationAdded
+              medication={item}
+              handleDelete={() => handleDelete(item)}
+              openEditModal={() => openEditModal(item)}
+            />
+          );
+        })
+      }
+
+      {/* Select Medicine Modal*/}
+      <Modal
+        isVisible={selectModalOpen}
+        animationIn="slideInUp"
+        onBackdropPress={() => setSelectModalOpen(false)}
+        onBackButtonPress={() => setSelectModalOpen(false)}>
+        <View style={styles.container}>
+          <View style={styles.header}>
+            <Text style={styles.headerTitle}>Select Medicine</Text>
+            <Entypo
+              name="cross"
+              size={30}
+              style={{marginTop: '1%', marginStart: '20%'}}
+              onPress={() => setSelectModalOpen(false)}
             />
           </View>
-        </Modal>
-      </View>
-    );
-  }
-}
+        </View>
+        <SelectMedicationModalContent
+          setMedicine={getSelectedMedicineFromModal}
+          selectedMedicationList={props.selectedMedicationList}
+        />
+      </Modal>
+
+      {/* Edit Medicine (Dosage) Modal*/}
+      <Modal
+        isVisible={editModalOpen}
+        animationIn="slideInUp"
+        onBackdropPress={() => setEditModalOpen(false)}
+        onBackButtonPress={() => setEditModalOpen(false)}>
+        <View style={styles.container}>
+          <View style={styles.header}>
+            <Text style={styles.headerTitle}>Edit Medicine</Text>
+            <Entypo
+              name="cross"
+              size={30}
+              style={{marginTop: '1%', marginStart: '20%'}}
+              onPress={() => setEditModalOpen(false)}
+            />
+          </View>
+          <EditMedicationModalContent
+            medicineToEdit={medicineToEdit}
+            editedMedicine={handleEditMedicine}
+          />
+        </View>
+      </Modal>
+
+      <TouchableOpacity
+        style={[styles.button, styles.shadow]}
+        onPress={() => setSelectModalOpen(true)}>
+        <Text style={styles.buttonText}>Add Medicine</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
 
 function MedicationAdded({medication, handleDelete, openEditModal}) {
   return (
@@ -212,13 +153,7 @@ function MedicationAdded({medication, handleDelete, openEditModal}) {
         name="circle-with-cross"
         color={'red'}
         size={30}
-        style={{
-          alignSelf: 'flex-end',
-          marginEnd: '4%',
-          position: 'absolute',
-          zIndex: 2,
-          elevation: 2,
-        }}
+        style={styles.deleteIcon}
         onPress={handleDelete}
       />
       <View
@@ -295,7 +230,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingStart: '20%',
     paddingEnd: '20%',
-    alignSelf: 'stretch',
     borderRadius: 20,
     marginVertical: 10,
     paddingVertical: 6,
@@ -307,7 +241,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingStart: '5%',
     paddingEnd: '5%',
-    alignSelf: 'stretch',
     borderRadius: 20,
     marginVertical: 10,
     paddingVertical: 6,
@@ -361,4 +294,13 @@ const styles = StyleSheet.create({
     flex: 2,
     flexWrap: 'wrap',
   },
+  deleteIcon: {
+    alignSelf: 'flex-end',
+    marginEnd: '4%',
+    position: 'absolute',
+    zIndex: 2,
+    elevation: 2,
+  },
 });
+
+export default MedicationLogBlock;

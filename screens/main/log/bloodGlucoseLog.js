@@ -14,6 +14,7 @@ import {useNavigation} from '@react-navigation/native';
 //components
 import SuccessDialogue from '../../../components/successDialogue';
 import BloodGlucoseLogBlock from '../../../components/logs/bloodGlucoseLogBlock';
+import {checkTime} from '../../../commonFunctions/logFunctions';
 
 const BloodGlucoseLog = (props) => {
   const navigation = useNavigation();
@@ -24,7 +25,7 @@ const BloodGlucoseLog = (props) => {
   console.log(bloodGlucose);
 
   const handleSubmit = () => {
-    if (checkTime()) {
+    if (checkTime(date)) {
       if (Number(bloodGlucose) >= 30 || Number(bloodGlucose) <= 0) {
         Alert.alert('Error', 'Invalid Blood Glucose Level', [{text: 'Got It'}]);
       } else if (
@@ -56,45 +57,21 @@ const BloodGlucoseLog = (props) => {
     }
   };
 
-  const checkTime = () => {
-    let format = 'hh:mm';
-    let timeNow = Moment(new Date(), format);
-    let timeInput = Moment(date, format);
-    if (date.toDateString() !== new Date().toDateString()) {
-      Alert.alert(
-        'Error',
-        'Invalid date. Make sure date selected is not after today. ',
-        [{text: 'Got It'}],
-      );
-      return false;
-    } else if (timeInput.isAfter(timeNow)) {
-      Alert.alert(
-        'Error',
-        'Invalid date. Make sure time selected is not after current time. ',
-        [{text: 'Got It'}],
-      );
-      return false;
-    }
-    return true;
-  };
-
   return (
-    <ScrollView>
-      <View style={styles.screen}>
-        <BloodGlucoseLogBlock
-          date={date}
-          setDate={setDate}
-          bloodGlucose={bloodGlucose}
-          setBloodGlucose={setBloodGlucose}
-        />
+    <View style={styles.screen}>
+      <BloodGlucoseLogBlock
+        date={date}
+        setDate={setDate}
+        bloodGlucose={bloodGlucose}
+        setBloodGlucose={setBloodGlucose}
+      />
 
-        <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-          <Text style={styles.buttonText}>Submit</Text>
-        </TouchableOpacity>
+      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+        <Text style={styles.buttonText}>Submit</Text>
+      </TouchableOpacity>
 
-        <SuccessDialogue visible={successShow} type="Blood Glucose" />
-      </View>
-    </ScrollView>
+      <SuccessDialogue visible={successShow} type="Blood Glucose" />
+    </View>
   );
 };
 

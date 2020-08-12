@@ -6,28 +6,23 @@ import {
   TouchableOpacity,
   Alert,
   Dimensions,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import {TextInput, ScrollView} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {sendOTPRequest} from '../../netcalls/requestsPasswordReset';
 
 function ForgetPasswordScreen({navigation}) {
   Icon.loadFont();
   const [phoneNumber, setPhoneNumber] = useState('');
+
   const handleButtonPress = () => {
     if (phoneNumber != '' && phoneNumber.length == 8) {
       var first = phoneNumber.substring(0, 1);
       if (first == '8' || first == '9') {
-        Alert.alert(
-          'Success',
-          'OTP has been sent to you via SMS',
-          [
-            {
-              text: 'Got It',
-              onPress: () => navigation.navigate('InputOTP'),
-            },
-          ],
-          {cancelable: false},
-        );
+        sendOTPRequest(phoneNumber);
       } else {
         Alert.alert('Invalid', 'Please input a valid phone number', [
           {text: 'Got It'},
@@ -41,34 +36,39 @@ function ForgetPasswordScreen({navigation}) {
   };
 
   return (
-    <ScrollView>
-      <View style={{alignItems: 'center', flex: 1}}>
-        <Icon name="mobile-phone" size={300} />
-        <Text style={styles.textStyle}>
-          Input your phone number and your login credentials will be sent to you
-          via sms
-        </Text>
-        <View style={[styles.formContainer, styles.shadow]}>
-          <TextInput
-            style={styles.inputBox}
-            placeholder="Phone Number"
-            placeholderTextColor="#a1a3a0"
-            onChangeText={(value) => {
-              var cleanNumber = value.replace(/[^0-9]/g, '');
-              setPhoneNumber(cleanNumber);
-              console.log('Cleaning phone number:' + phoneNumber);
-            }}
-            keyboardType="number-pad"
-            maxLength={8}
-          />
-          <TouchableOpacity
-            style={styles.buttonStyle}
-            onPress={handleButtonPress}>
-            <Text style={styles.buttonText}>Recover Password</Text>
-          </TouchableOpacity>
+    <KeyboardAvoidingView
+      style={{flex: 1}}
+      behavior={Platform.OS === 'ios' ? 'padding' : null}>
+      <SafeAreaView style={{flex: 1}}>
+        <View style={styles.inner}>
+          <Icon name="mobile-phone" size={300} />
+          <Text style={styles.textStyle}>
+            Input your phone number and your login credentials will be sent to
+            you via sms
+          </Text>
+          <View style={[styles.formContainer, styles.shadow]}>
+            <TextInput
+              style={[styles.inputBox, {padding: '4%'}]}
+              placeholder="Phone Number"
+              placeholderTextColor="#a1a3a0"
+              onChangeText={(value) => {
+                var cleanNumber = value.replace(/[^0-9]/g, '');
+                setPhoneNumber(cleanNumber);
+                console.log('Cleaning phone number:' + phoneNumber);
+              }}
+              keyboardType="number-pad"
+              maxLength={8}
+            />
+            <TouchableOpacity
+              style={styles.buttonStyle}
+              onPress={handleButtonPress}>
+              <Text style={styles.buttonText}>Recover Password</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={{flex: 1}} />
         </View>
-      </View>
-    </ScrollView>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -80,6 +80,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 30,
+  },
+  inner: {
+    padding: 20,
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'flex-end',
   },
   textStyle: {
     margin: '5%',
@@ -112,6 +118,7 @@ const styles = StyleSheet.create({
     paddingStart: 30, //position placeholder text
     marginVertical: 10,
     alignSelf: 'center',
+    padding: '3%',
   },
   shadow: {
     shadowColor: '#000',
