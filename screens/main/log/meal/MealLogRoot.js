@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, Text, TouchableHighlight, TouchableOpacity, Modal, Alert, ScrollView} from 'react-native';
+import {View, StyleSheet, Text, TouchableHighlight, TouchableOpacity, Modal, Alert} from 'react-native';
 // Third-party lib
 import DatePicker from 'react-native-date-picker';
 import Moment from 'moment';
@@ -23,42 +23,40 @@ const options = [{name: "Breakfast", value: "breakfast"},
 class MealLogRoot extends React.Component {
     constructor(props) {
         super(props);
+        const {selectedMeal, mealType, recordDate} = this.props;
         const now = new Date();
         const hours = now.getHours();
 
         this.state = {
-            selectedDateTime: now,
-            selectedMealType: getDefaultMealType(hours),
+            selectedDateTime: recordDate || now,
+            selectedMealType: mealType || getDefaultMealType(hours),
             datepickerModalOpen: false,
-            selectedMeal: null
+            selectedMeal: selectedMeal || null
         }
     }
 
-    // Check for props. if there are props then load them.
     componentDidMount() {
-        const {selectedMeal, mealType, recordDate} = this.props;
-        this.setState(prevState => {
-            return {
-                selectedMeal: selectedMeal || prevState.selectedMeal,
-                mealType: mealType || prevState.mealType,
-                selectedDateTime: recordDate || prevState.selectedDateTime
-            }
-        })
+        // Update parent the moment this component mounts.
+        const {onMealUpdateListener, onDateTimeUpdateListener, onMealTypeUpdateListener} = this.props;
+        if (onMealUpdateListener) {
+            onMealUpdateListener(this.state.selectedMeal);
+        }
+        if (onDateTimeUpdateListener) {
+            onDateTimeUpdateListener(this.state.selectedDateTime);
+        }
+        if (onMealTypeUpdateListener) {
+            onMealTypeUpdateListener(this.state.selectedMealType);
+        }
     }
 
     // Listen to updates from route, date time and meal type
     componentDidUpdate(prevProps, prevState) {
 
-        // MEAL CHANGED. CALL PARENT PROPS IF THERE IS ANY.
+        // MEAL CHANGED FROM CREATE MEAL LOG PAGE.
         if (this.props.route.params?.meal && this.props.route.params.meal !== this.state.selectedMeal) {
-            console.log(this.props.route.params);
             const newMeal = this.props.route.params.meal;
             this.setState({
                 selectedMeal: newMeal
-            }, () => {
-                if (this.props.onMealUpdateListener) {
-                    this.props.onMealUpdateListener(newMeal);
-                }
             });
         }
 
@@ -73,6 +71,13 @@ class MealLogRoot extends React.Component {
         if (prevState.selectedMealType !== this.state.selectedMealType) {
             if (this.props.onMealTypeUpdateListener) {
                 this.props.onMealTypeUpdateListener(this.state.selectedMealType);
+            }
+        }
+
+        // MEAL CHANGED. CALL PARENT PROPS IF THERE IS ANY.
+        if (prevState.selectedMeal !== this.state.selectedMeal) {
+            if (this.props.onMealUpdateListener) {
+                this.props.onMealUpdateListener(this.state.selectedMeal);
             }
         }
     }
@@ -145,7 +150,7 @@ class MealLogRoot extends React.Component {
     }
 
     navigateToCreateMealLogPage = (selectedMeal) => {
-        const { parentScreen } = this.props.route.params;
+        const parentScreen = this.props.parentScreen;
         const meal = {...selectedMeal};
         // remove unfavourite key from the selected meal.
         delete meal['unfavourite'];
@@ -305,7 +310,7 @@ const modalStyles = StyleSheet.create({
     },
     okayButtonText: {
         color: '#fff',
-        fontSize: 40
+        fontSize: 30
     },
 })
 

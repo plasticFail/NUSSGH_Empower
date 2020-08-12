@@ -163,6 +163,7 @@ export default class CreateMealLog extends React.Component {
             Alert.alert('Error','Please give your favourite meal a name', [ { text: 'Ok' }]);
             return;
         }
+
         const meal = {
             mealName,
             isFavourite,
