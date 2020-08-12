@@ -11,7 +11,6 @@ const Item = (props) => {
         resizeMode="cover"
       />
       <Text style={styles.foodName}>{content['food-name']}</Text>
-      <Text style={styles.hyposerving}>{content['serving-hypo']}</Text>
     </View>
   );
 };
@@ -19,11 +18,12 @@ const Item = (props) => {
 const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
-    padding: 10,
+    padding: 20,
     width: '100%',
     backgroundColor: '#f5f5f5',
     margin: '1%',
     borderRadius: 20,
+    alignItems: 'center',
   },
   shadow: {
     shadowColor: '#000',
@@ -50,6 +50,7 @@ const styles = StyleSheet.create({
   hyposerving: {
     fontWeight: '500',
     color: '#0f0f0f',
+    fontSize: 16,
   },
 });
 

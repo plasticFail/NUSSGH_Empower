@@ -40,6 +40,7 @@ const DailyLog1 = (props) => {
           question={'Did you take your blood glucose reading today?'}
           getFormSelection={getFormSelection}
           selectNo={false}
+          color={'#aad326'}
         />
       </View>
       {show && (
@@ -53,10 +54,10 @@ const DailyLog1 = (props) => {
 
       <TouchableOpacity
         style={{marginTop: '4%'}}
-        onPress={() =>
-        { // pass states to other screens to maintain persistent storage.
-          const states = props.route.params
-          props.navigation.navigate('DailyLog2', states)
+        onPress={() => {
+          // pass states to other screens to maintain persistent storage.
+          const states = props.route.params;
+          props.navigation.navigate('DailyLog2', states);
         }}>
         <Text>Next</Text>
       </TouchableOpacity>

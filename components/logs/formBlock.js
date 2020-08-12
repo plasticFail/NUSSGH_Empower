@@ -3,8 +3,12 @@ import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import RadioButton from '../radioButton';
 
 const FormBlock = (props) => {
-  const [selectYes, setSelectedYes] = useState(props.defaultValue === 'yes' || false);
-  const [selectNo, setSelectedNo] = useState(props.defaultValue === 'no' || props.selectNo);
+  const [selectYes, setSelectedYes] = useState(
+    props.defaultValue === 'yes' || false,
+  );
+  const [selectNo, setSelectedNo] = useState(
+    props.defaultValue === 'no' || props.selectNo,
+  );
   const handleButtonPress = (selectItem) => {
     if (selectItem == 'yes') {
       setSelectedYes(true);
@@ -23,12 +27,16 @@ const FormBlock = (props) => {
       <Text style={styles.questionHeader}>{props.question}</Text>
       <View style={styles.buttonGroupStyle}>
         <TouchableOpacity onPress={() => handleButtonPress('yes')}>
-          <RadioButton btnText={'Yes'} color={'#e958c8'} selected={selectYes} />
+          <RadioButton
+            btnText={'Yes'}
+            color={props.color}
+            selected={selectYes}
+          />
         </TouchableOpacity>
         <TouchableOpacity
           style={{marginStart: '40%'}}
           onPress={() => handleButtonPress('no')}>
-          <RadioButton btnText={'No'} color={'#e958c8'} selected={selectNo} />
+          <RadioButton btnText={'No'} color={props.color} selected={selectNo} />
         </TouchableOpacity>
       </View>
     </View>

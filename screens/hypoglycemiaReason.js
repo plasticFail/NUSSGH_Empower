@@ -133,6 +133,7 @@ function FormQuestion({type, setRespective}) {
           question={'Did you eat lesser than usual today?'}
           getFormSelection={setRespective}
           selectNo={true}
+          color={'#e958c8'}
         />
       </View>
     );
@@ -144,6 +145,7 @@ function FormQuestion({type, setRespective}) {
           question={'Did you exercise today?'}
           getFormSelection={setRespective}
           selectNo={true}
+          color={'#e958c8'}
         />
       </View>
     );
@@ -155,6 +157,7 @@ function FormQuestion({type, setRespective}) {
           question={'Did you have any alcoholic beverages today?'}
           getFormSelection={setRespective}
           selectNo={true}
+          color={'#e958c8'}
         />
       </View>
     );
