@@ -1,5 +1,6 @@
 import React from 'react';
 import {View, Text, StyleSheet, Image, Dimensions, TouchableOpacity, ScrollView, Alert} from 'react-native';
+import Moment from 'moment';
 import FormBlock from '../../../../components/logs/formBlock';
 import MealLogRoot from "../meal/MealLogRoot";
 
@@ -7,7 +8,7 @@ export default class DailyLogForFood extends React.Component {
     constructor(props) {
         super(props);
         if (this.props.route.params?.dailyLog2Cache) {
-            this.state = this.props.route.params.dailyLog2Cache.state;
+            this.state = deserializeState(this.props.route.params.dailyLog2Cache.state);
         } else {
             this.state = {
                 mealTaken: false,
@@ -44,24 +45,24 @@ export default class DailyLogForFood extends React.Component {
     }
 
     goNext = () => {
-        const {mealTaken, mealSelected} = this.state;
+        const {mealTaken, mealSelected, mealType, recordDate} = this.state;
         if (mealTaken && mealSelected === null) {
             Alert.alert("Error", "Please select your meal before proceeding next", [{
                 text: "Ok"
             }])
             return;
         }
-        this.props.navigation.navigate('DailyLog3', {
+        this.props.navigation.navigate('DailyLog3', {...this.props.route.params,
             dailyLog2Cache: {
-                state: {...this.state}
+                state: serializeState({...this.state})
             }
         });
     }
 
     goBack = () => {
-        this.props.navigation.navigate('DailyLog', {
+        this.props.navigation.navigate('DailyLog', {...this.props.route.params,
             dailyLog2Cache: {
-                state: {...this.state}
+                state: serializeState({...this.state})
             }
         });
     }
@@ -117,9 +118,37 @@ export default class DailyLogForFood extends React.Component {
     }
 }
 
+function serializeState(state) {
+    const {mealTaken, mealSelected, mealType, recordDate} = state;
+    if (recordDate === null) {
+        return state;
+    }
+    return {
+        mealSelected,
+        mealTaken,
+        mealType,
+        recordDate: Moment(recordDate).format("DD/MM/YYYY HH:mm:ss")
+    }
+}
+
+function deserializeState(serializedState) {
+    const {mealTaken, mealSelected, mealType, recordDate} = serializedState;
+    // the record date passed to serializeState is the string format.
+    if (recordDate === null) {
+        return serializedState;
+    }
+    return {
+        mealSelected,
+        mealTaken,
+        mealType,
+        recordDate: Moment(recordDate, "DD/MM/YYYY HH:mm:ss").toDate()
+    }
+}
+
 const styles = StyleSheet.create({
     root: {
-        minHeight: '100%'
+        minHeight: '100%',
+        backgroundColor: '#fff'
     },
     headerTextContainer: {
         width: '100%',

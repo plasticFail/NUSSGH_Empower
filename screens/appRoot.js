@@ -156,6 +156,7 @@ class AppRoot extends Component {
                 options={{
                   title: 'Daily Log',
                   animationEnabled: false,
+                  headerBackImage: () => <HeaderBackIcon/>,
                   headerRight: () => <View />,
                 }}
               />
@@ -164,6 +165,7 @@ class AppRoot extends Component {
                 component={DailyLog3}
                 options={{
                   title: 'Daily Log',
+                  headerBackImage: () => <HeaderBackIcon/>,
                   headerRight: () => <View />,
                 }}
               />
