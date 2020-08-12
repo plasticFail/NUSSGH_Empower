@@ -15,6 +15,7 @@ const ViewMore = (props) => {
         setArr(x.foodItems);
       }
     }
+    console.log(arr);
   }, []);
 
   return <View style={styles.screen}></View>;

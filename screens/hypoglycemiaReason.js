@@ -75,7 +75,12 @@ export default class HypoglycemiaReason extends React.Component {
     Alert.alert(
       'Thank you for filling the survey',
       'Please click to view the list of fast acting carbohydrates!',
-      [{text: 'Got It', onPress: () => this.props.navigation.navigate('Home')}],
+      [
+        {
+          text: 'Got It',
+          onPress: () => this.props.navigation.navigate('HypocorrectionFood'),
+        },
+      ],
       {cancelable: false},
     );
   }

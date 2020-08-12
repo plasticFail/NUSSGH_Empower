@@ -24,41 +24,45 @@ const SelectMedicationModalContent = (props) => {
   const [dosage, setDosage] = useState('');
 
   const searchMedication = (searchKey) => {
-    if (searchKey === '') {
+    if (searchKey.length == 0) {
       //set seleted medication name : '
       setSearchMedicationResult([]);
     } else {
-      //set for 1 second
-      setTimeout(() => {
-        //data
-        returnSearchResult(searchKey);
-      }, 500);
+      returnSearchResult(searchKey);
     }
   };
 
   //search
   const returnSearchResult = (searchKey) => {
     let arr = [];
+    let result = new Array();
     storeMedications().then((response) => {
       for (var x of response.medications) {
         arr.push(x);
       }
-
-      var result = arr.filter((medication) => {
-        var medicine = medication.drug_name
-          .replace(/\s{1,2}\[|\]/g, ' ')
-          .toLowerCase();
-        var searchArr = String(searchKey).split(' ');
-        var count = 0;
-        for (var x of searchArr) {
-          if (medicine.includes(x.toLowerCase())) {
-            count += 1;
+      if (searchKey.length == 0) {
+        console.log('hi2');
+        setSearchMedicationResult([]);
+        return;
+      }
+      if (searchKey.length >= 1) {
+        console.log('hihi1');
+        result = arr.filter((medication) => {
+          var medicine = medication.drug_name
+            .replace(/\s{1,2}\[|\]/g, ' ')
+            .toLowerCase();
+          var searchArr = String(searchKey).split(' ');
+          var count = 0;
+          for (var x of searchArr) {
+            if (medicine.includes(x.toLowerCase())) {
+              count += 1;
+            }
           }
-        }
-        if (count == searchArr.length) {
-          return medication;
-        }
-      });
+          if (count == searchArr.length) {
+            return medication;
+          }
+        });
+      }
       setSearchMedicationResult(result);
     });
   };
@@ -229,6 +233,7 @@ function SearchMedicine({
           placeholder="Type a medication..."
           placeholderTextColor="#a1a3a0"
           onChangeText={(text) => {
+            console.log('lENGTH' + text.length);
             searchMedication(text);
           }}
         />

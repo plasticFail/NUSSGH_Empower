@@ -16,7 +16,6 @@ const Carousel = (props) => {
 
   const init = (width) => {
     const totalItems = items.length;
-    console.log(totalItems);
     // initialise width
     setWidth(width);
     // initialise total intervals
