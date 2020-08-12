@@ -32,7 +32,7 @@ const MedicationLog = (props) => {
       });
       console.log(selectedMedicationList);
       medicationAddLogRequest(selectedMedicationList).then((value) => {
-        if (value == true) {
+        if (value) {
           setShowSuccess(true);
         } else {
           Alert.alert('Error', 'Unexpected Error Occured', [
@@ -52,7 +52,7 @@ const MedicationLog = (props) => {
           selectedMedicationList={selectedMedicationList}
           onListChange={onListChange}
         />
-        {selectedMedicationList.length != 0 && (
+        {selectedMedicationList.length !== 0 && (
           <TouchableOpacity
             style={[styles.button, styles.shadow, {backgroundColor: '#aad326'}]}
             onPress={handleSubmit}>
@@ -72,7 +72,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingStart: '20%',
     paddingEnd: '20%',
-    alignSelf: 'stretch',
     borderRadius: 20,
     marginVertical: 10,
     paddingVertical: 6,

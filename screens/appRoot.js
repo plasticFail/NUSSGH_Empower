@@ -8,6 +8,7 @@ import {
 import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
 import {connect} from 'react-redux';
 import Entypo from 'react-native-vector-icons/Entypo';
+import Icon from 'react-native-vector-icons/dist/FontAwesome';
 //functions
 import {getToken} from '../storage/asyncStorageFunctions';
 import {mapStateToProps, mapDispatchToProps} from '../redux/reduxMapping';
@@ -26,7 +27,7 @@ import MedicationLog from './main/log/medication/medicationLog';
 import MealLogRoot from './main/log/meal/MealLogRoot';
 import WeightLog from './main/log/weightLog';
 //components
-import HeaderIcon from '../components/headerBtnIcon';
+import HeaderIcon from '../components/common/headerBtnIcon';
 import HypoglycemiaReason from './hypoglycemiaReason';
 import DailyLogForFood from './main/log/dailyLog/dailyLog2';
 import DailyLog3 from './main/log/dailyLog/dailyLog3';
@@ -34,6 +35,8 @@ import CreateMealLogScreen from './main/log/meal/CreateMealLog';
 import FavouriteMealScreen from './main/log/meal/FavouriteMeals';
 import RecentMealScreen from './main/log/meal/RecentMeal';
 import FoodSearchEngineScreen from './main/log/meal/FoodSearchEngine';
+import HeaderBackIcon from '../components/common/headerBackIcon';
+import HeaderBackIconClick from '../components/common/headerBackIconClick';
 
 Entypo.loadFont();
 
@@ -125,6 +128,7 @@ class AppRoot extends Component {
                 component={AlertsScreen}
                 options={{
                   title: 'Alerts',
+                  headerBackImage: () => <HeaderBackIcon/>,
                   headerRight: () => <View />,
                 }}
               />
@@ -133,6 +137,7 @@ class AppRoot extends Component {
                 component={ChatScreen}
                 options={{
                   title: 'Chat',
+                  headerBackImage: () => <HeaderBackIcon/>,
                   headerRight: () => <View />,
                 }}
               />
@@ -141,6 +146,7 @@ class AppRoot extends Component {
                 component={DailyLog1}
                 options={{
                   title: 'Daily Log',
+                  headerBackImage: () => <HeaderBackIcon/>,
                   headerRight: () => <View />,
                 }}
               />
@@ -166,13 +172,7 @@ class AppRoot extends Component {
                 component={MealLogRoot}
                 options={({route, navigation}) => ({
                   title: 'Meal Log',
-                  headerLeft: () => (
-                    <HeaderIcon
-                      iconName="chevron-left"
-                      text={null}
-                      clickFunc={navigation.goBack}
-                    />
-                  ),
+                  headerBackImage: () => <HeaderBackIcon/>,
                   headerRight: () => <View />,
                 })}
               />
@@ -182,10 +182,8 @@ class AppRoot extends Component {
                 options={({route, navigation}) => ({
                   animationEnabled: true,
                   title: 'Create Meal Log',
-                  headerLeft: () => (
-                    <HeaderIcon
-                      iconName="chevron-left"
-                      text={null}
+                  headerBackImage: () => (
+                    <HeaderBackIconClick
                       clickFunc={() => {
                         if (route.params.edited) {
                           // Confirmation message before going back.
@@ -219,13 +217,7 @@ class AppRoot extends Component {
                 component={FavouriteMealScreen}
                 options={({route, navigation}) => ({
                   title: 'Favourites',
-                  headerLeft: () => (
-                    <HeaderIcon
-                      iconName="times"
-                      text={null}
-                      clickFunc={navigation.goBack}
-                    />
-                  ),
+                  headerBackImage: () => <HeaderBackIcon/>,
                   headerRight: () => <View />,
                   ...TransitionPresets.ModalTransition,
                 })}
@@ -235,13 +227,7 @@ class AppRoot extends Component {
                 component={RecentMealScreen}
                 options={({route, navigation}) => ({
                   title: 'Recent',
-                  headerLeft: () => (
-                    <HeaderIcon
-                      iconName="times"
-                      text={null}
-                      clickFunc={navigation.goBack}
-                    />
-                  ),
+                  headerBackImage: () => <HeaderBackIcon/>,
                   headerRight: () => <View />,
                   ...TransitionPresets.ModalTransition,
                 })}
@@ -257,6 +243,7 @@ class AppRoot extends Component {
                 options={{
                   title: 'Blood Glucose Log',
                   headerRight: () => <View />,
+                  headerBackImage: () => <HeaderBackIcon/>,
                 }}
               />
               <Stack.Screen
@@ -265,6 +252,7 @@ class AppRoot extends Component {
                 options={{
                   title: 'Medication Log',
                   headerRight: () => <View />,
+                  headerBackImage: () => <HeaderBackIcon/>,
                 }}
               />
               <Stack.Screen
@@ -273,6 +261,7 @@ class AppRoot extends Component {
                 options={{
                   title: 'Weight Log',
                   headerRight: () => <View />,
+                  headerBackImage: () => <HeaderBackIcon/>,
                 }}
               />
               <Stack.Screen

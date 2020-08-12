@@ -9,6 +9,7 @@ import HeaderIcon from '../../components/headerBtnIcon';
 import HypocorrectionFood from '../more/hypocorrectionFood';
 import AppointmentScreen from '../more/appointments';
 import ViewMore from '../../components/hypofood/viewMore';
+import HeaderIcon from '../../components/common/headerBtnIcon';
 
 const Stack = createStackNavigator();
 

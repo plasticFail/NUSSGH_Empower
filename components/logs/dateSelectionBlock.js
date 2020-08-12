@@ -35,6 +35,8 @@ const DateSelectionBlock = (props) => {
           visible={visible}
           date={props.date}
           onDateChange={props.setDate}
+          minimumDate={Moment(new Date()).subtract(10, 'days').toDate()}
+          maximumDate={Moment(new Date()).add(10, 'minutes').toDate()}
           mode="datetime"
         />
       )}
