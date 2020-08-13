@@ -8,6 +8,11 @@ import {
   TouchableOpacity,
   FlatList,
 } from 'react-native-gesture-handler';
+import {LogBox} from 'react-native';
+
+LogBox.ignoreWarnings([
+  'VirtualizedLists should never be nested', // TODO: Remove when fixed
+]);
 
 const buttonList = [
   {
