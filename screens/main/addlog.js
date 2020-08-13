@@ -9,9 +9,6 @@ import {
   FlatList,
 } from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
-import StackNavigator from '@react-navigation/stack/src/navigators/createStackNavigator';
-import BloodGlucoseLog from './log/bloodGlucoseLog';
-import MedicationLog from './log/medication/medicationLog';
 
 const Stack = createStackNavigator();
 
@@ -53,7 +50,9 @@ const AddLogScreen = ({navigation}) => {
       <Text style={styles.headerText}>Choose from the following: </Text>
       <Text style={styles.headerText2}>1. Schedule 3 times a day</Text>
 
-      <TouchableOpacity style={styles.buttonStyle}  onPress={() => navigation.navigate('DailyLog')}>
+      <TouchableOpacity
+        style={styles.buttonStyle}
+        onPress={() => navigation.navigate('DailyLog')}>
         <Text style={styles.buttonText}>Daily Log</Text>
         <ImageBackground
           source={require('../../resources/images/dailylog.jpg')}
