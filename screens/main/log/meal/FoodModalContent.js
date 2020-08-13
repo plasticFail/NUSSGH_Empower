@@ -45,6 +45,8 @@ export default function FoodModalContent({onClose, selected, children}) {
 function renderNutritionRow({amount, unit}, nutrient) {
     // for now generate a random % and use that as the percentage for the progressbar.
     const percent = (Math.random() * 100).toString() + "%";
+
+    const reverse = nutrient === 'Dietary Fibre' || nutrient === 'Protein';
     return (<View style={modalStyles.nutrientRow}>
         <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <Text>{nutrient}</Text>
@@ -53,7 +55,7 @@ function renderNutritionRow({amount, unit}, nutrient) {
                     : <Text>{amount + " " + unit}</Text>
             }
         </View>
-        <ProgressBar progress={percent} useIndicatorLevel={true}
+        <ProgressBar progress={percent} useIndicatorLevel={true} reverse={reverse}
                      containerStyle={{height: 15, width: '100%'}} />
         </View>
     )

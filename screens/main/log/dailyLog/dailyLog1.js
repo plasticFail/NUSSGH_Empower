@@ -9,7 +9,6 @@ const DailyLog1 = (props) => {
   const [date, setDate] = useState(new Date());
   const [bloodGlucose, setBloodGlucose] = useState('');
   const [show, setShow] = useState(false);
-
   //get form selection
   const getFormSelection = (boolValue) => {
     console.log(boolValue);

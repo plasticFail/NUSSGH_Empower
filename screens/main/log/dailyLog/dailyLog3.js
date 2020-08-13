@@ -9,6 +9,7 @@ const DailyLog3 = (props) => {
   const [selectedMedicationList, setSelectedMedicationList] = useState([]);
   const [show, setShow] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+
   //get form selection
   const getFormSelection = (boolValue) => {
     console.log(boolValue);
