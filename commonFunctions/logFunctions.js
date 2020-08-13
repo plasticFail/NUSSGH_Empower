@@ -26,7 +26,7 @@ const checkTime = (dateToCheck) => {
 };
 
 const checkDosage = (dosageString) => {
-  var dosageS = String(dosageString);
+  let dosageS = String(dosageString);
   if (
     dosageString.length != 0 &&
     !dosageS.includes('.') &&
