@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 const key_username = 'username';
 const key_password = 'password';
 const key_token = 'token';
-const key_medications = 'medications';
+
 
 const storeData = async (key, value) => {
   try {
@@ -24,22 +24,7 @@ const getData = async (key) => {
     }
   } catch (e) {
     // error reading value
-    console.log('error getUsername : ' + e);
-  }
-  return null;
-};
-
-//just without value*
-const getData2 = async (key) => {
-  try {
-    const value = await AsyncStorage.getItem(key);
-    if (value !== null) {
-      console.log('load ' + key);
-      return value;
-    }
-  } catch (e) {
-    // error reading value
-    console.log('error : ' + e);
+    console.log('error getData : ' + e);
   }
   return null;
 };
@@ -68,9 +53,6 @@ const getToken = async () => {
   return await getData(key_token);
 };
 
-const getMedications = async () => {
-  return await getData2(key_medications);
-};
 
 export {
   storeUsername,
@@ -79,5 +61,4 @@ export {
   getPassword,
   storeToken,
   getToken,
-  getMedications,
 };
