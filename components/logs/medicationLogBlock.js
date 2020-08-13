@@ -3,7 +3,6 @@ import {
   View,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   Image,
   Dimensions,
@@ -14,8 +13,8 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import DateSelectionBlock from '../logs/dateSelectionBlock';
 
 // content
-import SelectMedicationModalContent from '../../screens/main/log/medication/selectMedicationModalContent';
-import EditMedicationModalContent from '../../screens/main/log/medication/editMedicationModalContent';
+import SelectMedicationModalContent from './selectMedicationModalContent';
+import EditMedicationModalContent from './editMedicationModalContent';
 import {checkDosage} from '../../commonFunctions/logFunctions';
 
 Entypo.loadFont();

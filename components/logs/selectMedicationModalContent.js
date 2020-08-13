@@ -1,111 +1,142 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, Component} from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TextInput,
-  ActivityIndicator,
   Image,
   Alert,
   TouchableOpacity,
 } from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 import Entypo from 'react-native-vector-icons/Entypo';
-import {storeMedications} from '../../../../netcalls/requestsLog';
-import {checkDosage} from '../../../../commonFunctions/logFunctions';
+import {storeMedications} from '../../netcalls/requestsLog';
+import {checkDosage} from '../../commonFunctions/logFunctions';
 
 Entypo.loadFont();
 
-const SelectMedicationModalContent = (props) => {
-  const [query, setQuery] = useState('');
-  const [selectedMedicineName, setSelectedMedicineName] = useState('');
-  const [selectedMedicine, setSelectedMedicine] = useState([]);
-  const [searchMedicationResults, setSearchMedicationResult] = useState([]);
-  const [dosage, setDosage] = useState('');
+class SelectMedicationModalContent extends Component {
+  constructor(props) {
+    super(props);
+    this.props = props;
 
-  const searchMedication = (searchKey) => {
-    if (searchKey.length === 0) {
-      //set seleted medication name : '
-      setSearchMedicationResult([]);
-    } else {
-      returnSearchResult(searchKey);
+    this.state = {
+      triggerSearch: false,
+      searchKey: '',
+      searchKeyCache: '',
+      selectedMedicine: null,
+      searchMedicationResults: [],
+      dosage: '',
+    };
+  }
+
+  componentDidUpdate() {
+    console.log(
+      'update : ' +
+        this.state.searchKey +
+        ' cache : ' +
+        this.state.searchKeyCache,
+    );
+    if (
+      this.state.triggerSearch &&
+      this.state.searchKey === this.state.searchKeyCache
+    ) {
+      this.returnSearchResult(this.state.searchKey);
     }
+  }
+
+  handleSearch = (searchKey) => {
+    this.setState({searchKey: searchKey});
+    this.setState({triggerSearch: true});
+    setTimeout(() => {
+      this.setState({searchKeyCache: searchKey});
+    }, 1000);
+  };
+
+  handleDosage = (dosage) => {
+    this.setState({dosage: dosage});
   };
 
   //search
-  const returnSearchResult = (searchKey) => {
-    let arr = [];
-    let result = new Array();
-    storeMedications().then((response) => {
-      for (var x of response.medications) {
-        arr.push(x);
-      }
-      if (searchKey.length >= 1) {
-        result = arr.filter((medication) => {
-          var medicine = medication.drug_name
+  returnSearchResult = (searchKey) => {
+    if (searchKey !== '') {
+      let arr = [];
+      storeMedications().then((response) => {
+        for (let x of response.medications) {
+          arr.push(x);
+        }
+
+        let result = arr.filter((medication) => {
+          let medicine = medication.drug_name
             .replace(/\s{1,2}\[|\]/g, ' ')
             .toLowerCase();
-          var searchArr = String(searchKey).split(' ');
-          var count = 0;
-          for (var x of searchArr) {
+          let searchArr = String(searchKey).split(' ');
+          let count = 0;
+          for (let x of searchArr) {
             if (medicine.includes(x.toLowerCase())) {
               count += 1;
             }
           }
-          if (count == searchArr.length) {
+          if (count === searchArr.length) {
             return medication;
           }
         });
-      }
-      setSearchMedicationResult(result);
-    });
+        this.setState({triggerSearch: false});
+        this.setState({searchMedicationResults: result});
+      });
+    } else {
+      this.setState({triggerSearch: false});
+      this.setState({searchMedicationResults: []});
+    }
   };
 
-  const selectFromList = (item) => {
-    console.log('Selected Item: ' + item);
-    setQuery(item.drug_name);
-    setSelectedMedicineName(item.drug_name);
-    setSearchMedicationResult([]);
-    setSelectedMedicine(item);
+  selectFromList = (item) => {
+    console.log('Selected Item: ' + item.drug_name);
+    this.setState({searchKey: item.drug_name});
+    this.setState({searchMedicationResults: []});
+    this.setState({selectedMedicine: item});
   };
 
-  const submit = () => {
-    if (checkDosage(dosage) && selectedMedicineName.length != 0) {
+  submit = () => {
+    if (
+      checkDosage(this.state.dosage) &&
+      this.state.selectedMedicine !== null
+    ) {
       //if repeated
-      if (checkRepeat(selectedMedicine.drug_name)) {
+      if (this.checkRepeat(this.state.selectedMedicine.drug_name)) {
         console.log('Duplicate detected');
         Alert.alert('Error', 'Medication added previously', [{text: 'Got It'}]);
       } else {
         console.log(
           'Adding Medicine: ' +
-            selectedMedicine.drug_name +
+            this.state.selectedMedicine.drug_name +
             ' Dosage: ' +
-            dosage,
+            this.dosage,
         );
         //use to send the selected medicine back to 'parent'
-        props.setMedicine({
-          drugName: selectedMedicine.drug_name,
+        this.props.setMedicine({
+          drugName: this.state.selectedMedicine.drug_name,
           unit: 'unit',
-          dosage: Number(dosage),
+          dosage: Number(this.state.dosage),
           recordDate: '',
-          image_url: selectedMedicine.image_url,
+          image_url: this.state.selectedMedicine.image_url,
         });
-        setQuery('');
+        this.setState({searchKey: ''});
       }
     }
 
-    if (selectedMedicineName.length == 0) {
+    if (this.state.selectedMedicine === null) {
       Alert.alert('Error', 'Please select a medication from the database', [
         {text: 'Got It'},
       ]);
     }
   };
 
-  const checkRepeat = (medicationName) => {
-    var arr = props.selectedMedicationList;
+  checkRepeat = (medicationName) => {
+    let arr = this.props.selectedMedicationList;
     console.log('Checking');
     console.log(arr);
-    for (var x of arr) {
+    for (let x of arr) {
       console.log(x.drug_name);
       if (x.drugName === medicationName) {
         return true;
@@ -114,38 +145,40 @@ const SelectMedicationModalContent = (props) => {
     return false;
   };
 
-  return (
-    <View style={styles.container}>
-      <SearchMedicine
-        searchMedication={searchMedication}
-        query={query}
-        setQuery={setQuery}
-        setSelectedMedicineName={setSelectedMedicineName}
-      />
-      {searchMedicationResults.length > 0 && (
-        <SearchMedicineResults
-          searchMedicineResults={searchMedicationResults}
-          selectFromList={selectFromList}
+  render() {
+    return (
+      <View style={styles.container}>
+        <SearchMedicine
+          searchKey={this.state.searchKey}
+          handleSearch={this.handleSearch}
         />
-      )}
-      <DosageInput setDosage={setDosage} />
+        {this.state.searchMedicationResults.length > 0 && (
+          <SearchMedicineResults
+            searchMedicineResults={this.state.searchMedicationResults}
+            selectFromList={this.selectFromList}
+          />
+        )}
+        <DosageInput dosage={this.state.dosage} setDosage={this.handleDosage} />
 
-      <View style={{paddingBottom: '4%'}}>
-        <TouchableOpacity
-          style={[
-            styles.button,
-            styles.shadow,
-            {width: 200, height: 40, backgroundColor: '#aad326'},
-          ]}
-          onPress={submit}>
-          <Text style={[styles.buttonText, {fontSize: 22}]}>Add Medicine</Text>
-        </TouchableOpacity>
+        <View style={{paddingBottom: '4%'}}>
+          <TouchableOpacity
+            style={[
+              styles.button,
+              styles.shadow,
+              {width: 200, height: 40, backgroundColor: '#aad326'},
+            ]}
+            onPress={this.submit}>
+            <Text style={[styles.buttonText, {fontSize: 22}]}>
+              Add Medicine
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
-  );
-};
+    );
+  }
+}
 
-function DosageInput({setDosage}) {
+function DosageInput(props) {
   return (
     <View style={styles.componentContainer}>
       <Text style={styles.inputHeader}>Dosage: </Text>
@@ -155,7 +188,8 @@ function DosageInput({setDosage}) {
           placeholder=""
           placeholderTextColor="#a1a3a0"
           keyboardType="number-pad"
-          onChangeText={(value) => setDosage(value)}
+          value={props.dosage}
+          onChangeText={(value) => props.setDosage(value)}
         />
         <View style={styles.unitStyle}>
           <Text style={{fontSize: 20}}>Unit (s)</Text>
@@ -202,39 +236,22 @@ function SearchMedicineResults({searchMedicineResults, selectFromList}) {
   );
 }
 
-function SearchMedicine({
-  searchMedication,
-  query,
-  setQuery,
-  setSelectedMedicineName,
-}) {
+const SearchMedicine = (props) => {
   return (
     <View style={styles.componentContainer}>
       <Text style={styles.inputHeader}>Name:</Text>
-      {query.length != 0 ? (
-        <TextInput
-          style={styles.searchInputBox}
-          value={query}
-          placeholderTextColor="#a1a3a0"
-          onChangeText={(text) => {
-            setQuery('');
-            setSelectedMedicineName('');
-          }}
-        />
-      ) : (
-        <TextInput
-          style={styles.searchInputBox}
-          placeholder="Type a medication..."
-          placeholderTextColor="#a1a3a0"
-          onChangeText={(text) => {
-            console.log('lENGTH' + text.length);
-            searchMedication(text);
-          }}
-        />
-      )}
+      <TextInput
+        style={styles.searchInputBox}
+        placeholder="Type a medication..."
+        placeholderTextColor="#a1a3a0"
+        value={props.searchKey}
+        onChangeText={(text) => {
+          props.handleSearch(text);
+        }}
+      />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
