@@ -3,7 +3,8 @@ import AsyncStorage from '@react-native-community/async-storage';
 const key_username = 'username';
 const key_password = 'password';
 const key_token = 'token';
-const key_medications = 'medications';
+const key_bloodGlucoseLog = 'lastBloodGlucoseLog';
+const key_weightLog = 'lastWeightLog';
 
 const storeData = async (key, value) => {
   try {
@@ -25,21 +26,6 @@ const getData = async (key) => {
   } catch (e) {
     // error reading value
     console.log('error getUsername : ' + e);
-  }
-  return null;
-};
-
-//just without value*
-const getData2 = async (key) => {
-  try {
-    const value = await AsyncStorage.getItem(key);
-    if (value !== null) {
-      console.log('load ' + key);
-      return value;
-    }
-  } catch (e) {
-    // error reading value
-    console.log('error : ' + e);
   }
   return null;
 };
@@ -68,8 +54,20 @@ const getToken = async () => {
   return await getData(key_token);
 };
 
-const getMedications = async () => {
-  return await getData2(key_medications);
+const storeLastBgLog = async (bgLog) => {
+  await storeData(key_bloodGlucoseLog, bgLog);
+};
+
+const getLastBgLog = async () => {
+  return await getData(key_bloodGlucoseLog);
+};
+
+const storeLastWeightLog = async (weightLog) => {
+  await storeData(key_weightLog, weightLog);
+};
+
+const getLastWeightLog = async () => {
+  return await getData(key_weightLog);
 };
 
 export {
@@ -79,5 +77,8 @@ export {
   getPassword,
   storeToken,
   getToken,
-  getMedications,
+  storeLastBgLog,
+  getLastBgLog,
+  storeLastWeightLog,
+  getLastWeightLog,
 };
