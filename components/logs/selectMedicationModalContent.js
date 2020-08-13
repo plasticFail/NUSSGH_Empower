@@ -203,6 +203,7 @@ function SearchMedicineResults({searchMedicineResults, selectFromList}) {
         Results: {searchMedicineResults.length}
       </Text>
       <FlatList
+        keyExtractor={(item, index) => item.drug_name}
         data={searchMedicineResults}
         renderItem={({item}) => (
           <View style={styles.resultItem}>
