@@ -24,6 +24,7 @@ const styles = StyleSheet.create({
     margin: '1%',
     borderRadius: 20,
     alignItems: 'center',
+    marginEnd: '2%',
   },
   shadow: {
     shadowColor: '#000',

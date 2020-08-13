@@ -101,6 +101,7 @@ export default class DailyLogForFood extends React.Component {
               question="Have you had your meal?"
               getFormSelection={this.setMealTaken}
               selectNo={false}
+              color={'#aad326'}
               defaultValue={mealTaken ? 'yes' : 'no'}
             />
           </View>

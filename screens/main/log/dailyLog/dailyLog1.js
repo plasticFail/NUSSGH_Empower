@@ -38,7 +38,7 @@ const DailyLog1 = (props) => {
         <FormBlock
           question={'Did you take your blood glucose reading today?'}
           getFormSelection={getFormSelection}
-          selectNo={false}
+          selectNo={true}
           color={'#aad326'}
         />
       </View>
