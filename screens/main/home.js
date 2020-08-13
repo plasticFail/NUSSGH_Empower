@@ -2,17 +2,13 @@ import React from 'react';
 import {View, Text, StyleSheet, Button} from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import Ionicon from 'react-native-vector-icons/Ionicons';
+import Entypo from 'react-native-vector-icons/Entypo';
 import Foundation from 'react-native-vector-icons/Foundation';
 import {
   ScrollView,
   TouchableOpacity,
   FlatList,
 } from 'react-native-gesture-handler';
-import {LogBox} from 'react-native';
-
-LogBox.ignoreWarnings([
-  'VirtualizedLists should never be nested', // TODO: Remove when fixed
-]);
 
 const buttonList = [
   {
@@ -51,6 +47,7 @@ const HomeScreen = (props) => {
   Ionicon.loadFont();
   Icon.loadFont();
   Foundation.loadFont();
+  Entypo.loadFont();
 
   return (
     <ScrollView
@@ -68,21 +65,18 @@ const HomeScreen = (props) => {
             marginTop: '2%',
           }}
           renderItem={({item}) => (
-            <TouchableOpacity
-              onPress={() => {
-                props.navigation.navigate(item.route);
-              }}>
-              <View style={[styles.buttonStyle]}>
+            <View>
+              <TouchableOpacity style={[styles.buttonStyle]}>
                 {item.iconName == 'game-controller' ? (
-                  <Ionicon name={item.iconName} size={30} />
+                  <Entypo name={item.iconName} size={30} />
                 ) : item.iconName != 'target-two' ? (
                   <Icon name={item.iconName} size={30} />
                 ) : (
                   <Foundation name="target-two" size={30} />
                 )}
-              </View>
+              </TouchableOpacity>
               <Text>{item.name}</Text>
-            </TouchableOpacity>
+            </View>
           )}
         />
       </View>
