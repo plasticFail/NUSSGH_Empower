@@ -1,8 +1,11 @@
 import React from 'react';
-import {View, Text, StyleSheet, Image, Dimensions, TouchableOpacity, ScrollView, Alert} from 'react-native';
+import {View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, Alert} from 'react-native';
+// Third party lib
 import Moment from 'moment';
+// Components
 import FormBlock from '../../../../components/logs/formBlock';
 import MealLogRoot from "../meal/MealLogRoot";
+import PreviousMealBlock from "../meal/PreviousMealBlock";
 
 export default class DailyLogForFood extends React.Component {
     constructor(props) {
@@ -14,7 +17,7 @@ export default class DailyLogForFood extends React.Component {
                 mealTaken: false,
                 mealSelected: null,
                 recordDate: null,
-                mealType: null
+                mealType: null,
             }
         }
 
@@ -46,7 +49,7 @@ export default class DailyLogForFood extends React.Component {
 
     goNext = () => {
         const {mealTaken, mealSelected, mealType, recordDate} = this.state;
-        if (mealTaken && mealSelected === null) {
+        if (!mealTaken && mealSelected === null) {
             Alert.alert("Error", "Please select your meal before proceeding next", [{
                 text: "Ok"
             }])
@@ -83,14 +86,14 @@ export default class DailyLogForFood extends React.Component {
                         source={require('../../../../resources/images/progress2.png')}
                     />
                     <View style={styles.formBlockContainer}>
-                        <FormBlock question='Have you had your meal?'
+                        <FormBlock question='Have you made a meal log yet?'
                                    getFormSelection={this.setMealTaken}
                                    selectNo={false}
                                    defaultValue={mealTaken ? 'yes' : 'no'} />
                     </View>
                 </View>
                 {
-                    mealTaken ? <MealLogRoot
+                    !mealTaken ? <MealLogRoot
                                              parentScreen='DailyLog2'
                                              onMealUpdateListener={this.setMealCallback}
                                              onMealTypeUpdateListener={this.setMealTypeCallback}
@@ -101,7 +104,7 @@ export default class DailyLogForFood extends React.Component {
                                              navigation={navigation}
                                              route={route}
                         /> :
-                        null
+                        <PreviousMealBlock />
                 }
                 <View style={{flex: 1, justifyContent: 'flex-end'}}>
                     <View style={styles.buttonContainer}>

@@ -1,8 +1,9 @@
 import React from 'react';
 import {View, StyleSheet, Text, TouchableHighlight, TouchableOpacity, ScrollView, Alert} from 'react-native';
 // Third-party lib
-import DatePicker from 'react-native-date-picker';
 import Moment from 'moment';
+// Functions
+import {storeLastMealLog} from "../../../../storage/asyncStorageFunctions";
 // Components
 import Select from "../../../../components/select";
 // Others
@@ -115,14 +116,11 @@ class MealLogRoot extends React.Component {
             recordDate
         };
         mealAddLogRequest(mealData).then(data => {
-            if (data.statusCode === 403) {
-                // There is another favourite meal with the same name as this favourite meal.
-                Alert.alert('Error',data.message, [ { text: 'Ok' }]);
-                return;
-            }
-            this.props.navigation.goBack();
-            Alert.alert("Log Success!", data.message,
-                [ { text: 'Ok' }]);
+            storeLastMealLog(JSON.stringify(this.state)).then(resp => {
+                this.props.navigation.goBack();
+                Alert.alert("Log Success!", data.message,
+                    [ { text: 'Ok' }]);
+            })
         }).catch(err => {
             Alert.alert("Error", err.message,
                 [ { text: 'Ok' }]);

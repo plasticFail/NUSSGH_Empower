@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useRef} from 'react';
 import {StyleSheet, Text, TextInput, View, Animated} from 'react-native';
 //third party libs
 import Moment from 'moment';
@@ -19,14 +19,14 @@ const DateSelectionBlock = (props) => {
     if (currentVisibility) {
       Animated.timing(slideAnimation, {
         toValue: 0,
-        duration: 500,
+        duration: 300, // 300ms slide up animation when visible is set false.
         useNativeDriver: false
       }).start(() => setVisible(false));
     } else {
       setVisible(true);
       Animated.timing(slideAnimation, {
         toValue: 1,
-        duration: 500,
+        duration: 300, // 300ms slide down animation when visible is set true.
         useNativeDriver: false
       }).start();
     }
