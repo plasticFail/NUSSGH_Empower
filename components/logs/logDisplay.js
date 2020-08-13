@@ -36,20 +36,26 @@ const LogDisplay = (props) => {
   };
 
   return (
-    <View style={[styles.container, styles.shadow]}>
-      {type === 'BloodGlucose' && (
-        <Text style={styles.textStyle}>
-          Your most recent blood glucose log is{' '}
-          <Text style={styles.bold}>{lastValue}</Text> mmol/L at{' '}
-          <Text style={styles.bold}>{time}</Text> today.
-        </Text>
-      )}
-      {type === 'Weight' && (
-        <Text style={styles.textStyle}>
-          Your most recent weight log is{' '}
-          <Text style={styles.bold}>{lastValue}</Text> kg at{' '}
-          <Text style={styles.bold}>{time}</Text> today.
-        </Text>
+    <View>
+      {lastValue === '' ? (
+        <View></View>
+      ) : (
+        <View style={[styles.container, styles.shadow]}>
+          {type === 'BloodGlucose' && (
+            <Text style={styles.textStyle}>
+              Your most recent blood glucose log is{' '}
+              <Text style={styles.bold}>{lastValue}</Text> mmol/L at{' '}
+              <Text style={styles.bold}>{time}</Text> today.
+            </Text>
+          )}
+          {type === 'Weight' && (
+            <Text style={styles.textStyle}>
+              Your most recent weight log is{' '}
+              <Text style={styles.bold}>{lastValue}</Text> kg at{' '}
+              <Text style={styles.bold}>{time}</Text> today.
+            </Text>
+          )}
+        </View>
       )}
     </View>
   );
