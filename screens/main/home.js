@@ -58,6 +58,7 @@ const HomeScreen = (props) => {
       }}>
       <View style={[styles.buttonContainer, styles.shadow]}>
         <FlatList
+          keyExtractor={(item, index) => item.id}
           data={buttonList}
           contentContainerStyle={{
             flexDirection: 'row',
@@ -68,7 +69,7 @@ const HomeScreen = (props) => {
             <View>
               <TouchableOpacity style={[styles.buttonStyle]}>
                 {item.iconName == 'game-controller' ? (
-                  <Entypo name={item.iconName} size={30} />
+                  <Entypo name={item.iconName} size={28} />
                 ) : item.iconName != 'target-two' ? (
                   <Icon name={item.iconName} size={30} />
                 ) : (

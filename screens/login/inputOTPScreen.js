@@ -21,12 +21,15 @@ import {
 
 const InputOTPScreen = (props) => {
   const {phoneNumber} = props.route.params;
+  const showPhoneNo = String(phoneNumber).substring(4, 9);
   console.log(phoneNumber);
   Icon.loadFont();
   const [otp, setOtp] = useState('');
   const [disabled, setDisable] = useState(true);
   const [countdownVisible, setCountdownVisible] = useState(true);
   const [countdownTime, setCountdownTime] = useState(120);
+
+  console.log(showPhoneNo);
 
   const handleTimout = () => {
     setCountdownVisible(true);
@@ -62,7 +65,7 @@ const InputOTPScreen = (props) => {
     setCountdownVisible(true);
     sendOTPRequest(phoneNumber).then(() => {
       setCountdownTime(120);
-      Alert.alert('Success', 'Please check if your SMS for new OTP', [
+      Alert.alert('Success', 'Please check your SMS for new OTP', [
         {text: 'Got It'},
       ]);
     });
@@ -77,7 +80,7 @@ const InputOTPScreen = (props) => {
           <Icon name="cellphone-message" size={260} />
           <Text style={styles.text}>
             Enter the 6-digit One-Time Password (OTP) sent to your mobile number
-            (**** 9876).
+            ( **** {showPhoneNo} ).
           </Text>
           <View style={[styles.formContainer, styles.shadow]}>
             <CountdownTimer

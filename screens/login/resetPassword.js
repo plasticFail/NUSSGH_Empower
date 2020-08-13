@@ -38,7 +38,7 @@ const ResetPasswordScreen = (props) => {
           if (response) {
             Alert.alert(
               'Success',
-              'Password changed successfully',
+              'Password changed.',
               [
                 {
                   text: 'Got It',

@@ -21,6 +21,7 @@ const ViewMore = (props) => {
   return (
     <View style={styles.screen}>
       <FlatList
+        keyExtractor={(item, index) => item._id}
         data={arr}
         numColumns={2}
         renderItem={({item}) => <Item content={item} />}

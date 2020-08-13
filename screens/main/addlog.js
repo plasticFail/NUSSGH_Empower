@@ -62,6 +62,7 @@ const AddLogScreen = ({navigation}) => {
 
       <Text style={styles.headerText2}>2. Own Time Own Pace (Anytime): </Text>
       <FlatList
+        keyExtractor={(item, index) => item.name}
         data={buttonList}
         width="100%"
         renderItem={({item}) => (
