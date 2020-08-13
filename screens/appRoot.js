@@ -21,7 +21,7 @@ import InputOTPScreen from './login/inputOTPScreen';
 import AlertsScreen from './sub/alerts';
 import ChatScreen from './sub/chat';
 import ResetPasswordScreen from './login/resetPassword';
-import DailyLog1 from './main/log/dailyLog/dailyLog1';
+import DailyLog from './main/log/dailyLog/dailyLog';
 import BloodGlucoseLog from './main/log/bloodGlucoseLog';
 import MedicationLog from './main/log/medication/medicationLog';
 import MealLogRoot from './main/log/meal/MealLogRoot';
@@ -143,7 +143,7 @@ class AppRoot extends Component {
               />
               <Stack.Screen
                 name="DailyLog"
-                component={DailyLog1}
+                component={DailyLog}
                 options={{
                   title: 'Daily Log',
                   headerBackImage: () => <HeaderBackIcon/>,

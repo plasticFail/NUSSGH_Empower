@@ -25,7 +25,7 @@ const getData = async (key) => {
     }
   } catch (e) {
     // error reading value
-    console.log('error getUsername : ' + e);
+    console.log('error getData : ' + e);
   }
   return null;
 };

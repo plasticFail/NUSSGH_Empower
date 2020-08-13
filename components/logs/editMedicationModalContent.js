@@ -5,7 +5,6 @@ import {
   StyleSheet,
   TextInput,
   Image,
-  Alert,
   TouchableOpacity,
 } from 'react-native';
 import {checkDosage} from '../../commonFunctions/logFunctions';

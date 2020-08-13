@@ -1,11 +1,10 @@
 import React, {useState} from 'react';
 import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
 //other screens
-import BloodGlucoseLog from '../bloodGlucoseLog';
 import BloodGlucoseLogBlock from '../../../../components/logs/bloodGlucoseLogBlock';
 import FormBlock from '../../../../components/logs/formBlock';
 
-const DailyLog1 = (props) => {
+const DailyLog = (props) => {
   const [date, setDate] = useState(new Date());
   const [bloodGlucose, setBloodGlucose] = useState('');
   const [show, setShow] = useState(false);
@@ -102,4 +101,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DailyLog1;
+export default DailyLog;
