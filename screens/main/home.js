@@ -31,7 +31,7 @@ const buttonList = [
   {
     id: '4',
     name: 'Game Center',
-    iconName: 'solution1',
+    iconName: 'game-controller',
     route: 'GameCenter',
   },
   {
@@ -68,7 +68,9 @@ const HomeScreen = (props) => {
                 props.navigation.navigate(item.route);
               }}>
               <View style={[styles.buttonStyle]}>
-                {item.iconName != 'target-two' ? (
+                {item.iconName == 'game-controller' ? (
+                  <Ionicon name={item.iconName} size={30} />
+                ) : item.iconName != 'target-two' ? (
                   <Icon name={item.iconName} size={30} />
                 ) : (
                   <Foundation name="target-two" size={30} />
