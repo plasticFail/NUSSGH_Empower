@@ -1,4 +1,4 @@
-import React, {useState, Component} from 'react';
+import React, {Component} from 'react';
 import {
   View,
   Text,
@@ -35,6 +35,7 @@ class SelectMedicationModalContent extends Component {
   componentDidUpdate(){
     console.log('update : ' + this.state.searchKey + " cache : " + this.state.searchKeyCache);
     if(this.state.triggerSearch && this.state.searchKey === this.state.searchKeyCache){
+      this.setState({triggerSearch: false});
       this.returnSearchResult(this.state.searchKey);
     }
   }
@@ -75,11 +76,9 @@ class SelectMedicationModalContent extends Component {
             return medication;
           }
         });
-        this.setState({triggerSearch: false});
         this.setState({searchMedicationResults: result});
       });
     }else{
-      this.setState({triggerSearch: false});
       this.setState({searchMedicationResults: []});
     }
   };
