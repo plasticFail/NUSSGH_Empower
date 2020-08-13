@@ -145,9 +145,9 @@ class MealLogRoot extends React.Component {
         const {selectedDateTime, selectedMealType, selectedMeal} = this.state;
         return (
             <View style={styles.root}>
-                <ScrollView style={{flex: 1}} contentContainerStyle={{alignItems: 'center', padding: 20, flexGrow: 1}}>
+                <ScrollView style={{flex: 1}} contentContainerStyle={{padding: 20, flexGrow: 1}}>
                 <DateSelectionBlock date={selectedDateTime} setDate={(date) => this.setState({selectedDateTime : date})} />
-                <View style={{flexDirection: 'column', alignItems: 'center', paddingTop: 30, paddingBottom: 30, width: '100%'}}>
+                <View style={{flexDirection: 'column', paddingTop: 30, paddingBottom: 30, width: '100%'}}>
                     <Text style={{paddingBottom: 10, fontSize: 20}}>Meal Type:</Text>
                     <Select
                             defaultValue={selectedMealType}
@@ -246,7 +246,8 @@ const styles = StyleSheet.create({
     textPrompt: {
         fontWeight: "bold",
         fontSize: 28,
-        paddingBottom: 30
+        paddingBottom: 30,
+        alignSelf: 'center'
     },
     button:{
         width: '70%',
@@ -256,7 +257,8 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#fff',
         justifyContent: 'center',
-        marginTop: 20
+        marginTop: 20,
+        alignSelf: 'center'
     },
     buttonText:{
         color:'#fff',
