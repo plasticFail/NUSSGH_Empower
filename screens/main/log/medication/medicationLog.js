@@ -68,9 +68,7 @@ const MedicationLog = (props) => {
           </TouchableOpacity>
         )}
       </View>
-
       <MedicationLogDisplay />
-
       <SuccessDialogue visible={showSuccess} type="Medication" />
     </ScrollView>
   );
