@@ -21,7 +21,7 @@ const glucoseAddLogRequest = async (bgReading, date) => {
       }),
     });
     let responseJson = await response.json();
-    console.log(responseJson);
+    console.log('glucoseAddLogRequest : ' + responseJson);
     return true;
   } catch (error) {
     console.error(error);
@@ -40,6 +40,7 @@ const storeMedications = async () => {
       },
     });
     let responseJson = await response.json();
+    console.log('storeMedications : ' + responseJson);
     return responseJson;
   } catch (error) {
     console.error(error);
@@ -61,7 +62,7 @@ const medicationAddLogRequest = async (data) => {
       }),
     });
     let responseJson = await response.json();
-    console.log(responseJson);
+    console.log('medicationAddLogRequest : ' + responseJson);
     return true;
   } catch (error) {
     console.error(error);
@@ -84,8 +85,13 @@ const weightAddLogRequest = async (weight, date) => {
         unit: 'kg',
       }),
     });
+    console.log('body : ' + JSON.stringify({
+      weight: weight,
+      recordDate: date,
+      unit: 'kg',
+    }),);
     let responseJson = await response.json();
-    console.log(responseJson);
+    console.log('weightAddLogRequest : ' + responseJson);
     return true;
   } catch (error) {
     console.error(error);

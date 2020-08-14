@@ -16,11 +16,13 @@ const HypocorrectionFood = (props) => {
 */
   return (
     <View style={styles.screen}>
+      <Text style={styles.header}>Consume 15g from this food list now!</Text>
       <FlatList
         data={SampleData.data}
+        contentContainerStyle={{paddingBottom: '20%'}}
         renderItem={({item}) => (
           <>
-            <Text>{item.category}</Text>
+            <Text style={styles.categoryText}>{item.category}</Text>
             <Carousel
               items={item.foodItems}
               itemsPerInterval={3}
@@ -38,6 +40,19 @@ const styles = StyleSheet.create({
   screen: {
     width: '100%',
     backgroundColor: 'white',
+  },
+  header: {
+    alignSelf: 'center',
+    fontSize: 20,
+    margin: '2%',
+    fontWeight: '700',
+    color: '#d43f3a',
+  },
+  categoryText: {
+    fontSize: 18,
+    fontWeight: '600',
+    marginStart: '2%',
+    marginTop: '2%',
   },
 });
 

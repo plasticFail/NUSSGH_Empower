@@ -4,15 +4,14 @@ import {View, StyleSheet, Text, TouchableHighlight, TouchableOpacity, ScrollView
 import Moment from 'moment';
 // Functions
 import {storeLastMealLog} from "../../../../storage/asyncStorageFunctions";
-// Components
-import Select from "../../../../components/select";
-// Others
-import Entypo from 'react-native-vector-icons/Entypo';
-import RenderMealItem from "../../../../components/logs/meal/RenderMealItem";
 import {mealAddLogRequest} from "../../../../netcalls/requestsLog";
+// Components
 import DateSelectionBlock from "../../../../components/logs/dateSelectionBlock";
 import MealTypeSelectionBlock from "../../../../components/logs/meal/MealTypeSelectionBlock";
 import MealFinder from "../../../../components/logs/meal/MealFinder";
+import RenderMealItem from "../../../../components/logs/meal/RenderMealItem";
+// Others
+import Entypo from 'react-native-vector-icons/Entypo';
 
 Entypo.loadFont();
 
@@ -109,7 +108,7 @@ class MealLogRoot extends React.Component {
             recordDate
         };
         mealAddLogRequest(mealData).then(data => {
-            storeLastMealLog(JSON.stringify(this.state)).then(resp => {
+            storeLastMealLog(this.state).then(resp => {
                 this.props.navigation.goBack();
                 Alert.alert("Log Success!", data.message,
                     [ { text: 'Ok' }]);
@@ -132,11 +131,11 @@ class MealLogRoot extends React.Component {
     }
 
     render() {
-        const {navigation, parentScreen} = this.props;
+        const {navigation, parentScreen, containerStyle} = this.props;
         const {selectedDateTime, selectedMealType, selectedMeal} = this.state;
         return (
-            <View style={styles.root}>
-                <ScrollView style={{flex: 1}} contentContainerStyle={{padding: 20, flexGrow: 1}}>
+            <View style={[styles.root, containerStyle]}>
+                <ScrollView style={{flex: 1}} contentContainerStyle={{flexGrow: 1}}>
                     <DateSelectionBlock date={selectedDateTime}
                                         setDate={(date) => this.setState({selectedDateTime : date})} />
                     <MealTypeSelectionBlock onSelectChange={this.handleSelectChange}
@@ -170,7 +169,7 @@ class MealLogRoot extends React.Component {
                                   />
                               </View>
                               {   // If parent screen is from daily log, don't render the submit button.
-                                  this.props.parentScreen !== 'DailyLog2' &&
+                                  this.props.parentScreen !== 'DailyLog' &&
                                   <TouchableOpacity style={styles.submitButton} onPress={this.handleSubmitLog}>
                                       <Text style={styles.submitButtonText}>Submit Log!</Text>
                                   </TouchableOpacity>
@@ -200,6 +199,7 @@ function getDefaultMealType(hours) {
 const styles = StyleSheet.create({
     root: {
         flex: 1,
+        padding: 20,
     },
     datePickerInput: {
         backgroundColor: '#eff3bd',

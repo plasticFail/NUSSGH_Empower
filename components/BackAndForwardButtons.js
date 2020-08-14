@@ -4,7 +4,7 @@ import {Text, TouchableOpacity, View, StyleSheet} from "react-native";
 // Props: onPressBack: <Function> : Callback fired when the 'back' button is pressed.
 // Props: onPressForward: <Function>: Callback fired when the 'next' button is pressed.
 // Note: If onPressBack/onPressForward is not specified, the button is not rendered.
-export function BackAndForwardButton({onPressBack, onPressForward}) {
+export function BackAndForwardButton({onPressBack, onPressForward, overrideForwardTitle, overrideBackwardTitle}) {
     return (
         <View style={{flex: 1, justifyContent: 'flex-end'}}>
             <View style={styles.buttonContainer}>
@@ -12,7 +12,7 @@ export function BackAndForwardButton({onPressBack, onPressForward}) {
                     {
                         onPressBack &&
                         <TouchableOpacity style={styles.button} onPress={onPressBack}>
-                            <Text style={styles.buttonText}>Back</Text>
+                            <Text style={styles.buttonText}>{overrideBackwardTitle || "Back"}</Text>
                         </TouchableOpacity>
                     }
                 </View>
@@ -20,7 +20,7 @@ export function BackAndForwardButton({onPressBack, onPressForward}) {
                     {
                         onPressForward &&
                         <TouchableOpacity style={styles.button} onPress={onPressForward}>
-                            <Text style={styles.buttonText}>Next</Text>
+                            <Text style={styles.buttonText}>{overrideForwardTitle || "Next"}</Text>
                         </TouchableOpacity>
                     }
                 </View>
@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
         width: '100%',
         flexDirection: 'row',
         padding: 20,
-        paddingBottom: '10%',
+        paddingTop: 50,
     },
     button: {
         justifyContent: 'center',

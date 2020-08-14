@@ -40,6 +40,7 @@ const styles = StyleSheet.create({
         borderTopWidth: 0.5,
         borderColor: '#cfcfcf',
         height: 240,
+        width: '100%'
     },
     headerContainer: {
         flexDirection: 'row',

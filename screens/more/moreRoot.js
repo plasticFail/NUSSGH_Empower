@@ -27,6 +27,28 @@ const MoreRootScreen = (props) => {
         break;
 
       case 5:
+        props.navigation.navigate('Reports');
+        break;
+      case 6:
+        props.navigation.navigate('EducationMaterials');
+        break;
+
+      case 7:
+        props.navigation.navigate('Goals');
+        break;
+
+      case 8:
+        props.navigation.navigate('Reminders');
+        break;
+
+      case 9:
+        props.navigation.navigate('GameCenter');
+        break;
+      case 10:
+        props.navigation.navigate('GlucoseMonitors');
+        break;
+
+      case 11:
         storeToken('');
         props.logout();
         break;
@@ -38,7 +60,13 @@ const MoreRootScreen = (props) => {
     {id: 2, value: 'View My Medications'},
     {id: 3, value: 'View My Appointments'},
     {id: 4, value: 'View Hypo-correction Food'},
-    {id: 5, value: 'Logout'},
+    {id: 5, value: 'View My Reports'},
+    {id: 6, value: 'View Educational Materials'},
+    {id: 7, value: 'Manage My Goals'},
+    {id: 8, value: 'Manage My Reminders'},
+    {id: 9, value: 'Game Center'},
+    {id: 10, value: 'Bluetooth Glucose Monitors'},
+    {id: 11, value: 'Logout'},
   ];
 
   return (

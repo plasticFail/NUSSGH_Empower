@@ -1,6 +1,9 @@
 import Moment from 'moment';
-
 import {Alert} from 'react-native';
+import {
+  storeLastBgLog,
+  storeLastWeightLog,
+} from '../storage/asyncStorageFunctions';
 
 const checkTime = (dateToCheck) => {
   Moment.locale('en');
@@ -26,7 +29,7 @@ const checkTime = (dateToCheck) => {
 };
 
 const checkDosage = (dosageString) => {
-  var dosageS = String(dosageString);
+  let dosageS = String(dosageString);
   if (
     dosageString.length != 0 &&
     !dosageS.includes('.') &&
@@ -42,4 +45,13 @@ const checkDosage = (dosageString) => {
   }
 };
 
-export {checkTime, checkDosage};
+const storeData = (type, data) => {
+  if (type === 'BloodGlucose') {
+    storeLastBgLog(JSON.stringify(data));
+  }
+  if (type === 'Weight') {
+    storeLastWeightLog(JSON.stringify(data));
+  }
+};
+
+export {checkTime, checkDosage, storeData};

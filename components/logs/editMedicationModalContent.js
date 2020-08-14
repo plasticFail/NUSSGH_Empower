@@ -5,10 +5,9 @@ import {
   StyleSheet,
   TextInput,
   Image,
-  Alert,
   TouchableOpacity,
 } from 'react-native';
-import {checkDosage} from '../../../../commonFunctions/logFunctions';
+import {checkDosage} from '../../commonFunctions/logFunctions';
 
 const EditMedicationModalContent = (props) => {
   const [dosage, setDosage] = useState(props.medicineToEdit.dosage);

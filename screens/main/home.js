@@ -2,13 +2,52 @@ import React from 'react';
 import {View, Text, StyleSheet, Button} from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import Ionicon from 'react-native-vector-icons/Ionicons';
+import Entypo from 'react-native-vector-icons/Entypo';
 import Foundation from 'react-native-vector-icons/Foundation';
-import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
+import {
+  ScrollView,
+  TouchableOpacity,
+  FlatList,
+} from 'react-native-gesture-handler';
+
+const buttonList = [
+  {
+    id: '1',
+    name: 'Medications',
+    iconName: 'medicinebox',
+    route: 'Medication',
+  },
+  {
+    id: '2',
+    name: 'Reports',
+    iconName: 'linechart',
+    route: 'Reports',
+  },
+  {
+    id: '3',
+    name: 'Education',
+    iconName: 'solution1',
+    route: 'EducationMaterials',
+  },
+  {
+    id: '4',
+    name: 'Game Center',
+    iconName: 'game-controller',
+    route: 'GameCenter',
+  },
+  {
+    id: '5',
+    name: 'Goals',
+    iconName: 'target-two',
+    route: 'Goals',
+  },
+];
 
 const HomeScreen = (props) => {
   Ionicon.loadFont();
   Icon.loadFont();
   Foundation.loadFont();
+  Entypo.loadFont();
 
   return (
     <ScrollView
@@ -18,58 +57,30 @@ const HomeScreen = (props) => {
         backgroundColor: 'white',
       }}>
       <View style={[styles.buttonContainer, styles.shadow]}>
-        <View style={styles.buttonIconContainer}>
-          <TouchableOpacity>
-            <View style={[styles.buttonStyle]}>
-              <Icon name="medicinebox" size={30} />
+        <FlatList
+          keyExtractor={(item, index) => item.id}
+          data={buttonList}
+          contentContainerStyle={{
+            flexDirection: 'row',
+            justifyContent: 'space-around',
+            marginTop: '2%',
+          }}
+          renderItem={({item}) => (
+            <View>
+              <TouchableOpacity style={[styles.buttonStyle]}>
+                {item.iconName == 'game-controller' ? (
+                  <Entypo name={item.iconName} size={28} />
+                ) : item.iconName != 'target-two' ? (
+                  <Icon name={item.iconName} size={30} />
+                ) : (
+                  <Foundation name="target-two" size={30} />
+                )}
+              </TouchableOpacity>
+              <Text>{item.name}</Text>
             </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity>
-            <View style={styles.buttonStyle}>
-              <Icon name="linechart" size={30} />
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity>
-            <View style={styles.buttonStyle}>
-              <Icon name="solution1" size={30} />
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity>
-            <View style={styles.buttonStyle}>
-              <Foundation name="target-two" size={30} />
-            </View>
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.wordContainer}>
-          <Text style={styles.buttonText}>Medication</Text>
-          <Text style={styles.buttonText}>Reports</Text>
-          <Text style={styles.buttonText}>Education</Text>
-          <Text style={styles.buttonText}>Goals</Text>
-        </View>
+          )}
+        />
       </View>
-
-      <TouchableOpacity
-        style={[
-          styles.gameCenterContainer,
-          styles.shadow,
-          styles.contentContainer,
-        ]}>
-        <Ionicon name="alert-circle-outline" size={50} style={{flex: 0.2}} />
-        <Text style={{flex: 1, marginTop: '2%'}}>
-          1 Chance (s) left today to select a cell from your alphabetical card
-        </Text>
-        <TouchableOpacity style={styles.gameCenterButton}>
-          <Ionicon
-            name="chevron-forward-sharp"
-            size={30}
-            style={{alignItems: 'flex-end', marginTop: '35%'}}
-          />
-        </TouchableOpacity>
-      </TouchableOpacity>
 
       <Text style={styles.text}>Today's Overview</Text>
       <View
@@ -104,13 +115,10 @@ const styles = StyleSheet.create({
     marginEnd: '5%',
   },
   buttonStyle: {
-    flex: 1,
-    padding: '5%',
+    padding: '2%',
     backgroundColor: 'white',
-    width: '100%',
-    borderRadius: 500,
+    borderRadius: 30,
     alignItems: 'center',
-    justifyContent: 'space-evenly',
     borderWidth: 0.2,
   },
   gameCenterContainer: {

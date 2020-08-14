@@ -1,7 +1,8 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, StyleSheet, Text, Image} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 import SampleData from '../../screens/more/sampleHypoList.json';
+import Item from './item';
 
 //using sample data for now
 const ViewMore = (props) => {
@@ -10,14 +11,23 @@ const ViewMore = (props) => {
 
   useEffect(() => {
     //initialise list of items under same category
-    for (var x in SampleData.data) {
+    for (var x of SampleData.data) {
       if (x.category === category) {
         setArr(x.foodItems);
       }
     }
   }, []);
 
-  return <View style={styles.screen}></View>;
+  return (
+    <View style={styles.screen}>
+      <FlatList
+        keyExtractor={(item, index) => item._id}
+        data={arr}
+        numColumns={2}
+        renderItem={({item}) => <Item content={item} />}
+      />
+    </View>
+  );
 };
 
 export default ViewMore;
@@ -27,5 +37,6 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     backgroundColor: 'white',
+    padding: '2%',
   },
 });

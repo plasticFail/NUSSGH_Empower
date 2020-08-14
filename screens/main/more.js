@@ -9,6 +9,12 @@ import HypocorrectionFood from '../more/hypocorrectionFood';
 import AppointmentScreen from '../more/appointments';
 import ViewMore from '../../components/hypofood/viewMore';
 import HeaderIcon from '../../components/common/headerBtnIcon';
+import ReportsScreen from '../more/reports';
+import EducationMaterialsScreen from '../more/educationMaterials';
+import GoalsScreen from '../more/goals';
+import RemindersScreen from '../more/reminders';
+import GameCenterScreen from '../more/gameCenter';
+import GlucoseMonitorsScreen from '../more/glucoseMonitor';
 
 const Stack = createStackNavigator();
 
@@ -28,9 +34,6 @@ function getMoreHeaderTitle(route) {
     case 'Appointments':
       console.log('Appointments');
       return 'Appointments';
-    case 'HypocorrectionFood':
-      console.log('HypocorrectionFood');
-      return 'Hypocorrection Food';
   }
 }
 
@@ -108,6 +111,54 @@ const MoreScreen = (props) => {
           title: route.params.category,
           headerRight: () => <View />,
         })}
+      />
+      <Stack.Screen
+        name="Reports"
+        component={ReportsScreen}
+        options={{
+          title: 'Reports',
+          headerRight: () => <View />,
+        }}
+      />
+      <Stack.Screen
+        name="EducationMaterials"
+        component={EducationMaterialsScreen}
+        options={{
+          title: 'Education',
+          headerRight: () => <View />,
+        }}
+      />
+      <Stack.Screen
+        name="Goals"
+        component={GoalsScreen}
+        options={{
+          title: 'Manage My Goals',
+          headerRight: () => <View />,
+        }}
+      />
+      <Stack.Screen
+        name="Reminders"
+        component={RemindersScreen}
+        options={{
+          title: 'Manage My Reminders',
+          headerRight: () => <View />,
+        }}
+      />
+      <Stack.Screen
+        name="GameCenter"
+        component={GameCenterScreen}
+        options={{
+          title: 'Game Center',
+          headerRight: () => <View />,
+        }}
+      />
+      <Stack.Screen
+        name="GlucoseMonitors"
+        component={GlucoseMonitorsScreen}
+        options={{
+          title: 'Glucose Monitors',
+          headerRight: () => <View />,
+        }}
       />
     </Stack.Navigator>
   );

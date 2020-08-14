@@ -5,16 +5,17 @@ import {
   StyleSheet,
   TouchableOpacity,
   Alert,
-  ScrollView,
 } from 'react-native';
 //third party libs
 import Moment from 'moment';
 //functions
 import {weightAddLogRequest} from '../../../netcalls/requestsLog';
+import {checkTime} from '../../../commonFunctions/logFunctions';
+import {storeLastWeightLog} from '../../../storage/asyncStorageFunctions';
 //components
 import SuccessDialogue from '../../../components/successDialogue';
 import WeightLogBlock from '../../../components/logs/weightLogBlock';
-import {checkTime} from '../../../commonFunctions/logFunctions';
+import LogDisplay from '../../../components/logs/logDisplay';
 
 const WeightLog = (props) => {
   const [date, setDate] = useState(new Date());
@@ -35,6 +36,8 @@ const WeightLog = (props) => {
           ]);
         }
       });
+
+      storeLastWeightLog({value: weight, time: Moment(date).format('h:mm a')});
     }
   };
 
@@ -69,6 +72,9 @@ const WeightLog = (props) => {
       <TouchableOpacity style={styles.button} onPress={handleSubmit}>
         <Text style={styles.buttonText}>Submit</Text>
       </TouchableOpacity>
+
+      <LogDisplay type="Weight" />
+
       <SuccessDialogue visible={successShow} type="Weight" />
     </View>
   );

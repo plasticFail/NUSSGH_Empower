@@ -11,8 +11,8 @@ const PreviousMealBlock = (props) => {
     const [mealData, setMealData] = React.useState(null);
     React.useEffect(() => {
         if (mealData === null) {
-            getLastMealLog().then(stringifiedLog => {
-                setMealData(JSON.parse(stringifiedLog));
+            getLastMealLog().then(log => {
+                setMealData(log);
             });
         }
     }, [mealData]);
@@ -36,6 +36,7 @@ const PreviousMealBlock = (props) => {
 
 const styles = StyleSheet.create({
     root: {
+        width: '100%',
         alignItems: 'center',
         flex: 1,
         marginLeft: '5%',

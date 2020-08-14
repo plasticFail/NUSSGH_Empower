@@ -75,7 +75,12 @@ export default class HypoglycemiaReason extends React.Component {
     Alert.alert(
       'Thank you for filling the survey',
       'Please click to view the list of fast acting carbohydrates!',
-      [{text: 'Got It', onPress: () => this.props.navigation.navigate('Home')}],
+      [
+        {
+          text: 'Got It',
+          onPress: () => this.props.navigation.navigate('HypocorrectionFood'),
+        },
+      ],
       {cancelable: false},
     );
   }
@@ -128,6 +133,7 @@ function FormQuestion({type, setRespective}) {
           question={'Did you eat lesser than usual today?'}
           getFormSelection={setRespective}
           selectNo={true}
+          color={'#e958c8'}
         />
       </View>
     );
@@ -139,6 +145,7 @@ function FormQuestion({type, setRespective}) {
           question={'Did you exercise today?'}
           getFormSelection={setRespective}
           selectNo={true}
+          color={'#e958c8'}
         />
       </View>
     );
@@ -150,6 +157,7 @@ function FormQuestion({type, setRespective}) {
           question={'Did you have any alcoholic beverages today?'}
           getFormSelection={setRespective}
           selectNo={true}
+          color={'#e958c8'}
         />
       </View>
     );
