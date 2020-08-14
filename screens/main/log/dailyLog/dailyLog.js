@@ -14,8 +14,10 @@ class DailyLog extends Component {
     this.state = {
       currentStep: 1,
       showNewInput: false,
+
       dateBloodGlucose: new Date(),
-      bloodGlucose: null,
+      bloodGlucose: '',
+      lastBloodGlucose: null,
     };
   }
 
@@ -24,16 +26,17 @@ class DailyLog extends Component {
       console.log(data);
       console.log(data.time);
       console.log(data.value);
-      this.setState({bloodGlucose : data});
+      this.setState({lastBloodGlucose : data});
     });
   }
 
   componentDidUpdate() {
-    console.log(this.state.bloodGlucose.value);
+    console.log(this.state.dateBloodGlucose);
+    console.log(this.state.bloodGlucose);
   }
 
-  displayStepText = step => {
-    switch (step){
+  displayStepText = () => {
+    switch (this.state.currentStep){
       case 1:
         return 'Step 1: Blood Glucose Log';
       case 2:
@@ -48,8 +51,8 @@ class DailyLog extends Component {
     return '';
   }
 
-  stepImage = step => {
-    switch (step){
+  stepImage = () => {
+    switch (this.state.currentStep){
       case 1:
         return require('../../../../resources/images/progress1.png');
       case 2:
@@ -64,8 +67,8 @@ class DailyLog extends Component {
     return '';
   }
 
-  newInputText = step => {
-    switch (step){
+  formText = () => {
+    switch (this.state.currentStep){
       case 1:
         return 'You already logged blood glucose today, Want to add a new record?';
       case 2:
@@ -78,59 +81,107 @@ class DailyLog extends Component {
     return '';
   }
 
+  showFormText = () => {
+    switch (this.state.currentStep){
+      case 1:
+        if(this.state.lastBloodGlucose !== null){
+          return true;
+        }
+        break;
+      case 2:
+        return true;
+        break;
+      case 3:
+        return true;
+        break;
+      case 4:
+        return true;
+        break;
+      case 5:
+        return false;
+        break;
+    }
+    return false;
+  }
+
+  showLastLog = step => {
+    if(step === this.state.currentStep){
+      switch (step){
+        case 1:
+          if(this.state.lastBloodGlucose !== null && !this.state.showNewInput){
+            return true;
+          }
+          break;
+      }
+    }
+    return false;
+  }
+
+  showNewLogInput = step => {
+    if(step === this.state.currentStep){
+      switch (step){
+        case 1:
+          if(this.state.lastBloodGlucose === null || this.state.showNewInput){
+            return true;
+          }
+          break;
+      }
+    }
+    return false;
+  }
+
   render() {
     return (
         <View style={styles.screen}>
           <View style={styles.textContainer}>
-            <Text style={styles.text}>{this.displayStepText(this.state.currentStep)}</Text>
+            <Text style={styles.text}>{this.displayStepText()}</Text>
           </View>
           <Image
               style={styles.progress}
               resizeMode="contain"
-              source={this.stepImage(this.state.currentStep)}
+              source={this.stepImage()}
           />
 
-          {this.state.showNewInput ? (<View
+          {this.showFormText() && (<View
               style={[
                 styles.container,
                 styles.shadow,
                 {marginBottom: '4%', paddingEnd: '1%'},
               ]}>
             <FormBlock
-                question={this.newInputText(this.state.currentStep)}
+                question={this.formText()}
                 getFormSelection={boolValue => {
                   this.setState({showNewInput: boolValue})
                 }}
                 selectNo={true}
                 color={'#aad326'}
             />
-          </View>) : null}
+          </View>)}
 
-          {this.state.bloodGlucose !== null ? (<BloodGlucoseLogDisplay data={this.state.bloodGlucose}/>) : null}
+          {this.showLastLog(1) && (<BloodGlucoseLogDisplay data={this.state.lastBloodGlucose}/>)}
 
+          {this.showNewLogInput(1) && (
+            <BloodGlucoseLogBlock
+              date={this.state.dateBloodGlucose}
+              setDate={date => {this.setState({dateBloodGlucose : date})}}
+              bloodGlucose={this.state.bloodGlucose}
+              setBloodGlucose={value => {this.setState({bloodGlucose : value})}}
+            />
+          )}
 
-          {/*{show && (*/}
-          {/*  <BloodGlucoseLogBlock*/}
-          {/*    date={date}*/}
-          {/*    setDate={setDate}*/}
-          {/*    bloodGlucose={bloodGlucose}*/}
-          {/*    setBloodGlucose={setBloodGlucose}*/}
-          {/*  />*/}
-          {/*)}*/}
-
-          {/*<TouchableOpacity*/}
-          {/*  style={{marginTop: '4%'}}*/}
-          {/*  onPress={() => {*/}
-          {/*    // pass states to other screens to maintain persistent storage.*/}
-          {/*    const states = props.route.params;*/}
-          {/*    props.navigation.navigate('DailyLog2', states);*/}
-          {/*  }}>*/}
-          {/*  <Text>Next</Text>*/}
-          {/*</TouchableOpacity>*/}
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => {
+              // pass states to other screens to maintain persistent storage.
+              this.setState({currentStep : this.state.currentStep+1});
+              this.setState({showNewInput : false});
+            }}>
+            <Text style={styles.buttonText}>Next</Text>
+          </TouchableOpacity>
         </View>
     );
   }
-};
+}
 
 const styles = StyleSheet.create({
   screen: {
@@ -167,6 +218,20 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+  },
+  button: {
+    marginTop: '9%',
+    backgroundColor: '#AAD326',
+    borderRadius: 20,
+    marginVertical: 10,
+    paddingHorizontal: 40,
+    paddingVertical: 6,
+    alignSelf: 'center',
+  },
+  buttonText: {
+    fontSize: 23,
+    fontWeight: '500',
+    textAlign: 'center',
   },
 });
 
