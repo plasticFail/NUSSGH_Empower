@@ -4,7 +4,6 @@ import {
   getLastBgLog,
   getLastWeightLog,
 } from '../../storage/asyncStorageFunctions';
-import Moment from 'moment';
 
 //for displaying the most recent value for weight/blood glucose log
 //pass in a prop type="Weight" or "BloodGlucose"
@@ -36,7 +35,7 @@ const LogDisplay = (props) => {
   };
 
   return (
-    <View>
+    <>
       {lastValue === '' ? (
         <View></View>
       ) : (
@@ -57,7 +56,7 @@ const LogDisplay = (props) => {
           )}
         </View>
       )}
-    </View>
+    </>
   );
 };
 

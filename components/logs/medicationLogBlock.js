@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import Modal from 'react-native-modal';
 import Entypo from 'react-native-vector-icons/Entypo';
-import {FlatList} from "react-native-gesture-handler";
+import {FlatList} from 'react-native-gesture-handler';
 
 // content
 import DateSelectionBlock from '../logs/dateSelectionBlock';
@@ -19,7 +19,6 @@ import EditMedicationModalContent from './editMedicationModalContent';
 
 // functions
 import {checkDosage} from '../../commonFunctions/logFunctions';
-
 
 Entypo.loadFont();
 
@@ -82,15 +81,15 @@ const MedicationLogBlock = (props) => {
       )}
 
       <FlatList
-          keyExtractor={(item, index) => item.drug_name}
-          data={props.selectedMedicationList}
-          renderItem={({item}) => (
-              <MedicationAdded
-                  medication={item}
-                  handleDelete={() => handleDelete(item)}
-                  openEditModal={() => openEditModal(item)}
-              />
-          )}
+        keyExtractor={(item) => item.drugName}
+        data={props.selectedMedicationList}
+        renderItem={({item}) => (
+          <MedicationAdded
+            medication={item}
+            handleDelete={() => handleDelete(item)}
+            openEditModal={() => openEditModal(item)}
+          />
+        )}
       />
 
       {/* Select Medicine Modal*/}

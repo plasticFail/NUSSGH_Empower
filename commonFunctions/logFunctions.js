@@ -3,6 +3,7 @@ import {Alert} from 'react-native';
 import {
   storeLastBgLog,
   storeLastWeightLog,
+  storeLastMedicationLog,
 } from '../storage/asyncStorageFunctions';
 
 const checkTime = (dateToCheck) => {
@@ -51,6 +52,9 @@ const storeData = (type, data) => {
   }
   if (type === 'Weight') {
     storeLastWeightLog(JSON.stringify(data));
+  }
+  if (type === 'Medication') {
+    storeLastMedicationLog(JSON.stringify(data));
   }
 };
 

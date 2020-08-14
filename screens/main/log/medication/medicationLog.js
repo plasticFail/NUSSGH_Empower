@@ -6,7 +6,8 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {medicationAddLogRequest} from '../../../../netcalls/requestsLog';
 import SuccessDialogue from '../../../../components/successDialogue';
 import MedicationLogBlock from '../../../../components/logs/medicationLogBlock';
-import {checkTime} from '../../../../commonFunctions/logFunctions';
+import {checkTime, storeData} from '../../../../commonFunctions/logFunctions';
+import MedicationLogDisplay from '../../../../components/logs/medicationLogDisplay';
 
 Entypo.loadFont();
 
@@ -26,11 +27,18 @@ const MedicationLog = (props) => {
       for (var x of selectedMedicationList) {
         x.recordDate = Moment(date).format('DD/MM/YYYY HH:mm:ss');
       }
+
+      //store latest in async storage [before removing img to send to db]
+      storeData('Medication', {
+        value: selectedMedicationList,
+        time: Moment(date).format('h:mm a'),
+      });
+
+      //remove image to send back to database
       selectedMedicationList.map(function (item) {
         delete item.image_url;
         return item;
       });
-      console.log(selectedMedicationList);
       medicationAddLogRequest(selectedMedicationList).then((value) => {
         if (value) {
           setShowSuccess(true);
@@ -60,6 +68,9 @@ const MedicationLog = (props) => {
           </TouchableOpacity>
         )}
       </View>
+
+      <MedicationLogDisplay />
+
       <SuccessDialogue visible={showSuccess} type="Medication" />
     </ScrollView>
   );
