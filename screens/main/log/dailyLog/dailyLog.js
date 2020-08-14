@@ -32,6 +32,7 @@ class DailyLog extends Component {
       mealType: null,
       meal: null,
       lastMealLog: null,
+      toRecordMealLog: false,
 
       dateWeight: new Date(),
       weight: '',
@@ -131,6 +132,24 @@ class DailyLog extends Component {
     return false;
   }
 
+  handleFormBlockChange = (boolValue) => {
+    if (this.state.showNewInput === boolValue) {
+      return;
+    }
+    switch (this.state.currentStep) {
+      case 2:
+        this.setState({
+          showNewInput: boolValue,
+          toRecordMealLog: boolValue
+        });
+        break;
+      default:
+        this.setState({
+          showNewInput: boolValue
+        })
+    };
+  }
+
   showLastLog = step => {
     if(step === this.state.currentStep){
       switch (step){
@@ -204,8 +223,8 @@ class DailyLog extends Component {
     // To do
 
     // Meal data to pass to endpoint
-    const {meal, mealType, mealRecordDate} = this.state;
-    if (meal) {
+    const {meal, mealType, mealRecordDate, toRecordMealLog} = this.state;
+    if (meal && toRecordMealLog) {
       const { beverage, main, side, dessert, isFavourite, mealName } = meal;
       const mealDataToLog = {
         beverage,
@@ -232,7 +251,6 @@ class DailyLog extends Component {
     // Call all requests asynchronously.
     Promise.all(promises).then(respArr => {
       // All have been recorded
-      console.log(respArr);
       this.props.navigation.goBack();
       Alert.alert('Log success', 'Your logs have been recorded', [{text: 'Okay'}])
     }).catch(err => {
@@ -282,9 +300,7 @@ class DailyLog extends Component {
                   ]}>
                 <FormBlock
                     question={this.formText()}
-                    getFormSelection={boolValue => {
-                      this.setState({showNewInput: boolValue})
-                    }}
+                    getFormSelection={this.handleFormBlockChange}
                     selectNo={true}
                     color={'#aad326'}
                 />
@@ -302,14 +318,6 @@ class DailyLog extends Component {
                   setBloodGlucose={value => {this.setState({bloodGlucose : value})}}
                 />
               )}
-              {this.showNewLogInput(4) && (
-                  <WeightLogBlock
-                      date={this.state.dateWeight}
-                      setDate={date => {this.setState({dateWeight : date})}}
-                      bloodGlucose={this.state.weight}
-                      setBloodGlucose={value => {this.setState({weight : value})}}
-                  />
-              )}
               {
                 this.showNewLogInput(2) && <MealLogRoot
                     containerStyle={{padding: 0}}
@@ -324,6 +332,14 @@ class DailyLog extends Component {
                     route={route}
                 />
               }
+              {this.showNewLogInput(4) && (
+                  <WeightLogBlock
+                      date={this.state.dateWeight}
+                      setDate={date => {this.setState({dateWeight : date})}}
+                      bloodGlucose={this.state.weight}
+                      setBloodGlucose={value => {this.setState({weight : value})}}
+                  />
+              )}
                 {
                     currentStep === 1 ? // Only render the forward button
                         <BackAndForwardButton onPressBack={this.props.navigation.goBack}
