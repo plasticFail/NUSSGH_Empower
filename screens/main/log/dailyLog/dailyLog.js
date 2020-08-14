@@ -1,10 +1,13 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, Image, TouchableOpacity, Modal} from 'react-native';
-//other screens
-import BloodGlucoseLogBlock from '../../../../components/logs/bloodGlucoseLogBlock';
+import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
+//functions
+import {getLastBgLog, getLastWeightLog} from '../../../../storage/asyncStorageFunctions';
+//components
 import FormBlock from '../../../../components/logs/formBlock';
+import BloodGlucoseLogBlock from '../../../../components/logs/bloodGlucoseLogBlock';
 import BloodGlucoseLogDisplay from '../../../../components/logs/bloodGlucoseLogDisplay';
-import {getLastBgLog} from '../../../../storage/asyncStorageFunctions';
+import WeightLogBlock from '../../../../components/logs/weightLogBlock';
+import WeightLogDisplay from '../../../../components/logs/weightLogDisplay';
 
 class DailyLog extends Component {
   constructor(props) {
@@ -18,21 +21,25 @@ class DailyLog extends Component {
       dateBloodGlucose: new Date(),
       bloodGlucose: '',
       lastBloodGlucose: null,
+
+      dateWeight: new Date(),
+      weight: '',
+      lastWeight: null,
     };
   }
 
   componentDidMount() {
     getLastBgLog().then((data) => {
-      console.log(data);
-      console.log(data.time);
-      console.log(data.value);
       this.setState({lastBloodGlucose : data});
     });
+
+    getLastWeightLog().then((data) => {
+      this.setState({lastWeight : data});
+    })
   }
 
   componentDidUpdate() {
-    console.log(this.state.dateBloodGlucose);
-    console.log(this.state.bloodGlucose);
+
   }
 
   displayStepText = () => {
@@ -95,7 +102,9 @@ class DailyLog extends Component {
         return true;
         break;
       case 4:
-        return true;
+        if(this.state.lastWeight !== null){
+          return true;
+        }
         break;
       case 5:
         return false;
@@ -112,6 +121,11 @@ class DailyLog extends Component {
             return true;
           }
           break;
+        case 4:
+          if(this.state.lastWeight !== null && !this.state.showNewInput){
+            return true;
+          }
+          break;
       }
     }
     return false;
@@ -122,6 +136,11 @@ class DailyLog extends Component {
       switch (step){
         case 1:
           if(this.state.lastBloodGlucose === null || this.state.showNewInput){
+            return true;
+          }
+          break;
+        case 4:
+          if(this.state.lastWeight === null || this.state.showNewInput){
             return true;
           }
           break;
@@ -159,6 +178,7 @@ class DailyLog extends Component {
           </View>)}
 
           {this.showLastLog(1) && (<BloodGlucoseLogDisplay data={this.state.lastBloodGlucose}/>)}
+          {this.showLastLog(4) && (<WeightLogDisplay data={this.state.lastWeight}/>)}
 
           {this.showNewLogInput(1) && (
             <BloodGlucoseLogBlock
@@ -167,6 +187,14 @@ class DailyLog extends Component {
               bloodGlucose={this.state.bloodGlucose}
               setBloodGlucose={value => {this.setState({bloodGlucose : value})}}
             />
+          )}
+          {this.showNewLogInput(4) && (
+              <WeightLogBlock
+                  date={this.state.dateWeight}
+                  setDate={date => {this.setState({dateWeight : date})}}
+                  bloodGlucose={this.state.weight}
+                  setBloodGlucose={value => {this.setState({weight : value})}}
+              />
           )}
 
           <TouchableOpacity
