@@ -137,43 +137,46 @@ class MealLogRoot extends React.Component {
         return (
             <View style={styles.root}>
                 <ScrollView style={{flex: 1}} contentContainerStyle={{padding: 20, flexGrow: 1}}>
-                <DateSelectionBlock date={selectedDateTime} setDate={(date) => this.setState({selectedDateTime : date})} />
-                <MealTypeSelectionBlock onSelectChange={this.handleSelectChange} defaultValue={selectedMealType} />
-                {   // If meal is not selected, display options (create, recent or favourites) for
-                    // user to select a meal from (MealFinder).
-                  !selectedMeal ? (
-                      <MealFinder navigation={navigation} parentScreen={parentScreen} />
-                  ) : // Meal has been selected, render a preview of the meal for confirmation before submitting.
-                      <View style={{width: '100%', flex: 1}}>
-                          <View style={{flex: 1, justifyContent: 'center'}}>
-                              <RenderMealItem item={selectedMeal}
-                                              options={{
-                                                  buttons: [
-                                                      {
-                                                          text: 'Remove',
-                                                          onPress: this.handleDeleteMeal,
-                                                          buttonStyle: {
-                                                              backgroundColor: 'red',
-                                                              width: 80
+                    <DateSelectionBlock date={selectedDateTime}
+                                        setDate={(date) => this.setState({selectedDateTime : date})} />
+                    <MealTypeSelectionBlock onSelectChange={this.handleSelectChange}
+                                            defaultValue={selectedMealType} />
+                    {   // If meal is not selected, display options (create, recent or favourites) for
+                        // user to select a meal from (MealFinder).
+                      !selectedMeal ? (
+                          <MealFinder navigation={navigation}
+                                      parentScreen={parentScreen} />
+                      ) : // Meal has been selected, render a preview of the meal for confirmation before submitting.
+                          <View style={{width: '100%', flex: 1}}>
+                              <View style={{flex: 1, justifyContent: 'center'}}>
+                                  <RenderMealItem item={selectedMeal}
+                                                  options={{
+                                                      buttons: [
+                                                          {
+                                                              text: 'Remove',
+                                                              onPress: this.handleDeleteMeal,
+                                                              buttonStyle: {
+                                                                  backgroundColor: 'red',
+                                                                  width: 80
+                                                              }
+                                                          },
+                                                          {
+                                                              text: 'Edit',
+                                                              onPress: this.navigateToCreateMealLogPage
                                                           }
-                                                      },
-                                                      {
-                                                          text: 'Edit',
-                                                          onPress: this.navigateToCreateMealLogPage
-                                                      }
-                                                  ],
-                                                  header: (meal) => meal.mealName
-                                              }}
-                              />
+                                                      ],
+                                                      header: (meal) => meal.mealName
+                                                  }}
+                                  />
+                              </View>
+                              {   // If parent screen is from daily log, don't render the submit button.
+                                  this.props.parentScreen !== 'DailyLog2' &&
+                                  <TouchableOpacity style={styles.submitButton} onPress={this.handleSubmitLog}>
+                                      <Text style={styles.submitButtonText}>Submit Log!</Text>
+                                  </TouchableOpacity>
+                              }
                           </View>
-                          {   // If parent screen is from daily log, don't render the submit button.
-                              this.props.parentScreen !== 'DailyLog2' &&
-                              <TouchableOpacity style={styles.submitButton} onPress={this.handleSubmitLog}>
-                                  <Text style={styles.submitButtonText}>Submit Log!</Text>
-                              </TouchableOpacity>
-                          }
-                      </View>
-                }
+                    }
                 </ScrollView>
             </View>
         )
