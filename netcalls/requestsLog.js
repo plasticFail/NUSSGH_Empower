@@ -85,6 +85,11 @@ const weightAddLogRequest = async (weight, date) => {
         unit: 'kg',
       }),
     });
+    console.log('body : ' + JSON.stringify({
+      weight: weight,
+      recordDate: date,
+      unit: 'kg',
+    }),);
     let responseJson = await response.json();
     console.log('weightAddLogRequest : ' + responseJson);
     return true;

@@ -5,16 +5,16 @@ import {
   StyleSheet,
   TouchableOpacity,
   Alert,
-  ScrollView,
 } from 'react-native';
 //third party libs
 import Moment from 'moment';
 //functions
 import {weightAddLogRequest} from '../../../netcalls/requestsLog';
+import {checkTime} from '../../../commonFunctions/logFunctions';
+import {storeLastWeightLog} from '../../../storage/asyncStorageFunctions';
 //components
 import SuccessDialogue from '../../../components/successDialogue';
 import WeightLogBlock from '../../../components/logs/weightLogBlock';
-import {checkTime, storeData} from '../../../commonFunctions/logFunctions';
 import LogDisplay from '../../../components/logs/logDisplay';
 
 const WeightLog = (props) => {
@@ -37,8 +37,7 @@ const WeightLog = (props) => {
         }
       });
 
-      //Async
-      storeData('Weight', {value: weight, time: Moment(date).format('h:mm a')});
+      storeLastWeightLog({value: weight, time: Moment(date).format('h:mm a')});
     }
   };
 

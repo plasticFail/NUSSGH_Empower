@@ -12,7 +12,7 @@ const storeData = async (key, value) => {
     console.log('save ' + key + ' : ' + value);
   } catch (e) {
     // saving error
-    console.log('error store ' + key + ' : ' + e);
+    console.log('error store : ' + key + ' : ' + e);
   }
 };
 
@@ -29,6 +29,33 @@ const getData = async (key) => {
   }
   return null;
 };
+
+const storeDataObj = async (key, obj) => {
+  try {
+    let objString = JSON.stringify(obj);
+    console.log('save obj ' + key + ' : ' + objString);
+    await AsyncStorage.setItem(key, objString);
+  } catch (e) {
+    // saving error
+    console.log('error store obj : ' + key + ' : ' + e);
+  }
+};
+
+const getDataObj = async (key) => {
+  try {
+    let objString = await AsyncStorage.getItem(key);
+    let obj = JSON.parse(objString);
+    if (obj !== null) {
+      console.log('load ' + key + ' : ' + objString);
+      return obj;
+    }
+  } catch (e) {
+    // error reading value
+    console.log('error getData obj : ' + e);
+  }
+  return null;
+};
+
 
 const storeUsername = async (username) => {
   await storeData(key_username, username);
@@ -55,19 +82,19 @@ const getToken = async () => {
 };
 
 const storeLastBgLog = async (bgLog) => {
-  await storeData(key_bloodGlucoseLog, bgLog);
+  await storeDataObj(key_bloodGlucoseLog, bgLog);
 };
 
 const getLastBgLog = async () => {
-  return await getData(key_bloodGlucoseLog);
+  return await getDataObj(key_bloodGlucoseLog);
 };
 
 const storeLastWeightLog = async (weightLog) => {
-  await storeData(key_weightLog, weightLog);
+  await storeDataObj(key_weightLog, weightLog);
 };
 
 const getLastWeightLog = async () => {
-  return await getData(key_weightLog);
+  return await getDataObj(key_weightLog);
 };
 
 export {
