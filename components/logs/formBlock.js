@@ -3,8 +3,8 @@ import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import RadioButton from '../radioButton';
 
 const FormBlock = (props) => {
-  const [selectYes, setSelectedYes] = useState(props.defaultValue === 'yes' || false);
-  const [selectNo, setSelectedNo] = useState(props.defaultValue === 'no' || props.selectNo);
+  const [selectYes, setSelectedYes] = useState(false);
+  const [selectNo, setSelectedNo] = useState(props.selectNo);
   const handleButtonPress = (selectItem) => {
     if (selectItem == 'yes') {
       setSelectedYes(true);

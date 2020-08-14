@@ -8,20 +8,13 @@ import {storeLastMealLog} from "../../../../storage/asyncStorageFunctions";
 import Select from "../../../../components/select";
 // Others
 import Entypo from 'react-native-vector-icons/Entypo';
-import Ionicons from "react-native-vector-icons/Ionicons";
-import {getToken} from "../../../../storage/asyncStorageFunctions";
-import {mealAddLogEndpoint} from "../../../../netcalls/urls";
 import RenderMealItem from "../../../../components/logs/meal/RenderMealItem";
 import {mealAddLogRequest} from "../../../../netcalls/requestsLog";
 import DateSelectionBlock from "../../../../components/logs/dateSelectionBlock";
+import MealTypeSelectionBlock from "../../../../components/logs/meal/MealTypeSelectionBlock";
+import MealFinder from "../../../../components/logs/meal/MealFinder";
 
 Entypo.loadFont();
-
-const options = [{name: "Breakfast", value: "breakfast"},
-    {name: "Lunch", value: "lunch"},
-    {name: "Dinner", value: "dinner"},
-    {name: "Supper", value: "supper"},
-    {name: "Snack / Tea", value: "snack"}];
 
 class MealLogRoot extends React.Component {
     constructor(props) {
@@ -139,50 +132,17 @@ class MealLogRoot extends React.Component {
     }
 
     render() {
-        const {navigation} = this.props;
+        const {navigation, parentScreen} = this.props;
         const {selectedDateTime, selectedMealType, selectedMeal} = this.state;
         return (
             <View style={styles.root}>
                 <ScrollView style={{flex: 1}} contentContainerStyle={{padding: 20, flexGrow: 1}}>
                 <DateSelectionBlock date={selectedDateTime} setDate={(date) => this.setState({selectedDateTime : date})} />
-                <View style={{flexDirection: 'column', paddingTop: 30, paddingBottom: 30, width: '100%'}}>
-                    <Text style={{paddingBottom: 10, fontSize: 20}}>Meal Type:</Text>
-                    <Select
-                            defaultValue={selectedMealType}
-                            options={options}
-                            onSelect={this.handleSelectChange} containerStyle={styles.selectStyle}
-                            rightIcon="chevron-down"/>
-                </View>
+                <MealTypeSelectionBlock onSelectChange={this.handleSelectChange} defaultValue={selectedMealType} />
                 {   // If meal is not selected, display options (create, recent or favourites) for
-                    // user to select a meal from.
+                    // user to select a meal from (MealFinder).
                   !selectedMeal ? (
-                      <React.Fragment>
-                          <Text style={styles.textPrompt}>Where to find your meal?</Text>
-                          <TouchableHighlight
-                              onPress={() => {
-                                  navigation.push("FavouriteMeal", { parentScreen: this.props.parentScreen });
-                              }}
-                              style={styles.button}
-                              underlayColor='#fff'>
-                              <Text style={styles.buttonText}>Favourites</Text>
-                          </TouchableHighlight>
-                        <TouchableHighlight
-                        onPress={() => {
-                        navigation.push("RecentMeal", { parentScreen: this.props.parentScreen });
-                             }}
-                        style={styles.button}
-                        underlayColor='#fff'>
-                        <Text style={styles.buttonText}>Recent</Text>
-                        </TouchableHighlight>
-                        <TouchableHighlight
-                        onPress={() => {
-                        navigation.push("CreateMealLog", { parentScreen: this.props.parentScreen });
-                             }}
-                        style={styles.button}
-                        underlayColor='#fff'>
-                        <Text style={styles.buttonText}>Create</Text>
-                        </TouchableHighlight>
-                      </React.Fragment>
+                      <MealFinder navigation={navigation} parentScreen={parentScreen} />
                   ) : // Meal has been selected, render a preview of the meal for confirmation before submitting.
                       <View style={{width: '100%', flex: 1}}>
                           <View style={{flex: 1, justifyContent: 'center'}}>
@@ -237,31 +197,6 @@ function getDefaultMealType(hours) {
 const styles = StyleSheet.create({
     root: {
         flex: 1,
-    },
-    selectStyle: {
-        height: 43,
-    },
-    textPrompt: {
-        fontWeight: "bold",
-        fontSize: 28,
-        paddingBottom: 30,
-        alignSelf: 'center'
-    },
-    button:{
-        width: '70%',
-        height: 65,
-        backgroundColor:'#288259',
-        borderRadius:10,
-        borderWidth: 1,
-        borderColor: '#fff',
-        justifyContent: 'center',
-        marginTop: 20,
-        alignSelf: 'center'
-    },
-    buttonText:{
-        color:'#fff',
-        textAlign:'center',
-        fontSize: 26
     },
     datePickerInput: {
         backgroundColor: '#eff3bd',

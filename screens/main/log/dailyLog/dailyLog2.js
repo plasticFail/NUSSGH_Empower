@@ -6,6 +6,7 @@ import Moment from 'moment';
 import FormBlock from '../../../../components/logs/formBlock';
 import MealLogRoot from "../meal/MealLogRoot";
 import PreviousMealBlock from "../meal/PreviousMealBlock";
+import {BackAndForwardButton} from "../../../../components/BackAndForwardButtons";
 
 export default class DailyLogForFood extends React.Component {
     constructor(props) {
@@ -88,8 +89,8 @@ export default class DailyLogForFood extends React.Component {
                     <View style={styles.formBlockContainer}>
                         <FormBlock question='Have you made a meal log yet?'
                                    getFormSelection={this.setMealTaken}
-                                   selectNo={false}
-                                   defaultValue={mealTaken ? 'yes' : 'no'} />
+                                   selectNo={true}
+                        />
                     </View>
                 </View>
                 {
@@ -106,16 +107,7 @@ export default class DailyLogForFood extends React.Component {
                         /> :
                         <PreviousMealBlock />
                 }
-                <View style={{flex: 1, justifyContent: 'flex-end'}}>
-                    <View style={styles.buttonContainer}>
-                        <TouchableOpacity style={styles.button} onPress={this.goBack}>
-                            <Text style={styles.buttonText}>Back</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.button} onPress={this.goNext}>
-                            <Text style={styles.buttonText}>Next</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
+                <BackAndForwardButton onPressBack={this.goBack} onPressForward={this.goNext} />
             </ScrollView>
         );
     }
@@ -163,24 +155,6 @@ const styles = StyleSheet.create({
     progress: {
         width: '100%',
         height: 100,
-    },
-    buttonContainer: {
-        width: '100%',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        padding: 20
-    },
-    button: {
-        width: '45%',
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#B3D14C',
-        height: 45,
-        borderRadius: 10
-    },
-    buttonText: {
-        fontSize: 20,
-        fontWeight: 'bold'
     },
     formBlockContainer: {
         backgroundColor: 'white',
