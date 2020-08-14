@@ -1,10 +1,9 @@
 import React from 'react';
 import {View, StyleSheet, ActivityIndicator, Alert} from "react-native";
 // Functions
-import {getToken} from "../../../../storage/asyncStorageFunctions";
+import {requestMealLogList} from "../../../../netcalls/mealEndpoints/requestMealLog";
 // Other
-import {mealListEndpoint} from "../../../../netcalls/urls";
-import MealList from "./MealList";
+import MealList from "../../../../components/logs/meal/MealList";
 
 export default class RecentMealScreen extends React.Component {
     constructor(props) {
@@ -17,20 +16,12 @@ export default class RecentMealScreen extends React.Component {
 
     componentDidMount() {
         // Fetch recently logged meals.
-        getToken().then(token => {
-                fetch(mealListEndpoint, {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: "Bearer " + token
-                    }
-                }).then(resp => resp.json()).then(data => {
-                    this.setState({
-                        isLoading: false,
-                        recentMeals: data.data
-                    });
-                }).catch(err => Alert.alert('Error',err.message, [ { text: 'Ok' }]));
-            })
+        requestMealLogList().then(data => {
+            this.setState({
+                isLoading: false,
+                recentMeals: data.data
+            });
+        }).catch(err => Alert.alert('Error',err.message, [ { text: 'Ok' }]));
     }
 
     navigateToCreateMealLogPage = (selectedMeal) => {

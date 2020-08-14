@@ -17,12 +17,11 @@ import {
 import Moment from 'moment';
 // Components
 import ImageWithBadge from "../../../../components/ImageWithBadge";
-import FoodModalContent from "./FoodModalContent";
+import FoodModalContent from "../../../../components/logs/meal/FoodModalContent";
 import IntegerQuantitySelector from "../../../../components/IntegerQuantitySelector";
 // Functions
-import {getToken} from "../../../../storage/asyncStorageFunctions";
+import {requestFavouriteMealList} from "../../../../netcalls/mealEndpoints/requestMealLog";
 // Others such as images, icons.
-import {favouriteMealListEndpoint, mealAddLogEndpoint} from "../../../../netcalls/urls";
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import main from '../../../../resources/images/icons/meal.png';
 import beverage from '../../../../resources/images/icons/mug.png';
@@ -173,33 +172,25 @@ export default class CreateMealLog extends React.Component {
             dessert
         };
         if (isFavourite) {
-            getToken().then(token => {
-                fetch(favouriteMealListEndpoint, {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: "Bearer " + token
-                    }
-                }).then(resp => resp.json()).then(data => {
-                    // Duplicate favourite meal name
-                    if (data.data.filter(m => m.mealName === mealName).length != 0) {
-                        Alert.alert('Error', `There is already another favourite meal with the same name as ${mealName}`,
-                            [ { text: 'Ok' }]);
-                        return;
-                    }
-                    // Otherwise send back and update.
-                    if (this.props.route.params.parentScreen) {
-                        this.props.navigation.navigate(this.props.route.params.parentScreen,{
-                            meal,
-                            parentScreen: this.props.route.params.parentScreen
-                        });
-                    } else {
-                        this.props.navigation.navigate('MealLogRoot', {
-                            meal
-                        });
-                    }
-                }).catch(err => alert(err.message));
-            })
+            requestFavouriteMealList().then(data => {
+                // Duplicate favourite meal name
+                if (data.data.filter(m => m.mealName === mealName).length !== 0) {
+                    Alert.alert('Error', `There is already another favourite meal with the same name as ${mealName}`,
+                        [ { text: 'Ok' }]);
+                    return;
+                }
+                // Otherwise send back and update.
+                if (this.props.route.params.parentScreen) {
+                    this.props.navigation.navigate(this.props.route.params.parentScreen,{
+                        meal,
+                        parentScreen: this.props.route.params.parentScreen
+                    });
+                } else {
+                    this.props.navigation.navigate('MealLogRoot', {
+                        meal
+                    });
+                }
+            }).catch(err => alert(err.message));
         } else {
             // Not favourited meals can just be sent back to parentScreen.
             if (this.props.route.params.parentScreen) {

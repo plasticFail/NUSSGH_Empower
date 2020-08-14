@@ -47,11 +47,11 @@ export default class FlashMessage extends React.Component {
         Animated.sequence([Animated.timing(this.state.flashMessageAnimation, {
             toValue: 1,
             duration: slideUpDuration || 200,
-            useNativeDriver: false
+            useNativeDriver: true
         }), Animated.delay(delay || 1000), Animated.timing(this.state.flashMessageAnimation, {
             toValue: 0,
             duration: slideDownDuration || 200,
-            useNativeDriver: false
+            useNativeDriver: true
         })]).start();
     }
 
