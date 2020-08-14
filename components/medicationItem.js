@@ -34,6 +34,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: '2%',
     marginEnd: '5%',
+    flex: 1,
   },
   medicineImg: {
     width: 100,

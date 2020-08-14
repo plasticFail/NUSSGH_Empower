@@ -32,11 +32,8 @@ const MedicationLogDisplay = (props) => {
         showsHorizontalScrollIndicator
         contentContainerStyle={[
           styles.scrollView,
-          {width: `${100 * (width / 2)}%`},
-        ]}
-        onContentSizeChange={() => {
-          medicationScrollView.current.scrollToEnd();
-        }}>
+          {width: `${100 * Math.ceil(medicationList.length / 2)}%`},
+        ]}>
         {medicationList.map((item, index) => {
           return <MedicationItem medication={item} key={index.toString()} />;
         })}
@@ -49,7 +46,7 @@ export default MedicationLogDisplay;
 
 const styles = StyleSheet.create({
   scrollView: {
-    flex: 1,
+    display: 'flex',
     flexDirection: 'row',
     overflow: 'hidden',
     padding: '1%',
@@ -60,6 +57,7 @@ const styles = StyleSheet.create({
     padding: '3%',
     margin: '3%',
     borderRadius: 20,
+    flex: 1,
   },
   shadow: {
     shadowColor: '#000',
