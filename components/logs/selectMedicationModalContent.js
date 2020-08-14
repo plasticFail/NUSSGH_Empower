@@ -15,9 +15,7 @@ import {checkDosage} from '../../commonFunctions/logFunctions';
 
 Entypo.loadFont();
 
-
 class SelectMedicationModalContent extends Component {
-
   constructor(props) {
     super(props);
     this.props = props;
@@ -32,9 +30,17 @@ class SelectMedicationModalContent extends Component {
     };
   }
 
-  componentDidUpdate(){
-    console.log('update : ' + this.state.searchKey + " cache : " + this.state.searchKeyCache);
-    if(this.state.triggerSearch && this.state.searchKey === this.state.searchKeyCache){
+  componentDidUpdate() {
+    console.log(
+      'update : ' +
+        this.state.searchKey +
+        ' cache : ' +
+        this.state.searchKeyCache,
+    );
+    if (
+      this.state.triggerSearch &&
+      this.state.searchKey === this.state.searchKeyCache
+    ) {
       this.setState({triggerSearch: false});
       this.returnSearchResult(this.state.searchKey);
     }
@@ -46,15 +52,15 @@ class SelectMedicationModalContent extends Component {
     setTimeout(() => {
       this.setState({searchKeyCache: searchKey});
     }, 1000);
-  }
+  };
 
   handleDosage = (dosage) => {
     this.setState({dosage: dosage});
-  }
+  };
 
   //search
   returnSearchResult = (searchKey) => {
-    if(searchKey !== '') {
+    if (searchKey !== '') {
       let arr = [];
       storeMedications().then((response) => {
         for (let x of response.medications) {
@@ -63,8 +69,8 @@ class SelectMedicationModalContent extends Component {
 
         let result = arr.filter((medication) => {
           let medicine = medication.drug_name
-              .replace(/\s{1,2}\[|\]/g, ' ')
-              .toLowerCase();
+            .replace(/\s{1,2}\[|\]/g, ' ')
+            .toLowerCase();
           let searchArr = String(searchKey).split(' ');
           let count = 0;
           for (let x of searchArr) {
@@ -78,7 +84,7 @@ class SelectMedicationModalContent extends Component {
         });
         this.setState({searchMedicationResults: result});
       });
-    }else{
+    } else {
       this.setState({searchMedicationResults: []});
     }
   };
@@ -91,7 +97,10 @@ class SelectMedicationModalContent extends Component {
   };
 
   submit = () => {
-    if (checkDosage(this.state.dosage) && this.state.selectedMedicine !== null) {
+    if (
+      checkDosage(this.state.dosage) &&
+      this.state.selectedMedicine !== null
+    ) {
       //if repeated
       if (this.checkRepeat(this.state.selectedMedicine.drug_name)) {
         console.log('Duplicate detected');
@@ -137,34 +146,36 @@ class SelectMedicationModalContent extends Component {
 
   render() {
     return (
-        <View style={styles.container}>
-          <SearchMedicine
-              searchKey={this.state.searchKey}
-              handleSearch={this.handleSearch}
+      <View style={styles.container}>
+        <SearchMedicine
+          searchKey={this.state.searchKey}
+          handleSearch={this.handleSearch}
+        />
+        {this.state.searchMedicationResults.length > 0 && (
+          <SearchMedicineResults
+            searchMedicineResults={this.state.searchMedicationResults}
+            selectFromList={this.selectFromList}
           />
-          {this.state.searchMedicationResults.length > 0 && (
-              <SearchMedicineResults
-                  searchMedicineResults={this.state.searchMedicationResults}
-                  selectFromList={this.selectFromList}
-              />
-          )}
-          <DosageInput dosage={this.state.dosage} setDosage={this.handleDosage}/>
+        )}
+        <DosageInput dosage={this.state.dosage} setDosage={this.handleDosage} />
 
-          <View style={{paddingBottom: '4%'}}>
-            <TouchableOpacity
-                style={[
-                  styles.button,
-                  styles.shadow,
-                  {width: 200, height: 40, backgroundColor: '#aad326'},
-                ]}
-                onPress={this.submit}>
-              <Text style={[styles.buttonText, {fontSize: 22}]}>Add Medicine</Text>
-            </TouchableOpacity>
-          </View>
+        <View style={{paddingBottom: '4%'}}>
+          <TouchableOpacity
+            style={[
+              styles.button,
+              styles.shadow,
+              {width: 200, height: 40, backgroundColor: '#aad326'},
+            ]}
+            onPress={this.submit}>
+            <Text style={[styles.buttonText, {fontSize: 22}]}>
+              Add Medicine
+            </Text>
+          </TouchableOpacity>
         </View>
+      </View>
     );
   }
-};
+}
 
 function DosageInput(props) {
   return (
@@ -202,7 +213,6 @@ function SearchMedicineResults({searchMedicineResults, selectFromList}) {
         Results: {searchMedicineResults.length}
       </Text>
       <FlatList
-        keyExtractor={(item, index) => item.drug_name}
         data={searchMedicineResults}
         renderItem={({item}) => (
           <View style={styles.resultItem}>
@@ -225,22 +235,22 @@ function SearchMedicineResults({searchMedicineResults, selectFromList}) {
   );
 }
 
-const SearchMedicine = props => {
+const SearchMedicine = (props) => {
   return (
     <View style={styles.componentContainer}>
       <Text style={styles.inputHeader}>Name:</Text>
-        <TextInput
-          style={styles.searchInputBox}
-          placeholder="Type a medication..."
-          placeholderTextColor="#a1a3a0"
-          value={props.searchKey}
-          onChangeText={(text) => {
-            props.handleSearch(text);
-          }}
-        />
+      <TextInput
+        style={styles.searchInputBox}
+        placeholder="Type a medication..."
+        placeholderTextColor="#a1a3a0"
+        value={props.searchKey}
+        onChangeText={(text) => {
+          props.handleSearch(text);
+        }}
+      />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {

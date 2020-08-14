@@ -3,7 +3,8 @@ import AsyncStorage from '@react-native-community/async-storage';
 const key_username = 'username';
 const key_password = 'password';
 const key_token = 'token';
-
+const key_bloodGlucoseLog = 'lastBloodGlucoseLog';
+const key_weightLog = 'lastWeightLog';
 
 const storeData = async (key, value) => {
   try {
@@ -53,6 +54,21 @@ const getToken = async () => {
   return await getData(key_token);
 };
 
+const storeLastBgLog = async (bgLog) => {
+  await storeData(key_bloodGlucoseLog, bgLog);
+};
+
+const getLastBgLog = async () => {
+  return await getData(key_bloodGlucoseLog);
+};
+
+const storeLastWeightLog = async (weightLog) => {
+  await storeData(key_weightLog, weightLog);
+};
+
+const getLastWeightLog = async () => {
+  return await getData(key_weightLog);
+};
 
 export {
   storeUsername,
@@ -61,4 +77,8 @@ export {
   getPassword,
   storeToken,
   getToken,
+  storeLastBgLog,
+  getLastBgLog,
+  storeLastWeightLog,
+  getLastWeightLog,
 };

@@ -14,7 +14,9 @@ import {useNavigation} from '@react-navigation/native';
 //components
 import SuccessDialogue from '../../../components/successDialogue';
 import BloodGlucoseLogBlock from '../../../components/logs/bloodGlucoseLogBlock';
-import {checkTime} from '../../../commonFunctions/logFunctions';
+import {checkTime, storeData} from '../../../commonFunctions/logFunctions';
+import BloodGluocseDisplay from '../../../components/logs/logDisplay';
+import LogDisplay from '../../../components/logs/logDisplay';
 
 const BloodGlucoseLog = (props) => {
   const navigation = useNavigation();
@@ -22,7 +24,6 @@ const BloodGlucoseLog = (props) => {
   const [bloodGlucose, setBloodGlucose] = useState('');
   const [successShow, setSuccessShow] = useState(false);
   Moment.locale('en');
-  console.log(bloodGlucose);
 
   const handleSubmit = () => {
     if (checkTime(date)) {
@@ -47,6 +48,11 @@ const BloodGlucoseLog = (props) => {
             ]);
           }
         });
+        //store data in async storage.
+        storeData('BloodGlucose', {
+          value: bloodGlucose,
+          time: Moment(date).format('h:mm a'),
+        });
       } else {
         Alert.alert(
           'Error',
@@ -69,6 +75,8 @@ const BloodGlucoseLog = (props) => {
       <TouchableOpacity style={styles.button} onPress={handleSubmit}>
         <Text style={styles.buttonText}>Submit</Text>
       </TouchableOpacity>
+
+      <LogDisplay type="BloodGlucose" />
 
       <SuccessDialogue visible={successShow} type="Blood Glucose" />
     </View>

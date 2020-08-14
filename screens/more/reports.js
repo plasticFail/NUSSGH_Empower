@@ -1,16 +1,16 @@
 import React from 'react';
 import {View, StyleSheet, Text} from 'react-native';
 
-const MedicationScreen = (props) => {
+const ReportsScreen = (props) => {
   return (
-    <View style={{...styles.medicationScreen, ...props.style}}>
-      <Text>Medication</Text>
+    <View style={{...styles.screen, ...props.style}}>
+      <Text>Reports</Text>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  medicationScreen: {
+  screen: {
     flex: 1,
     padding: 10,
     alignItems: 'center',
@@ -18,4 +18,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MedicationScreen;
+export default ReportsScreen;
