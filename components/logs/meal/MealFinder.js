@@ -23,6 +23,7 @@ export default function MealFinder({parentScreen, navigation}) {
             {
                 buttons.map(button => (
                     <TouchableHighlight
+                        key={button.title}
                         onPress={() => {
                             navigation.push(button.navTo, { parentScreen: parentScreen });
                         }}
