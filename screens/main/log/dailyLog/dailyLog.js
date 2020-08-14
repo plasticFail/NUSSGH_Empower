@@ -19,15 +19,18 @@ class DailyLog extends Component {
 
     this.state = {
       currentStep: 1,
-      showNewInput: true,
+      showNewInput: false,
+
       dateBloodGlucose: new Date(),
-      bloodGlucose: null,
+      bloodGlucose: '',
+      lastBloodGlucose: null,
       // Just to show the schema of meal daily log data. Will be initialised when meallogroot component mounts.
       mealDailyLogData: {
         recordDate: null,
         mealType: null,
         meal: null
-      }
+      },
+      lastMealLog: null,
     };
   }
 
@@ -36,22 +39,22 @@ class DailyLog extends Component {
       console.log(data);
       console.log(data.time);
       console.log(data.value);
-      this.setState({bloodGlucose : data});
+      this.setState({lastBloodGlucose : data});
     });
     getLastMealLog().then((data) => {
       this.setState({
-        mealDailyLogData: data
+        lastMealLog: data
       })
     })
   }
 
   componentDidUpdate() {
-    //console.log(this.state.bloodGlucose.value);
-    console.log(this.state.mealDailyLogData.meal);
+    //console.log(this.state.dateBloodGlucose);
+    //console.log(this.state.bloodGlucose);
   }
 
-  displayStepText = step => {
-    switch (step){
+  displayStepText = () => {
+    switch (this.state.currentStep){
       case 1:
         return 'Step 1: Blood Glucose Log';
       case 2:
@@ -66,8 +69,8 @@ class DailyLog extends Component {
     return '';
   }
 
-  stepImage = step => {
-    switch (step){
+  stepImage = () => {
+    switch (this.state.currentStep){
       case 1:
         return require('../../../../resources/images/progress1.png');
       case 2:
@@ -82,8 +85,8 @@ class DailyLog extends Component {
     return '';
   }
 
-  newInputText = step => {
-    switch (step){
+  formText = () => {
+    switch (this.state.currentStep){
       case 1:
         return 'You already logged blood glucose today, Want to add a new record?';
       case 2:
@@ -94,6 +97,67 @@ class DailyLog extends Component {
         return 'You already logged weight today, Want to add a new record?';
     }
     return '';
+  }
+
+  showFormText = () => {
+    switch (this.state.currentStep){
+      case 1:
+        if(this.state.lastBloodGlucose !== null){
+          return true;
+        }
+        break;
+      case 2:
+        if (this.state.lastMealLog) {
+          return true;
+        }
+        break;
+      case 3:
+        return true;
+        break;
+      case 4:
+        return true;
+        break;
+      case 5:
+        return false;
+        break;
+    }
+    return false;
+  }
+
+  showLastLog = step => {
+    if(step === this.state.currentStep){
+      switch (step){
+        case 1:
+          if(this.state.lastBloodGlucose !== null && !this.state.showNewInput){
+            return true;
+          }
+          break;
+        case 2:
+          if(this.state.lastMealLog && !this.state.showNewInput) {
+            return true;
+          }
+          break;
+      }
+    }
+    return false;
+  }
+
+  showNewLogInput = step => {
+    if(step === this.state.currentStep){
+      switch (step){
+        case 1:
+          if(this.state.lastBloodGlucose === null || this.state.showNewInput){
+            return true;
+          }
+          break;
+        case 2:
+          if(this.state.showNewInput) {
+            return true;
+          }
+          break;
+      }
+    }
+    return false;
   }
 
   // Meal handler events
@@ -170,13 +234,15 @@ class DailyLog extends Component {
 
   incrementStepper = () => {
     this.setState({
-      currentStep: this.state.currentStep + 1
+      currentStep: this.state.currentStep + 1,
+      showNewInput: false
     })
   }
 
   decrementStepper = () => {
     this.setState({
-      currentStep: this.state.currentStep - 1
+      currentStep: this.state.currentStep - 1,
+      showNewInput: false
     });
   }
 
@@ -195,94 +261,82 @@ class DailyLog extends Component {
                     }}>
         <View style={styles.screen}>
           <View style={styles.textContainer}>
-            <Text style={styles.text}>{this.displayStepText(this.state.currentStep)}</Text>
+            <Text style={styles.text}>{this.displayStepText()}</Text>
           </View>
           <Image
               style={styles.progress}
               resizeMode="contain"
-              source={this.stepImage(this.state.currentStep)}
+              source={this.stepImage()}
           />
 
-          {this.state.showNewInput ? (<View
+          {this.showFormText() && (<View
               style={[
                 styles.container,
                 styles.shadow,
                 {marginBottom: '4%', paddingEnd: '1%'},
               ]}>
             <FormBlock
-                question={this.newInputText(this.state.currentStep)}
+                question={this.formText()}
                 getFormSelection={boolValue => {
                   this.setState({showNewInput: boolValue})
                 }}
-                selectNo={false}
+                selectNo={true}
                 color={'#aad326'}
             />
-          </View>) : null}
+          </View>)}
 
-          {this.state.bloodGlucose !== null ? (<BloodGlucoseLogDisplay data={this.state.bloodGlucose}/>) : null}
-          {/*{show && (*/}
-          {/*  <BloodGlucoseLogBlock*/}
-          {/*    date={date}*/}
-          {/*    setDate={setDate}*/}
-          {/*    bloodGlucose={bloodGlucose}*/}
-          {/*    setBloodGlucose={setBloodGlucose}*/}
-          {/*  />*/}
-          {/*)}*/}
-          {
-            this.state.currentStep === 2 ?
-                (this.state.showNewInput ?
-                  <MealLogRoot
-                      containerStyle={{padding: 0}}
-                      parentScreen='DailyLog'
-                      onMealUpdateListener={this.setMealCallback}
-                      onMealTypeUpdateListener={this.setMealTypeCallback}
-                      onDateTimeUpdateListener={this.setMealRecordDateCallback}
-                      recordDate={mealDailyLogData.recordDate}
-                      mealType={mealDailyLogData.mealType}
-                      selectedMeal={mealDailyLogData.meal}
-                      navigation={navigation}
-                      route={route}
-                  /> :
-                  <PreviousMealBlock />)
-                : null
-          }
+          {this.showLastLog(1) && (<BloodGlucoseLogDisplay data={this.state.lastBloodGlucose}/>)}
+          {this.showLastLog(2) && <PreviousMealBlock />}
 
-          {/*<TouchableOpacity*/}
-          {/*  style={{marginTop: '4%'}}*/}
-          {/*  onPress={() => {*/}
-          {/*    // pass states to other screens to maintain persistent storage.*/}
-          {/*    const states = props.route.params;*/}
-          {/*    props.navigation.navigate('DailyLog2', states);*/}
-          {/*  }}>*/}
-          {/*  <Text>Next</Text>*/}
-          {/*</TouchableOpacity>*/}
+          {this.showNewLogInput(1) && (
+            <BloodGlucoseLogBlock
+              date={this.state.dateBloodGlucose}
+              setDate={date => {this.setState({dateBloodGlucose : date})}}
+              bloodGlucose={this.state.bloodGlucose}
+              setBloodGlucose={value => {this.setState({bloodGlucose : value})}}
+            />
+          )}
           {
-            currentStep === 1 ? // Only render the forward button
-                <BackAndForwardButton onPressBack={this.props.navigation.goBack}
-                                      onPressForward={this.incrementStepper}
-                                      overrideBackwardTitle="Cancel"/>
-              : currentStep === 5 ? // Only render the back button
-                <BackAndForwardButton onPressBack={this.decrementStepper}
-                                      onPressForward={this.handleSubmit}
-                                      overrideForwardTitle="Submit"/>
-              : <BackAndForwardButton onPressBack={this.decrementStepper}
-                                      onPressForward={this.incrementStepper}
-                                      />
+            this.showNewLogInput(2) && <MealLogRoot
+                containerStyle={{padding: 0}}
+                parentScreen='DailyLog'
+                onMealUpdateListener={this.setMealCallback}
+                onMealTypeUpdateListener={this.setMealTypeCallback}
+                onDateTimeUpdateListener={this.setMealRecordDateCallback}
+                recordDate={mealDailyLogData.recordDate}
+                mealType={mealDailyLogData.mealType}
+                selectedMeal={mealDailyLogData.meal}
+                navigation={navigation}
+                route={route}
+            />
           }
+            {
+                currentStep === 1 ? // Only render the forward button
+                    <BackAndForwardButton onPressBack={this.props.navigation.goBack}
+                                          onPressForward={this.incrementStepper}
+                                          overrideBackwardTitle="Cancel"/>
+                    : currentStep === 5 ? // Only render the back button
+                    <BackAndForwardButton onPressBack={this.decrementStepper}
+                                          onPressForward={this.handleSubmit}
+                                          overrideForwardTitle="Submit"/>
+                    : <BackAndForwardButton onPressBack={this.decrementStepper}
+                                            onPressForward={this.incrementStepper}
+                    />
+            }
         </View>
         </ScrollView>
     );
   }
-};
+}
 
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
     flexDirection: 'column',
     width: '100%',
+    alignItems: 'center',
     padding: 20,
     backgroundColor: 'white',
-    alignItems: 'center'
   },
   textContainer: {
     width: '100%',
@@ -310,7 +364,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-  },
+  }
 });
 
 export default DailyLog;

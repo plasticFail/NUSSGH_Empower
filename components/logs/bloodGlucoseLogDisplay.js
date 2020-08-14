@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import LogDisplay from './logDisplay';
+
 
 const BloodGlucoseLogDisplay = (props) => {
     return (

@@ -29,8 +29,6 @@ import WeightLog from './main/log/weightLog';
 //components
 import HeaderIcon from '../components/common/headerBtnIcon';
 import HypoglycemiaReason from './hypoglycemiaReason';
-import DailyLogForFood from './main/log/dailyLog/dailyLog2';
-import DailyLog3 from './main/log/dailyLog/dailyLog3';
 import CreateMealLogScreen from './main/log/meal/CreateMealLog';
 import FavouriteMealScreen from './main/log/meal/FavouriteMeals';
 import RecentMealScreen from './main/log/meal/RecentMeal';
@@ -144,25 +142,6 @@ class AppRoot extends Component {
               <Stack.Screen
                 name="DailyLog"
                 component={DailyLog}
-                options={{
-                  title: 'Daily Log',
-                  headerBackImage: () => <HeaderBackIcon/>,
-                  headerRight: () => <View />,
-                }}
-              />
-              <Stack.Screen
-                name="DailyLog2"
-                component={DailyLogForFood}
-                options={{
-                  title: 'Daily Log',
-                  animationEnabled: false,
-                  headerBackImage: () => <HeaderBackIcon/>,
-                  headerRight: () => <View />,
-                }}
-              />
-              <Stack.Screen
-                name="DailyLog3"
-                component={DailyLog3}
                 options={{
                   title: 'Daily Log',
                   headerBackImage: () => <HeaderBackIcon/>,
