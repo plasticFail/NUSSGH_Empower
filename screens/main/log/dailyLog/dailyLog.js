@@ -39,11 +39,13 @@ class DailyLog extends Component {
     this.state = {
       currentStep: 1,
       showNewInput: false,
+      isTypingFinished: false,
 
       dateBloodGlucose: new Date(),
       bloodGlucose: '',
       lastBloodGlucose: null,
       inputNewBloodGlucose: false,
+      cacheBloodGlucose: '',
 
       mealRecordDate: null,
       mealType: null,
@@ -60,6 +62,7 @@ class DailyLog extends Component {
       weight: '',
       lastWeight: null,
       inputWeight: false,
+      cacheWeight: '',
     };
   }
 
@@ -91,14 +94,22 @@ class DailyLog extends Component {
     });
   }
 
-  componentDidUpdate(prevProps,prevState){
-    console.log('prev : ' + prevState.bloodGlucose);
-    console.log('current : ' + this.state.bloodGlucose);
-
-  }
-
   isToday = date => {
     return date === Moment(new Date()).format('YYYY/MM/DD');
+  }
+
+  handleBloodGlucoseInput = value => {
+    this.setState({bloodGlucose: value});
+    setTimeout(() => {
+      this.setState({cacheBloodGlucose: value});
+    }, 2000);
+  }
+
+  handleWeightInput = value => {
+    this.setState({weight: value});
+    setTimeout(() => {
+      this.setState({cacheWeight: value});
+    }, 2000);
   }
 
   enableNext = () => {
@@ -108,6 +119,9 @@ class DailyLog extends Component {
           if(this.state.lastBloodGlucose){
             return true;
           }
+          break;
+        case 2:
+          return true;
           break;
         case 3:
           if(this.state.lastMedication){
@@ -122,18 +136,25 @@ class DailyLog extends Component {
       }
     }
 
-    switch (this.state.currentStep){
+    switch (this.state.currentStep) {
       case 1:
-        return checkBloodGlucose(this.state.bloodGlucose);
+        if(this.state.bloodGlucose === this.state.cacheBloodGlucose) {
+          return checkBloodGlucose(this.state.bloodGlucose);
+        }
+        break;
+      case 2:
+        return true;
         break;
       case 3:
         return this.state.selectedMedicationList.length > 0;
         break;
       case 4:
-        return checkWeight(this.state.weight);
+        if(this.state.weight === this.state.cacheWeight) {
+          return checkWeight(this.state.weight);
+        }
         break;
     }
-    return true;
+    return false;
   }
 
   displayStepText = () => {
@@ -436,9 +457,7 @@ class DailyLog extends Component {
                 this.setState({dateBloodGlucose: date});
               }}
               bloodGlucose={this.state.bloodGlucose}
-              setBloodGlucose={(value) => {
-                this.setState({bloodGlucose: value});
-              }}
+              setBloodGlucose={this.handleBloodGlucoseInput}
             />
           )}
           {this.showNewLogInput(2) && (
@@ -472,9 +491,7 @@ class DailyLog extends Component {
                 this.setState({dateWeight: date});
               }}
               weight={this.state.weight}
-              setWeight={(value) => {
-                this.setState({weight: value});
-              }}
+              setWeight={this.handleWeightInput}
             />
           )}
           {currentStep === 1 ? ( // Only render the forward button
