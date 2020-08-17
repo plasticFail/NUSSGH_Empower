@@ -30,7 +30,7 @@ const MedicationLogDisplay = (props) => {
   return (
     <View style={[styles.container, styles.shadow]}>
       <Text style={styles.textStyle}>
-        You have recently added these medication at{' '}
+        You have recently added these medications at{' '}
         <Text style={styles.bold}>{time}</Text> today
       </Text>
       <ScrollView
