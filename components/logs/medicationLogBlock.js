@@ -36,6 +36,7 @@ const MedicationLogBlock = (props) => {
     //set new states
     setSelectModalOpen(false);
     props.onListChange(list);
+    console.log(list);
   };
 
   const openEditModal = (item) => {
