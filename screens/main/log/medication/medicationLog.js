@@ -16,8 +16,6 @@ const MedicationLog = (props) => {
   const [selectedMedicationList, setSelectedMedicationList] = useState([]);
   const [showSuccess, setShowSuccess] = useState(false);
 
-  console.log('--In Medication Log');
-
   const onListChange = (list) => {
     setSelectedMedicationList([...list]);
   };

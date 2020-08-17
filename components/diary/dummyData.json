@@ -18,20 +18,38 @@
   "food": {},
   "medication": {
     "logs": [
-      {
-        "dosage": 1,
-        "drugName": "--Avandamet 4MG/500MG - PO",
-        "image_url": "https://th.bing.com/th/id/OIP.rVCzuo8XWRL1oIfwuzSvyQAAAA?pid=Api&rs=1",
-        "recordDate": "24/07/2020 12:33:02",
-        "unit": "unit"
-      },
-      {
-        "dosage": 1,
-        "drugName": "Insulin Aspart Penfill (NovoRAPID)",
-        "image_url": "https://5.imimg.com/data5/XC/CJ/MY-35349270/novorapid-flexpens-500x500.png",
-        "recordDate": "24/07/2020 12:33:02",
-        "unit": "unit"
-      }
+      [
+        {
+          "dosage": 1,
+          "drugName": "--Avandamet 4MG/500MG - PO",
+          "image_url": "https://th.bing.com/th/id/OIP.rVCzuo8XWRL1oIfwuzSvyQAAAA?pid=Api&rs=1",
+          "recordDate": "24/07/2020 12:33:02",
+          "unit": "unit"
+        },
+        {
+          "dosage": 1,
+          "drugName": "Insulin Aspart Penfill (NovoRAPID)",
+          "image_url": "https://5.imimg.com/data5/XC/CJ/MY-35349270/novorapid-flexpens-500x500.png",
+          "recordDate": "24/07/2020 12:33:02",
+          "unit": "unit"
+        }
+      ],
+      [
+        {
+          "dosage": 3,
+          "drugName": "--Avandamet 4MG/500MG - PO",
+          "image_url": "https://th.bing.com/th/id/OIP.rVCzuo8XWRL1oIfwuzSvyQAAAA?pid=Api&rs=1",
+          "recordDate": "24/07/2020 12:40:02",
+          "unit": "unit"
+        },
+        {
+          "dosage": 4,
+          "drugName": "Insulin Aspart Penfill (NovoRAPID)",
+          "image_url": "https://5.imimg.com/data5/XC/CJ/MY-35349270/novorapid-flexpens-500x500.png",
+          "recordDate": "24/07/2020 12:40:02",
+          "unit": "unit"
+        }
+      ]
     ]
   },
   "activity": {

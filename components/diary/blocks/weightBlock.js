@@ -10,7 +10,8 @@ import {
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import Modal from 'react-native-modal';
 import Header from './header';
-import DataField from './dataField';
+import moment from 'moment';
+import WeightLogBlock from '../../logs/weightLogBlock';
 
 const WeightBlock = (props) => {
   const {weight} = props;
@@ -19,16 +20,31 @@ const WeightBlock = (props) => {
     dateString.indexOf('2020') + 4,
     dateString.length - 3,
   );
+  let dateMomentObject = moment(dateString, 'DD/MM/YYYY HH:mm:ss');
+  let dateObject = dateMomentObject.toDate();
+
   const img = require('../../../resources/images/weight.jpg');
   const logo = require('../../../resources/images/weight_logo.png');
+  const initialWeight = String(weight.weight);
   const [modalVisible, setModalVisible] = useState(false);
+  const [date, setDate] = useState(dateObject);
+  const [weightValue, setWeightValue] = useState(initialWeight);
+  const [disable, setDisabled] = useState(true);
 
   //close itself
   const closeModal = () => {
     setModalVisible(false);
   };
 
-  //open edit modal
+  //enable edit button
+  const setWeight = (value) => {
+    setWeightValue(value);
+    if (value != initialWeight) {
+      setDisabled(false);
+    } else if (value == initialWeight) {
+      setDisabled(true);
+    }
+  };
 
   //handle delete of log
   const handleDelete = () => {};
@@ -36,12 +52,13 @@ const WeightBlock = (props) => {
   return (
     <View>
       <TouchableOpacity
-        style={styles.buttonStyle}
+        style={styles.container}
         onPress={() => setModalVisible(true)}>
         <Image source={logo} style={styles.iconImg} />
         <Text style={styles.buttonText1}>Weight</Text>
         <ImageBackground source={img} style={styles.backgroundImg} />
       </TouchableOpacity>
+      {/* Open details of log*/}
       <Modal
         isVisible={modalVisible}
         animationIn="slideInUp"
@@ -50,8 +67,35 @@ const WeightBlock = (props) => {
         style={{justifyContent: 'flex-end'}}>
         <Header title={'Weight:' + time} closeModal={closeModal} />
         <View style={styles.modalContainer}>
-          <DataField fieldName="Record Date Time" value={dateString} />
-          <DataField fieldName="Weight" value={String(weight.weight)} />
+          <WeightLogBlock
+            date={date}
+            setDate={setDate}
+            weight={weightValue}
+            setWeight={setWeight}
+          />
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}>
+            {disable == true ? (
+              <TouchableOpacity
+                disabled={disable}
+                style={[styles.actionButton, {backgroundColor: '#cdd4e4'}]}>
+                <Text style={styles.actionText}>Edit</Text>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                style={[styles.actionButton, {backgroundColor: '#aad326'}]}>
+                <Text style={styles.actionText}>Edit</Text>
+              </TouchableOpacity>
+            )}
+            <TouchableOpacity
+              style={[styles.actionButton, {backgroundColor: '#ffb7e7'}]}>
+              <Text style={styles.actionText}>Delete</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </Modal>
     </View>
@@ -61,7 +105,7 @@ const WeightBlock = (props) => {
 export default WeightBlock;
 
 const styles = StyleSheet.create({
-  buttonStyle: {
+  container: {
     width: '40%', // This should be the same size as backgroundImg height
     alignSelf: 'center',
     paddingTop: 10,
@@ -86,7 +130,7 @@ const styles = StyleSheet.create({
   },
   buttonText1: {
     position: 'absolute',
-    top: '70%',
+    top: '75%',
     left: '6%',
     fontSize: 18,
     fontWeight: '700',
@@ -95,5 +139,20 @@ const styles = StyleSheet.create({
   modalContainer: {
     backgroundColor: 'white',
     padding: '3%',
+  },
+  actionButton: {
+    borderRadius: 20,
+    margin: '2%',
+    flexDirection: 'row',
+    padding: '10%',
+    alignSelf: 'center',
+    marginVertical: 10,
+    paddingHorizontal: 40,
+    paddingVertical: 6,
+  },
+  actionText: {
+    fontWeight: '700',
+    fontSize: 17,
+    textAlign: 'center',
   },
 });

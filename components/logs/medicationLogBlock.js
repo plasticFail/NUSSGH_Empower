@@ -27,8 +27,6 @@ const MedicationLogBlock = (props) => {
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [medicineToEdit, setMedicineToEdit] = useState({});
 
-  console.log('---In Medication Log Block');
-
   const getSelectedMedicineFromModal = (medicineObj) => {
     console.log('Setting selected medication: ' + medicineObj);
     let list = props.selectedMedicationList;

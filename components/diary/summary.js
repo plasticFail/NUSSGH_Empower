@@ -4,6 +4,9 @@ import Result from './result';
 import DummyData from './dummyData.json';
 import BgBlock from './blocks/bgBlock';
 import WeightBlock from './blocks/weightBlock';
+import MedicationLogBlock from '../logs/medicationLogBlock';
+import MedBlock from './blocks/medBlock';
+import {ScrollView} from 'react-native-gesture-handler';
 
 const Summary = (props) => {
   const [avgBg, setAverageBg] = useState(0);
@@ -27,7 +30,7 @@ const Summary = (props) => {
     setBgLogs(DummyData.glucose.logs);
     setTargetBg(DummyData.glucose.target);
     setWeightLogs(DummyData.weight.logs);
-
+    setMedLogs(DummyData.medication.logs); // an array of an array of logs*
     getAllResult();
   });
 
@@ -82,12 +85,17 @@ const Summary = (props) => {
           <Result success={true} message={'Weight log not completed.'} />
         )}
       </View>
-      {bgLogs.map((item) => (
-        <BgBlock bloodGlucose={item} />
-      ))}
-      {weightLogs.map((item) => (
-        <WeightBlock weight={item} />
-      ))}
+      <ScrollView>
+        {bgLogs.map((item, index) => (
+          <BgBlock bloodGlucose={item} key={index.toString()} />
+        ))}
+        {weightLogs.map((item, index) => (
+          <WeightBlock weight={item} key={index.toString()} />
+        ))}
+        {medLogs.map((item, index) => (
+          <MedBlock medicationList={item} key={index.toString()} />
+        ))}
+      </ScrollView>
     </>
   );
 };

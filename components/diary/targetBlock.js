@@ -1,7 +1,6 @@
 import React from 'react';
 import {View, StyleSheet, Text, Dimensions} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import TargetContent from './targetContent';
 import {useNavigation} from '@react-navigation/native';
 
 const TargetBlock = (props) => {
