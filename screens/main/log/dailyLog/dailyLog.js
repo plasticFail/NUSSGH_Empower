@@ -523,6 +523,21 @@ class DailyLog extends Component {
               }}
             />
           )}
+          {this.state.currentStep === 5 && (
+              <>
+                <BloodGlucoseLogDisplay data={{
+                  value: this.state.bloodGlucose,
+                  date: Moment(this.state.dateBloodGlucose).format('YYYY/MM/DD'),
+                  time: Moment(this.state.dateBloodGlucose).format('h:mm a'),
+                }} isNewSubmit={true}/>
+                <WeightLogDisplay data={{
+                  value: this.state.weight,
+                  date: Moment(this.state.dateWeight).format('YYYY/MM/DD'),
+                  time: Moment(this.state.dateWeight).format('h:mm a')
+                }} isNewSubmit={true}/>
+              </>
+          )}
+
           {this.state.showNewInput && (<Text style={styles.text}>{this.alertText()}</Text>)}
           {currentStep === 1 ? ( // Only render the forward button
             <BackAndForwardButton
