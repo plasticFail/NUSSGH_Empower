@@ -10,7 +10,7 @@ const DataField = (props) => {
         style={styles.inputBox}
         placeholderTextColor="black"
         keyboardType="decimal-pad"
-        placeholder={value}
+        placeholder={String(value)}
         editable={false}
       />
     </>
