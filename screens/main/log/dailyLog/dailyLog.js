@@ -69,7 +69,9 @@ class DailyLog extends Component {
     });
 
     getLastMedicationLog().then((data) => {
-      this.setState({lastMedication: data});
+      if(this.isToday(data.date)) {
+        this.setState({lastMedication: data});
+      }
     });
 
     getLastWeightLog().then((data) => {
@@ -187,10 +189,7 @@ class DailyLog extends Component {
     if (step === this.state.currentStep) {
       switch (step) {
         case 1:
-          if (
-            this.state.lastBloodGlucose !== null &&
-            !this.state.showNewInput
-          ) {
+          if (this.state.lastBloodGlucose !== null && !this.state.showNewInput) {
             return true;
           }
           break;

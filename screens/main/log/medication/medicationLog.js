@@ -1,13 +1,17 @@
 import React, {useState} from 'react';
 import {View, TouchableOpacity, Text, StyleSheet, Alert} from 'react-native';
+//third party libs
 import Entypo from 'react-native-vector-icons/Entypo';
 import Moment from 'moment';
 import {ScrollView} from 'react-native-gesture-handler';
+//functions
 import {medicationAddLogRequest} from '../../../../netcalls/requestsLog';
+import {checkTime} from '../../../../commonFunctions/logFunctions';
+import {storeLastMedicationLog} from '../../../../storage/asyncStorageFunctions';
+//components
 import SuccessDialogue from '../../../../components/successDialogue';
 import MedicationLogBlock from '../../../../components/logs/medicationLogBlock';
-import {checkTime} from '../../../../commonFunctions/logFunctions';
-import MedicationLogDisplay from '../../../../components/logs/medicationLogDisplay';
+
 
 Entypo.loadFont();
 
@@ -69,7 +73,6 @@ const MedicationLog = (props) => {
           </TouchableOpacity>
         )}
       </View>
-      <MedicationLogDisplay />
       <SuccessDialogue visible={showSuccess} type="Medication" />
     </ScrollView>
   );
