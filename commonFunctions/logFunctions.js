@@ -51,6 +51,23 @@ const checkBloodGlucose = bloodGlucose => {
   return false;
 }
 
+const checkBloodGlucoseText = bloodGlucose => {
+  if(bloodGlucose) {
+    if (Number(bloodGlucose) >= 30 || Number(bloodGlucose) <= 0) {
+      return 'Invalid Blood Glucose Level, should be within 0-30';
+    } else if (
+        bloodGlucose.match(/^[0-9]+(\.[0-9]{1,2})?$/g) &&
+        !bloodGlucose.includes(',') &&
+        !bloodGlucose.includes('-')
+    ) {
+      return '';
+    } else {
+      return 'Invalid Blood Glucose Input. Make sure at most 2 decimal place';
+    }
+  }
+  return false;
+}
+
 const checkWeight = weight => {
   if(weight) {
     if (
@@ -72,6 +89,22 @@ const checkWeight = weight => {
   }
 };
 
+const checkWeightText = weight => {
+  if(weight) {
+    if (
+        weight.match(/^[0-9]+(\.[0-9]{1})?$/g) &&
+        !weight.includes(',') &&
+        !weight.includes('-') &&
+        Number(weight) <= 200 &&
+        Number(weight) >= 40
+    ) {
+      return '';
+    } else {
+      return'Make sure weight entered is between 40 to 200kg. ';
+    }
+  }
+};
+
 const checkDosage = (dosageString) => {
   let dosageS = String(dosageString);
   if (
@@ -89,4 +122,4 @@ const checkDosage = (dosageString) => {
   }
 };
 
-export {checkTime, checkBloodGlucose, checkWeight, checkDosage};
+export {checkTime, checkBloodGlucose, checkWeight, checkBloodGlucoseText, checkWeightText, checkDosage};
