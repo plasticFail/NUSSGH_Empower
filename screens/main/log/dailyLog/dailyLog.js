@@ -66,12 +66,14 @@ class DailyLog extends Component {
   componentDidMount() {
     Moment.locale('en');
 
-    this.setState({alertText: 'some text'});
-
     getLastBgLog().then((data) => {
-      if(this.isToday(data.date)) {
+      if(data && this.isToday(data.date)) {
         this.setState({lastBloodGlucose: data});
         this.setState({enableNext: true});
+      }else{
+        this.setState({
+          showNewInput: this.handleShowNewInput(),
+        });
       }
     });
 
@@ -106,7 +108,9 @@ class DailyLog extends Component {
           }
           break;
         case 2:
-          return true;
+          if(this.state.lastMealLog) {
+            return true;
+          }
           break;
         case 3:
           if(this.state.lastMedication){
@@ -139,21 +143,19 @@ class DailyLog extends Component {
   }
 
   alertText = () => {
-    if(this.state.showNewInput) {
-      switch (this.state.currentStep) {
-        case 1:
-          return checkBloodGlucoseText(this.state.bloodGlucose);
-          break;
-        case 2:
-          return true;
-          break;
-        case 3:
-          return this.state.selectedMedicationList.length > 0;
-          break;
-        case 4:
-          return checkWeightText(this.state.weight);
-          break;
-      }
+    switch (this.state.currentStep) {
+      case 1:
+        return checkBloodGlucoseText(this.state.bloodGlucose);
+        break;
+      case 2:
+        return true;
+        break;
+      case 3:
+        return this.state.selectedMedicationList.length > 0;
+        break;
+      case 4:
+        return checkWeightText(this.state.weight);
+        break;
     }
     return '';
   }
@@ -329,20 +331,6 @@ class DailyLog extends Component {
     });
   };
 
-  handleNext = () => {
-    switch (this.state.currentStep){
-      case 1:
-        this.setState({inputNewBloodGlucose: this.state.showNewInput});
-        break;
-      case 3:
-        this.setState({inputNewMedication: this.state.showNewInput});
-        break;
-      case 4:
-        this.setState({inputWeight: this.state.showNewInput});
-        break;
-    }
-  }
-
   handleSubmit = () => {
     // Array to hold all the requests
     let promises = [];
@@ -393,18 +381,54 @@ class DailyLog extends Component {
   };
 
   incrementStepper = () => {
+    this.handleNext();
     this.setState({
       currentStep: this.state.currentStep + 1,
-      showNewInput: false,
+      showNewInput: this.handleShowNewInput(),
     });
   };
 
   decrementStepper = () => {
     this.setState({
       currentStep: this.state.currentStep - 1,
-      showNewInput: false,
+      showNewInput: this.handleShowNewInput(),
     });
   };
+
+  handleNext = () => {
+    switch (this.state.currentStep){
+      case 1:
+        this.setState({inputNewBloodGlucose: this.state.showNewInput});
+        break;
+      case 3:
+        this.setState({inputNewMedication: this.state.showNewInput});
+        break;
+      case 4:
+        this.setState({inputWeight: this.state.showNewInput});
+        break;
+    }
+  }
+
+  handleShowNewInput = () => {
+    switch (this.state.currentStep){
+      case 1:
+        if(!this.state.lastBloodGlucose || this.state.inputNewBloodGlucose){
+          return true
+        }
+        break;
+      case 3:
+        if(!this.state.lastMedication || this.state.inputNewMedication){
+          return true
+        }
+        break;
+      case 4:
+        if(!this.state.lastWeight || this.state.inputWeight){
+          return true
+        }
+        break;
+    }
+    return false;
+  }
 
   render() {
     const {navigation, route} = this.props;
@@ -499,7 +523,7 @@ class DailyLog extends Component {
               }}
             />
           )}
-          <Text style={styles.text}>{this.alertText()}</Text>
+          {this.state.showNewInput && (<Text style={styles.text}>{this.alertText()}</Text>)}
           {currentStep === 1 ? ( // Only render the forward button
             <BackAndForwardButton
               onPressBack={this.props.navigation.goBack}

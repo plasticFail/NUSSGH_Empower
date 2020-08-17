@@ -1,11 +1,6 @@
 import Moment from 'moment';
 import {Alert} from 'react-native';
-import {
-  storeLastBgLog,
-  storeLastWeightLog,
-  storeLastMedicationLog,
-} from '../storage/asyncStorageFunctions';
-import {glucoseAddLogRequest} from '../netcalls/requestsLog';
+
 
 const checkTime = (dateToCheck) => {
   Moment.locale('en');
@@ -103,6 +98,7 @@ const checkWeightText = weight => {
       return'Make sure weight entered is between 40 to 200kg. ';
     }
   }
+  return false;
 };
 
 const checkDosage = (dosageString) => {
