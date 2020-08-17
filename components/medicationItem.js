@@ -30,11 +30,12 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#f5f5f5',
     borderRadius: 20,
-    width: '40%',
+    width: '35%',
     alignItems: 'center',
     padding: '2%',
     marginEnd: '5%',
     flex: 1,
+    margin: '4%',
   },
   medicineImg: {
     width: 100,
@@ -56,9 +57,9 @@ const styles = StyleSheet.create({
   },
   medicationName: {
     margin: '2%',
-    alignSelf: 'center',
     fontSize: 16,
     fontWeight: '700',
+    margin: '2%',
   },
   dosage: {
     color: '#d22b55',

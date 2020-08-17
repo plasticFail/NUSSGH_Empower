@@ -48,13 +48,13 @@ const checkDosage = (dosageString) => {
 
 const storeData = (type, data) => {
   if (type === 'BloodGlucose') {
-    storeLastBgLog(JSON.stringify(data));
+    storeLastBgLog(data);
   }
   if (type === 'Weight') {
-    storeLastWeightLog(JSON.stringify(data));
+    storeLastWeightLog(data);
   }
   if (type === 'Medication') {
-    storeLastMedicationLog(JSON.stringify(data));
+    storeLastMedicationLog(data);
   }
 };
 
