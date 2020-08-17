@@ -11,26 +11,19 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import Modal from 'react-native-modal';
 import Header from './header';
 import BloodGlucoseLogBlock from '../../logs/bloodGlucoseLogBlock';
-import DataField from './dataField';
-import moment from 'moment';
+import {getTime, getDateObj} from '../../../commonFunctions/diaryFunctions';
 
 const BgBlock = (props) => {
   const {bloodGlucose} = props;
-
   //format date
   let dateString = String(bloodGlucose.record_date);
-  const time = dateString.substring(
-    dateString.indexOf('2020') + 4,
-    dateString.length - 3,
-  );
-  let dateMomentObject = moment(dateString, 'DD/MM/YYYY HH:mm:ss');
-  let dateObject = dateMomentObject.toDate();
+  let time = getTime(dateString);
 
   const img = require('../../../resources/images/bloodglucose.jpg');
   const logo = require('../../../resources/images/bloodglucose_logo.png');
   const initialBg = String(bloodGlucose.bg_reading);
   const [modalVisible, setModalVisible] = useState(false);
-  const [date, setDate] = useState(dateObject);
+  const [date, setDate] = useState(getDateObj(dateString));
   const [bg, setBg] = useState(initialBg);
   const [disable, setDisabled] = useState(true);
 

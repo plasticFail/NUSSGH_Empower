@@ -12,22 +12,18 @@ import Modal from 'react-native-modal';
 import Header from './header';
 import moment from 'moment';
 import WeightLogBlock from '../../logs/weightLogBlock';
+import {getDateObj, getTime} from '../../../commonFunctions/diaryFunctions';
 
 const WeightBlock = (props) => {
   const {weight} = props;
   let dateString = String(weight.record_date);
-  const time = dateString.substring(
-    dateString.indexOf('2020') + 4,
-    dateString.length - 3,
-  );
-  let dateMomentObject = moment(dateString, 'DD/MM/YYYY HH:mm:ss');
-  let dateObject = dateMomentObject.toDate();
+  let time = getTime(dateString);
 
   const img = require('../../../resources/images/weight.jpg');
   const logo = require('../../../resources/images/weight_logo.png');
   const initialWeight = String(weight.weight);
   const [modalVisible, setModalVisible] = useState(false);
-  const [date, setDate] = useState(dateObject);
+  const [date, setDate] = useState(getDateObj(dateString));
   const [weightValue, setWeightValue] = useState(initialWeight);
   const [disable, setDisabled] = useState(true);
 

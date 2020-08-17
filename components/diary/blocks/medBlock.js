@@ -10,22 +10,21 @@ import {
 import {TouchableOpacity, FlatList} from 'react-native-gesture-handler';
 import Modal from 'react-native-modal';
 import Header from './header';
-import DataField from './dataField';
-import MedicationItem from '../../medicationItem';
+import MedicationLogBlock from '../../logs/medicationLogBlock';
+import {getTime, getDateObj} from '../../../commonFunctions/diaryFunctions';
 
 const MedBlock = (props) => {
   const {medicationList} = props;
-
+  //format date string
+  let dateString = String(medicationList[0].recordDate);
+  let time = getTime(dateString);
+  let initalList = medicationList;
   const img = require('../../../resources/images/medication.jpeg');
   const logo = require('../../../resources/images/medication_logo.png');
   const [modalVisible, setModalVisible] = useState(false);
-
-  //format date string
-  let dateString = String(medicationList[0].recordDate);
-  const time = dateString.substring(
-    dateString.indexOf('2020') + 4,
-    dateString.length - 3,
-  );
+  const [list, setList] = useState(medicationList);
+  const [date, setDate] = useState(getDateObj(dateString));
+  const [disable, setDisabled] = useState(true);
 
   //close itself
   const closeModal = () => {
@@ -36,6 +35,15 @@ const MedBlock = (props) => {
 
   //handle delete of log
   const handleDelete = () => {};
+
+  const onListChange = (list) => {
+    setList([...list]);
+    if (JSON.stringify(list) === JSON.stringify(initalList)) {
+      setDisabled(true);
+    } else {
+      setDisabled(false);
+    }
+  };
 
   return (
     <View>
@@ -55,14 +63,35 @@ const MedBlock = (props) => {
         style={{justifyContent: 'flex-end'}}>
         <Header title={'Medication:' + time} closeModal={closeModal} />
         <View style={styles.modalContainer}>
-          <DataField fieldName="Record Date Time" value={dateString} />
-          <Text style={styles.medicationAddedText}>Medications Added:</Text>
-          <FlatList
-            data={medicationList}
-            numColumns={2}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({item}) => <MedicationItem medication={item} />}
+          <MedicationLogBlock
+            date={date}
+            setDate={setDate}
+            selectedMedicationList={list}
+            onListChange={onListChange}
           />
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}>
+            {disable == true ? (
+              <TouchableOpacity
+                disabled={disable}
+                style={[styles.actionButton, {backgroundColor: '#cdd4e4'}]}>
+                <Text style={styles.actionText}>Edit</Text>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                style={[styles.actionButton, {backgroundColor: '#aad326'}]}>
+                <Text style={styles.actionText}>Edit</Text>
+              </TouchableOpacity>
+            )}
+            <TouchableOpacity
+              style={[styles.actionButton, {backgroundColor: '#ffb7e7'}]}>
+              <Text style={styles.actionText}>Delete</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </Modal>
     </View>
@@ -106,6 +135,7 @@ const styles = StyleSheet.create({
   modalContainer: {
     backgroundColor: 'white',
     padding: '3%',
+    flex: 1,
   },
   actionButton: {
     borderRadius: 20,
