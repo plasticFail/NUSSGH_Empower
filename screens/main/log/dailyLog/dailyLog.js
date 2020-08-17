@@ -1,4 +1,4 @@
-import React, {Component, useState} from 'react';
+import React, {Component} from 'react';
 import {
   View,
   Text,
@@ -6,7 +6,6 @@ import {
   Image,
   Alert,
   ScrollView,
-  TouchableOpacity,
 } from 'react-native';
 // third party lib
 import Moment from 'moment';
@@ -29,6 +28,8 @@ import WeightLogBlock from '../../../../components/logs/weightLogBlock';
 import WeightLogDisplay from '../../../../components/logs/weightLogDisplay';
 import MedicationLogDisplay from '../../../../components/logs/medicationLogDisplay';
 import MedicationLogBlock from '../../../../components/logs/medicationLogBlock';
+import {checkBloodGlucose, checkTime} from '../../../../commonFunctions/logFunctions';
+
 
 class DailyLog extends Component {
   constructor(props) {
@@ -38,10 +39,12 @@ class DailyLog extends Component {
     this.state = {
       currentStep: 1,
       showNewInput: false,
+      enableNext: false,
 
       dateBloodGlucose: new Date(),
       bloodGlucose: '',
       lastBloodGlucose: null,
+      inputNewBloodGlucose: false,
 
       mealRecordDate: null,
       mealType: null,
@@ -52,10 +55,12 @@ class DailyLog extends Component {
       dateMedication: new Date(),
       selectedMedicationList: [],
       lastMedication: null,
+      inputNewMedication: false,
 
       dateWeight: new Date(),
       weight: '',
       lastWeight: null,
+      inputWeight: false,
     };
   }
 
@@ -65,6 +70,7 @@ class DailyLog extends Component {
     getLastBgLog().then((data) => {
       if(this.isToday(data.date)) {
         this.setState({lastBloodGlucose: data});
+        this.setState({enableNext: true});
       }
     });
 
@@ -86,7 +92,17 @@ class DailyLog extends Component {
     });
   }
 
-  componentDidUpdate() {}
+  componentDidUpdate(prevProps,prevState){
+    console.log('prev : ' + prevState.bloodGlucose);
+    console.log('current : ' + this.state.bloodGlucose);
+    switch (this.state.currentStep){
+      case 1:
+        if(prevState.showNewInput !== this.state.showNewInput || prevState.bloodGlucose !== this.state.bloodGlucose || prevState.dateBloodGlucose !== this.state.dateBloodGlucose) {
+          this.setState({enableNext: !this.state.showNewInput || checkBloodGlucose(this.state.bloodGlucose)});
+        }
+        break;
+    }
+  }
 
   isToday = date => {
     return date === Moment(new Date()).format('YYYY/MM/DD');
@@ -141,7 +157,7 @@ class DailyLog extends Component {
   showFormText = () => {
     switch (this.state.currentStep) {
       case 1:
-        if (this.state.lastBloodGlucose !== null) {
+        if (this.state.lastBloodGlucose) {
           return true;
         }
         break;
@@ -156,7 +172,7 @@ class DailyLog extends Component {
         }
         break;
       case 4:
-        if (this.state.lastWeight !== null) {
+        if (this.state.lastWeight) {
           return true;
         }
         break;
@@ -171,6 +187,7 @@ class DailyLog extends Component {
     if (this.state.showNewInput === boolValue) {
       return;
     }
+
     switch (this.state.currentStep) {
       case 2:
         this.setState({
@@ -232,7 +249,7 @@ class DailyLog extends Component {
           }
           break;
         case 2:
-          if (this.state.showNewInput) {
+          if (this.state.lastWeight === null || this.state.showNewInput) {
             return true;
           }
           break;
@@ -263,6 +280,20 @@ class DailyLog extends Component {
       mealRecordDate: recordDate,
     });
   };
+
+  handleNext = () => {
+    switch (this.state.currentStep){
+      case 1:
+        this.setState({inputNewBloodGlucose: this.state.showNewInput});
+        break;
+      case 3:
+        this.setState({inputNewMedication: this.state.showNewInput});
+        break;
+      case 4:
+        this.setState({inputWeight: this.state.showNewInput});
+        break;
+    }
+  }
 
   handleSubmit = () => {
     // Array to hold all the requests
@@ -425,17 +456,20 @@ class DailyLog extends Component {
               onPressBack={this.props.navigation.goBack}
               onPressForward={this.incrementStepper}
               overrideBackwardTitle="Cancel"
+              enableForward={this.state.enableNext}
             />
           ) : currentStep === 5 ? ( // Only render the back button
             <BackAndForwardButton
               onPressBack={this.decrementStepper}
               onPressForward={this.handleSubmit}
               overrideForwardTitle="Submit"
+              enableForward={this.state.enableNext}
             />
           ) : (
             <BackAndForwardButton
               onPressBack={this.decrementStepper}
               onPressForward={this.incrementStepper}
+              enableForward={this.state.enableNext}
             />
           )}
         </View>

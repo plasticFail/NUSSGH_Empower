@@ -12,7 +12,7 @@ import {glucoseAddLogRequest} from '../../../netcalls/requestsLog';
 import {useNavigation} from '@react-navigation/native';
 //functions
 import {storeLastBgLog} from '../../../storage/asyncStorageFunctions';
-import {checkTime} from '../../../commonFunctions/logFunctions';
+import {checkTime, checkBloodGlucose} from '../../../commonFunctions/logFunctions';
 //components
 import SuccessDialogue from '../../../components/successDialogue';
 import BloodGlucoseLogBlock from '../../../components/logs/bloodGlucoseLogBlock';
@@ -26,14 +26,7 @@ const BloodGlucoseLog = (props) => {
   Moment.locale('en');
 
   const handleSubmit = () => {
-    if (checkTime(date)) {
-      if (Number(bloodGlucose) >= 30 || Number(bloodGlucose) <= 0) {
-        Alert.alert('Error', 'Invalid Blood Glucose Level', [{text: 'Got It'}]);
-      } else if (
-        bloodGlucose.match(/^[0-9]+(\.[0-9]{1,2})?$/g) &&
-        !bloodGlucose.includes(',') &&
-        !bloodGlucose.includes('-')
-      ) {
+    if (checkBloodGlucose(bloodGlucose)) {
         let formatDate = Moment(date).format('DD/MM/YYYY HH:mm:ss');
         glucoseAddLogRequest(Number(bloodGlucose), formatDate).then((value) => {
           if (value === true) {
@@ -54,13 +47,6 @@ const BloodGlucoseLog = (props) => {
           date: Moment(date).format('YYYY/MM/DD'),
           time: Moment(date).format('h:mm a'),
         });
-      } else {
-        Alert.alert(
-          'Error',
-          'Invalid Blood Glucose Input. Make sure at most 2 decimal place',
-          [{text: 'Got It'}],
-        );
-      }
     }
   };
 
