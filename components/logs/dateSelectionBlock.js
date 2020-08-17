@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {StyleSheet, Text, TextInput, View} from 'react-native';
+import React, {useState, useRef} from 'react';
+import {StyleSheet, Text, TextInput, View, Animated} from 'react-native';
 //third party libs
 import Moment from 'moment';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -7,6 +7,31 @@ import DatePicker from 'react-native-date-picker';
 
 const DateSelectionBlock = (props) => {
   const [visible, setVisible] = useState(false);
+  const slideAnimation = useRef(new Animated.Value(0)).current;
+
+  const heightInterpolate = slideAnimation.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, 225], //I don't know how to get the height of the datepicker but 225 seems to fit it just nice.
+    extrapolate: 'clamp',
+  });
+
+  const handleOpenCloseWithAnimation = (currentVisibility) => {
+    if (currentVisibility) {
+      Animated.timing(slideAnimation, {
+        toValue: 0,
+        duration: 300, // 300ms slide up animation when visible is set false.
+        useNativeDriver: false
+      }).start(() => setVisible(false));
+    } else {
+      setVisible(true);
+      Animated.timing(slideAnimation, {
+        toValue: 1,
+        duration: 300, // 300ms slide down animation when visible is set true.
+        useNativeDriver: false
+      }).start();
+    }
+  }
+
   Moment.locale('en');
 
   return (
@@ -25,12 +50,10 @@ const DateSelectionBlock = (props) => {
           name="calendar-outline"
           size={30}
           style={{marginStart: '5%'}}
-          onPress={() => {
-            setVisible(!visible);
-          }}
+          onPress={() => handleOpenCloseWithAnimation(visible)}
         />
       </View>
-      {visible && (
+      {visible && (<Animated.View style={[styles.slideAnimationWrapperForDatePicker, {height: heightInterpolate}]}>
         <DatePicker
           visible={visible}
           date={props.date}
@@ -39,6 +62,7 @@ const DateSelectionBlock = (props) => {
           maximumDate={Moment(new Date()).add(10, 'minutes').toDate()}
           mode="datetime"
         />
+          </Animated.View>
       )}
     </>
   );
@@ -63,6 +87,9 @@ const styles = StyleSheet.create({
     color: 'black',
     padding: '2%',
   },
+  slideAnimationWrapperForDatePicker: {
+    overflow: 'hidden',
+  }
 });
 
 export default DateSelectionBlock;

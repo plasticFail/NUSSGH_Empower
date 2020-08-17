@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, StyleSheet, Text, TextInput} from 'react-native';
+import {View, StyleSheet, Text} from 'react-native';
 import {
   getLastBgLog,
   getLastWeightLog,
@@ -7,21 +7,23 @@ import {
 
 //for displaying the most recent value for weight/blood glucose log
 //pass in a prop type="Weight" or "BloodGlucose"
+
+const BloodGlucoseType = 'BloodGlucose';
+const WeightType = 'Weight';
+
 const LogDisplay = (props) => {
   const {type} = props;
   const [lastValue, setLastValue] = useState('');
   const [time, setTime] = useState('');
 
   useEffect(() => {
-    if (type === 'BloodGlucose') {
-      getLastBgLog().then((response) => {
-        let data = JSON.parse(response);
+    if (type === BloodGlucoseType) {
+      getLastBgLog().then((data) => {
         setValues(data);
       });
     }
-    if (type === 'Weight') {
-      getLastWeightLog().then((response) => {
-        let data = JSON.parse(response);
+    if (type === WeightType) {
+      getLastWeightLog().then((data) => {
         setValues(data);
       });
     }
@@ -40,14 +42,14 @@ const LogDisplay = (props) => {
         <View></View>
       ) : (
         <View style={[styles.container, styles.shadow]}>
-          {type === 'BloodGlucose' && (
+          {type === BloodGlucoseType && (
             <Text style={styles.textStyle}>
               Your most recent blood glucose log is{' '}
               <Text style={styles.bold}>{lastValue}</Text> mmol/L at{' '}
               <Text style={styles.bold}>{time}</Text> today.
             </Text>
           )}
-          {type === 'Weight' && (
+          {type === WeightType && (
             <Text style={styles.textStyle}>
               Your most recent weight log is{' '}
               <Text style={styles.bold}>{lastValue}</Text> kg at{' '}

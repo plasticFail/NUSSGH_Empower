@@ -5,17 +5,17 @@ import {
   Text,
   TouchableOpacity,
   Alert,
-  ScrollView,
 } from 'react-native';
 //third party libs
 import Moment from 'moment';
 import {glucoseAddLogRequest} from '../../../netcalls/requestsLog';
 import {useNavigation} from '@react-navigation/native';
+//functions
+import {storeLastBgLog} from '../../../storage/asyncStorageFunctions';
+import {checkTime} from '../../../commonFunctions/logFunctions';
 //components
 import SuccessDialogue from '../../../components/successDialogue';
 import BloodGlucoseLogBlock from '../../../components/logs/bloodGlucoseLogBlock';
-import {checkTime, storeData} from '../../../commonFunctions/logFunctions';
-import BloodGluocseDisplay from '../../../components/logs/logDisplay';
 import LogDisplay from '../../../components/logs/logDisplay';
 
 const BloodGlucoseLog = (props) => {
@@ -49,7 +49,7 @@ const BloodGlucoseLog = (props) => {
           }
         });
         //store data in async storage.
-        storeData('BloodGlucose', {
+        storeLastBgLog({
           value: bloodGlucose,
           time: Moment(date).format('h:mm a'),
         });
