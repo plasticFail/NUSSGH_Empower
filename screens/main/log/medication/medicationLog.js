@@ -6,7 +6,6 @@ import Moment from 'moment';
 import {ScrollView} from 'react-native-gesture-handler';
 //functions
 import {medicationAddLogRequest} from '../../../../netcalls/requestsLog';
-import {checkTime} from '../../../../commonFunctions/logFunctions';
 import {storeLastMedicationLog} from '../../../../storage/asyncStorageFunctions';
 //components
 import SuccessDialogue from '../../../../components/successDialogue';
@@ -27,7 +26,6 @@ const MedicationLog = (props) => {
   };
 
   const handleSubmit = () => {
-    if (checkTime(date)) {
       for (let x of selectedMedicationList) {
         x.recordDate = Moment(date).format('DD/MM/YYYY HH:mm:ss');
       }
@@ -53,7 +51,6 @@ const MedicationLog = (props) => {
           ]);
         }
       });
-    }
   };
 
   return (

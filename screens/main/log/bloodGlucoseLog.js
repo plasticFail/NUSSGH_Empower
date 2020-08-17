@@ -12,7 +12,7 @@ import {glucoseAddLogRequest} from '../../../netcalls/requestsLog';
 import {useNavigation} from '@react-navigation/native';
 //functions
 import {storeLastBgLog} from '../../../storage/asyncStorageFunctions';
-import {checkTime, checkBloodGlucose} from '../../../commonFunctions/logFunctions';
+import {checkBloodGlucose} from '../../../commonFunctions/logFunctions';
 //components
 import SuccessDialogue from '../../../components/successDialogue';
 import BloodGlucoseLogBlock from '../../../components/logs/bloodGlucoseLogBlock';

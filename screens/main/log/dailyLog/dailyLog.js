@@ -266,17 +266,15 @@ class DailyLog extends Component {
             return true;
           }
           break;
+        case 2:
+          return true;
+          break;
         case 3:
           if (this.state.lastMedication === null || this.state.showNewInput) {
             return true;
           }
           break;
         case 4:
-          if (this.state.lastWeight === null || this.state.showNewInput) {
-            return true;
-          }
-          break;
-        case 2:
           if (this.state.lastWeight === null || this.state.showNewInput) {
             return true;
           }
