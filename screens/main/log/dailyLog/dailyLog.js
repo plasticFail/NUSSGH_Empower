@@ -28,7 +28,7 @@ import WeightLogBlock from '../../../../components/logs/weightLogBlock';
 import WeightLogDisplay from '../../../../components/logs/weightLogDisplay';
 import MedicationLogDisplay from '../../../../components/logs/medicationLogDisplay';
 import MedicationLogBlock from '../../../../components/logs/medicationLogBlock';
-import {checkBloodGlucose, checkTime} from '../../../../commonFunctions/logFunctions';
+import {checkBloodGlucose, checkWeight} from '../../../../commonFunctions/logFunctions';
 
 
 class DailyLog extends Component {
@@ -39,7 +39,6 @@ class DailyLog extends Component {
     this.state = {
       currentStep: 1,
       showNewInput: false,
-      enableNext: false,
 
       dateBloodGlucose: new Date(),
       bloodGlucose: '',
@@ -95,17 +94,46 @@ class DailyLog extends Component {
   componentDidUpdate(prevProps,prevState){
     console.log('prev : ' + prevState.bloodGlucose);
     console.log('current : ' + this.state.bloodGlucose);
-    switch (this.state.currentStep){
-      case 1:
-        if(prevState.showNewInput !== this.state.showNewInput || prevState.bloodGlucose !== this.state.bloodGlucose || prevState.dateBloodGlucose !== this.state.dateBloodGlucose) {
-          this.setState({enableNext: !this.state.showNewInput || checkBloodGlucose(this.state.bloodGlucose)});
-        }
-        break;
-    }
+
   }
 
   isToday = date => {
     return date === Moment(new Date()).format('YYYY/MM/DD');
+  }
+
+  enableNext = () => {
+    if(!this.state.showNewInput){
+      switch (this.state.currentStep){
+        case 1:
+          if(this.state.lastBloodGlucose){
+            return true;
+          }
+          break;
+        case 3:
+          if(this.state.lastMedication){
+            return true;
+          }
+          break;
+        case 4:
+          if(this.state.lastWeight){
+            return true;
+          }
+          break;
+      }
+    }
+
+    switch (this.state.currentStep){
+      case 1:
+        return checkBloodGlucose(this.state.bloodGlucose);
+        break;
+      case 3:
+        return this.state.selectedMedicationList.length > 0;
+        break;
+      case 4:
+        return checkWeight(this.state.weight);
+        break;
+    }
+    return true;
   }
 
   displayStepText = () => {
@@ -445,8 +473,8 @@ class DailyLog extends Component {
               setDate={(date) => {
                 this.setState({dateWeight: date});
               }}
-              bloodGlucose={this.state.weight}
-              setBloodGlucose={(value) => {
+              weight={this.state.weight}
+              setWeight={(value) => {
                 this.setState({weight: value});
               }}
             />
@@ -456,20 +484,20 @@ class DailyLog extends Component {
               onPressBack={this.props.navigation.goBack}
               onPressForward={this.incrementStepper}
               overrideBackwardTitle="Cancel"
-              enableForward={this.state.enableNext}
+              enableForward={this.enableNext}
             />
           ) : currentStep === 5 ? ( // Only render the back button
             <BackAndForwardButton
               onPressBack={this.decrementStepper}
               onPressForward={this.handleSubmit}
               overrideForwardTitle="Submit"
-              enableForward={this.state.enableNext}
+              enableForward={this.enableNext}
             />
           ) : (
             <BackAndForwardButton
               onPressBack={this.decrementStepper}
               onPressForward={this.incrementStepper}
-              enableForward={this.state.enableNext}
+              enableForward={this.enableNext}
             />
           )}
         </View>

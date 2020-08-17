@@ -19,7 +19,7 @@ export function BackAndForwardButton({onPressBack, onPressForward, overrideForwa
                 <View style={{flex: 1, alignItems: 'flex-end'}}>
                     {
                         onPressForward &&
-                        <TouchableOpacity style={forwardStyles(enableForward)} onPress={onPressForward} disabled={!enableForward}>
+                        <TouchableOpacity style={forwardStyles(enableForward())} onPress={onPressForward} disabled={!enableForward()}>
                             <Text style={styles.buttonText}>{overrideForwardTitle || "Next"}</Text>
                         </TouchableOpacity>
                     }

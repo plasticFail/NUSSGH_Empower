@@ -7,7 +7,6 @@ import {
   Image,
   Dimensions,
   Alert,
-  ScrollView,
 } from 'react-native';
 import Modal from 'react-native-modal';
 import Entypo from 'react-native-vector-icons/Entypo';
