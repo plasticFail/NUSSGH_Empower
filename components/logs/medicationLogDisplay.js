@@ -18,16 +18,20 @@ const MedicationLogDisplay = (props) => {
 
   useEffect(() => {
     getLastMedicationLog().then((response) => {
-      let data = response;
-      setTime(data.time);
-      let arr = data.value;
-      setOriList(arr);
-      console.log(oriList);
-      setMedicationList(arr.slice(0, 3));
+      if (response != null) {
+        let data = response;
+        setTime(data.time);
+        let arr = data.value;
+        setOriList(arr);
+        console.log(oriList);
+        setMedicationList(arr.slice(0, 3));
+      }
     });
   }, []);
 
-  return (
+  return time === '' ? (
+    <View></View>
+  ) : (
     <View style={[styles.container, styles.shadow]}>
       <Text style={styles.textStyle}>
         You have recently added these medications at{' '}
