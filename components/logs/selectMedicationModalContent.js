@@ -7,11 +7,13 @@ import {
   Image,
   Alert,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 import Entypo from 'react-native-vector-icons/Entypo';
 import {storeMedications} from '../../netcalls/requestsLog';
 import {checkDosage} from '../../commonFunctions/logFunctions';
+import Loading from '../loading';
 
 Entypo.loadFont();
 
@@ -27,6 +29,7 @@ class SelectMedicationModalContent extends Component {
       selectedMedicine: null,
       searchMedicationResults: [],
       dosage: '',
+      isLoading: false,
     };
   }
 
@@ -37,6 +40,7 @@ class SelectMedicationModalContent extends Component {
         ' cache : ' +
         this.state.searchKeyCache,
     );
+    console.log('isLoading: ' + this.state.isLoading);
     if (
       this.state.triggerSearch &&
       this.state.searchKey === this.state.searchKeyCache
@@ -52,6 +56,10 @@ class SelectMedicationModalContent extends Component {
     setTimeout(() => {
       this.setState({searchKeyCache: searchKey});
     }, 1000);
+  };
+
+  setLoading = () => {
+    this.setState({isLoading: true});
   };
 
   handleDosage = (dosage) => {
@@ -87,6 +95,7 @@ class SelectMedicationModalContent extends Component {
     } else {
       this.setState({searchMedicationResults: []});
     }
+    this.setState({isLoading: false});
   };
 
   selectFromList = (item) => {
@@ -150,11 +159,13 @@ class SelectMedicationModalContent extends Component {
         <SearchMedicine
           searchKey={this.state.searchKey}
           handleSearch={this.handleSearch}
+          setLoading={this.setLoading}
         />
         {this.state.searchMedicationResults.length > 0 && (
           <SearchMedicineResults
             searchMedicineResults={this.state.searchMedicationResults}
             selectFromList={this.selectFromList}
+            isLoading={this.state.isLoading}
           />
         )}
         <DosageInput dosage={this.state.dosage} setDosage={this.handleDosage} />
@@ -198,8 +209,16 @@ function DosageInput(props) {
   );
 }
 
-function SearchMedicineResults({searchMedicineResults, selectFromList}) {
-  return (
+function SearchMedicineResults({
+  searchMedicineResults,
+  selectFromList,
+  isLoading,
+}) {
+  return isLoading ? (
+    <View style={styles.loadingContainer}>
+      <ActivityIndicator size="large" color="#B3D14C" />
+    </View>
+  ) : (
     <View
       style={[
         styles.resultItemContainer,
@@ -213,6 +232,7 @@ function SearchMedicineResults({searchMedicineResults, selectFromList}) {
         Results: {searchMedicineResults.length}
       </Text>
       <FlatList
+        keyExtractor={(item) => item.drug_name}
         data={searchMedicineResults}
         renderItem={({item}) => (
           <View style={styles.resultItem}>
@@ -245,6 +265,7 @@ const SearchMedicine = (props) => {
         placeholderTextColor="#a1a3a0"
         value={props.searchKey}
         onChangeText={(text) => {
+          props.setLoading();
           props.handleSearch(text);
         }}
       />
@@ -349,6 +370,11 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderColor: '#AAd326',
     padding: 15,
+    alignItems: 'center',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
   },
 });

@@ -19,6 +19,7 @@ const HypocorrectionFood = (props) => {
       <Text style={styles.header}>Consume 15g from this food list now!</Text>
       <FlatList
         data={SampleData.data}
+        keyExtractor={(item, index) => index.toString()}
         contentContainerStyle={{paddingBottom: '20%'}}
         renderItem={({item}) => (
           <>

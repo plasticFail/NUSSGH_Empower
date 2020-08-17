@@ -5,6 +5,7 @@ const key_password = 'password';
 const key_token = 'token';
 const key_bloodGlucoseLog = 'lastBloodGlucoseLog';
 const key_weightLog = 'lastWeightLog';
+const key_medicationLog = 'lastMedicationLog';
 const key_last_meal_log = 'lastMealLog';
 
 const storeData = async (key, value) => {
@@ -57,7 +58,6 @@ const getDataObj = async (key) => {
   return null;
 };
 
-
 const storeUsername = async (username) => {
   await storeData(key_username, username);
 };
@@ -98,13 +98,20 @@ const getLastWeightLog = async () => {
   return await getDataObj(key_weightLog);
 };
 
+const storeLastMedicationLog = async (medicationLog) => {
+  await storeDataObj(key_medicationLog, medicationLog);
+};
+
+const getLastMedicationLog = async () => {
+  return await getDataObj(key_medicationLog);
+};
 const storeLastMealLog = async (mealLog) => {
   return await storeDataObj(key_last_meal_log, mealLog);
-}
+};
 
 const getLastMealLog = async () => {
   return await getDataObj(key_last_meal_log);
-}
+};
 
 export {
   storeUsername,
@@ -117,6 +124,8 @@ export {
   getLastBgLog,
   storeLastWeightLog,
   getLastWeightLog,
+  storeLastMedicationLog,
+  getLastMedicationLog,
   storeLastMealLog,
-  getLastMealLog
+  getLastMealLog,
 };

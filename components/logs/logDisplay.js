@@ -37,7 +37,7 @@ const LogDisplay = (props) => {
   };
 
   return (
-    <View>
+    <>
       {lastValue === '' ? (
         <View></View>
       ) : (
@@ -58,7 +58,7 @@ const LogDisplay = (props) => {
           )}
         </View>
       )}
-    </View>
+    </>
   );
 };
 
