@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, useState} from 'react';
 import {
   View,
   Text,
@@ -28,6 +28,7 @@ import PreviousMealBlock from '../meal/PreviousMealBlock';
 import WeightLogBlock from '../../../../components/logs/weightLogBlock';
 import WeightLogDisplay from '../../../../components/logs/weightLogDisplay';
 import MedicationLogDisplay from '../../../../components/logs/medicationLogDisplay';
+import MedicationLogBlock from '../../../../components/logs/medicationLogBlock';
 
 class DailyLog extends Component {
   constructor(props) {
@@ -48,17 +49,23 @@ class DailyLog extends Component {
       lastMealLog: null,
       toRecordMealLog: false,
 
+      dateMedication: new Date(),
+      selectedMedicationList: [],
+      lastMedication: null,
+
       dateWeight: new Date(),
       weight: '',
       lastWeight: null,
-
-      lastMedication: [],
     };
   }
 
   componentDidMount() {
+    Moment.locale('en');
+
     getLastBgLog().then((data) => {
-      this.setState({lastBloodGlucose: data});
+      if(this.isToday(data.date)) {
+        this.setState({lastBloodGlucose: data});
+      }
     });
 
     getLastMedicationLog().then((data) => {
@@ -66,7 +73,9 @@ class DailyLog extends Component {
     });
 
     getLastWeightLog().then((data) => {
-      this.setState({lastWeight: data});
+      if(this.isToday(data.date)) {
+        this.setState({lastWeight: data});
+      }
     });
     getLastMealLog().then((data) => {
       this.setState({
@@ -76,6 +85,10 @@ class DailyLog extends Component {
   }
 
   componentDidUpdate() {}
+
+  isToday = date => {
+    return date === Moment(new Date()).format('YYYY/MM/DD');
+  }
 
   displayStepText = () => {
     switch (this.state.currentStep) {
@@ -136,7 +149,9 @@ class DailyLog extends Component {
         }
         break;
       case 3:
-        return true;
+        if(this.state.lastMedication) {
+          return true;
+        }
         break;
       case 4:
         if (this.state.lastWeight !== null) {
@@ -207,6 +222,11 @@ class DailyLog extends Component {
             return true;
           }
           break;
+        case 3:
+          if (this.state.lastMedication === null || this.state.showNewInput) {
+            return true;
+          }
+          break;
         case 4:
           if (this.state.lastWeight === null || this.state.showNewInput) {
             return true;
@@ -220,6 +240,10 @@ class DailyLog extends Component {
       }
     }
     return false;
+  };
+
+  onMedicationList = (list) => {
+    this.setState({selectedMedicationList: list});
   };
 
   // Meal handler events
@@ -344,7 +368,7 @@ class DailyLog extends Component {
             <BloodGlucoseLogDisplay data={this.state.lastBloodGlucose} />
           )}
           {this.showLastLog(2) && <PreviousMealBlock />}
-          {this.showLastLog(3) && <MedicationLogDisplay />}
+          {this.showLastLog(3) && (<MedicationLogDisplay />)}
           {this.showLastLog(4) && (
             <WeightLogDisplay data={this.state.lastWeight} />
           )}
@@ -373,6 +397,16 @@ class DailyLog extends Component {
               selectedMeal={meal}
               navigation={navigation}
               route={route}
+            />
+          )}
+          {this.showNewLogInput(3) && (
+            <MedicationLogBlock
+                date={this.state.dateMedication}
+                setDate={(date) => {
+                  this.setState({dateMedication: date});
+                }}
+                selectedMedicationList={this.state.selectedMedicationList}
+                onListChange={this.onMedicationList}
             />
           )}
           {this.showNewLogInput(4) && (

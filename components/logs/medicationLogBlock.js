@@ -7,6 +7,7 @@ import {
   Image,
   Dimensions,
   Alert,
+  ScrollView,
 } from 'react-native';
 import Modal from 'react-native-modal';
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -228,7 +229,6 @@ const styles = StyleSheet.create({
   button: {
     marginTop: '4%',
     backgroundColor: '#EEF3BD',
-    flex: 1,
     paddingStart: '20%',
     paddingEnd: '20%',
     borderRadius: 20,

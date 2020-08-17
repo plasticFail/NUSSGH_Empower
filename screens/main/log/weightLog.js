@@ -37,7 +37,11 @@ const WeightLog = (props) => {
         }
       });
 
-      storeLastWeightLog({value: weight, time: Moment(date).format('h:mm a')});
+      storeLastWeightLog({
+        value: weight,
+        date: Moment(date).format('YYYY/MM/DD'),
+        time: Moment(date).format('h:mm a')
+      });
     }
   };
 

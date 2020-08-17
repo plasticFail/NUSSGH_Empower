@@ -6,7 +6,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {medicationAddLogRequest} from '../../../../netcalls/requestsLog';
 import SuccessDialogue from '../../../../components/successDialogue';
 import MedicationLogBlock from '../../../../components/logs/medicationLogBlock';
-import {checkTime, storeData} from '../../../../commonFunctions/logFunctions';
+import {checkTime} from '../../../../commonFunctions/logFunctions';
 import MedicationLogDisplay from '../../../../components/logs/medicationLogDisplay';
 
 Entypo.loadFont();
@@ -24,13 +24,14 @@ const MedicationLog = (props) => {
 
   const handleSubmit = () => {
     if (checkTime(date)) {
-      for (var x of selectedMedicationList) {
+      for (let x of selectedMedicationList) {
         x.recordDate = Moment(date).format('DD/MM/YYYY HH:mm:ss');
       }
 
       //store latest in async storage [before removing img to send to db]
-      storeData('Medication', {
+      storeLastMedicationLog({
         value: selectedMedicationList,
+        date: Moment(date).format('YYYY/MM/DD'),
         time: Moment(date).format('h:mm a'),
       });
 

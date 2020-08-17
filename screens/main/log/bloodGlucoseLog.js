@@ -51,6 +51,7 @@ const BloodGlucoseLog = (props) => {
         //store data in async storage.
         storeLastBgLog({
           value: bloodGlucose,
+          date: Moment(date).format('YYYY/MM/DD'),
           time: Moment(date).format('h:mm a'),
         });
       } else {
