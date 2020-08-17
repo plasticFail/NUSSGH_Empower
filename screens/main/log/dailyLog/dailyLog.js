@@ -139,20 +139,23 @@ class DailyLog extends Component {
   }
 
   alertText = () => {
-    switch (this.state.currentStep) {
-      case 1:
-        return checkBloodGlucoseText(this.state.bloodGlucose);
-        break;
-      case 2:
-        return true;
-        break;
-      case 3:
-        return this.state.selectedMedicationList.length > 0;
-        break;
-      case 4:
-        return checkWeightText(this.state.weight);
-        break;
+    if(this.state.showNewInput) {
+      switch (this.state.currentStep) {
+        case 1:
+          return checkBloodGlucoseText(this.state.bloodGlucose);
+          break;
+        case 2:
+          return true;
+          break;
+        case 3:
+          return this.state.selectedMedicationList.length > 0;
+          break;
+        case 4:
+          return checkWeightText(this.state.weight);
+          break;
+      }
     }
+    return '';
   }
 
   displayStepText = () => {
