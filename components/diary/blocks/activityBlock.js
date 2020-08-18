@@ -8,12 +8,14 @@ import {
   Dimensions,
 } from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+//third party library
 import Modal from 'react-native-modal';
-import Header from './header';
-import {getTime, getDateObj} from '../../../commonFunctions/diaryFunctions';
 import Moment from 'moment';
+//components
+import Header from './header';
 import DataField from './dataField';
-import {act} from 'react-test-renderer';
+//function
+import {getTime, getDateObj} from '../../../commonFunctions/diaryFunctions';
 
 const ActivityBlock = (props) => {
   const {activity} = props;

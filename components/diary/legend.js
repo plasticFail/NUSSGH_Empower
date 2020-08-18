@@ -1,5 +1,6 @@
 import React from 'react';
 import {View, StyleSheet, Text, Image, Button} from 'react-native';
+//third party library
 import Icon from '../..';
 
 const Legend = (props) => {

@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {View, StyleSheet, Text} from 'react-native';
+//third part library
 import Entypo from 'react-native-vector-icons/Entypo';
 
 Entypo.loadFont();

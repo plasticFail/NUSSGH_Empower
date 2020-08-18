@@ -8,9 +8,12 @@ import {
   Dimensions,
 } from 'react-native';
 import {TouchableOpacity, FlatList} from 'react-native-gesture-handler';
+//third party library
 import Modal from 'react-native-modal';
+//component
 import Header from './header';
 import MedicationLogBlock from '../../logs/medicationLogBlock';
+//function
 import {getTime, getDateObj} from '../../../commonFunctions/diaryFunctions';
 
 const MedBlock = (props) => {

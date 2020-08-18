@@ -8,10 +8,13 @@ import {
   Dimensions,
 } from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+//third party library
 import Modal from 'react-native-modal';
-import Header from './header';
 import moment from 'moment';
+//component
+import Header from './header';
 import WeightLogBlock from '../../logs/weightLogBlock';
+//function
 import {getDateObj, getTime} from '../../../commonFunctions/diaryFunctions';
 
 const WeightBlock = (props) => {
