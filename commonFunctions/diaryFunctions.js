@@ -15,4 +15,10 @@ const getTime = (dateString) => {
   return time;
 };
 
-export {getDateObj, getTime};
+const getHour = (dateString) => {
+  let timeString = getTime(dateString);
+  let hourString = timeString.substring(0, 6).trim().replace(/[:]/, '');
+  return Number(hourString);
+};
+
+export {getDateObj, getTime, getHour};

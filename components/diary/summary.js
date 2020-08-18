@@ -3,11 +3,6 @@ import {View, StyleSheet, Text} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 //component
 import Result from './result';
-import BgBlock from './blocks/bgBlock';
-import WeightBlock from './blocks/weightBlock';
-import MedicationLogBlock from '../logs/medicationLogBlock';
-import MedBlock from './blocks/medBlock';
-import ActivityBlock from './blocks/activityBlock';
 
 const Summary = (props) => {
   const {
