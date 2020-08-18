@@ -23,13 +23,14 @@ const MedicationLog = (props) => {
   };
 
   const handleSubmit = () => {
-    for (var x of selectedMedicationList) {
+    for (let x of selectedMedicationList) {
       x.recordDate = Moment(date).format('DD/MM/YYYY HH:mm:ss');
     }
 
     //store latest in async storage [before removing img to send to db]
     storeLastMedicationLog({
       value: selectedMedicationList,
+      date: Moment(date).format('YYYY/MM/DD'),
       time: Moment(date).format('h:mm a'),
     });
 

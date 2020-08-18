@@ -4,6 +4,7 @@ import {View, Text, StyleSheet, TouchableOpacity, Alert} from 'react-native';
 import Moment from 'moment';
 //functions
 import {weightAddLogRequest} from '../../../netcalls/requestsLog';
+import {checkWeight} from '../../../commonFunctions/logFunctions';
 import {storeLastWeightLog} from '../../../storage/asyncStorageFunctions';
 //components
 import SuccessDialogue from '../../../components/successDialogue';
@@ -16,7 +17,9 @@ const WeightLog = (props) => {
   const [successShow, setSuccessShow] = useState(false);
 
   const handleSubmit = () => {
-    if (checkInputFormat(weight)) {
+    //check date valid and weight format (1 dp)
+    console.log('---' + Number(weight));
+    if (checkWeight(weight)) {
       let formatDate = Moment(date).format('DD/MM/YYYY HH:mm:ss');
       weightAddLogRequest(Number(weight), formatDate).then((value) => {
         if (value === true) {
@@ -28,26 +31,11 @@ const WeightLog = (props) => {
         }
       });
 
-      storeLastWeightLog({value: weight, time: Moment(date).format('h:mm a')});
-    }
-  };
-
-  const checkInputFormat = () => {
-    if (
-      weight.match(/^[0-9]+(\.[0-9]{1})?$/g) &&
-      !weight.includes(',') &&
-      !weight.includes('-') &&
-      Number(weight) <= 200 &&
-      Number(weight) >= 40
-    ) {
-      return true;
-    } else {
-      Alert.alert(
-        'Invalid Weight',
-        'Make sure weight entered is between 40 to 200kg. ',
-        [{text: 'Got It'}],
-      );
-      return false;
+      storeLastWeightLog({
+        value: weight,
+        date: Moment(date).format('YYYY/MM/DD'),
+        time: Moment(date).format('h:mm a'),
+      });
     }
   };
 

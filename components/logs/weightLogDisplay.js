@@ -4,17 +4,23 @@ import {StyleSheet, Text, View} from 'react-native';
 
 const WeightLogDisplay = (props) => {
     return (
-        <View>
-            <View style={[styles.container, styles.shadow]}>
-                <Text style={styles.textStyle}>
-                    Your most recent weight log is{' '}
-                    <Text style={styles.bold}>{props.data.value}</Text> kg at{' '}
-                    <Text style={styles.bold}>{props.data.time}</Text> today.
-                </Text>
-            </View>
+        <View style={[styles.container, styles.shadow]}>
+            <Text style={styles.textStyle}>
+                {prefix(props.isNewSubmit)}{' '}
+                <Text style={styles.bold}>{props.data.value}</Text> kg at{' '}
+                <Text style={styles.bold}>{props.data.time}</Text> today.
+            </Text>
         </View>
     );
 };
+
+const prefix = isNewSubmit => {
+    if(isNewSubmit){
+        return 'Your new log of weight is';
+    }else{
+        return 'Your most recent weight log is';
+    }
+}
 
 export default WeightLogDisplay;
 
