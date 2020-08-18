@@ -5,6 +5,7 @@ import Moment from 'moment';
 // Functions
 import {storeLastMealLog} from "../../../../storage/asyncStorageFunctions";
 import {mealAddLogRequest} from "../../../../netcalls/requestsLog";
+import {getDefaultMealType} from "../../../../commonFunctions/mealLogFunctions";
 // Components
 import DateSelectionBlock from "../../../../components/logs/dateSelectionBlock";
 import MealTypeSelectionBlock from "../../../../components/logs/meal/MealTypeSelectionBlock";
@@ -12,6 +13,7 @@ import MealFinder from "../../../../components/logs/meal/MealFinder";
 import RenderMealItem from "../../../../components/logs/meal/RenderMealItem";
 // Others
 import Entypo from 'react-native-vector-icons/Entypo';
+import SuccessDialogue from "../../../../components/successDialogue";
 
 Entypo.loadFont();
 
@@ -25,7 +27,8 @@ class MealLogRoot extends React.Component {
             selectedDateTime: now,
             selectedMealType: getDefaultMealType(hours),
             datepickerModalOpen: false,
-            selectedMeal: null
+            selectedMeal: null,
+            successMessage: false
         }
     }
 
@@ -73,9 +76,9 @@ class MealLogRoot extends React.Component {
         };
         mealAddLogRequest(mealData).then(data => {
             storeLastMealLog(mealData).then(resp => {
-                this.props.navigation.goBack();
-                Alert.alert("Log Success!", data.message,
-                    [ { text: 'Ok' }]);
+                this.setState({
+                    successMessage: true
+                })
             })
         }).catch(err => {
             Alert.alert("Error", err.message,
@@ -94,7 +97,7 @@ class MealLogRoot extends React.Component {
 
     render() {
         const {navigation} = this.props;
-        const {selectedDateTime, selectedMealType, selectedMeal} = this.state;
+        const {selectedDateTime, selectedMealType, selectedMeal, successMessage} = this.state;
         return (
             <View style={styles.root}>
                 <ScrollView style={{flex: 1}} contentContainerStyle={{flexGrow: 1}}>
@@ -136,23 +139,10 @@ class MealLogRoot extends React.Component {
                           </View>
                     }
                 </ScrollView>
+                <SuccessDialogue type='Meal' visible={successMessage} />
             </View>
         )
     }
-}
-
-function getDefaultMealType(hours) {
-    let defaultMealType = null;
-    if (hours >= 12 && hours < 18) {
-        defaultMealType = 'lunch';
-    } else if (hours >= 18 && hours < 22) {
-        defaultMealType = 'dinner'
-    } else if (hours >= 22 || hours < 5) {
-        defaultMealType = 'supper'
-    } else {
-        defaultMealType = 'breakfast'
-    }
-    return defaultMealType;
 }
 
 const styles = StyleSheet.create({

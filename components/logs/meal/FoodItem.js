@@ -11,10 +11,10 @@ export default function FoodItem({food}) {
         <View style={styles.foodItem}>
             <Image source={{uri: food.imgUrl.url}} style={styles.foodImage} />
             <View style={{justifyContent: 'center', flex: 1, alignItems: 'center'}}>
-                <Text style={{fontSize: adjustedFontSize, height: 50}}>
+                <Text style={{fontSize: adjustedFontSize, height: 50, paddingTop: 3}}>
                     {foodName}
                 </Text>
-                <Text>{"Qty: " + food["quantity"]}</Text>
+                <Text style={{paddingTop: 3}}>{"Qty: " + food["quantity"]}</Text>
             </View>
         </View>
     )

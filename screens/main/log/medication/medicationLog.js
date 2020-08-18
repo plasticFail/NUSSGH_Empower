@@ -1,13 +1,16 @@
 import React, {useState} from 'react';
 import {View, TouchableOpacity, Text, StyleSheet, Alert} from 'react-native';
+//third party libs
 import Entypo from 'react-native-vector-icons/Entypo';
 import Moment from 'moment';
 import {ScrollView} from 'react-native-gesture-handler';
+//functions
 import {medicationAddLogRequest} from '../../../../netcalls/requestsLog';
+import {storeLastMedicationLog} from '../../../../storage/asyncStorageFunctions';
+//components
 import SuccessDialogue from '../../../../components/successDialogue';
 import MedicationLogBlock from '../../../../components/logs/medicationLogBlock';
-import {checkTime, storeData} from '../../../../commonFunctions/logFunctions';
-import MedicationLogDisplay from '../../../../components/logs/medicationLogDisplay';
+
 
 Entypo.loadFont();
 
@@ -23,14 +26,14 @@ const MedicationLog = (props) => {
   };
 
   const handleSubmit = () => {
-    if (checkTime(date)) {
-      for (var x of selectedMedicationList) {
+      for (let x of selectedMedicationList) {
         x.recordDate = Moment(date).format('DD/MM/YYYY HH:mm:ss');
       }
 
       //store latest in async storage [before removing img to send to db]
-      storeData('Medication', {
+      storeLastMedicationLog({
         value: selectedMedicationList,
+        date: Moment(date).format('YYYY/MM/DD'),
         time: Moment(date).format('h:mm a'),
       });
 
@@ -48,7 +51,6 @@ const MedicationLog = (props) => {
           ]);
         }
       });
-    }
   };
 
   return (
@@ -68,7 +70,6 @@ const MedicationLog = (props) => {
           </TouchableOpacity>
         )}
       </View>
-      <MedicationLogDisplay />
       <SuccessDialogue visible={showSuccess} type="Medication" />
     </ScrollView>
   );

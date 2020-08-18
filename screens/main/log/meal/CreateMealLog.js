@@ -28,6 +28,7 @@ import beverage from '../../../../resources/images/icons/mug.png';
 import side from '../../../../resources/images/icons/salad.png';
 import dessert from '../../../../resources/images/icons/parfait.png';
 import FlashMessage from "../../../../components/FlashMessage";
+import {isValidMeal} from "../../../../commonFunctions/mealLogFunctions";
 
 Icon.loadFont()
 // Any meal log selected (e.g Create, Recent or Favourites)
@@ -160,6 +161,11 @@ export default class CreateMealLog extends React.Component {
         const {mealName, isFavourite, beverage, main, side, dessert} = this.state;
         if (mealName.trim() === '' && isFavourite) {
             Alert.alert('Error','Please give your favourite meal a name', [ { text: 'Ok' }]);
+            return;
+        }
+
+        if (!isValidMeal({beverage, main, side, dessert})) {
+            Alert.alert('Error','Your meal cannot be empty :(', [ { text: 'Ok' }]);
             return;
         }
 

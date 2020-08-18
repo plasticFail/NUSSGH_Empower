@@ -1,37 +1,39 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
+import ReadOnlyMealDisplay from "./ReadOnlyMealDisplay";
+import Moment from 'moment';
 
-
-const WeightLogDisplay = (props) => {
+const MealLogDisplay = (props) => {
+    console.log(props.data);
     return (
         <View style={[styles.container, styles.shadow]}>
             <Text style={styles.textStyle}>
                 {prefix(props.isNewSubmit)}{' '}
-                <Text style={styles.bold}>{props.data.value}</Text> kg at{' '}
-                <Text style={styles.bold}>{props.data.time}</Text> today.
             </Text>
+             <ReadOnlyMealDisplay style={{marginTop: '3%', marginBottom: '3%'}} meal={props.data.value} />
+            <Text style={[styles.textStyle, styles.bold]}> at {props.data.time} today.</Text>
         </View>
     );
 };
 
 const prefix = isNewSubmit => {
     if(isNewSubmit){
-        return 'Your new log of weight is';
+        return 'Your new log of meal is';
     }else{
-        return 'Your most recent weight log is';
+        return 'Your most recent meal log is';
     }
 }
 
-export default WeightLogDisplay;
+export default MealLogDisplay;
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: 'white',
-        alignItems: 'center',
+        backgroundColor: '#fff',
         width: '100%',
-        paddingBottom: '5%',
         borderRadius: 20,
         padding: '4%',
+        alignItems: 'center',
+        marginBottom: '5%'
     },
     shadow: {
         shadowColor: '#000',

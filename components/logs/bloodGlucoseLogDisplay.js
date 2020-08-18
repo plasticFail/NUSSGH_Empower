@@ -4,17 +4,23 @@ import {StyleSheet, Text, View} from 'react-native';
 
 const BloodGlucoseLogDisplay = (props) => {
     return (
-        <View>
-            <View style={[styles.container, styles.shadow]}>
-                <Text style={styles.textStyle}>
-                    Your most recent blood glucose log is{' '}
-                    <Text style={styles.bold}>{props.data.value}</Text> mmol/L at{' '}
-                    <Text style={styles.bold}>{props.data.time}</Text> today.
-                </Text>
-            </View>
+        <View style={[styles.container, styles.shadow]}>
+            <Text style={styles.textStyle}>
+                {prefix(props.isNewSubmit)}{' '}
+                <Text style={styles.bold}>{props.data.value}</Text> mmol/L at{' '}
+                <Text style={styles.bold}>{props.data.time}</Text> today.
+            </Text>
         </View>
     );
 };
+
+const prefix = isNewSubmit => {
+    if(isNewSubmit){
+        return 'Your new log of blood glucose is';
+    }else{
+        return 'Your most recent blood glucose log is';
+    }
+}
 
 export default BloodGlucoseLogDisplay;
 
@@ -26,6 +32,7 @@ const styles = StyleSheet.create({
         paddingBottom: '5%',
         borderRadius: 20,
         padding: '4%',
+        marginBottom: 20,
     },
     shadow: {
         shadowColor: '#000',
