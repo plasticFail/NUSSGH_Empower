@@ -77,7 +77,8 @@ class NutritionIntakeCard extends React.Component {
             overshootClamping: false,
             restSpeedThreshold: 0.001,
             restDisplacementThreshold: 0.001,
-        }).start(callback);
+        }).start();
+        callback();
     }
 
     render() {
@@ -129,7 +130,8 @@ const styles = StyleSheet.create({
     headerText: {
         fontSize: 16,
         fontWeight: 'bold',
-        flex: 2
+        flex: 2,
+        color: '#4d4d4d'
     },
     circularProgressWrapper: {
         flex: 1,

@@ -2,34 +2,24 @@ import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 // Third-party lib
 import Moment from 'moment';
-// Functions
-import {getLastMealLog} from "../../../../storage/asyncStorageFunctions";
 // Components
-import RenderMealItem from "../../../../components/logs/meal/RenderMealItem";
+import RenderMealItem from "./RenderMealItem";
 
-const PreviousMealBlock = (props) => {
-    const [mealData, setMealData] = React.useState(null);
-    React.useEffect(() => {
-        if (mealData === null) {
-            getLastMealLog().then(log => {
-                setMealData(log);
-            });
-        }
-    }, [mealData]);
-
-    return ( mealData &&
+const ReadOnlyMealDisplay = ({meal}) => {
+    return (
         <View style={styles.root}>
             <Text style={styles.header}>We found this meal log that you have made previously.</Text>
             <Text style={styles.subHeader}>This meal will be registered.</Text>
             <View style={styles.dateAndMealTypeWrapper}>
                 <Text style={styles.mealTypeText}>
-                    {mealData.selectedMealType[0].toUpperCase() + mealData.selectedMealType.slice(1)}
+                    {meal.mealType[0].toUpperCase() + meal.mealType.slice(1)}
                 </Text>
                 <Text style={styles.recordDateText}>
-                    {Moment(mealData.selectedDateTime).format("DD/MM/YYYY HH:mm:ss")}
+                    {meal.recordDate instanceof Date ? Moment(meal.recordDate).format("DD/MM/YYYY HH:mm:ss")
+                        : meal.recordDate }
                 </Text>
             </View>
-            <RenderMealItem item={mealData.selectedMeal} />
+            <RenderMealItem item={meal} />
         </View>
     )
 }
@@ -66,4 +56,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default PreviousMealBlock;
+export default ReadOnlyMealDisplay;

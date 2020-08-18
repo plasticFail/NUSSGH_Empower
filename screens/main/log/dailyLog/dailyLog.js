@@ -24,7 +24,7 @@ import BloodGlucoseLogBlock from '../../../../components/logs/bloodGlucoseLogBlo
 import BloodGlucoseLogDisplay from '../../../../components/logs/bloodGlucoseLogDisplay';
 import MealLogRoot from '../meal/MealLogRoot';
 import {BackAndForwardButton} from '../../../../components/BackAndForwardButtons';
-import PreviousMealBlock from '../meal/PreviousMealBlock';
+import ReadOnlyMealDisplay from '../../../../components/logs/meal/ReadOnlyMealDisplay';
 import WeightLogBlock from '../../../../components/logs/weightLogBlock';
 import WeightLogDisplay from '../../../../components/logs/weightLogDisplay';
 import MedicationLogDisplay from '../../../../components/logs/medicationLogDisplay';
@@ -343,7 +343,7 @@ class DailyLog extends Component {
           {this.showLastLog(1) && (
             <BloodGlucoseLogDisplay data={this.state.lastBloodGlucose} />
           )}
-          {this.showLastLog(2) && <PreviousMealBlock />}
+          {this.showLastLog(2) && <ReadOnlyMealDisplay meal={this.state.lastMealLog} />}
           {this.showLastLog(3) && <MedicationLogDisplay />}
           {this.showLastLog(4) && (
             <WeightLogDisplay data={this.state.lastWeight} />

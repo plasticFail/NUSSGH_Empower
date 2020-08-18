@@ -108,7 +108,7 @@ class MealLogRoot extends React.Component {
             recordDate
         };
         mealAddLogRequest(mealData).then(data => {
-            storeLastMealLog(this.state).then(resp => {
+            storeLastMealLog(mealData).then(resp => {
                 this.props.navigation.goBack();
                 Alert.alert("Log Success!", data.message,
                     [ { text: 'Ok' }]);
