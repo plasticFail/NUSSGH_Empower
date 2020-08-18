@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, Text, TouchableHighlight, TouchableOpacity, ScrollView, Alert} from 'react-native';
+import {View, StyleSheet, Text, TouchableOpacity, ScrollView, Alert} from 'react-native';
 // Third-party lib
 import Moment from 'moment';
 // Functions
@@ -18,29 +18,14 @@ Entypo.loadFont();
 class MealLogRoot extends React.Component {
     constructor(props) {
         super(props);
-        const {selectedMeal, mealType, recordDate} = this.props;
         const now = new Date();
         const hours = now.getHours();
 
         this.state = {
-            selectedDateTime: recordDate || now,
-            selectedMealType: mealType || getDefaultMealType(hours),
+            selectedDateTime: now,
+            selectedMealType: getDefaultMealType(hours),
             datepickerModalOpen: false,
-            selectedMeal: selectedMeal || null
-        }
-    }
-
-    componentDidMount() {
-        // Update parent the moment this component mounts.
-        const {onMealUpdateListener, onDateTimeUpdateListener, onMealTypeUpdateListener} = this.props;
-        if (onMealUpdateListener) {
-            onMealUpdateListener(this.state.selectedMeal);
-        }
-        if (onDateTimeUpdateListener) {
-            onDateTimeUpdateListener(this.state.selectedDateTime);
-        }
-        if (onMealTypeUpdateListener) {
-            onMealTypeUpdateListener(this.state.selectedMealType);
+            selectedMeal: null
         }
     }
 
@@ -53,27 +38,6 @@ class MealLogRoot extends React.Component {
             this.setState({
                 selectedMeal: newMeal
             });
-        }
-
-        // DATE TIME CHANGED. CALL PARENT PROPS IF THERE IS ANY.
-        if (prevState.selectedDateTime !== this.state.selectedDateTime) {
-            if (this.props.onDateTimeUpdateListener) {
-                this.props.onDateTimeUpdateListener(this.state.selectedDateTime)
-            }
-        }
-
-        // MEAL TYPE CHANGED. CALL PARENT PROPS IF THERE IS ANY.
-        if (prevState.selectedMealType !== this.state.selectedMealType) {
-            if (this.props.onMealTypeUpdateListener) {
-                this.props.onMealTypeUpdateListener(this.state.selectedMealType);
-            }
-        }
-
-        // MEAL CHANGED. CALL PARENT PROPS IF THERE IS ANY.
-        if (prevState.selectedMeal !== this.state.selectedMeal) {
-            if (this.props.onMealUpdateListener) {
-                this.props.onMealUpdateListener(this.state.selectedMeal);
-            }
         }
     }
 
@@ -120,21 +84,19 @@ class MealLogRoot extends React.Component {
     }
 
     navigateToCreateMealLogPage = (selectedMeal) => {
-        const parentScreen = this.props.parentScreen;
         const meal = {...selectedMeal};
         // remove unfavourite key from the selected meal.
         delete meal['unfavourite'];
         this.props.navigation.navigate("CreateMealLog", {
             meal,
-            parentScreen
         });
     }
 
     render() {
-        const {navigation, parentScreen, containerStyle} = this.props;
+        const {navigation} = this.props;
         const {selectedDateTime, selectedMealType, selectedMeal} = this.state;
         return (
-            <View style={[styles.root, containerStyle]}>
+            <View style={styles.root}>
                 <ScrollView style={{flex: 1}} contentContainerStyle={{flexGrow: 1}}>
                     <DateSelectionBlock date={selectedDateTime}
                                         setDate={(date) => this.setState({selectedDateTime : date})} />
@@ -144,7 +106,7 @@ class MealLogRoot extends React.Component {
                         // user to select a meal from (MealFinder).
                       !selectedMeal ? (
                           <MealFinder navigation={navigation}
-                                      parentScreen={parentScreen} />
+                                       />
                       ) : // Meal has been selected, render a preview of the meal for confirmation before submitting.
                           <View style={{width: '100%', flex: 1}}>
                               <View style={{flex: 1, justifyContent: 'center'}}>
@@ -168,12 +130,9 @@ class MealLogRoot extends React.Component {
                                                   }}
                                   />
                               </View>
-                              {   // If parent screen is from daily log, don't render the submit button.
-                                  this.props.parentScreen !== 'DailyLog' &&
-                                  <TouchableOpacity style={styles.submitButton} onPress={this.handleSubmitLog}>
-                                      <Text style={styles.submitButtonText}>Submit Log!</Text>
-                                  </TouchableOpacity>
-                              }
+                              <TouchableOpacity style={styles.submitButton} onPress={this.handleSubmitLog}>
+                                  <Text style={styles.submitButtonText}>Submit Log!</Text>
+                              </TouchableOpacity>
                           </View>
                     }
                 </ScrollView>
@@ -200,18 +159,6 @@ const styles = StyleSheet.create({
     root: {
         flex: 1,
         padding: 20,
-    },
-    datePickerInput: {
-        backgroundColor: '#eff3bd',
-        height: 50,
-        alignItems: 'center',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        flex: 1
-    },
-    dateInputText: {
-        fontSize: 20,
-        marginLeft: 10
     },
     submitButton: {
         width: '100%',

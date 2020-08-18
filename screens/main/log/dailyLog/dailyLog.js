@@ -22,7 +22,7 @@ import {mealAddLogRequest} from '../../../../netcalls/requestsLog';
 import FormBlock from '../../../../components/logs/formBlock';
 import BloodGlucoseLogBlock from '../../../../components/logs/bloodGlucoseLogBlock';
 import BloodGlucoseLogDisplay from '../../../../components/logs/bloodGlucoseLogDisplay';
-import MealLogRoot from '../meal/MealLogRoot';
+import DailyMealLogComponent from "../../../../components/logs/meal/DailyMealLogComponent";
 import {BackAndForwardButton} from '../../../../components/BackAndForwardButtons';
 import ReadOnlyMealDisplay from '../../../../components/logs/meal/ReadOnlyMealDisplay';
 import WeightLogBlock from '../../../../components/logs/weightLogBlock';
@@ -362,9 +362,7 @@ class DailyLog extends Component {
             />
           )}
           {this.showNewLogInput(2) && (
-            <MealLogRoot
-              containerStyle={{padding: 0}}
-              parentScreen="DailyLog"
+            <DailyMealLogComponent
               onMealUpdateListener={this.setMealCallback}
               onMealTypeUpdateListener={this.setMealTypeCallback}
               onDateTimeUpdateListener={this.setMealRecordDateCallback}
