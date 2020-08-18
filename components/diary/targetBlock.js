@@ -21,6 +21,7 @@ class TargetBlock extends Component {
       weightPass: false,
     };
     //if functional component -> states not updated correctly with hook
+    //useEffect updates after render*
     getEntry4Day(String(this.props.date)).then((data) => {
       let d = data[this.props.date];
       this.setState({
