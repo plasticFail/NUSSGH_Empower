@@ -63,7 +63,7 @@ const DiaryScreen = (props) => {
           keyExtractor={(item, index) => index.toString()}
           renderItem={({item}) => (
             <View style={[styles.diaryContentContainer, styles.shadow]}>
-              <TargetBlock date={item} />
+              <TargetBlock date={item} navigation={props.navigation} />
             </View>
           )}
         />

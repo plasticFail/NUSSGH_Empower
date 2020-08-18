@@ -1,114 +1,120 @@
-import React, {useEffect, useState} from 'react';
+import React, {Component} from 'react';
 import {View, StyleSheet, Text, Dimensions} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 //function
 import {useNavigation} from '@react-navigation/native';
 import {getEntry4Day} from '../../netcalls/requestsDiary';
 
-const TargetBlock = (props) => {
-  let width = Dimensions.get('window').width;
-  const navigation = useNavigation();
-  const {date} = props;
+class TargetBlock extends Component {
+  constructor(props) {
+    super(props);
+    this.props = props;
+    this.state = {
+      avgBg: 0,
+      bgLogs: [],
+      targetBg: {},
+      bgPass: false,
+      foodLogs: [],
+      medLogs: [],
+      activityLogs: [],
+      weightLogs: [],
+      weightPass: false,
+    };
+    //if functional component -> states not updated correctly with hook
+    getEntry4Day(String(this.props.date)).then((data) => {
+      let d = data[this.props.date];
+      this.setState({
+        //set logs
+        bgLogs: d.glucose.logs,
+        foodLogs: d.food.logs,
+        medLogs: d.medication.logs,
+        weightLogs: d.weight.logs,
+        activityLogs: d.activity.logs,
 
-  //states
-  const [avgBg, setAverageBg] = useState(0);
-  const [bgLogs, setBgLogs] = useState([]);
-  const [targetBg, setTargetBg] = useState({});
-  const [bgPass, setBgPass] = useState(false);
-
-  const [medLogs, setMedLogs] = useState([]);
-  const [foodLogs, setFoodLogs] = useState([]);
-
-  const [activityLogs, setActivityLogs] = useState([]);
-
-  const [weightLogs, setWeightLogs] = useState([]);
-  const [weightPass, setWeightPass] = useState(false);
-
-  useEffect(() => {
-    getEntry4Day(String(date)).then((data) => {
-      let d = data[date];
-      setBgLogs(d.glucose.logs);
-      setTargetBg(d.glucose.target);
-      setFoodLogs(d.food.logs);
-      setMedLogs(d.medication.logs);
-      setWeightLogs(d.weight.logs);
-      setActivityLogs(d.activity.logs);
-      getAllResult();
+        //set target
+        targetBg: d.glucose.target,
+      });
+      this.getAllResult();
+      this.handleOnPress = this.handleOnPress.bind(this);
     });
-  }, []);
+  }
 
-  const getAllResult = () => {
-    getBGResult();
-    getWeightResult();
+  getAllResult = () => {
+    this.getBGResult();
+    this.getWeightResult();
   };
 
-  const getBGResult = () => {
+  getBGResult = () => {
     var total = 0;
     var count = 0;
-    if (bgLogs.length != 0) {
-      for (var x of bgLogs) {
-        total += x.bg_reading;
-        count++;
-      }
-      let avg = (total / count).toFixed(2);
-      setAverageBg(avg);
-      if (targetBg.comparator === '<=') {
-        if (avgBg <= targetBg.value) {
-          setBgPass(true);
-        } else {
-          setBgPass(false);
-        }
+    for (var x of this.state.bgLogs) {
+      total += x.bg_reading;
+      count++;
+    }
+    let avg = (total / count).toFixed(2);
+    this.setState({avgBg: avg});
+    if (this.state.targetBg.comparator === '<=') {
+      if (avg <= this.state.targetBg.value) {
+        this.setState({bgPass: true});
+      } else {
+        this.setState({bgPass: false});
       }
     }
   };
 
-  const getWeightResult = () => {
-    if (weightLogs.length != 0) {
-      setWeightPass(true);
+  getWeightResult = () => {
+    if (this.state.weightLogs.length != 0) {
+      this.setState({weightPass: true});
     } else {
-      setWeightPass(false);
+      this.setState({weightPass: false});
     }
   };
 
-  const handleOnPress = () => {
-    navigation.navigate('DiaryDetail', {
-      date: date,
-      bgPass: bgPass,
-      avgBg: avgBg,
-      weightPass: weightPass,
-      bgLogs: bgLogs,
-      foodLogs: foodLogs,
-      medLogs: medLogs,
-      activityLogs: activityLogs,
-      weightLogs: weightLogs,
+  handleOnPress = () => {
+    this.props.navigation.navigate('DiaryDetail', {
+      date: this.props.date,
+      bgPass: this.state.bgPass,
+      avgBg: this.state.avgBg,
+      weightPass: this.state.weightPass,
+      bgLogs: this.state.bgLogs,
+      foodLogs: this.state.foodLogs,
+      medLogs: this.state.medLogs,
+      activityLogs: this.state.activityLogs,
+      weightLogs: this.state.weightLogs,
     });
   };
 
-  return (
-    <View>
-      <Text style={[styles.diaryDate, {width: width}]}>{date}</Text>
-      <TouchableOpacity onPress={handleOnPress}>
-        <View style={styles.diaryContent}>
-          <View style={styles.diaryContent1}>
-            <Text style={[styles.diaryContentHeader, {color: '#7d9a22'}]}>
-              Within Targets{' '}
-            </Text>
+  render() {
+    const {date, navigation} = this.props;
+    return (
+      <View>
+        <Text
+          style={[styles.diaryDate, {width: Dimensions.get('window').width}]}>
+          {date}
+        </Text>
+        <TouchableOpacity onPress={this.handleOnPress}>
+          <View style={styles.diaryContent}>
+            <View style={styles.diaryContent1}>
+              <Text style={[styles.diaryContentHeader, {color: '#7d9a22'}]}>
+                Within Targets{' '}
+              </Text>
+            </View>
+            <View style={styles.diaryContent2}>
+              <Text style={[styles.diaryContentHeader, {color: 'black'}]}>
+                Missed
+              </Text>
+            </View>
+            <View style={styles.diaryContent3}>
+              <Text style={[styles.diaryContentHeader, {color: '#9a228a'}]}>
+                Improve
+              </Text>
+            </View>
           </View>
-          <View style={styles.diaryContent2}>
-            <Text style={[styles.diaryContentHeader, {color: 'black'}]}>
-              Missed
-            </Text>
-          </View>
-          <View style={styles.diaryContent3}>
-            <Text style={[styles.diaryContentHeader, {color: '#9a228a'}]}>
-              Improve
-            </Text>
-          </View>
-        </View>
-      </TouchableOpacity>
-    </View>
-  );
-};
+        </TouchableOpacity>
+      </View>
+    );
+  }
+}
 
 export default TargetBlock;
 
