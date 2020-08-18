@@ -20,17 +20,17 @@ const DateSelectionBlock = (props) => {
       Animated.timing(slideAnimation, {
         toValue: 0,
         duration: 300, // 300ms slide up animation when visible is set false.
-        useNativeDriver: false
+        useNativeDriver: false,
       }).start(() => setVisible(false));
     } else {
       setVisible(true);
       Animated.timing(slideAnimation, {
         toValue: 1,
         duration: 300, // 300ms slide down animation when visible is set true.
-        useNativeDriver: false
+        useNativeDriver: false,
       }).start();
     }
-  }
+  };
 
   Moment.locale('en');
 
@@ -53,16 +53,21 @@ const DateSelectionBlock = (props) => {
           onPress={() => handleOpenCloseWithAnimation(visible)}
         />
       </View>
-      {visible && (<Animated.View style={[styles.slideAnimationWrapperForDatePicker, {height: heightInterpolate}]}>
-        <DatePicker
-          visible={visible}
-          date={props.date}
-          onDateChange={props.setDate}
-          minimumDate={Moment(new Date()).subtract(10, 'days').toDate()}
-          maximumDate={Moment(new Date()).add(10, 'minutes').toDate()}
-          mode="datetime"
-        />
-          </Animated.View>
+      {visible && (
+        <Animated.View
+          style={[
+            styles.slideAnimationWrapperForDatePicker,
+            {height: heightInterpolate},
+          ]}>
+          <DatePicker
+            visible={visible}
+            date={props.date}
+            onDateChange={props.setDate}
+            minimumDate={Moment(props.date).subtract(10, 'days').toDate()}
+            maximumDate={Moment(props.date).add(10, 'minutes').toDate()}
+            mode="datetime"
+          />
+        </Animated.View>
       )}
     </>
   );
@@ -89,7 +94,7 @@ const styles = StyleSheet.create({
   },
   slideAnimationWrapperForDatePicker: {
     overflow: 'hidden',
-  }
+  },
 });
 
 export default DateSelectionBlock;

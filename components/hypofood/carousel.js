@@ -1,7 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import {View, ScrollView, StyleSheet, Text, Dimensions} from 'react-native';
-import Item from './item';
 import {useNavigation} from '@react-navigation/native';
+//component
+import Item from './item';
 
 const Carousel = (props) => {
   //basic carousel set up

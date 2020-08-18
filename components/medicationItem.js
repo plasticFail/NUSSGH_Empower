@@ -5,6 +5,8 @@ const MedicationItem = (props) => {
   const {removable} = props.removable === undefined ? false : props.removable; //for future use
   const {medication} = props;
 
+  console.log(medication);
+
   if (medication != undefined) {
     return (
       <View style={[styles.container, styles.shadow]}>

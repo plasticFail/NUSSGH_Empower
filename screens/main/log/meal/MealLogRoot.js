@@ -63,7 +63,7 @@ class MealLogRoot extends React.Component {
         // selectedDateTime is javascript's default Date object.toString().
         const { selectedMealType, selectedDateTime } = this.state;
         const { beverage, main, side, dessert, isFavourite, mealName } = this.state.selectedMeal;
-        const recordDate = Moment(new Date(selectedDateTime)).format("DD/MM/YYYY HH:mm:ss");
+        const recordDate = Moment(selectedDateTime).format("DD/MM/YYYY HH:mm:ss");
         const mealData = {
             isFavourite,
             beverage,
@@ -75,7 +75,13 @@ class MealLogRoot extends React.Component {
             recordDate
         };
         mealAddLogRequest(mealData).then(data => {
-            storeLastMealLog(mealData).then(resp => {
+            storeLastMealLog(
+                {
+                    value: {...mealData},
+                    date: Moment(selectedDateTime).format("YYYY/MM/DD"),
+                    time: Moment(selectedDateTime).format("h:mm a")
+                }
+                ).then(resp => {
                 this.setState({
                     successMessage: true
                 })

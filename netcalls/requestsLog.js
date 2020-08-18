@@ -1,5 +1,6 @@
 import {
-  glucoseAddLog, mealAddLogEndpoint,
+  glucoseAddLog,
+  mealAddLogEndpoint,
   medicationAddLog,
   medicationList,
   weightAddLog,
@@ -85,11 +86,14 @@ const weightAddLogRequest = async (weight, date) => {
         unit: 'kg',
       }),
     });
-    console.log('body : ' + JSON.stringify({
-      weight: weight,
-      recordDate: date,
-      unit: 'kg',
-    }),);
+    console.log(
+      'body : ' +
+        JSON.stringify({
+          weight: weight,
+          recordDate: date,
+          unit: 'kg',
+        }),
+    );
     let responseJson = await response.json();
     console.log('weightAddLogRequest : ' + responseJson);
     return true;
@@ -111,12 +115,12 @@ const mealAddLogRequest = async (mealData) => {
   });
   let responseJson = await response.json();
   return responseJson;
-}
+};
 
 export {
   glucoseAddLogRequest,
   storeMedications,
   medicationAddLogRequest,
   weightAddLogRequest,
-  mealAddLogRequest
+  mealAddLogRequest,
 };

@@ -8,15 +8,14 @@ import {
   Dimensions,
   Alert,
 } from 'react-native';
+import {FlatList} from 'react-native-gesture-handler';
+//third party lib
 import Modal from 'react-native-modal';
 import Entypo from 'react-native-vector-icons/Entypo';
-import {FlatList} from 'react-native-gesture-handler';
-
-// content
+// component (content)
 import DateSelectionBlock from '../logs/dateSelectionBlock';
 import SelectMedicationModalContent from './selectMedicationModalContent';
 import EditMedicationModalContent from './editMedicationModalContent';
-
 // functions
 import {checkDosage} from '../../commonFunctions/logFunctions';
 
@@ -27,8 +26,6 @@ const MedicationLogBlock = (props) => {
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [medicineToEdit, setMedicineToEdit] = useState({});
 
-  console.log('---In Medication Log Block');
-
   const getSelectedMedicineFromModal = (medicineObj) => {
     console.log('Setting selected medication: ' + medicineObj);
     let list = props.selectedMedicationList;
@@ -36,6 +33,7 @@ const MedicationLogBlock = (props) => {
     //set new states
     setSelectModalOpen(false);
     props.onListChange(list);
+    console.log(list);
   };
 
   const openEditModal = (item) => {
@@ -228,8 +226,8 @@ const styles = StyleSheet.create({
   button: {
     marginTop: '4%',
     backgroundColor: '#EEF3BD',
-    paddingStart: '20%',
-    paddingEnd: '20%',
+    paddingStart: '10%',
+    paddingEnd: '10%',
     borderRadius: 20,
     marginVertical: 10,
     paddingVertical: 6,

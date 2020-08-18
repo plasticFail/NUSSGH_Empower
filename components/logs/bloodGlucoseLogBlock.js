@@ -14,6 +14,7 @@ const BloodGlucoseLogBlock = (props) => {
       <TextInput
         style={styles.inputBox}
         placeholderTextColor="#a1a3a0"
+        placeholder={props.bloodGlucose}
         keyboardType="decimal-pad"
         value={props.bloodGlucose}
         onChangeText={(value) => {

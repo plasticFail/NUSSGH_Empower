@@ -1,11 +1,5 @@
 import React, {useState} from 'react';
-import {
-  View,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  Alert,
-} from 'react-native';
+import {View, StyleSheet, Text, TouchableOpacity, Alert} from 'react-native';
 //third party libs
 import Moment from 'moment';
 import {glucoseAddLogRequest} from '../../../netcalls/requestsLog';
@@ -27,26 +21,24 @@ const BloodGlucoseLog = (props) => {
 
   const handleSubmit = () => {
     if (checkBloodGlucose(bloodGlucose)) {
-        let formatDate = Moment(date).format('DD/MM/YYYY HH:mm:ss');
-        glucoseAddLogRequest(Number(bloodGlucose), formatDate).then((value) => {
-          if (value === true) {
-            if (bloodGlucose === '3.2') {
-              navigation.navigate('HypoglycemiaReason');
-            } else {
-              setSuccessShow(true);
-            }
+      let formatDate = Moment(date).format('DD/MM/YYYY HH:mm:ss');
+      glucoseAddLogRequest(Number(bloodGlucose), formatDate).then((value) => {
+        if (value === true) {
+          if (bloodGlucose === '3.2') {
+            navigation.navigate('HypoglycemiaReason');
           } else {
-            Alert.alert('Error', 'Unexpected Error Occured', [
-              {text: 'Try Again later'},
-            ]);
+            setSuccessShow(true);
           }
-        });
-        //store data in async storage.
-        storeLastBgLog({
-          value: bloodGlucose,
-          date: Moment(date).format('YYYY/MM/DD'),
-          time: Moment(date).format('h:mm a'),
-        });
+        } else {
+          setSuccessShow(true);
+        }
+      });
+      //store data in async storage.
+      storeLastBgLog({
+        value: bloodGlucose,
+        date: Moment(date).format('YYYY/MM/DD'),
+        time: Moment(date).format('h:mm a'),
+      });
     }
   };
 
@@ -62,8 +54,6 @@ const BloodGlucoseLog = (props) => {
       <TouchableOpacity style={styles.button} onPress={handleSubmit}>
         <Text style={styles.buttonText}>Submit</Text>
       </TouchableOpacity>
-
-      <LogDisplay type="BloodGlucose" />
 
       <SuccessDialogue visible={successShow} type="Blood Glucose" />
     </View>

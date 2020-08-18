@@ -1,11 +1,5 @@
 import React, {useState} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Alert,
-} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, Alert} from 'react-native';
 //third party libs
 import Moment from 'moment';
 //functions
@@ -40,7 +34,7 @@ const WeightLog = (props) => {
       storeLastWeightLog({
         value: weight,
         date: Moment(date).format('YYYY/MM/DD'),
-        time: Moment(date).format('h:mm a')
+        time: Moment(date).format('h:mm a'),
       });
     }
   };
@@ -57,8 +51,6 @@ const WeightLog = (props) => {
       <TouchableOpacity style={styles.button} onPress={handleSubmit}>
         <Text style={styles.buttonText}>Submit</Text>
       </TouchableOpacity>
-
-      <LogDisplay type="Weight" />
 
       <SuccessDialogue visible={successShow} type="Weight" />
     </View>
