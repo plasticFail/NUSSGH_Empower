@@ -16,29 +16,12 @@ import {
   getEntryForDateRange,
 } from '../../../netcalls/requestsDiary';
 
-const filterList = [
-  {
-    name: '1 Week',
-    value: '1 Week',
-  },
-  {
-    name: '1 Month',
-    value: '1 Month',
-  },
-];
+const dates = ['2020-08-06', '2020-08-07', '2020-08-08'];
 
 const DiaryScreen = (props) => {
   const [filter, setFilter] = useState('Filter');
   const [dateList, setDateList] = useState([]);
   const [diaryEntries, setDiaryEntries] = useState([]);
-
-  useEffect(() => {
-    //should get a list of dates from filter * then sort descending
-    getEntryForDateRange('2020-08-06', '2020-08-08').then((data) => {
-      setDateList(Object.keys(data));
-      console.log(dateList);
-    });
-  }, []);
 
   return (
     <View style={styles.diaryScreen}>
@@ -59,7 +42,7 @@ const DiaryScreen = (props) => {
       </View>
       <View style={{flex: 2, padding: '2%'}}>
         <FlatList
-          data={dateList}
+          data={dates}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({item}) => (
             <View style={[styles.diaryContentContainer, styles.shadow]}>

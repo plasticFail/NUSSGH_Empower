@@ -15,12 +15,6 @@ class DiaryDetail extends Component {
       avgBg: props.route.params.avgBg,
       weightPass: props.route.params.weightPass,
 
-      bgLogs: props.route.params.bgLogs,
-      foodLogs: props.route.params.foodLogs,
-      medLogs: props.route.params.medLogs,
-      activityLogs: props.route.params.activityLogs,
-      weightLogs: props.route.params.weightLogs,
-
       loopArr: [],
       earlyMorningLogs: [],
       morningLogs: [],
@@ -28,12 +22,12 @@ class DiaryDetail extends Component {
       eveningLogs: [],
     };
 
-    //init list of log types to loop through
-    this.state.loopArr.push(this.state.bgLogs);
-    this.state.loopArr.push(this.state.foodLogs);
-    this.state.loopArr.push(this.state.medLogs);
-    this.state.loopArr.push(this.state.activityLogs);
-    this.state.loopArr.push(this.state.weightLogs);
+    //init list of logs to loop through
+    this.state.loopArr.push(this.props.route.params.bgLogs);
+    this.state.loopArr.push(this.props.route.params.foodLogs);
+    this.state.loopArr.push(this.props.route.params.medLogs);
+    this.state.loopArr.push(this.props.route.params.activityLogs);
+    this.state.loopArr.push(this.props.route.params.weightLogs);
 
     //functional component set duplicates in array*
     //set the logs for each time period
@@ -41,7 +35,7 @@ class DiaryDetail extends Component {
     this.filterMorning();
     this.filterAfternoon();
     this.filterEvening();
-    console.log(this.state.eveningLogs);
+    console.log(this.state.earlyMorningLogs);
   }
 
   filterEarlyMorning = () => {
@@ -111,7 +105,7 @@ class DiaryDetail extends Component {
       medLogs,
       activityLogs,
       weightLogs,
-    } = this.state;
+    } = this.props.route.params;
     return (
       <View style={styles.screen}>
         <Text style={styles.summaryText}>Summary: </Text>
