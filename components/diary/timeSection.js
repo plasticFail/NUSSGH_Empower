@@ -18,7 +18,6 @@ const TimeSection = (props) => {
   return (
     <View>
       <Text>hihi</Text>
-      {renderHourLogs(data[0], currentTime)}
     </View>
   );
 };
