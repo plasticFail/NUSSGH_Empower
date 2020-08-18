@@ -4,11 +4,32 @@ import Summary from '../../../components/diary/summary';
 
 //see if class or functional component
 const DiaryDetail = (props) => {
+  const {
+    date,
+    bgPass,
+    avgBg,
+    weightPass,
+    bgLogs,
+    foodLogs,
+    medLogs,
+    activityLogs,
+    weightLogs,
+  } = props.route.params;
   return (
     <View style={styles.screen}>
       <Text style={styles.summaryText}>Summary: </Text>
       <View style={{padding: '2%'}}>
-        <Summary />
+        <Summary
+          date={date}
+          bgPass={bgPass}
+          avgBg={avgBg}
+          weightPass={weightPass}
+          bgLogs={bgLogs}
+          foodLogs={foodLogs}
+          medLogs={medLogs}
+          activityLogs={activityLogs}
+          weightLogs={weightLogs}
+        />
       </View>
     </View>
   );

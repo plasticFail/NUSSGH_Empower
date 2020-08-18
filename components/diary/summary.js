@@ -8,108 +8,68 @@ import WeightBlock from './blocks/weightBlock';
 import MedicationLogBlock from '../logs/medicationLogBlock';
 import MedBlock from './blocks/medBlock';
 import ActivityBlock from './blocks/activityBlock';
-//data
-import DummyData from './dummyData.json';
 
 const Summary = (props) => {
-  const [avgBg, setAverageBg] = useState(0);
-  const [bgLogs, setBgLogs] = useState([]);
-  const [targetBg, setTargetBg] = useState({});
-  const [bgPass, setBgPass] = useState(false);
-
-  const [foodLogs, setFoodLogs] = useState([]);
-
-  const [medLogs, setMedLogs] = useState([]);
-
-  const [activityLogs, setActivityLogs] = useState([]);
-
-  const [weightLogs, setWeightLogs] = useState([]);
-  const [weightPass, setWeightPass] = useState(false);
-
+  const {
+    date,
+    bgPass,
+    avgBg,
+    weightPass,
+    bgLogs,
+    foodLogs,
+    medLogs,
+    activityLogs,
+    weightLogs,
+  } = props;
   console.log('In Summary Component: ');
-
-  useEffect(() => {
-    //call the api to retrieve the logs for the day
-    setBgLogs(DummyData.glucose.logs);
-    setTargetBg(DummyData.glucose.target);
-    setWeightLogs(DummyData.weight.logs);
-    setMedLogs(DummyData.medication.logs); // an array of an array of logs*
-    setActivityLogs(DummyData.activity.logs);
-    getAllResult();
-  });
-
-  const getAllResult = () => {
-    getBGResult();
-    getWeightResult();
-  };
-
-  const getBGResult = () => {
-    var total = 0;
-    var count = 0;
-    for (var x of bgLogs) {
-      total += x.bg_reading;
-      count++;
-    }
-    let avg = total / count;
-    setAverageBg(avg);
-    if (targetBg.comparator === '<=') {
-      if (avgBg <= targetBg.value) {
-        setBgPass(true);
-      } else {
-        setBgPass(false);
-      }
-    }
-  };
-
-  const getWeightResult = () => {
-    if (weightLogs.length != 0) {
-      setWeightPass(true);
-    } else {
-      setWeightPass(false);
-    }
-  };
 
   return (
     <>
       <View style={[styles.container, styles.shadow]}>
-        {bgPass == true ? (
-          <Result
-            success={true}
-            message={'Average blood sugar: ' + avgBg + ' mmol/L.'}
-          />
-        ) : (
-          <Result
-            success={false}
-            message={'Average blood sugar: ' + avgBg + ' mmol/L.'}
-          />
-        )}
-        {weightPass == true ? (
-          <Result success={true} message={'Weight log completed.'} />
-        ) : (
-          <Result success={true} message={'Weight log not completed.'} />
-        )}
+        {renderBloodGlucoseResult(bgPass, bgLogs, avgBg)}
+        {renderActivityResult(activityLogs)}
+        {renderWeightResult(weightPass, weightLogs)}
       </View>
-      <ScrollView contentContainerStyle={{paddingBottom: '60%'}}>
-        <Text>Morning (08:00 - 12:00)</Text>
-        {bgLogs.map((item, index) => (
-          <BgBlock bloodGlucose={item} key={index.toString()} />
-        ))}
-        {weightLogs.map((item, index) => (
-          <WeightBlock weight={item} key={index.toString()} />
-        ))}
-        {medLogs.map((item, index) => (
-          <MedBlock medicationList={item} key={index.toString()} />
-        ))}
-        {activityLogs.map((item, index) => (
-          <ActivityBlock activity={item} key={index.toString()} />
-        ))}
-      </ScrollView>
     </>
   );
 };
 
+function renderWeightResult(weightPass, weightLogs) {
+  if (weightLogs.length === 0) {
+    return <Result success={false} message={'Missing weight log.'} />;
+  } else {
+    return <Result success={true} message={'Weight log completed.'} />;
+  }
+}
+
+function renderActivityResult(activityLogs) {
+  if (activityLogs.length === 0) {
+    return <Result success={false} message={'Missing activity log.'} />;
+  } else {
+    return <Result success={true} message={'Activity log completed.'} />;
+  }
+}
+
 //take in the duration, check
-function RenderResult() {}
+function renderBloodGlucoseResult(bgPass, bgLogs, avgBg) {
+  if (bgLogs.length === 0) {
+    return <Result success={false} message={'Missing Blood Glucose Log'} />;
+  } else if (bgPass == true) {
+    return (
+      <Result
+        success={true}
+        message={'Average blood sugar: ' + avgBg + ' mmol/L.'}
+      />
+    );
+  } else {
+    return (
+      <Result
+        success={false}
+        message={'Average blood sugar: ' + avgBg + ' mmol/L.'}
+      />
+    );
+  }
+}
 
 export default Summary;
 

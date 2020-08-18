@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   StyleSheet,
@@ -7,39 +7,14 @@ import {
   Dimensions,
   Picker,
 } from 'react-native';
+//component
 import Legend from '../../../components/diary/legend';
 import TargetBlock from '../../../components/diary/targetBlock';
-
-const itemList = [
-  {
-    date: '22/2/2020',
-    withinT: {
-      glucoseC: '2',
-      foodIntakeC: '3',
-    },
-    missed: {
-      activityC: '2',
-      medicationC: '2',
-    },
-    improve: {
-      weightC: '2',
-    },
-  },
-  {
-    date: '21/2/2020',
-    withinT: {
-      glucoseC: '2',
-      foodIntakeC: '3',
-    },
-    missed: {
-      activityC: '2',
-      medicationC: '2',
-    },
-    improve: {
-      weightC: '2',
-    },
-  },
-];
+//functions
+import {
+  getEntryToday,
+  getEntryForDateRange,
+} from '../../../netcalls/requestsDiary';
 
 const filterList = [
   {
@@ -54,6 +29,16 @@ const filterList = [
 
 const DiaryScreen = (props) => {
   const [filter, setFilter] = useState('Filter');
+  const [dateList, setDateList] = useState([]);
+  const [diaryEntries, setDiaryEntries] = useState([]);
+
+  useEffect(() => {
+    //should get a list of dates from filter * then sort descending
+    getEntryForDateRange('2020-08-06', '2020-08-08').then((data) => {
+      setDateList(Object.keys(data));
+      console.log(dateList);
+    });
+  }, []);
 
   return (
     <View style={styles.diaryScreen}>
@@ -74,11 +59,11 @@ const DiaryScreen = (props) => {
       </View>
       <View style={{flex: 2, padding: '2%'}}>
         <FlatList
-          data={itemList}
+          data={dateList}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({item}) => (
             <View style={[styles.diaryContentContainer, styles.shadow]}>
-              <TargetBlock item={item} />
+              <TargetBlock date={item} />
             </View>
           )}
         />
