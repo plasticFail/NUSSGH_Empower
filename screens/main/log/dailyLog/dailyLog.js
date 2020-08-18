@@ -75,6 +75,10 @@ class DailyLog extends Component {
     getLastMedicationLog().then((data) => {
       if (this.isToday(data.date)) {
         this.setState({lastMedication: data});
+      } else {
+        this.setState({
+          showNewInput: this.handleShowNewInput(),
+        });
       }
     });
 
