@@ -18,7 +18,7 @@ const MedicationLogDisplay = (props) => {
   ) : (
     <View style={[styles.container, styles.shadow]}>
       <Text style={styles.textStyle}>
-        You have recently added these medications at{' '}
+        {prefix(props.isNewSubmit)}{' '}
         <Text style={styles.bold}>{props.data.time}</Text> today
       </Text>
       <ScrollView
@@ -71,6 +71,14 @@ const MedicationLogDisplay = (props) => {
       </Modal>
     </View>
   );
+};
+
+const prefix = (isNewSubmit) => {
+  if (isNewSubmit) {
+    return 'Your new medication log is taken at';
+  } else {
+    return 'Your most recent medication log is taken at';
+  }
 };
 
 export default MedicationLogDisplay;

@@ -542,6 +542,14 @@ class DailyLog extends Component {
                 }}
                 isNewSubmit={true}
               />
+              <MedicationLogDisplay
+                data={{
+                  value: this.state.selectedMedicationList,
+                  date: Moment(this.state.dateMedication).format('YYYY/MM/DD'),
+                  time: Moment(this.state.dateWeight).format('h:mm a'),
+                }}
+                isNewSubmit={true}
+              />
               <WeightLogDisplay
                 data={{
                   value: this.state.weight,
