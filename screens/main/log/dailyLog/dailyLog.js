@@ -291,7 +291,9 @@ class DailyLog extends Component {
           }
           break;
         case 2:
-          return true;
+          if (this.state.lastMealLog === null || this.state.showNewInput){
+            return true;
+          }
           break;
         case 3:
           if (this.state.lastMedication === null || this.state.showNewInput) {
@@ -384,14 +386,14 @@ class DailyLog extends Component {
     this.handleNext();
     this.setState({
       currentStep: this.state.currentStep + 1,
-      showNewInput: this.handleShowNewInput(),
+      showNewInput: this.handleShowNewInput(this.state.currentStep + 1),
     });
   };
 
   decrementStepper = () => {
     this.setState({
       currentStep: this.state.currentStep - 1,
-      showNewInput: this.handleShowNewInput(),
+      showNewInput: this.handleShowNewInput(this.state.currentStep - 1),
     });
   };
 
@@ -409,10 +411,15 @@ class DailyLog extends Component {
     }
   }
 
-  handleShowNewInput = () => {
-    switch (this.state.currentStep){
+  handleShowNewInput = step => {
+    switch (step){
       case 1:
         if(!this.state.lastBloodGlucose || this.state.inputNewBloodGlucose){
+          return true
+        }
+        break;
+      case 2:
+        if(!this.state.lastMealLog){
           return true
         }
         break;
