@@ -1,13 +1,15 @@
 import React, {useState, useEffect} from 'react';
 import {View, StyleSheet, Text} from 'react-native';
+import {ScrollView} from 'react-native-gesture-handler';
+//component
 import Result from './result';
-import DummyData from './dummyData.json';
 import BgBlock from './blocks/bgBlock';
 import WeightBlock from './blocks/weightBlock';
 import MedicationLogBlock from '../logs/medicationLogBlock';
 import MedBlock from './blocks/medBlock';
-import {ScrollView} from 'react-native-gesture-handler';
 import ActivityBlock from './blocks/activityBlock';
+//data
+import DummyData from './dummyData.json';
 
 const Summary = (props) => {
   const [avgBg, setAverageBg] = useState(0);
@@ -105,6 +107,9 @@ const Summary = (props) => {
     </>
   );
 };
+
+//take in the duration, check
+function RenderResult() {}
 
 export default Summary;
 

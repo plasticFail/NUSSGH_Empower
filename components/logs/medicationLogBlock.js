@@ -8,15 +8,14 @@ import {
   Dimensions,
   Alert,
 } from 'react-native';
+import {FlatList} from 'react-native-gesture-handler';
+//third party lib
 import Modal from 'react-native-modal';
 import Entypo from 'react-native-vector-icons/Entypo';
-import {FlatList} from 'react-native-gesture-handler';
-
-// content
+// component (content)
 import DateSelectionBlock from '../logs/dateSelectionBlock';
 import SelectMedicationModalContent from './selectMedicationModalContent';
 import EditMedicationModalContent from './editMedicationModalContent';
-
 // functions
 import {checkDosage} from '../../commonFunctions/logFunctions';
 

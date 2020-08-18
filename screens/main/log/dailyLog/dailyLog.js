@@ -58,15 +58,21 @@ class DailyLog extends Component {
 
   componentDidMount() {
     getLastBgLog().then((data) => {
-      this.setState({lastBloodGlucose: data});
+      if (data != null) {
+        this.setState({lastBloodGlucose: data});
+      }
     });
 
     getLastMedicationLog().then((data) => {
-      this.setState({lastMedication: data});
+      if (data != null) {
+        this.setState({lastMedication: data});
+      }
     });
 
     getLastWeightLog().then((data) => {
-      this.setState({lastWeight: data});
+      if (data != null) {
+        this.setState({lastWeight: data});
+      }
     });
     getLastMealLog().then((data) => {
       this.setState({
@@ -344,7 +350,9 @@ class DailyLog extends Component {
             <BloodGlucoseLogDisplay data={this.state.lastBloodGlucose} />
           )}
           {this.showLastLog(2) && <PreviousMealBlock />}
-          {this.showLastLog(3) && <MedicationLogDisplay />}
+          {this.showLastLog(3) && (
+            <MedicationLogDisplay data={this.state.lastMedication} />
+          )}
           {this.showLastLog(4) && (
             <WeightLogDisplay data={this.state.lastWeight} />
           )}

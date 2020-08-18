@@ -1,13 +1,15 @@
 import React, {useState} from 'react';
 import {View, TouchableOpacity, Text, StyleSheet, Alert} from 'react-native';
+import {ScrollView} from 'react-native-gesture-handler';
+//third party library
 import Entypo from 'react-native-vector-icons/Entypo';
 import Moment from 'moment';
-import {ScrollView} from 'react-native-gesture-handler';
+//functions
 import {medicationAddLogRequest} from '../../../../netcalls/requestsLog';
+import {storeLastMedicationLog} from '../../../../storage/asyncStorageFunctions';
+//components
 import SuccessDialogue from '../../../../components/successDialogue';
 import MedicationLogBlock from '../../../../components/logs/medicationLogBlock';
-import {checkTime, storeData} from '../../../../commonFunctions/logFunctions';
-import MedicationLogDisplay from '../../../../components/logs/medicationLogDisplay';
 
 Entypo.loadFont();
 
@@ -21,32 +23,30 @@ const MedicationLog = (props) => {
   };
 
   const handleSubmit = () => {
-    if (checkTime(date)) {
-      for (var x of selectedMedicationList) {
-        x.recordDate = Moment(date).format('DD/MM/YYYY HH:mm:ss');
-      }
-
-      //store latest in async storage [before removing img to send to db]
-      storeData('Medication', {
-        value: selectedMedicationList,
-        time: Moment(date).format('h:mm a'),
-      });
-
-      //remove image to send back to database
-      selectedMedicationList.map(function (item) {
-        delete item.image_url;
-        return item;
-      });
-      medicationAddLogRequest(selectedMedicationList).then((value) => {
-        if (value) {
-          setShowSuccess(true);
-        } else {
-          Alert.alert('Error', 'Unexpected Error Occured', [
-            {text: 'Try again later'},
-          ]);
-        }
-      });
+    for (var x of selectedMedicationList) {
+      x.recordDate = Moment(date).format('DD/MM/YYYY HH:mm:ss');
     }
+
+    //store latest in async storage [before removing img to send to db]
+    storeLastMedicationLog({
+      value: selectedMedicationList,
+      time: Moment(date).format('h:mm a'),
+    });
+
+    //remove image to send back to database
+    selectedMedicationList.map(function (item) {
+      delete item.image_url;
+      return item;
+    });
+    medicationAddLogRequest(selectedMedicationList).then((value) => {
+      if (value) {
+        setShowSuccess(true);
+      } else {
+        Alert.alert('Error', 'Unexpected Error Occured', [
+          {text: 'Try again later'},
+        ]);
+      }
+    });
   };
 
   return (
@@ -66,7 +66,6 @@ const MedicationLog = (props) => {
           </TouchableOpacity>
         )}
       </View>
-      <MedicationLogDisplay />
       <SuccessDialogue visible={showSuccess} type="Medication" />
     </ScrollView>
   );

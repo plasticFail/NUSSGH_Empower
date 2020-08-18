@@ -1,16 +1,9 @@
 import React, {useState} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Alert,
-} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, Alert} from 'react-native';
 //third party libs
 import Moment from 'moment';
 //functions
 import {weightAddLogRequest} from '../../../netcalls/requestsLog';
-import {checkTime} from '../../../commonFunctions/logFunctions';
 import {storeLastWeightLog} from '../../../storage/asyncStorageFunctions';
 //components
 import SuccessDialogue from '../../../components/successDialogue';
@@ -23,9 +16,7 @@ const WeightLog = (props) => {
   const [successShow, setSuccessShow] = useState(false);
 
   const handleSubmit = () => {
-    //check date valid and weight format (1 dp)
-    console.log('---' + Number(weight));
-    if (checkTime(date) && checkInputFormat(weight)) {
+    if (checkInputFormat(weight)) {
       let formatDate = Moment(date).format('DD/MM/YYYY HH:mm:ss');
       weightAddLogRequest(Number(weight), formatDate).then((value) => {
         if (value === true) {
@@ -72,8 +63,6 @@ const WeightLog = (props) => {
       <TouchableOpacity style={styles.button} onPress={handleSubmit}>
         <Text style={styles.buttonText}>Submit</Text>
       </TouchableOpacity>
-
-      <LogDisplay type="Weight" />
 
       <SuccessDialogue visible={successShow} type="Weight" />
     </View>

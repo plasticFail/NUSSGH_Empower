@@ -1,18 +1,11 @@
 import React, {useState} from 'react';
-import {
-  View,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  Alert,
-} from 'react-native';
+import {View, StyleSheet, Text, TouchableOpacity, Alert} from 'react-native';
 //third party libs
 import Moment from 'moment';
 import {glucoseAddLogRequest} from '../../../netcalls/requestsLog';
 import {useNavigation} from '@react-navigation/native';
 //functions
 import {storeLastBgLog} from '../../../storage/asyncStorageFunctions';
-import {checkTime} from '../../../commonFunctions/logFunctions';
 //components
 import SuccessDialogue from '../../../components/successDialogue';
 import BloodGlucoseLogBlock from '../../../components/logs/bloodGlucoseLogBlock';
@@ -26,40 +19,38 @@ const BloodGlucoseLog = (props) => {
   Moment.locale('en');
 
   const handleSubmit = () => {
-    if (checkTime(date)) {
-      if (Number(bloodGlucose) >= 30 || Number(bloodGlucose) <= 0) {
-        Alert.alert('Error', 'Invalid Blood Glucose Level', [{text: 'Got It'}]);
-      } else if (
-        bloodGlucose.match(/^[0-9]+(\.[0-9]{1,2})?$/g) &&
-        !bloodGlucose.includes(',') &&
-        !bloodGlucose.includes('-')
-      ) {
-        let formatDate = Moment(date).format('DD/MM/YYYY HH:mm:ss');
-        glucoseAddLogRequest(Number(bloodGlucose), formatDate).then((value) => {
-          if (value === true) {
-            if (bloodGlucose === '3.2') {
-              navigation.navigate('HypoglycemiaReason');
-            } else {
-              setSuccessShow(true);
-            }
+    if (Number(bloodGlucose) >= 30 || Number(bloodGlucose) <= 0) {
+      Alert.alert('Error', 'Invalid Blood Glucose Level', [{text: 'Got It'}]);
+    } else if (
+      bloodGlucose.match(/^[0-9]+(\.[0-9]{1,2})?$/g) &&
+      !bloodGlucose.includes(',') &&
+      !bloodGlucose.includes('-')
+    ) {
+      let formatDate = Moment(date).format('DD/MM/YYYY HH:mm:ss');
+      glucoseAddLogRequest(Number(bloodGlucose), formatDate).then((value) => {
+        if (value === true) {
+          if (Number(bloodGlucose) < 4) {
+            navigation.navigate('HypoglycemiaReason');
           } else {
-            Alert.alert('Error', 'Unexpected Error Occured', [
-              {text: 'Try Again later'},
-            ]);
+            setSuccessShow(true);
           }
-        });
-        //store data in async storage.
-        storeLastBgLog({
-          value: bloodGlucose,
-          time: Moment(date).format('h:mm a'),
-        });
-      } else {
-        Alert.alert(
-          'Error',
-          'Invalid Blood Glucose Input. Make sure at most 2 decimal place',
-          [{text: 'Got It'}],
-        );
-      }
+        } else {
+          Alert.alert('Error', 'Unexpected Error Occured', [
+            {text: 'Try Again later'},
+          ]);
+        }
+      });
+      //store data in async storage.
+      storeLastBgLog({
+        value: bloodGlucose,
+        time: Moment(date).format('h:mm a'),
+      });
+    } else {
+      Alert.alert(
+        'Error',
+        'Invalid Blood Glucose Input. Make sure at most 2 decimal place',
+        [{text: 'Got It'}],
+      );
     }
   };
 
@@ -75,8 +66,6 @@ const BloodGlucoseLog = (props) => {
       <TouchableOpacity style={styles.button} onPress={handleSubmit}>
         <Text style={styles.buttonText}>Submit</Text>
       </TouchableOpacity>
-
-      <LogDisplay type="BloodGlucose" />
 
       <SuccessDialogue visible={successShow} type="Blood Glucose" />
     </View>
