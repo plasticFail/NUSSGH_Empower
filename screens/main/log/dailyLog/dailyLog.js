@@ -536,7 +536,7 @@ class DailyLog extends Component {
                   ...meal,
                   mealType,
                   mealRecordDate
-                } : {...this.state.lastMealLog},
+                } : this.state.lastMealLog.value,
                 date: Moment(this.state.mealRecordDate).format('YYYY/MM/DD'),
                 time: meal ? Moment(this.state.mealRecordDate).format('h:mm a') :
                     Moment(this.state.lastMealLog.recordDate, "DD/MM/YYYY HH:mm:ss")
