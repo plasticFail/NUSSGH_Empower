@@ -2,7 +2,10 @@ import React, {Component} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 //component
 import Summary from '../../../components/diary/summary';
-import {getTime, getHour} from '../../../commonFunctions/diaryFunctions';
+
+//functions
+import {getHour} from '../../../commonFunctions/diaryFunctions';
+import TimeSection from '../../../components/diary/timeSection';
 
 //see if class or functional component
 class DiaryDetail extends Component {
@@ -10,11 +13,6 @@ class DiaryDetail extends Component {
     super(props);
     this.props = props;
     this.state = {
-      date: props.route.params.date,
-      bgPass: props.route.params.bgPass,
-      avgBg: props.route.params.avgBg,
-      weightPass: props.route.params.weightPass,
-
       loopArr: [],
       earlyMorningLogs: [],
       morningLogs: [],
@@ -35,7 +33,6 @@ class DiaryDetail extends Component {
     this.filterMorning();
     this.filterAfternoon();
     this.filterEvening();
-    console.log(this.state.earlyMorningLogs);
   }
 
   filterEarlyMorning = () => {
@@ -121,6 +118,7 @@ class DiaryDetail extends Component {
             activityLogs={activityLogs}
             weightLogs={weightLogs}
           />
+          <TimeSection data={this.state.afternoonLogs} />
         </View>
       </View>
     );
