@@ -24,7 +24,6 @@ import BloodGlucoseLogBlock from '../../../../components/logs/bloodGlucoseLogBlo
 import BloodGlucoseLogDisplay from '../../../../components/logs/bloodGlucoseLogDisplay';
 import DailyMealLogComponent from "../../../../components/logs/meal/DailyMealLogComponent";
 import {BackAndForwardButton} from '../../../../components/BackAndForwardButtons';
-import ReadOnlyMealDisplay from '../../../../components/logs/meal/ReadOnlyMealDisplay';
 import WeightLogBlock from '../../../../components/logs/weightLogBlock';
 import WeightLogDisplay from '../../../../components/logs/weightLogDisplay';
 import MedicationLogDisplay from '../../../../components/logs/medicationLogDisplay';
@@ -51,7 +50,6 @@ class DailyLog extends Component {
       mealType: getDefaultMealType(new Date().getHours()),
       meal: null,
       lastMealLog: null,
-      toRecordMealLog: false,
 
       dateMedication: new Date(),
       selectedMedicationList: [],
@@ -238,22 +236,9 @@ class DailyLog extends Component {
   };
 
   handleFormBlockChange = (boolValue) => {
-    if (this.state.showNewInput === boolValue) {
-      return;
-    }
-
-    switch (this.state.currentStep) {
-      case 2:
-        this.setState({
-          showNewInput: boolValue,
-          toRecordMealLog: boolValue,
-        });
-        break;
-      default:
-        this.setState({
-          showNewInput: boolValue,
-        });
-    }
+    this.setState({
+      showNewInput: boolValue
+    })
   };
 
   showLastLog = (step) => {
@@ -343,8 +328,8 @@ class DailyLog extends Component {
     // To do
 
     // Meal data to pass to endpoint
-    const {meal, mealType, mealRecordDate, toRecordMealLog} = this.state;
-    if (meal && toRecordMealLog) {
+    const {meal, mealType, mealRecordDate} = this.state;
+    if (meal) {
       const {beverage, main, side, dessert, isFavourite, mealName} = meal;
       const mealDataToLog = {
         beverage,

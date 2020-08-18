@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, ScrollView} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 // Components
 import DateSelectionBlock from "../dateSelectionBlock";
 import MealTypeSelectionBlock from "./MealTypeSelectionBlock";
