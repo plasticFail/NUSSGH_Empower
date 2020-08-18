@@ -1,6 +1,8 @@
 import React, {useState} from 'react';
 import {View, TextInput, Text, StyleSheet, Dimensions} from 'react-native';
+//third party lib
 import zxcvbn from 'zxcvbn';
+//component
 import ProgressBar from './progressbar';
 
 const PasswordStrengthMeter = (props) => {

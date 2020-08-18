@@ -7,6 +7,7 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
+//functions
 import {checkDosage} from '../../commonFunctions/logFunctions';
 
 const EditMedicationModalContent = (props) => {

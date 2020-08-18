@@ -14,6 +14,7 @@ const foodSearchEndpoint = server + 'food/search';
 const requestOTP = server + 'auth/patient/password-reset/request-otp';
 const verifyOTP = server + 'auth/patient/password-reset/verify-otp';
 const postNewPassword = server + 'auth/patient/password-reset/reset';
+const getDiaryEntries = server + 'log/diary';
 
 export {
   patientLogin,
@@ -30,4 +31,5 @@ export {
   requestOTP,
   verifyOTP,
   postNewPassword,
+  getDiaryEntries,
 };

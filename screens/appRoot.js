@@ -35,6 +35,7 @@ import RecentMealScreen from './main/log/meal/RecentMeal';
 import FoodSearchEngineScreen from './main/log/meal/FoodSearchEngine';
 import HeaderBackIcon from '../components/common/headerBackIcon';
 import HeaderBackIconClick from '../components/common/headerBackIconClick';
+import DiaryDetail from './main/diary/diaryDetail';
 
 Entypo.loadFont();
 
@@ -126,7 +127,7 @@ class AppRoot extends Component {
                 component={AlertsScreen}
                 options={{
                   title: 'Alerts',
-                  headerBackImage: () => <HeaderBackIcon/>,
+                  headerBackImage: () => <HeaderBackIcon />,
                   headerRight: () => <View />,
                 }}
               />
@@ -135,7 +136,7 @@ class AppRoot extends Component {
                 component={ChatScreen}
                 options={{
                   title: 'Chat',
-                  headerBackImage: () => <HeaderBackIcon/>,
+                  headerBackImage: () => <HeaderBackIcon />,
                   headerRight: () => <View />,
                 }}
               />
@@ -144,7 +145,7 @@ class AppRoot extends Component {
                 component={DailyLog}
                 options={{
                   title: 'Daily Log',
-                  headerBackImage: () => <HeaderBackIcon/>,
+                  headerBackImage: () => <HeaderBackIcon />,
                   headerRight: () => <View />,
                 }}
               />
@@ -153,7 +154,7 @@ class AppRoot extends Component {
                 component={MealLogRoot}
                 options={({route, navigation}) => ({
                   title: 'Meal Log',
-                  headerBackImage: () => <HeaderBackIcon/>,
+                  headerBackImage: () => <HeaderBackIcon />,
                   headerRight: () => <View />,
                 })}
               />
@@ -198,7 +199,7 @@ class AppRoot extends Component {
                 component={FavouriteMealScreen}
                 options={({route, navigation}) => ({
                   title: 'Favourites',
-                  headerBackImage: () => <HeaderBackIcon/>,
+                  headerBackImage: () => <HeaderBackIcon />,
                   headerRight: () => <View />,
                   ...TransitionPresets.ModalTransition,
                 })}
@@ -208,7 +209,7 @@ class AppRoot extends Component {
                 component={RecentMealScreen}
                 options={({route, navigation}) => ({
                   title: 'Recent',
-                  headerBackImage: () => <HeaderBackIcon/>,
+                  headerBackImage: () => <HeaderBackIcon />,
                   headerRight: () => <View />,
                   ...TransitionPresets.ModalTransition,
                 })}
@@ -224,7 +225,7 @@ class AppRoot extends Component {
                 options={{
                   title: 'Blood Glucose Log',
                   headerRight: () => <View />,
-                  headerBackImage: () => <HeaderBackIcon/>,
+                  headerBackImage: () => <HeaderBackIcon />,
                 }}
               />
               <Stack.Screen
@@ -233,7 +234,7 @@ class AppRoot extends Component {
                 options={{
                   title: 'Medication Log',
                   headerRight: () => <View />,
-                  headerBackImage: () => <HeaderBackIcon/>,
+                  headerBackImage: () => <HeaderBackIcon />,
                 }}
               />
               <Stack.Screen
@@ -242,7 +243,7 @@ class AppRoot extends Component {
                 options={{
                   title: 'Weight Log',
                   headerRight: () => <View />,
-                  headerBackImage: () => <HeaderBackIcon/>,
+                  headerBackImage: () => <HeaderBackIcon />,
                 }}
               />
               <Stack.Screen
@@ -255,6 +256,14 @@ class AppRoot extends Component {
                   },
                   headerRight: () => <View />,
                 }}
+              />
+              <Stack.Screen
+                name="DiaryDetail"
+                component={DiaryDetail}
+                options={({route}) => ({
+                  title: 'Diary Entry: ' + route.params.date,
+                  headerRight: () => <View />,
+                })}
               />
             </>
           ) : (

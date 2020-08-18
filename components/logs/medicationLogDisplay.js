@@ -9,49 +9,32 @@ import Entypo from 'react-native-vector-icons/Entypo';
 Entypo.loadFont();
 
 const MedicationLogDisplay = (props) => {
-  const [medicationList, setMedicationList] = useState([]);
-  const [oriList, setOriList] = useState([]);
-  const [time, setTime] = useState('');
-  const medicationScrollView = useRef(null);
-  const [width, setWidth] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
+  const originalList = props.data.value;
+  const slicedList = props.data.value.slice(0, 3);
 
-  useEffect(() => {
-    getLastMedicationLog().then((response) => {
-      if (response != null) {
-        let data = response;
-        setTime(data.time);
-        let arr = data.value;
-        setOriList(arr);
-        console.log(oriList);
-        setMedicationList(arr.slice(0, 3));
-      }
-    });
-  }, []);
-
-  return time === '' ? (
+  return props.time === '' ? (
     <View></View>
   ) : (
     <View style={[styles.container, styles.shadow]}>
       <Text style={styles.textStyle}>
-        You have recently added these medications at{' '}
-        <Text style={styles.bold}>{time}</Text> today
+        {prefix(props.isNewSubmit)}{' '}
+        <Text style={styles.bold}>{props.data.time}</Text> today
       </Text>
       <ScrollView
-        ref={medicationScrollView}
         horizontal={true}
         pagingEnabled
         scrollEnabled={true}
         showsHorizontalScrollIndicator
         contentContainerStyle={[
           styles.scrollView,
-          {width: `${100 * Math.ceil(medicationList.length / 2.5)}%`},
+          {width: `${100 * Math.ceil(slicedList.length / 2.5)}%`},
         ]}>
-        {medicationList.map((item, index) => {
+        {slicedList.map((item, index) => {
           return <MedicationItem medication={item} key={index.toString()} />;
         })}
       </ScrollView>
-      {oriList.length > 3 && (
+      {originalList.length > 3 && (
         <Text
           style={styles.hyperLinkStyle}
           onPress={() => {
@@ -80,7 +63,7 @@ const MedicationLogDisplay = (props) => {
           </View>
           <FlatList
             keyExtractor={(item, index) => item.image_url}
-            data={oriList}
+            data={originalList}
             numColumns={2}
             renderItem={({item}) => <MedicationItem medication={item} />}
           />
@@ -88,6 +71,14 @@ const MedicationLogDisplay = (props) => {
       </Modal>
     </View>
   );
+};
+
+const prefix = (isNewSubmit) => {
+  if (isNewSubmit) {
+    return 'Your new medication log is taken at';
+  } else {
+    return 'Your most recent medication log is taken at';
+  }
 };
 
 export default MedicationLogDisplay;

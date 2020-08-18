@@ -1,12 +1,5 @@
 import React, {Component} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  Alert,
-  ScrollView,
-} from 'react-native';
+import {View, Text, StyleSheet, Image, Alert, ScrollView} from 'react-native';
 // third party lib
 import Moment from 'moment';
 //functions
@@ -28,8 +21,10 @@ import WeightLogBlock from '../../../../components/logs/weightLogBlock';
 import WeightLogDisplay from '../../../../components/logs/weightLogDisplay';
 import MedicationLogDisplay from '../../../../components/logs/medicationLogDisplay';
 import MedicationLogBlock from '../../../../components/logs/medicationLogBlock';
-import {checkBloodGlucoseText, checkWeightText} from '../../../../commonFunctions/logFunctions';
-
+import {
+  checkBloodGlucoseText,
+  checkWeightText,
+} from '../../../../commonFunctions/logFunctions';
 
 class DailyLog extends Component {
   constructor(props) {
@@ -67,10 +62,10 @@ class DailyLog extends Component {
     Moment.locale('en');
 
     getLastBgLog().then((data) => {
-      if(data && this.isToday(data.date)) {
+      if (data && this.isToday(data.date)) {
         this.setState({lastBloodGlucose: data});
         this.setState({enableNext: true});
-      }else{
+      } else {
         this.setState({
           showNewInput: this.handleShowNewInput(),
         });
@@ -78,13 +73,17 @@ class DailyLog extends Component {
     });
 
     getLastMedicationLog().then((data) => {
-      if(this.isToday(data.date)) {
+      if (this.isToday(data.date)) {
         this.setState({lastMedication: data});
+      } else {
+        this.setState({
+          showNewInput: this.handleShowNewInput(),
+        });
       }
     });
 
     getLastWeightLog().then((data) => {
-      if(this.isToday(data.date)) {
+      if (this.isToday(data.date)) {
         this.setState({lastWeight: data});
       }
     });
@@ -95,30 +94,30 @@ class DailyLog extends Component {
     });
   }
 
-  isToday = date => {
+  isToday = (date) => {
     return date === Moment(new Date()).format('YYYY/MM/DD');
-  }
+  };
 
   enableNext = () => {
-    if(!this.state.showNewInput){
-      switch (this.state.currentStep){
+    if (!this.state.showNewInput) {
+      switch (this.state.currentStep) {
         case 1:
-          if(this.state.lastBloodGlucose){
+          if (this.state.lastBloodGlucose) {
             return true;
           }
           break;
         case 2:
-          if(this.state.lastMealLog) {
+          if (this.state.lastMealLog) {
             return true;
           }
           break;
         case 3:
-          if(this.state.lastMedication){
+          if (this.state.lastMedication) {
             return true;
           }
           break;
         case 4:
-          if(this.state.lastWeight){
+          if (this.state.lastWeight) {
             return true;
           }
           break;
@@ -140,7 +139,7 @@ class DailyLog extends Component {
         break;
     }
     return false;
-  }
+  };
 
   alertText = () => {
     switch (this.state.currentStep) {
@@ -158,7 +157,7 @@ class DailyLog extends Component {
         break;
     }
     return '';
-  }
+  };
 
   displayStepText = () => {
     switch (this.state.currentStep) {
@@ -219,7 +218,7 @@ class DailyLog extends Component {
         }
         break;
       case 3:
-        if(this.state.lastMedication) {
+        if (this.state.lastMedication) {
           return true;
         }
         break;
@@ -258,7 +257,10 @@ class DailyLog extends Component {
     if (step === this.state.currentStep) {
       switch (step) {
         case 1:
-          if (this.state.lastBloodGlucose !== null && !this.state.showNewInput) {
+          if (
+            this.state.lastBloodGlucose !== null &&
+            !this.state.showNewInput
+          ) {
             return true;
           }
           break;
@@ -291,7 +293,7 @@ class DailyLog extends Component {
           }
           break;
         case 2:
-          if (this.state.lastMealLog === null || this.state.showNewInput){
+          if (this.state.lastMealLog === null || this.state.showNewInput) {
             return true;
           }
           break;
@@ -398,7 +400,7 @@ class DailyLog extends Component {
   };
 
   handleNext = () => {
-    switch (this.state.currentStep){
+    switch (this.state.currentStep) {
       case 1:
         this.setState({inputNewBloodGlucose: this.state.showNewInput});
         break;
@@ -409,33 +411,33 @@ class DailyLog extends Component {
         this.setState({inputWeight: this.state.showNewInput});
         break;
     }
-  }
+  };
 
-  handleShowNewInput = step => {
-    switch (step){
+  handleShowNewInput = (step) => {
+    switch (step) {
       case 1:
-        if(!this.state.lastBloodGlucose || this.state.inputNewBloodGlucose){
-          return true
+        if (!this.state.lastBloodGlucose || this.state.inputNewBloodGlucose) {
+          return true;
         }
         break;
       case 2:
-        if(!this.state.lastMealLog){
-          return true
+        if (!this.state.lastMealLog) {
+          return true;
         }
         break;
       case 3:
-        if(!this.state.lastMedication || this.state.inputNewMedication){
-          return true
+        if (!this.state.lastMedication || this.state.inputNewMedication) {
+          return true;
         }
         break;
       case 4:
-        if(!this.state.lastWeight || this.state.inputWeight){
-          return true
+        if (!this.state.lastWeight || this.state.inputWeight) {
+          return true;
         }
         break;
     }
     return false;
-  }
+  };
 
   render() {
     const {navigation, route} = this.props;
@@ -477,7 +479,9 @@ class DailyLog extends Component {
             <BloodGlucoseLogDisplay data={this.state.lastBloodGlucose} />
           )}
           {this.showLastLog(2) && <PreviousMealBlock />}
-          {this.showLastLog(3) && (<MedicationLogDisplay />)}
+          {this.showLastLog(3) && (
+            <MedicationLogDisplay data={this.state.lastMedication} />
+          )}
           {this.showLastLog(4) && (
             <WeightLogDisplay data={this.state.lastWeight} />
           )}
@@ -510,12 +514,12 @@ class DailyLog extends Component {
           )}
           {this.showNewLogInput(3) && (
             <MedicationLogBlock
-                date={this.state.dateMedication}
-                setDate={(date) => {
-                  this.setState({dateMedication: date});
-                }}
-                selectedMedicationList={this.state.selectedMedicationList}
-                onListChange={this.onMedicationList}
+              date={this.state.dateMedication}
+              setDate={(date) => {
+                this.setState({dateMedication: date});
+              }}
+              selectedMedicationList={this.state.selectedMedicationList}
+              onListChange={this.onMedicationList}
             />
           )}
           {this.showNewLogInput(4) && (
@@ -531,21 +535,39 @@ class DailyLog extends Component {
             />
           )}
           {this.state.currentStep === 5 && (
-              <>
-                <BloodGlucoseLogDisplay data={{
+            <>
+              <BloodGlucoseLogDisplay
+                data={{
                   value: this.state.bloodGlucose,
-                  date: Moment(this.state.dateBloodGlucose).format('YYYY/MM/DD'),
+                  date: Moment(this.state.dateBloodGlucose).format(
+                    'YYYY/MM/DD',
+                  ),
                   time: Moment(this.state.dateBloodGlucose).format('h:mm a'),
-                }} isNewSubmit={true}/>
-                <WeightLogDisplay data={{
+                }}
+                isNewSubmit={true}
+              />
+              <MedicationLogDisplay
+                data={{
+                  value: this.state.selectedMedicationList,
+                  date: Moment(this.state.dateMedication).format('YYYY/MM/DD'),
+                  time: Moment(this.state.dateWeight).format('h:mm a'),
+                }}
+                isNewSubmit={true}
+              />
+              <WeightLogDisplay
+                data={{
                   value: this.state.weight,
                   date: Moment(this.state.dateWeight).format('YYYY/MM/DD'),
-                  time: Moment(this.state.dateWeight).format('h:mm a')
-                }} isNewSubmit={true}/>
-              </>
+                  time: Moment(this.state.dateWeight).format('h:mm a'),
+                }}
+                isNewSubmit={true}
+              />
+            </>
           )}
 
-          {this.state.showNewInput && (<Text style={styles.text}>{this.alertText()}</Text>)}
+          {this.state.showNewInput && (
+            <Text style={styles.text}>{this.alertText()}</Text>
+          )}
           {currentStep === 1 ? ( // Only render the forward button
             <BackAndForwardButton
               onPressBack={this.props.navigation.goBack}
