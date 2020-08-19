@@ -57,26 +57,26 @@ export default class ProgressBar extends React.Component {
             backgroundColor: this.props.useIndicatorLevel ? colorInterpolate : this.props.progressBarColor ? this.props.progressBarColor : '#7BBFDB',
             height: '100%',
             position: 'absolute',
-            borderRadius: this.props.containerStyle ? this.props.containerStyle.height ?
-                this.props.containerStyle.height / 2 : styles.container.height / 2 : styles.container.height / 2
+            //borderRadius: this.props.containerStyle ? this.props.containerStyle.height ?
+            //    this.props.containerStyle.height / 2 : styles.container.height / 2 : styles.container.height / 2
         };
 
         const backgroundBarStyle = {
             ...styles.backgroundFill,
             backgroundColor: this.props.backgroundBarColor ? this.props.backgroundBarColor
                 : styles.backgroundFill.backgroundColor,
-            borderRadius: progressBarStyle.borderRadius
+            borderRadius: this.props.containerStyle ? this.props.containerStyle.height ?
+                this.props.containerStyle.height / 2 : styles.container.height / 2 : styles.container.height / 2
         }
         return (
             <View style={{...styles.container, ...this.props.containerStyle}}>
                 <TouchableWithoutFeedback>
                     <View style={backgroundBarStyle}>
-
+                        <View style={StyleSheet.absoluteFill}>
+                            <Animated.View style={[progressBarStyle]}/>
+                        </View>
                     </View>
                 </TouchableWithoutFeedback>
-                <View style={StyleSheet.absoluteFill}>
-                    <Animated.View style={[progressBarStyle]}/>
-                </View>
             </View>
         );
     }
@@ -102,6 +102,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         width: '100%',
         backgroundColor: "#d4d4d4",
-        height: '100%'
+        height: '100%',
+        overflow: 'hidden'
     }
 })

@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   FlatList,
 } from 'react-native-gesture-handler';
+import NutritionIntakeCard from "../../components/dashboard/todayOverview/NutritionIntakeCard";
 
 const buttonList = [
   {
@@ -53,7 +54,7 @@ const HomeScreen = (props) => {
     <ScrollView
       contentContainerStyle={{
         flexGrow: 1,
-        justifyContent: 'space-between',
+        //justifyContent: 'space-between',
         backgroundColor: 'white',
       }}>
       <View style={[styles.buttonContainer, styles.shadow]}>
@@ -63,7 +64,8 @@ const HomeScreen = (props) => {
           contentContainerStyle={{
             flexDirection: 'row',
             justifyContent: 'space-around',
-            marginTop: '2%',
+            alignItems: 'center',
+            flexGrow: 1
           }}
           renderItem={({item}) => (
             <View>
@@ -83,19 +85,27 @@ const HomeScreen = (props) => {
       </View>
 
       <Text style={styles.text}>Today's Overview</Text>
-      <View
+      {
+       /*
+       <View
         style={[
           styles.chartContainter,
           styles.shadow,
           styles.contentContainer,
         ]}></View>
+        */
+      }
+      <View style={styles.chartContainter}>
+        <NutritionIntakeCard onPress={() => alert('pressed nutrient card!')} />
+      </View>
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   buttonContainer: {
-    flex: 0.2,
+    height: '12%',
+    justifyContent: 'center',
     backgroundColor: '#f4fcda',
     borderRadius: 20,
     margin: '4%',
@@ -130,8 +140,9 @@ const styles = StyleSheet.create({
     paddingEnd: '1%',
   },
   chartContainter: {
-    flex: 4,
-    backgroundColor: 'white',
+    flex: 1,
+    marginLeft: '5%',
+    marginRight: '5%'
   },
   text: {
     marginStart: '5%',
