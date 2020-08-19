@@ -95,29 +95,25 @@ class DiaryDetail extends Component {
 
   render() {
     const {
-      date,
       bgPass,
+      bgMiss,
       avgBg,
       weightPass,
-      bgLogs,
-      foodLogs,
-      medLogs,
-      activityLogs,
-      weightLogs,
+      weightMiss,
+      activityPass,
+      activityMiss,
     } = this.props.route.params;
     return (
       <View style={styles.screen}>
         <Text style={styles.summaryText}>Summary: </Text>
         <Summary
-          date={date}
           bgPass={bgPass}
+          bgMiss={bgMiss}
           avgBg={avgBg}
           weightPass={weightPass}
-          bgLogs={bgLogs}
-          foodLogs={foodLogs}
-          medLogs={medLogs}
-          activityLogs={activityLogs}
-          weightLogs={weightLogs}
+          weightMiss={weightMiss}
+          activityPass={activityPass}
+          activityMiss={activityMiss}
         />
         <FlatList
           listKey={(item, index) => index.toString()}

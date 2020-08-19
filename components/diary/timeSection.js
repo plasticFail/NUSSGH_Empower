@@ -39,7 +39,7 @@ const TimeSection = (props) => {
     <>
       <View>{renderTimeSection(data)}</View>
       <FlatList
-        listKey={(item, index) => index.toString()}
+        listKey={(item, index) => String(index)}
         keyExtractor={(item, index) => index.toString()}
         contentContainerStyle={{
           width: Dimensions.get('window').width - 20,

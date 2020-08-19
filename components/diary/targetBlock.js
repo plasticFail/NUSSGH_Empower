@@ -4,6 +4,11 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 //function
 import {useNavigation} from '@react-navigation/native';
 import {getEntry4Day} from '../../netcalls/requestsDiary';
+import TargetContent from './targetContent';
+import {min} from 'moment';
+
+const within_target = 'Within Target';
+const missed = 'Missed';
 
 class TargetBlock extends Component {
   constructor(props) {
@@ -13,12 +18,24 @@ class TargetBlock extends Component {
       avgBg: 0,
       bgLogs: [],
       targetBg: {},
-      bgPass: false,
       foodLogs: [],
       medLogs: [],
       activityLogs: [],
       weightLogs: [],
+
+      bgPass: false,
+      bgPassCount: 0,
+      bgMiss: false,
+      bgFailCount: 0,
+
       weightPass: false,
+      weightPassCount: 0,
+      weightMiss: false,
+      weightFailCount: 0,
+
+      activityPass: false,
+      activityPassCount: 0,
+      activityMiss: false,
     };
     //if functional component -> states not updated correctly with hook
     //useEffect updates after render*
@@ -43,50 +60,108 @@ class TargetBlock extends Component {
   getAllResult = () => {
     this.getBGResult();
     this.getWeightResult();
+    this.getActivityResult();
   };
 
   getBGResult = () => {
-    var total = 0;
-    var count = 0;
-    for (var x of this.state.bgLogs) {
-      total += x.bg_reading;
-      count++;
-    }
-    let avg = (total / count).toFixed(2);
-    this.setState({avgBg: avg});
-    if (this.state.targetBg.comparator === '<=') {
-      if (avg <= this.state.targetBg.value) {
-        this.setState({bgPass: true});
-      } else {
-        this.setState({bgPass: false});
+    let total = 0;
+    let count = 0;
+    let passCount = 0;
+    let length = this.state.bgLogs.length;
+    if (length != 0) {
+      for (var x of this.state.bgLogs) {
+        //get counts of bg pass
+        if (this.state.targetBg.comparator === '<=') {
+          if (x.bg_reading <= this.state.targetBg.value) {
+            passCount++;
+          }
+        }
+        //calculate average
+        total += x.bg_reading;
+        count++;
       }
+      let avg = (total / count).toFixed(2);
+
+      //set states
+      this.setState({avgBg: avg});
+      this.setState({bgPassCount: passCount});
+      this.setState({bgFailCount: length - passCount});
+
+      if (this.state.targetBg.comparator === '<=') {
+        if (avg <= this.state.targetBg.value) {
+          this.setState({bgPass: true});
+        } else {
+          this.setState({bgPass: false});
+        }
+      }
+    } else {
+      this.setState({bgMiss: true});
     }
   };
 
   getWeightResult = () => {
     if (this.state.weightLogs.length != 0) {
-      this.setState({weightPass: true});
+      let maxWeight = 200;
+      let minWeight = 40;
+      let passCount = 0;
+
+      for (var x of this.state.weightLogs) {
+        if (x.weight < minWeight && x.weight > maxWeight) {
+          passCount++;
+        }
+      }
+      this.setState({weightPassCount: passCount});
+      this.setState({
+        weightFailCount: this.state.weightLogs.length - passCount,
+      });
     } else {
-      this.setState({weightPass: false});
+      this.setState({weightMiss: true});
+    }
+  };
+
+  getActivityResult = () => {
+    let length = this.state.activityLogs.length;
+    if (length != 0) {
+      this.setState({activityPass: true});
+      this.setState({activityPassCount: length});
+    } else {
+      this.setState({activityMiss: true});
     }
   };
 
   handleOnPress = () => {
     this.props.navigation.navigate('DiaryDetail', {
       date: this.props.date,
-      bgPass: this.state.bgPass,
       avgBg: this.state.avgBg,
-      weightPass: this.state.weightPass,
+
       bgLogs: this.state.bgLogs,
       foodLogs: this.state.foodLogs,
       medLogs: this.state.medLogs,
       activityLogs: this.state.activityLogs,
       weightLogs: this.state.weightLogs,
+
+      bgPass: this.state.bgPass,
+      bgMiss: this.state.bgMiss,
+      avgBg: this.state.avgBg,
+      weightPass: this.state.weightPass,
+      weightMiss: this.state.weightMiss,
+      activityPass: this.state.activityPass,
+      activityMiss: this.state.activityMiss,
     });
   };
 
   render() {
     const {date, navigation} = this.props;
+    const {
+      bgPass,
+      bgPassCount,
+      bgFailCount,
+      bgMiss,
+      weightPass,
+      weightPassCount,
+      weightFailCount,
+      weightMiss,
+    } = this.state;
     return (
       <View>
         <Text
@@ -97,8 +172,15 @@ class TargetBlock extends Component {
           <View style={styles.diaryContent}>
             <View style={styles.diaryContent1}>
               <Text style={[styles.diaryContentHeader, {color: '#7d9a22'}]}>
-                Within Targets{' '}
+                Within Targets
               </Text>
+              <TargetContent
+                bgPass={bgPass}
+                bgPassCount={bgPassCount}
+                weightPass={weightPass}
+                weightPassCount={weightPassCount}
+                type={within_target}
+              />
             </View>
             <View style={styles.diaryContent2}>
               <Text style={[styles.diaryContentHeader, {color: 'black'}]}>

@@ -6,39 +6,37 @@ import Result from './result';
 
 const Summary = (props) => {
   const {
-    date,
     bgPass,
+    bgMiss,
     avgBg,
     weightPass,
-    bgLogs,
-    foodLogs,
-    medLogs,
-    activityLogs,
-    weightLogs,
+    weightMiss,
+    activityPass,
+    activityMiss,
   } = props;
   console.log('In Summary Component: ');
 
   return (
     <>
       <View style={[styles.container, styles.shadow]}>
-        {renderBloodGlucoseResult(bgPass, bgLogs, avgBg)}
-        {renderActivityResult(activityLogs)}
-        {renderWeightResult(weightPass, weightLogs)}
+        {renderBloodGlucoseResult(bgPass, bgMiss, avgBg)}
+        {renderActivityResult(activityPass, activityMiss)}
+        {renderWeightResult(weightPass, weightMiss)}
       </View>
     </>
   );
 };
 
-function renderWeightResult(weightPass, weightLogs) {
-  if (weightLogs.length === 0) {
+function renderWeightResult(weightPass, weightMiss) {
+  if (weightMiss) {
     return <Result success={false} message={'Missing weight log.'} />;
   } else {
     return <Result success={true} message={'Weight log completed.'} />;
   }
 }
 
-function renderActivityResult(activityLogs) {
-  if (activityLogs.length === 0) {
+function renderActivityResult(activityPass, activityMiss) {
+  if (activityMiss) {
     return <Result success={false} message={'Missing activity log.'} />;
   } else {
     return <Result success={true} message={'Activity log completed.'} />;
@@ -46,8 +44,8 @@ function renderActivityResult(activityLogs) {
 }
 
 //take in the duration, check
-function renderBloodGlucoseResult(bgPass, bgLogs, avgBg) {
-  if (bgLogs.length === 0) {
+function renderBloodGlucoseResult(bgPass, bgMiss, avgBg) {
+  if (bgMiss) {
     return <Result success={false} message={'Missing Blood Glucose Log'} />;
   } else if (bgPass == true) {
     return (
