@@ -95,6 +95,12 @@ class TargetBlock extends Component {
         } else {
           this.setState({bgPass: false});
         }
+      } else if (this.state.targetBg.comparator === '>=') {
+        if (avg >= this.state.targetBg.value) {
+          this.setState({bgPass: true});
+        } else {
+          this.setState({bgPass: false});
+        }
       }
     } else {
       this.setState({bgMiss: true});
