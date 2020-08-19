@@ -38,7 +38,7 @@ const ActivityBlock = (props) => {
   };
 
   return (
-    <View>
+    <View style={{flexBasis: '33.3%'}}>
       <TouchableOpacity
         style={styles.buttonStyle}
         onPress={() => setModalVisible(true)}>
@@ -46,6 +46,7 @@ const ActivityBlock = (props) => {
         <Text style={styles.buttonText1}>Activity</Text>
         <ImageBackground source={img} style={styles.backgroundImg} />
       </TouchableOpacity>
+      <Text style={{textAlign: 'center'}}>{time}</Text>
       <Modal
         isVisible={modalVisible}
         animationIn="slideInUp"
@@ -72,17 +73,15 @@ export default ActivityBlock;
 
 const styles = StyleSheet.create({
   buttonStyle: {
-    width: '40%', // This should be the same size as backgroundImg height
-    alignSelf: 'center',
-    paddingTop: 10,
-    paddingBottom: 10,
+    width: '100%', // This should be the same size as backgroundImg height
+    padding: 10,
   },
   iconImg: {
     position: 'absolute',
     top: '40%',
-    left: '7%',
-    width: 40,
-    height: 40,
+    left: '20%',
+    width: 30,
+    height: 30,
     resizeMode: 'contain', //resize image so dont cut off
   },
   backgroundImg: {
@@ -97,7 +96,7 @@ const styles = StyleSheet.create({
   buttonText1: {
     position: 'absolute',
     top: '70%',
-    left: '6%',
+    left: '18%',
     fontSize: 18,
     fontWeight: '700',
     color: '#072d08',
