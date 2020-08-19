@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, StyleSheet, Text} from 'react-native';
-import {SimpleBarChart} from "../../components/dashboard/reports/SimpleBarChart";
+import CalorieReport from "../../components/dashboard/reports/CalorieReport";
 
 const ReportsScreen = (props) => {
   return (
@@ -10,10 +10,7 @@ const ReportsScreen = (props) => {
         <Text>Reports</Text>
          */
       }
-      <SimpleBarChart />
-      <Text style={{backgroundColor: '#fff', width: '100%', textAlign: 'center', color: '#4d4d4d', paddingTop: 10, paddingBottom: 10}}>
-        Your calorie (kcal) consumption this week
-      </Text>
+      <CalorieReport />
     </View>
   );
 };
