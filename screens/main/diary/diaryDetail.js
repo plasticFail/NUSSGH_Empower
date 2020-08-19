@@ -35,8 +35,6 @@ class DiaryDetail extends Component {
 
     console.disableYellowBox = true;
     console.ignoredYellowBox = ['ref.measureLayout'];
-
-    console.log(this.state.eveningLogs);
   }
 
   filterEarlyMorning = () => {

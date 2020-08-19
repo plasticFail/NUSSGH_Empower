@@ -22,24 +22,22 @@ const TimeSection = (props) => {
     if (data[0].length != 0) {
       let hour = getHour(data[0][0].record_date);
       if (hour > 0 && hour < 800) {
-        return 'Early Morning (08:00 - 09:00)';
+        return (
+          <Text style={styles.timeText}>Early Morning (08:00 - 09:00)</Text>
+        );
       } else if (hour >= 800 && hour < 1200) {
-        return 'Morning (08:00 - 12:00)';
+        return <Text style={styles.timeText}>Morning (08:00 - 12:00)</Text>;
       } else if (hour >= 1200 && hour < 1800) {
-        return 'Afternoon (12:00 - 18:00)';
+        return <Text style={styles.timeText}>Afternoon (12:00 - 18:00)</Text>;
       } else if (hour >= 1800 && hour < 2400) {
-        return 'Evening (18:00 - 24:00)';
-      } else {
-        return '';
+        return <Text style={styles.timeText}>Evening (18:00 - 24:00)</Text>;
       }
     }
   };
 
   return (
     <>
-      <View>
-        <Text style={styles.timeText}>{renderTimeSection(data)}</Text>
-      </View>
+      <View>{renderTimeSection(data)}</View>
       <FlatList
         listKey={(item, index) => index.toString()}
         keyExtractor={(item, index) => index.toString()}

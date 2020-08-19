@@ -57,6 +57,7 @@ const WeightBlock = (props) => {
         <Text style={styles.buttonText1}>Weight</Text>
         <ImageBackground source={img} style={styles.backgroundImg} />
       </TouchableOpacity>
+      <Text style={{textAlign: 'center'}}>{time}</Text>
       {/* Open details of log*/}
       <Modal
         isVisible={modalVisible}
