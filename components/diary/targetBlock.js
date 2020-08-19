@@ -9,7 +9,9 @@ import {min} from 'moment';
 
 const within_target = 'Within Target';
 const missed = 'Missed';
+const improved = 'Improve';
 
+//mainly do the calculation for the result of the logs to display
 class TargetBlock extends Component {
   constructor(props) {
     super(props);
@@ -161,6 +163,9 @@ class TargetBlock extends Component {
       weightPassCount,
       weightFailCount,
       weightMiss,
+      activityPass,
+      activityPassCount,
+      activityMiss,
     } = this.state;
     return (
       <View>
@@ -172,24 +177,32 @@ class TargetBlock extends Component {
           <View style={styles.diaryContent}>
             <View style={styles.diaryContent1}>
               <Text style={[styles.diaryContentHeader, {color: '#7d9a22'}]}>
-                Within Targets
+                {within_target}
               </Text>
               <TargetContent
                 bgPass={bgPass}
                 bgPassCount={bgPassCount}
                 weightPass={weightPass}
                 weightPassCount={weightPassCount}
+                activityPass={activityPass}
+                activityPassCount={activityPassCount}
                 type={within_target}
               />
             </View>
             <View style={styles.diaryContent2}>
               <Text style={[styles.diaryContentHeader, {color: 'black'}]}>
-                Missed
+                {missed}
               </Text>
+              <TargetContent
+                bgMiss={bgMiss}
+                weightMiss={weightMiss}
+                activityMiss={activityMiss}
+                type={missed}
+              />
             </View>
             <View style={styles.diaryContent3}>
               <Text style={[styles.diaryContentHeader, {color: '#9a228a'}]}>
-                Improve
+                {improved}
               </Text>
             </View>
           </View>
@@ -231,9 +244,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#fae6e6',
   },
   diaryContentHeader: {
-    marginTop: '4%',
+    margin: '2%',
     alignSelf: 'center',
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: '700',
   },
 });
