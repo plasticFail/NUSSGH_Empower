@@ -12,7 +12,6 @@ const TargetContent = (props) => {
   const {bgPassCount, weightPassCount, activityPassCount} = props;
   const {bgMiss, weightMiss, activityMiss} = props;
   const {bgFailCount, weightFailCount} = props;
-  console.log(bgFailCount);
 
   return (
     <>
@@ -78,7 +77,6 @@ function renderItem(
   }
 
   if (type === 'Improve') {
-    console.log('fdsfs');
     return (
       <View>
         {bgFailCount != 0 && renderCountLogo(bgFailCount, type, bg)}
@@ -121,7 +119,6 @@ function setImage(logType) {
     return require('../../resources/images/bloodglucose_logo.png');
   }
   if (logType === 'Weight') {
-    console.log('hihi');
     return require('../../resources/images/weight_logo.png');
   }
   if (logType === 'Activity') {

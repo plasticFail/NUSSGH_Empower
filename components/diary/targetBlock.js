@@ -108,11 +108,13 @@ class TargetBlock extends Component {
       let passCount = 0;
 
       for (var x of this.state.weightLogs) {
-        if (x.weight < minWeight && x.weight > maxWeight) {
+        if (x.weight >= minWeight && x.weight <= maxWeight) {
           passCount++;
         }
       }
+
       this.setState({weightPassCount: passCount});
+      this.setState({weightPass: true});
       this.setState({
         weightFailCount: this.state.weightLogs.length - passCount,
       });
