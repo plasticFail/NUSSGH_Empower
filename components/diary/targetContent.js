@@ -11,6 +11,8 @@ const TargetContent = (props) => {
   const {bgPass, weightPass, activityPass} = props;
   const {bgPassCount, weightPassCount, activityPassCount} = props;
   const {bgMiss, weightMiss, activityMiss} = props;
+  const {bgFailCount, weightFailCount} = props;
+  console.log(bgFailCount);
 
   return (
     <>
@@ -25,6 +27,8 @@ const TargetContent = (props) => {
         bgMiss,
         weightMiss,
         activityMiss,
+        bgFailCount,
+        weightFailCount,
       )}
     </>
   );
@@ -42,6 +46,8 @@ function renderItem(
   bgMiss,
   weightMiss,
   activityMiss,
+  bgFailCount,
+  weightFailCount,
 ) {
   if (type === 'Within Target') {
     return (
@@ -72,6 +78,13 @@ function renderItem(
   }
 
   if (type === 'Improve') {
+    console.log('fdsfs');
+    return (
+      <View>
+        {bgFailCount != 0 && renderCountLogo(bgFailCount, type, bg)}
+        {weightFailCount != 0 && renderCountLogo(weightFailCount, type, weight)}
+      </View>
+    );
   }
 }
 
@@ -94,6 +107,12 @@ function renderCountLogo(count, targetType, logType) {
     );
   }
   if (targetType === 'Improve') {
+    return (
+      <View style={styles.targetContainer}>
+        <Text style={styles.countTextImprove}>x {count}</Text>
+        <Image source={image} style={styles.iconImg} />
+      </View>
+    );
   }
 }
 
@@ -132,6 +151,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginEnd: '5%',
     color: 'black',
+    fontWeight: '600',
+  },
+  countTextImprove: {
+    fontSize: 18,
+    marginEnd: '5%',
+    color: 'red',
     fontWeight: '600',
   },
   empty: {

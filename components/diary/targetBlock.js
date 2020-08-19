@@ -204,6 +204,11 @@ class TargetBlock extends Component {
               <Text style={[styles.diaryContentHeader, {color: '#9a228a'}]}>
                 {improved}
               </Text>
+              <TargetContent
+                bgFailCount={bgFailCount}
+                weightFailCount={weightFailCount}
+                type={improved}
+              />
             </View>
           </View>
         </TouchableOpacity>

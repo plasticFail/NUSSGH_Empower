@@ -1,44 +1,30 @@
 import React, {useState, useEffect} from 'react';
-import {
-  View,
-  StyleSheet,
-  Text,
-  FlatList,
-  Dimensions,
-  Picker,
-} from 'react-native';
+import {View, StyleSheet, Text, FlatList} from 'react-native';
 //component
 import Legend from '../../../components/diary/legend';
 import TargetBlock from '../../../components/diary/targetBlock';
+//third party
+import moment from 'moment';
 //functions
-import {
-  getEntryToday,
-  getEntryForDateRange,
-} from '../../../netcalls/requestsDiary';
+import {getDateRange} from '../../../commonFunctions/diaryFunctions';
+import Filter from '../../../components/filter';
 
 const dates = ['2020-08-06', '2020-08-07', '2020-08-08'];
 
 const DiaryScreen = (props) => {
-  const [filter, setFilter] = useState('Filter');
-  const [dateList, setDateList] = useState([]);
-  const [diaryEntries, setDiaryEntries] = useState([]);
+  const [dates, setDates] = useState([]);
+
+  //set useeffect to render this week*
+  useEffect(() => {
+    setDates(getDateRange(7));
+  }, []);
 
   return (
     <View style={styles.diaryScreen}>
-      <Text style={{fontSize: 18, fontWeight: '600', margin: '2%'}}>
-        Legend
-      </Text>
-      <View
-        style={{
-          flexDirection: 'row',
-          flex: 1,
-        }}>
+      <Text style={styles.legendHeader}>Legend</Text>
+      <Filter />
+      <View style={styles.legendContainer}>
         <Legend />
-        {/*         <Select
-          options={filterList}
-          defaultValue={filterList[0]}
-          onSelect={handleSelect}
-        />*/}
       </View>
       <View style={{flex: 2, padding: '2%'}}>
         <FlatList
@@ -70,6 +56,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between',
   },
+  legendContainer: {
+    flexDirection: 'row',
+    flex: 1,
+    zIndex: 1,
+    elevation: 1,
+    marginTop: '2%',
+  },
+  legendHeader: {fontSize: 18, fontWeight: '700', margin: '2%'},
 });
 
 export default DiaryScreen;

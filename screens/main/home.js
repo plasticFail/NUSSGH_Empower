@@ -4,11 +4,7 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Foundation from 'react-native-vector-icons/Foundation';
-import {
-  ScrollView,
-  TouchableOpacity,
-  FlatList,
-} from 'react-native-gesture-handler';
+import {TouchableOpacity, FlatList} from 'react-native-gesture-handler';
 
 const buttonList = [
   {
@@ -49,47 +45,52 @@ const HomeScreen = (props) => {
   Foundation.loadFont();
   Entypo.loadFont();
 
+  console.disableYellowBox = true;
+  console.ignoredYellowBox = ['ref.measureLayout'];
+
   return (
-    <ScrollView
+    <FlatList
       contentContainerStyle={{
         flexGrow: 1,
         justifyContent: 'space-between',
         backgroundColor: 'white',
-      }}>
-      <View style={[styles.buttonContainer, styles.shadow]}>
-        <FlatList
-          keyExtractor={(item, index) => item.id}
-          data={buttonList}
-          contentContainerStyle={{
-            flexDirection: 'row',
-            justifyContent: 'space-around',
-            marginTop: '2%',
-          }}
-          renderItem={({item}) => (
-            <View>
-              <TouchableOpacity style={[styles.buttonStyle]}>
-                {item.iconName == 'game-controller' ? (
-                  <Entypo name={item.iconName} size={28} />
-                ) : item.iconName != 'target-two' ? (
-                  <Icon name={item.iconName} size={30} />
-                ) : (
-                  <Foundation name="target-two" size={30} />
-                )}
-              </TouchableOpacity>
-              <Text>{item.name}</Text>
-            </View>
-          )}
-        />
-      </View>
-
-      <Text style={styles.text}>Today's Overview</Text>
-      <View
-        style={[
-          styles.chartContainter,
-          styles.shadow,
-          styles.contentContainer,
-        ]}></View>
-    </ScrollView>
+      }}
+      ListEmptyComponent={
+        <>
+          <View style={[styles.buttonContainer, styles.shadow]}>
+            <FlatList
+              keyExtractor={(item, index) => item.id}
+              data={buttonList}
+              contentContainerStyle={{
+                flexDirection: 'row',
+                justifyContent: 'space-around',
+                marginTop: '2%',
+              }}
+              renderItem={({item}) => (
+                <View>
+                  <TouchableOpacity style={[styles.buttonStyle]}>
+                    {item.iconName == 'game-controller' ? (
+                      <Entypo name={item.iconName} size={28} />
+                    ) : item.iconName != 'target-two' ? (
+                      <Icon name={item.iconName} size={30} />
+                    ) : (
+                      <Foundation name="target-two" size={30} />
+                    )}
+                  </TouchableOpacity>
+                  <Text>{item.name}</Text>
+                </View>
+              )}
+            />
+          </View>
+          <Text style={styles.text}>Today's Overview</Text>
+          <View
+            style={[
+              styles.chartContainter,
+              styles.shadow,
+              styles.contentContainer,
+            ]}></View>
+        </>
+      }></FlatList>
   );
 };
 
