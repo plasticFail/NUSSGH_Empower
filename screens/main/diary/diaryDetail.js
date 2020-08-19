@@ -1,13 +1,12 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, Dimensions} from 'react-native';
+import {FlatList} from 'react-native-gesture-handler';
 //component
 import Summary from '../../../components/diary/summary';
-
+import TimeSection from '../../../components/diary/timeSection';
 //functions
 import {getHour} from '../../../commonFunctions/diaryFunctions';
-import TimeSection from '../../../components/diary/timeSection';
 
-//see if class or functional component
 class DiaryDetail extends Component {
   constructor(props) {
     super(props);
@@ -33,6 +32,9 @@ class DiaryDetail extends Component {
     this.filterMorning();
     this.filterAfternoon();
     this.filterEvening();
+
+    console.disableYellowBox = true;
+    console.ignoredYellowBox = ['ref.measureLayout'];
   }
 
   filterEarlyMorning = () => {
@@ -93,33 +95,37 @@ class DiaryDetail extends Component {
 
   render() {
     const {
-      date,
       bgPass,
+      bgMiss,
       avgBg,
       weightPass,
-      bgLogs,
-      foodLogs,
-      medLogs,
-      activityLogs,
-      weightLogs,
+      weightMiss,
+      activityPass,
+      activityMiss,
     } = this.props.route.params;
     return (
       <View style={styles.screen}>
         <Text style={styles.summaryText}>Summary: </Text>
-        <View style={{padding: '2%'}}>
-          <Summary
-            date={date}
-            bgPass={bgPass}
-            avgBg={avgBg}
-            weightPass={weightPass}
-            bgLogs={bgLogs}
-            foodLogs={foodLogs}
-            medLogs={medLogs}
-            activityLogs={activityLogs}
-            weightLogs={weightLogs}
-          />
-          <TimeSection data={this.state.afternoonLogs} />
-        </View>
+        <Summary
+          bgPass={bgPass}
+          bgMiss={bgMiss}
+          avgBg={avgBg}
+          weightPass={weightPass}
+          weightMiss={weightMiss}
+          activityPass={activityPass}
+          activityMiss={activityMiss}
+        />
+        <FlatList
+          listKey={(item, index) => index.toString()}
+          ListEmptyComponent={
+            <>
+              <TimeSection data={this.state.earlyMorningLogs} />
+              <TimeSection data={this.state.morningLogs} />
+              <TimeSection data={this.state.afternoonLogs} />
+              <TimeSection data={this.state.eveningLogs} />
+            </>
+          }
+        />
       </View>
     );
   }
@@ -131,6 +137,9 @@ const styles = StyleSheet.create({
   screen: {
     backgroundColor: 'white',
     width: '100%',
+    flex: 1,
+    height: Dimensions.get('window').height,
+    padding: '2%',
   },
   summaryText: {
     fontSize: 20,
