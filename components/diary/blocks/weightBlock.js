@@ -25,8 +25,9 @@ const WeightBlock = (props) => {
   const img = require('../../../resources/images/weight.jpg');
   const logo = require('../../../resources/images/weight_logo.png');
   const initialWeight = String(weight.weight);
+  const initialDate = getDateObj(dateString);
   const [modalVisible, setModalVisible] = useState(false);
-  const [date, setDate] = useState(getDateObj(dateString));
+  const [dateValue, setDateValue] = useState(initialDate);
   const [weightValue, setWeightValue] = useState(initialWeight);
   const [disable, setDisabled] = useState(true);
 
@@ -34,6 +35,16 @@ const WeightBlock = (props) => {
   const closeModal = () => {
     setModalVisible(false);
     setWeight(initialWeight);
+    setDateValue(initialDate);
+  };
+
+  const setDate = (value) => {
+    setDateValue(value);
+    if (value != initialDate) {
+      setDisabled(false);
+    } else if (value == initialDate) {
+      setDisabled(true);
+    }
   };
 
   //enable edit button
@@ -69,7 +80,7 @@ const WeightBlock = (props) => {
         <Header title={'Weight:' + time} closeModal={closeModal} />
         <View style={styles.modalContainer}>
           <WeightLogBlock
-            date={date}
+            date={dateValue}
             setDate={setDate}
             weight={weightValue}
             setWeight={setWeight}
