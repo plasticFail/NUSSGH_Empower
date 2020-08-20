@@ -349,14 +349,8 @@ class DailyLog extends Component {
     if(this.state.inputNewMeal) {
       const {meal, mealType, mealRecordDate} = this.state;
       if (meal) {
-        const {beverage, main, side, dessert, isFavourite, mealName} = meal;
         const mealDataToLog = {
-          beverage,
-          main,
-          side,
-          dessert,
-          isFavourite,
-          mealName,
+          ...meal,
           mealType,
           recordDate: Moment(mealRecordDate).format('DD/MM/YYYY HH:mm:ss'),
         };
@@ -562,16 +556,14 @@ class DailyLog extends Component {
           )}
           {(this.state.currentStep === 5 && this.state.inputNewMeal) && (
               <MealLogDisplay data={{
-                value: meal ?  {
+                value: {
                   ...meal,
                   mealType,
                   mealRecordDate
-                } : this.state.lastMealLog.value,
-                date: meal ? Moment(this.state.mealRecordDate).format('YYYY/MM/DD')
-                    : this.state.lastMealLog.date,
-                time: meal ? Moment(this.state.mealRecordDate).format('h:mm a')
-                    : this.state.lastMealLog.time
-              }} isNewSubmit={meal !== null}/>
+                },
+                date:  Moment(this.state.mealRecordDate).format('YYYY/MM/DD'),
+                time: Moment(this.state.mealRecordDate).format('h:mm a'),
+              }} isNewSubmit={true}/>
           )}
           {(this.state.currentStep === 5 && this.state.inputNewMedication) && (
               <MedicationLogDisplay
