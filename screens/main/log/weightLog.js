@@ -1,41 +1,20 @@
 import React, {useState} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, Alert} from 'react-native';
-//third party libs
-import Moment from 'moment';
 //functions
-import {weightAddLogRequest} from '../../../netcalls/requestsLog';
-import {checkWeight} from '../../../commonFunctions/logFunctions';
-import {storeLastWeightLog} from '../../../storage/asyncStorageFunctions';
+import {handleSubmitWeight} from '../../../commonFunctions/logFunctions';
 //components
 import SuccessDialogue from '../../../components/successDialogue';
 import WeightLogBlock from '../../../components/logs/weightLogBlock';
-import LogDisplay from '../../../components/logs/logDisplay';
+
 
 const WeightLog = (props) => {
   const [date, setDate] = useState(new Date());
   const [weight, setWeight] = useState('');
   const [successShow, setSuccessShow] = useState(false);
 
-  const handleSubmit = () => {
-    //check date valid and weight format (1 dp)
-    console.log('---' + Number(weight));
-    if (checkWeight(weight)) {
-      let formatDate = Moment(date).format('DD/MM/YYYY HH:mm:ss');
-      weightAddLogRequest(Number(weight), formatDate).then((value) => {
-        if (value === true) {
-          setSuccessShow(true);
-        } else {
-          Alert.alert('Error', 'Unexpected Error Occured ', [
-            {text: 'Try Again Later'},
-          ]);
-        }
-      });
-
-      storeLastWeightLog({
-        value: weight,
-        date: Moment(date).format('YYYY/MM/DD'),
-        time: Moment(date).format('h:mm a'),
-      });
+  const handleSubmit = async() => {
+    if(await handleSubmitWeight(date, weight)){
+      setSuccessShow(true);
     }
   };
 

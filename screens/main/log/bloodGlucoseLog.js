@@ -2,15 +2,13 @@ import React, {useState} from 'react';
 import {View, StyleSheet, Text, TouchableOpacity, Alert} from 'react-native';
 //third party libs
 import Moment from 'moment';
-import {glucoseAddLogRequest} from '../../../netcalls/requestsLog';
 import {useNavigation} from '@react-navigation/native';
 //functions
-import {storeLastBgLog} from '../../../storage/asyncStorageFunctions';
-import {checkBloodGlucose} from '../../../commonFunctions/logFunctions';
+import {handleSubmitBloodGlucose} from '../../../commonFunctions/logFunctions';
 //components
 import SuccessDialogue from '../../../components/successDialogue';
 import BloodGlucoseLogBlock from '../../../components/logs/bloodGlucoseLogBlock';
-import LogDisplay from '../../../components/logs/logDisplay';
+
 
 const BloodGlucoseLog = (props) => {
   const navigation = useNavigation();
@@ -19,26 +17,13 @@ const BloodGlucoseLog = (props) => {
   const [successShow, setSuccessShow] = useState(false);
   Moment.locale('en');
 
-  const handleSubmit = () => {
-    if (checkBloodGlucose(bloodGlucose)) {
-      let formatDate = Moment(date).format('DD/MM/YYYY HH:mm:ss');
-      glucoseAddLogRequest(Number(bloodGlucose), formatDate).then((value) => {
-        if (value === true) {
-          if (bloodGlucose === '3.2') {
-            navigation.navigate('HypoglycemiaReason');
-          } else {
-            setSuccessShow(true);
-          }
-        } else {
-          setSuccessShow(true);
-        }
-      });
-      //store data in async storage.
-      storeLastBgLog({
-        value: bloodGlucose,
-        date: Moment(date).format('YYYY/MM/DD'),
-        time: Moment(date).format('h:mm a'),
-      });
+  const handleSubmit = async() => {
+    if(await handleSubmitBloodGlucose(date, bloodGlucose)){
+      if(bloodGlucose === '3.2'){
+        navigation.navigate('HypoglycemiaReason');
+      }else{
+        setSuccessShow(true);
+      }
     }
   };
 
