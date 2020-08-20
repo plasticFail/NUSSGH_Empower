@@ -33,6 +33,7 @@ const BgBlock = (props) => {
   //close itself
   const closeModal = () => {
     setModalVisible(false);
+    setBgValue(initialBg);
   };
 
   //handle edit

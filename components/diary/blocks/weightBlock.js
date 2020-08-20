@@ -33,6 +33,7 @@ const WeightBlock = (props) => {
   //close itself
   const closeModal = () => {
     setModalVisible(false);
+    setWeight(initialWeight);
   };
 
   //enable edit button
