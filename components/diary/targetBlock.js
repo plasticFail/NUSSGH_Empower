@@ -5,7 +5,6 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import {useNavigation} from '@react-navigation/native';
 import {getEntry4Day} from '../../netcalls/requestsDiary';
 import TargetContent from './targetContent';
-import {min} from 'moment';
 
 const within_target = 'Within Target';
 const missed = 'Missed';
