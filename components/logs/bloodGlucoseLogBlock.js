@@ -2,6 +2,7 @@ import React from 'react';
 import {View, StyleSheet, Text, TextInput} from 'react-native';
 //components
 import DateSelectionBlock from './dateSelectionBlock';
+import HypoglycemiaBlock from './hypoglycemiaBlock';
 
 const BloodGlucoseLogBlock = (props) => {
   return (
@@ -20,6 +21,15 @@ const BloodGlucoseLogBlock = (props) => {
         onChangeText={(value) => {
           props.setBloodGlucose(value);
         }}
+      />
+      <HypoglycemiaBlock
+        eatSelection={props.eatSelection}
+        setEatSelection={props.setEatSelection}
+        exerciseSelection={props.exerciseSelection}
+        setExerciseSelection={props.setExerciseSelection}
+        alcoholSelection={props.alcoholSelection}
+        setAlcoholSelection={props.setAlcoholSelection}
+        bloodGlucose={props.bloodGlucose}
       />
     </View>
   );

@@ -1,5 +1,12 @@
 import React, {useState} from 'react';
-import {View, StyleSheet, Text, TouchableOpacity, Alert} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  Alert,
+  Dimensions,
+} from 'react-native';
 //third party libs
 import Moment from 'moment';
 import {useNavigation} from '@react-navigation/native';
@@ -8,20 +15,24 @@ import {handleSubmitBloodGlucose} from '../../../commonFunctions/logFunctions';
 //components
 import SuccessDialogue from '../../../components/successDialogue';
 import BloodGlucoseLogBlock from '../../../components/logs/bloodGlucoseLogBlock';
-
+import {ScrollView} from 'react-native-gesture-handler';
 
 const BloodGlucoseLog = (props) => {
   const navigation = useNavigation();
   const [date, setDate] = useState(new Date());
   const [bloodGlucose, setBloodGlucose] = useState('');
   const [successShow, setSuccessShow] = useState(false);
+  const [eatSelection, setEatSelection] = useState(false);
+  const [exerciseSelection, setExerciseSelection] = useState(false);
+  const [alcoholSelection, setAlcoholSelection] = useState(false);
+
   Moment.locale('en');
 
-  const handleSubmit = async() => {
-    if(await handleSubmitBloodGlucose(date, bloodGlucose)){
-      if(bloodGlucose === '3.2'){
+  const handleSubmit = async () => {
+    if (await handleSubmitBloodGlucose(date, bloodGlucose)) {
+      if (bloodGlucose === '3.2') {
         navigation.navigate('HypoglycemiaReason');
-      }else{
+      } else {
         setSuccessShow(true);
       }
     }
@@ -29,18 +40,30 @@ const BloodGlucoseLog = (props) => {
 
   return (
     <View style={styles.screen}>
-      <BloodGlucoseLogBlock
-        date={date}
-        setDate={setDate}
-        bloodGlucose={bloodGlucose}
-        setBloodGlucose={setBloodGlucose}
-      />
+      <ScrollView
+        contentContainerStyle={{
+          width: Dimensions.get('window').width - 20,
+          backgroundColor: 'white',
+        }}>
+        <BloodGlucoseLogBlock
+          date={date}
+          setDate={setDate}
+          bloodGlucose={bloodGlucose}
+          setBloodGlucose={setBloodGlucose}
+          eatSelection={eatSelection}
+          setEatSelection={setEatSelection}
+          exerciseSelection={exerciseSelection}
+          setExerciseSelection={setExerciseSelection}
+          alcoholSelection={alcoholSelection}
+          setAlcoholSelection={setAlcoholSelection}
+        />
 
-      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-        <Text style={styles.buttonText}>Submit</Text>
-      </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+          <Text style={styles.buttonText}>Submit</Text>
+        </TouchableOpacity>
 
-      <SuccessDialogue visible={successShow} type="Blood Glucose" />
+        <SuccessDialogue visible={successShow} type="Blood Glucose" />
+      </ScrollView>
     </View>
   );
 };
@@ -48,11 +71,10 @@ const BloodGlucoseLog = (props) => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    flexDirection: 'column',
     width: '100%',
     alignItems: 'center',
-    padding: 20,
     backgroundColor: 'white',
+    padding: '2%',
   },
   button: {
     marginTop: '9%',
