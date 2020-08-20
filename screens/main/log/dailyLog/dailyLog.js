@@ -42,6 +42,7 @@ class DailyLog extends Component {
       mealType: getDefaultMealType(new Date().getHours()),
       meal: null,
       lastMealLog: null,
+      inputNewMeal: false,
 
       dateMedication: new Date(),
       selectedMedicationList: [],
@@ -51,7 +52,7 @@ class DailyLog extends Component {
       dateWeight: new Date(),
       weight: '',
       lastWeight: null,
-      inputWeight: false,
+      inputNewWeight: false,
     };
   }
 
@@ -64,18 +65,14 @@ class DailyLog extends Component {
         this.setState({enableNext: true});
       } else {
         this.setState({
-          showNewInput: this.handleShowNewInput(),
+          showNewInput: true,
         });
       }
-    });
+    })
 
     getLastMedicationLog().then((data) => {
       if (this.isToday(data.date)) {
         this.setState({lastMedication: data});
-      } else {
-        this.setState({
-          showNewInput: this.handleShowNewInput(),
-        });
       }
     });
 
@@ -136,6 +133,9 @@ class DailyLog extends Component {
         break;
       case 4:
         return checkWeightText(this.state.weight) === '';
+        break;
+      case 5:
+        return true;
         break;
     }
     return false;
@@ -387,15 +387,19 @@ class DailyLog extends Component {
   };
 
   handleNext = () => {
+    console.log('handleNext : ' + this.state.currentStep + ' showNewInput : ' + this.state.showNewInput);
     switch (this.state.currentStep) {
       case 1:
         this.setState({inputNewBloodGlucose: this.state.showNewInput});
+        break;
+      case 2:
+        this.setState({inputNewMeal: this.state.showNewInput});
         break;
       case 3:
         this.setState({inputNewMedication: this.state.showNewInput});
         break;
       case 4:
-        this.setState({inputWeight: this.state.showNewInput});
+        this.setState({inputNewWeight: this.state.showNewInput});
         break;
     }
   };
@@ -408,7 +412,7 @@ class DailyLog extends Component {
         }
         break;
       case 2:
-        if (!this.state.lastMealLog) {
+        if (!this.state.lastMealLog || this.state.inputNewMeal) {
           return true;
         }
         break;
@@ -418,7 +422,7 @@ class DailyLog extends Component {
         }
         break;
       case 4:
-        if (!this.state.lastWeight || this.state.inputWeight) {
+        if (!this.state.lastWeight || this.state.inputNewWeight) {
           return true;
         }
         break;
@@ -519,8 +523,7 @@ class DailyLog extends Component {
               }}
             />
           )}
-          {this.state.currentStep === 5 && (
-            <>
+          {(this.state.currentStep === 5 && this.state.inputNewBloodGlucose) && (
               <BloodGlucoseLogDisplay
                 data={{
                   value: this.state.bloodGlucose,
@@ -531,6 +534,8 @@ class DailyLog extends Component {
                 }}
                 isNewSubmit={true}
               />
+          )}
+          {(this.state.currentStep === 5 && this.state.inputNewMeal) && (
               <MealLogDisplay data={{
                 value: meal ?  {
                   ...meal,
@@ -542,6 +547,8 @@ class DailyLog extends Component {
                 time: meal ? Moment(this.state.mealRecordDate).format('h:mm a')
                     : this.state.lastMealLog.time
               }} isNewSubmit={meal !== null}/>
+          )}
+          {(this.state.currentStep === 5 && this.state.inputNewMedication) && (
               <MedicationLogDisplay
                 data={{
                   value: this.state.selectedMedicationList,
@@ -550,6 +557,8 @@ class DailyLog extends Component {
                 }}
                 isNewSubmit={true}
               />
+          )}
+          {(this.state.currentStep === 5 && this.state.inputNewWeight) && (
               <WeightLogDisplay
                 data={{
                   value: this.state.weight,
@@ -558,7 +567,6 @@ class DailyLog extends Component {
                 }}
                 isNewSubmit={true}
               />
-            </>
           )}
 
           {this.state.showNewInput && (
