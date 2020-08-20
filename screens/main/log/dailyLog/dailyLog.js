@@ -343,7 +343,7 @@ class DailyLog extends Component {
 
     if(this.state.inputNewWeight){
       promises.push(new Promise((resolve, reject) => {
-        resolve(handleSubmitMedication(this.state.dateWeight, this.state.dateWeight));
+        resolve(handleSubmitWeight(this.state.dateWeight, this.state.dateWeight));
       }));
     }
 
