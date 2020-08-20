@@ -51,8 +51,9 @@ function renderItem(
   if (type === 'Within Target') {
     return (
       <View>
-        {bgPass === true && renderCountLogo(bgPassCount, type, bg)}
-        {weightPass === true && renderCountLogo(weightPassCount, type, weight)}
+        {(bgPassCount != 0) === true && renderCountLogo(bgPassCount, type, bg)}
+        {(weightPassCount != 0) === true &&
+          renderCountLogo(weightPassCount, type, weight)}
         {activityPass === true &&
           renderCountLogo(activityPassCount, type, activity)}
       </View>
