@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, StyleSheet, Text} from 'react-native';
 import CalorieReport from "../../components/dashboard/reports/CalorieReport";
+import {SimplePieChart, PieChart} from "../../components/dashboard/reports/SimplePieChart";
 
 const ReportsScreen = (props) => {
   return (
@@ -10,7 +11,15 @@ const ReportsScreen = (props) => {
         <Text>Reports</Text>
          */
       }
-      <CalorieReport />
+      {
+        //<CalorieReport />
+      }
+    {
+        /* piechart
+            <SimplePieChart />
+              <PieChart />
+         */
+    }
     </View>
   );
 };

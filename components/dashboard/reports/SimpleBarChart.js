@@ -29,7 +29,7 @@ const data = [
     },
     {
         x: new Date(2020, 7, 15),
-        y: 4771,
+        y: 0,
         y2: 30,
     },
     {
@@ -57,7 +57,7 @@ const barGap = 20;
 let xAxisTextFontSize = 12;
 const yAxisTextFontSize = 12;
 const stepSize = 500;
-const yAxisStartsFrom = 500;
+const yAxisStartsFrom = 0;
 
 // Scale axis functions from d3.
 const minX = data[0].x;
