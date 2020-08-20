@@ -3,10 +3,8 @@ import {View, TouchableOpacity, Text, StyleSheet, Alert} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 //third party library
 import Entypo from 'react-native-vector-icons/Entypo';
-import Moment from 'moment';
 //functions
-import {medicationAddLogRequest} from '../../../../netcalls/requestsLog';
-import {storeLastMedicationLog} from '../../../../storage/asyncStorageFunctions';
+import {handleSubmitMedication} from '../../../../commonFunctions/logFunctions';
 //components
 import SuccessDialogue from '../../../../components/successDialogue';
 import MedicationLogBlock from '../../../../components/logs/medicationLogBlock';
@@ -22,32 +20,10 @@ const MedicationLog = (props) => {
     setSelectedMedicationList([...list]);
   };
 
-  const handleSubmit = () => {
-    for (let x of selectedMedicationList) {
-      x.recordDate = Moment(date).format('DD/MM/YYYY HH:mm:ss');
+  const handleSubmit = async() => {
+    if(await handleSubmitMedication(date, selectedMedicationList)){
+      setShowSuccess(true);
     }
-
-    //store latest in async storage [before removing img to send to db]
-    storeLastMedicationLog({
-      value: selectedMedicationList,
-      date: Moment(date).format('YYYY/MM/DD'),
-      time: Moment(date).format('h:mm a'),
-    });
-
-    //remove image to send back to database
-    selectedMedicationList.map(function (item) {
-      delete item.image_url;
-      return item;
-    });
-    medicationAddLogRequest(selectedMedicationList).then((value) => {
-      if (value) {
-        setShowSuccess(true);
-      } else {
-        Alert.alert('Error', 'Unexpected Error Occured', [
-          {text: 'Try again later'},
-        ]);
-      }
-    });
   };
 
   return (
