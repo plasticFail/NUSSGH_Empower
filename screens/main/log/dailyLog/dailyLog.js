@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {View, Text, StyleSheet, Image, Alert, ScrollView} from 'react-native';
 // third party lib
 import Moment from 'moment';
-import {resolve} from 'react-native-svg/src/lib/resolve';
 //functions
 import {
   getLastBgLog,
