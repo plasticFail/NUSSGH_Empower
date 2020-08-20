@@ -50,11 +50,8 @@ const HomeScreen = (props) => {
   Foundation.loadFont();
   Entypo.loadFont();
 
-  console.disableYellowBox = true;
-  console.ignoredYellowBox = ['ref.measureLayout'];
-
   return (
-    <FlatList
+    <ScrollView
       contentContainerStyle={{
         flexGrow: 1,
         //justifyContent: 'space-between',
@@ -99,7 +96,7 @@ const HomeScreen = (props) => {
       <View style={styles.chartContainter}>
         <NutritionIntakeCard onPress={() => alert('pressed nutrient card!')} />
       </View>
-    </FlatList>
+    </ScrollView>
   );
 };
 
