@@ -9,8 +9,7 @@ import {
   getLastMealLog,
   getLastMedicationLog,
 } from '../../../../storage/asyncStorageFunctions';
-import {mealAddLogRequest} from '../../../../netcalls/requestsLog';
-import {getDefaultMealType, isValidMeal} from "../../../../commonFunctions/mealLogFunctions";
+import {getDefaultMealType, handleSubmitMealLog, isValidMeal} from "../../../../commonFunctions/mealLogFunctions";
 import {checkBloodGlucoseText, checkWeightText, handleSubmitBloodGlucose, handleSubmitMedication, handleSubmitWeight} from '../../../../commonFunctions/logFunctions';
 //components
 import FormBlockFix from '../../../../components/logs/formBlockFix';
@@ -364,7 +363,7 @@ class DailyLog extends Component {
         // Append async promise to promises array.
         promises.push(
             new Promise((resolve, reject) => {
-              resolve(mealAddLogRequest(mealDataToLog));
+              resolve(handleSubmitMealLog(mealDataToLog, mealRecordDate));
             }),
         );
       }

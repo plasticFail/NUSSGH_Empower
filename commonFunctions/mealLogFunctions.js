@@ -1,3 +1,7 @@
+import {mealAddLogRequest} from "../netcalls/requestsLog";
+import {storeLastMealLog} from "../storage/asyncStorageFunctions";
+import Moment from "moment";
+
 function getDefaultMealType(hours) {
     let defaultMealType = null;
     if (hours >= 12 && hours < 18) {
@@ -16,4 +20,20 @@ function isValidMeal(meal) {
     return meal && meal.beverage.length + meal.main.length + meal.side.length + meal.dessert.length !== 0;
 }
 
-export {getDefaultMealType, isValidMeal}
+async function handleSubmitMealLog(mealData, recordDate) {
+    if (isValidMeal(mealData)) {
+        let resp = await mealAddLogRequest(mealData);
+        if (resp) {
+            let storeResp = await storeLastMealLog(
+                {
+                    value: {...mealData},
+                    date: Moment(recordDate).format("YYYY/MM/DD"),
+                    time: Moment(recordDate).format("h:mm a")
+                });
+            return resp;
+        }
+    }
+    return false;
+}
+
+export {getDefaultMealType, isValidMeal, handleSubmitMealLog}
