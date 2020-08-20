@@ -104,22 +104,20 @@ const checkDosage = (dosageString) => {
 const handleSubmitBloodGlucose = async(date, bloodGlucose) => {
   if (checkBloodGlucose(bloodGlucose)) {
     let formatDate = Moment(date).format('DD/MM/YYYY HH:mm:ss');
-    glucoseAddLogRequest(Number(bloodGlucose), formatDate).then((value) => {
-      if (value) {
-        storeLastBgLog({
-          value: bloodGlucose,
-          date: Moment(date).format('YYYY/MM/DD'),
-          time: Moment(date).format('h:mm a'),
-        });
-      }else {
-        Alert.alert('Error', 'Unexpected Error Occured', [
-          {text: 'Try again later'},
-        ]);
-      }
-      return value;
-    });
+    if(await glucoseAddLogRequest(Number(bloodGlucose), formatDate)){
+      storeLastBgLog({
+        value: bloodGlucose,
+        date: Moment(date).format('YYYY/MM/DD'),
+        time: Moment(date).format('h:mm a'),
+      });
+      return true;
+    }else{
+      Alert.alert('Error', 'Unexpected Error Occured', [
+        {text: 'Try again later'},
+      ]);
+      return false;
+    }
   }
-  return false;
 };
 
 const handleSubmitMedication = async(date, selectedMedicationList) => {
@@ -127,46 +125,45 @@ const handleSubmitMedication = async(date, selectedMedicationList) => {
     x.recordDate = Moment(date).format('DD/MM/YYYY HH:mm:ss');
   }
 
-  medicationAddLogRequest(selectedMedicationList).then((value) => {
-    if (value) {
-      storeLastMedicationLog({
-        value: selectedMedicationList,
-        date: Moment(date).format('YYYY/MM/DD'),
-        time: Moment(date).format('h:mm a'),
-      });
-      //remove image to send back to database
-      selectedMedicationList.map(function (item) {
-        delete item.image_url;
-        return item;
-      });
-    }else {
-      Alert.alert('Error', 'Unexpected Error Occured', [
-        {text: 'Try again later'},
-      ]);
-    }
-    return value;
+  //remove image to send back to database
+  let listCopySend = JSON.parse(JSON.stringify(selectedMedicationList));
+  listCopySend.map(function (item) {
+    delete item.image_url;
+    return item;
   });
+
+  if(await medicationAddLogRequest(listCopySend)){
+    storeLastMedicationLog({
+      value: selectedMedicationList,
+      date: Moment(date).format('YYYY/MM/DD'),
+      time: Moment(date).format('h:mm a'),
+    });
+    return true;
+  }else {
+    Alert.alert('Error', 'Unexpected Error Occured', [
+      {text: 'Try again later'},
+    ]);
+    return false;
+  }
 }
 
 const handleSubmitWeight = async(date, weight) => {
   if (checkWeight(weight)) {
     let formatDate = Moment(date).format('DD/MM/YYYY HH:mm:ss');
-    weightAddLogRequest(Number(weight), formatDate).then((value) => {
-      if (value) {
-        storeLastWeightLog({
-          value: weight,
-          date: Moment(date).format('YYYY/MM/DD'),
-          time: Moment(date).format('h:mm a'),
-        });
-      } else {
-        Alert.alert('Error', 'Unexpected Error Occured ', [
-          {text: 'Try Again Later'},
-        ]);
-      }
-      return value;
-    });
+    if(await weightAddLogRequest(Number(weight), formatDate)){
+      storeLastWeightLog({
+        value: weight,
+        date: Moment(date).format('YYYY/MM/DD'),
+        time: Moment(date).format('h:mm a'),
+      });
+      return true;
+    }else {
+      Alert.alert('Error', 'Unexpected Error Occured ', [
+        {text: 'Try Again Later'},
+      ]);
+      return false;
+    }
   }
-  return false;
 };
 
 export {
