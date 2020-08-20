@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {View, Text, StyleSheet, Image, Alert, ScrollView} from 'react-native';
 // third party lib
 import Moment from 'moment';
+import {resolve} from 'react-native-svg/src/lib/resolve';
 //functions
 import {
   getLastBgLog,
@@ -11,8 +12,9 @@ import {
 } from '../../../../storage/asyncStorageFunctions';
 import {mealAddLogRequest} from '../../../../netcalls/requestsLog';
 import {getDefaultMealType, isValidMeal} from "../../../../commonFunctions/mealLogFunctions";
+import {checkBloodGlucoseText, checkWeightText, handleSubmitBloodGlucose, handleSubmitMedication, handleSubmitWeight} from '../../../../commonFunctions/logFunctions';
 //components
-import FormBlock from '../../../../components/logs/formBlock';
+import FormBlockFix from '../../../../components/logs/formBlockFix';
 import BloodGlucoseLogBlock from '../../../../components/logs/bloodGlucoseLogBlock';
 import BloodGlucoseLogDisplay from '../../../../components/logs/bloodGlucoseLogDisplay';
 import DailyMealLogComponent from "../../../../components/logs/meal/DailyMealLogComponent";
@@ -21,8 +23,8 @@ import WeightLogBlock from '../../../../components/logs/weightLogBlock';
 import WeightLogDisplay from '../../../../components/logs/weightLogDisplay';
 import MedicationLogDisplay from '../../../../components/logs/medicationLogDisplay';
 import MedicationLogBlock from '../../../../components/logs/medicationLogBlock';
-import {checkBloodGlucoseText, checkWeightText} from '../../../../commonFunctions/logFunctions';
 import MealLogDisplay from "../../../../components/logs/meal/MealLogDisplay";
+
 
 class DailyLog extends Component {
   constructor(props) {
@@ -327,49 +329,69 @@ class DailyLog extends Component {
     let promises = [];
 
     // Blood glucose data to pass to endpoint
-    // To do
-
-    // Meal data to pass to endpoint
-    const {meal, mealType, mealRecordDate} = this.state;
-    if (meal) {
-      const {beverage, main, side, dessert, isFavourite, mealName} = meal;
-      const mealDataToLog = {
-        beverage,
-        main,
-        side,
-        dessert,
-        isFavourite,
-        mealName,
-        mealType,
-        recordDate: Moment(mealRecordDate).format('DD/MM/YYYY HH:mm:ss'),
-      };
-      // Append async promise to promises array.
-      promises.push(
-        new Promise((resolve, reject) => {
-          resolve(mealAddLogRequest(mealDataToLog));
-        }),
-      );
+    if(this.state.inputNewBloodGlucose){
+      promises.push(new Promise((resolve, reject) => {
+        resolve(handleSubmitBloodGlucose(this.state.dateBloodGlucose, this.state.bloodGlucose));
+      }));
     }
 
-    // Medication data to pass to endpoint
-    // To do
+    if(this.state.inputNewMedication){
+      promises.push(new Promise((resolve, reject) => {
+        resolve(handleSubmitMedication(this.state.dateMedication, this.state.selectedMedicationList));
+      }));
+    }
 
-    // Weight data to pass to endpoint
-    // To do
+    if(this.state.inputNewWeight){
+      promises.push(new Promise((resolve, reject) => {
+        resolve(handleSubmitWeight(this.state.dateWeight, this.state.weight));
+      }));
+    }
 
-    // Call all requests asynchronously.
-    Promise.all(promises)
-      .then((respArr) => {
-        // All have been recorded
-        this.props.navigation.goBack();
-        Alert.alert('Log success', 'Your logs have been recorded', [
-          {text: 'Okay'},
-        ]);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    // Meal data to pass to endpoint
+    if(this.state.inputNewMeal) {
+      const {meal, mealType, mealRecordDate} = this.state;
+      if (meal) {
+        const {beverage, main, side, dessert, isFavourite, mealName} = meal;
+        const mealDataToLog = {
+          beverage,
+          main,
+          side,
+          dessert,
+          isFavourite,
+          mealName,
+          mealType,
+          recordDate: Moment(mealRecordDate).format('DD/MM/YYYY HH:mm:ss'),
+        };
+        // Append async promise to promises array.
+        promises.push(
+            new Promise((resolve, reject) => {
+              resolve(mealAddLogRequest(mealDataToLog));
+            }),
+        );
+      }
+    }
+
+    if(promises.length > 0) {
+      // Call all requests asynchronously.
+      Promise.all(promises)
+          .then((respArr) => {
+            // All have been recorded
+            this.props.navigation.goBack();
+            Alert.alert('Log success', 'Your logs have been recorded', [
+              {text: 'Okay'},
+            ]);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+    }else{
+      this.props.navigation.goBack();
+      Alert.alert('No new records', 'You have no new records', [
+        {text: 'Okay'},
+      ]);
+    }
   };
+
 
   incrementStepper = () => {
     this.handleNext();
@@ -408,25 +430,30 @@ class DailyLog extends Component {
     switch (step) {
       case 1:
         if (!this.state.lastBloodGlucose || this.state.inputNewBloodGlucose) {
+          console.log('lastBloodGlucose : ' + this.state.lastBloodGlucose + ' inputNewBloodGlucose : ' + this.state.inputNewBloodGlucose);
           return true;
         }
         break;
       case 2:
         if (!this.state.lastMealLog || this.state.inputNewMeal) {
+          console.log('lastMealLog : ' + this.state.lastMealLog + ' inputNewMeal : ' + this.state.inputNewMeal);
           return true;
         }
         break;
       case 3:
         if (!this.state.lastMedication || this.state.inputNewMedication) {
+          console.log('lastMedication : ' + this.state.lastMedication + ' inputNewMedication : ' + this.state.inputNewMedication);
           return true;
         }
         break;
       case 4:
         if (!this.state.lastWeight || this.state.inputNewWeight) {
+          console.log('lastWeight : ' + this.state.lastWeight + ' inputNewWeight : ' + this.state.inputNewWeight);
           return true;
         }
         break;
     }
+    console.log('handleShowNewInput : not trigger ' + step);
     return false;
   };
 
@@ -457,10 +484,10 @@ class DailyLog extends Component {
                 styles.shadow,
                 {marginBottom: '4%', paddingEnd: '1%'},
               ]}>
-              <FormBlock
+              <FormBlockFix
                 question={this.formText()}
                 getFormSelection={this.handleFormBlockChange}
-                selectNo={true}
+                selectYes={this.state.showNewInput}
                 color={'#aad326'}
               />
             </View>
