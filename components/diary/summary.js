@@ -9,37 +9,68 @@ const Summary = (props) => {
     bgPass,
     bgMiss,
     avgBg,
-    weightPass,
     weightMiss,
-    activityPass,
+    weightPassCount,
+    weightFailCount,
     activityMiss,
+    activityPassCount,
+    activityFailCount,
   } = props;
   console.log('In Summary Component: ');
+  console.log(activityFailCount);
 
   return (
     <>
       <View style={[styles.container, styles.shadow]}>
         {renderBloodGlucoseResult(bgPass, bgMiss, avgBg)}
-        {renderActivityResult(activityPass, activityMiss)}
-        {renderWeightResult(weightPass, weightMiss)}
+        {renderActivityResult(
+          activityPassCount,
+          activityFailCount,
+          activityMiss,
+        )}
+        {renderWeightResult(weightPassCount, weightFailCount, weightMiss)}
       </View>
     </>
   );
 };
 
-function renderWeightResult(weightPass, weightMiss) {
+function getPercentage(passcount, failcount) {
+  return Math.floor((passcount / (failcount + passcount)) * 100);
+}
+
+function renderWeightResult(weightPassCount, weightFailCount, weightMiss) {
   if (weightMiss) {
     return <Result success={false} message={'Missing weight log.'} />;
   } else {
-    return <Result success={true} message={'Weight log completed.'} />;
+    let percentage = getPercentage(weightPassCount, weightFailCount);
+    return (
+      <>
+        <Result success={true} message={'Weight log completed.'} />
+        <Text style={styles.percentStyle}>
+          {percentage} % of your weight logs are above 40 kg and below 200 kg
+        </Text>
+      </>
+    );
   }
 }
 
-function renderActivityResult(activityPass, activityMiss) {
+function renderActivityResult(
+  activityPassCount,
+  activityFailCount,
+  activityMiss,
+) {
   if (activityMiss) {
     return <Result success={false} message={'Missing activity log.'} />;
   } else {
-    return <Result success={true} message={'Activity log completed.'} />;
+    let percentage = getPercentage(activityPassCount, activityFailCount);
+    return (
+      <>
+        <Result success={true} message={'Activity log completed.'} />
+        <Text style={styles.percentStyle}>
+          {percentage} % of your activity logs are within target range
+        </Text>
+      </>
+    );
   }
 }
 
@@ -81,5 +112,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+  },
+  percentStyle: {
+    marginStart: ' 10%',
+    fontSize: 13,
+    color: 'green',
   },
 });

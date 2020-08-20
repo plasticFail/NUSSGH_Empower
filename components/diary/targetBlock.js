@@ -29,14 +29,13 @@ class TargetBlock extends Component {
       bgMiss: false,
       bgFailCount: 0,
 
-      weightPass: false,
       weightPassCount: 0,
       weightMiss: false,
       weightFailCount: 0,
 
-      activityPass: false,
       activityPassCount: 0,
       activityMiss: false,
+      activityFailCount: 0,
     };
     //if functional component -> states not updated correctly with hook
     //useEffect updates after render*
@@ -119,7 +118,6 @@ class TargetBlock extends Component {
       }
 
       this.setState({weightPassCount: passCount});
-      this.setState({weightPass: true});
       this.setState({
         weightFailCount: this.state.weightLogs.length - passCount,
       });
@@ -130,9 +128,17 @@ class TargetBlock extends Component {
 
   getActivityResult = () => {
     let length = this.state.activityLogs.length;
+    let minstep = Math.floor(2000 / 7);
+    let passCount = 0;
     if (length != 0) {
+      for (var x of this.state.activityLogs) {
+        if (x.steps >= minstep) {
+          passCount++;
+        }
+      }
       this.setState({activityPass: true});
-      this.setState({activityPassCount: length});
+      this.setState({activityPassCount: passCount});
+      this.setState({activityFailCount: length - passCount});
     } else {
       this.setState({activityMiss: true});
     }
@@ -152,10 +158,14 @@ class TargetBlock extends Component {
       bgPass: this.state.bgPass,
       bgMiss: this.state.bgMiss,
       avgBg: this.state.avgBg,
-      weightPass: this.state.weightPass,
+
       weightMiss: this.state.weightMiss,
-      activityPass: this.state.activityPass,
+      weightPassCount: this.state.weightPassCount,
+      weightFailCount: this.state.weightFailCount,
+
       activityMiss: this.state.activityMiss,
+      activityPassCount: this.state.activityPassCount,
+      activityFailCount: this.state.activityFailCount,
     });
   };
 

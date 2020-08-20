@@ -98,10 +98,12 @@ class DiaryDetail extends Component {
       bgPass,
       bgMiss,
       avgBg,
-      weightPass,
       weightMiss,
-      activityPass,
+      weightPassCount,
+      weightFailCount,
       activityMiss,
+      activityPassCount,
+      activityFailCount,
     } = this.props.route.params;
     return (
       <View style={styles.screen}>
@@ -110,10 +112,12 @@ class DiaryDetail extends Component {
           bgPass={bgPass}
           bgMiss={bgMiss}
           avgBg={avgBg}
-          weightPass={weightPass}
           weightMiss={weightMiss}
-          activityPass={activityPass}
+          weightPassCount={weightPassCount}
+          weightFailCount={weightFailCount}
           activityMiss={activityMiss}
+          activityPassCount={activityPassCount}
+          activityFailCount={activityFailCount}
         />
         <FlatList
           listKey={(item, index) => index.toString()}
