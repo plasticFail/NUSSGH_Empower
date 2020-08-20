@@ -74,8 +74,8 @@ const WeightBlock = (props) => {
       <Modal
         isVisible={modalVisible}
         animationIn="slideInUp"
-        onBackdropPress={() => setModalVisible(false)}
-        onBackButtonPress={() => setModalVisible(false)}
+        onBackdropPress={() => closeModal()}
+        onBackButtonPress={() => closeModal()}
         style={{justifyContent: 'flex-end'}}>
         <Header title={'Weight:' + time} closeModal={closeModal} />
         <View style={styles.modalContainer}>

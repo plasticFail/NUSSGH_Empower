@@ -75,8 +75,8 @@ const BgBlock = (props) => {
       <Modal
         isVisible={modalVisible}
         animationIn="slideInUp"
-        onBackdropPress={() => setModalVisible(false)}
-        onBackButtonPress={() => setModalVisible(false)}
+        onBackdropPress={() => closeModal()}
+        onBackButtonPress={() => closeModal()}
         style={{justifyContent: 'flex-end'}}>
         <Header title={'Blood Glucose:' + time} closeModal={closeModal} />
         <View style={styles.modalContainer}>
