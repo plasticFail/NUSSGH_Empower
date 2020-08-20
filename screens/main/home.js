@@ -4,7 +4,12 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Foundation from 'react-native-vector-icons/Foundation';
-import {TouchableOpacity, FlatList} from 'react-native-gesture-handler';
+import {
+  ScrollView,
+  TouchableOpacity,
+  FlatList,
+} from 'react-native-gesture-handler';
+import NutritionIntakeCard from '../../components/dashboard/todayOverview/NutritionIntakeCard';
 
 const buttonList = [
   {
@@ -52,51 +57,56 @@ const HomeScreen = (props) => {
     <FlatList
       contentContainerStyle={{
         flexGrow: 1,
-        justifyContent: 'space-between',
+        //justifyContent: 'space-between',
         backgroundColor: 'white',
-      }}
-      ListEmptyComponent={
-        <>
-          <View style={[styles.buttonContainer, styles.shadow]}>
-            <FlatList
-              keyExtractor={(item, index) => item.id}
-              data={buttonList}
-              contentContainerStyle={{
-                flexDirection: 'row',
-                justifyContent: 'space-around',
-                marginTop: '2%',
-              }}
-              renderItem={({item}) => (
-                <View>
-                  <TouchableOpacity style={[styles.buttonStyle]}>
-                    {item.iconName == 'game-controller' ? (
-                      <Entypo name={item.iconName} size={28} />
-                    ) : item.iconName != 'target-two' ? (
-                      <Icon name={item.iconName} size={30} />
-                    ) : (
-                      <Foundation name="target-two" size={30} />
-                    )}
-                  </TouchableOpacity>
-                  <Text>{item.name}</Text>
-                </View>
-              )}
-            />
-          </View>
-          <Text style={styles.text}>Today's Overview</Text>
-          <View
-            style={[
-              styles.chartContainter,
-              styles.shadow,
-              styles.contentContainer,
-            ]}></View>
-        </>
-      }></FlatList>
+      }}>
+      <View style={[styles.buttonContainer, styles.shadow]}>
+        <FlatList
+          keyExtractor={(item, index) => item.id}
+          data={buttonList}
+          contentContainerStyle={{
+            flexDirection: 'row',
+            justifyContent: 'space-around',
+            alignItems: 'center',
+            flexGrow: 1,
+          }}
+          renderItem={({item}) => (
+            <View>
+              <TouchableOpacity style={[styles.buttonStyle]}>
+                {item.iconName == 'game-controller' ? (
+                  <Entypo name={item.iconName} size={28} />
+                ) : item.iconName != 'target-two' ? (
+                  <Icon name={item.iconName} size={30} />
+                ) : (
+                  <Foundation name="target-two" size={30} />
+                )}
+              </TouchableOpacity>
+              <Text>{item.name}</Text>
+            </View>
+          )}
+        />
+      </View>
+
+      <Text style={styles.text}>Today's Overview</Text>
+      {/*
+       <View
+        style={[
+          styles.chartContainter,
+          styles.shadow,
+          styles.contentContainer,
+        ]}></View>
+        */}
+      <View style={styles.chartContainter}>
+        <NutritionIntakeCard onPress={() => alert('pressed nutrient card!')} />
+      </View>
+    </FlatList>
   );
 };
 
 const styles = StyleSheet.create({
   buttonContainer: {
-    flex: 0.2,
+    height: '12%',
+    justifyContent: 'center',
     backgroundColor: '#f4fcda',
     borderRadius: 20,
     margin: '4%',
@@ -131,8 +141,9 @@ const styles = StyleSheet.create({
     paddingEnd: '1%',
   },
   chartContainter: {
-    flex: 4,
-    backgroundColor: 'white',
+    flex: 1,
+    marginLeft: '5%',
+    marginRight: '5%',
   },
   text: {
     marginStart: '5%',

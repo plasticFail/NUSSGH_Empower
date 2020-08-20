@@ -10,21 +10,19 @@ import {
   getLastMedicationLog,
 } from '../../../../storage/asyncStorageFunctions';
 import {mealAddLogRequest} from '../../../../netcalls/requestsLog';
+import {getDefaultMealType, isValidMeal} from "../../../../commonFunctions/mealLogFunctions";
 //components
 import FormBlock from '../../../../components/logs/formBlock';
 import BloodGlucoseLogBlock from '../../../../components/logs/bloodGlucoseLogBlock';
 import BloodGlucoseLogDisplay from '../../../../components/logs/bloodGlucoseLogDisplay';
-import MealLogRoot from '../meal/MealLogRoot';
+import DailyMealLogComponent from "../../../../components/logs/meal/DailyMealLogComponent";
 import {BackAndForwardButton} from '../../../../components/BackAndForwardButtons';
-import PreviousMealBlock from '../meal/PreviousMealBlock';
 import WeightLogBlock from '../../../../components/logs/weightLogBlock';
 import WeightLogDisplay from '../../../../components/logs/weightLogDisplay';
 import MedicationLogDisplay from '../../../../components/logs/medicationLogDisplay';
 import MedicationLogBlock from '../../../../components/logs/medicationLogBlock';
-import {
-  checkBloodGlucoseText,
-  checkWeightText,
-} from '../../../../commonFunctions/logFunctions';
+import {checkBloodGlucoseText, checkWeightText} from '../../../../commonFunctions/logFunctions';
+import MealLogDisplay from "../../../../components/logs/meal/MealLogDisplay";
 
 class DailyLog extends Component {
   constructor(props) {
@@ -40,11 +38,10 @@ class DailyLog extends Component {
       lastBloodGlucose: null,
       inputNewBloodGlucose: false,
 
-      mealRecordDate: null,
-      mealType: null,
+      mealRecordDate: new Date(),
+      mealType: getDefaultMealType(new Date().getHours()),
       meal: null,
       lastMealLog: null,
-      toRecordMealLog: false,
 
       dateMedication: new Date(),
       selectedMedicationList: [],
@@ -87,10 +84,13 @@ class DailyLog extends Component {
         this.setState({lastWeight: data});
       }
     });
+
     getLastMealLog().then((data) => {
-      this.setState({
-        lastMealLog: data,
-      });
+      if (this.isToday(data.date)) {
+        this.setState({
+          lastMealLog: data,
+        });
+      }
     });
   }
 
@@ -129,7 +129,7 @@ class DailyLog extends Component {
         return checkBloodGlucoseText(this.state.bloodGlucose) === '';
         break;
       case 2:
-        return true;
+        return isValidMeal(this.state.meal);
         break;
       case 3:
         return this.state.selectedMedicationList.length > 0;
@@ -235,22 +235,9 @@ class DailyLog extends Component {
   };
 
   handleFormBlockChange = (boolValue) => {
-    if (this.state.showNewInput === boolValue) {
-      return;
-    }
-
-    switch (this.state.currentStep) {
-      case 2:
-        this.setState({
-          showNewInput: boolValue,
-          toRecordMealLog: boolValue,
-        });
-        break;
-      default:
-        this.setState({
-          showNewInput: boolValue,
-        });
-    }
+    this.setState({
+      showNewInput: boolValue
+    })
   };
 
   showLastLog = (step) => {
@@ -343,8 +330,8 @@ class DailyLog extends Component {
     // To do
 
     // Meal data to pass to endpoint
-    const {meal, mealType, mealRecordDate, toRecordMealLog} = this.state;
-    if (meal && toRecordMealLog) {
+    const {meal, mealType, mealRecordDate} = this.state;
+    if (meal) {
       const {beverage, main, side, dessert, isFavourite, mealName} = meal;
       const mealDataToLog = {
         beverage,
@@ -478,7 +465,7 @@ class DailyLog extends Component {
           {this.showLastLog(1) && (
             <BloodGlucoseLogDisplay data={this.state.lastBloodGlucose} />
           )}
-          {this.showLastLog(2) && <PreviousMealBlock />}
+          {this.showLastLog(2) && <MealLogDisplay data={this.state.lastMealLog} />}
           {this.showLastLog(3) && (
             <MedicationLogDisplay data={this.state.lastMedication} />
           )}
@@ -499,9 +486,7 @@ class DailyLog extends Component {
             />
           )}
           {this.showNewLogInput(2) && (
-            <MealLogRoot
-              containerStyle={{padding: 0}}
-              parentScreen="DailyLog"
+            <DailyMealLogComponent
               onMealUpdateListener={this.setMealCallback}
               onMealTypeUpdateListener={this.setMealTypeCallback}
               onDateTimeUpdateListener={this.setMealRecordDateCallback}
@@ -546,6 +531,17 @@ class DailyLog extends Component {
                 }}
                 isNewSubmit={true}
               />
+              <MealLogDisplay data={{
+                value: meal ?  {
+                  ...meal,
+                  mealType,
+                  mealRecordDate
+                } : this.state.lastMealLog.value,
+                date: meal ? Moment(this.state.mealRecordDate).format('YYYY/MM/DD')
+                    : this.state.lastMealLog.date,
+                time: meal ? Moment(this.state.mealRecordDate).format('h:mm a')
+                    : this.state.lastMealLog.time
+              }} isNewSubmit={meal !== null}/>
               <MedicationLogDisplay
                 data={{
                   value: this.state.selectedMedicationList,
@@ -575,7 +571,7 @@ class DailyLog extends Component {
               overrideBackwardTitle="Cancel"
               enableForward={this.enableNext}
             />
-          ) : currentStep === 5 ? ( // Only render the back button
+          ) : currentStep === 5 ? (
             <BackAndForwardButton
               onPressBack={this.decrementStepper}
               onPressForward={this.handleSubmit}
