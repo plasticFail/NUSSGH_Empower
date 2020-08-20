@@ -67,7 +67,7 @@ function renderActivityResult(
       <>
         <Result success={true} message={'Activity log completed.'} />
         <Text style={styles.percentStyle}>
-          {percentage} % of your activity logs are within target range
+          {percentage} % of your activity logs have at least 6000 steps
         </Text>
       </>
     );

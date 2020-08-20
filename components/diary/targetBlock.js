@@ -5,6 +5,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import {useNavigation} from '@react-navigation/native';
 import {getEntry4Day} from '../../netcalls/requestsDiary';
 import TargetContent from './targetContent';
+import {min} from 'react-native-reanimated';
 
 const within_target = 'Within Target';
 const missed = 'Missed';
@@ -128,7 +129,7 @@ class TargetBlock extends Component {
 
   getActivityResult = () => {
     let length = this.state.activityLogs.length;
-    let minstep = Math.floor(2000 / 7);
+    let minstep = 6000;
     let passCount = 0;
     if (length != 0) {
       for (var x of this.state.activityLogs) {
