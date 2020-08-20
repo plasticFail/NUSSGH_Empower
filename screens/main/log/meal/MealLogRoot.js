@@ -3,9 +3,7 @@ import {View, StyleSheet, Text, TouchableOpacity, ScrollView, Alert} from 'react
 // Third-party lib
 import Moment from 'moment';
 // Functions
-import {storeLastMealLog} from "../../../../storage/asyncStorageFunctions";
-import {mealAddLogRequest} from "../../../../netcalls/requestsLog";
-import {getDefaultMealType} from "../../../../commonFunctions/mealLogFunctions";
+import {getDefaultMealType, handleSubmitMealLog} from "../../../../commonFunctions/mealLogFunctions";
 // Components
 import DateSelectionBlock from "../../../../components/logs/dateSelectionBlock";
 import MealTypeSelectionBlock from "../../../../components/logs/meal/MealTypeSelectionBlock";
@@ -74,18 +72,13 @@ class MealLogRoot extends React.Component {
             mealType: selectedMealType,
             recordDate
         };
-        mealAddLogRequest(mealData).then(data => {
-            storeLastMealLog(
-                {
-                    value: {...mealData},
-                    date: Moment(selectedDateTime).format("YYYY/MM/DD"),
-                    time: Moment(selectedDateTime).format("h:mm a")
-                }
-                ).then(resp => {
+
+        handleSubmitMealLog(mealData, selectedDateTime).then(data => {
+            if (data) {
                 this.setState({
                     successMessage: true
-                })
-            })
+                });
+            }
         }).catch(err => {
             Alert.alert("Error", err.message,
                 [ { text: 'Ok' }]);
