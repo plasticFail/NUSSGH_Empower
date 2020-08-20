@@ -15,7 +15,6 @@ const HypoglycemiaBlock = (props) => {
 
   useEffect(() => {
     if (Number(props.bloodGlucose) <= 4 && props.bloodGlucose != '') {
-      console.log('fading in');
       setVisible(true);
       //fade in animation
       Animated.timing(fadeAnim, {
@@ -24,8 +23,6 @@ const HypoglycemiaBlock = (props) => {
         useNativeDriver: true,
       }).start(() => setVisible(true));
     } else {
-      setVisible(false);
-      console.log('fading out');
       Animated.timing(fadeAnim, {
         toValue: 0,
         duration: 1000,
