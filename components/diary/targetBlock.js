@@ -5,7 +5,6 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import {useNavigation} from '@react-navigation/native';
 import {getEntry4Day} from '../../netcalls/requestsDiary';
 import TargetContent from './targetContent';
-import {min} from 'moment';
 
 const within_target = 'Within Target';
 const missed = 'Missed';
@@ -95,6 +94,12 @@ class TargetBlock extends Component {
         } else {
           this.setState({bgPass: false});
         }
+      } else if (this.state.targetBg.comparator === '>=') {
+        if (avg >= this.state.targetBg.value) {
+          this.setState({bgPass: true});
+        } else {
+          this.setState({bgPass: false});
+        }
       }
     } else {
       this.setState({bgMiss: true});
@@ -108,11 +113,13 @@ class TargetBlock extends Component {
       let passCount = 0;
 
       for (var x of this.state.weightLogs) {
-        if (x.weight < minWeight && x.weight > maxWeight) {
+        if (x.weight >= minWeight && x.weight <= maxWeight) {
           passCount++;
         }
       }
+
       this.setState({weightPassCount: passCount});
+      this.setState({weightPass: true});
       this.setState({
         weightFailCount: this.state.weightLogs.length - passCount,
       });
@@ -204,6 +211,11 @@ class TargetBlock extends Component {
               <Text style={[styles.diaryContentHeader, {color: '#9a228a'}]}>
                 {improved}
               </Text>
+              <TargetContent
+                bgFailCount={bgFailCount}
+                weightFailCount={weightFailCount}
+                type={improved}
+              />
             </View>
           </View>
         </TouchableOpacity>

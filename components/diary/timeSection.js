@@ -23,7 +23,7 @@ const TimeSection = (props) => {
       let hour = getHour(data[0][0].record_date);
       if (hour > 0 && hour < 800) {
         return (
-          <Text style={styles.timeText}>Early Morning (08:00 - 09:00)</Text>
+          <Text style={styles.timeText}>Early Morning (00:00 - 08:00)</Text>
         );
       } else if (hour >= 800 && hour < 1200) {
         return <Text style={styles.timeText}>Morning (08:00 - 12:00)</Text>;

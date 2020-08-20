@@ -11,6 +11,7 @@ const TargetContent = (props) => {
   const {bgPass, weightPass, activityPass} = props;
   const {bgPassCount, weightPassCount, activityPassCount} = props;
   const {bgMiss, weightMiss, activityMiss} = props;
+  const {bgFailCount, weightFailCount} = props;
 
   return (
     <>
@@ -25,6 +26,8 @@ const TargetContent = (props) => {
         bgMiss,
         weightMiss,
         activityMiss,
+        bgFailCount,
+        weightFailCount,
       )}
     </>
   );
@@ -42,12 +45,15 @@ function renderItem(
   bgMiss,
   weightMiss,
   activityMiss,
+  bgFailCount,
+  weightFailCount,
 ) {
   if (type === 'Within Target') {
     return (
       <View>
-        {bgPass === true && renderCountLogo(bgPassCount, type, bg)}
-        {weightPass === true && renderCountLogo(weightPassCount, type, weight)}
+        {(bgPassCount != 0) === true && renderCountLogo(bgPassCount, type, bg)}
+        {(weightPassCount != 0) === true &&
+          renderCountLogo(weightPassCount, type, weight)}
         {activityPass === true &&
           renderCountLogo(activityPassCount, type, activity)}
       </View>
@@ -72,6 +78,12 @@ function renderItem(
   }
 
   if (type === 'Improve') {
+    return (
+      <View>
+        {bgFailCount != 0 && renderCountLogo(bgFailCount, type, bg)}
+        {weightFailCount != 0 && renderCountLogo(weightFailCount, type, weight)}
+      </View>
+    );
   }
 }
 
@@ -94,6 +106,12 @@ function renderCountLogo(count, targetType, logType) {
     );
   }
   if (targetType === 'Improve') {
+    return (
+      <View style={styles.targetContainer}>
+        <Text style={styles.countTextImprove}>x {count}</Text>
+        <Image source={image} style={styles.iconImg} />
+      </View>
+    );
   }
 }
 
@@ -102,7 +120,6 @@ function setImage(logType) {
     return require('../../resources/images/bloodglucose_logo.png');
   }
   if (logType === 'Weight') {
-    console.log('hihi');
     return require('../../resources/images/weight_logo.png');
   }
   if (logType === 'Activity') {
@@ -132,6 +149,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginEnd: '5%',
     color: 'black',
+    fontWeight: '600',
+  },
+  countTextImprove: {
+    fontSize: 18,
+    marginEnd: '5%',
+    color: 'red',
     fontWeight: '600',
   },
   empty: {

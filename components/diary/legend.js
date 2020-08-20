@@ -52,7 +52,7 @@ const Legend = (props) => {
 const styles = StyleSheet.create({
   legendContainer: {
     flex: 3,
-    backgroundColor: '#c3f9cd',
+    backgroundColor: 'white',
     borderRadius: 20,
     padding: '3%',
   },

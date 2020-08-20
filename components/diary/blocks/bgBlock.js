@@ -25,17 +25,29 @@ const BgBlock = (props) => {
   const img = require('../../../resources/images/bloodglucose.jpg');
   const logo = require('../../../resources/images/bloodglucose_logo.png');
   const initialBg = String(bloodGlucose.bg_reading);
+  const initialDate = getDateObj(dateString);
   const [modalVisible, setModalVisible] = useState(false);
-  const [date, setDate] = useState(getDateObj(dateString));
+  const [dateValue, setDateValue] = useState(initialDate);
   const [bg, setBg] = useState(initialBg);
   const [disable, setDisabled] = useState(true);
 
   //close itself
   const closeModal = () => {
     setModalVisible(false);
+    setBgValue(initialBg);
+    setDateValue(initialDate);
   };
 
   //handle edit
+
+  const setDate = (value) => {
+    setDateValue(value);
+    if (value != initialDate) {
+      setDisabled(false);
+    } else if (value == initialDate) {
+      setDisabled(true);
+    }
+  };
 
   //enable edit button
   const setBgValue = (value) => {
@@ -63,13 +75,13 @@ const BgBlock = (props) => {
       <Modal
         isVisible={modalVisible}
         animationIn="slideInUp"
-        onBackdropPress={() => setModalVisible(false)}
-        onBackButtonPress={() => setModalVisible(false)}
+        onBackdropPress={() => closeModal()}
+        onBackButtonPress={() => closeModal()}
         style={{justifyContent: 'flex-end'}}>
         <Header title={'Blood Glucose:' + time} closeModal={closeModal} />
         <View style={styles.modalContainer}>
           <BloodGlucoseLogBlock
-            date={date}
+            date={dateValue}
             setDate={setDate}
             bloodGlucose={bg}
             setBloodGlucose={setBgValue}
