@@ -12,7 +12,7 @@ import {getTime, getDateObj} from '../../../commonFunctions/diaryFunctions';
 const MealBlock = (props) => {
   const {mealObj} = props;
   //format date
-  let dateString = String(mealObj.updated_at);
+  let dateString = String(mealObj.record_date);
   let time = getTime(dateString);
   const img = require('../../../resources/images/foodintake.jpg');
   const logo = require('../../../resources/images/foodintake_logo.png');
