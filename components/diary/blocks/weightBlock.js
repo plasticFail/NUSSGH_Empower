@@ -5,7 +5,7 @@ import {
   StyleSheet,
   Image,
   ImageBackground,
-  Dimensions,
+  KeyboardAvoidingView,
 } from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 //third party library
@@ -83,19 +83,21 @@ const WeightBlock = (props) => {
         onBackButtonPress={() => closeModal()}
         style={{justifyContent: 'flex-end'}}>
         <Header title={'Weight:' + time} closeModal={closeModal} />
-        <View style={styles.modalContainer}>
-          <WeightLogBlock
-            date={dateValue}
-            setDate={setDate}
-            weight={weightValue}
-            setWeight={setWeight}
-          />
-          <ActionButton
-            disable={disable}
-            handleEdit={handleEdit}
-            handleDelete={handleDelete}
-          />
-        </View>
+        <KeyboardAvoidingView behavior="padding">
+          <View style={styles.modalContainer}>
+            <WeightLogBlock
+              date={dateValue}
+              setDate={setDate}
+              weight={weightValue}
+              setWeight={setWeight}
+            />
+            <ActionButton
+              disable={disable}
+              handleEdit={handleEdit}
+              handleDelete={handleDelete}
+            />
+          </View>
+        </KeyboardAvoidingView>
       </Modal>
     </View>
   );

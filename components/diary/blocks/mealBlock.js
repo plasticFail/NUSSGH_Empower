@@ -112,9 +112,7 @@ const styles = StyleSheet.create({
   modalContainer: {
     backgroundColor: 'white',
     width: '100%',
-    paddingBottom: '6%',
     padding: '4%',
     alignItems: 'center',
-    marginBottom: '5%',
   },
 });

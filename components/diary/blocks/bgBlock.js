@@ -1,6 +1,13 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, StyleSheet, Image, ImageBackground} from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  ImageBackground,
+  KeyboardAvoidingView,
+} from 'react-native';
+import {TouchableOpacity, ScrollView} from 'react-native-gesture-handler';
 //third party library
 import Modal from 'react-native-modal';
 //component
@@ -76,21 +83,23 @@ const BgBlock = (props) => {
         animationIn="slideInUp"
         onBackdropPress={() => closeModal()}
         onBackButtonPress={() => closeModal()}
-        style={{justifyContent: 'flex-end'}}>
-        <Header title={'Blood Glucose:' + time} closeModal={closeModal} />
-        <View style={styles.modalContainer}>
-          <BloodGlucoseLogBlock
-            date={dateValue}
-            setDate={setDate}
-            bloodGlucose={bg}
-            setBloodGlucose={setBgValue}
-          />
-          <ActionButton
-            disable={disable}
-            handleEdit={handleEdit}
-            handleDelete={handleDelete}
-          />
-        </View>
+        style={{flex: 1, justifyContent: 'flex-end'}}>
+        <KeyboardAvoidingView behavior="padding">
+          <Header title={'Blood Glucose:' + time} closeModal={closeModal} />
+          <View style={styles.modalContainer}>
+            <BloodGlucoseLogBlock
+              date={dateValue}
+              setDate={setDate}
+              bloodGlucose={bg}
+              setBloodGlucose={setBgValue}
+            />
+            <ActionButton
+              disable={disable}
+              handleEdit={handleEdit}
+              handleDelete={handleDelete}
+            />
+          </View>
+        </KeyboardAvoidingView>
       </Modal>
     </View>
   );
