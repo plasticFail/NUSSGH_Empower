@@ -72,11 +72,14 @@ const ResetPasswordScreen = (props) => {
           <Text style={styles.subText}>{'\u2713'} Alphabets</Text>
           <Text style={styles.subText}>{'\u2713'} Numbers</Text>
           <Text style={styles.subText}>{'\u2713'} Special Characters</Text>
-          <SetPassword
-            setPassword={setPassword}
-            setPassword2={setPass2}
-            checkPassword={checkPassword}
-          />
+          <View
+            style={[styles.formContainer, styles.shadow, {marginTop: '3%'}]}>
+            <SetPassword
+              setPassword={setPassword}
+              setPassword2={setPass2}
+              checkPassword={checkPassword}
+            />
+          </View>
           <View style={{flex: 1}} />
         </View>
       </SafeAreaView>

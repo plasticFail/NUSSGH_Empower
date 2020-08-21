@@ -11,7 +11,7 @@ import PasswordStrengthMeter from '../passwordStrengthMeter';
 
 const SetPassword = (props) => {
   return (
-    <View style={[styles.formContainer, styles.shadow, {marginTop: '3%'}]}>
+    <View style={{paddingBottom: '3%'}}>
       <PasswordStrengthMeter setPassword={props.setPassword} />
       <TextInput
         style={styles.inputBox}
@@ -32,15 +32,8 @@ const SetPassword = (props) => {
 export default SetPassword;
 
 const styles = StyleSheet.create({
-  formContainer: {
-    width: Dimensions.get('window').width - 20,
-    backgroundColor: 'white',
-    borderRadius: 25,
-    paddingTop: '5%',
-    paddingBottom: '3%',
-  },
   inputBox: {
-    width: Dimensions.get('window').width - 30,
+    width: Dimensions.get('window').width - 60,
     borderRadius: 20,
     backgroundColor: '#EEF3BD',
     paddingStart: 30, //position placeholder text
