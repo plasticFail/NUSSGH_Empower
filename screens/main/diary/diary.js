@@ -15,7 +15,7 @@ const DiaryScreen = (props) => {
 
   //set useeffect to render this week*
   useEffect(() => {
-    setDates(getDateRange(7));
+    setDates(getDateRange(1));
   }, []);
 
   const getDateArrFromFilter = (value) => {

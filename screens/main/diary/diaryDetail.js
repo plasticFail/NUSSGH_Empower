@@ -104,6 +104,12 @@ class DiaryDetail extends Component {
       activityMiss,
       activityPassCount,
       activityFailCount,
+      foodMiss,
+      carbs,
+      protein,
+      fats,
+      foodPassCount,
+      foodFailCount,
     } = this.props.route.params;
     return (
       <View style={styles.screen}>
@@ -118,6 +124,12 @@ class DiaryDetail extends Component {
           activityMiss={activityMiss}
           activityPassCount={activityPassCount}
           activityFailCount={activityFailCount}
+          foodMiss={foodMiss}
+          carbs={carbs}
+          protein={protein}
+          fats={fats}
+          foodPassCount={foodPassCount}
+          foodFailCount={foodFailCount}
         />
         <FlatList
           listKey={(item, index) => index.toString()}

@@ -1,59 +1,36 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {View, Text, StyleSheet, Image, ImageBackground} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 //third party library
 import Modal from 'react-native-modal';
 //component
 import Header from './header';
-import BloodGlucoseLogBlock from '../../logs/bloodGlucoseLogBlock';
+import ReadOnlyMealDisplay from '../../logs/meal/ReadOnlyMealDisplay';
 //function
 import {getTime, getDateObj} from '../../../commonFunctions/diaryFunctions';
-
-const BgBlock = (props) => {
-  const {bloodGlucose} = props;
+const MealBlock = (props) => {
+  const {mealObj} = props;
   //format date
-  let dateString = String(bloodGlucose.record_date);
+  let dateString = String(mealObj.updated_at);
   let time = getTime(dateString);
-
-  const img = require('../../../resources/images/bloodglucose.jpg');
-  const logo = require('../../../resources/images/bloodglucose_logo.png');
-  const initialBg = String(bloodGlucose.bg_reading);
+  const img = require('../../../resources/images/foodintake.jpg');
+  const logo = require('../../../resources/images/foodintake_logo.png');
   const initialDate = getDateObj(dateString);
-  const [modalVisible, setModalVisible] = useState(false);
   const [dateValue, setDateValue] = useState(initialDate);
-  const [bg, setBg] = useState(initialBg);
+  const [meal, setMeal] = useState(mealObj);
+  const [mealType, setMealType] = useState(mealObj.mealType);
+  const [modalVisible, setModalVisible] = useState(false);
   const [disable, setDisabled] = useState(true);
 
-  //close itself
+  console.log(meal);
+
+  const handleEdit = () => {
+    console.log('edit meal log');
+  };
+
   const closeModal = () => {
     setModalVisible(false);
-    setBgValue(initialBg);
-    setDateValue(initialDate);
   };
-
-  //handle edit
-
-  const setDate = (value) => {
-    setDateValue(value);
-    if (value != initialDate) {
-      setDisabled(false);
-    } else if (value == initialDate) {
-      setDisabled(true);
-    }
-  };
-
-  //enable edit button
-  const setBgValue = (value) => {
-    setBg(value);
-    if (value != initialBg) {
-      setDisabled(false);
-    } else if (value == initialBg) {
-      setDisabled(true);
-    }
-  };
-
-  //handle delete of log
-  const handleDelete = () => {};
 
   return (
     <View style={{flexBasis: '33.3%'}}>
@@ -61,7 +38,7 @@ const BgBlock = (props) => {
         style={styles.buttonStyle}
         onPress={() => setModalVisible(true)}>
         <Image source={logo} style={styles.iconImg} />
-        <Text style={styles.buttonText1}>Blood Glucose</Text>
+        <Text style={styles.buttonText1}>Food Intake</Text>
         <ImageBackground source={img} style={styles.backgroundImg} />
       </TouchableOpacity>
       <Text style={{textAlign: 'center'}}>{time}</Text>
@@ -71,20 +48,18 @@ const BgBlock = (props) => {
         onBackdropPress={() => closeModal()}
         onBackButtonPress={() => closeModal()}
         style={{justifyContent: 'flex-end'}}>
-        <Header title={'Blood Glucose:' + time} closeModal={closeModal} />
+        <Header title={'Food Intake Log:' + time} closeModal={closeModal} />
         <View style={styles.modalContainer}>
-          <BloodGlucoseLogBlock
-            date={dateValue}
-            setDate={setDate}
-            bloodGlucose={bg}
-            setBloodGlucose={setBgValue}
-          />
           <View
             style={{
               flexDirection: 'row',
               justifyContent: 'space-between',
               alignItems: 'center',
             }}>
+            <ReadOnlyMealDisplay
+              style={{marginTop: '3%', marginBottom: '3%', paddingTop: '3%'}}
+              meal={mealObj}
+            />
             {disable == true ? (
               <TouchableOpacity
                 disabled={disable}
@@ -107,8 +82,7 @@ const BgBlock = (props) => {
     </View>
   );
 };
-
-export default BgBlock;
+export default MealBlock;
 
 const styles = StyleSheet.create({
   buttonStyle: {
@@ -135,7 +109,7 @@ const styles = StyleSheet.create({
   buttonText1: {
     position: 'absolute',
     top: '70%',
-    left: '19%',
+    left: '12%',
     fontSize: 18,
     fontWeight: '700',
     color: '#072d08',
@@ -143,6 +117,8 @@ const styles = StyleSheet.create({
   modalContainer: {
     backgroundColor: 'white',
     padding: '3%',
+    width: '100%',
+    paddingBottom: '6%',
   },
   actionButton: {
     borderRadius: 20,
