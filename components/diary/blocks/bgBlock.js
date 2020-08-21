@@ -31,8 +31,6 @@ const BgBlock = (props) => {
     setDateValue(initialDate);
   };
 
-  //handle edit
-
   const setDate = (value) => {
     setDateValue(value);
     if (value != initialDate) {
@@ -54,6 +52,9 @@ const BgBlock = (props) => {
 
   //handle delete of log
   const handleDelete = () => {};
+
+  //handle edit
+  const handleEdit = () => {};
 
   return (
     <View style={{flexBasis: '33.3%'}}>

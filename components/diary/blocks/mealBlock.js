@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {View, Text, StyleSheet, Image, ImageBackground} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import {useNavigation} from '@react-navigation/native';
 //third party library
 import Modal from 'react-native-modal';
 //component
@@ -16,16 +17,23 @@ const MealBlock = (props) => {
   const img = require('../../../resources/images/foodintake.jpg');
   const logo = require('../../../resources/images/foodintake_logo.png');
   const initialDate = getDateObj(dateString);
+  //for edit later
   const [dateValue, setDateValue] = useState(initialDate);
   const [meal, setMeal] = useState(mealObj);
   const [mealType, setMealType] = useState(mealObj.mealType);
   const [modalVisible, setModalVisible] = useState(false);
   const [disable, setDisabled] = useState(true);
 
-  console.log(meal);
+  //navigation
+  const navigation = useNavigation();
 
   const handleEdit = () => {
     console.log('edit meal log');
+    setModalVisible(false);
+    navigation.navigate('CreateMealLog', {
+      meal: mealObj,
+      parentScreen: 'DiaryDetail',
+    });
   };
 
   const closeModal = () => {
@@ -50,28 +58,21 @@ const MealBlock = (props) => {
         style={{justifyContent: 'flex-end'}}>
         <Header title={'Food Intake Log:' + time} closeModal={closeModal} />
         <View style={styles.modalContainer}>
+          <ReadOnlyMealDisplay
+            style={{marginBottom: '3%', paddingTop: '3%'}}
+            meal={mealObj}
+          />
           <View
             style={{
               flexDirection: 'row',
               justifyContent: 'space-between',
               alignItems: 'center',
             }}>
-            <ReadOnlyMealDisplay
-              style={{marginTop: '3%', marginBottom: '3%', paddingTop: '3%'}}
-              meal={mealObj}
-            />
-            {disable == true ? (
-              <TouchableOpacity
-                disabled={disable}
-                style={[styles.actionButton, {backgroundColor: '#cdd4e4'}]}>
-                <Text style={styles.actionText}>Edit</Text>
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity
-                style={[styles.actionButton, {backgroundColor: '#aad326'}]}>
-                <Text style={styles.actionText}>Edit</Text>
-              </TouchableOpacity>
-            )}
+            <TouchableOpacity
+              style={[styles.actionButton, {backgroundColor: '#aad326'}]}
+              onPress={handleEdit}>
+              <Text style={styles.actionText}>Click to Edit</Text>
+            </TouchableOpacity>
             <TouchableOpacity
               style={[styles.actionButton, {backgroundColor: '#ffb7e7'}]}>
               <Text style={styles.actionText}>Delete</Text>
@@ -116,9 +117,11 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     backgroundColor: 'white',
-    padding: '3%',
     width: '100%',
     paddingBottom: '6%',
+    padding: '4%',
+    alignItems: 'center',
+    marginBottom: '5%',
   },
   actionButton: {
     borderRadius: 20,
