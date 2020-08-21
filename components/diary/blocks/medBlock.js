@@ -13,6 +13,7 @@ import Modal from 'react-native-modal';
 //component
 import Header from './header';
 import MedicationLogBlock from '../../logs/medicationLogBlock';
+import ActionButton from './actionBtn';
 //function
 import {getTime, getDateObj} from '../../../commonFunctions/diaryFunctions';
 
@@ -35,6 +36,7 @@ const MedBlock = (props) => {
   };
 
   //open edit modal
+  const handleEdit = () => {};
 
   //handle delete of log
   const handleDelete = () => {};
@@ -73,29 +75,11 @@ const MedBlock = (props) => {
             selectedMedicationList={list}
             onListChange={onListChange}
           />
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}>
-            {disable == true ? (
-              <TouchableOpacity
-                disabled={disable}
-                style={[styles.actionButton, {backgroundColor: '#cdd4e4'}]}>
-                <Text style={styles.actionText}>Edit</Text>
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity
-                style={[styles.actionButton, {backgroundColor: '#aad326'}]}>
-                <Text style={styles.actionText}>Edit</Text>
-              </TouchableOpacity>
-            )}
-            <TouchableOpacity
-              style={[styles.actionButton, {backgroundColor: '#ffb7e7'}]}>
-              <Text style={styles.actionText}>Delete</Text>
-            </TouchableOpacity>
-          </View>
+          <ActionButton
+            disable={disable}
+            handleEdit={handleEdit}
+            handleDelete={handleDelete}
+          />
         </View>
       </Modal>
     </View>
@@ -140,21 +124,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     padding: '3%',
     flex: 1,
-  },
-  actionButton: {
-    borderRadius: 20,
-    margin: '2%',
-    flexDirection: 'row',
-    padding: '10%',
-    alignSelf: 'center',
-    marginVertical: 10,
-    paddingHorizontal: 40,
-    paddingVertical: 6,
-  },
-  actionText: {
-    fontWeight: '700',
-    fontSize: 17,
-    textAlign: 'center',
   },
   medicationAddedText: {
     fontSize: 18,

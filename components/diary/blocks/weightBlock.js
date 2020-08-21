@@ -10,10 +10,10 @@ import {
 import {TouchableOpacity} from 'react-native-gesture-handler';
 //third party library
 import Modal from 'react-native-modal';
-import moment from 'moment';
 //component
 import Header from './header';
 import WeightLogBlock from '../../logs/weightLogBlock';
+import ActionButton from './actionBtn';
 //function
 import {getDateObj, getTime} from '../../../commonFunctions/diaryFunctions';
 
@@ -57,8 +57,13 @@ const WeightBlock = (props) => {
     }
   };
 
-  //handle delete of log
-  const handleDelete = () => {};
+  const handleEdit = () => {
+    console.log('edit weight log');
+  };
+
+  const handleDelete = () => {
+    console.log('delete weight log');
+  };
 
   return (
     <View style={{flexBasis: '33.3%'}}>
@@ -85,29 +90,11 @@ const WeightBlock = (props) => {
             weight={weightValue}
             setWeight={setWeight}
           />
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}>
-            {disable == true ? (
-              <TouchableOpacity
-                disabled={disable}
-                style={[styles.actionButton, {backgroundColor: '#cdd4e4'}]}>
-                <Text style={styles.actionText}>Edit</Text>
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity
-                style={[styles.actionButton, {backgroundColor: '#aad326'}]}>
-                <Text style={styles.actionText}>Edit</Text>
-              </TouchableOpacity>
-            )}
-            <TouchableOpacity
-              style={[styles.actionButton, {backgroundColor: '#ffb7e7'}]}>
-              <Text style={styles.actionText}>Delete</Text>
-            </TouchableOpacity>
-          </View>
+          <ActionButton
+            disable={disable}
+            handleEdit={handleEdit}
+            handleDelete={handleDelete}
+          />
         </View>
       </Modal>
     </View>
@@ -150,20 +137,5 @@ const styles = StyleSheet.create({
   modalContainer: {
     backgroundColor: 'white',
     padding: '3%',
-  },
-  actionButton: {
-    borderRadius: 20,
-    margin: '2%',
-    flexDirection: 'row',
-    padding: '10%',
-    alignSelf: 'center',
-    marginVertical: 10,
-    paddingHorizontal: 40,
-    paddingVertical: 6,
-  },
-  actionText: {
-    fontWeight: '700',
-    fontSize: 17,
-    textAlign: 'center',
   },
 });

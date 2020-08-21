@@ -7,6 +7,7 @@ import Modal from 'react-native-modal';
 //component
 import Header from './header';
 import ReadOnlyMealDisplay from '../../logs/meal/ReadOnlyMealDisplay';
+import ActionButton from './actionBtn';
 //function
 import {getTime, getDateObj} from '../../../commonFunctions/diaryFunctions';
 const MealBlock = (props) => {
@@ -36,6 +37,10 @@ const MealBlock = (props) => {
     });
   };
 
+  const handleDelete = () => {
+    console.log('delete meal log');
+  };
+
   const closeModal = () => {
     setModalVisible(false);
   };
@@ -62,22 +67,11 @@ const MealBlock = (props) => {
             style={{marginBottom: '3%', paddingTop: '3%'}}
             meal={mealObj}
           />
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}>
-            <TouchableOpacity
-              style={[styles.actionButton, {backgroundColor: '#aad326'}]}
-              onPress={handleEdit}>
-              <Text style={styles.actionText}>Click to Edit</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.actionButton, {backgroundColor: '#ffb7e7'}]}>
-              <Text style={styles.actionText}>Delete</Text>
-            </TouchableOpacity>
-          </View>
+          <ActionButton
+            disable={false}
+            handleEdit={handleEdit}
+            handleDelete={handleDelete}
+          />
         </View>
       </Modal>
     </View>
@@ -122,20 +116,5 @@ const styles = StyleSheet.create({
     padding: '4%',
     alignItems: 'center',
     marginBottom: '5%',
-  },
-  actionButton: {
-    borderRadius: 20,
-    margin: '2%',
-    flexDirection: 'row',
-    padding: '10%',
-    alignSelf: 'center',
-    marginVertical: 10,
-    paddingHorizontal: 40,
-    paddingVertical: 6,
-  },
-  actionText: {
-    fontWeight: '700',
-    fontSize: 17,
-    textAlign: 'center',
   },
 });

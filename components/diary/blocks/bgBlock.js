@@ -6,6 +6,7 @@ import Modal from 'react-native-modal';
 //component
 import Header from './header';
 import BloodGlucoseLogBlock from '../../logs/bloodGlucoseLogBlock';
+import ActionButton from './actionBtn';
 //function
 import {getTime, getDateObj} from '../../../commonFunctions/diaryFunctions';
 
@@ -51,10 +52,14 @@ const BgBlock = (props) => {
   };
 
   //handle delete of log
-  const handleDelete = () => {};
+  const handleDelete = () => {
+    console.log('delete blood glucose');
+  };
 
   //handle edit
-  const handleEdit = () => {};
+  const handleEdit = () => {
+    console.log('edit blood glucose');
+  };
 
   return (
     <View style={{flexBasis: '33.3%'}}>
@@ -80,29 +85,11 @@ const BgBlock = (props) => {
             bloodGlucose={bg}
             setBloodGlucose={setBgValue}
           />
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}>
-            {disable == true ? (
-              <TouchableOpacity
-                disabled={disable}
-                style={[styles.actionButton, {backgroundColor: '#cdd4e4'}]}>
-                <Text style={styles.actionText}>Edit</Text>
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity
-                style={[styles.actionButton, {backgroundColor: '#aad326'}]}>
-                <Text style={styles.actionText}>Edit</Text>
-              </TouchableOpacity>
-            )}
-            <TouchableOpacity
-              style={[styles.actionButton, {backgroundColor: '#ffb7e7'}]}>
-              <Text style={styles.actionText}>Delete</Text>
-            </TouchableOpacity>
-          </View>
+          <ActionButton
+            disable={disable}
+            handleEdit={handleEdit}
+            handleDelete={handleDelete}
+          />
         </View>
       </Modal>
     </View>
@@ -144,20 +131,5 @@ const styles = StyleSheet.create({
   modalContainer: {
     backgroundColor: 'white',
     padding: '3%',
-  },
-  actionButton: {
-    borderRadius: 20,
-    margin: '2%',
-    flexDirection: 'row',
-    padding: '10%',
-    alignSelf: 'center',
-    marginVertical: 10,
-    paddingHorizontal: 40,
-    paddingVertical: 6,
-  },
-  actionText: {
-    fontWeight: '700',
-    fontSize: 17,
-    textAlign: 'center',
   },
 });
