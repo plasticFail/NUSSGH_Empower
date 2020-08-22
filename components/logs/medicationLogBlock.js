@@ -60,7 +60,9 @@ const MedicationLogBlock = (props) => {
       setEditModalOpen(false);
       props.onListChange(newArr);
     } else {
-      Alert.alert('Error', 'Invalid Dosage', [{text: 'Got It'}]);
+      Alert.alert('Error', 'Invalid Dosage, must be at least 5', [
+        {text: 'Got It'},
+      ]);
     }
   };
 

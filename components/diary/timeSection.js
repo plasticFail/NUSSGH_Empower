@@ -7,6 +7,7 @@ import ActivityBlock from './blocks/activityBlock';
 import WeightBlock from './blocks/weightBlock';
 //function
 import {getHour, getTime} from '../../commonFunctions/diaryFunctions';
+import MealBlock from './blocks/mealBlock';
 
 const TimeSection = (props) => {
   const {data} = props;
@@ -49,11 +50,15 @@ const TimeSection = (props) => {
         numColumns={3}
         renderItem={({item}) => {
           let bg = Object.keys(item).includes('bg_reading');
-          //include food, medication **
+          let food = Object.keys(item).includes('beverage');
+          //include medication **
           let activity = Object.keys(item).includes('steps');
           let weight = Object.keys(item).includes('weight');
           if (bg) {
             return <BgBlock bloodGlucose={item} />;
+          }
+          if (food) {
+            return <MealBlock mealObj={item} />;
           }
           if (activity) {
             return <ActivityBlock activity={item} />;
