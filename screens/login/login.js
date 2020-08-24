@@ -120,6 +120,14 @@ class Login extends Component {
           <TouchableOpacity style={styles.button} onPress={this.handleLogin}>
             <Text style={styles.buttonText}>Login</Text>
           </TouchableOpacity>
+          <Text style={styles.light}>
+            Having troubles logging in?{'  '}
+            <Text
+              style={styles.bold}
+              onPress={() => this.props.navigation.navigate('ContactUsScreen')}>
+              Contact Us Now!{' '}
+            </Text>
+          </Text>
           <Loading isLoading={this.state.isLoading} />
         </View>
       </KeyboardAvoidingView>
@@ -156,5 +164,13 @@ const styles = StyleSheet.create({
     fontSize: 23,
     fontWeight: '500',
     textAlign: 'center',
+  },
+  light: {
+    color: '#949494',
+    marginTop: '3%',
+  },
+  bold: {
+    fontWeight: '700',
+    color: 'black',
   },
 });

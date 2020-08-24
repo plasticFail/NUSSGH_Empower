@@ -12,12 +12,12 @@ import SetPassword from './setPassword';
 import Header from '../diary/blocks/header';
 //third party library
 import Modal from 'react-native-modal';
+//function
 import {
   getPassword,
   getToken,
   storePassword,
 } from '../../storage/asyncStorageFunctions';
-import AsyncStorage from '@react-native-community/async-storage';
 import {resetPassword} from '../../netcalls/requestsPasswordReset';
 
 const EditPasswordModal = (props) => {
@@ -119,7 +119,7 @@ const EditPasswordModal = (props) => {
     ) {
       Alert.alert(
         'Invalid Inputs',
-        'Please make sure all fields are filled in correctly.',
+        'Please make sure all fields are filled in.',
         [
           {
             text: 'Got It',
