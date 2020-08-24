@@ -58,6 +58,8 @@ const ResetPasswordScreen = (props) => {
     }
   };
 
+  console.log(setPass2);
+
   Icon.loadFont();
   return (
     <KeyboardAvoidingView
