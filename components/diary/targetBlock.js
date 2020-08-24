@@ -183,7 +183,7 @@ class TargetBlock extends Component {
       this.setState({fats: totalFats.toFixed(2)});
       this.setState({foodPassCount: passCount});
       this.setState({foodFailCount: length - passCount});
-    } else {
+    } else if (length === 0) {
       this.setState({foodMiss: true});
     }
   };
