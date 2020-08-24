@@ -26,6 +26,7 @@ import BloodGlucoseLog from './main/log/bloodGlucoseLog';
 import MedicationLog from './main/log/medication/medicationLog';
 import MealLogRoot from './main/log/meal/MealLogRoot';
 import WeightLog from './main/log/weightLog';
+import DiaryDetail from './main/diary/diaryDetail';
 //components
 import HeaderIcon from '../components/common/headerBtnIcon';
 import HypoglycemiaReason from './hypoglycemiaReason';
@@ -35,7 +36,6 @@ import RecentMealScreen from './main/log/meal/RecentMeal';
 import FoodSearchEngineScreen from './main/log/meal/FoodSearchEngine';
 import HeaderBackIcon from '../components/common/headerBackIcon';
 import HeaderBackIconClick from '../components/common/headerBackIconClick';
-import DiaryDetail from './main/diary/diaryDetail';
 
 Entypo.loadFont();
 

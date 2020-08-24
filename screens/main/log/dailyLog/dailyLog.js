@@ -9,10 +9,10 @@ import {
   getLastMealLog,
   getLastMedicationLog,
 } from '../../../../storage/asyncStorageFunctions';
-import {mealAddLogRequest} from '../../../../netcalls/requestsLog';
-import {getDefaultMealType, isValidMeal} from "../../../../commonFunctions/mealLogFunctions";
+import {getDefaultMealType, handleSubmitMealLog, isValidMeal} from "../../../../commonFunctions/mealLogFunctions";
+import {checkBloodGlucoseText, checkWeightText, handleSubmitBloodGlucose, handleSubmitMedication, handleSubmitWeight} from '../../../../commonFunctions/logFunctions';
 //components
-import FormBlock from '../../../../components/logs/formBlock';
+import FormBlockFix from '../../../../components/logs/formBlockFix';
 import BloodGlucoseLogBlock from '../../../../components/logs/bloodGlucoseLogBlock';
 import BloodGlucoseLogDisplay from '../../../../components/logs/bloodGlucoseLogDisplay';
 import DailyMealLogComponent from "../../../../components/logs/meal/DailyMealLogComponent";
@@ -21,8 +21,8 @@ import WeightLogBlock from '../../../../components/logs/weightLogBlock';
 import WeightLogDisplay from '../../../../components/logs/weightLogDisplay';
 import MedicationLogDisplay from '../../../../components/logs/medicationLogDisplay';
 import MedicationLogBlock from '../../../../components/logs/medicationLogBlock';
-import {checkBloodGlucoseText, checkWeightText} from '../../../../commonFunctions/logFunctions';
 import MealLogDisplay from "../../../../components/logs/meal/MealLogDisplay";
+
 
 class DailyLog extends Component {
   constructor(props) {
@@ -42,6 +42,7 @@ class DailyLog extends Component {
       mealType: getDefaultMealType(new Date().getHours()),
       meal: null,
       lastMealLog: null,
+      inputNewMeal: false,
 
       dateMedication: new Date(),
       selectedMedicationList: [],
@@ -51,7 +52,7 @@ class DailyLog extends Component {
       dateWeight: new Date(),
       weight: '',
       lastWeight: null,
-      inputWeight: false,
+      inputNewWeight: false,
     };
   }
 
@@ -64,18 +65,14 @@ class DailyLog extends Component {
         this.setState({enableNext: true});
       } else {
         this.setState({
-          showNewInput: this.handleShowNewInput(),
+          showNewInput: true,
         });
       }
-    });
+    })
 
     getLastMedicationLog().then((data) => {
       if (this.isToday(data.date)) {
         this.setState({lastMedication: data});
-      } else {
-        this.setState({
-          showNewInput: this.handleShowNewInput(),
-        });
       }
     });
 
@@ -136,6 +133,9 @@ class DailyLog extends Component {
         break;
       case 4:
         return checkWeightText(this.state.weight) === '';
+        break;
+      case 5:
+        return true;
         break;
     }
     return false;
@@ -327,49 +327,63 @@ class DailyLog extends Component {
     let promises = [];
 
     // Blood glucose data to pass to endpoint
-    // To do
-
-    // Meal data to pass to endpoint
-    const {meal, mealType, mealRecordDate} = this.state;
-    if (meal) {
-      const {beverage, main, side, dessert, isFavourite, mealName} = meal;
-      const mealDataToLog = {
-        beverage,
-        main,
-        side,
-        dessert,
-        isFavourite,
-        mealName,
-        mealType,
-        recordDate: Moment(mealRecordDate).format('DD/MM/YYYY HH:mm:ss'),
-      };
-      // Append async promise to promises array.
-      promises.push(
-        new Promise((resolve, reject) => {
-          resolve(mealAddLogRequest(mealDataToLog));
-        }),
-      );
+    if(this.state.inputNewBloodGlucose){
+      promises.push(new Promise((resolve, reject) => {
+        resolve(handleSubmitBloodGlucose(this.state.dateBloodGlucose, this.state.bloodGlucose));
+      }));
     }
 
-    // Medication data to pass to endpoint
-    // To do
+    if(this.state.inputNewMedication){
+      promises.push(new Promise((resolve, reject) => {
+        resolve(handleSubmitMedication(this.state.dateMedication, this.state.selectedMedicationList));
+      }));
+    }
 
-    // Weight data to pass to endpoint
-    // To do
+    if(this.state.inputNewWeight){
+      promises.push(new Promise((resolve, reject) => {
+        resolve(handleSubmitWeight(this.state.dateWeight, this.state.weight));
+      }));
+    }
 
-    // Call all requests asynchronously.
-    Promise.all(promises)
-      .then((respArr) => {
-        // All have been recorded
-        this.props.navigation.goBack();
-        Alert.alert('Log success', 'Your logs have been recorded', [
-          {text: 'Okay'},
-        ]);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    // Meal data to pass to endpoint
+    if(this.state.inputNewMeal) {
+      const {meal, mealType, mealRecordDate} = this.state;
+      if (meal) {
+        const mealDataToLog = {
+          ...meal,
+          mealType,
+          recordDate: Moment(mealRecordDate).format('DD/MM/YYYY HH:mm:ss'),
+        };
+        // Append async promise to promises array.
+        promises.push(
+            new Promise((resolve, reject) => {
+              resolve(handleSubmitMealLog(mealDataToLog, mealRecordDate));
+            }),
+        );
+      }
+    }
+
+    if(promises.length > 0) {
+      // Call all requests asynchronously.
+      Promise.all(promises)
+          .then((respArr) => {
+            // All have been recorded
+            this.props.navigation.goBack();
+            Alert.alert('Log success', 'Your logs have been recorded', [
+              {text: 'Okay'},
+            ]);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+    }else{
+      this.props.navigation.goBack();
+      Alert.alert('No new records', 'You have no new records', [
+        {text: 'Okay'},
+      ]);
+    }
   };
+
 
   incrementStepper = () => {
     this.handleNext();
@@ -387,15 +401,19 @@ class DailyLog extends Component {
   };
 
   handleNext = () => {
+    console.log('handleNext : ' + this.state.currentStep + ' showNewInput : ' + this.state.showNewInput);
     switch (this.state.currentStep) {
       case 1:
         this.setState({inputNewBloodGlucose: this.state.showNewInput});
+        break;
+      case 2:
+        this.setState({inputNewMeal: this.state.showNewInput});
         break;
       case 3:
         this.setState({inputNewMedication: this.state.showNewInput});
         break;
       case 4:
-        this.setState({inputWeight: this.state.showNewInput});
+        this.setState({inputNewWeight: this.state.showNewInput});
         break;
     }
   };
@@ -404,25 +422,30 @@ class DailyLog extends Component {
     switch (step) {
       case 1:
         if (!this.state.lastBloodGlucose || this.state.inputNewBloodGlucose) {
+          console.log('lastBloodGlucose : ' + this.state.lastBloodGlucose + ' inputNewBloodGlucose : ' + this.state.inputNewBloodGlucose);
           return true;
         }
         break;
       case 2:
-        if (!this.state.lastMealLog) {
+        if (!this.state.lastMealLog || this.state.inputNewMeal) {
+          console.log('lastMealLog : ' + this.state.lastMealLog + ' inputNewMeal : ' + this.state.inputNewMeal);
           return true;
         }
         break;
       case 3:
         if (!this.state.lastMedication || this.state.inputNewMedication) {
+          console.log('lastMedication : ' + this.state.lastMedication + ' inputNewMedication : ' + this.state.inputNewMedication);
           return true;
         }
         break;
       case 4:
-        if (!this.state.lastWeight || this.state.inputWeight) {
+        if (!this.state.lastWeight || this.state.inputNewWeight) {
+          console.log('lastWeight : ' + this.state.lastWeight + ' inputNewWeight : ' + this.state.inputNewWeight);
           return true;
         }
         break;
     }
+    console.log('handleShowNewInput : not trigger ' + step);
     return false;
   };
 
@@ -453,10 +476,10 @@ class DailyLog extends Component {
                 styles.shadow,
                 {marginBottom: '4%', paddingEnd: '1%'},
               ]}>
-              <FormBlock
+              <FormBlockFix
                 question={this.formText()}
                 getFormSelection={this.handleFormBlockChange}
-                selectNo={true}
+                selectYes={this.state.showNewInput}
                 color={'#aad326'}
               />
             </View>
@@ -519,8 +542,7 @@ class DailyLog extends Component {
               }}
             />
           )}
-          {this.state.currentStep === 5 && (
-            <>
+          {(this.state.currentStep === 5 && this.state.inputNewBloodGlucose) && (
               <BloodGlucoseLogDisplay
                 data={{
                   value: this.state.bloodGlucose,
@@ -531,17 +553,19 @@ class DailyLog extends Component {
                 }}
                 isNewSubmit={true}
               />
+          )}
+          {(this.state.currentStep === 5 && this.state.inputNewMeal) && (
               <MealLogDisplay data={{
-                value: meal ?  {
+                value: {
                   ...meal,
                   mealType,
                   mealRecordDate
-                } : this.state.lastMealLog.value,
-                date: meal ? Moment(this.state.mealRecordDate).format('YYYY/MM/DD')
-                    : this.state.lastMealLog.date,
-                time: meal ? Moment(this.state.mealRecordDate).format('h:mm a')
-                    : this.state.lastMealLog.time
-              }} isNewSubmit={meal !== null}/>
+                },
+                date:  Moment(this.state.mealRecordDate).format('YYYY/MM/DD'),
+                time: Moment(this.state.mealRecordDate).format('h:mm a'),
+              }} isNewSubmit={true}/>
+          )}
+          {(this.state.currentStep === 5 && this.state.inputNewMedication) && (
               <MedicationLogDisplay
                 data={{
                   value: this.state.selectedMedicationList,
@@ -550,6 +574,8 @@ class DailyLog extends Component {
                 }}
                 isNewSubmit={true}
               />
+          )}
+          {(this.state.currentStep === 5 && this.state.inputNewWeight) && (
               <WeightLogDisplay
                 data={{
                   value: this.state.weight,
@@ -558,7 +584,6 @@ class DailyLog extends Component {
                 }}
                 isNewSubmit={true}
               />
-            </>
           )}
 
           {this.state.showNewInput && (

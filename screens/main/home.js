@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   FlatList,
 } from 'react-native-gesture-handler';
-import NutritionIntakeCard from "../../components/dashboard/todayOverview/NutritionIntakeCard";
+import NutritionIntakeCard from '../../components/dashboard/todayOverview/NutritionIntakeCard';
 
 const buttonList = [
   {
@@ -65,7 +65,7 @@ const HomeScreen = (props) => {
             flexDirection: 'row',
             justifyContent: 'space-around',
             alignItems: 'center',
-            flexGrow: 1
+            flexGrow: 1,
           }}
           renderItem={({item}) => (
             <View>
@@ -85,16 +85,14 @@ const HomeScreen = (props) => {
       </View>
 
       <Text style={styles.text}>Today's Overview</Text>
-      {
-       /*
+      {/*
        <View
         style={[
           styles.chartContainter,
           styles.shadow,
           styles.contentContainer,
         ]}></View>
-        */
-      }
+        */}
       <View style={styles.chartContainter}>
         <NutritionIntakeCard onPress={() => alert('pressed nutrient card!')} />
       </View>
@@ -142,7 +140,7 @@ const styles = StyleSheet.create({
   chartContainter: {
     flex: 1,
     marginLeft: '5%',
-    marginRight: '5%'
+    marginRight: '5%',
   },
   text: {
     marginStart: '5%',

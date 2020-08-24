@@ -5,15 +5,15 @@ import {
   StyleSheet,
   Image,
   ImageBackground,
-  Dimensions,
+  KeyboardAvoidingView,
 } from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 //third party library
 import Modal from 'react-native-modal';
-import moment from 'moment';
 //component
 import Header from './header';
 import WeightLogBlock from '../../logs/weightLogBlock';
+import ActionButton from './actionBtn';
 //function
 import {getDateObj, getTime} from '../../../commonFunctions/diaryFunctions';
 
@@ -25,14 +25,26 @@ const WeightBlock = (props) => {
   const img = require('../../../resources/images/weight.jpg');
   const logo = require('../../../resources/images/weight_logo.png');
   const initialWeight = String(weight.weight);
+  const initialDate = getDateObj(dateString);
   const [modalVisible, setModalVisible] = useState(false);
-  const [date, setDate] = useState(getDateObj(dateString));
+  const [dateValue, setDateValue] = useState(initialDate);
   const [weightValue, setWeightValue] = useState(initialWeight);
   const [disable, setDisabled] = useState(true);
 
   //close itself
   const closeModal = () => {
     setModalVisible(false);
+    setWeight(initialWeight);
+    setDateValue(initialDate);
+  };
+
+  const setDate = (value) => {
+    setDateValue(value);
+    if (value != initialDate) {
+      setDisabled(false);
+    } else if (value == initialDate) {
+      setDisabled(true);
+    }
   };
 
   //enable edit button
@@ -45,11 +57,16 @@ const WeightBlock = (props) => {
     }
   };
 
-  //handle delete of log
-  const handleDelete = () => {};
+  const handleEdit = () => {
+    console.log('edit weight log');
+  };
+
+  const handleDelete = () => {
+    console.log('delete weight log');
+  };
 
   return (
-    <View>
+    <View style={{flexBasis: '33.3%'}}>
       <TouchableOpacity
         style={styles.container}
         onPress={() => setModalVisible(true)}>
@@ -57,45 +74,30 @@ const WeightBlock = (props) => {
         <Text style={styles.buttonText1}>Weight</Text>
         <ImageBackground source={img} style={styles.backgroundImg} />
       </TouchableOpacity>
+      <Text style={{textAlign: 'center'}}>{time}</Text>
       {/* Open details of log*/}
       <Modal
         isVisible={modalVisible}
         animationIn="slideInUp"
-        onBackdropPress={() => setModalVisible(false)}
-        onBackButtonPress={() => setModalVisible(false)}
+        onBackdropPress={() => closeModal()}
+        onBackButtonPress={() => closeModal()}
         style={{justifyContent: 'flex-end'}}>
         <Header title={'Weight:' + time} closeModal={closeModal} />
-        <View style={styles.modalContainer}>
-          <WeightLogBlock
-            date={date}
-            setDate={setDate}
-            weight={weightValue}
-            setWeight={setWeight}
-          />
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}>
-            {disable == true ? (
-              <TouchableOpacity
-                disabled={disable}
-                style={[styles.actionButton, {backgroundColor: '#cdd4e4'}]}>
-                <Text style={styles.actionText}>Edit</Text>
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity
-                style={[styles.actionButton, {backgroundColor: '#aad326'}]}>
-                <Text style={styles.actionText}>Edit</Text>
-              </TouchableOpacity>
-            )}
-            <TouchableOpacity
-              style={[styles.actionButton, {backgroundColor: '#ffb7e7'}]}>
-              <Text style={styles.actionText}>Delete</Text>
-            </TouchableOpacity>
+        <KeyboardAvoidingView behavior="padding">
+          <View style={styles.modalContainer}>
+            <WeightLogBlock
+              date={dateValue}
+              setDate={setDate}
+              weight={weightValue}
+              setWeight={setWeight}
+            />
+            <ActionButton
+              disable={disable}
+              handleEdit={handleEdit}
+              handleDelete={handleDelete}
+            />
           </View>
-        </View>
+        </KeyboardAvoidingView>
       </Modal>
     </View>
   );
@@ -105,17 +107,16 @@ export default WeightBlock;
 
 const styles = StyleSheet.create({
   container: {
-    width: '40%', // This should be the same size as backgroundImg height
+    width: '100%', // This should be the same size as backgroundImg height
     alignSelf: 'center',
-    paddingTop: 10,
-    paddingBottom: 10,
+    padding: 10,
   },
   iconImg: {
     position: 'absolute',
     top: '40%',
-    left: '7%',
-    width: 40,
-    height: 40,
+    left: '20%',
+    width: 30,
+    height: 30,
     resizeMode: 'contain', //resize image so dont cut off
   },
   backgroundImg: {
@@ -130,7 +131,7 @@ const styles = StyleSheet.create({
   buttonText1: {
     position: 'absolute',
     top: '75%',
-    left: '6%',
+    left: '19%',
     fontSize: 18,
     fontWeight: '700',
     color: '#072d08',
@@ -138,20 +139,5 @@ const styles = StyleSheet.create({
   modalContainer: {
     backgroundColor: 'white',
     padding: '3%',
-  },
-  actionButton: {
-    borderRadius: 20,
-    margin: '2%',
-    flexDirection: 'row',
-    padding: '10%',
-    alignSelf: 'center',
-    marginVertical: 10,
-    paddingHorizontal: 40,
-    paddingVertical: 6,
-  },
-  actionText: {
-    fontWeight: '700',
-    fontSize: 17,
-    textAlign: 'center',
   },
 });

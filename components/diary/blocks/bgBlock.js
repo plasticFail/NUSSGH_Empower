@@ -5,14 +5,15 @@ import {
   StyleSheet,
   Image,
   ImageBackground,
-  Dimensions,
+  KeyboardAvoidingView,
 } from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import {TouchableOpacity, ScrollView} from 'react-native-gesture-handler';
 //third party library
 import Modal from 'react-native-modal';
 //component
 import Header from './header';
 import BloodGlucoseLogBlock from '../../logs/bloodGlucoseLogBlock';
+import ActionButton from './actionBtn';
 //function
 import {getTime, getDateObj} from '../../../commonFunctions/diaryFunctions';
 
@@ -25,17 +26,27 @@ const BgBlock = (props) => {
   const img = require('../../../resources/images/bloodglucose.jpg');
   const logo = require('../../../resources/images/bloodglucose_logo.png');
   const initialBg = String(bloodGlucose.bg_reading);
+  const initialDate = getDateObj(dateString);
   const [modalVisible, setModalVisible] = useState(false);
-  const [date, setDate] = useState(getDateObj(dateString));
+  const [dateValue, setDateValue] = useState(initialDate);
   const [bg, setBg] = useState(initialBg);
   const [disable, setDisabled] = useState(true);
 
   //close itself
   const closeModal = () => {
     setModalVisible(false);
+    setBgValue(initialBg);
+    setDateValue(initialDate);
   };
 
-  //handle edit
+  const setDate = (value) => {
+    setDateValue(value);
+    if (value != initialDate) {
+      setDisabled(false);
+    } else if (value == initialDate) {
+      setDisabled(true);
+    }
+  };
 
   //enable edit button
   const setBgValue = (value) => {
@@ -48,10 +59,17 @@ const BgBlock = (props) => {
   };
 
   //handle delete of log
-  const handleDelete = () => {};
+  const handleDelete = () => {
+    console.log('delete blood glucose');
+  };
+
+  //handle edit
+  const handleEdit = () => {
+    console.log('edit blood glucose');
+  };
 
   return (
-    <View>
+    <View style={{flexBasis: '33.3%'}}>
       <TouchableOpacity
         style={styles.buttonStyle}
         onPress={() => setModalVisible(true)}>
@@ -59,44 +77,29 @@ const BgBlock = (props) => {
         <Text style={styles.buttonText1}>Blood Glucose</Text>
         <ImageBackground source={img} style={styles.backgroundImg} />
       </TouchableOpacity>
+      <Text style={{textAlign: 'center'}}>{time}</Text>
       <Modal
         isVisible={modalVisible}
         animationIn="slideInUp"
-        onBackdropPress={() => setModalVisible(false)}
-        onBackButtonPress={() => setModalVisible(false)}
-        style={{justifyContent: 'flex-end'}}>
-        <Header title={'Blood Glucose:' + time} closeModal={closeModal} />
-        <View style={styles.modalContainer}>
-          <BloodGlucoseLogBlock
-            date={date}
-            setDate={setDate}
-            bloodGlucose={bg}
-            setBloodGlucose={setBgValue}
-          />
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}>
-            {disable == true ? (
-              <TouchableOpacity
-                disabled={disable}
-                style={[styles.actionButton, {backgroundColor: '#cdd4e4'}]}>
-                <Text style={styles.actionText}>Edit</Text>
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity
-                style={[styles.actionButton, {backgroundColor: '#aad326'}]}>
-                <Text style={styles.actionText}>Edit</Text>
-              </TouchableOpacity>
-            )}
-            <TouchableOpacity
-              style={[styles.actionButton, {backgroundColor: '#ffb7e7'}]}>
-              <Text style={styles.actionText}>Delete</Text>
-            </TouchableOpacity>
+        onBackdropPress={() => closeModal()}
+        onBackButtonPress={() => closeModal()}
+        style={{flex: 1, justifyContent: 'flex-end'}}>
+        <KeyboardAvoidingView behavior="padding">
+          <Header title={'Blood Glucose:' + time} closeModal={closeModal} />
+          <View style={styles.modalContainer}>
+            <BloodGlucoseLogBlock
+              date={dateValue}
+              setDate={setDate}
+              bloodGlucose={bg}
+              setBloodGlucose={setBgValue}
+            />
+            <ActionButton
+              disable={disable}
+              handleEdit={handleEdit}
+              handleDelete={handleDelete}
+            />
           </View>
-        </View>
+        </KeyboardAvoidingView>
       </Modal>
     </View>
   );
@@ -106,17 +109,15 @@ export default BgBlock;
 
 const styles = StyleSheet.create({
   buttonStyle: {
-    width: '40%', // This should be the same size as backgroundImg height
-    alignSelf: 'center',
-    paddingTop: 10,
-    paddingBottom: 10,
+    width: '100%', // This should be the same size as backgroundImg height
+    padding: 10,
   },
   iconImg: {
     position: 'absolute',
     top: '40%',
-    left: '7%',
-    width: 40,
-    height: 40,
+    left: '20%',
+    width: 30,
+    height: 30,
     resizeMode: 'contain', //resize image so dont cut off
   },
   backgroundImg: {
@@ -131,7 +132,7 @@ const styles = StyleSheet.create({
   buttonText1: {
     position: 'absolute',
     top: '70%',
-    left: '6%',
+    left: '19%',
     fontSize: 18,
     fontWeight: '700',
     color: '#072d08',
@@ -139,20 +140,5 @@ const styles = StyleSheet.create({
   modalContainer: {
     backgroundColor: 'white',
     padding: '3%',
-  },
-  actionButton: {
-    borderRadius: 20,
-    margin: '2%',
-    flexDirection: 'row',
-    padding: '10%',
-    alignSelf: 'center',
-    marginVertical: 10,
-    paddingHorizontal: 40,
-    paddingVertical: 6,
-  },
-  actionText: {
-    fontWeight: '700',
-    fontSize: 17,
-    textAlign: 'center',
   },
 });

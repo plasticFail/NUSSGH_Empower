@@ -13,6 +13,7 @@ import Modal from 'react-native-modal';
 //component
 import Header from './header';
 import MedicationLogBlock from '../../logs/medicationLogBlock';
+import ActionButton from './actionBtn';
 //function
 import {getTime, getDateObj} from '../../../commonFunctions/diaryFunctions';
 
@@ -35,6 +36,7 @@ const MedBlock = (props) => {
   };
 
   //open edit modal
+  const handleEdit = () => {};
 
   //handle delete of log
   const handleDelete = () => {};
@@ -49,7 +51,7 @@ const MedBlock = (props) => {
   };
 
   return (
-    <View>
+    <View style={{flexBasis: '33.3%'}}>
       <TouchableOpacity
         style={styles.container}
         onPress={() => setModalVisible(true)}>
@@ -57,6 +59,7 @@ const MedBlock = (props) => {
         <Text style={styles.buttonText1}>Medication</Text>
         <ImageBackground source={img} style={styles.backgroundImg} />
       </TouchableOpacity>
+      <Text style={{textAlign: 'center'}}>{time}</Text>
       {/* Open details of log*/}
       <Modal
         isVisible={modalVisible}
@@ -72,29 +75,11 @@ const MedBlock = (props) => {
             selectedMedicationList={list}
             onListChange={onListChange}
           />
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}>
-            {disable == true ? (
-              <TouchableOpacity
-                disabled={disable}
-                style={[styles.actionButton, {backgroundColor: '#cdd4e4'}]}>
-                <Text style={styles.actionText}>Edit</Text>
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity
-                style={[styles.actionButton, {backgroundColor: '#aad326'}]}>
-                <Text style={styles.actionText}>Edit</Text>
-              </TouchableOpacity>
-            )}
-            <TouchableOpacity
-              style={[styles.actionButton, {backgroundColor: '#ffb7e7'}]}>
-              <Text style={styles.actionText}>Delete</Text>
-            </TouchableOpacity>
-          </View>
+          <ActionButton
+            disable={disable}
+            handleEdit={handleEdit}
+            handleDelete={handleDelete}
+          />
         </View>
       </Modal>
     </View>
@@ -105,7 +90,7 @@ export default MedBlock;
 
 const styles = StyleSheet.create({
   container: {
-    width: '40%', // This should be the same size as backgroundImg height
+    width: '100%', // This should be the same size as backgroundImg height
     alignSelf: 'center',
     paddingTop: 10,
     paddingBottom: 10,
@@ -113,9 +98,9 @@ const styles = StyleSheet.create({
   iconImg: {
     position: 'absolute',
     top: '40%',
-    left: '7%',
-    width: 40,
-    height: 40,
+    left: '20%',
+    width: 30,
+    height: 30,
     resizeMode: 'contain', //resize image so dont cut off
   },
   backgroundImg: {
@@ -130,7 +115,7 @@ const styles = StyleSheet.create({
   buttonText1: {
     position: 'absolute',
     top: '75%',
-    left: '6%',
+    left: '19%',
     fontSize: 18,
     fontWeight: '700',
     color: '#072d08',
@@ -139,21 +124,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     padding: '3%',
     flex: 1,
-  },
-  actionButton: {
-    borderRadius: 20,
-    margin: '2%',
-    flexDirection: 'row',
-    padding: '10%',
-    alignSelf: 'center',
-    marginVertical: 10,
-    paddingHorizontal: 40,
-    paddingVertical: 6,
-  },
-  actionText: {
-    fontWeight: '700',
-    fontSize: 17,
-    textAlign: 'center',
   },
   medicationAddedText: {
     fontSize: 18,

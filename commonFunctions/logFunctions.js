@@ -1,28 +1,8 @@
 import Moment from 'moment';
 import {Alert} from 'react-native';
+import {glucoseAddLogRequest, medicationAddLogRequest, weightAddLogRequest} from '../netcalls/requestsLog';
+import {storeLastBgLog, storeLastMedicationLog, storeLastWeightLog} from '../storage/asyncStorageFunctions';
 
-const checkTime = (dateToCheck) => {
-  Moment.locale('en');
-  let format = 'hh:mm';
-  let timeNow = Moment(new Date(), format);
-  let timeInput = Moment(dateToCheck, format);
-  if (dateToCheck.toDateString() !== new Date().toDateString()) {
-    Alert.alert(
-      'Error',
-      'Invalid date. Make sure date selected is not after today. ',
-      [{text: 'Got It'}],
-    );
-    return false;
-  } else if (timeInput.isAfter(timeNow)) {
-    Alert.alert(
-      'Error',
-      'Invalid date. Make sure time selected is not after current time. ',
-      [{text: 'Got It'}],
-    );
-    return false;
-  }
-  return true;
-};
 
 const checkBloodGlucose = (bloodGlucose) => {
   if (bloodGlucose) {
@@ -121,11 +101,78 @@ const checkDosage = (dosageString) => {
   }
 };
 
+const handleSubmitBloodGlucose = async(date, bloodGlucose) => {
+  if (checkBloodGlucose(bloodGlucose)) {
+    let formatDate = Moment(date).format('DD/MM/YYYY HH:mm:ss');
+    if(await glucoseAddLogRequest(Number(bloodGlucose), formatDate)){
+      storeLastBgLog({
+        value: bloodGlucose,
+        date: Moment(date).format('YYYY/MM/DD'),
+        time: Moment(date).format('h:mm a'),
+      });
+      return true;
+    }else{
+      Alert.alert('Error', 'Unexpected Error Occured', [
+        {text: 'Try again later'},
+      ]);
+      return false;
+    }
+  }
+};
+
+const handleSubmitMedication = async(date, selectedMedicationList) => {
+  for (let x of selectedMedicationList) {
+    x.recordDate = Moment(date).format('DD/MM/YYYY HH:mm:ss');
+  }
+
+  //remove image to send back to database
+  let listCopySend = JSON.parse(JSON.stringify(selectedMedicationList));
+  listCopySend.map(function (item) {
+    delete item.image_url;
+    return item;
+  });
+
+  if(await medicationAddLogRequest(listCopySend)){
+    storeLastMedicationLog({
+      value: selectedMedicationList,
+      date: Moment(date).format('YYYY/MM/DD'),
+      time: Moment(date).format('h:mm a'),
+    });
+    return true;
+  }else {
+    Alert.alert('Error', 'Unexpected Error Occured', [
+      {text: 'Try again later'},
+    ]);
+    return false;
+  }
+}
+
+const handleSubmitWeight = async(date, weight) => {
+  if (checkWeight(weight)) {
+    let formatDate = Moment(date).format('DD/MM/YYYY HH:mm:ss');
+    if(await weightAddLogRequest(Number(weight), formatDate)){
+      storeLastWeightLog({
+        value: weight,
+        date: Moment(date).format('YYYY/MM/DD'),
+        time: Moment(date).format('h:mm a'),
+      });
+      return true;
+    }else {
+      Alert.alert('Error', 'Unexpected Error Occured ', [
+        {text: 'Try Again Later'},
+      ]);
+      return false;
+    }
+  }
+};
+
 export {
-  checkTime,
   checkBloodGlucose,
   checkWeight,
   checkBloodGlucoseText,
   checkWeightText,
   checkDosage,
+  handleSubmitBloodGlucose,
+  handleSubmitMedication,
+  handleSubmitWeight,
 };
