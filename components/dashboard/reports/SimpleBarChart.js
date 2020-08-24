@@ -152,8 +152,6 @@ export default function SimpleBarChart(props) {
                             fill={selectedIndex === index ? '#3caea3' : '#03dac6'} height={scaleHeight(d.y)}
                         />
                     ))
-
-
                 }
             </Svg>
         </View>

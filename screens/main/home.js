@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet, Button} from 'react-native';
+import {View, Text, StyleSheet, Button, Dimensions} from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -9,91 +9,126 @@ import {
   TouchableOpacity,
   FlatList,
 } from 'react-native-gesture-handler';
+import {Svg, Text as SvgText, Circle, Image, Rect, G, Defs, ClipPath} from "react-native-svg";
 import NutritionIntakeCard from '../../components/dashboard/todayOverview/NutritionIntakeCard';
+import DailyBloodSugarLevelBarChart from "../../components/dashboard/reports/DailyBloodSugarLevelBarChart";
+
+Ionicon.loadFont();
+Icon.loadFont();
+Foundation.loadFont();
+Entypo.loadFont();
 
 const buttonList = [
   {
     id: '1',
     name: 'Medications',
-    iconName: 'medicinebox',
-    route: 'Medication',
+    path: 'Medication'
   },
   {
     id: '2',
-    name: 'Reports',
-    iconName: 'linechart',
-    route: 'Reports',
+    name: 'Rewards',
+    path: 'GameCenter'
   },
   {
     id: '3',
-    name: 'Education',
-    iconName: 'solution1',
-    route: 'EducationMaterials',
-  },
-  {
-    id: '4',
-    name: 'Game Center',
-    iconName: 'game-controller',
-    route: 'GameCenter',
-  },
-  {
-    id: '5',
     name: 'Goals',
-    iconName: 'target-two',
-    route: 'Goals',
-  },
+    path: 'Goals'
+  }
 ];
 
+function getGreetingFromHour(hour) {
+  if (hour > 4 && hour < 12) {
+    return "Morning";
+  } else if (hour >= 12 && hour < 18) {
+    return "Afternoon";
+  } else if (hour >= 18 && hour < 22) {
+    return "Evening";
+  } else {
+    return "Night";
+  }
+}
+
+// properties
+const username = "Jimmy";
+const {width, height} = Dimensions.get('window');
+const buttonSize = width * 0.26;
+const padding = 20;
+
+const bloodGlucoseBarChartWidth = width - 2 * padding;
+const bloodGlucoseBarChartHeight = height * 0.21;
+
 const HomeScreen = (props) => {
-  Ionicon.loadFont();
-  Icon.loadFont();
-  Foundation.loadFont();
-  Entypo.loadFont();
+  const [currHour, setCurrHour] = React.useState(new Date().getHours());
+  React.useEffect(() => {
+    //Refresh every 1 minutes
+    setTimeout(() => setCurrHour(new Date().getHours()), 60000);
+  })
 
   return (
     <ScrollView
       contentContainerStyle={{
         flexGrow: 1,
-        //justifyContent: 'space-between',
         backgroundColor: 'white',
+        padding: padding
       }}>
-      <View style={[styles.buttonContainer, styles.shadow]}>
-        <FlatList
-          keyExtractor={(item, index) => item.id}
-          data={buttonList}
-          contentContainerStyle={{
-            flexDirection: 'row',
-            justifyContent: 'space-around',
-            alignItems: 'center',
-            flexGrow: 1,
-          }}
-          renderItem={({item}) => (
-            <View>
-              <TouchableOpacity style={[styles.buttonStyle]}>
-                {item.iconName == 'game-controller' ? (
-                  <Entypo name={item.iconName} size={28} />
-                ) : item.iconName != 'target-two' ? (
-                  <Icon name={item.iconName} size={30} />
-                ) : (
-                  <Foundation name="target-two" size={30} />
-                )}
-              </TouchableOpacity>
-              <Text>{item.name}</Text>
-            </View>
-          )}
-        />
+      <View style={{height: '10%', justifyContent: 'center'}}>
+        <Text style={styles.greetingText}>
+          {getGreetingFromHour(currHour)} <Text style={styles.usernameText}>{username}</Text>
+        </Text>
       </View>
-
-      <Text style={styles.text}>Today's Overview</Text>
-      {/*
-       <View
-        style={[
-          styles.chartContainter,
-          styles.shadow,
-          styles.contentContainer,
-        ]}></View>
-        */}
-      <View style={styles.chartContainter}>
+      <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingBottom: 20}}>
+        <Svg width={width- 2 * padding} height={buttonSize}>
+          {
+            buttonList.map((button, index) => {
+                const textXOffset = 10;
+                const textYOffset = 20;
+                const fontSize = 14.5;
+                const circleRadius = 0.35 * buttonSize;
+                const circleYOffset = 10
+                const circleXOffset = 10;
+                return (<G key={button.id}>
+                      <Defs>
+                        <ClipPath id={`clip-${index}`}>
+                          <Circle r={circleRadius}
+                                  x={index * (buttonSize + (width - 2 * padding - 3 * (buttonSize))/ 2)
+                                  + circleRadius - circleXOffset}
+                                  y={circleRadius - circleYOffset}
+                          />
+                        </ClipPath>
+                      </Defs>
+                      <Rect
+                          width={buttonSize}
+                          x={index * (buttonSize + (width - 2 * padding - 3 * (buttonSize))/ 2)}
+                          rx={15}
+                          height={buttonSize}
+                          fill='#B2D04B'
+                      />
+                      <Rect
+                          width={buttonSize}
+                          x={index * (buttonSize + (width - 2 * padding - 3 * (buttonSize))/ 2)}
+                          rx={15}
+                          height={buttonSize}
+                          fill='#C3DA6B'
+                          clipPath={`url(#clip-${index})`}
+                      />
+                      <SvgText x={index * (buttonSize + (width - 2 * padding - 3 * (buttonSize))/ 2) + textXOffset}
+                               fontSize={fontSize}
+                               y={buttonSize - textYOffset}
+                               fontWeight='bold'
+                               fill='#fff'>
+                        {button.name}
+                      </SvgText>
+                    </G>
+                )
+              }
+            )
+          }
+        </Svg>
+      </View>
+      <DailyBloodSugarLevelBarChart width={bloodGlucoseBarChartWidth}
+                                    height={bloodGlucoseBarChartHeight} />
+      <View>
+        {/* Nutrition overview, activity overview, weight overview */}
         <NutritionIntakeCard onPress={() => alert('pressed nutrient card!')} />
       </View>
     </ScrollView>
@@ -101,53 +136,13 @@ const HomeScreen = (props) => {
 };
 
 const styles = StyleSheet.create({
-  buttonContainer: {
-    height: '12%',
-    justifyContent: 'center',
-    backgroundColor: '#f4fcda',
-    borderRadius: 20,
-    margin: '4%',
+  greetingText: {
+    color: '#222939',
+    fontSize: 32,
+    fontWeight: 'bold'
   },
-  buttonIconContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    paddingTop: '2%',
-  },
-  wordContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-  },
-  buttonText: {
-    marginTop: '1%',
-    marginEnd: '5%',
-  },
-  buttonStyle: {
-    padding: '2%',
-    backgroundColor: 'white',
-    borderRadius: 30,
-    alignItems: 'center',
-    borderWidth: 0.2,
-  },
-  gameCenterContainer: {
-    flex: 0.1,
-    backgroundColor: '#ffeffd',
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    paddingStart: '1%',
-    paddingEnd: '1%',
-  },
-  chartContainter: {
-    flex: 1,
-    marginLeft: '5%',
-    marginRight: '5%',
-  },
-  text: {
-    marginStart: '5%',
-    marginTop: '1%',
-    fontSize: 18,
-    fontWeight: '500',
-    marginBottom: '3%',
+  usernameText: {
+    color: '#B2D14A'
   },
   shadow: {
     shadowColor: '#000',
@@ -158,15 +153,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-  },
-  contentContainer: {
-    // borderRadius: 300,
-    // marginStart: '2%',
-    borderRadius: 20,
-    marginStart: '4%',
-    marginBottom: '4%',
-    marginEnd: '4%',
-    paddingTop: '2%',
   },
 });
 
