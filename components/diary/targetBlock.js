@@ -169,9 +169,9 @@ class TargetBlock extends Component {
           Number(arr[2]) + Number(arr1[2]) + Number(arr2[2]) + Number(arr3[2]);
 
         if (
-          totalCarbs >= maxCarbs ||
-          totalProtein <= maxProtein ||
-          totalFats <= maxFats
+          totalCarbs > maxCarbs ||
+          totalProtein > maxProtein ||
+          totalFats > maxFats
         ) {
           this.setState({foodPass: false});
         } else {
