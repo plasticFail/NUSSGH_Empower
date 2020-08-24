@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, Text, Dimensions, Image, TouchableWithoutFeedback, Animated, Modal, ActivityIndicator} from 'react-native';
+import {View, StyleSheet, Text, Dimensions, Image, TouchableWithoutFeedback, Animated, Modal, ActivityIndicator, Linking} from 'react-native';
 import {Svg, Circle} from "react-native-svg";
 import WebView from "react-native-webview";
 import {BackAndForwardButton} from "../../components/BackAndForwardButtons";
@@ -15,7 +15,6 @@ const circleOffset = height - headerHeight;
 Icon.loadFont();
 export default function FitbitSetup(props) {
     const [expand, setExpand] = React.useState(false);
-    const [openWebview, setOpenWebview] = React.useState(false);
     const expandAnimation = React.useRef(new Animated.Value(0));
     React.useEffect(() => {
         if (expand) {
@@ -38,6 +37,12 @@ export default function FitbitSetup(props) {
         outputRange: [0.92, 1] // Grows from 80% size to 100% size
     });
 
+    const handleOpenFitbitOAuthUrl = () => {
+        Linking.canOpenURL(fitbitOAuthUri).then(supported => {
+            Linking.openURL(fitbitOAuthUri);
+        })
+    }
+
     return (
         <View style={styles.root}>
             <View style={StyleSheet.absoluteFill}>
@@ -57,7 +62,7 @@ export default function FitbitSetup(props) {
                     <Text style={styles.fitbitPromptText}>
                         Tap on the Fitbit icon to begin!
                     </Text>
-                    <TouchableWithoutFeedback onPress={() => setOpenWebview(true)}>
+                    <TouchableWithoutFeedback onPress={handleOpenFitbitOAuthUrl}>
                         <Animated.View style={[styles.fitbitIconStyle, {transform: [{scale}]}]}>
                             <Image source={fitbitIcon} style={{width: '100%', height: '100%'}} />
                         </Animated.View>
@@ -68,7 +73,9 @@ export default function FitbitSetup(props) {
                                       overrideForwardTitle='Skip'
                                       enableForward={() => true} />
             </View>
-            {openWebview && <FitbitWebViewModal visible={openWebview} setVisible={setOpenWebview}/>}
+            {
+                //openWebview && <FitbitWebViewModal visible={openWebview} setVisible={setOpenWebview}/>
+            }
         </View>
     )
 }
