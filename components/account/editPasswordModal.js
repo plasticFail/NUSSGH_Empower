@@ -29,10 +29,6 @@ const EditPasswordModal = (props) => {
   const [strong, setStrong] = useState(false);
 
   useEffect(() => {
-    setInputCurrent('');
-    setNewPassword('');
-    setConfirmPassword('');
-
     getToken().then((value) => {
       setToken(value);
     });
@@ -73,12 +69,17 @@ const EditPasswordModal = (props) => {
     ) {
       resetPassword(newPassword, token).then((result) => {
         Alert.alert(
-          'Password Change Success',
+          'Password Change Successfully',
           '',
           [
             {
               text: 'Got It',
-              onPress: () => props.close(),
+              onPress: () => {
+                setInputCurrent('');
+                setNewPassword('');
+                setConfirmPassword('');
+                props.close();
+              },
             },
           ],
           {cancelable: false},

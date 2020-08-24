@@ -20,7 +20,7 @@ function ForgetPasswordScreen({navigation}) {
 
   const handleButtonPress = () => {
     if (phoneNumber != '' && phoneNumber.length == 8) {
-      var first = phoneNumber.substring(0, 1);
+      let first = phoneNumber.substring(0, 1);
       if (first == '8' || first == '9') {
         sendOTPRequest(phoneNumber).then((response) => {
           if (response.message === 'OTP sent.') {
