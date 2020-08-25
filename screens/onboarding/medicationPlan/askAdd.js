@@ -1,9 +1,10 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, Dimensions} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 //third party library
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import Calendar from 'react-native-calendars';
+import {Calendar} from 'react-native-calendars';
+import CalendarMedicationDay from '../../../components/onboarding/medication/calendarMedicationDay';
 
 Ionicons.loadFont();
 
@@ -36,19 +37,41 @@ const AskAdd = (props) => {
         help to track them.
       </Text>
       {isEmpty(selectedDates) === true ? (
-        <TouchableOpacity
-          style={styles.addButton}
-          onPress={handleAddMedication}>
-          <Ionicons name="add-circle" size={80} color="#aad326" />
-        </TouchableOpacity>
+        <>
+          <TouchableOpacity
+            style={styles.addButton}
+            onPress={handleAddMedication}>
+            <Ionicons name="add-circle" size={80} color="#aad326" />
+          </TouchableOpacity>
+          <View style={{flex: 1}} />
+          <TouchableOpacity style={styles.skipButton} onPress={handleSkip}>
+            <Text style={styles.buttonText}>Skip</Text>
+          </TouchableOpacity>
+        </>
       ) : (
-        <Text>hI</Text>
+        <>
+          <Calendar
+            dayComponent={CalendarMedicationDay}
+            current={new Date()}
+            hideArrows={true}
+            onDayPress={(day) => {
+              console.log('Showing ', day);
+            }}
+            markedDates={selectedDates}
+            markingType={'custom'}
+            selectAll={false}
+            theme={{
+              textDayHeaderFontSize: 15,
+            }}
+          />
+          <View style={{flex: 1}} />
+          <TouchableOpacity
+            style={[styles.skipButton, {backgroundColor: '#aad326'}]}
+            onPress={handleSkip}>
+            <Text style={styles.buttonText}>Next</Text>
+          </TouchableOpacity>
+        </>
       )}
-
-      <View style={{flex: 1}} />
-      <TouchableOpacity style={styles.skipButton} onPress={handleSkip}>
-        <Text style={styles.buttonText}>Skip</Text>
-      </TouchableOpacity>
     </View>
   );
 };
@@ -58,23 +81,29 @@ export default AskAdd;
 const styles = StyleSheet.create({
   onboardingContainer: {
     flex: 1,
-    padding: ' 10%',
-    width: '100%',
+    paddingTop: '3%',
+    backgroundColor: 'white',
   },
   stepText: {
     marginTop: '20%',
     fontSize: 35,
     fontWeight: '700',
+    marginStart: '3%',
+    marginEnd: '3%',
   },
   stepContent: {
     fontWeight: '700',
     fontSize: 20,
     marginTop: '3%',
+    marginStart: '3%',
+    marginEnd: '3%',
   },
   stepDescription: {
     fontSize: 17,
     width: '90%',
     marginTop: '3%',
+    marginStart: '3%',
+    marginEnd: '3%',
   },
   addButton: {
     alignSelf: 'center',
@@ -83,8 +112,10 @@ const styles = StyleSheet.create({
   skipButton: {
     backgroundColor: '#e4e4e4',
     height: 45,
-    width: '100%',
+    width: '70%',
     borderRadius: 20,
+    margin: '5%',
+    alignSelf: 'center',
   },
   buttonText: {
     fontSize: 20,

@@ -52,14 +52,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: '30%',
   },
-  weekName: {
-    width: 32,
-    textAlign: 'center',
-    fontSize: 12,
-    textTransform: 'uppercase',
-    fontWeight: 'bold',
-    color: '#7c7c7c',
-  },
   content: {
     width: 36,
     height: 36,

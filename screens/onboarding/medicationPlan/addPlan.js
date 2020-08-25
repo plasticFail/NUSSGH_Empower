@@ -130,6 +130,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     padding: '3%',
+    backgroundColor: 'white',
   },
   backIcon: {
     marginTop: '5%',
@@ -162,8 +163,9 @@ const styles = StyleSheet.create({
   addButton: {
     backgroundColor: '#aad326',
     height: 45,
-    width: '100%',
+    width: '70%',
     borderRadius: 15,
+    alignSelf: 'center',
   },
   addText: {
     fontSize: 20,

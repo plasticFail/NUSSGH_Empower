@@ -94,6 +94,7 @@ const CalendarTemplate = (props) => {
         setSelectAll={selectAll}
         theme={{
           header: 'flex-start',
+          textDayHeaderFontSize: 15,
         }}
       />
     </>

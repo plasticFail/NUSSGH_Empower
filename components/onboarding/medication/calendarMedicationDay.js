@@ -1,5 +1,11 @@
 import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Dimensions,
+} from 'react-native';
 
 //show the calendar view with underline when there is medication for that particular day
 const CalendarMedicationDay = (props) => {
@@ -11,15 +17,19 @@ const CalendarMedicationDay = (props) => {
       text: {
         color: '#181c26',
       },
+      border: {},
     };
 
     if (state === 'disabled') {
       style.text.color = '#c1c2c1';
     } else if (marking.marked === true && marking.medicationList.length != 0) {
-      console.log('hihihi');
       style.text.color = 'black';
       style.content.backgroundColor = '#aad326';
       style.content.borderRadius = 10;
+      style.border.borderWidth = 1;
+      style.border.borderRadius = 20;
+      style.border.width = '60%';
+      style.border.borderColor = 'white';
     } else {
       style.content.backgroundColor = '#e2e2e2';
       style.content.borderRadius = 10;
@@ -42,6 +52,7 @@ const CalendarMedicationDay = (props) => {
           <Text style={[styles.contentText, contentStyle.text]}>
             {String(date.day)}
           </Text>
+          <View style={contentStyle.border} />
         </TouchableOpacity>
       </View>
     )
@@ -49,20 +60,6 @@ const CalendarMedicationDay = (props) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: '30%',
-  },
-  weekName: {
-    width: 32,
-    textAlign: 'center',
-    fontSize: 12,
-    textTransform: 'uppercase',
-    fontWeight: 'bold',
-    color: '#7c7c7c',
-  },
   content: {
     width: 36,
     height: 36,
