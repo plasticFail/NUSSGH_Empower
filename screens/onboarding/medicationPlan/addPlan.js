@@ -1,8 +1,9 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 //third party library
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import moment from 'moment';
 //component
 import Counter from '../../../components/onboarding/medication/Counter';
 import SelectDaysModal from '../../../components/onboarding/medication/selectDaysModal';
@@ -16,7 +17,9 @@ const AddPlan = (props) => {
   const [selectedString, setSelectedString] = useState('');
   const [dayModalVisible, setDayModalVisible] = useState(false);
 
-  console.log(selectedDates);
+  useEffect(() => {
+    formatSelectionString();
+  }, [selectedDates]);
 
   const goPrevScreen = () => {
     props.navigation.goBack();
@@ -36,6 +39,29 @@ const AddPlan = (props) => {
   };
   const openModal = () => {
     setDayModalVisible(true);
+  };
+
+  //handle formating selection string
+  const formatSelectionString = () => {
+    let selections = '';
+    let arr = Object.keys(selectedDates);
+
+    for (var i = 0; i < arr.length; i++) {
+      let newDayString = moment(new Date(arr[i])).format('Do');
+      if (i === arr.length - 1) {
+        selections += newDayString;
+      } else {
+        selections += newDayString + ', ';
+      }
+    }
+    console.log(selections.length);
+
+    if (selections.length > 42) {
+      let reducedString = selections.slice(0, 42) + '...';
+      setSelectedString(reducedString);
+    } else {
+      setSelectedString(selections);
+    }
   };
 
   return (
@@ -64,8 +90,10 @@ const AddPlan = (props) => {
       />
       <Text style={styles.fieldText}>Recurring Period</Text>
       <TouchableOpacity style={styles.selectDaysButton} onPress={openModal}>
-        {isEmpty(selectedDates) === true && (
+        {isEmpty(selectedDates) === true ? (
           <Text style={styles.selectDaysText}>Select Days</Text>
+        ) : (
+          <Text style={styles.selectDaysText}>{selectedString}</Text>
         )}
       </TouchableOpacity>
       {/* Day Selection Modal Component*/}
@@ -75,11 +103,11 @@ const AddPlan = (props) => {
         selectedDates={selectedDates}
         setSelectedDates={setSelectedDates}
       />
-
-      <View style={{flex: 1}} />
+      <View style={{flex: 7}} />
       <TouchableOpacity style={styles.addButton}>
         <Text style={styles.addText}>Add</Text>
       </TouchableOpacity>
+      <View style={{flex: 1}} />
     </View>
   );
 };
@@ -117,6 +145,8 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: 'center',
     marginVertical: '2%',
+    paddingStart: '2%',
+    paddingEnd: '2%',
   },
   addButton: {
     backgroundColor: '#aad326',

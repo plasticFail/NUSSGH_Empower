@@ -1,6 +1,7 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 //third party library
 import {Calendar} from 'react-native-calendars';
+import moment from 'moment';
 
 //Props:
 //dayComponent: pass a component to render the styling for each day
@@ -15,14 +16,12 @@ const CalendarTemplate = (props) => {
     selectedDates,
     setSelectedDates,
     dayComponent,
-    setSelectedString,
     allowSelectAll,
     hideArrows,
   } = props;
 
   //select and de-select date
-  const addSelectedDate = (day) => {
-    let dateString = String(day.dateString);
+  const addSelectedDate = (dateString) => {
     let newObj = {};
     //check if date is inside, if date is inside - deselect.
     if (Object.keys(selectedDates).includes(dateString)) {
@@ -43,7 +42,27 @@ const CalendarTemplate = (props) => {
   };
 
   const selectAll = () => {
-    console.log('hihi');
+    console.log('Selecting all dates');
+    let currentMonth = moment(new Date()).format('YYYY-MM');
+    let daysInMonth = moment(currentMonth, 'YYYY-MM').daysInMonth();
+    let newObj = {};
+    setSelectedDates({});
+    for (i = 1; i <= daysInMonth; i++) {
+      let stringDate = '';
+      if (i < 10) {
+        stringDate = currentMonth + '-0' + i;
+      } else {
+        stringDate = currentMonth + '-' + i;
+      }
+      newObj = {
+        ...newObj,
+        [stringDate]: {
+          selected: true,
+          marked: true,
+        },
+      };
+    }
+    setSelectedDates(newObj);
   };
 
   return (
@@ -54,7 +73,7 @@ const CalendarTemplate = (props) => {
         hideArrows={hideArrows}
         onDayPress={(day) => {
           console.log('Adding selected day', day);
-          addSelectedDate(day);
+          addSelectedDate(day.dateString);
         }}
         markedDates={selectedDates}
         markingType={'custom'}

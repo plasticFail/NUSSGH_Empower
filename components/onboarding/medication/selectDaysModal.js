@@ -9,12 +9,14 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 const SelectDaysModal = (props) => {
   const {visible, closeModal} = props;
   const {selectedDates, setSelectedDates} = props;
-  const {setSelectedString} = props;
+
+  const handleConfirm = () => {
+    //handle medication object.
+    closeModal();
+  };
+
   return (
-    <Modal
-      isVisible={visible}
-      onBackdropPress={() => closeModal()}
-      onBackButtonPress={() => closeModal()}>
+    <Modal isVisible={visible}>
       <View style={styles.dayModalContainer}>
         <Text style={styles.modalHeader}>Recurring Period</Text>
         <Text style={styles.modalDetails}>
@@ -24,11 +26,10 @@ const SelectDaysModal = (props) => {
           dayComponent={CalendarDayComponent}
           setSelectedDates={setSelectedDates}
           selectedDates={selectedDates}
-          setSelectedString={setSelectedString}
           allowSelectAll={true}
           hideArrows={true}
         />
-        <TouchableOpacity style={styles.confirmButton}>
+        <TouchableOpacity style={styles.confirmButton} onPress={handleConfirm}>
           <Text style={styles.confirmText}>Confirm</Text>
         </TouchableOpacity>
       </View>
@@ -53,7 +54,6 @@ const styles = StyleSheet.create({
   modalDetails: {
     fontSize: 16,
     margin: '4%',
-    width: '80%',
   },
   confirmButton: {
     backgroundColor: '#aad326',
