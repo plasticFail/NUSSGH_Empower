@@ -12,6 +12,7 @@ import moment from 'moment';
 //hideArrow: put true for option to show other months
 //headerStyle: either flex-start, center, flex-end (justifyContent)
 //calendarStyle: style theme of calendar
+//monthChange: boolean true false
 const CalendarTemplate = (props) => {
   const {
     selectedDates,
@@ -19,6 +20,7 @@ const CalendarTemplate = (props) => {
     dayComponent,
     allowSelectAll,
     hideArrows,
+    monthChange,
   } = props;
 
   const {selectedMedicine} = props;
@@ -84,6 +86,7 @@ const CalendarTemplate = (props) => {
         dayComponent={dayComponent}
         current={new Date()}
         hideArrows={hideArrows}
+        disableMonthChange={monthChange}
         onDayPress={(day) => {
           console.log('Adding selected day', day);
           addSelectedDate(day.dateString);

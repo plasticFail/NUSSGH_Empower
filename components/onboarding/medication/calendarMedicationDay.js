@@ -1,15 +1,12 @@
-import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Dimensions,
-} from 'react-native';
+import React, {useState} from 'react';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import ScheduledMedicationModal from './scheduledMedicationModal';
 
 //show the calendar view with underline when there is medication for that particular day
+//opens modal with scheduled medicine when select
 const CalendarMedicationDay = (props) => {
   const {state, marking = {}, date} = props;
+  const [visible, setVisible] = useState(false);
 
   const getContentStyle = () => {
     const style = {
@@ -39,7 +36,12 @@ const CalendarMedicationDay = (props) => {
 
   //open modal with medication
   const onDayPress = () => {
-    props.onPress(props.marking);
+    console.log('opening modal');
+    setVisible(true);
+  };
+
+  const closeModal = () => {
+    setVisible(false);
   };
 
   const contentStyle = getContentStyle();
@@ -54,6 +56,11 @@ const CalendarMedicationDay = (props) => {
           </Text>
           <View style={contentStyle.border} />
         </TouchableOpacity>
+        <ScheduledMedicationModal
+          isVisible={visible}
+          closeModal={closeModal}
+          medicationList={marking.medicationList}
+        />
       </View>
     )
   );
@@ -61,8 +68,8 @@ const CalendarMedicationDay = (props) => {
 
 const styles = StyleSheet.create({
   content: {
-    width: 36,
-    height: 36,
+    width: 40,
+    height: 33,
     justifyContent: 'center',
     alignItems: 'center',
   },

@@ -1,14 +1,15 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 //third party library
 import Modal from 'react-native-modal';
+//component
 import CalendarDayComponent from './calendarDay';
 import CalendarTemplate from '../../calendar/calendarTemplate';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 
 const SelectDaysModal = (props) => {
   const {visible, closeModal} = props;
   const {selectedDates, setSelectedDates} = props;
+  const {selectedMedicine} = props;
 
   const handleConfirm = () => {
     //handle medication object.
@@ -28,6 +29,8 @@ const SelectDaysModal = (props) => {
           selectedDates={selectedDates}
           allowSelectAll={true}
           hideArrows={true}
+          disableMonthChange={true}
+          selectedMedicine={selectedMedicine}
         />
         <TouchableOpacity style={styles.confirmButton} onPress={handleConfirm}>
           <Text style={styles.confirmText}>Confirm</Text>

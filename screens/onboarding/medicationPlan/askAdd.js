@@ -54,9 +54,7 @@ const AskAdd = (props) => {
             dayComponent={CalendarMedicationDay}
             current={new Date()}
             hideArrows={true}
-            onDayPress={(day) => {
-              console.log('Showing ', day);
-            }}
+            disableMonthChange={true}
             markedDates={selectedDates}
             markingType={'custom'}
             selectAll={false}
@@ -80,12 +78,12 @@ export default AskAdd;
 
 const styles = StyleSheet.create({
   onboardingContainer: {
-    flex: 1,
-    paddingTop: '3%',
+    paddingTop: '2%',
     backgroundColor: 'white',
+    flex: 1,
   },
   stepText: {
-    marginTop: '20%',
+    marginTop: '10%',
     fontSize: 35,
     fontWeight: '700',
     marginStart: '3%',
@@ -116,6 +114,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     margin: '5%',
     alignSelf: 'center',
+    marginBottom: '3%',
   },
   buttonText: {
     fontSize: 20,
