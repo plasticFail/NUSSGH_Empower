@@ -11,6 +11,7 @@ import moment from 'moment';
 //allowSelectAll : option to select all
 //hideArrow: put true for option to show other months
 //headerStyle: either flex-start, center, flex-end (justifyContent)
+//calendarStyle: style theme of calendar
 const CalendarTemplate = (props) => {
   const {
     selectedDates,
@@ -19,6 +20,8 @@ const CalendarTemplate = (props) => {
     allowSelectAll,
     hideArrows,
   } = props;
+
+  const {selectedMedicine} = props;
 
   //select and de-select date
   const addSelectedDate = (dateString) => {
@@ -35,10 +38,18 @@ const CalendarTemplate = (props) => {
         [dateString]: {
           selected: true,
           marked: true,
+          medicationList: [],
         },
       };
+      addMedication(newObj, dateString);
       setSelectedDates(newObj);
     }
+  };
+
+  //add the medication to the medication array in datestring key of object*
+  const addMedication = (object, dateString) => {
+    let arr = object[dateString].medicationList;
+    arr.push(selectedMedicine);
   };
 
   const selectAll = () => {
@@ -59,8 +70,10 @@ const CalendarTemplate = (props) => {
         [stringDate]: {
           selected: true,
           marked: true,
+          medicationList: [],
         },
       };
+      addMedication(newObj, stringDate);
     }
     setSelectedDates(newObj);
   };

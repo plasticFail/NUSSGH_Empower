@@ -1,16 +1,30 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 //third party library
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import Calendar from 'react-native-calendars';
 
 Ionicons.loadFont();
 
 const AskAdd = (props) => {
-  const handleSkip = () => {};
+  const [selectedDates, setSelectedDates] = useState({});
 
+  const onReturn = (data) => {
+    setSelectedDates(data);
+  };
+
+  const handleSkip = () => {};
   const handleAddMedication = () => {
-    props.navigation.navigate('AddPlan');
+    props.navigation.navigate('AddPlan', {onReturn: onReturn});
+  };
+
+  //check if selected dates object is empty
+  const isEmpty = (obj) => {
+    for (var key in obj) {
+      if (obj.hasOwnProperty(key)) return false;
+    }
+    return true;
   };
 
   return (
@@ -21,9 +35,16 @@ const AskAdd = (props) => {
         Would you like to add your scheduled medications for this month? We will
         help to track them.
       </Text>
-      <TouchableOpacity style={styles.addButton} onPress={handleAddMedication}>
-        <Ionicons name="add-circle" size={80} color="#aad326" />
-      </TouchableOpacity>
+      {isEmpty(selectedDates) === true ? (
+        <TouchableOpacity
+          style={styles.addButton}
+          onPress={handleAddMedication}>
+          <Ionicons name="add-circle" size={80} color="#aad326" />
+        </TouchableOpacity>
+      ) : (
+        <Text>hI</Text>
+      )}
+
       <View style={{flex: 1}} />
       <TouchableOpacity style={styles.skipButton} onPress={handleSkip}>
         <Text style={styles.buttonText}>Skip</Text>
@@ -52,7 +73,7 @@ const styles = StyleSheet.create({
   },
   stepDescription: {
     fontSize: 17,
-    width: '80%',
+    width: '90%',
     marginTop: '3%',
   },
   addButton: {

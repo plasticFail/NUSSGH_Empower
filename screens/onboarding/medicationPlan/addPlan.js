@@ -16,6 +16,12 @@ const AddPlan = (props) => {
   const [selectedDates, setSelectedDates] = useState({});
   const [selectedString, setSelectedString] = useState('');
   const [dayModalVisible, setDayModalVisible] = useState(false);
+  const [selectedMedicine, setSelectedMedicine] = useState({
+    drugName: 'ACTRAPID [Insulin Soluble] Injection',
+    image_url:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Actrapid_vial.jpg/1200px-Actrapid_vial.jpg',
+    unit: 'unit',
+  });
 
   useEffect(() => {
     formatSelectionString();
@@ -23,6 +29,12 @@ const AddPlan = (props) => {
 
   const goPrevScreen = () => {
     props.navigation.goBack();
+  };
+
+  //pass selected dates with the medications back
+  const handleAdd = () => {
+    props.navigation.goBack();
+    props.route.params.onReturn(selectedDates);
   };
 
   //check if selected dates object is empty
@@ -54,8 +66,6 @@ const AddPlan = (props) => {
         selections += newDayString + ', ';
       }
     }
-    console.log(selections.length);
-
     if (selections.length > 42) {
       let reducedString = selections.slice(0, 42) + '...';
       setSelectedString(reducedString);
@@ -102,9 +112,10 @@ const AddPlan = (props) => {
         closeModal={closeModal}
         selectedDates={selectedDates}
         setSelectedDates={setSelectedDates}
+        selectedMedicine={selectedMedicine}
       />
       <View style={{flex: 7}} />
-      <TouchableOpacity style={styles.addButton}>
+      <TouchableOpacity style={styles.addButton} onPress={handleAdd}>
         <Text style={styles.addText}>Add</Text>
       </TouchableOpacity>
       <View style={{flex: 1}} />

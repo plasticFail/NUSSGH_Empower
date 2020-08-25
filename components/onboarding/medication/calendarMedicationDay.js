@@ -1,8 +1,10 @@
 import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 
-const CalendarDayComponent = (props) => {
+//show the calendar view with underline when there is medication for that particular day
+const CalendarMedicationDay = (props) => {
   const {state, marking = {}, date} = props;
+
   const getContentStyle = () => {
     const style = {
       content: {},
@@ -13,7 +15,8 @@ const CalendarDayComponent = (props) => {
 
     if (state === 'disabled') {
       style.text.color = '#c1c2c1';
-    } else if (marking.marked === true) {
+    } else if (marking.marked === true && marking.medicationList.length != 0) {
+      console.log('hihihi');
       style.text.color = 'black';
       style.content.backgroundColor = '#aad326';
       style.content.borderRadius = 10;
@@ -24,9 +27,9 @@ const CalendarDayComponent = (props) => {
     return style;
   };
 
-  //allow for day selection*
+  //open modal with medication
   const onDayPress = () => {
-    props.onPress(props.date);
+    props.onPress(props.marking);
   };
 
   const contentStyle = getContentStyle();
@@ -71,4 +74,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CalendarDayComponent;
+export default CalendarMedicationDay;
