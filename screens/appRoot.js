@@ -37,7 +37,8 @@ import FoodSearchEngineScreen from './main/log/meal/FoodSearchEngine';
 import HeaderBackIcon from '../components/common/headerBackIcon';
 import HeaderBackIconClick from '../components/common/headerBackIconClick';
 import ContactUs from './contactUs';
-import CalendarSelect from './onboarding/medicationPlan/calendarSelect';
+import AskAdd from './onboarding/medicationPlan/askAdd';
+import AddPlan from './onboarding/medicationPlan/addPlan';
 
 Entypo.loadFont();
 
@@ -272,9 +273,15 @@ class AppRoot extends Component {
             <>
               <Stack.Screen
                 name="MedicationPlan"
-                component={CalendarSelect}
+                component={AskAdd}
                 options={{headerShown: false}}
               />
+              <Stack.Screen
+                name="AddPlan"
+                component={AddPlan}
+                options={{headerShown: false}}
+              />
+
               <Stack.Screen
                 name="Login"
                 component={Login}

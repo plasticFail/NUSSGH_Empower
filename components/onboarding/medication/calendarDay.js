@@ -1,14 +1,10 @@
 import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 
-class CalendarDayComponent extends React.Component {
-  constructor(props) {
-    super(props);
-    this.onDayPress = this.onDayPress.bind(this);
-  }
+const CalendarDayComponent = (props) => {
+  const {state, marking = {}, date} = props;
 
-  getContentStyle() {
-    const {state, marking = {}} = this.props;
+  const getContentStyle = () => {
     const style = {
       content: {},
       text: {
@@ -27,28 +23,28 @@ class CalendarDayComponent extends React.Component {
       style.content.borderRadius = 10;
     }
     return style;
-  }
+  };
 
   //open modal with medication
-  onDayPress() {
-    this.props.onPress(this.props.date);
-  }
+  const onDayPress = () => {
+    props.onPress(props.date);
+  };
 
-  render() {
-    const contentStyle = this.getContentStyle();
-    return (
+  const contentStyle = getContentStyle();
+  return (
+    getContentStyle() && (
       <View style={styles.container}>
         <TouchableOpacity
           style={[styles.content, contentStyle.content]}
-          onPress={this.onDayPress}>
+          onPress={onDayPress}>
           <Text style={[styles.contentText, contentStyle.text]}>
-            {String(this.props.date.day)}
+            {String(date.day)}
           </Text>
         </TouchableOpacity>
       </View>
-    );
-  }
-}
+    )
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
