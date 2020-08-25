@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from 'react';
 import {View, StyleSheet, Text} from 'react-native';
-import {ScrollView} from 'react-native-gesture-handler';
 //component
 import Result from './result';
 import ProgressBar from '../progressbar';
@@ -28,7 +27,6 @@ const Summary = (props) => {
     foodFailCount,
   } = props;
   console.log('In Summary Component: ');
-  console.log(fats);
 
   return (
     <>
@@ -156,7 +154,7 @@ function renderActivityResult(
         <Result success={true} message={'Activity log completed.'} />
         {percentage != 0 ? (
           <Text style={styles.percentStyle}>
-            {percentage} % of your activity logs have at least 6000 steps
+            {percentage} % of your activity logs have at least 20 active min
           </Text>
         ) : (
           <Text style={[styles.percentStyle, {color: 'red'}]}>

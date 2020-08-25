@@ -13,9 +13,9 @@ const missed = 'Missed';
 const improved = 'Improve';
 const maxWeight = 200;
 const minWeight = 40;
-const maxCarbs = 130;
-const maxProtein = 46;
-const maxFats = 46;
+const maxCarbs = 130; //grams
+const maxProtein = 46; //grams
+const maxFats = 46; //grams
 
 //mainly do the calculation for the result of the logs to display
 class TargetBlock extends Component {
@@ -51,6 +51,8 @@ class TargetBlock extends Component {
       activityPassCount: 0,
       activityMiss: false,
       activityFailCount: 0,
+      activityTarget: {},
+      activitySummary: {},
     };
 
     this.init(); // for first time*
@@ -75,6 +77,8 @@ class TargetBlock extends Component {
 
         //set target
         targetBg: d.glucose.target,
+        activityTarget: d.activity.summary_target,
+        activitySummary: d.activity.summary,
       });
       this.getAllResult();
       this.handleOnPress = this.handleOnPress.bind(this);
@@ -190,11 +194,12 @@ class TargetBlock extends Component {
 
   getActivityResult = () => {
     let length = this.state.activityLogs.length;
-    let minstep = 6000;
     let passCount = 0;
+    let targetType = this.state.activityTarget.type;
+    let value = this.state.activityTarget.value;
     if (length != 0) {
       for (var x of this.state.activityLogs) {
-        if (x.steps >= minstep) {
+        if (x[targetType] >= value) {
           passCount++;
         }
       }
@@ -235,6 +240,7 @@ class TargetBlock extends Component {
       activityMiss: this.state.activityMiss,
       activityPassCount: this.state.activityPassCount,
       activityFailCount: this.state.activityFailCount,
+      activitySummary: this.state.activitySummary,
     });
   };
 
