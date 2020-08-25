@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 //third party library
-import {Calendar} from 'git';
+import {Calendar} from 'react-native-calendars';
 import moment from 'moment';
 
 //Props:

@@ -3,7 +3,7 @@ import {View, Text, StyleSheet, Dimensions} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 //third party library
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {Calendar} from 'git';
+import {Calendar} from 'react-native-calendars';
 import CalendarMedicationDay from '../../../components/onboarding/medication/calendarMedicationDay';
 
 Ionicons.loadFont();
