@@ -49,6 +49,9 @@ export default function DailyBloodSugarLevelBarChart(props) {
     const barLabelHeight = 20;
     const barLabelWidth = 30;
     const barLabelYOffset = 10;
+    // lower and upper bound labels
+    const lowerBound = 4.0;
+    const upperBound = 11.0;
 
     // d3 properties
     const minX = new Date(2020, 8, 27, 0, 0, 0, 0);
@@ -81,6 +84,12 @@ export default function DailyBloodSugarLevelBarChart(props) {
                                 {Moment(xVal).format("H:mm")}
                             </SvgText>
                         ))
+                    }
+                    {
+                        // healthy bounds (lower and upper).
+                        <Path key='healthyRange' stroke='none' fill='#F1F6D7'
+                              d={`M 0 ${scaleY(lowerBound)} l ${width - paddingLeft - paddingRight + barWidth + 2 * axisMargin} 0
+                              l 0 ${-scaleY(upperBound)} l ${-(width - paddingLeft - paddingRight + barWidth + 2 * axisMargin)} 0 Z`}/>
                     }
                     {
                         // vertical lines for x axis labels

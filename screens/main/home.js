@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, StyleSheet, Button, Dimensions} from 'react-native';
-import Icon from 'react-native-vector-icons/AntDesign';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Foundation from 'react-native-vector-icons/Foundation';
@@ -12,9 +12,7 @@ import {
 import {Svg, Text as SvgText, Circle, Image, Rect, G, Defs, ClipPath} from "react-native-svg";
 import NutritionIntakeCard from '../../components/dashboard/todayOverview/NutritionIntakeCard';
 import DailyBloodSugarLevelBarChart from "../../components/dashboard/reports/DailyBloodSugarLevelBarChart";
-
 Ionicon.loadFont();
-Icon.loadFont();
 Foundation.loadFont();
 Entypo.loadFont();
 
@@ -22,17 +20,20 @@ const buttonList = [
   {
     id: '1',
     name: 'Medications',
-    path: 'Medication'
+    path: 'Medication',
+    iconName: 'capsules'
   },
   {
     id: '2',
     name: 'Rewards',
-    path: 'GameCenter'
+    path: 'GameCenter',
+    iconName: 'gift'
   },
   {
     id: '3',
     name: 'Goals',
-    path: 'Goals'
+    path: 'Goals',
+    iconName: 'empire'
   }
 ];
 
@@ -111,6 +112,12 @@ const HomeScreen = (props) => {
                           fill='#C3DA6B'
                           clipPath={`url(#clip-${index})`}
                       />
+                      <Icon name={button.iconName} color='#fff'
+                            size={30}
+                            style={{position: 'absolute',
+                              transform: [
+                                  {translateX: index * (buttonSize + (width - 2 * padding - 3 * (buttonSize))/ 2) + circleXOffset},
+                                  {translateY: circleYOffset}]}} />
                       <SvgText x={index * (buttonSize + (width - 2 * padding - 3 * (buttonSize))/ 2) + textXOffset}
                                fontSize={fontSize}
                                y={buttonSize - textYOffset}
