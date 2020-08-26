@@ -8,7 +8,6 @@ import {
 import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
 import {connect} from 'react-redux';
 import Entypo from 'react-native-vector-icons/Entypo';
-import Icon from 'react-native-vector-icons/dist/FontAwesome';
 //functions
 import {getToken} from '../storage/asyncStorageFunctions';
 import {mapStateToProps, mapDispatchToProps} from '../redux/reduxMapping';
@@ -120,6 +119,7 @@ class AppRoot extends Component {
                       clickFunc={() => navigation.navigate('Chat')}
                     />
                   ),
+                  headerBackTitleVisible: false,
                 })}
               />
               <Stack.Screen
@@ -129,6 +129,7 @@ class AppRoot extends Component {
                   title: 'Alerts',
                   headerBackImage: () => <HeaderBackIcon />,
                   headerRight: () => <View />,
+                  headerBackTitleVisible: false,
                 }}
               />
               <Stack.Screen
@@ -138,6 +139,7 @@ class AppRoot extends Component {
                   title: 'Chat',
                   headerBackImage: () => <HeaderBackIcon />,
                   headerRight: () => <View />,
+                  headerBackTitleVisible: false,
                 }}
               />
               <Stack.Screen
@@ -147,6 +149,7 @@ class AppRoot extends Component {
                   title: 'Daily Log',
                   headerBackImage: () => <HeaderBackIcon />,
                   headerRight: () => <View />,
+                  headerBackTitleVisible: false,
                 }}
               />
               <Stack.Screen
@@ -156,6 +159,7 @@ class AppRoot extends Component {
                   title: 'Meal Log',
                   headerBackImage: () => <HeaderBackIcon />,
                   headerRight: () => <View />,
+                  headerBackTitleVisible: false,
                 })}
               />
               <Stack.Screen
@@ -192,6 +196,7 @@ class AppRoot extends Component {
                     />
                   ),
                   headerRight: () => <View />,
+                  headerBackTitleVisible: false,
                 })}
               />
               <Stack.Screen
@@ -202,6 +207,7 @@ class AppRoot extends Component {
                   headerBackImage: () => <HeaderBackIcon />,
                   headerRight: () => <View />,
                   ...TransitionPresets.ModalTransition,
+                  headerBackTitleVisible: false,
                 })}
               />
               <Stack.Screen
@@ -212,6 +218,7 @@ class AppRoot extends Component {
                   headerBackImage: () => <HeaderBackIcon />,
                   headerRight: () => <View />,
                   ...TransitionPresets.ModalTransition,
+                  headerBackTitleVisible: false,
                 })}
               />
               <Stack.Screen
@@ -226,6 +233,7 @@ class AppRoot extends Component {
                   title: 'Blood Glucose Log',
                   headerRight: () => <View />,
                   headerBackImage: () => <HeaderBackIcon />,
+                  headerBackTitleVisible: false,
                 }}
               />
               <Stack.Screen
@@ -235,6 +243,7 @@ class AppRoot extends Component {
                   title: 'Medication Log',
                   headerRight: () => <View />,
                   headerBackImage: () => <HeaderBackIcon />,
+                  headerBackTitleVisible: false,
                 }}
               />
               <Stack.Screen
@@ -244,6 +253,7 @@ class AppRoot extends Component {
                   title: 'Weight Log',
                   headerRight: () => <View />,
                   headerBackImage: () => <HeaderBackIcon />,
+                  headerBackTitleVisible: false,
                 }}
               />
               <Stack.Screen
