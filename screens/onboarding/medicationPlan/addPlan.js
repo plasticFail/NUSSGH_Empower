@@ -13,7 +13,7 @@ Ionicons.loadFont();
 const AddPlan = (props) => {
   const [dosage, setDosage] = useState(0);
   const [frequency, setFrequency] = useState(0);
-  const [selectedDates, setSelectedDates] = useState({});
+  const [selectedDates41, setSelectedDates41] = useState({});
   const [selectedString, setSelectedString] = useState('');
   const [dayModalVisible, setDayModalVisible] = useState(false);
   const [selectedMedicine, setSelectedMedicine] = useState({
@@ -23,9 +23,12 @@ const AddPlan = (props) => {
     unit: 'unit',
   });
 
+  console.disableYellowBox = true;
+  console.ignoredYellowBox = ['Non-serializable'];
+
   useEffect(() => {
     formatSelectionString();
-  }, [selectedDates]);
+  }, [selectedDates41]);
 
   const goPrevScreen = () => {
     props.navigation.goBack();
@@ -34,7 +37,7 @@ const AddPlan = (props) => {
   //pass selected dates with the medications back
   const handleAdd = () => {
     props.navigation.goBack();
-    props.route.params.onReturn(selectedDates);
+    props.route.params.onReturn(selectedDates41);
   };
 
   //check if selected dates object is empty
@@ -56,7 +59,7 @@ const AddPlan = (props) => {
   //handle formating selection string
   const formatSelectionString = () => {
     let selections = '';
-    let arr = Object.keys(selectedDates);
+    let arr = Object.keys(selectedDates41);
 
     for (var i = 0; i < arr.length; i++) {
       let newDayString = moment(new Date(arr[i])).format('Do');
@@ -100,7 +103,7 @@ const AddPlan = (props) => {
       />
       <Text style={styles.fieldText}>Recurring Period</Text>
       <TouchableOpacity style={styles.selectDaysButton} onPress={openModal}>
-        {isEmpty(selectedDates) === true ? (
+        {isEmpty(selectedDates41) === true ? (
           <Text style={styles.selectDaysText}>Select Days</Text>
         ) : (
           <Text style={styles.selectDaysText}>{selectedString}</Text>
@@ -110,8 +113,8 @@ const AddPlan = (props) => {
       <SelectDaysModal
         visible={dayModalVisible}
         closeModal={closeModal}
-        selectedDates={selectedDates}
-        setSelectedDates={setSelectedDates}
+        selectedDates41={selectedDates41}
+        setSelectedDates41={setSelectedDates41}
         selectedMedicine={selectedMedicine}
       />
       <View style={{flex: 7}} />

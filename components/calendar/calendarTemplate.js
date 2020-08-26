@@ -13,73 +13,17 @@ import moment from 'moment';
 //headerStyle: either flex-start, center, flex-end (justifyContent)
 //calendarStyle: style theme of calendar
 //monthChange: boolean true false
+//addSelectedDate: call back function to act on get selected date string
+//selectAll: callback function to act on all dates selected for the month*
 const CalendarTemplate = (props) => {
   const {
-    selectedDates,
-    setSelectedDates,
     dayComponent,
     allowSelectAll,
     hideArrows,
     monthChange,
+    selectedDates41,
   } = props;
-
-  const {selectedMedicine} = props;
-
-  //select and de-select date
-  const addSelectedDate = (dateString) => {
-    let newObj = {};
-    //check if date is inside, if date is inside - deselect.
-    if (Object.keys(selectedDates).includes(dateString)) {
-      console.log('----deselecting');
-      delete selectedDates[dateString];
-      //markedDate prop in Calendar is immutable* need do below to show change
-      setSelectedDates(JSON.parse(JSON.stringify(selectedDates)));
-    } else {
-      newObj = {
-        ...selectedDates,
-        [dateString]: {
-          selected: true,
-          marked: true,
-          medicationList: [],
-        },
-      };
-      addMedication(newObj, dateString);
-      setSelectedDates(newObj);
-    }
-  };
-
-  //add the medication to the medication array in datestring key of object*
-  const addMedication = (object, dateString) => {
-    let arr = object[dateString].medicationList;
-    arr.push(selectedMedicine);
-  };
-
-  const selectAll = () => {
-    console.log('Selecting all dates');
-    let currentMonth = moment(new Date()).format('YYYY-MM');
-    let daysInMonth = moment(currentMonth, 'YYYY-MM').daysInMonth();
-    let newObj = {};
-    setSelectedDates({});
-    for (i = 1; i <= daysInMonth; i++) {
-      let stringDate = '';
-      if (i < 10) {
-        stringDate = currentMonth + '-0' + i;
-      } else {
-        stringDate = currentMonth + '-' + i;
-      }
-      newObj = {
-        ...newObj,
-        [stringDate]: {
-          selected: true,
-          marked: true,
-          medicationList: [],
-        },
-      };
-      addMedication(newObj, stringDate);
-    }
-    setSelectedDates(newObj);
-  };
-
+  const {addSelectedDate, selectAll} = props;
   return (
     <>
       <Calendar
@@ -91,7 +35,7 @@ const CalendarTemplate = (props) => {
           console.log('Adding selected day', day);
           addSelectedDate(day.dateString);
         }}
-        markedDates={selectedDates}
+        markedDates={selectedDates41}
         markingType={'custom'}
         selectAll={allowSelectAll}
         setSelectAll={selectAll}

@@ -2,18 +2,68 @@ import React, {useState} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 //third party library
 import Modal from 'react-native-modal';
+import moment from 'moment';
 //component
 import CalendarDayComponent from './calendarDay';
 import CalendarTemplate from '../../calendar/calendarTemplate';
 
+//responsible for adding a medication to the selected days*
 const SelectDaysModal = (props) => {
   const {visible, closeModal} = props;
-  const {selectedDates, setSelectedDates} = props;
+  const {selectedDates41, setSelectedDates41} = props;
   const {selectedMedicine} = props;
 
   const handleConfirm = () => {
     //handle medication object.
     closeModal();
+  };
+
+  //select and de-select date
+  const addSelectedDate = (dateString) => {
+    let newObj = {};
+    //check if date is inside, if date is inside - deselect.
+    if (Object.keys(selectedDates41).includes(dateString)) {
+      console.log('----deselecting');
+      delete selectedDates[dateString];
+      //markedDate prop in Calendar is immutable* need do below to show change
+      setSelectedDates(JSON.parse(JSON.stringify(selectedDates41)));
+    } else {
+      newObj = {
+        ...selectedDates41,
+        [dateString]: {
+          selected: true,
+          marked: true,
+          medicine: selectedMedicine,
+        },
+      };
+      setSelectedDates41(newObj);
+    }
+  };
+
+  const selectAll = () => {
+    console.log('Selecting all dates');
+    let currentMonth = moment(new Date()).format('YYYY-MM');
+    let daysInMonth = moment(currentMonth, 'YYYY-MM').daysInMonth();
+    let newObj = {};
+    setSelectedDates41({});
+
+    for (i = 1; i <= daysInMonth; i++) {
+      let stringDate = '';
+      if (i < 10) {
+        stringDate = currentMonth + '-0' + i;
+      } else {
+        stringDate = currentMonth + '-' + i;
+      }
+      newObj = {
+        ...newObj,
+        [stringDate]: {
+          selected: true,
+          marked: true,
+          medicine: selectedMedicine,
+        },
+      };
+    }
+    setSelectedDates41(newObj);
   };
 
   return (
@@ -25,12 +75,12 @@ const SelectDaysModal = (props) => {
         </Text>
         <CalendarTemplate
           dayComponent={CalendarDayComponent}
-          setSelectedDates={setSelectedDates}
-          selectedDates={selectedDates}
           allowSelectAll={true}
           hideArrows={true}
           disableMonthChange={true}
-          selectedMedicine={selectedMedicine}
+          addSelectedDate={addSelectedDate}
+          selectAll={selectAll}
+          selectedDates41={selectedDates41}
         />
         <TouchableOpacity style={styles.confirmButton} onPress={handleConfirm}>
           <Text style={styles.confirmText}>Confirm</Text>

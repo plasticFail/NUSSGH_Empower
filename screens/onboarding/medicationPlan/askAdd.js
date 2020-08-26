@@ -9,10 +9,55 @@ import CalendarMedicationDay from '../../../components/onboarding/medication/cal
 Ionicons.loadFont();
 
 const AskAdd = (props) => {
-  const [selectedDates, setSelectedDates] = useState({});
+  const [selectedDates4All, setSelectedDates4All] = useState({});
+  console.log('--------');
+  console.log(selectedDates4All);
 
+  //get the selected dates for a particular medication
+  //loop through the current selectDatesForAll to see if medicine exist for day
+  //if not, add the medication*
   const onReturn = (data) => {
-    setSelectedDates(data);
+    for (var x of Object.keys(data)) {
+      if (!Object.keys(selectedDates4All).includes(x)) {
+        let newObj = {
+          ...selectedDates4All,
+          [x]: {
+            selected: true,
+            marked: true,
+            medicationList: [data[x].medicine],
+          },
+        };
+        setSelectedDates4All(newObj);
+      } else {
+        //there is an existing date with medication
+        //check if medication exist in medicationlist for that date, if not add
+        if (
+          !containsObject(data[x].medicine, selectedDates4All[x].medicationList)
+        ) {
+          let arr = selectedDates4All[x].medicationList;
+          arr.push(data[x].medicine);
+          let newObj = {
+            ...selectedDates4All,
+            [x]: {
+              ...selectedDates4All[x],
+              medicationList: arr,
+            },
+          };
+          setSelectedDates4All(newObj);
+        }
+      }
+    }
+  };
+
+  //check if medicine name same*
+  const containsObject = (obj, list) => {
+    var i;
+    for (i = 0; i < list.length; i++) {
+      if (list[i].drugName === obj.drugName) {
+        return true;
+      }
+    }
+    return false;
   };
 
   const handleSkip = () => {};
@@ -36,7 +81,7 @@ const AskAdd = (props) => {
         Would you like to add your scheduled medications for this month? We will
         help to track them.
       </Text>
-      {isEmpty(selectedDates) === true ? (
+      {isEmpty(selectedDates4All) === true ? (
         <>
           <TouchableOpacity
             style={styles.addButton}
@@ -55,7 +100,7 @@ const AskAdd = (props) => {
             current={new Date()}
             hideArrows={true}
             disableMonthChange={true}
-            markedDates={selectedDates}
+            markedDates={selectedDates4All}
             markingType={'custom'}
             selectAll={false}
             theme={{
@@ -65,7 +110,7 @@ const AskAdd = (props) => {
           <View style={{flex: 1}} />
           <TouchableOpacity
             style={[styles.skipButton, {backgroundColor: '#aad326'}]}
-            onPress={handleSkip}>
+            onPress={handleAddMedication}>
             <Text style={styles.buttonText}>Next</Text>
           </TouchableOpacity>
         </>
