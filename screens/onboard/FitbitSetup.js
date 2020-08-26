@@ -5,7 +5,8 @@ import {Svg, Circle} from "react-native-svg";
 // component
 import {BackAndForwardButton} from "../../components/BackAndForwardButtons";
 //function
-import {getFitbitToken, storeFitbitToken} from "../../storage/asyncStorageFunctions";
+import {getFitbitToken} from "../../storage/asyncStorageFunctions";
+import {postFitbitToken} from "../../netcalls/fitbitEndpoints/tokenRequests";
 // config
 import {fitbitTokenUri, fitbitOAuthUri, client_id, redirect_uri, authorisationHeader, scope} from "../../config/FitbitConfig";
 // others
@@ -74,7 +75,7 @@ export default class FitbitSetup extends React.Component {
             })
         }).then(resp => resp.json())
             .then(data => {
-                storeFitbitToken(data).then(resp => {
+                postFitbitToken(data).then(resp => {
                         this.setState({
                             isAuthorized: true
                         });
