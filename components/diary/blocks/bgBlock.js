@@ -5,14 +5,15 @@ import {
   StyleSheet,
   Image,
   ImageBackground,
-  Dimensions,
+  KeyboardAvoidingView,
 } from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import {TouchableOpacity, ScrollView} from 'react-native-gesture-handler';
 //third party library
 import Modal from 'react-native-modal';
 //component
 import Header from './header';
 import BloodGlucoseLogBlock from '../../logs/bloodGlucoseLogBlock';
+import ActionButton from './actionBtn';
 //function
 import {getTime, getDateObj} from '../../../commonFunctions/diaryFunctions';
 
@@ -38,8 +39,6 @@ const BgBlock = (props) => {
     setDateValue(initialDate);
   };
 
-  //handle edit
-
   const setDate = (value) => {
     setDateValue(value);
     if (value != initialDate) {
@@ -60,7 +59,14 @@ const BgBlock = (props) => {
   };
 
   //handle delete of log
-  const handleDelete = () => {};
+  const handleDelete = () => {
+    console.log('delete blood glucose');
+  };
+
+  //handle edit
+  const handleEdit = () => {
+    console.log('edit blood glucose');
+  };
 
   return (
     <View style={{flexBasis: '33.3%'}}>
@@ -77,39 +83,23 @@ const BgBlock = (props) => {
         animationIn="slideInUp"
         onBackdropPress={() => closeModal()}
         onBackButtonPress={() => closeModal()}
-        style={{justifyContent: 'flex-end'}}>
-        <Header title={'Blood Glucose:' + time} closeModal={closeModal} />
-        <View style={styles.modalContainer}>
-          <BloodGlucoseLogBlock
-            date={dateValue}
-            setDate={setDate}
-            bloodGlucose={bg}
-            setBloodGlucose={setBgValue}
-          />
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}>
-            {disable == true ? (
-              <TouchableOpacity
-                disabled={disable}
-                style={[styles.actionButton, {backgroundColor: '#cdd4e4'}]}>
-                <Text style={styles.actionText}>Edit</Text>
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity
-                style={[styles.actionButton, {backgroundColor: '#aad326'}]}>
-                <Text style={styles.actionText}>Edit</Text>
-              </TouchableOpacity>
-            )}
-            <TouchableOpacity
-              style={[styles.actionButton, {backgroundColor: '#ffb7e7'}]}>
-              <Text style={styles.actionText}>Delete</Text>
-            </TouchableOpacity>
+        style={{flex: 1, justifyContent: 'flex-end'}}>
+        <KeyboardAvoidingView behavior="padding">
+          <Header title={'Blood Glucose:' + time} closeModal={closeModal} />
+          <View style={styles.modalContainer}>
+            <BloodGlucoseLogBlock
+              date={dateValue}
+              setDate={setDate}
+              bloodGlucose={bg}
+              setBloodGlucose={setBgValue}
+            />
+            <ActionButton
+              disable={disable}
+              handleEdit={handleEdit}
+              handleDelete={handleDelete}
+            />
           </View>
-        </View>
+        </KeyboardAvoidingView>
       </Modal>
     </View>
   );
@@ -150,20 +140,5 @@ const styles = StyleSheet.create({
   modalContainer: {
     backgroundColor: 'white',
     padding: '3%',
-  },
-  actionButton: {
-    borderRadius: 20,
-    margin: '2%',
-    flexDirection: 'row',
-    padding: '10%',
-    alignSelf: 'center',
-    marginVertical: 10,
-    paddingHorizontal: 40,
-    paddingVertical: 6,
-  },
-  actionText: {
-    fontWeight: '700',
-    fontSize: 17,
-    textAlign: 'center',
   },
 });

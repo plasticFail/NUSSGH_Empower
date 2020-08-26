@@ -1,10 +1,7 @@
 import React, {useState} from 'react';
 import {
   View,
-  ScrollView,
   StyleSheet,
-  TextInput,
-  TouchableOpacity,
   Text,
   Alert,
   Dimensions,
@@ -12,11 +9,11 @@ import {
   KeyboardAvoidingView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import PasswordStrengthMeter from '../../components/passwordStrengthMeter';
 import {resetPassword} from '../../netcalls/requestsPasswordReset';
+import SetPassword from '../../components/account/setPassword';
 
 const ResetPasswordScreen = (props) => {
-  const {token} = props.route.params;
+  const {token} = props.route.params; //rememberundo
   const [pass1, setPass1] = useState('');
   const [pass2, setPass2] = useState('');
   const [strong, setStrong] = useState(false);
@@ -77,21 +74,11 @@ const ResetPasswordScreen = (props) => {
           <Text style={styles.subText}>{'\u2713'} Special Characters</Text>
           <View
             style={[styles.formContainer, styles.shadow, {marginTop: '3%'}]}>
-            <PasswordStrengthMeter setPassword={setPassword} />
-            <TextInput
-              style={styles.inputBox}
-              placeholder="Confirm New Password"
-              placeholderTextColor="#a1a3a0"
-              secureTextEntry={true}
-              onChangeText={(value) => {
-                setPass2(value);
-              }}
+            <SetPassword
+              setPassword={setPassword}
+              setPassword2={setPass2}
+              checkPassword={checkPassword}
             />
-            <TouchableOpacity
-              style={styles.buttonStyle}
-              onPress={checkPassword}>
-              <Text style={styles.buttonText}>Submit</Text>
-            </TouchableOpacity>
           </View>
           <View style={{flex: 1}} />
         </View>

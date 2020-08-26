@@ -57,7 +57,7 @@ const PasswordStrengthMeter = (props) => {
             height: 9,
             width: '75%',
             alignSelf: 'center',
-            marginStart: '2%',
+            marginStart: '4%',
             marginEnd: '1%',
           }}
         />
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   inputBox: {
-    width: Dimensions.get('window').width - 30,
+    width: Dimensions.get('window').width - 60,
     borderRadius: 20,
     backgroundColor: '#EEF3BD',
     paddingStart: 30, //position placeholder text

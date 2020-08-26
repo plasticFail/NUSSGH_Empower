@@ -126,7 +126,7 @@ class DailyLog extends Component {
         return checkBloodGlucoseText(this.state.bloodGlucose) === '';
         break;
       case 2:
-        return isValidMeal(this.state.meal);
+        return this.state.meal !== null;
         break;
       case 3:
         return this.state.selectedMedicationList.length > 0;
@@ -147,7 +147,7 @@ class DailyLog extends Component {
         return checkBloodGlucoseText(this.state.bloodGlucose);
         break;
       case 2:
-        return true;
+        return this.state.meal !== null;
         break;
       case 3:
         return this.state.selectedMedicationList.length > 0;

@@ -87,8 +87,7 @@ class MealLogRoot extends React.Component {
 
     navigateToCreateMealLogPage = (selectedMeal) => {
         const meal = {...selectedMeal};
-        // remove unfavourite key from the selected meal.
-        delete meal['unfavourite'];
+
         this.props.navigation.navigate("CreateMealLog", {
             meal,
         });
