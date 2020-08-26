@@ -142,7 +142,7 @@ class AskAdd extends Component {
             <View style={{flex: 1}} />
             <TouchableOpacity
               style={[styles.skipButton, {backgroundColor: '#aad326'}]}
-              onPress={this.handleAddMedication}>
+              onPress={() => this.props.navigation.navigate('DashBoard')}>
               <Text style={styles.buttonText}>Next</Text>
             </TouchableOpacity>
           </>

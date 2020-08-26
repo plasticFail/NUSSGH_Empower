@@ -36,7 +36,7 @@ const CalendarMedicationDay = (props) => {
 
   //open modal with medication
   const onDayPress = () => {
-    console.log('opening modal');
+    console.log('opening modal for scheduled medicine');
     setVisible(true);
   };
 
@@ -60,6 +60,7 @@ const CalendarMedicationDay = (props) => {
           isVisible={visible}
           closeModal={closeModal}
           medicationList={marking.medicationList}
+          date={date}
         />
       </View>
     )
