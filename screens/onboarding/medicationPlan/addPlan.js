@@ -23,9 +23,6 @@ const AddPlan = (props) => {
     unit: 'unit',
   });
 
-  console.disableYellowBox = true;
-  console.ignoredYellowBox = ['Non-serializable'];
-
   useEffect(() => {
     formatSelectionString();
   }, [selectedDates41]);
@@ -36,8 +33,7 @@ const AddPlan = (props) => {
 
   //pass selected dates with the medications back
   const handleAdd = () => {
-    props.navigation.goBack();
-    props.route.params.onReturn(selectedDates41);
+    props.navigation.navigate('MedicationPlan', {list: selectedDates41});
   };
 
   //check if selected dates object is empty

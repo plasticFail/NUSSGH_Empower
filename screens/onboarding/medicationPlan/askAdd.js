@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from 'react';
-import {View, Text, StyleSheet, Dimensions} from 'react-native';
+import React, {Component} from 'react';
+import {View, Text, StyleSheet} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 //third party library
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -8,49 +8,50 @@ import CalendarMedicationDay from '../../../components/onboarding/medication/cal
 
 Ionicons.loadFont();
 
-const AskAdd = (props) => {
-  const [selectedDates4All, setSelectedDates4All] = useState({});
-  console.log('--------');
-  console.log(selectedDates4All);
+class AskAdd extends Component {
+  constructor(props) {
+    super(props);
+    this.props = props;
+
+    this.state = {
+      selectedDates4All: {},
+    };
+  }
+
+  componentDidUpdate(prevProp) {
+    console.log('here in component did update');
+    if (prevProp.route.params != this.props.route.params) {
+      const {list} = this.props.route.params;
+      let newObj = this.onReturn(list);
+      this.setState({selectedDates4All: newObj});
+    }
+  }
 
   //get the selected dates for a particular medication
   //loop through the current selectDatesForAll to see if medicine exist for day
   //if not, add the medication*
-  const onReturn = (data) => {
+  onReturn = (data) => {
+    let object = this.state.selectedDates4All;
     for (var x of Object.keys(data)) {
-      if (!Object.keys(selectedDates4All).includes(x)) {
-        let newObj = {
-          ...selectedDates4All,
-          [x]: {
-            selected: true,
-            marked: true,
-            medicationList: [data[x].medicine],
-          },
+      if (!Object.keys(object).includes(x)) {
+        object[x] = {
+          selected: true,
+          marked: true,
+          medicationList: [data[x].medicine],
         };
-        setSelectedDates4All(newObj);
       } else {
         //there is an existing date with medication
         //check if medication exist in medicationlist for that date, if not add
-        if (
-          !containsObject(data[x].medicine, selectedDates4All[x].medicationList)
-        ) {
-          let arr = selectedDates4All[x].medicationList;
-          arr.push(data[x].medicine);
-          let newObj = {
-            ...selectedDates4All,
-            [x]: {
-              ...selectedDates4All[x],
-              medicationList: arr,
-            },
-          };
-          setSelectedDates4All(newObj);
+        if (!this.containsObject(data[x].medicine, object[x].medicationList)) {
+          object[x].medicationList.push(data[x].medicine);
         }
       }
     }
+    return object;
   };
 
   //check if medicine name same*
-  const containsObject = (obj, list) => {
+  containsObject = (obj, list) => {
     var i;
     for (i = 0; i < list.length; i++) {
       if (list[i].drugName === obj.drugName) {
@@ -60,64 +61,96 @@ const AskAdd = (props) => {
     return false;
   };
 
-  const handleSkip = () => {};
-  const handleAddMedication = () => {
-    props.navigation.navigate('AddPlan', {onReturn: onReturn});
+  handleSkip = () => {};
+
+  handleAddMedication = () => {
+    this.props.navigation.navigate('AddPlan');
   };
 
   //check if selected dates object is empty
-  const isEmpty = (obj) => {
+  isEmpty = (obj) => {
     for (var key in obj) {
       if (obj.hasOwnProperty(key)) return false;
     }
     return true;
   };
 
-  return (
-    <View style={styles.onboardingContainer}>
-      <Text style={styles.stepText}>Step 3</Text>
-      <Text style={styles.stepContent}>Add your Medicine Plan</Text>
-      <Text style={styles.stepDescription}>
-        Would you like to add your scheduled medications for this month? We will
-        help to track them.
-      </Text>
-      {isEmpty(selectedDates4All) === true ? (
-        <>
-          <TouchableOpacity
-            style={styles.addButton}
-            onPress={handleAddMedication}>
-            <Ionicons name="add-circle" size={80} color="#aad326" />
-          </TouchableOpacity>
-          <View style={{flex: 1}} />
-          <TouchableOpacity style={styles.skipButton} onPress={handleSkip}>
-            <Text style={styles.buttonText}>Skip</Text>
-          </TouchableOpacity>
-        </>
-      ) : (
-        <>
-          <Calendar
-            dayComponent={CalendarMedicationDay}
-            current={new Date()}
-            hideArrows={true}
-            disableMonthChange={true}
-            markedDates={selectedDates4All}
-            markingType={'custom'}
-            selectAll={false}
-            theme={{
-              textDayHeaderFontSize: 15,
-            }}
-          />
-          <View style={{flex: 1}} />
-          <TouchableOpacity
-            style={[styles.skipButton, {backgroundColor: '#aad326'}]}
-            onPress={handleAddMedication}>
-            <Text style={styles.buttonText}>Next</Text>
-          </TouchableOpacity>
-        </>
-      )}
-    </View>
-  );
-};
+  isEquivalent = (a, b) => {
+    // Create arrays of property names
+    var aProps = Object.getOwnPropertyNames(a);
+    var bProps = Object.getOwnPropertyNames(b);
+
+    // If number of properties is different,
+    // objects are not equivalent
+    if (aProps.length != bProps.length) {
+      return false;
+    }
+
+    for (var i = 0; i < aProps.length; i++) {
+      var propName = aProps[i];
+
+      // If values of same property are not equal,
+      // objects are not equivalent
+      if (a[propName] !== b[propName]) {
+        return false;
+      }
+    }
+
+    // If we made it this far, objects
+    // are considered equivalent
+    return true;
+  };
+
+  render() {
+    const {selectedDates4All} = this.state;
+    return (
+      <View style={styles.onboardingContainer}>
+        <Text style={styles.stepText}>Step 3</Text>
+        <Text style={styles.stepContent}>Add your Medicine Plan</Text>
+        <Text style={styles.stepDescription}>
+          Would you like to add your scheduled medications for this month? We
+          will help to track them.
+        </Text>
+        {this.isEmpty(selectedDates4All) === true ? (
+          <>
+            <TouchableOpacity
+              style={styles.addButton}
+              onPress={this.handleAddMedication}>
+              <Ionicons name="add-circle" size={80} color="#aad326" />
+            </TouchableOpacity>
+            <View style={{flex: 1}} />
+            <TouchableOpacity
+              style={styles.skipButton}
+              onPress={this.handleSkip}>
+              <Text style={styles.buttonText}>Skip</Text>
+            </TouchableOpacity>
+          </>
+        ) : (
+          <>
+            <Calendar
+              dayComponent={CalendarMedicationDay}
+              current={new Date()}
+              hideArrows={true}
+              disableMonthChange={true}
+              markedDates={selectedDates4All}
+              markingType={'custom'}
+              selectAll={false}
+              theme={{
+                textDayHeaderFontSize: 15,
+              }}
+            />
+            <View style={{flex: 1}} />
+            <TouchableOpacity
+              style={[styles.skipButton, {backgroundColor: '#aad326'}]}
+              onPress={this.handleAddMedication}>
+              <Text style={styles.buttonText}>Next</Text>
+            </TouchableOpacity>
+          </>
+        )}
+      </View>
+    );
+  }
+}
 
 export default AskAdd;
 
