@@ -1,12 +1,17 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import ScheduledMedicationModal from './scheduledMedicationModal';
+import AskAdd from '../../../screens/onboarding/medicationPlan/askAdd';
 
 //show the calendar view with underline when there is medication for that particular day
 //opens modal with scheduled medicine when select
 const CalendarMedicationDay = (props) => {
   const {state, marking = {}, date} = props;
   const [visible, setVisible] = useState(false);
+  var Obj = new AskAdd();
+
+  console.log('in calendar medication day');
+  console.log(props);
 
   const getContentStyle = () => {
     const style = {
@@ -44,6 +49,10 @@ const CalendarMedicationDay = (props) => {
     setVisible(false);
   };
 
+  const handleRemove = () => {
+    Obj.removeObj();
+  };
+
   const contentStyle = getContentStyle();
   return (
     getContentStyle() && (
@@ -61,6 +70,7 @@ const CalendarMedicationDay = (props) => {
           closeModal={closeModal}
           medicationList={marking.medicationList}
           date={date}
+          removeMethod={handleRemove}
         />
       </View>
     )

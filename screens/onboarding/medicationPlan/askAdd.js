@@ -42,7 +42,6 @@ class AskAdd extends Component {
           marked: true,
           medicationList: [data[x].medicine],
         };
-        console.log(object);
       } else {
         //there is an existing date with medication
         //check if medication exist in medicationlist for that date, if not add
@@ -104,6 +103,10 @@ class AskAdd extends Component {
     // If we made it this far, objects
     // are considered equivalent
     return true;
+  };
+
+  removeObj = () => {
+    console.log('i wana remove');
   };
 
   render() {

@@ -13,6 +13,7 @@ Entypo.loadFont();
 const ScheduledMedicationModal = (props) => {
   const {isVisible, closeModal} = props;
   const {medicationList, date} = props;
+  const {removeMethod} = props;
   const dateString = moment(date.dateString, 'YYYY-MM-DD').format(
     'Do MMMM  YYYY',
   );
@@ -57,7 +58,10 @@ const ScheduledMedicationModal = (props) => {
                     onBackdropPress={handleCloseDeleteModal}
                     onBackButtonPress={handleCloseDeleteModal}>
                     <View style={styles.scheduledContainer}>
-                      <DeleteConfirmation medication={item} />
+                      <DeleteConfirmation
+                        medication={item}
+                        removeMethod={removeMethod}
+                      />
                     </View>
                   </Modal>
                 </>
