@@ -67,6 +67,7 @@ const AddPlan = (props) => {
       ]);
     } else {
       setParameter();
+      setMedicine2Obj();
       props.navigation.navigate('MedicationPlan', {list: selectedDates41});
     }
   };
@@ -76,6 +77,15 @@ const AddPlan = (props) => {
     if (!isEmpty(selectedMedicine)) {
       selectedMedicine['dosage'] = dosage;
       selectedMedicine['perDay'] = frequency;
+    }
+  };
+
+  //set selected medicine to object
+  const setMedicine2Obj = () => {
+    for (var x of Object.keys(selectedDates41)) {
+      if (isEmpty(selectedDates41[x].medicine)) {
+        selectedDates41[x].medicine = selectedMedicine;
+      }
     }
   };
 
