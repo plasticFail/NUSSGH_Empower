@@ -4,6 +4,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 //third party library
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {Calendar} from 'react-native-calendars';
+//component
 import CalendarMedicationDay from '../../../components/onboarding/medication/calendarMedicationDay';
 
 Ionicons.loadFont();
@@ -19,7 +20,6 @@ class AskAdd extends Component {
   }
 
   componentDidUpdate(prevProp) {
-    console.log('here in component did update');
     if (prevProp.route.params != this.props.route.params) {
       const {list} = this.props.route.params;
       let newObj = this.onReturn(list);

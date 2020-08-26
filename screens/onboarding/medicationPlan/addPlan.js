@@ -1,12 +1,18 @@
-import React, {useState, useEffect} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import React, {useState, useEffect, useDebugValue} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  TextInput,
+} from 'react-native';
 //third party library
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import moment from 'moment';
 //component
 import Counter from '../../../components/onboarding/medication/Counter';
 import SelectDaysModal from '../../../components/onboarding/medication/selectDaysModal';
+import SearchMedication from '../../../components/onboarding/medication/searchMedication';
 
 Ionicons.loadFont();
 
@@ -16,16 +22,35 @@ const AddPlan = (props) => {
   const [selectedDates41, setSelectedDates41] = useState({});
   const [selectedString, setSelectedString] = useState('');
   const [dayModalVisible, setDayModalVisible] = useState(false);
-  const [selectedMedicine, setSelectedMedicine] = useState({
-    drugName: 'ACTRAPID [Insulin Soluble] Injection',
-    image_url:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Actrapid_vial.jpg/1200px-Actrapid_vial.jpg',
-    unit: 'unit',
-  });
+  const [selectedMedicine, setSelectedMedicine] = useState({});
+  const [selectedMedicineName, setSelectedMedicineName] = useState('');
+  const [searchVisible, setSearchVisible] = useState(false);
 
   useEffect(() => {
     formatSelectionString();
   }, [selectedDates41]);
+
+  //cut name shown
+  useEffect(() => {
+    if (!isEmpty(selectedMedicine)) {
+      let name = selectedMedicine.drugName;
+      if (name.length > 42) {
+        let reducedString = name.slice(0, 42) + '...';
+        setSelectedMedicineName(reducedString);
+      } else {
+        setSelectedMedicineName(name);
+      }
+    }
+  }, [selectedMedicine]);
+
+  //update dosage and per day
+  useEffect(() => {
+    if (!isEmpty(selectedMedicine)) {
+      selectedMedicine['dosage'] = dosage;
+      selectedMedicine['perDay'] = frequency;
+    }
+    console.log(selectedMedicine);
+  }, [dosage, frequency]);
 
   const goPrevScreen = () => {
     props.navigation.goBack();
@@ -50,6 +75,14 @@ const AddPlan = (props) => {
   };
   const openModal = () => {
     setDayModalVisible(true);
+  };
+
+  const openSearchModal = () => {
+    setSearchVisible(true);
+  };
+
+  const closeSearchModal = () => {
+    setSearchVisible(false);
   };
 
   //handle formating selection string
@@ -85,6 +118,19 @@ const AddPlan = (props) => {
       </TouchableOpacity>
       <Text style={styles.stepDetailText}>Add Medicine Plan</Text>
       <Text style={{fontSize: 18}}>Select your medicine</Text>
+
+      <TouchableOpacity style={styles.searchInput} onPress={openSearchModal}>
+        {isEmpty(selectedMedicine) === true ? (
+          <Text style={{fontSize: 18, color: '#b5b5b5'}}>
+            <Ionicons name="search" size={20} /> Name (eg. Metformin)
+          </Text>
+        ) : (
+          <Text style={{fontSize: 18, color: 'black'}}>
+            {selectedMedicineName}
+          </Text>
+        )}
+      </TouchableOpacity>
+
       <Counter
         count={dosage}
         setCount={setDosage}
@@ -118,6 +164,15 @@ const AddPlan = (props) => {
         <Text style={styles.addText}>Add</Text>
       </TouchableOpacity>
       <View style={{flex: 1}} />
+      {/*Search */}
+      {searchVisible === true ? (
+        <SearchMedication
+          visible={searchVisible}
+          closeModal={closeSearchModal}
+          selectedMedicine={selectedMedicine}
+          setSelectedMedicine={setSelectedMedicine}
+        />
+      ) : null}
     </View>
   );
 };
@@ -171,5 +226,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginVertical: '3%',
     fontWeight: '700',
+  },
+  searchInput: {
+    backgroundColor: '#e6ebed',
+    borderRadius: 20,
+    height: '8%',
+    marginTop: '9%',
+    marginBottom: '3%',
+    padding: '4%',
   },
 });

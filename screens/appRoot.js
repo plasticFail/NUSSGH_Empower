@@ -268,9 +268,7 @@ class AppRoot extends Component {
                   headerRight: () => <View />,
                 })}
               />
-            </>
-          ) : (
-            <>
+              {/* Onboarding */}
               <Stack.Screen
                 name="MedicationPlan"
                 component={AskAdd}
@@ -281,7 +279,9 @@ class AppRoot extends Component {
                 component={AddPlan}
                 options={{headerShown: false}}
               />
-
+            </>
+          ) : (
+            <>
               <Stack.Screen
                 name="Login"
                 component={Login}
