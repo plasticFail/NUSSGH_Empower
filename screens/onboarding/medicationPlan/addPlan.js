@@ -56,7 +56,7 @@ const AddPlan = (props) => {
 
   //pass selected dates with the medications back
   const handleAdd = () => {
-    if (dosage === 0 || frequency === 0 || selectedMedicine === undefined) {
+    if (dosage === 0 || frequency === 0 || isEmpty(selectedMedicine)) {
       Alert.alert('Invalid Input', 'Make sure all fields are filled', [
         {text: 'Got It'},
       ]);

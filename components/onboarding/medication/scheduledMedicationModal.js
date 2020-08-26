@@ -20,8 +20,13 @@ const ScheduledMedicationModal = (props) => {
   //delete modal
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
 
+  const handleCloseDeleteModal = () => {
+    setDeleteModalVisible(false);
+  };
+
   const handleDelete = () => {
     console.log('show delete confirmation');
+    setDeleteModalVisible(true);
   };
 
   const handleAdd = () => {
@@ -42,10 +47,20 @@ const ScheduledMedicationModal = (props) => {
               keyExtractor={(item, index) => index.toString()}
               data={medicationList}
               renderItem={({item}) => (
-                <MedicationAdded
-                  medication={item}
-                  handleDelete={handleDelete}
-                />
+                <>
+                  <MedicationAdded
+                    medication={item}
+                    handleDelete={handleDelete}
+                  />
+                  <Modal
+                    isVisible={deleteModalVisible}
+                    onBackdropPress={handleCloseDeleteModal}
+                    onBackButtonPress={handleCloseDeleteModal}>
+                    <View style={styles.scheduledContainer}>
+                      <DeleteConfirmation medication={item} />
+                    </View>
+                  </Modal>
+                </>
               )}
             />
           )}
@@ -57,7 +72,6 @@ const ScheduledMedicationModal = (props) => {
           </TouchableOpacity>
         </View>
       </Modal>
-      <DeleteConfirmation />
     </>
   );
 };
