@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 import {useNavigation} from '@react-navigation/native';
@@ -6,6 +6,7 @@ import {useNavigation} from '@react-navigation/native';
 import Modal from 'react-native-modal';
 import moment from 'moment';
 import Entypo from 'react-native-vector-icons/Entypo';
+import DeleteConfirmation from './deleteConfirmation';
 
 Entypo.loadFont();
 
@@ -16,6 +17,8 @@ const ScheduledMedicationModal = (props) => {
     'Do MMMM  YYYY',
   );
   const navigation = useNavigation();
+  //delete modal
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
 
   const handleDelete = () => {
     console.log('show delete confirmation');
@@ -27,29 +30,35 @@ const ScheduledMedicationModal = (props) => {
   };
 
   return (
-    <Modal isVisible={isVisible}>
-      <View style={styles.scheduledContainer}>
-        <Text style={styles.header}>{dateString}</Text>
-        <Text style={styles.details}>Scheduled Medications:</Text>
-        {medicationList === undefined ? (
-          <Text style={styles.details}>No Medication Set Yet</Text>
-        ) : (
-          <FlatList
-            keyExtractor={(item, index) => index.toString()}
-            data={medicationList}
-            renderItem={({item}) => (
-              <MedicationAdded medication={item} handleDelete={handleDelete} />
-            )}
-          />
-        )}
-        <TouchableOpacity style={styles.button} onPress={handleAdd}>
-          <Text style={styles.buttonText}>Add</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={closeModal}>
-          <Text style={styles.backText}>Back</Text>
-        </TouchableOpacity>
-      </View>
-    </Modal>
+    <>
+      <Modal isVisible={isVisible}>
+        <View style={styles.scheduledContainer}>
+          <Text style={styles.header}>{dateString}</Text>
+          <Text style={styles.details}>Scheduled Medications:</Text>
+          {medicationList === undefined ? (
+            <Text style={styles.miss}>No Medication Set Yet</Text>
+          ) : (
+            <FlatList
+              keyExtractor={(item, index) => index.toString()}
+              data={medicationList}
+              renderItem={({item}) => (
+                <MedicationAdded
+                  medication={item}
+                  handleDelete={handleDelete}
+                />
+              )}
+            />
+          )}
+          <TouchableOpacity style={styles.button} onPress={handleAdd}>
+            <Text style={styles.buttonText}>Add</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={closeModal}>
+            <Text style={styles.backText}>Back</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+      <DeleteConfirmation />
+    </>
   );
 };
 
@@ -139,5 +148,11 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: '#aad326',
     marginBottom: '4%',
+  },
+  miss: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: 'red',
+    alignSelf: 'center',
   },
 });

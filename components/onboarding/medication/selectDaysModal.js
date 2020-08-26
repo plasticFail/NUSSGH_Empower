@@ -24,9 +24,9 @@ const SelectDaysModal = (props) => {
     //check if date is inside, if date is inside - deselect.
     if (Object.keys(selectedDates41).includes(dateString)) {
       console.log('----deselecting');
-      delete selectedDates[dateString];
+      delete selectedDates41[dateString];
       //markedDate prop in Calendar is immutable* need do below to show change
-      setSelectedDates(JSON.parse(JSON.stringify(selectedDates41)));
+      setSelectedDates41(JSON.parse(JSON.stringify(selectedDates41)));
     } else {
       newObj = {
         ...selectedDates41,

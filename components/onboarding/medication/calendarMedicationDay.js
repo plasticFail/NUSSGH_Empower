@@ -19,7 +19,7 @@ const CalendarMedicationDay = (props) => {
 
     if (state === 'disabled') {
       style.text.color = '#c1c2c1';
-    } else if (marking.marked === true && marking.medicationList.length != 0) {
+    } else if (marking.marked === true && marking.medicationList.length > 0) {
       style.text.color = 'black';
       style.content.backgroundColor = '#aad326';
       style.content.borderRadius = 10;

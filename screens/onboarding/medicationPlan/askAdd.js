@@ -21,9 +21,11 @@ class AskAdd extends Component {
 
   componentDidUpdate(prevProp) {
     if (prevProp.route.params != this.props.route.params) {
+      console.log('setting state');
       const {list} = this.props.route.params;
-      let newObj = this.onReturn(list);
-      this.setState({selectedDates4All: newObj});
+      this.onReturn(list);
+      console.log('---state');
+      console.log(this.state.selectedDates4All);
     }
   }
 
@@ -34,11 +36,13 @@ class AskAdd extends Component {
     let object = this.state.selectedDates4All;
     for (var x of Object.keys(data)) {
       if (!Object.keys(object).includes(x)) {
+        console.log('no medicine for this date, adding medicine');
         object[x] = {
           selected: true,
           marked: true,
           medicationList: [data[x].medicine],
         };
+        console.log(object);
       } else {
         //there is an existing date with medication
         //check if medication exist in medicationlist for that date, if not add
@@ -47,7 +51,8 @@ class AskAdd extends Component {
         }
       }
     }
-    return object;
+    //since calendar's markedDates property is an object , enforce new object creation**
+    this.setState({selectedDates4All: JSON.parse(JSON.stringify(object))});
   };
 
   //check if medicine name same*

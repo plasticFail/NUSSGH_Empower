@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   TextInput,
+  Alert,
 } from 'react-native';
 //third party library
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -45,10 +46,7 @@ const AddPlan = (props) => {
 
   //update dosage and per day
   useEffect(() => {
-    if (!isEmpty(selectedMedicine)) {
-      selectedMedicine['dosage'] = dosage;
-      selectedMedicine['perDay'] = frequency;
-    }
+    setParameter();
     console.log(selectedMedicine);
   }, [dosage, frequency]);
 
@@ -58,7 +56,22 @@ const AddPlan = (props) => {
 
   //pass selected dates with the medications back
   const handleAdd = () => {
-    props.navigation.navigate('MedicationPlan', {list: selectedDates41});
+    if (dosage === 0 || frequency === 0 || selectedMedicine === undefined) {
+      Alert.alert('Invalid Input', 'Make sure all fields are filled', [
+        {text: 'Got It'},
+      ]);
+    } else {
+      setParameter();
+      props.navigation.navigate('MedicationPlan', {list: selectedDates41});
+    }
+  };
+
+  //set dosage to medicine
+  const setParameter = () => {
+    if (!isEmpty(selectedMedicine)) {
+      selectedMedicine['dosage'] = dosage;
+      selectedMedicine['perDay'] = frequency;
+    }
   };
 
   //check if selected dates object is empty
@@ -98,8 +111,8 @@ const AddPlan = (props) => {
         selections += newDayString + ', ';
       }
     }
-    if (selections.length > 42) {
-      let reducedString = selections.slice(0, 42) + '...';
+    if (selections.length > 38) {
+      let reducedString = selections.slice(0, 35) + '...';
       setSelectedString(reducedString);
     } else {
       setSelectedString(selections);
@@ -121,11 +134,11 @@ const AddPlan = (props) => {
 
       <TouchableOpacity style={styles.searchInput} onPress={openSearchModal}>
         {isEmpty(selectedMedicine) === true ? (
-          <Text style={{fontSize: 18, color: '#b5b5b5'}}>
+          <Text style={{fontSize: 17, color: '#b5b5b5'}}>
             <Ionicons name="search" size={20} /> Name (eg. Metformin)
           </Text>
         ) : (
-          <Text style={{fontSize: 18, color: 'black'}}>
+          <Text style={{fontSize: 17, color: 'black'}}>
             {selectedMedicineName}
           </Text>
         )}
@@ -233,6 +246,6 @@ const styles = StyleSheet.create({
     height: '8%',
     marginTop: '9%',
     marginBottom: '3%',
-    padding: '4%',
+    padding: '4.2%',
   },
 });
