@@ -11,7 +11,7 @@ import {
 import Modal from 'react-native-modal';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {storeMedications} from '../../../netcalls/requestsLog';
-import SearchResult from '../searchResult';
+import SearchResult from './searchResult';
 
 Ionicons.loadFont();
 
@@ -26,9 +26,15 @@ const SearchMedication = (props) => {
   //time lag when call api*
   useEffect(() => {
     console.log('search key ' + searchTerm + ' cache ' + searchKeyCache);
+    let mounted = true;
     if (searchKeyCache == searchTerm) {
-      setTimeout(() => searchMedication(), 800);
+      if (mounted) {
+        setTimeout(() => searchMedication(), 800);
+      }
     }
+    return function cleanUp() {
+      mounted = false;
+    };
   }, [searchTerm, searchKeyCache]);
 
   //update states

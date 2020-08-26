@@ -87,7 +87,7 @@ function MedicationAdded({medication, handleDelete}) {
         </Text>
       </View>
       <TouchableOpacity style={styles.deleteMedication} onPress={handleDelete}>
-        <Entypo name="cross" size={60} color="red" />
+        <Entypo name="cross" size={60} color="#ff0844" />
       </TouchableOpacity>
     </View>
   );
@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
     margin: '4%',
   },
   medicationItem: {
-    backgroundColor: '#cacfdb',
+    backgroundColor: '#e3e9ef',
     padding: '3%',
     marginTop: '2%',
     marginStart: '4%',
@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
     marginTop: '2%',
   },
   deleteMedication: {
-    backgroundColor: '#cacfdb',
+    backgroundColor: '#e3e9ef',
     padding: '3%',
     marginTop: '2%',
     marginStart: '1%',

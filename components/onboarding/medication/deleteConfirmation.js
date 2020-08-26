@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
     margin: '4%',
   },
   deleteButton: {
-    backgroundColor: '#ff4f64',
+    backgroundColor: '#ff0844',
     height: 45,
     width: '70%',
     alignSelf: 'center',
@@ -40,13 +40,13 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: 'center',
     marginVertical: '3%',
-    fontWeight: '700',
+    fontWeight: '500',
     color: 'white',
   },
   deleteAllText: {
     fontSize: 20,
     textAlign: 'center',
-    color: '#ff4f64',
+    color: '#ff0844',
     marginBottom: '3%',
   },
 });
