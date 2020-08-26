@@ -4,10 +4,10 @@ import {ScrollView} from 'react-native-gesture-handler';
 //third party library
 import Entypo from 'react-native-vector-icons/Entypo';
 //functions
-import {handleSubmitMedication} from '../../../../commonFunctions/logFunctions';
+import {handleSubmitMedication} from '../../../commonFunctions/logFunctions';
 //components
-import SuccessDialogue from '../../../../components/successDialogue';
-import MedicationLogBlock from '../../../../components/logs/medicationLogBlock';
+import SuccessDialogue from '../../../components/successDialogue';
+import MedicationLogBlock from '../../../components/logs/medicationLogBlock';
 
 Entypo.loadFont();
 
