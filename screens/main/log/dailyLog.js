@@ -10,7 +10,7 @@ import {
   getLastMedicationLog,
 } from '../../../storage/asyncStorageFunctions';
 import {getDefaultMealType, handleSubmitMealLog, isValidMeal} from "../../../commonFunctions/mealLogFunctions";
-import {checkBloodGlucose, checkBloodGlucoseText, checkWeightText, handleSubmitBloodGlucose, handleSubmitMedication, handleSubmitWeight} from '../../../commonFunctions/logFunctions';
+import {checkBloodGlucose, checkWeight, handleSubmitBloodGlucose, handleSubmitMedication, handleSubmitWeight} from '../../../commonFunctions/logFunctions';
 //components
 import FormBlockFix from '../../../components/logs/formBlockFix';
 import BloodGlucoseLogBlock from '../../../components/logs/bloodGlucoseLogBlock';
