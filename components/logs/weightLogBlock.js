@@ -2,6 +2,8 @@ import React from 'react';
 import {View, StyleSheet, Text, TextInput} from 'react-native';
 //components
 import DateSelectionBlock from './dateSelectionBlock';
+import {checkWeightText} from '../../commonFunctions/logFunctions';
+import globalStyles from '../../styles/globalStyles';
 
 const WeightLogBlock = (props) => {
   return (
@@ -17,6 +19,11 @@ const WeightLogBlock = (props) => {
           props.setWeight(value);
         }}
       />
+        {(checkWeightText(props.weight) !== '') && (
+            <View style={globalStyles.cardContainer}>
+                <Text style={globalStyles.alertText}>{checkWeightText(props.weight)}</Text>
+            </View>
+        )}
     </View>
   );
 };
