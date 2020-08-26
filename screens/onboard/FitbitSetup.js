@@ -1,30 +1,18 @@
 import React from 'react';
 import {View, StyleSheet, Text, Dimensions, Image, TouchableWithoutFeedback, Animated, Modal, ActivityIndicator, Linking} from 'react-native';
+// third party lib
 import {Svg, Circle} from "react-native-svg";
-import WebView from "react-native-webview";
+// component
 import {BackAndForwardButton} from "../../components/BackAndForwardButtons";
+//function
+import {getFitbitToken, storeFitbitToken} from "../../storage/asyncStorageFunctions";
+// config
+import {fitbitTokenUri, fitbitOAuthUri, client_id, redirect_uri, authorisationHeader, scope} from "../../config/FitbitConfig";
+// others
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import fitbitIcon from '../../resources/images/fitbit/fitbit.png';
-import {getFitbitToken, getToken, storeFitbitToken} from "../../storage/asyncStorageFunctions";
-const Buffer = require('buffer/').Buffer;
+
 const qs = require('qs');
-
-// properties of oauth2
-const fitbitOAuthUri = "https://www.fitbit.com/oauth2/authorize";
-const redirect_uri = "edu.nus.com.empower://oauth2-callback/fitbit";
-const client_id = "22BV5Z" //"22BVZ4";
-const oAuthClientSecret = "b175b181d985d9224c8b08bd7989a0a4"//"81a05f0d421e7498f848bbb2ca11ad3b";
-const scope = "activity heartrate location nutrition profile weight settings sleep social";
-
-function base64URLEncode(str) {
-    return str.toString('base64')
-        .replace(/\+/g, '-')
-        .replace(/\//g, '_')
-        .replace(/=/g, '');
-}
-
-const fitbitTokenUri = 'https://api.fitbit.com/oauth2/token';
-const authorisationHeader = base64URLEncode(Buffer.from(client_id + ":" + oAuthClientSecret, 'utf8'));
 
 const oAuthUrl = fitbitOAuthUri + "?" + qs.stringify({
     response_type: 'code',
@@ -86,13 +74,13 @@ export default class FitbitSetup extends React.Component {
             })
         }).then(resp => resp.json())
             .then(data => {
-                storeFitbitToken(data).then(
-                    this.setState({
-                        isAuthorized: true
-                    })
+                storeFitbitToken(data).then(resp => {
+                        this.setState({
+                            isAuthorized: true
+                        });
+                    }
                 )
-            })
-            .catch(err => alert(err.message));
+            }).catch(err => alert(err.message));
     }
 
     render() {
@@ -122,7 +110,7 @@ function FitbitSetupComponent(props) {
                 useNativeDriver: true
             }).start(() => setExpand(!expand));
         }
-    }, [expand]);
+    }, [expand, hasBeenAuthorized]);
 
     const scale = expandAnimation.current.interpolate({
         inputRange: [0, 1],
@@ -131,7 +119,9 @@ function FitbitSetupComponent(props) {
 
     const handleOpenFitbitOAuthUrl = async () => {
         await Linking.canOpenURL(oAuthUrl).then(supported => {
-            Linking.openURL(oAuthUrl);
+            if (supported) {
+                Linking.openURL(oAuthUrl);
+            }
         });
 
     }
@@ -175,61 +165,9 @@ function FitbitSetupComponent(props) {
                                       overrideForwardTitle={hasBeenAuthorized ? 'Next' : 'Skip'}
                                       enableForward={() => true} />
             </View>
-            {
-                //openWebview && <FitbitWebViewModal visible={openWebview} setVisible={setOpenWebview}/>
-            }
         </View>
     )
 }
-
-function FitbitWebViewModal({visible, setVisible}) {
-    const loading = React.useRef(true);
-    setTimeout(() => {
-           loading.current = false;
-    }, 1200);
-
-    return (
-        <Modal visible={visible} animationType='slide'>
-            <View style={modalStyles.root}>
-                <View style={modalStyles.header}>
-                    <Icon name='times' size={35} onPress={() => setVisible(false)}
-                          style={modalStyles.closeButton} />
-                </View>
-                {   loading.current &&
-                    <View style={{flex: 1000, justifyContent: 'center', alignItems: 'center'}}>
-                        <Text style={modalStyles.waitText}>Please wait for a moment!</Text>
-                        <ActivityIndicator size='large' color='#b3d14c' />
-                    </View>
-                }
-                <WebView source={{uri: fitbitOAuthUri}} style={{height: 0}} />
-            </View>
-        </Modal>
-    )
-}
-
-const modalStyles = StyleSheet.create({
-    root: {
-        flex: 1,
-    },
-    closeButton: {
-        alignSelf: 'flex-end',
-        paddingRight: 10,
-    },
-    waitText: {
-        fontSize: 30,
-        fontWeight: 'bold',
-        color: '#4d4d4d',
-        paddingBottom: '5%'
-    },
-    header: {
-        paddingTop: '10%',
-        backgroundColor: "#B3D14C",
-        paddingBottom: '2%'
-    },
-    webview: {
-        // Cannot remove margin anyway.
-    }
-})
 
 const styles = StyleSheet.create({
     root: {
