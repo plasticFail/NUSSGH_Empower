@@ -43,4 +43,34 @@ const getDateArray = (startDate, stopDate) => {
   return dateArr.reverse();
 };
 
-export {getDateObj, getTime, getHour, getDateRange};
+//pass a food item - beverage, main etc in to get [carbs, protein, fats] count
+const getNutrientCount = (array) => {
+  let nutrientArr = new Array();
+  let totalCarbs = 0;
+  let totalProtein = 0;
+  let totalFats = 0;
+  if (array.length != 0) {
+    for (var a of array) {
+      if (a != null) {
+        let carbsAmount = a?.nutrients.carbohydrate.amount;
+        let proteinAmount = a?.nutrients.protein.amount;
+        let fatAmount = a?.nutrients['total-fat']?.amount;
+        if (carbsAmount != 'N.A') {
+          totalCarbs += Number(carbsAmount);
+        }
+        if (proteinAmount != 'N.A') {
+          totalProtein += Number(proteinAmount);
+        }
+        if (fatAmount != 'N.A') {
+          totalFats += Number(fatAmount);
+        }
+      }
+    }
+  }
+  nutrientArr.push(totalCarbs);
+  nutrientArr.push(totalProtein);
+  nutrientArr.push(totalFats);
+  return nutrientArr;
+};
+
+export {getDateObj, getTime, getHour, getDateRange, getNutrientCount};

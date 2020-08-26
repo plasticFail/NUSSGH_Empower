@@ -4,14 +4,20 @@ import {View, StyleSheet, Text, Image} from 'react-native';
 const bg = 'Blood Glucose';
 const weight = 'Weight';
 const activity = 'Activity';
+const food = 'Food';
 
 //takes in an object with bgPass, bgMiss, weightPass, weightMiss... and displays the content
 const TargetContent = (props) => {
   const {type} = props;
-  const {bgPass, weightPass, activityPass} = props;
-  const {bgPassCount, weightPassCount, activityPassCount} = props;
-  const {bgMiss, weightMiss, activityMiss} = props;
-  const {bgFailCount, weightFailCount} = props;
+  const {bgPass, weightPass, activityPass, foodPass} = props;
+  const {
+    bgPassCount,
+    weightPassCount,
+    activityPassCount,
+    foodPassCount,
+  } = props;
+  const {bgMiss, weightMiss, activityMiss, foodMiss} = props;
+  const {bgFailCount, weightFailCount, foodFailCount} = props;
 
   return (
     <>
@@ -28,6 +34,10 @@ const TargetContent = (props) => {
         activityMiss,
         bgFailCount,
         weightFailCount,
+        foodMiss,
+        foodPass,
+        foodPassCount,
+        foodFailCount,
       )}
     </>
   );
@@ -47,6 +57,10 @@ function renderItem(
   activityMiss,
   bgFailCount,
   weightFailCount,
+  foodMiss,
+  foodPass,
+  foodPassCount,
+  foodFailCount,
 ) {
   if (type === 'Within Target') {
     return (
@@ -54,13 +68,14 @@ function renderItem(
         {(bgPassCount != 0) === true && renderCountLogo(bgPassCount, type, bg)}
         {(weightPassCount != 0) === true &&
           renderCountLogo(weightPassCount, type, weight)}
-        {activityPass === true &&
+        {activityPassCount != 0 &&
           renderCountLogo(activityPassCount, type, activity)}
+        {foodPassCount != 0 && renderCountLogo(foodPassCount, type, food)}
       </View>
     );
   }
   if (type === 'Missed') {
-    if (!bgMiss && !activityMiss && !weightMiss) {
+    if (!bgMiss && !activityMiss && !weightMiss && !foodMiss) {
       return (
         <View>
           <Text style={styles.empty}>-</Text>
@@ -72,6 +87,7 @@ function renderItem(
           {bgMiss === true && renderCountLogo(0, type, bg)}
           {weightMiss === true && renderCountLogo(0, type, weight)}
           {activityMiss === true && renderCountLogo(0, type, activity)}
+          {foodMiss === true && renderCountLogo(0, type, food)}
         </View>
       );
     }
@@ -82,6 +98,7 @@ function renderItem(
       <View>
         {bgFailCount != 0 && renderCountLogo(bgFailCount, type, bg)}
         {weightFailCount != 0 && renderCountLogo(weightFailCount, type, weight)}
+        {foodFailCount != 0 && renderCountLogo(foodFailCount, type, food)}
       </View>
     );
   }
@@ -124,6 +141,9 @@ function setImage(logType) {
   }
   if (logType === 'Activity') {
     return require('../../resources/images/activity_logo.png');
+  }
+  if (logType === 'Food') {
+    return require('../../resources/images/foodintake_logo.png');
   }
 }
 
