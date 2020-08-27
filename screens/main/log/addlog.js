@@ -16,29 +16,29 @@ const buttonList = [
   {
     id: '1',
     name: 'Blood Glucose',
-    logo: require('../../resources/images/bloodglucose_logo.png'),
-    image: require('../../resources/images/bloodglucose.jpg'),
+    logo: require('../../../resources/images/bloodglucose_logo.png'),
+    image: require('../../../resources/images/bloodglucose.jpg'),
     route: 'BloodGlucoseLog', //Fill in the route yourself. If null, it does not redirect
   },
   {
     id: '2',
     name: 'Food Intake',
-    logo: require('../../resources/images/foodintake_logo.png'),
-    image: require('../../resources/images/foodintake.jpg'),
+    logo: require('../../../resources/images/foodintake_logo.png'),
+    image: require('../../../resources/images/foodintake.jpg'),
     route: 'MealLogRoot', //Fill in the route yourself. If null, it does not redirect
   },
   {
     id: '3',
     name: 'Medication',
-    logo: require('../../resources/images/medication_logo.png'),
-    image: require('../../resources/images/medication.jpeg'),
+    logo: require('../../../resources/images/medication_logo.png'),
+    image: require('../../../resources/images/medication.jpeg'),
     route: 'MedicationLog', //Fill in the route yourself. If null, it does not redirect
   },
   {
     id: '4',
     name: 'Weight',
-    logo: require('../../resources/images/weight_logo.png'),
-    image: require('../../resources/images/weight.jpg'),
+    logo: require('../../../resources/images/weight_logo.png'),
+    image: require('../../../resources/images/weight.jpg'),
     route: 'WeightLog', //Fill in the route yourself. If null, it does not redirect
   },
 ];
@@ -55,7 +55,7 @@ const AddLogScreen = ({navigation}) => {
         onPress={() => navigation.navigate('DailyLog')}>
         <Text style={styles.buttonText}>Daily Log</Text>
         <ImageBackground
-          source={require('../../resources/images/dailylog.jpg')}
+          source={require('../../../resources/images/dailylog.jpg')}
           style={styles.backgroundImg}
         />
       </TouchableOpacity>
