@@ -13,7 +13,6 @@ Entypo.loadFont();
 const ScheduledMedicationModal = (props) => {
   const {isVisible, closeModal} = props;
   const {medicationList, date} = props;
-  const {removeMethod} = props;
   const dateString = moment(date.dateString, 'YYYY-MM-DD').format(
     'Do MMMM  YYYY',
   );
@@ -43,6 +42,8 @@ const ScheduledMedicationModal = (props) => {
           <Text style={styles.details}>Scheduled Medications:</Text>
           {medicationList === undefined ? (
             <Text style={styles.miss}>No Medication Set Yet</Text>
+          ) : medicationList.length === 0 ? (
+            <Text style={styles.miss}>No Medication Set Yet</Text>
           ) : (
             <FlatList
               keyExtractor={(item, index) => index.toString()}
@@ -60,7 +61,9 @@ const ScheduledMedicationModal = (props) => {
                     <View style={styles.scheduledContainer}>
                       <DeleteConfirmation
                         medication={item}
-                        removeMethod={removeMethod}
+                        date={date}
+                        closeSelf={handleCloseDeleteModal}
+                        closeParent={closeModal}
                       />
                     </View>
                   </Modal>

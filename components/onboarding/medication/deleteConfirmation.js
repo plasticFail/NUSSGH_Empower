@@ -1,19 +1,43 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+//function
+import {useNavigation} from '@react-navigation/native';
 
-//calling removeMethod from askAdd.js
+//calling removeObj from askAdd.js
 const DeleteConfirmation = (props) => {
-  const {medication, removeMethod} = props;
+  const {medication, date} = props;
+  const {closeSelf, closeParent} = props;
+  const navigation = useNavigation();
+
+  const handleRemoveDate = () => {
+    closeSelf();
+    closeParent();
+    navigation.navigate('MedicationPlan', {
+      dateString: date.dateString,
+      type: 'justThis',
+      medication: medication,
+    });
+  };
+
+  const handleRemoveFromAll = () => {
+    closeSelf();
+    closeParent();
+    navigation.navigate('MedicationPlan', {
+      type: 'forAll',
+      medication: medication,
+    });
+  };
+
   return (
     <>
       <Text style={styles.header}>Remove This Medication</Text>
       <Text style={styles.details}>{medication.drugName}</Text>
-      <TouchableOpacity
-        style={styles.deleteButton}
-        onPress={() => removeMethod()}>
+      <TouchableOpacity style={styles.deleteButton} onPress={handleRemoveDate}>
         <Text style={styles.deleteButtonText}>Remove for this Date</Text>
       </TouchableOpacity>
-      <Text style={styles.deleteAllText}>Remove from All</Text>
+      <TouchableOpacity onPress={handleRemoveFromAll}>
+        <Text style={styles.deleteAllText}>Remove from All</Text>
+      </TouchableOpacity>
     </>
   );
 };

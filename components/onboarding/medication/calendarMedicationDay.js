@@ -8,10 +8,8 @@ import AskAdd from '../../../screens/onboarding/medicationPlan/askAdd';
 const CalendarMedicationDay = (props) => {
   const {state, marking = {}, date} = props;
   const [visible, setVisible] = useState(false);
-  var Obj = new AskAdd();
 
-  console.log('in calendar medication day');
-  console.log(props);
+  console.log('Calendar Medication Day: saving selected medication to date');
 
   const getContentStyle = () => {
     const style = {
@@ -70,7 +68,6 @@ const CalendarMedicationDay = (props) => {
           closeModal={closeModal}
           medicationList={marking.medicationList}
           date={date}
-          removeMethod={handleRemove}
         />
       </View>
     )

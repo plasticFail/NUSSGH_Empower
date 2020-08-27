@@ -6,6 +6,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {Calendar} from 'react-native-calendars';
 //component
 import CalendarMedicationDay from '../../../components/onboarding/medication/calendarMedicationDay';
+import {Value} from 'react-native-reanimated';
 
 Ionicons.loadFont();
 
@@ -16,16 +17,30 @@ class AskAdd extends Component {
 
     this.state = {
       selectedDates4All: {},
+      selectedDate: '',
+      showCalendar: false,
     };
   }
 
   componentDidUpdate(prevProp) {
     if (prevProp.route.params != this.props.route.params) {
-      console.log('setting state');
+      //if return from AddPlan
+      console.log('setting new state for marked dates in calendar');
       const {list} = this.props.route.params;
       this.onReturn(list);
-      console.log('---state');
       console.log(this.state.selectedDates4All);
+      //if return from delete dialogue
+      const {dateString, type, medication} = this.props.route.params;
+      if (!this.isEmpty(medication)) {
+        if (type === 'justThis') {
+          console.log(
+            dateString + ': removing ' + type + ' for ' + medication.drugName,
+          );
+          this.removeObj4Date(dateString, medication);
+        } else if (type === 'forAll') {
+          this.removeForAllDates(medication);
+        }
+      }
     }
   }
 
@@ -54,7 +69,7 @@ class AskAdd extends Component {
     this.setState({selectedDates4All: JSON.parse(JSON.stringify(object))});
   };
 
-  //check if medicine name same*
+  //check if in medicationList array medicine name exist*
   containsObject = (obj, list) => {
     var i;
     for (i = 0; i < list.length; i++) {
@@ -79,34 +94,38 @@ class AskAdd extends Component {
     return true;
   };
 
-  isEquivalent = (a, b) => {
-    // Create arrays of property names
-    var aProps = Object.getOwnPropertyNames(a);
-    var bProps = Object.getOwnPropertyNames(b);
-
-    // If number of properties is different,
-    // objects are not equivalent
-    if (aProps.length != bProps.length) {
-      return false;
-    }
-
-    for (var i = 0; i < aProps.length; i++) {
-      var propName = aProps[i];
-
-      // If values of same property are not equal,
-      // objects are not equivalent
-      if (a[propName] !== b[propName]) {
-        return false;
+  //remove medication obj just for this date
+  removeObj4Date = (dateString, selectedItem) => {
+    let original = this.state.selectedDates4All;
+    for (var x of Object.keys(original)) {
+      if (x === dateString) {
+        let arr = original[x].medicationList;
+        original[x].medicationList = arr.filter(
+          (medication) => medication != selectedItem,
+        );
       }
     }
-
-    // If we made it this far, objects
-    // are considered equivalent
-    return true;
+    this.setState({selectedDates4All: JSON.parse(JSON.stringify(original))});
   };
 
-  removeObj = () => {
-    console.log('i wana remove');
+  removeForAllDates = (selectedItem) => {
+    console.log('removing ' + selectedItem.drugName + ' for all dates');
+    let original = this.state.selectedDates4All;
+    for (var x of Object.keys(original)) {
+      let medList = original[x].medicationList;
+      //check if selected medication exist for that date
+      if (this.containsObject(selectedItem, medList)) {
+        console.log('medicine exist in ' + x);
+        let removeIndex = medList
+          .map(function (item) {
+            return item.drugName;
+          })
+          .indexOf(selectedItem.drugName);
+        medList.splice(removeIndex, 1);
+        console.log(medList);
+      }
+    }
+    this.setState({selectedDates4All: JSON.parse(JSON.stringify(original))});
   };
 
   render() {
