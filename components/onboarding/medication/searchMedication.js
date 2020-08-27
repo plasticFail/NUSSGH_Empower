@@ -10,7 +10,9 @@ import {
 //third party library
 import Modal from 'react-native-modal';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+//function
 import {storeMedications} from '../../../netcalls/requestsLog';
+//component
 import SearchResult from './searchResult';
 
 Ionicons.loadFont();
@@ -34,6 +36,7 @@ const SearchMedication = (props) => {
     }
     return function cleanUp() {
       mounted = false;
+      clearTimeout();
     };
   }, [searchTerm, searchKeyCache]);
 

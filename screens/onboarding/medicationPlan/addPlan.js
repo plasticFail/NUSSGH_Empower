@@ -35,8 +35,8 @@ const AddPlan = (props) => {
   useEffect(() => {
     if (!isEmpty(selectedMedicine)) {
       let name = selectedMedicine.drugName;
-      if (name.length > 42) {
-        let reducedString = name.slice(0, 42) + '...';
+      if (name.length > 39) {
+        let reducedString = name.slice(0, 39) + '...';
         setSelectedMedicineName(reducedString);
       } else {
         setSelectedMedicineName(name);

@@ -38,7 +38,10 @@ const ScheduledMedicationModal = (props) => {
 
   return (
     <>
-      <Modal isVisible={isVisible}>
+      <Modal
+        isVisible={isVisible}
+        onBackdropPress={closeModal}
+        onBackButtonPress={closeModal}>
         <View style={styles.scheduledContainer}>
           <Text style={styles.header}>{dateString}</Text>
           <Text style={styles.details}>Scheduled Medications:</Text>

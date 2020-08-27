@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+//component
 import ScheduledMedicationModal from './scheduledMedicationModal';
-import AskAdd from '../../../screens/onboarding/medicationPlan/askAdd';
 
 //show the calendar view with underline when there is medication for that particular day
 //opens modal with scheduled medicine when select

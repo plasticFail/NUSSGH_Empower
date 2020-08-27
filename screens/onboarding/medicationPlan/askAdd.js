@@ -6,6 +6,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {Calendar} from 'react-native-calendars';
 //component
 import CalendarMedicationDay from '../../../components/onboarding/medication/calendarMedicationDay';
+import LoadingModal from '../../../components/loadingModal';
 
 Ionicons.loadFont();
 
@@ -18,6 +19,7 @@ class AskAdd extends Component {
       selectedDates4All: {},
       selectedDate: '',
       showCalendar: false,
+      loading: false,
     };
   }
 
@@ -85,7 +87,17 @@ class AskAdd extends Component {
     return false;
   };
 
-  handleSkip = () => {};
+  handleSkip = () => {
+    this.setState({loading: true});
+    setTimeout(() => {
+      this.setState({loading: false});
+      this.props.navigation.navigate('DashBoard');
+    }, 1200);
+  };
+
+  handleNext = () => {
+    this.handleSkip();
+  };
 
   handleAddMedication = () => {
     this.props.navigation.navigate('AddPlan');
@@ -154,7 +166,7 @@ class AskAdd extends Component {
   };
 
   render() {
-    const {selectedDates4All, showCalendar} = this.state;
+    const {selectedDates4All, showCalendar, loading} = this.state;
     return (
       <View style={styles.onboardingContainer}>
         <Text style={styles.stepText}>Step 3</Text>
@@ -194,7 +206,7 @@ class AskAdd extends Component {
             <View style={{flex: 1}} />
             <TouchableOpacity
               style={[styles.skipButton, {backgroundColor: '#aad326'}]}
-              onPress={() => this.props.navigation.navigate('DashBoard')}>
+              onPress={this.handleNext}>
               <Text style={styles.buttonText}>Next</Text>
             </TouchableOpacity>
           </>
@@ -213,6 +225,7 @@ class AskAdd extends Component {
             </TouchableOpacity>
           </>
         )}
+        <LoadingModal visible={loading} message={'Setting up your account'} />
       </View>
     );
   }
