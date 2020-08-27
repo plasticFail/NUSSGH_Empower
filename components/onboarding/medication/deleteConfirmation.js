@@ -16,6 +16,7 @@ const DeleteConfirmation = (props) => {
       dateString: date.dateString,
       type: 'justThis',
       medication: medication,
+      list: {},
     });
   };
 
@@ -25,6 +26,7 @@ const DeleteConfirmation = (props) => {
     navigation.navigate('MedicationPlan', {
       type: 'forAll',
       medication: medication,
+      parent: 'deleteConfirmation',
     });
   };
 

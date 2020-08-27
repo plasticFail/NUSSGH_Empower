@@ -68,7 +68,10 @@ const AddPlan = (props) => {
     } else {
       setParameter();
       setMedicine2Obj();
-      props.navigation.navigate('MedicationPlan', {list: selectedDates41});
+      props.navigation.navigate('MedicationPlan', {
+        list: selectedDates41,
+        parent: 'addPlan',
+      });
     }
   };
 

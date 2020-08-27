@@ -1,12 +1,11 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, Alert} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 //third party library
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {Calendar} from 'react-native-calendars';
 //component
 import CalendarMedicationDay from '../../../components/onboarding/medication/calendarMedicationDay';
-import {Value} from 'react-native-reanimated';
 
 Ionicons.loadFont();
 
@@ -24,27 +23,32 @@ class AskAdd extends Component {
 
   componentDidUpdate(prevProp) {
     if (prevProp.route.params != this.props.route.params) {
-      //if return from AddPlan
-      console.log('setting new state for marked dates in calendar');
-      const {list} = this.props.route.params;
-      this.onReturn(list);
-      console.log(this.state.selectedDates4All);
-      //if return from delete dialogue
-      const {dateString, type, medication} = this.props.route.params;
-      if (!this.isEmpty(medication)) {
-        if (type === 'justThis') {
-          console.log(
-            dateString + ': removing ' + type + ' for ' + medication.drugName,
-          );
-          this.removeObj4Date(dateString, medication);
-        } else if (type === 'forAll') {
-          this.removeForAllDates(medication);
+      const {parent} = this.props.route.params;
+      if (parent === 'addPlan') {
+        //if return from AddPlan
+        console.log('setting new state for marked dates in calendar');
+        const {list} = this.props.route.params;
+        this.onReturn(list);
+        console.log(this.state.selectedDates4All);
+      } else if (parent === 'deleteConfirmation') {
+        //if return from delete dialogue
+        const {dateString, type, medication} = this.props.route.params;
+        if (!this.isEmpty(medication)) {
+          if (type === 'justThis') {
+            console.log(
+              dateString + ': removing ' + type + ' for ' + medication.drugName,
+            );
+            this.removeObj4Date(dateString, medication);
+          } else if (type === 'forAll') {
+            this.removeForAllDates(medication);
+          }
         }
       }
     }
+    console.log('show calendar ' + this.state.showCalendar);
   }
 
-  //get the selected dates for a particular medication
+  //get the selected dates for a particular medication from ask plan
   //loop through the current selectDatesForAll to see if medicine exist for day
   //if not, add the medication*
   onReturn = (data) => {
@@ -67,6 +71,7 @@ class AskAdd extends Component {
     }
     //since calendar's markedDates property is an object , enforce new object creation**
     this.setState({selectedDates4All: JSON.parse(JSON.stringify(object))});
+    this.checkCalendar();
   };
 
   //check if in medicationList array medicine name exist*
@@ -99,13 +104,17 @@ class AskAdd extends Component {
     let original = this.state.selectedDates4All;
     for (var x of Object.keys(original)) {
       if (x === dateString) {
-        let arr = original[x].medicationList;
-        original[x].medicationList = arr.filter(
-          (medication) => medication != selectedItem,
-        );
+        let medList = original[x].medicationList;
+        let removeIndex = medList
+          .map(function (item) {
+            return item.drugName;
+          })
+          .indexOf(selectedItem.drugName);
+        medList.splice(removeIndex, 1);
       }
     }
     this.setState({selectedDates4All: JSON.parse(JSON.stringify(original))});
+    this.checkCalendar();
   };
 
   removeForAllDates = (selectedItem) => {
@@ -126,10 +135,24 @@ class AskAdd extends Component {
       }
     }
     this.setState({selectedDates4All: JSON.parse(JSON.stringify(original))});
+    this.checkCalendar();
+  };
+
+  checkCalendar = () => {
+    let original = this.state.selectedDates4All;
+    for (var x of Object.keys(original)) {
+      let medList = original[x].medicationList;
+      if (medList != undefined && medList.length > 0) {
+        this.setState({showCalendar: true});
+        return;
+      }
+    }
+    this.setState({showCalendar: false});
+    return;
   };
 
   render() {
-    const {selectedDates4All} = this.state;
+    const {selectedDates4All, showCalendar} = this.state;
     return (
       <View style={styles.onboardingContainer}>
         <Text style={styles.stepText}>Step 3</Text>
@@ -152,7 +175,7 @@ class AskAdd extends Component {
               <Text style={styles.buttonText}>Skip</Text>
             </TouchableOpacity>
           </>
-        ) : (
+        ) : showCalendar === true ? (
           <>
             <Calendar
               dayComponent={CalendarMedicationDay}
@@ -171,6 +194,20 @@ class AskAdd extends Component {
               style={[styles.skipButton, {backgroundColor: '#aad326'}]}
               onPress={() => this.props.navigation.navigate('DashBoard')}>
               <Text style={styles.buttonText}>Next</Text>
+            </TouchableOpacity>
+          </>
+        ) : (
+          <>
+            <TouchableOpacity
+              style={styles.addButton}
+              onPress={this.handleAddMedication}>
+              <Ionicons name="add-circle" size={80} color="#aad326" />
+            </TouchableOpacity>
+            <View style={{flex: 1}} />
+            <TouchableOpacity
+              style={styles.skipButton}
+              onPress={this.handleSkip}>
+              <Text style={styles.buttonText}>Skip</Text>
             </TouchableOpacity>
           </>
         )}

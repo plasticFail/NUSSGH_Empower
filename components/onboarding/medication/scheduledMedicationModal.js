@@ -19,14 +19,16 @@ const ScheduledMedicationModal = (props) => {
   const navigation = useNavigation();
   //delete modal
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+  const [toDelete, setToDelete] = useState({});
 
   const handleCloseDeleteModal = () => {
     setDeleteModalVisible(false);
   };
 
-  const handleDelete = () => {
+  const handleDelete = (item) => {
     console.log('show delete confirmation');
     setDeleteModalVisible(true);
+    setToDelete(item);
   };
 
   const handleAdd = () => {
@@ -45,31 +47,35 @@ const ScheduledMedicationModal = (props) => {
           ) : medicationList.length === 0 ? (
             <Text style={styles.miss}>No Medication Set Yet</Text>
           ) : (
-            <FlatList
-              keyExtractor={(item, index) => index.toString()}
-              data={medicationList}
-              renderItem={({item}) => (
-                <>
-                  <MedicationAdded
-                    medication={item}
-                    handleDelete={handleDelete}
-                  />
-                  <Modal
-                    isVisible={deleteModalVisible}
-                    onBackdropPress={handleCloseDeleteModal}
-                    onBackButtonPress={handleCloseDeleteModal}>
-                    <View style={styles.scheduledContainer}>
-                      <DeleteConfirmation
-                        medication={item}
-                        date={date}
-                        closeSelf={handleCloseDeleteModal}
-                        closeParent={closeModal}
-                      />
-                    </View>
-                  </Modal>
-                </>
-              )}
-            />
+            <>
+              <FlatList
+                keyExtractor={(item, index) => index.toString()}
+                data={medicationList}
+                renderItem={({item}) => (
+                  <>
+                    <MedicationAdded
+                      medication={item}
+                      handleDelete={handleDelete}
+                    />
+                  </>
+                )}
+              />
+              {deleteModalVisible ? (
+                <Modal
+                  isVisible={deleteModalVisible}
+                  onBackdropPress={handleCloseDeleteModal}
+                  onBackButtonPress={handleCloseDeleteModal}>
+                  <View style={styles.scheduledContainer}>
+                    <DeleteConfirmation
+                      medication={toDelete}
+                      date={date}
+                      closeSelf={handleCloseDeleteModal}
+                      closeParent={closeModal}
+                    />
+                  </View>
+                </Modal>
+              ) : null}
+            </>
           )}
           <TouchableOpacity style={styles.button} onPress={handleAdd}>
             <Text style={styles.buttonText}>Add</Text>
@@ -93,7 +99,9 @@ function MedicationAdded({medication, handleDelete}) {
           {medication.perDay} Times(s) Per Day
         </Text>
       </View>
-      <TouchableOpacity style={styles.deleteMedication} onPress={handleDelete}>
+      <TouchableOpacity
+        style={styles.deleteMedication}
+        onPress={() => handleDelete(medication)}>
         <Entypo name="cross" size={60} color="#ff0844" />
       </TouchableOpacity>
     </View>
