@@ -104,6 +104,7 @@ class AskAdd extends Component {
     let original = this.state.selectedDates4All;
     for (var x of Object.keys(original)) {
       if (x === dateString) {
+        console.log('removing for one date');
         let medList = original[x].medicationList;
         let removeIndex = medList
           .map(function (item) {
@@ -111,6 +112,7 @@ class AskAdd extends Component {
           })
           .indexOf(selectedItem.drugName);
         medList.splice(removeIndex, 1);
+        console.log(medList);
       }
     }
     this.setState({selectedDates4All: JSON.parse(JSON.stringify(original))});

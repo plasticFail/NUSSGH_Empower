@@ -17,6 +17,7 @@ const DeleteConfirmation = (props) => {
       type: 'justThis',
       medication: medication,
       list: {},
+      parent: 'deleteConfirmation',
     });
   };
 
