@@ -3,8 +3,13 @@ import {View, StyleSheet, Text, TextInput} from 'react-native';
 //components
 import DateSelectionBlock from './dateSelectionBlock';
 import HypoglycemiaBlock from './hypoglycemiaBlock';
+//functions
+import {checkBloodGlucoseText} from '../../commonFunctions/logFunctions';
+//styles
+import globalStyles from '../../styles/globalStyles';
 
 const BloodGlucoseLogBlock = (props) => {
+
   return (
     <View style={{flexDirection: 'column'}}>
       <DateSelectionBlock date={props.date} setDate={props.setDate} />
@@ -22,6 +27,12 @@ const BloodGlucoseLogBlock = (props) => {
           props.setBloodGlucose(value);
         }}
       />
+        {(checkBloodGlucoseText(props.bloodGlucose) !== '') && (
+            <View style={globalStyles.cardContainer}>
+                <Text style={globalStyles.alertText}>{checkBloodGlucoseText(props.bloodGlucose)}</Text>
+            </View>
+        )}
+
       <HypoglycemiaBlock
         eatSelection={props.eatSelection}
         setEatSelection={props.setEatSelection}

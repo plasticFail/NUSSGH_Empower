@@ -5,26 +5,8 @@ import {storeLastBgLog, storeLastMedicationLog, storeLastWeightLog} from '../sto
 
 
 const checkBloodGlucose = (bloodGlucose) => {
-  if (bloodGlucose) {
-    if (Number(bloodGlucose) >= 30 || Number(bloodGlucose) <= 0) {
-      Alert.alert(
-        'Error',
-        'Invalid Blood Glucose Level, should be within 0-30',
-        [{text: 'Got It'}],
-      );
-    } else if (
-      bloodGlucose.match(/^[0-9]+(\.[0-9]{1,2})?$/g) &&
-      !bloodGlucose.includes(',') &&
-      !bloodGlucose.includes('-')
-    ) {
-      return true;
-    } else {
-      Alert.alert(
-        'Error',
-        'Invalid Blood Glucose Input. Make sure at most 2 decimal place',
-        [{text: 'Got It'}],
-      );
-    }
+  if (bloodGlucose && checkBloodGlucoseText(bloodGlucose) === '') {
+    return true;
   }
   return false;
 };
@@ -43,28 +25,14 @@ const checkBloodGlucoseText = (bloodGlucose) => {
       return 'Invalid Blood Glucose Input. Make sure at most 2 decimal place';
     }
   }
-  return false;
+  return '';
 };
 
 const checkWeight = (weight) => {
-  if (weight) {
-    if (
-      weight.match(/^[0-9]+(\.[0-9]{1})?$/g) &&
-      !weight.includes(',') &&
-      !weight.includes('-') &&
-      Number(weight) <= 200 &&
-      Number(weight) >= 40
-    ) {
-      return true;
-    } else {
-      Alert.alert(
-        'Invalid Weight',
-        'Make sure weight entered is between 40 to 200kg. ',
-        [{text: 'Got It'}],
-      );
-      return false;
-    }
+  if (weight && checkWeightText(weight) === '') {
+    return true;
   }
+  return false;
 };
 
 const checkWeightText = (weight) => {
@@ -81,7 +49,7 @@ const checkWeightText = (weight) => {
       return 'Make sure weight entered is between 40 to 200kg. ';
     }
   }
-  return false;
+  return '';
 };
 
 const checkDosage = (dosageString) => {

@@ -14,7 +14,7 @@ const HypoglycemiaBlock = (props) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    if (Number(props.bloodGlucose) <= 4 && props.bloodGlucose != '') {
+    if (Number(props.bloodGlucose) <= 4 && props.bloodGlucose !== '') {
       setVisible(true);
       //fade in animation
       Animated.timing(fadeAnim, {

@@ -8,7 +8,6 @@ import {
 import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
 import {connect} from 'react-redux';
 import Entypo from 'react-native-vector-icons/Entypo';
-import Icon from 'react-native-vector-icons/dist/FontAwesome';
 //functions
 import {getToken} from '../storage/asyncStorageFunctions';
 import {mapStateToProps, mapDispatchToProps} from '../redux/reduxMapping';
@@ -21,15 +20,14 @@ import InputOTPScreen from './login/inputOTPScreen';
 import AlertsScreen from './sub/alerts';
 import ChatScreen from './sub/chat';
 import ResetPasswordScreen from './login/resetPassword';
-import DailyLog from './main/log/dailyLog/dailyLog';
+import DailyLog from './main/log/dailyLog';
 import BloodGlucoseLog from './main/log/bloodGlucoseLog';
-import MedicationLog from './main/log/medication/medicationLog';
+import MedicationLog from './main/log/medicationLog';
 import MealLogRoot from './main/log/meal/MealLogRoot';
 import WeightLog from './main/log/weightLog';
 import DiaryDetail from './main/diary/diaryDetail';
 //components
 import HeaderIcon from '../components/common/headerBtnIcon';
-import HypoglycemiaReason from './hypoglycemiaReason';
 import CreateMealLogScreen from './main/log/meal/CreateMealLog';
 import FavouriteMealScreen from './main/log/meal/FavouriteMeals';
 import RecentMealScreen from './main/log/meal/RecentMeal';
@@ -123,6 +121,7 @@ class AppRoot extends Component {
                       clickFunc={() => navigation.navigate('Chat')}
                     />
                   ),
+                  headerBackTitleVisible: false,
                 })}
               />
               <Stack.Screen
@@ -132,6 +131,7 @@ class AppRoot extends Component {
                   title: 'Alerts',
                   headerBackImage: () => <HeaderBackIcon />,
                   headerRight: () => <View />,
+                  headerBackTitleVisible: false,
                 }}
               />
               <Stack.Screen
@@ -141,6 +141,7 @@ class AppRoot extends Component {
                   title: 'Chat',
                   headerBackImage: () => <HeaderBackIcon />,
                   headerRight: () => <View />,
+                  headerBackTitleVisible: false,
                 }}
               />
               <Stack.Screen
@@ -150,6 +151,7 @@ class AppRoot extends Component {
                   title: 'Daily Log',
                   headerBackImage: () => <HeaderBackIcon />,
                   headerRight: () => <View />,
+                  headerBackTitleVisible: false,
                 }}
               />
               <Stack.Screen
@@ -159,6 +161,7 @@ class AppRoot extends Component {
                   title: 'Meal Log',
                   headerBackImage: () => <HeaderBackIcon />,
                   headerRight: () => <View />,
+                  headerBackTitleVisible: false,
                 })}
               />
               <Stack.Screen
@@ -195,6 +198,7 @@ class AppRoot extends Component {
                     />
                   ),
                   headerRight: () => <View />,
+                  headerBackTitleVisible: false,
                 })}
               />
               <Stack.Screen
@@ -205,6 +209,7 @@ class AppRoot extends Component {
                   headerBackImage: () => <HeaderBackIcon />,
                   headerRight: () => <View />,
                   ...TransitionPresets.ModalTransition,
+                  headerBackTitleVisible: false,
                 })}
               />
               <Stack.Screen
@@ -215,6 +220,7 @@ class AppRoot extends Component {
                   headerBackImage: () => <HeaderBackIcon />,
                   headerRight: () => <View />,
                   ...TransitionPresets.ModalTransition,
+                  headerBackTitleVisible: false,
                 })}
               />
               <Stack.Screen
@@ -229,6 +235,7 @@ class AppRoot extends Component {
                   title: 'Blood Glucose Log',
                   headerRight: () => <View />,
                   headerBackImage: () => <HeaderBackIcon />,
+                  headerBackTitleVisible: false,
                 }}
               />
               <Stack.Screen
@@ -238,6 +245,7 @@ class AppRoot extends Component {
                   title: 'Medication Log',
                   headerRight: () => <View />,
                   headerBackImage: () => <HeaderBackIcon />,
+                  headerBackTitleVisible: false,
                 }}
               />
               <Stack.Screen
@@ -247,17 +255,7 @@ class AppRoot extends Component {
                   title: 'Weight Log',
                   headerRight: () => <View />,
                   headerBackImage: () => <HeaderBackIcon />,
-                }}
-              />
-              <Stack.Screen
-                name="HypoglycemiaReason"
-                component={HypoglycemiaReason}
-                options={{
-                  title: 'WARNING',
-                  headerStyle: {
-                    backgroundColor: '#eb90d6',
-                  },
-                  headerRight: () => <View />,
+                  headerBackTitleVisible: false,
                 }}
               />
               <Stack.Screen
