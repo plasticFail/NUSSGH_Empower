@@ -28,7 +28,6 @@ import WeightLog from './main/log/weightLog';
 import DiaryDetail from './main/diary/diaryDetail';
 //components
 import HeaderIcon from '../components/common/headerBtnIcon';
-import HypoglycemiaReason from './hypoglycemiaReason';
 import CreateMealLogScreen from './main/log/meal/CreateMealLog';
 import FavouriteMealScreen from './main/log/meal/FavouriteMeals';
 import RecentMealScreen from './main/log/meal/RecentMeal';
@@ -254,17 +253,6 @@ class AppRoot extends Component {
                   headerRight: () => <View />,
                   headerBackImage: () => <HeaderBackIcon />,
                   headerBackTitleVisible: false,
-                }}
-              />
-              <Stack.Screen
-                name="HypoglycemiaReason"
-                component={HypoglycemiaReason}
-                options={{
-                  title: 'WARNING',
-                  headerStyle: {
-                    backgroundColor: '#eb90d6',
-                  },
-                  headerRight: () => <View />,
                 }}
               />
               <Stack.Screen
