@@ -92,7 +92,7 @@ class AskAdd extends Component {
     setTimeout(() => {
       this.setState({loading: false});
       this.props.navigation.navigate('DashBoard');
-    }, 1200);
+    }, 1500);
   };
 
   handleNext = () => {

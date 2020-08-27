@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     borderRadius: 20,
     width: '100%',
-    flexBasis: '20%',
+    flexBasis: '24%',
   },
   text: {
     fontSize: 18,
