@@ -80,7 +80,7 @@ const ContactUs = (props) => {
           </Text>
           <SimpleLineIcons
             name="question"
-            size={150}
+            size={130}
             style={{alignSelf: 'center'}}
           />
           <View style={{margin: '3%'}}>
@@ -121,7 +121,7 @@ const ContactUs = (props) => {
             expandable={false}
             setText={setEmail}
           />
-          <View style={{flex: 1}} />
+          <View style={{flex: 2}} />
           <TouchableOpacity style={styles.button} onPress={submit}>
             <Text style={styles.buttonText}>Submit</Text>
           </TouchableOpacity>

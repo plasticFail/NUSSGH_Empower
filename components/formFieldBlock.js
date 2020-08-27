@@ -39,6 +39,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
     marginStart: '3%',
     marginEnd: '3%',
+    marginBottom: ' 3%',
     fontSize: 16,
   },
 });
