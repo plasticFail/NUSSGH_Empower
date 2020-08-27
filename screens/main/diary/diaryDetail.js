@@ -132,6 +132,7 @@ class DiaryDetail extends Component {
           fats={fats}
           foodPassCount={foodPassCount}
           foodFailCount={foodFailCount}
+          activitySummary={activitySummary}
         />
         {activitySummary != undefined && (
           <>

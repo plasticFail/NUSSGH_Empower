@@ -4,7 +4,8 @@ import {View, StyleSheet, Text} from 'react-native';
 const ActivitySummary = (props) => {
   const {activitySummary} = props;
   return (
-    <View style={[styles.container, styles.shadow]}>
+    <>
+      {/* <View style={[styles.container, styles.shadow]}>
       <Text style={styles.text}>
         Total Calories Burnt:{' '}
         <Text style={styles.data}>{activitySummary.calories} kCal</Text>
@@ -23,7 +24,8 @@ const ActivitySummary = (props) => {
       <Text style={{textAlign: 'right', fontSize: 13, marginTop: '3%'}}>
         Updated at: {activitySummary.record_date}
       </Text>
-    </View>
+    </View>*/}
+    </>
   );
 };
 
