@@ -6,6 +6,7 @@ import {
   KeyboardAvoidingView,
   Dimensions,
   Alert,
+  Platform,
 } from 'react-native';
 //component
 import SetPassword from './setPassword';
@@ -138,7 +139,7 @@ const EditPasswordModal = (props) => {
       onBackdropPress={props.close}
       onBackButtonPress={props.close}
       style={{justifyContent: 'flex-end'}}>
-      <KeyboardAvoidingView behavior="padding">
+      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : null}>
         <View style={{backgroundColor: 'white'}}>
           <Header title={'Change Password'} closeModal={props.close} />
           <TextInput

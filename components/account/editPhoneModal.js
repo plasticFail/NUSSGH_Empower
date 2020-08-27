@@ -10,6 +10,7 @@ import {
   TextInput,
   TouchableOpacity,
   Alert,
+  Platform,
 } from 'react-native';
 //third party library
 import Modal from 'react-native-modal';
@@ -77,7 +78,7 @@ const EditPhoneModal = (props) => {
       onBackdropPress={props.close}
       onBackButtonPress={props.close}
       style={{justifyContent: 'flex-end'}}>
-      <KeyboardAvoidingView behavior="padding">
+      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : null}>
         <View style={{backgroundColor: 'white'}}>
           <Header title={'Change Phone Number'} closeModal={props.close} />
           <Text style={styles.header}>
