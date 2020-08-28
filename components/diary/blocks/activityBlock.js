@@ -10,27 +10,40 @@ import {
 import {TouchableOpacity} from 'react-native-gesture-handler';
 //third party library
 import Modal from 'react-native-modal';
-import Moment from 'moment';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 //components
 import Header from './header';
-import DataField from './dataField';
 //function
-import {getTime, getDateObj} from '../../../commonFunctions/diaryFunctions';
+import {getTime} from '../../../commonFunctions/diaryFunctions';
+
+const images = {
+  run: require('../../../resources/images/activity/type_RUN.png'),
+  walk: require('../../../resources/images/activity/type_WALK.png'),
+  outdoor_bike: require('../../../resources/images/activity/type_OUTDOORBIKE.png'),
+  elliptical: require('../../../resources/images/activity/type_ELLIPTICAL.png'),
+  sports: require('../../../resources/images/activity/type_AEROBICWORKOUT.png'),
+  caloriesBurnt: require('../../../resources/images/activity/calories.png'),
+  distance: require('../../../resources/images/activity/distance.png'),
+  steps_taken: require('../../../resources/images/activity/steps_taken.png'),
+};
+
+Icon.loadFont();
+AntDesign.loadFont();
 
 const ActivityBlock = (props) => {
   const {activity} = props;
   //format date
   let dateString = String(activity.record_date);
   let time = getTime(dateString);
-  let date = Moment(getDateObj(dateString)).format('MMMM Do YYYY, h:mm a');
-  let activityName =
-    String(activity.name).charAt(0).toUpperCase() +
-    String(activity.name).slice(1);
 
   const img = require('../../../resources/images/activity.jpg');
-  const logo = require('../../../resources/images/activity_logo.png');
-
   const [modalVisible, setModalVisible] = useState(false);
+  const [activityName, setActivityName] = useState('');
+
+  useEffect(() => {
+    setActivityName(String(activity.name).toUpperCase().replace(/\s/g, ''));
+  }, []);
 
   //close itself
   const closeModal = () => {
@@ -42,7 +55,7 @@ const ActivityBlock = (props) => {
       <TouchableOpacity
         style={styles.buttonStyle}
         onPress={() => setModalVisible(true)}>
-        <Image source={logo} style={styles.iconImg} />
+        {renderIcon(activityName, false)}
         <Text style={styles.buttonText1}>Activity</Text>
         <ImageBackground source={img} style={styles.backgroundImg} />
       </TouchableOpacity>
@@ -54,20 +67,77 @@ const ActivityBlock = (props) => {
         onBackButtonPress={() => setModalVisible(false)}
         style={{justifyContent: 'flex-end'}}>
         <Header title={'Activity:' + time} closeModal={closeModal} />
+
         <View style={styles.modalContainer}>
-          <DataField fieldName="Activity Name" value={activityName} />
-          <DataField fieldName="Record Date Time" value={date} />
-          <DataField fieldName="Duration (mins)" value={activity.duration} />
-          <DataField fieldName="Steps" value={activity.steps} />
-          <DataField
-            fieldName="Calories Burnt (kCal)"
-            value={activity.calories}
-          />
+          <View style={{flexDirection: 'row', paddingTop: '3%'}}>
+            {renderIcon(activityName, true)}
+            <Text style={styles.details}>
+              {String(activity.name).charAt(0).toUpperCase() +
+                String(activity.name).slice(1)}
+            </Text>
+            <View style={{flexDirection: 'row', flex: 3}}>
+              <Image
+                source={images.caloriesBurnt}
+                style={{marginStart: '10%'}}
+              />
+              <Text style={styles.details}>
+                {activity.calories} calories burnt
+              </Text>
+            </View>
+          </View>
+          <View style={{flexDirection: 'row'}}>
+            <Image source={images.steps_taken} />
+            <Text style={styles.details}>{activity.steps}</Text>
+            <View style={{flexDirection: 'row', flex: 2}}>
+              <AntDesign name="clockcircle" color="#3ec1c1" size={40} />
+              <Text style={styles.details}>{activity.duration} mins</Text>
+            </View>
+          </View>
         </View>
       </Modal>
     </View>
   );
 };
+
+function renderIcon(activityName, bool) {
+  if (bool === true) {
+    return (
+      <View style={{marginBottom: '20%'}}>
+        {activityName === 'RUN' ? (
+          <Image source={images.run} style={styles.iconImg2} />
+        ) : activityName === 'WALK' ? (
+          <Image source={images.walk} style={styles.iconImg2} />
+        ) : activityName === 'OUTDOORBIKE' ? (
+          <Image source={images.outdoor_bike} style={styles.iconImg2} />
+        ) : activityName === 'ELLIPTICAL' ? (
+          <Image source={images.elliptical} style={styles.iconImg2} />
+        ) : activityName === 'SPORTS' ? (
+          <Image source={images.sports} style={styles.iconImg2} />
+        ) : (
+          <Icon name="swim" style={styles.iconImg2} size={60} color="#3ec1c1" />
+        )}
+      </View>
+    );
+  } else {
+    return (
+      <>
+        {activityName === 'RUN' ? (
+          <Image source={images.run} style={styles.iconImg} />
+        ) : activityName === 'WALK' ? (
+          <Image source={images.walk} style={styles.iconImg} />
+        ) : activityName === 'OUTDOORBIKE' ? (
+          <Image source={images.outdoor_bike} style={styles.iconImg} />
+        ) : activityName === 'ELLIPTICAL' ? (
+          <Image source={images.elliptical} style={styles.iconImg} />
+        ) : activityName === 'SPORTS' ? (
+          <Image source={images.sports} style={styles.iconImg} />
+        ) : (
+          <Icon name="swim" style={styles.iconImg} size={33} color="#3ec1c1" />
+        )}
+      </>
+    );
+  }
+}
 
 export default ActivityBlock;
 
@@ -84,10 +154,14 @@ const styles = StyleSheet.create({
     height: 30,
     resizeMode: 'contain', //resize image so dont cut off
   },
+  iconImg2: {
+    height: 50,
+    width: 50,
+  },
   backgroundImg: {
     width: '100%',
     height: 120,
-    opacity: 0.3,
+    opacity: 0.2,
     borderWidth: 0.4,
     overflow: 'hidden',
     borderWidth: 2,
@@ -104,6 +178,7 @@ const styles = StyleSheet.create({
   modalContainer: {
     backgroundColor: 'white',
     padding: '3%',
+    width: '100%',
   },
   actionButton: {
     borderRadius: 20,
@@ -120,4 +195,5 @@ const styles = StyleSheet.create({
     fontSize: 17,
     textAlign: 'center',
   },
+  details: {flex: 1, margin: '3%', fontSize: 20},
 });
