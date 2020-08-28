@@ -136,7 +136,6 @@ class DiaryDetail extends Component {
         />
         {activitySummary != undefined && (
           <>
-            <Text style={styles.summaryText}>Activity Summary: </Text>
             <ActivitySummary activitySummary={activitySummary} />
           </>
         )}
