@@ -33,21 +33,21 @@ export default function FitbitSetup(props) {
     const authorised = React.useRef(false);
     const expandAnimation = React.useRef(new Animated.Value(0));
     React.useEffect(() => {
+        let cancelled = false;
         if (expand) {
             Animated.timing(expandAnimation.current, {
                 toValue: 0,
                 duration: 500,
                 useNativeDriver: true
-            }).start(() => setExpand(!expand));
+            }).start(() => !cancelled && setExpand(!expand));
         } else {
             Animated.timing(expandAnimation.current, {
                 toValue: 1,
                 duration: 500,
                 useNativeDriver: true
-            }).start(() => setExpand(!expand));
+            }).start(() => !cancelled && setExpand(!expand));
         }
-
-        if (!authorised.current) {
+        if (!authorised.current && !cancelled) {
             setTimeout(() => {
                 getFitbitToken().then(resp => {
                     if (resp) {
@@ -56,6 +56,9 @@ export default function FitbitSetup(props) {
                 })
             }, 500);
         }
+        return () => {
+            cancelled = true
+        };
     }, [expand]);
 
     const scale = expandAnimation.current.interpolate({
