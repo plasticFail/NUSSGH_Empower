@@ -33,15 +33,24 @@ const ScheduledMedicationModal = (props) => {
 
   const handleAdd = () => {
     closeModal();
-    navigation.navigate('AddPlan');
+    navigation.navigate('AddPlan', {fromAddPlanDate: date.dateString});
   };
 
   return (
     <>
       <Modal
         isVisible={isVisible}
-        onBackdropPress={closeModal}
-        onBackButtonPress={closeModal}>
+        coverScreen={true}
+        backdropOpacity={1}
+        backdropColor={'white'}>
+        <View style={{marginTop: '5%'}}>
+          <Entypo
+            name="chevron-thin-down"
+            onPress={closeModal}
+            size={30}
+            color="#16A950"
+          />
+        </View>
         <View style={styles.scheduledContainer}>
           <Text style={styles.header}>{dateString}</Text>
           <Text style={styles.details}>Scheduled Medications:</Text>
@@ -54,6 +63,7 @@ const ScheduledMedicationModal = (props) => {
               <FlatList
                 keyExtractor={(item, index) => index.toString()}
                 data={medicationList}
+                style={{flexGrow: 0}}
                 renderItem={({item}) => (
                   <>
                     <MedicationAdded
@@ -68,7 +78,7 @@ const ScheduledMedicationModal = (props) => {
                   isVisible={deleteModalVisible}
                   onBackdropPress={handleCloseDeleteModal}
                   onBackButtonPress={handleCloseDeleteModal}>
-                  <View style={styles.scheduledContainer}>
+                  <View style={styles.deleteContainer}>
                     <DeleteConfirmation
                       medication={toDelete}
                       date={date}
@@ -80,11 +90,12 @@ const ScheduledMedicationModal = (props) => {
               ) : null}
             </>
           )}
-          <TouchableOpacity style={styles.button} onPress={handleAdd}>
-            <Text style={styles.buttonText}>Add</Text>
+          <TouchableOpacity onPress={handleAdd}>
+            <Text style={styles.addbutton}>Add Medication</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={closeModal}>
-            <Text style={styles.backText}>Back</Text>
+          <View style={{flex: 1}} />
+          <TouchableOpacity style={styles.button} onPress={closeModal}>
+            <Text style={styles.buttonText}>Done</Text>
           </TouchableOpacity>
         </View>
       </Modal>
@@ -94,7 +105,7 @@ const ScheduledMedicationModal = (props) => {
 
 function MedicationAdded({medication, handleDelete}) {
   return (
-    <View style={{flexDirection: 'row'}}>
+    <View style={{flexDirection: 'row', borderBottomWidth: 0.2}}>
       <View style={styles.medicationItem}>
         <Text style={styles.medicationName}>{medication.drugName}</Text>
         <Text style={styles.medicationDetail}>{medication.dosage} Unit(s)</Text>
@@ -118,26 +129,29 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: 'white',
     borderRadius: 20,
+    flex: 1,
+  },
+  deleteContainer: {
+    width: '100%',
+    backgroundColor: 'white',
+    borderRadius: 20,
   },
   header: {
-    fontSize: 20,
+    fontSize: 30,
     fontWeight: '700',
     marginTop: '4%',
     marginStart: '4%',
   },
   details: {
-    fontSize: 16,
+    fontSize: 18,
     margin: '4%',
+    fontWeight: '600',
+    color: '#3c3c43',
   },
   medicationItem: {
-    backgroundColor: '#e3e9ef',
-    padding: '3%',
     marginTop: '2%',
     marginStart: '4%',
     marginBottom: '4%',
-    borderTopStartRadius: 15,
-    borderTopLeftRadius: 15,
-    borderBottomLeftRadius: 15,
     flex: 4,
   },
   medicationName: {
@@ -149,14 +163,7 @@ const styles = StyleSheet.create({
     marginTop: '2%',
   },
   deleteMedication: {
-    backgroundColor: '#e3e9ef',
     padding: '3%',
-    marginTop: '2%',
-    marginStart: '1%',
-    marginEnd: '4%',
-    marginBottom: '4%',
-    borderTopRightRadius: 15,
-    borderBottomRightRadius: 15,
     flex: 1,
     justifyContent: 'center',
   },
@@ -185,6 +192,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     color: 'red',
-    alignSelf: 'center',
+    margin: '4%',
+  },
+  addbutton: {
+    flexDirection: 'row',
+    margin: '4%',
+    color: '#aad326',
+    fontSize: 20,
   },
 });

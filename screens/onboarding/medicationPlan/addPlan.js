@@ -14,6 +14,7 @@ import moment from 'moment';
 import Counter from '../../../components/onboarding/medication/Counter';
 import SelectDaysModal from '../../../components/onboarding/medication/selectDaysModal';
 import SearchMedication from '../../../components/onboarding/medication/searchMedication';
+import {set} from 'react-native-reanimated';
 
 Ionicons.loadFont();
 
@@ -30,6 +31,15 @@ const AddPlan = (props) => {
   useEffect(() => {
     formatSelectionString();
   }, [selectedDates41]);
+
+  useEffect(() => {
+    if (props.route.params != null) {
+      const {fromAddPlanDate} = props.route.params;
+      setSelectedDates41({
+        [fromAddPlanDate]: {marked: true, medicine: {}, selected: true},
+      });
+    }
+  }, []);
 
   //cut name shown
   useEffect(() => {
