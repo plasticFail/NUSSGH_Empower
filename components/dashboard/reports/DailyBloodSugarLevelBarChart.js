@@ -62,7 +62,7 @@ export default function DailyBloodSugarLevelBarChart(props) {
     const scaleX = scaleTime().domain([minX, maxX]).range([paddingLeft, width - paddingRight]);
     const scaleY = scaleLinear().domain([yAxisStartsFrom, maxY]).range([height - padding, padding]);
     const scaleHeight = scaleLinear().domain([yAxisStartsFrom, maxY]).range([0, height - 2 * padding]);
-    const barWidth = 12.5;
+    const barWidth = 9.5;
 
     // event handlers
     const handleSelect = (index) => {

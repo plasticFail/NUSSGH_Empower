@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Alert, View} from 'react-native';
+import {Alert, View, Linking} from 'react-native';
 //third party libs
 import {
   getFocusedRouteNameFromRoute,
@@ -36,6 +36,8 @@ import RecentMealScreen from './main/log/meal/RecentMeal';
 import FoodSearchEngineScreen from './main/log/meal/FoodSearchEngine';
 import HeaderBackIcon from '../components/common/headerBackIcon';
 import HeaderBackIconClick from '../components/common/headerBackIconClick';
+import {redirect_uri} from "../config/FitbitConfig";
+import {AuthoriseFitbit} from "../commonFunctions/AuthoriseFitbit";
 
 Entypo.loadFont();
 
@@ -71,6 +73,15 @@ class AppRoot extends Component {
 
   componentDidMount() {
     this.init();
+    Linking.addEventListener('url', this.handleRedirectUrl);
+  }
+
+  handleRedirectUrl = (event) => {
+    const url = event.url;
+    if (url.startsWith(redirect_uri)) {
+      // fitbit redirect url
+      AuthoriseFitbit(url);
+    }
   }
 
   init = async () => {
@@ -83,6 +94,10 @@ class AppRoot extends Component {
       }
     }
   };
+
+  componentWillUnmount() {
+    Linking.removeAllListeners('url');
+  }
 
   render() {
     return (

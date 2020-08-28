@@ -1,14 +1,13 @@
 import React from 'react';
-import {View, StyleSheet, Text, Dimensions, Image, TouchableWithoutFeedback, Animated, Modal, ActivityIndicator, Linking} from 'react-native';
+import {View, StyleSheet, Text, Dimensions, Image, TouchableWithoutFeedback, Animated, Linking} from 'react-native';
 // third party lib
 import {Svg, Circle} from "react-native-svg";
 // component
 import {BackAndForwardButton} from "../../components/BackAndForwardButtons";
 //function
 import {getFitbitToken} from "../../storage/asyncStorageFunctions";
-import {postFitbitToken} from "../../netcalls/fitbitEndpoints/tokenRequests";
 // config
-import {fitbitTokenUri, fitbitOAuthUri, client_id, redirect_uri, authorisationHeader, scope} from "../../config/FitbitConfig";
+import {fitbitOAuthUri, client_id, redirect_uri, scope} from "../../config/FitbitConfig";
 // others
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import fitbitIcon from '../../resources/images/fitbit/fitbit.png';
@@ -29,73 +28,9 @@ const circleRadius = height;
 const circleOffset = height - headerHeight;
 Icon.loadFont();
 
-export default class FitbitSetup extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            isAuthorized: false
-        }
-    }
-
-    componentDidMount() {
-        getFitbitToken().then(data => {
-            if (data !== null) {
-                this.setState({
-                    isAuthorized: true
-                })
-            } else {
-                Linking.addEventListener('url', this.handleRedirectUrl);
-            }
-        })
-    }
-
-    componentWillUnmount() {
-        Linking.removeEventListener('url', this.handleRedirectUrl);
-    }
-
-    handleRedirectUrl = (event) => {
-        // Entire set up procedure for handling authorisation code grant.
-        const callback_url = event.url;
-        // remove the front part of callback url.
-        const params = callback_url.split(redirect_uri + "?")[1];
-        const codeResponse = qs.parse(params);
-        const authorisationCode = codeResponse['code'].replace(/(_|=|#)/g, '');
-        // Make call to get tokens
-        fetch(fitbitTokenUri, {
-            method: "POST",
-            headers: {
-                Authorization: "Basic " + authorisationHeader,
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
-            body: qs.stringify({
-                clientId: client_id,
-                grant_type: 'authorization_code',
-                redirect_uri,
-                code: authorisationCode
-            })
-        }).then(resp => resp.json())
-            .then(data => {
-                postFitbitToken(data).then(resp => {
-                        this.setState({
-                            isAuthorized: true
-                        });
-                    }
-                )
-            }).catch(err => alert(err.message));
-    }
-
-    render() {
-        return (
-            <FitbitSetupComponent hasBeenAuthorized={this.state.isAuthorized} />
-        );
-    }
-
-}
-
-
-function FitbitSetupComponent(props) {
+export default function FitbitSetupComponent(props) {
     const [expand, setExpand] = React.useState(false);
-    const {hasBeenAuthorized} = props;
+    const authorised = React.useRef(false);
     const expandAnimation = React.useRef(new Animated.Value(0));
     React.useEffect(() => {
         if (expand) {
@@ -111,7 +46,17 @@ function FitbitSetupComponent(props) {
                 useNativeDriver: true
             }).start(() => setExpand(!expand));
         }
-    }, [expand, hasBeenAuthorized]);
+
+        if (!authorised.current) {
+            setTimeout(() => {
+                getFitbitToken().then(resp => {
+                    if (resp) {
+                        authorised.current = true;
+                    }
+                })
+            }, 500);
+        }
+    }, [expand]);
 
     const scale = expandAnimation.current.interpolate({
         inputRange: [0, 1],
@@ -144,7 +89,7 @@ function FitbitSetupComponent(props) {
             <View style={styles.remainingContainer}>
                 <View style={[styles.fitbitPromptContainer, {flex: 4}]}>
                     {
-                        hasBeenAuthorized ?
+                        authorised.current ?
                             <React.Fragment>
                                 <Text style={styles.fitbitDoneMainText}>Done!</Text>
                                 <Text style={styles.fitbitDoneSubText}>You are all set</Text>
@@ -163,7 +108,7 @@ function FitbitSetupComponent(props) {
                 </View>
                 <BackAndForwardButton onPressBack={()=>{}}
                                       onPressForward={()=>{}}
-                                      overrideForwardTitle={hasBeenAuthorized ? 'Next' : 'Skip'}
+                                      overrideForwardTitle={authorised.current ? 'Next' : 'Skip'}
                                       enableForward={() => true} />
             </View>
         </View>
