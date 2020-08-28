@@ -8,20 +8,20 @@ import {
   getLastWeightLog,
   getLastMealLog,
   getLastMedicationLog,
-} from '../../../../storage/asyncStorageFunctions';
-import {getDefaultMealType, handleSubmitMealLog, isValidMeal} from "../../../../commonFunctions/mealLogFunctions";
-import {checkBloodGlucoseText, checkWeightText, handleSubmitBloodGlucose, handleSubmitMedication, handleSubmitWeight} from '../../../../commonFunctions/logFunctions';
+} from '../../../storage/asyncStorageFunctions';
+import {getDefaultMealType, handleSubmitMealLog, isValidMeal} from "../../../commonFunctions/mealLogFunctions";
+import {checkBloodGlucose, checkWeight, handleSubmitBloodGlucose, handleSubmitMedication, handleSubmitWeight} from '../../../commonFunctions/logFunctions';
 //components
-import FormBlockFix from '../../../../components/logs/formBlockFix';
-import BloodGlucoseLogBlock from '../../../../components/logs/bloodGlucoseLogBlock';
-import BloodGlucoseLogDisplay from '../../../../components/logs/bloodGlucoseLogDisplay';
-import DailyMealLogComponent from "../../../../components/logs/meal/DailyMealLogComponent";
-import {BackAndForwardButton} from '../../../../components/BackAndForwardButtons';
-import WeightLogBlock from '../../../../components/logs/weightLogBlock';
-import WeightLogDisplay from '../../../../components/logs/weightLogDisplay';
-import MedicationLogDisplay from '../../../../components/logs/medicationLogDisplay';
-import MedicationLogBlock from '../../../../components/logs/medicationLogBlock';
-import MealLogDisplay from "../../../../components/logs/meal/MealLogDisplay";
+import FormBlockFix from '../../../components/logs/formBlockFix';
+import BloodGlucoseLogBlock from '../../../components/logs/bloodGlucoseLogBlock';
+import BloodGlucoseLogDisplay from '../../../components/logs/bloodGlucoseLogDisplay';
+import DailyMealLogComponent from "../../../components/logs/meal/DailyMealLogComponent";
+import {BackAndForwardButton} from '../../../components/BackAndForwardButtons';
+import WeightLogBlock from '../../../components/logs/weightLogBlock';
+import WeightLogDisplay from '../../../components/logs/weightLogDisplay';
+import MedicationLogDisplay from '../../../components/logs/medicationLogDisplay';
+import MedicationLogBlock from '../../../components/logs/medicationLogBlock';
+import MealLogDisplay from "../../../components/logs/meal/MealLogDisplay";
 
 
 class DailyLog extends Component {
@@ -123,7 +123,7 @@ class DailyLog extends Component {
 
     switch (this.state.currentStep) {
       case 1:
-        return checkBloodGlucoseText(this.state.bloodGlucose) === '';
+        return checkBloodGlucose(this.state.bloodGlucose);
         break;
       case 2:
         return this.state.meal !== null;
@@ -132,31 +132,13 @@ class DailyLog extends Component {
         return this.state.selectedMedicationList.length > 0;
         break;
       case 4:
-        return checkWeightText(this.state.weight) === '';
+        return checkWeight(this.state.weight);
         break;
       case 5:
         return true;
         break;
     }
     return false;
-  };
-
-  alertText = () => {
-    switch (this.state.currentStep) {
-      case 1:
-        return checkBloodGlucoseText(this.state.bloodGlucose);
-        break;
-      case 2:
-        return this.state.meal !== null;
-        break;
-      case 3:
-        return this.state.selectedMedicationList.length > 0;
-        break;
-      case 4:
-        return checkWeightText(this.state.weight);
-        break;
-    }
-    return '';
   };
 
   displayStepText = () => {
@@ -178,15 +160,15 @@ class DailyLog extends Component {
   stepImage = () => {
     switch (this.state.currentStep) {
       case 1:
-        return require('../../../../resources/images/progress1.png');
+        return require('../../../resources/images/progress1.png');
       case 2:
-        return require('../../../../resources/images/progress2.png');
+        return require('../../../resources/images/progress2.png');
       case 3:
-        return require('../../../../resources/images/progress3.png');
+        return require('../../../resources/images/progress3.png');
       case 4:
-        return require('../../../../resources/images/progress4.png');
+        return require('../../../resources/images/progress4.png');
       case 5:
-        return require('../../../../resources/images/progress5.png');
+        return require('../../../resources/images/progress5.png');
     }
     return '';
   };
@@ -586,9 +568,6 @@ class DailyLog extends Component {
               />
           )}
 
-          {this.state.showNewInput && (
-            <Text style={styles.text}>{this.alertText()}</Text>
-          )}
           {currentStep === 1 ? ( // Only render the forward button
             <BackAndForwardButton
               onPressBack={this.props.navigation.goBack}

@@ -12,9 +12,6 @@ import {
 import {Svg, Text as SvgText, Circle, Image, Rect, G, Defs, ClipPath} from "react-native-svg";
 import NutritionIntakeCard from '../../components/dashboard/todayOverview/NutritionIntakeCard';
 import DailyBloodSugarLevelBarChart from "../../components/dashboard/reports/DailyBloodSugarLevelBarChart";
-Ionicon.loadFont();
-Foundation.loadFont();
-Entypo.loadFont();
 
 const buttonList = [
   {
@@ -146,6 +143,11 @@ const HomeScreen = (props) => {
         {/* Nutrition overview, activity overview, weight overview */}
         <NutritionIntakeCard onPress={() => alert('pressed nutrient card!')} />
       </View>
+      <Button
+        title="Medicine Plan "
+        onPress={() => props.navigation.navigate('MedicationPlan')}
+      />
+      <Button title="Sync fitbit" onPress={() => props.navigation.navigate('FitbitSetup')}/>
     </ScrollView>
   );
 };

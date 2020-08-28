@@ -21,23 +21,26 @@ import InputOTPScreen from './login/inputOTPScreen';
 import AlertsScreen from './sub/alerts';
 import ChatScreen from './sub/chat';
 import ResetPasswordScreen from './login/resetPassword';
-import DailyLog from './main/log/dailyLog/dailyLog';
+import DailyLog from './main/log/dailyLog';
 import BloodGlucoseLog from './main/log/bloodGlucoseLog';
-import MedicationLog from './main/log/medication/medicationLog';
+import MedicationLog from './main/log/medicationLog';
 import MealLogRoot from './main/log/meal/MealLogRoot';
 import WeightLog from './main/log/weightLog';
 import DiaryDetail from './main/diary/diaryDetail';
 //components
 import HeaderIcon from '../components/common/headerBtnIcon';
-import HypoglycemiaReason from './hypoglycemiaReason';
 import CreateMealLogScreen from './main/log/meal/CreateMealLog';
 import FavouriteMealScreen from './main/log/meal/FavouriteMeals';
 import RecentMealScreen from './main/log/meal/RecentMeal';
 import FoodSearchEngineScreen from './main/log/meal/FoodSearchEngine';
 import HeaderBackIcon from '../components/common/headerBackIcon';
 import HeaderBackIconClick from '../components/common/headerBackIconClick';
+import ContactUs from './contactUs';
+import AskAdd from './onboarding/medicationPlan/askAdd';
+import AddPlan from './onboarding/medicationPlan/addPlan';
 import {redirect_uri} from "../config/FitbitConfig";
 import {AuthoriseFitbit} from "../commonFunctions/AuthoriseFitbit";
+import FitbitSetup from "./onboarding/fitbit/FitbitSetup";
 
 Entypo.loadFont();
 
@@ -135,6 +138,7 @@ class AppRoot extends Component {
                       clickFunc={() => navigation.navigate('Chat')}
                     />
                   ),
+                  headerBackTitleVisible: false,
                 })}
               />
               <Stack.Screen
@@ -144,6 +148,7 @@ class AppRoot extends Component {
                   title: 'Alerts',
                   headerBackImage: () => <HeaderBackIcon />,
                   headerRight: () => <View />,
+                  headerBackTitleVisible: false,
                 }}
               />
               <Stack.Screen
@@ -153,6 +158,7 @@ class AppRoot extends Component {
                   title: 'Chat',
                   headerBackImage: () => <HeaderBackIcon />,
                   headerRight: () => <View />,
+                  headerBackTitleVisible: false,
                 }}
               />
               <Stack.Screen
@@ -162,6 +168,7 @@ class AppRoot extends Component {
                   title: 'Daily Log',
                   headerBackImage: () => <HeaderBackIcon />,
                   headerRight: () => <View />,
+                  headerBackTitleVisible: false,
                 }}
               />
               <Stack.Screen
@@ -171,6 +178,7 @@ class AppRoot extends Component {
                   title: 'Meal Log',
                   headerBackImage: () => <HeaderBackIcon />,
                   headerRight: () => <View />,
+                  headerBackTitleVisible: false,
                 })}
               />
               <Stack.Screen
@@ -207,6 +215,7 @@ class AppRoot extends Component {
                     />
                   ),
                   headerRight: () => <View />,
+                  headerBackTitleVisible: false,
                 })}
               />
               <Stack.Screen
@@ -217,6 +226,7 @@ class AppRoot extends Component {
                   headerBackImage: () => <HeaderBackIcon />,
                   headerRight: () => <View />,
                   ...TransitionPresets.ModalTransition,
+                  headerBackTitleVisible: false,
                 })}
               />
               <Stack.Screen
@@ -227,6 +237,7 @@ class AppRoot extends Component {
                   headerBackImage: () => <HeaderBackIcon />,
                   headerRight: () => <View />,
                   ...TransitionPresets.ModalTransition,
+                  headerBackTitleVisible: false,
                 })}
               />
               <Stack.Screen
@@ -241,6 +252,7 @@ class AppRoot extends Component {
                   title: 'Blood Glucose Log',
                   headerRight: () => <View />,
                   headerBackImage: () => <HeaderBackIcon />,
+                  headerBackTitleVisible: false,
                 }}
               />
               <Stack.Screen
@@ -250,6 +262,7 @@ class AppRoot extends Component {
                   title: 'Medication Log',
                   headerRight: () => <View />,
                   headerBackImage: () => <HeaderBackIcon />,
+                  headerBackTitleVisible: false,
                 }}
               />
               <Stack.Screen
@@ -259,17 +272,7 @@ class AppRoot extends Component {
                   title: 'Weight Log',
                   headerRight: () => <View />,
                   headerBackImage: () => <HeaderBackIcon />,
-                }}
-              />
-              <Stack.Screen
-                name="HypoglycemiaReason"
-                component={HypoglycemiaReason}
-                options={{
-                  title: 'WARNING',
-                  headerStyle: {
-                    backgroundColor: '#eb90d6',
-                  },
-                  headerRight: () => <View />,
+                  headerBackTitleVisible: false,
                 }}
               />
               <Stack.Screen
@@ -280,6 +283,21 @@ class AppRoot extends Component {
                   headerRight: () => <View />,
                 })}
               />
+              {/* Onboarding */}
+              <Stack.Screen
+                name="MedicationPlan"
+                component={AskAdd}
+                options={{headerShown: false}}
+              />
+              <Stack.Screen
+                name="AddPlan"
+                component={AddPlan}
+                options={{headerShown: false}}
+              />
+              <Stack.Screen name="FitbitSetup"
+                            component={FitbitSetup}
+                            options={{headerShown: false}}
+              />
             </>
           ) : (
             <>
@@ -289,18 +307,19 @@ class AppRoot extends Component {
                 options={{headerShown: false}}
               />
               <Stack.Screen
+                name="ContactUsScreen"
+                component={ContactUs}
+                options={{
+                  title: 'Contact Us',
+                  headerRight: () => <View />,
+                  headerBackTitle: 'Back',
+                }}
+              />
+              <Stack.Screen
                 name="ForgetPassword"
                 component={ForgetPasswordScreen}
                 options={{
                   title: 'Forget Password',
-                  headerStyle: {
-                    backgroundColor: '#aad326',
-                  },
-                  headerTintColor: '#000',
-                  headerTitleStyle: {
-                    fontWeight: 'bold',
-                    alignSelf: 'center',
-                  },
                   headerRight: () => <View />,
                 }}
               />
@@ -309,14 +328,6 @@ class AppRoot extends Component {
                 component={InputOTPScreen}
                 options={{
                   title: 'Input OTP',
-                  headerStyle: {
-                    backgroundColor: '#aad326',
-                  },
-                  headerTintColor: '#000',
-                  headerTitleStyle: {
-                    fontWeight: 'bold',
-                    alignSelf: 'center',
-                  },
                   headerRight: () => <View />,
                   headerBackTitle: 'Back',
                 }}
@@ -326,14 +337,6 @@ class AppRoot extends Component {
                 component={ResetPasswordScreen}
                 options={{
                   title: 'Reset Password',
-                  headerStyle: {
-                    backgroundColor: '#aad326',
-                  },
-                  headerTintColor: '#000',
-                  headerTitleStyle: {
-                    fontWeight: 'bold',
-                    alignSelf: 'center',
-                  },
                   headerLeft: false,
                 }}
               />

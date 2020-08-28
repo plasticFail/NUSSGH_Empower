@@ -6,6 +6,7 @@ import {
   Image,
   ImageBackground,
   KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import {TouchableOpacity, ScrollView} from 'react-native-gesture-handler';
 //third party library
@@ -84,7 +85,8 @@ const BgBlock = (props) => {
         onBackdropPress={() => closeModal()}
         onBackButtonPress={() => closeModal()}
         style={{flex: 1, justifyContent: 'flex-end'}}>
-        <KeyboardAvoidingView behavior="padding">
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : null}>
           <Header title={'Blood Glucose:' + time} closeModal={closeModal} />
           <View style={styles.modalContainer}>
             <BloodGlucoseLogBlock

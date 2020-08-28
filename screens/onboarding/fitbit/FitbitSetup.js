@@ -3,14 +3,14 @@ import {View, StyleSheet, Text, Dimensions, Image, TouchableWithoutFeedback, Ani
 // third party lib
 import {Svg, Circle} from "react-native-svg";
 // component
-import {BackAndForwardButton} from "../../components/BackAndForwardButtons";
+import {BackAndForwardButton} from "../../../components/BackAndForwardButtons";
 //function
-import {getFitbitToken} from "../../storage/asyncStorageFunctions";
+import {getFitbitToken} from "../../../storage/asyncStorageFunctions";
 // config
-import {fitbitOAuthUri, client_id, redirect_uri, scope} from "../../config/FitbitConfig";
+import {fitbitOAuthUri, client_id, redirect_uri, scope} from "../../../config/FitbitConfig";
 // others
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
-import fitbitIcon from '../../resources/images/fitbit/fitbit.png';
+import fitbitIcon from '../../../resources/images/fitbit/fitbit.png';
 
 const qs = require('qs');
 
@@ -28,7 +28,7 @@ const circleRadius = height;
 const circleOffset = height - headerHeight;
 Icon.loadFont();
 
-export default function FitbitSetupComponent(props) {
+export default function FitbitSetup(props) {
     const [expand, setExpand] = React.useState(false);
     const authorised = React.useRef(false);
     const expandAnimation = React.useRef(new Animated.Value(0));
@@ -106,7 +106,7 @@ export default function FitbitSetupComponent(props) {
                         </React.Fragment>
                     }
                 </View>
-                <BackAndForwardButton onPressBack={()=>{}}
+                <BackAndForwardButton onPressBack={()=>props.navigation.goBack()}
                                       onPressForward={()=>{}}
                                       overrideForwardTitle={authorised.current ? 'Next' : 'Skip'}
                                       enableForward={() => true} />

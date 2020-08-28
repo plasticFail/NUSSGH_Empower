@@ -6,6 +6,7 @@ import Summary from '../../../components/diary/summary';
 import TimeSection from '../../../components/diary/timeSection';
 //functions
 import {getHour} from '../../../commonFunctions/diaryFunctions';
+import ActivitySummary from '../../../components/diary/activitySummary';
 
 class DiaryDetail extends Component {
   constructor(props) {
@@ -104,6 +105,7 @@ class DiaryDetail extends Component {
       activityMiss,
       activityPassCount,
       activityFailCount,
+      activitySummary,
       foodMiss,
       carbs,
       protein,
@@ -113,7 +115,7 @@ class DiaryDetail extends Component {
     } = this.props.route.params;
     return (
       <View style={styles.screen}>
-        <Text style={styles.summaryText}>Summary: </Text>
+        <Text style={styles.summaryText}>Overall Summary: </Text>
         <Summary
           bgPass={bgPass}
           bgMiss={bgMiss}
@@ -130,7 +132,14 @@ class DiaryDetail extends Component {
           fats={fats}
           foodPassCount={foodPassCount}
           foodFailCount={foodFailCount}
+          activitySummary={activitySummary}
         />
+        {activitySummary != undefined && (
+          <>
+            <ActivitySummary activitySummary={activitySummary} />
+          </>
+        )}
+
         <FlatList
           listKey={(item, index) => index.toString()}
           ListEmptyComponent={

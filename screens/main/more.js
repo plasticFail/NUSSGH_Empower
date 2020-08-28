@@ -15,7 +15,7 @@ import GoalsScreen from '../more/goals';
 import RemindersScreen from '../more/reminders';
 import GameCenterScreen from '../more/gameCenter';
 import GlucoseMonitorsScreen from '../more/glucoseMonitor';
-import FitbitSetup from "../onboard/FitbitSetup";
+import FitbitSetup from "../onboarding/fitbit/FitbitSetup";
 
 const Stack = createStackNavigator();
 

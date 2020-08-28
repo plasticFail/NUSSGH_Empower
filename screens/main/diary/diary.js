@@ -11,7 +11,6 @@ import {getDateRange} from '../../../commonFunctions/diaryFunctions';
 
 const DiaryScreen = (props) => {
   const [dates, setDates] = useState([]);
-  const [selection, setSelection] = useState('7');
 
   //set useeffect to render this week*
   useEffect(() => {

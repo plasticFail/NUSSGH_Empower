@@ -7,7 +7,7 @@ import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
 import Home from './main/home';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import Diary from './main/diary/diary';
-import AddLog from './main/addlog';
+import AddLog from './main/log/addlog';
 import More from './main/more';
 
 const Tab = createBottomTabNavigator();
