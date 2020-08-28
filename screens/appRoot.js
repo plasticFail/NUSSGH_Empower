@@ -34,6 +34,9 @@ import RecentMealScreen from './main/log/meal/RecentMeal';
 import FoodSearchEngineScreen from './main/log/meal/FoodSearchEngine';
 import HeaderBackIcon from '../components/common/headerBackIcon';
 import HeaderBackIconClick from '../components/common/headerBackIconClick';
+import ContactUs from './contactUs';
+import AskAdd from './onboarding/medicationPlan/askAdd';
+import AddPlan from './onboarding/medicationPlan/addPlan';
 
 Entypo.loadFont();
 
@@ -263,6 +266,17 @@ class AppRoot extends Component {
                   headerRight: () => <View />,
                 })}
               />
+              {/* Onboarding */}
+              <Stack.Screen
+                name="MedicationPlan"
+                component={AskAdd}
+                options={{headerShown: false}}
+              />
+              <Stack.Screen
+                name="AddPlan"
+                component={AddPlan}
+                options={{headerShown: false}}
+              />
             </>
           ) : (
             <>
@@ -272,18 +286,19 @@ class AppRoot extends Component {
                 options={{headerShown: false}}
               />
               <Stack.Screen
+                name="ContactUsScreen"
+                component={ContactUs}
+                options={{
+                  title: 'Contact Us',
+                  headerRight: () => <View />,
+                  headerBackTitle: 'Back',
+                }}
+              />
+              <Stack.Screen
                 name="ForgetPassword"
                 component={ForgetPasswordScreen}
                 options={{
                   title: 'Forget Password',
-                  headerStyle: {
-                    backgroundColor: '#aad326',
-                  },
-                  headerTintColor: '#000',
-                  headerTitleStyle: {
-                    fontWeight: 'bold',
-                    alignSelf: 'center',
-                  },
                   headerRight: () => <View />,
                 }}
               />
@@ -292,14 +307,6 @@ class AppRoot extends Component {
                 component={InputOTPScreen}
                 options={{
                   title: 'Input OTP',
-                  headerStyle: {
-                    backgroundColor: '#aad326',
-                  },
-                  headerTintColor: '#000',
-                  headerTitleStyle: {
-                    fontWeight: 'bold',
-                    alignSelf: 'center',
-                  },
                   headerRight: () => <View />,
                   headerBackTitle: 'Back',
                 }}
@@ -309,14 +316,6 @@ class AppRoot extends Component {
                 component={ResetPasswordScreen}
                 options={{
                   title: 'Reset Password',
-                  headerStyle: {
-                    backgroundColor: '#aad326',
-                  },
-                  headerTintColor: '#000',
-                  headerTitleStyle: {
-                    fontWeight: 'bold',
-                    alignSelf: 'center',
-                  },
                   headerLeft: false,
                 }}
               />

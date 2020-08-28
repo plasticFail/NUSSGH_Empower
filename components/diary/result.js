@@ -11,7 +11,7 @@ const Result = (props) => {
   return (
     <View>
       {success == true ? (
-        <View style={{flexDirection: 'row'}}>
+        <View style={{flexDirection: 'row', marginBottom: '2%'}}>
           <Entypo name="check" size={30} style={{color: 'green'}} />
           <Text style={styles.msg}>{message}</Text>
         </View>
@@ -32,5 +32,6 @@ const styles = StyleSheet.create({
     fontSize: 17,
     marginTop: '1%',
     marginStart: '1%',
+    flex: 1,
   },
 });

@@ -12,6 +12,7 @@ const phoneNumber = '89898989';
 
 const AccountDetailScreen = (props) => {
   const [modalVisible, setModalVisible] = useState(false);
+  const [phoneModalVisible, setPhoneModalVisible] = useState(false);
 
   const openModal = () => {
     setModalVisible(true);
@@ -21,13 +22,28 @@ const AccountDetailScreen = (props) => {
     setModalVisible(false);
   };
 
+  const openPhoneModal = () => {
+    setPhoneModalVisible(true);
+  };
+
+  const closePhoneModal = () => {
+    setPhoneModalVisible(false);
+  };
+
   return (
     <ScrollView
       contentContainerStyle={{...styles.accountDetailScreen, ...props.style}}>
       <Image source={profilePic} style={styles.profileImg} />
       <Clickable heading={'Username'} content={username} click={false} />
       <Clickable heading={'Name'} content={name} click={false} />
-      <Clickable heading={'Phone Number'} content={phoneNumber} click={false} />
+      <Clickable
+        heading={'Phone Number'}
+        content={phoneNumber}
+        click={true}
+        phoneModalVisible={phoneModalVisible}
+        openModal={openPhoneModal}
+        closeModal={closePhoneModal}
+      />
 
       <Clickable
         heading={'Change Password'}

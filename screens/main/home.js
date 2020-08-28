@@ -96,6 +96,10 @@ const HomeScreen = (props) => {
       <View style={styles.chartContainter}>
         <NutritionIntakeCard onPress={() => alert('pressed nutrient card!')} />
       </View>
+      <Button
+        title="Medicine Plan "
+        onPress={() => props.navigation.navigate('MedicationPlan')}
+      />
     </ScrollView>
   );
 };
