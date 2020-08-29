@@ -10,6 +10,10 @@ import {
   Modal,
   TouchableHighlight,
   Alert,
+    Animated,
+    Keyboard,
+    Platform,
+    KeyboardAvoidingView
 } from 'react-native';
 // Components
 import Searchbar from '../../../../components/Searchbar';
@@ -26,6 +30,9 @@ import requestFoodSearch from '../../../../netcalls/foodEndpoints/requestFoodSea
 
 Icon.loadFont();
 
+const AnimatedKeyboardAvoidingView = Animated.createAnimatedComponent(KeyboardAvoidingView);
+const AnimatedIcon = Animated.createAnimatedComponent(Icon);
+
 class FoodSearchEngineScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -33,9 +40,65 @@ class FoodSearchEngineScreen extends React.Component {
       query: '',
       isLoading: false,
       foodResults: [],
+      keyboardShown: false
     };
     this.timeout = setTimeout(() => {}, 0); //Initialise timeout for lazy loading
+    this.keyboardHeight = new Animated.Value(0);
+    this.listResultY = new Animated.Value(0);
+    this.backbuttonOpacity = new Animated.Value(1);
   }
+
+  componentDidMount () {
+    this.keyboardWillShowSub = Keyboard.addListener(Platform.OS == 'android' ? 'keyboardDidShow' : 'keyboardWillShow', this.keyboardWillShow);
+    this.keyboardWillHideSub = Keyboard.addListener(Platform.OS == 'android' ? "keyboardDidHide" : 'keyboardWillHide', this.keyboardWillHide);
+  }
+
+  componentWillUnmount() {
+    this.keyboardWillShowSub.remove();
+    this.keyboardWillHideSub.remove();
+  }
+
+  keyboardWillShow = (event) => {
+    this.setState({keyboardShown: true});
+    Animated.parallel([
+      Animated.timing(this.keyboardHeight, {
+        duration: event.duration,
+        toValue: event.endCoordinates.height,
+        useNativeDriver: true
+      }),
+      Animated.timing(this.listResultY, {
+        duration: 500,
+        toValue: -50,
+        useNativeDriver: true
+      }),
+      Animated.timing(this.backbuttonOpacity, {
+        duration: 200,
+        toValue: 0,
+        useNativeDriver: true
+      }),
+    ]).start();
+  };
+
+  keyboardWillHide = (event) => {
+    this.setState({keyboardShown: false});
+    Animated.parallel([
+      Animated.timing(this.keyboardHeight, {
+        duration: event.duration,
+        toValue: 0,
+        useNativeDriver: true
+      }),
+      Animated.timing(this.listResultY, {
+        duration: 500,
+        toValue: 0,
+        useNativeDriver: true
+      }),
+        Animated.timing(this.backbuttonOpacity, {
+          duration: 200,
+          toValue: 1,
+          useNativeDriver: true
+        }),
+    ]).start();
+  };
 
   // handler for making lazy requests.
   updateQuery = (text) => {
@@ -96,19 +159,20 @@ class FoodSearchEngineScreen extends React.Component {
 
   render() {
     const {navigation, route} = this.props;
-    const {query, isLoading, foodResults} = this.state;
+    const {query, isLoading, foodResults, keyboardShown} = this.state;
     const type = route.params.type;
     return (
-      <View style={styles.root}>
+      <AnimatedKeyboardAvoidingView enabled={false} style={[styles.root, {transform: [{translateY: this.listResultY}]}]}>
         <View style={styles.header}>
-            <Icon name="arrow-left" onPress={navigation.goBack} size={40} />
-            <Text style={styles.addItemText}>Add Item</Text>
+            <AnimatedIcon name="arrow-left" onPress={navigation.goBack} size={40} style={{opacity: this.backbuttonOpacity}} />
+            <Text style={styles.addItemText}>{keyboardShown ? "Search" : "Add Item"}</Text>
         </View>
         <Searchbar
-            containerStyle={{marginLeft: 20, marginRight: 20,backgroundColor: '#E2E7EE'}}
+            containerStyle={{marginLeft: 20, marginRight: 20}}
             onChangeText={this.updateQuery}
             onSubmit={this.onSubmit}
         />
+
         {query === '' ? ( // Render search prompt "Begin your search"
           <View style={styles.searchPromptBody}>
             <Text style={styles.searchPromptText}>Begin your search</Text>
@@ -139,7 +203,7 @@ class FoodSearchEngineScreen extends React.Component {
             <Text style={styles.searchHintText}>another query!</Text>
           </View>
         )}
-      </View>
+      </AnimatedKeyboardAvoidingView>
     );
   }
 }
