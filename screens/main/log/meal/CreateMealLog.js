@@ -69,6 +69,12 @@ export default class CreateMealLog extends React.Component {
         })
     }
 
+    componentDidMount() {
+        if (this.props.route.params?.meal) {
+            this.setState(this.props.route.params.meal);
+        }
+    }
+
     componentDidUpdate(prevProps) {
         if (prevProps.route.params?.item !== this.props.route.params?.item) {
             const { item } = this.props.route.params;
@@ -82,6 +88,24 @@ export default class CreateMealLog extends React.Component {
                 edited: true
             });
             this.setState(newState);
+        }
+        if (prevProps.route.params?.meal !== this.props.route.params?.meal) {
+            const {meal} = this.props.route.params;
+            const newFoodItems = this.state.foodItems.map(x => x);
+            for (const newFoodItem of meal.foodItems) {
+                const dup = this.state.foodItems.filter(x => x['food-name'] === newFoodItem['food-name']);
+                if (dup.length > 0) {
+                    dup[0].quantity += 1;
+                } else {
+                    newFoodItems.push(newFoodItem);
+                }
+            }
+            this.props.navigation.setParams({
+                edited: true
+            });
+            this.setState({
+                foodItems: newFoodItems
+            });
         }
     }
 
@@ -191,9 +215,8 @@ export default class CreateMealLog extends React.Component {
         const {isFavourite, mealName, selected, modalOpen, foodItems} = this.state;
 
         return (
-            <View style={{flexGrow: 1}}>
-                <ScrollView contentContainerStyle={styles.root}>
-                    <View style={{flex: 1, padding: 20}}>
+            <View style={styles.root}>
+                    <View style={{flexGrow: 1, padding: 20}}>
                         <View style={styles.header}>
                             <Icon name='times' size={50} color='#4DAA50' onPress={()=>navigation.goBack()} />
                             <Text style={{fontSize: 30, color:"#21283A", fontWeight: 'bold', paddingBottom: '2%'}}>Add Meal</Text>
@@ -211,12 +234,22 @@ export default class CreateMealLog extends React.Component {
                                   style={styles.favouriteIcon}/>
                         </View>
                         <Text style={{fontSize: 18, color:"#8A8A8E", fontWeight: 'bold'}} >Food intake</Text>
-                        {
+                        <View style={{flexGrow: 0, maxHeight:'42.5%', marginLeft: -20, marginRight: -20}}>
+                            <FlatList style={{flexGrow: 0, paddingLeft: 20, paddingRight: 20}} data={foodItems} showScrollIndicator={false} keyExtractor={i => i['food-name']}
+                                      renderItem={({item}) => (
+                                        <FoodItem item={item}
+                                          handleDelete={()=>this.handleDelete(item["food-name"])}
+                                          onQuantityChange={(val) => this.onQuantityChange(item["food-name"], val)} />
+                                      )}
+                            />
+                        </View>
+                        {   /*
                             foodItems.map((foodItem, index) => (
-                                <FoodItem item={foodItem}
+                                <FoodItem item={foodItem} key={foodItem['food-name']}
                                           handleDelete={()=>this.handleDelete(foodItem["food-name"])}
                                           onQuantityChange={(val) => this.onQuantityChange(foodItem["food-name"], val)} />
                             ))
+                            */
                         }
                         <TouchableOpacity onPress={this.redirectToFoodSearchEngine}>
                             <Text style={{fontSize: 18, color:"#9DC43D", paddingTop: 20, paddingBottom: 20}}>Add Item</Text>
@@ -234,7 +267,6 @@ export default class CreateMealLog extends React.Component {
                             </Modal>
                         </View>
                     </View>
-                </ScrollView>
                 <FlashMessage triggerValue={this.state.isFavourite}
                               renderFlashMessageComponent={(val) => val ? <View
                                       style={{height: 40, width: 150, borderRadius: 10,
@@ -291,7 +323,7 @@ function FoodItem({onPress, item, handleDelete, onQuantityChange}) {
                 <Image source={{uri: item.imgUrl.url}} style={{width: 65, height: 65, borderRadius: 10}}/>
                 <View style={styles.foodTextWrapper}>
                     <Text style={{fontSize: adjustedFontSize}}>{foodName}</Text>
-                    <IntegerQuantitySelector defaultValue={item.quantity}
+                    <IntegerQuantitySelector value={item.quantity}
                                              changeAmount={1}
                                              minValue={1}
                                              maxValue={50}
@@ -307,7 +339,7 @@ function FoodItem({onPress, item, handleDelete, onQuantityChange}) {
 
 const styles = StyleSheet.create({
     root: {
-        flexGrow: 1,
+        flex: 1,
         backgroundColor: '#ffffff'
     },
     mealNameTextAndIcon: {

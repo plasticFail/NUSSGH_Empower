@@ -12,8 +12,7 @@ export default class FavouriteMealScreen extends React.Component {
         super(props);
         this.state = {
             isLoading: true,
-            favouriteMeals: [],
-            filterQuery: ''
+            favouriteMeals: []
         }
     }
 
@@ -24,26 +23,17 @@ export default class FavouriteMealScreen extends React.Component {
             this.setState({
                 isLoading: false,
                 favouriteMeals: data.data
-            })
+            });
         }).catch(err => alert(err.message));
     }
 
     navigateToCreateMealLogPage = (selectedMeal) => {
-        const { parentScreen } = this.props.route.params;
         const meal = {...selectedMeal};
         meal.isFavourite = false;
         meal.mealName = "";
-
         this.props.navigation.navigate("CreateMealLog", {
-            meal,
-            parentScreen
+            meal
         });
-    }
-
-    handleChangeFilterQuery = (text) => {
-        this.setState({
-            filterQuery: text
-        })
     }
 
     handleUnfavouriteMeal = (meal) => {
@@ -58,19 +48,16 @@ export default class FavouriteMealScreen extends React.Component {
     }
 
     render() {
-        const {isLoading, favouriteMeals, filterQuery} = this.state;
-        const filteredMeals = favouriteMeals.filter(meal =>
-            meal.mealName.toLowerCase().indexOf(filterQuery.toLowerCase()) > -1);
+        const {isLoading, favouriteMeals} = this.state;
+        const {filterQuery} = this.props;
         return (
             isLoading ?
             <View style={styles.loadingContainer}>
                 <ActivityIndicator size="large" color="#B3D14C" />
             </View> :
             <View style={styles.root}>
-                <Searchbar containerStyle={{height: 50}} onChangeText={this.handleChangeFilterQuery}
-                           onSubmit={() => {}}/>
-                <MealList meals={filteredMeals}
-                          onSelectMeal={this.navigateToCreateMealLogPage}
+                {
+                    <MealList meals={favouriteMeals} filterQuery={filterQuery}
                           options={{
                                 buttons: [
                                     {
@@ -92,6 +79,7 @@ export default class FavouriteMealScreen extends React.Component {
                                 header: (meal) => meal.mealName,
                             }}
                           />
+                }
             </View>
         );
     }

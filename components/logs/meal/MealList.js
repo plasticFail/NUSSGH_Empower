@@ -31,13 +31,25 @@ Icon.loadFont();
 //                      ]
 //
 //       header        Function<Meal>: Function that takes in a Meal Object and returns a string to render in the Meal header.
-export default function MealList({onSelectMeal, meals, options}) {
+export default function MealList({filterQuery, meals, options}) {
+    const processed = meals.map(m => {
+        if (m.foodItems) {
+            return m;
+        }
+        m.foodItems = m.beverage.concat(m.side, m.main, m.dessert)
+        delete m['main'];
+        delete m['side'];
+        delete m['dessert'];
+        delete m['beverage'];
+        return m;
+    });
+
+    const filtered = processed.filter(x => x.mealName.toLowerCase().indexOf(filterQuery.trim().toLowerCase()) != -1);
     return (
-        <FlatList data={meals}
+        <FlatList data={filtered}
                   keyExtractor={meal => meal._id}
                   contentContainerStyle={styles.listContainer} renderItem={({item}) =>
-            (<RenderMealItem item={item} options={options}
-                             onPressSelect={() => onSelectMeal(item)} />)}
+            (<RenderMealItem item={item} options={options} />)}
         />
     )
 }

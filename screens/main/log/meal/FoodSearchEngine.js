@@ -18,8 +18,8 @@ import {
 // Components
 import Searchbar from '../../../../components/Searchbar';
 import FoodModalContent from '../../../../components/logs/meal/FoodModalContent';
+import FavouriteMealScreen from "./FavouriteMeals";
 // Functions
-import {getToken} from '../../../../storage/asyncStorageFunctions';
 // Others
 import carbohydrate from '../../../../resources/images/icons/carbohydrate.png';
 import energy from '../../../../resources/images/icons/energy.png';
@@ -27,6 +27,8 @@ import fat from '../../../../resources/images/icons/fat.png';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import {foodSearchEndpoint} from '../../../../netcalls/urls';
 import requestFoodSearch from '../../../../netcalls/foodEndpoints/requestFoodSearch';
+import {requestFavouriteMealList} from "../../../../netcalls/mealEndpoints/requestMealLog";
+import MealList from "../../../../components/logs/meal/MealList";
 
 Icon.loadFont();
 
@@ -40,7 +42,8 @@ class FoodSearchEngineScreen extends React.Component {
       query: '',
       isLoading: false,
       foodResults: [],
-      keyboardShown: false
+      keyboardShown: false,
+      selectedTab: 'search'
     };
     this.timeout = setTimeout(() => {}, 0); //Initialise timeout for lazy loading
     this.keyboardHeight = new Animated.Value(0);
@@ -159,21 +162,41 @@ class FoodSearchEngineScreen extends React.Component {
 
   render() {
     const {navigation, route} = this.props;
-    const {query, isLoading, foodResults, keyboardShown} = this.state;
+    const {query, isLoading, foodResults, keyboardShown, selectedTab} = this.state;
     const type = route.params.type;
     return (
       <AnimatedKeyboardAvoidingView enabled={false} style={[styles.root, {transform: [{translateY: this.listResultY}]}]}>
         <View style={styles.header}>
-            <AnimatedIcon name="arrow-left" onPress={navigation.goBack} size={40} style={{opacity: this.backbuttonOpacity}} />
+            <AnimatedIcon name="arrow-left" onPress={navigation.goBack} color={'#4DAA50'} size={40} style={{opacity: this.backbuttonOpacity}} />
             <Text style={styles.addItemText}>{keyboardShown ? "Search" : "Add Item"}</Text>
         </View>
-        <Searchbar
-            containerStyle={{marginLeft: 20, marginRight: 20}}
-            onChangeText={this.updateQuery}
-            onSubmit={this.onSubmit}
-        />
-
-        {query === '' ? ( // Render search prompt "Begin your search"
+        {
+          !keyboardShown &&
+          (<View style={styles.tabsContainer}>
+            <TouchableOpacity style={selectedTab === 'search' ? styles.selectedTab : styles.tabs} onPress={() => this.setState({selectedTab: 'search'})}>
+              <Text style={selectedTab === 'search' ? styles.selectedTabText : styles.tabText}>Search</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={selectedTab === 'favourites' ? styles.selectedTab : styles.tabs} onPress={() => this.setState({selectedTab: 'favourites'})}>
+              <Text style={selectedTab === 'favourites' ? styles.selectedTabText : styles.tabText}>Favourites</Text>
+            </TouchableOpacity>
+          </View>)
+        }
+        {
+          selectedTab === 'search' ? (<Searchbar
+              key='searchbar'
+              containerStyle={{marginLeft: 20, marginRight: 20}}
+              onChangeText={this.updateQuery}
+              placeholder='Search food'
+              onSubmit={this.onSubmit}
+          />) : (<Searchbar
+              key='favourites-searchbar'
+              containerStyle={{marginLeft: 20, marginRight: 20}}
+              onChangeText={this.updateQuery}
+              placeholder='Search favourites'
+              onSubmit={this.onSubmit}
+          />)
+        }
+        {selectedTab === 'search' && (query === '' ? ( // Render search prompt "Begin your search"
           <View style={styles.searchPromptBody}>
             <Text style={styles.searchPromptText}>Begin your search</Text>
             <Text style={styles.searchHintText}>
@@ -202,7 +225,9 @@ class FoodSearchEngineScreen extends React.Component {
             <Text style={styles.searchHintText}>Try again with</Text>
             <Text style={styles.searchHintText}>another query!</Text>
           </View>
-        )}
+        ))
+        }
+        { selectedTab === 'favourites' && <FavouriteMealScreen filterQuery={query} navigation={navigation} />}
       </AnimatedKeyboardAvoidingView>
     );
   }
@@ -402,6 +427,30 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: 'bold',
   },
+  tabsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginBottom: '4%'
+  },
+  tabs: {
+    height: 35,
+    width: '40%',
+    alignItems: 'center'
+  },
+  selectedTab: {
+    height: 35,
+    borderBottomWidth: 3.5,
+    borderColor: '#aad326',
+    width: '40%',
+    alignItems: 'center'
+  },
+  tabText: {
+    fontSize: 20
+  },
+  selectedTabText: {
+    color: '#aad326',
+    fontSize: 20
+  }
 });
 
 export default FoodSearchEngineScreen;

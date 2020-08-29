@@ -7,50 +7,35 @@ Icon.loadFont()
 export default class IntegerQuantitySelector extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            currentValue: null
-        }
-    }
-
-    componentDidMount() {
-        const {defaultValue} = this.props;
-        this.setState({
-            currentValue: defaultValue
-        })
     }
 
     increase = (amount) => {
-        const newAmount = this.state.currentValue + amount;
+        const newAmount = this.props.value + amount;
         if (newAmount > this.props.maxValue) {
             // Do nothing, throw error
             alert(`${this.props.maxValue} is the maximum you can add!`);
         } else {
-            this.setState({
-                currentValue: newAmount
-            }, () => this.props.onChange(newAmount));
+            this.props.onChange(newAmount)
         }
     }
 
     decrease = (amount) => {
-        const newAmount = this.state.currentValue - amount;
+        const newAmount = this.props.value - amount;
         if (newAmount < this.props.minValue) {
             // Do nothing, throw error
             alert(`${this.props.minValue} is the minimum you can minus!`);
         } else {
-            this.setState({
-                currentValue: newAmount
-            }, () => this.props.onChange(newAmount));
+            this.props.onChange(newAmount)
         }
     }
 
     render() {
-        const { onChange, minValue, maxValue, changeAmount, buttonColor } = this.props;
-        const { currentValue } = this.state;
+        const { onChange, minValue, maxValue, changeAmount, buttonColor, value} = this.props;
         return (
             <View style={styles.container}>
                 <Icon name="arrow-circle-left" color={buttonColor}
                       size={25} onPress={() => this.decrease(changeAmount)}/>
-                <Text style={styles.text}>{currentValue}</Text>
+                <Text style={styles.text}>{value}</Text>
                 <Icon name="arrow-circle-right" color={buttonColor}
                       size={25} onPress={() => this.increase(changeAmount)}/>
             </View>

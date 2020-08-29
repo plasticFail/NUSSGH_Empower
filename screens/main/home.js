@@ -144,11 +144,15 @@ const HomeScreen = (props) => {
         {/* Nutrition overview, activity overview, weight overview */}
         <NutritionIntakeCard onPress={() => alert('pressed nutrient card!')} />
       </View>
-      <Button
+      {
+        /*
+        <Button
         title="Medicine Plan "
         onPress={() => props.navigation.navigate('MedicationPlan')}
       />
       <Button title="Sync fitbit" onPress={() => props.navigation.navigate('FitbitSetup')}/>
+         */
+      }
     </ScrollView>
   );
 };

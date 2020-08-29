@@ -63,7 +63,7 @@ class Searchbar extends React.Component {
                 <AnimatedTextInput placeholder={placeholder}
                            value={value}
                            onChangeText={this.handleChangeText}
-                           autoFocus={true}
+                           placeholder={placeholder}
                            style={[{...styles.textInput, ...textInputStyle}, {width}]}/>
                 {   keyboardShown &&
                     <TouchableOpacity onPress={() => this.handleChangeText("")}>
