@@ -50,7 +50,7 @@ export default class IntegerQuantitySelector extends React.Component {
             <View style={styles.container}>
                 <Icon name="arrow-circle-left" color={buttonColor}
                       size={25} onPress={() => this.decrease(changeAmount)}/>
-                <Text>{currentValue}</Text>
+                <Text style={styles.text}>{currentValue}</Text>
                 <Icon name="arrow-circle-right" color={buttonColor}
                       size={25} onPress={() => this.increase(changeAmount)}/>
             </View>
@@ -60,12 +60,13 @@ export default class IntegerQuantitySelector extends React.Component {
 
 const styles = StyleSheet.create({
     container: {
-        width: 100,
         height: 35,
         flexDirection: 'row',
-        justifyContent: 'space-around',
+        justifyContent: 'flex-start',
         alignItems: 'center',
-        paddingLeft: 5,
-        paddingRight: 5,
+    },
+    text: {
+        paddingLeft: 12,
+        paddingRight: 12
     }
 });

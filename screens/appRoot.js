@@ -175,16 +175,19 @@ class AppRoot extends Component {
                 name="MealLogRoot"
                 component={MealLogRoot}
                 options={({route, navigation}) => ({
-                  title: 'Meal Log',
-                  headerBackImage: () => <HeaderBackIcon />,
-                  headerRight: () => <View />,
-                  headerBackTitleVisible: false,
+                  headerShown: false
+                  //title: 'Meal Log',
+                  //headerBackImage: () => <HeaderBackIcon />,
+                  //headerRight: () => <View />,
+                  //headerBackTitleVisible: false,
                 })}
               />
               <Stack.Screen
                 name={'CreateMealLog'}
                 component={CreateMealLogScreen}
                 options={({route, navigation}) => ({
+                  headerShown: false
+                  /*
                   animationEnabled: true,
                   title: 'Create Meal Log',
                   headerBackImage: () => (
@@ -216,6 +219,8 @@ class AppRoot extends Component {
                   ),
                   headerRight: () => <View />,
                   headerBackTitleVisible: false,
+
+                   */
                 })}
               />
               <Stack.Screen

@@ -57,13 +57,13 @@ export function WeightSlider(props) {
     const _onScroll = (event) => {
         const xPos = event.nativeEvent.contentOffset.x;
         const increment = xPos / (2 * tickGap + tickWidth);
-        setSelectedNum(Math.floor((weightRange[0] + increment + 0.1) * 10) / 10);
+        setSelectedNum(Math.floor((weightRange[0] + increment) * 10) / 10);
     }
 
     return (
         <View>
             <View style={{position: 'absolute', width}}>
-                <Svg width={width} height={40}>
+                <Svg width={width} height={60}>
                     <Path stroke='#000' fill='#000'
                           d={`M ${width/2 - 20} 0 l ${20} ${20} l ${20} ${-20} Z`} />
                           <Path stroke='pink' d={`M ${width / 2} 0 l 0 ${50}`} />

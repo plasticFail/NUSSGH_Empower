@@ -77,7 +77,7 @@ class FoodSearchEngineScreen extends React.Component {
   };
 
   makeApiCallToFoodSearchEngine = () => {
-    requestFoodSearch(this.state.query, this.props.route.params.type || 'ALL')
+    requestFoodSearch(this.state.query, 'ALL')
       .then((data) => {
         this.setState({
           foodResults: data.data,
@@ -101,16 +101,14 @@ class FoodSearchEngineScreen extends React.Component {
     return (
       <View style={styles.root}>
         <View style={styles.header}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Icon name="chevron-left" onPress={navigation.goBack} size={25} />
-            <Text style={styles.searchText}>Search</Text>
-          </View>
-          <Searchbar
-            containerStyle={{marginTop: 10}}
+            <Icon name="arrow-left" onPress={navigation.goBack} size={40} />
+            <Text style={styles.addItemText}>Add Item</Text>
+        </View>
+        <Searchbar
+            containerStyle={{marginLeft: 20, marginRight: 20,backgroundColor: '#E2E7EE'}}
             onChangeText={this.updateQuery}
             onSubmit={this.onSubmit}
-          />
-        </View>
+        />
         {query === '' ? ( // Render search prompt "Begin your search"
           <View style={styles.searchPromptBody}>
             <Text style={styles.searchPromptText}>Begin your search</Text>
@@ -186,13 +184,6 @@ function FoodResultList({foodList, navigation, route, type}) {
   const renderFoodListItem = ({item}) => {
     return (
       <TouchableOpacity style={listStyles.li} onPress={() => handleOpen(item)}>
-        <View style={listStyles.imageContainer}>
-          <Image
-            style={listStyles.image}
-            source={{uri: item.imgUrl.url}}
-            key={item['food-name']}
-          />
-        </View>
         <View style={listStyles.foodDescription}>
           <Text style={listStyles.foodServingText}>
             {item['household-measure']}
@@ -200,47 +191,6 @@ function FoodResultList({foodList, navigation, route, type}) {
           <Text style={listStyles.foodNameText}>
             {item['food-name'][0].toUpperCase() + item['food-name'].slice(1)}
           </Text>
-        </View>
-        <View style={listStyles.nutrientIndicatorList}>
-          <TouchableOpacity style={listStyles.nutrientIndicatorStyle}>
-            <Image style={listStyles.nutrientImageStyle} source={energy} />
-            <View
-              style={{
-                ...listStyles.barIndicatorStyle,
-                backgroundColor: getColorFromNutrient(
-                  item.nutrients['energy'],
-                  'energy',
-                ),
-              }}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity style={listStyles.nutrientIndicatorStyle}>
-            <Image
-              style={listStyles.nutrientImageStyle}
-              source={carbohydrate}
-            />
-            <View
-              style={{
-                ...listStyles.barIndicatorStyle,
-                backgroundColor: getColorFromNutrient(
-                  item.nutrients['carbohydrate'],
-                  'carbohydrate',
-                ),
-              }}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity style={listStyles.nutrientIndicatorStyle}>
-            <Image style={listStyles.nutrientImageStyle} source={fat} />
-            <View
-              style={{
-                ...listStyles.barIndicatorStyle,
-                backgroundColor: getColorFromNutrient(
-                  item.nutrients['total-fat'],
-                  'total-fat',
-                ),
-              }}
-            />
-          </TouchableOpacity>
         </View>
       </TouchableOpacity>
     );
@@ -310,78 +260,46 @@ const listStyles = StyleSheet.create({
   },
   li: {
     flex: 1,
-    height: 120,
-    display: 'flex',
+    height: 90,
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#fff',
-    paddingLeft: 10,
-    paddingRight: 10,
+    paddingLeft: 20,
+    paddingRight: 20,
     paddingTop: 5,
-    paddingBottom: 5,
-  },
-  image: {
-    width: 100,
-    height: 100,
-  },
-  imageContainer: {
-    width: 100,
-    height: 100,
-    borderRadius: 5,
-    overflow: 'hidden',
+    paddingBottom: 5
   },
   foodDescription: {
-    width: '60%',
+    width: '100%',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center', // position of the food description
+    overflow: 'hidden',
     height: '100%',
-    padding: 10,
-  },
-  nutrientIndicatorList: {
-    flexDirection: 'column',
-    justifyContent: 'space-around',
-    height: '100%',
-    flex: 1,
+    borderBottomWidth: 1,
+    borderColor: '#E2E7EE'
   },
   foodNameText: {
     fontWeight: 'bold',
   },
   foodServingText: {
     color: '#4d4d4d',
-  },
-  nutrientIndicatorStyle: {
-    height: 25,
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '100%',
-  },
-  nutrientImageStyle: {
-    height: 25,
-    width: 25,
-  },
-  barIndicatorStyle: {
-    borderRadius: 4, //Should be half of width
-    width: 8,
-    height: '100%',
-  },
+  }
 });
 
 const styles = StyleSheet.create({
   root: {
-    display: 'flex',
     flex: 1,
+    backgroundColor: '#fff'
   },
   header: {
-    backgroundColor: '#B3D14C',
     height: '18%',
     padding: 20,
     justifyContent: 'flex-end',
   },
-  searchText: {
-    fontSize: 28,
-    paddingLeft: 15,
+  addItemText: {
+    fontSize: 30,
+    fontWeight: 'bold',
   },
   searchPromptBody: {
     display: 'flex',

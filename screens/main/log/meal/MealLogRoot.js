@@ -12,6 +12,7 @@ import RenderMealItem from "../../../../components/logs/meal/RenderMealItem";
 // Others
 import Entypo from 'react-native-vector-icons/Entypo';
 import SuccessDialogue from "../../../../components/successDialogue";
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 Entypo.loadFont();
 
@@ -98,6 +99,11 @@ class MealLogRoot extends React.Component {
         const {selectedDateTime, selectedMealType, selectedMeal, successMessage} = this.state;
         return (
             <View style={styles.root}>
+                <View style={styles.header}>
+                    <Icon name='times' size={50} color='#4DAA50' onPress={()=>navigation.goBack()} />
+                    <Text style={{fontSize: 30, color:"#21283A", fontWeight: 'bold', paddingBottom: '2%'}}>Add Log</Text>
+                    <Text style={{fontSize: 18, color:"#21283A", fontWeight: 'bold'}}>Food intake log</Text>
+                </View>
                 <ScrollView style={{flex: 1}} contentContainerStyle={{flexGrow: 1}}>
                     <DateSelectionBlock date={selectedDateTime}
                                         setDate={(date) => this.setState({selectedDateTime : date})} />
@@ -106,8 +112,9 @@ class MealLogRoot extends React.Component {
                     {   // If meal is not selected, display options (create, recent or favourites) for
                         // user to select a meal from (MealFinder).
                       !selectedMeal ? (
-                          <MealFinder navigation={navigation}
-                                       />
+                          <TouchableOpacity style={styles.startButton} onPress={()=>navigation.navigate('CreateMealLog')}>
+                              <Icon name='plus' size={30} color='#fff' />
+                          </TouchableOpacity>
                       ) : // Meal has been selected, render a preview of the meal for confirmation before submitting.
                           <View style={{width: '100%', flex: 1}}>
                               <View style={{flex: 1, justifyContent: 'center'}}>
@@ -148,6 +155,11 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 20,
     },
+    header: {
+        height: '18%',
+        justifyContent: 'flex-end'
+    },
+    startButton: {alignSelf: 'center', backgroundColor: '#9DC43D', height: 60, width: 60, justifyContent: 'center', alignItems: 'center', borderRadius: 30},
     submitButton: {
         width: '100%',
         height: 70,

@@ -208,7 +208,7 @@ const iosStyles = StyleSheet.create({
         width: '100%',
         height: 50,
         alignItems: 'center',
-        backgroundColor: '#eff3bd',
+        backgroundColor: '#E2E8EE',
         borderRadius: 10,
         flexDirection: 'row',
         paddingLeft: '7%',

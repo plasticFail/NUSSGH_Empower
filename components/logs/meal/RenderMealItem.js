@@ -4,7 +4,6 @@ import Icon from "react-native-vector-icons/dist/FontAwesome";
 import FoodItem from "./FoodItem";
 
 export default function RenderMealItem({item, options, containerStyle}) {
-    const combinedMealItems = item.beverage.map(x => x).concat(item.main, item.side, item.dessert);
     return (
         <View style={{...styles.mealItem, ...containerStyle}}>
             <View style={styles.headerContainer}>
@@ -27,7 +26,7 @@ export default function RenderMealItem({item, options, containerStyle}) {
             <ScrollView showsHorizontalScrollIndicator={false} contentContainerStyle={{flexDirection: 'row'}}
                         horizontal={true}>
                 {
-                    combinedMealItems.map(food => <FoodItem key={food["food-name"]} food={food} />)
+                    item.foodItems.map(food => <FoodItem key={food["food-name"]} food={food} />)
                 }
             </ScrollView>
         </View>
