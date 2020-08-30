@@ -5,14 +5,14 @@ import {Svg, Path, Rect, G, Text} from 'react-native-svg';
 const {width, height} = Dimensions.get('window');
 
 const componentHeight = 120;
-const weightRange = [45, 95];
+const weightRange = [45, 85];
 const tickWidth = 1;
 const bigTickHeight = 40;
 const smallTickHeight = 24;
 const tickGap = 20;
 const tickContainerWidth = tickGap * 2 + tickWidth;
 
-const totalWidth = (weightRange[1] - weightRange[0] + 1) * (tickContainerWidth);
+const totalWidth = (weightRange[1] - weightRange[0] - 1) * (tickContainerWidth);
 /*
 const bigTicksPerWindow = 5; // needs to be odd
 const smallTicksBetweenBigTicks = 3;
@@ -26,7 +26,7 @@ const totalWidth = (spacingBetweenBigTicks + tickWidth) * (weightRange[1] - weig
 
 function generateTicks(weightRange) {
     let res = [];
-    for (let i = weightRange[0]; i <= weightRange[1]; i = i + 1) {
+    for (let i = weightRange[0]; i <= weightRange[1]; i++) {
         res.push(i);
     }
     return res;
@@ -56,8 +56,17 @@ export function WeightSlider(props) {
 
     const _onScroll = (event) => {
         const xPos = event.nativeEvent.contentOffset.x;
-        const increment = xPos / (2 * tickGap + tickWidth);
-        setSelectedNum(Math.floor((weightRange[0] + increment) * 10) / 10);
+        const increment = (xPos / (2 * tickGap + tickWidth));
+        setSelectedNum(Math.round(((weightRange[0] + increment) * 10)) / 10);
+    }
+
+    const _onMomentumScrollEnd = () => {
+        const f = Math.floor(selectedNum - weightRange[0]);
+        const x = f * tickContainerWidth;
+        InteractionManager.runAfterInteractions(() => {
+            setSelectedNum(f + weightRange[0]);
+            scrollViewRef.current.scrollTo({x});
+        });
     }
 
     return (
@@ -79,15 +88,10 @@ export function WeightSlider(props) {
             <Animated.ScrollView horizontal={true} ref={scrollViewRef}
                         decelerationRate={0} disableScrollViewPanResponder={true}
                         overScrollMode='never'
-                        contentInset={{
-                            top: 0,
-                            left: 0,
-                            bottom: 0,
-                            right: 0,
-                        }}
                                  onScroll={_onScroll}
+                                 onMomentumScrollEnd={_onMomentumScrollEnd}
                         //snapToAlignment='center'
-                        snapToInterval={Platform.OS === 'ios' ? tickContainerWidth : null}
+                        snapToInterval={Platform.OS === 'ios' ? tickContainerWidth : tickContainerWidth + 0.01 * tickContainerWidth}
                         //snapToInterval={spacingBetweenSmallTicks + tickWidth}
                         //snapToInterval={tickWidth + spacingBetweenBigTicks}
             >
@@ -122,8 +126,6 @@ export function WeightSlider(props) {
                             )
                         })
                     }
-                    <Rect width={tickWidth}
-                          height={bigTickHeight} x={(width / 2) + generateTicks(weightRange).length * tickContainerWidth} y={0} fill='#000'/>
                 </Svg>
             </Animated.ScrollView>
         </View>

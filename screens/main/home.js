@@ -144,6 +144,7 @@ const HomeScreen = (props) => {
         {/* Nutrition overview, activity overview, weight overview */}
         <NutritionIntakeCard onPress={() => alert('pressed nutrient card!')} />
       </View>
+      <WeightSlider />
       {
         /*
         <Button
