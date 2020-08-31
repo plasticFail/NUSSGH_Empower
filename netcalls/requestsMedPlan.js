@@ -24,7 +24,9 @@ const prepareData = (data) => {
       }
     }
   }
-  finalArr = objArr.filter((v, i, a) => a.findIndex((t) => t.id === v.id) != i);
+  finalArr = objArr.filter(
+    (v, i, a) => a.findIndex((t) => t.medication === v.medication) === i,
+  );
   console.log(finalArr);
   return finalArr;
 };
