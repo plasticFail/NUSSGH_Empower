@@ -61,6 +61,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#EAEAFF',
         height: 45,
         borderRadius: 10,
-        width: '95%'
+        width: '95%',
+        opacity: 0.55
     },
 })

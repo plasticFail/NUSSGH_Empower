@@ -52,6 +52,10 @@ const MoreRootScreen = (props) => {
         storeToken('');
         props.logout();
         break;
+
+      case 12:
+        props.navigation.navigate('FitbitSetup');
+        break
     }
   };
 
@@ -67,6 +71,7 @@ const MoreRootScreen = (props) => {
     {id: 9, value: 'Game Center'},
     {id: 10, value: 'Bluetooth Glucose Monitors'},
     {id: 11, value: 'Logout'},
+    {id: 12, value: 'Fitbit setup'}
   ];
 
   return (

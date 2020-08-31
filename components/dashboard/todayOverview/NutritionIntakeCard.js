@@ -95,22 +95,22 @@ class NutritionIntakeCard extends React.Component {
                     </View>
                     <View style={{flexDirection: 'row', flex: 1, alignItems: 'center'}}>
                         <View style={styles.circularProgressWrapper}>
-                            <CircularProgress color="#7BBFDB" percent={0.65}
+                            <CircularProgress color="#84C395" percent={0.65}
                                               radius={30} padding={5} strokeWidth={5} fontSize={15}/>
-                            <Text style={[styles.circularProgressText, {color: "#5F90D5"}]}>Carbohydrate</Text>
-                            <Text style={[styles.circularProgressSubText, {color: "#5F90D5"}]}>65/100g</Text>
+                            <Text style={[styles.circularProgressText, {color: "#84C395"}]}>Carbohydrate</Text>
+                            <Text style={[styles.circularProgressSubText, {color: "#84C395"}]}>65/100g</Text>
                         </View>
                         <View style={styles.circularProgressWrapper}>
-                            <CircularProgress color="#8F31AA" percent={0.4} radius={30}
+                            <CircularProgress color="#4EA458" percent={0.4} radius={30}
                                               padding={5} strokeWidth={5} fontSize={15}/>
-                            <Text style={[styles.circularProgressText, {color: '#8f31aa'}]}>Protein</Text>
-                            <Text style={[styles.circularProgressSubText, {color: '#8f31aa'}]}>40/100g</Text>
+                            <Text style={[styles.circularProgressText, {color: "#4EA458"}]}>Protein</Text>
+                            <Text style={[styles.circularProgressSubText, {color: "#4EA458"}]}>40/100g</Text>
                         </View>
                         <View style={styles.circularProgressWrapper}>
-                            <CircularProgress color="#60A354" percent={0.80}
+                            <CircularProgress color="#265A34" percent={0.80}
                                               radius={30} padding={5} strokeWidth={5} fontSize={15}/>
-                            <Text style={[styles.circularProgressText, {color: '#60a354'}]}>Fat</Text>
-                            <Text style={[styles.circularProgressSubText, {color: '#60a354'}]}>80/100g</Text>
+                            <Text style={[styles.circularProgressText, {color: "#265A34"}]}>Fat</Text>
+                            <Text style={[styles.circularProgressSubText, {color: "#265A34"}]}>80/100g</Text>
                         </View>
                     </View>
                 </AnimatedCard>

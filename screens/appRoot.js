@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Alert, View} from 'react-native';
+import {Alert, View, Linking} from 'react-native';
 //third party libs
 import {
   getFocusedRouteNameFromRoute,
@@ -8,6 +8,7 @@ import {
 import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
 import {connect} from 'react-redux';
 import Entypo from 'react-native-vector-icons/Entypo';
+import Icon from 'react-native-vector-icons/dist/FontAwesome';
 //functions
 import {getToken} from '../storage/asyncStorageFunctions';
 import {mapStateToProps, mapDispatchToProps} from '../redux/reduxMapping';
@@ -37,6 +38,9 @@ import HeaderBackIconClick from '../components/common/headerBackIconClick';
 import ContactUs from './contactUs';
 import AskAdd from './onboarding/medicationPlan/askAdd';
 import AddPlan from './onboarding/medicationPlan/addPlan';
+import {redirect_uri} from "../config/FitbitConfig";
+import {AuthoriseFitbit} from "../commonFunctions/AuthoriseFitbit";
+import FitbitSetup from "./onboarding/fitbit/FitbitSetup";
 
 Entypo.loadFont();
 
@@ -72,6 +76,15 @@ class AppRoot extends Component {
 
   componentDidMount() {
     this.init();
+    Linking.addEventListener('url', this.handleRedirectUrl);
+  }
+
+  handleRedirectUrl = (event) => {
+    const url = event.url;
+    if (url.startsWith(redirect_uri)) {
+      // fitbit redirect url
+      AuthoriseFitbit(url);
+    }
   }
 
   init = async () => {
@@ -84,6 +97,10 @@ class AppRoot extends Component {
       }
     }
   };
+
+  componentWillUnmount() {
+    Linking.removeAllListeners('url');
+  }
 
   render() {
     return (
@@ -276,6 +293,10 @@ class AppRoot extends Component {
                 name="AddPlan"
                 component={AddPlan}
                 options={{headerShown: false}}
+              />
+              <Stack.Screen name="FitbitSetup"
+                            component={FitbitSetup}
+                            options={{headerShown: false}}
               />
             </>
           ) : (

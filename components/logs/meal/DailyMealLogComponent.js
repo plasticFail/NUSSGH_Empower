@@ -39,8 +39,7 @@ function DailyMealLogComponent(props) {
 
     const navigateToCreateMealLogPage = (selectedMeal) => {
         const meal = {...selectedMeal};
-        // remove unfavourite key from the selected meal.
-        delete meal['unfavourite'];
+
         navigation.navigate("CreateMealLog", {
             meal,
             parentScreen: 'DailyLog'
