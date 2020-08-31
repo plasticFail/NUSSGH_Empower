@@ -17,7 +17,7 @@ export default function CircularProgress({percent, fontSize, radius, padding, st
             </G>
             <Text fontSize={fontSize} x={`${center}`}
                   y={`${center + fontSize / 3.5}`} fill={color}
-                  stroke={color} textAnchor='middle'>{percent * 100 + "%"}</Text>
+                  stroke={color} textAnchor='middle'>{Math.round(percent * 100) + "%"}</Text>
         </Svg>
     )
 }

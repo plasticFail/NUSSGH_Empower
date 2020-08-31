@@ -21,14 +21,8 @@ import FoodModalContent from '../../../../components/logs/meal/FoodModalContent'
 import FavouriteMealScreen from "./FavouriteMeals";
 // Functions
 // Others
-import carbohydrate from '../../../../resources/images/icons/carbohydrate.png';
-import energy from '../../../../resources/images/icons/energy.png';
-import fat from '../../../../resources/images/icons/fat.png';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
-import {foodSearchEndpoint} from '../../../../netcalls/urls';
 import requestFoodSearch from '../../../../netcalls/foodEndpoints/requestFoodSearch';
-import {requestFavouriteMealList} from "../../../../netcalls/mealEndpoints/requestMealLog";
-import MealList from "../../../../components/logs/meal/MealList";
 
 Icon.loadFont();
 
@@ -273,6 +267,7 @@ function FoodResultList({foodList, navigation, route, type}) {
   const renderFoodListItem = ({item}) => {
     return (
       <TouchableOpacity style={listStyles.li} onPress={() => handleOpen(item)}>
+        <Image source={{uri: item.imgUrl.url}} style={{width: 55, height: 55, borderRadius: 10, marginRight: 15}} />
         <View style={listStyles.foodDescription}>
           <Text style={listStyles.foodServingText}>
             {item['household-measure']}
@@ -353,20 +348,19 @@ const listStyles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#fff',
-    paddingLeft: 20,
-    paddingRight: 20,
+    marginLeft: 20,
+    marginRight: 20,
     paddingTop: 5,
-    paddingBottom: 5
+    paddingBottom: 5,
+    borderBottomWidth: 1,
+    borderColor: '#E2E7EE'
   },
   foodDescription: {
-    width: '100%',
-    display: 'flex',
+    flex: 1,
     flexDirection: 'column',
     justifyContent: 'center', // position of the food description
     overflow: 'hidden',
     height: '100%',
-    borderBottomWidth: 1,
-    borderColor: '#E2E7EE'
   },
   foodNameText: {
     fontWeight: 'bold',
@@ -414,11 +408,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   button: {
-    width: '100%',
+    width: '90%',
     height: 55,
     backgroundColor: '#aad326',
     justifyContent: 'center',
     alignSelf: 'center',
+    borderRadius: 10
     //transform: [{"translateY": 27.5}] // Half of height
   },
   buttonText: {

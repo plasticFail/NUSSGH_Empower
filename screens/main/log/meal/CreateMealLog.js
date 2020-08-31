@@ -234,8 +234,11 @@ export default class CreateMealLog extends React.Component {
                                   style={styles.favouriteIcon}/>
                         </View>
                         <Text style={{fontSize: 18, color:"#8A8A8E", fontWeight: 'bold'}} >Food intake</Text>
-                        <View style={{flexGrow: 0, maxHeight:'42.5%', marginLeft: -20, marginRight: -20}}>
-                            <FlatList style={{flexGrow: 0, paddingLeft: 20, paddingRight: 20}} data={foodItems} showScrollIndicator={false} keyExtractor={i => i['food-name']}
+                        <TouchableOpacity onPress={this.redirectToFoodSearchEngine}>
+                            <Text style={{fontSize: 18, color:"#9DC43D", paddingTop: 20, paddingBottom: 20}}>Add Item</Text>
+                        </TouchableOpacity>
+                        <View style={{flex: 4, marginLeft: -20, marginRight: -20}}>
+                            <FlatList style={{paddingLeft: 20, paddingRight: 20}} data={foodItems} showScrollIndicator={false} keyExtractor={i => i['food-name']}
                                       renderItem={({item}) => (
                                         <FoodItem item={item}
                                           handleDelete={()=>this.handleDelete(item["food-name"])}
@@ -251,9 +254,6 @@ export default class CreateMealLog extends React.Component {
                             ))
                             */
                         }
-                        <TouchableOpacity onPress={this.redirectToFoodSearchEngine}>
-                            <Text style={{fontSize: 18, color:"#9DC43D", paddingTop: 20, paddingBottom: 20}}>Add Item</Text>
-                        </TouchableOpacity>
                         <View style={{flex: 1, justifyContent: 'flex-end'}}>
                             <TouchableHighlight
                                 style={styles.button}
