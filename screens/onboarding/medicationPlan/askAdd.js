@@ -7,6 +7,7 @@ import {Calendar} from 'react-native-calendars';
 //component
 import CalendarMedicationDay from '../../../components/onboarding/medication/calendarMedicationDay';
 import LoadingModal from '../../../components/loadingModal';
+import {prepareData, postPlan} from '../../../netcalls/requestsMedPlan';
 
 Ionicons.loadFont();
 
@@ -31,7 +32,7 @@ class AskAdd extends Component {
         console.log('setting new state for marked dates in calendar');
         const {list} = this.props.route.params;
         this.onReturn(list);
-        console.log(this.state.selectedDates4All);
+        //
       } else if (parent === 'deleteConfirmation') {
         //if return from delete dialogue
         const {dateString, type, medication} = this.props.route.params;
@@ -47,7 +48,6 @@ class AskAdd extends Component {
         }
       }
     }
-    console.log('show calendar ' + this.state.showCalendar);
   }
 
   //get the selected dates for a particular medication from ask plan
@@ -96,7 +96,23 @@ class AskAdd extends Component {
   };
 
   handleNext = () => {
-    this.handleSkip();
+    let data = prepareData(this.state.selectedDates4All);
+    postPlan(data).then((response) => {
+      if (response != null) {
+        this.handleSkip();
+      } else {
+        Alert.alert(
+          'Network Error',
+          'Please try again later.',
+          [
+            {
+              text: 'Got It',
+            },
+          ],
+          {cancelable: false},
+        );
+      }
+    });
   };
 
   handleAddMedication = () => {
