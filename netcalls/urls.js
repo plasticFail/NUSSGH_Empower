@@ -16,6 +16,7 @@ const verifyOTP = server + 'auth/patient/password-reset/verify-otp';
 const postNewPassword = server + 'auth/patient/password-reset/reset';
 const getDiaryEntries = server + 'log/diary';
 const medplanAdd = server + 'log/medication/plan';
+const fitbitTokenPostEndpoint = server + 'datasync/auth-fitbit';
 
 export {
   patientLogin,
@@ -34,4 +35,5 @@ export {
   postNewPassword,
   getDiaryEntries,
   medplanAdd,
+  fitbitTokenPostEndpoint
 };

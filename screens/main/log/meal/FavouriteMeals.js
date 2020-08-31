@@ -21,18 +21,9 @@ export default class FavouriteMealScreen extends React.Component {
         // Get user's favourite meal.
         requestFavouriteMealList().then(data => {
             // Create this temporary observer pattern to handle unfavouriting.
-            const d = data.data.map(meal => {
-                meal['unfavourite'] = () => {
-                    const mealsAfterUnfavouriting = this.state.favouriteMeals.filter(m => m !== meal);
-                    this.setState({
-                        favouriteMeals: mealsAfterUnfavouriting
-                    })
-                };
-                return meal;
-            });
             this.setState({
                 isLoading: false,
-                favouriteMeals: d
+                favouriteMeals: data.data
             })
         }).catch(err => alert(err.message));
     }
@@ -42,8 +33,7 @@ export default class FavouriteMealScreen extends React.Component {
         const meal = {...selectedMeal};
         meal.isFavourite = false;
         meal.mealName = "";
-        // remove unfavourite key from the selected meal.
-        delete meal['unfavourite'];
+
         this.props.navigation.navigate("CreateMealLog", {
             meal,
             parentScreen
@@ -60,7 +50,9 @@ export default class FavouriteMealScreen extends React.Component {
         requestUnfavouriteMeal(meal.mealName)
             .then(data => {
                 // unfavourite the item from local state.
-                meal.unfavourite();
+                this.setState({
+                    favouriteMeals: this.state.favouriteMeals.filter(m => m.mealName !== meal.mealName)
+                })
             })
             .catch(err => Alert.alert("Error", err.message, [ { text: 'Ok' }]));
     }
