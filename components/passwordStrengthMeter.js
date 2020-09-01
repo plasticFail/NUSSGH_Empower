@@ -1,99 +1,211 @@
-import React, {useState} from 'react';
-import {View, TextInput, Text, StyleSheet, Dimensions} from 'react-native';
+import React, {Component} from 'react';
+import {View, TextInput, Animated, Text, StyleSheet} from 'react-native';
 //third party lib
 import zxcvbn from 'zxcvbn';
-//component
-import ProgressBar from './progressbar';
 
-const PasswordStrengthMeter = (props) => {
-  const [progress, setProgress] = useState('0%');
-  const [score, setScore] = useState(0);
-  const [rank, setRank] = useState('Strength'); //weak, fair, good, strong
-  // const [suggestion, setSuggestion] = useState('');
-  const [color, setColor] = useState('red');
+//using score 1 - 4, animate the respective bars to show strength
+export default class PasswordStrengthMeter extends Component {
+  constructor(props) {
+    super(props);
+    this.props = props;
+    this.state = {
+      passwordString: '',
+      score: 0,
+      animation: new Animated.Value(0),
+      result: '',
+    };
+    this.setInputPassword = this.setInputPassword.bind(this);
+    this.setResultString = this.setResultString.bind(this);
+  }
 
-  const getPasswordResult = (result) => {
-    setScore(result.score);
-    if (score === 0) {
-      setProgress('0%');
-      setRank('Poor');
-      setColor('red');
-    } else if (score === 1) {
-      setProgress('25%');
-      setRank('Poor');
-      setColor('red');
-    } else if (score === 2) {
-      setProgress('40%');
-      setRank('Fair');
-      setColor('yellow');
-    } else if (score === 3) {
-      setProgress('80%');
-      setRank('Good');
-      setColor('green');
-    } else if (score === 4) {
-      setProgress('100%');
-      setRank('Strong');
-      setColor('green');
+  componentDidMount() {
+    console.log('Mounting password strength meter');
+    this.getPasswordResult(this.state.passwordString);
+  }
+
+  componentDidUpdate(prevProp, prevState) {
+    console.log('Updating password strength meter component');
+    if (prevState.passwordString != this.state.passwordString) {
+      this.getPasswordResult(this.state.passwordString);
+      console.log('Score: ' + this.state.score);
+      this.setResultString(this.state.score);
+      //animate
+      Animated.timing(this.state.animation, {
+        toValue: this.state.score,
+        duration: 500,
+        useNativeDriver: false,
+      }).start();
+
+      //pass back parent
+      this.props.setPassword(this.state.passwordString, this.state.score);
     }
-  };
-  return (
-    <>
-      <TextInput
-        style={styles.inputBox}
-        placeholder="New password"
-        secureTextEntry
-        onChangeText={(value) => {
-          let result = zxcvbn(value);
-          getPasswordResult(result);
-          props?.setPassword(value, result.score);
-        }}
-      />
-      <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-        <ProgressBar
-          progress={progress}
-          useIndicatorLevel={true}
-          reverse={true}
-          containerStyle={{
-            height: 9,
-            width: '75%',
-            alignSelf: 'center',
-            marginStart: '4%',
-            marginEnd: '1%',
-          }}
-        />
-        {color === 'green' ? (
-          <Text style={[styles.rankStyle, {color: '#60a354'}]}>{rank}</Text>
-        ) : color === 'yellow' ? (
-          <Text style={[styles.rankStyle, {color: '#f5c444'}]}>{rank}</Text>
-        ) : (
-          <Text style={[styles.rankStyle, {color: '#dc143c'}]}>{rank}</Text>
-        )}
-      </View>
-    </>
-  );
-};
+  }
 
-export default PasswordStrengthMeter;
+  getPasswordResult(string) {
+    let score = zxcvbn(string).score;
+    this.setState({score: score});
+  }
+
+  setInputPassword(value) {
+    this.setState({passwordString: value});
+  }
+
+  setResultString(score) {
+    //set result
+    switch (Number(score)) {
+      case 0:
+        this.setState({result: 'Weak'});
+        break;
+      case 1:
+        this.setState({result: 'Poor'});
+        break;
+      case 2:
+        this.setState({result: 'Fair'});
+        break;
+      case 3:
+        this.setState({result: 'Good'});
+        break;
+      case 4:
+        this.setState({result: 'Strong'});
+        break;
+    }
+  }
+
+  render() {
+    const colorInterpolationA = this.state.animation.interpolate({
+      inputRange: [0, 1, 2, 3, 4],
+      outputRange: getFullColorRange(),
+    });
+
+    const progressStyleA = {
+      backgroundColor: colorInterpolationA,
+      width: '100%',
+      height: '40%',
+      flex: 1,
+      marginEnd: '2%',
+      marginStart: '1%',
+    };
+
+    const colorInterpolationB = this.state.animation.interpolate({
+      inputRange: [0, 1, 2, 3, 4],
+      outputRange: get2ndColorRange(),
+    });
+
+    const progressStyleB = {
+      backgroundColor: colorInterpolationB,
+      width: '100%',
+      height: '40%',
+      flex: 1,
+      marginEnd: '2%',
+      marginStart: '1%',
+    };
+
+    const colorInterpolationC = this.state.animation.interpolate({
+      inputRange: [0, 1, 2, 3, 4],
+      outputRange: get2ndLastColorRange(),
+    });
+
+    const progressStyleC = {
+      backgroundColor: colorInterpolationC,
+      width: '100%',
+      height: '40%',
+      flex: 1,
+      marginEnd: '2%',
+      marginStart: '1%',
+    };
+
+    const colorInterpolationD = this.state.animation.interpolate({
+      inputRange: [0, 1, 2, 3, 4],
+      outputRange: getLastColorRange(),
+    });
+
+    const progressStyleD = {
+      backgroundColor: colorInterpolationD,
+      width: '100%',
+      height: '40%',
+      flex: 1,
+      marginEnd: '2%',
+      marginStart: '1%',
+    };
+
+    return (
+      <>
+        <TextInput
+          placeholder="New password"
+          secureTextEntry
+          onChangeText={this.setInputPassword}
+          style={styles.inputbox}
+        />
+        <View style={{flexDirection: 'row', height: 10}}>
+          <Animated.View style={[progressStyleA]} />
+          <Animated.View style={[progressStyleB]} />
+          <Animated.View style={[progressStyleC]} />
+          <Animated.View style={[progressStyleD]} />
+        </View>
+        <Text
+          style={{
+            alignSelf: 'flex-end',
+            marginEnd: '4%',
+            marginBottom: '2%',
+            fontSize: 16,
+          }}>
+          {this.state.result}
+        </Text>
+      </>
+    );
+  }
+}
 
 const styles = StyleSheet.create({
-  rankStyle: {
-    fontSize: 16,
-    alignSelf: 'flex-end',
-    fontWeight: 'bold',
-    marginEnd: '3%',
-  },
-  strengthText: {
-    fontSize: 17,
-    alignSelf: 'flex-end',
-    fontWeight: 'bold',
-  },
-  inputBox: {
-    width: Dimensions.get('window').width - 60,
-    borderRadius: 20,
-    backgroundColor: '#EEF3BD',
-    paddingStart: 30, //position placeholder text
-    marginVertical: 10,
-    alignSelf: 'center',
+  inputbox: {
+    marginBottom: '2%',
+    backgroundColor: '#e2e8ee',
     padding: '3%',
+    margin: '2%',
+    borderRadius: 9.5,
   },
 });
+
+//first bar
+function getFullColorRange() {
+  return [
+    'rgb(220, 220, 220)',
+    'rgb(254, 92, 92)',
+    'rgb(247,186,49)',
+    'rgb(64,172,134)',
+    'rgb(0,129,84)',
+  ];
+}
+
+//2nd bar
+function get2ndColorRange() {
+  return [
+    'rgb(220, 220, 220)',
+    'rgb(220, 220, 220)',
+    'rgb(247,186,49)',
+    'rgb(64,172,134)',
+    'rgb(0,129,84)',
+  ];
+}
+
+//2nd last bar
+function get2ndLastColorRange() {
+  return [
+    'rgb(220, 220, 220)',
+    'rgb(220, 220, 220)',
+    'rgb(220, 220, 220)',
+    'rgb(64,172,134)',
+    'rgb(0,129,84)',
+  ];
+}
+
+//last bar
+function getLastColorRange() {
+  return [
+    'rgb(220, 220, 220)',
+    'rgb(220, 220, 220)',
+    'rgb(220, 220, 220)',
+    'rgb(220, 220, 220)',
+    'rgb(0,129,84)',
+  ];
+}
