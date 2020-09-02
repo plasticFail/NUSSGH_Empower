@@ -157,11 +157,13 @@ const AddPlan = (props) => {
           name={'arrow-back'}
           size={40}
           color={'#aad326'}
-          style={styles.backIcon}
+          style={globalStyles.backArrowStyle}
         />
       </TouchableOpacity>
       <Text style={styles.stepDetailText}>Add Medicine Plan</Text>
-      <Text style={{fontSize: 18}}>Select your medicine</Text>
+      <Text style={{fontSize: 18, paddingStart: '3%'}}>
+        Select your medicine
+      </Text>
 
       <TouchableOpacity style={styles.searchInput} onPress={openSearchModal}>
         {isEmpty(selectedMedicine) === true ? (
@@ -175,26 +177,28 @@ const AddPlan = (props) => {
         )}
       </TouchableOpacity>
 
-      <Counter
-        count={dosage}
-        setCount={setDosage}
-        parameter={'Unit (s)'}
-        fieldName={'Default Dosage'}
-      />
-      <Counter
-        count={frequency}
-        setCount={setFrequency}
-        parameter={'Per Day'}
-        fieldName={'Frequency'}
-      />
-      <Text style={styles.fieldText}>Recurring Period</Text>
-      <TouchableOpacity style={styles.selectDaysButton} onPress={openModal}>
-        {isEmpty(selectedDates41) === true ? (
-          <Text style={styles.selectDaysText}>Select Days</Text>
-        ) : (
-          <Text style={styles.selectDaysText}>{selectedString}</Text>
-        )}
-      </TouchableOpacity>
+      <View style={{paddingStart: '3%', paddingEnd: '3%'}}>
+        <Counter
+          count={dosage}
+          setCount={setDosage}
+          parameter={'Unit (s)'}
+          fieldName={'Default Dosage'}
+        />
+        <Counter
+          count={frequency}
+          setCount={setFrequency}
+          parameter={'Per Day'}
+          fieldName={'Frequency'}
+        />
+        <Text style={styles.fieldText}>Recurring Period</Text>
+        <TouchableOpacity style={styles.selectDaysButton} onPress={openModal}>
+          {isEmpty(selectedDates41) === true ? (
+            <Text style={styles.selectDaysText}>Select Days</Text>
+          ) : (
+            <Text style={styles.selectDaysText}>{selectedString}</Text>
+          )}
+        </TouchableOpacity>
+      </View>
       {/* Day Selection Modal Component*/}
       <SelectDaysModal
         visible={dayModalVisible}
@@ -204,9 +208,13 @@ const AddPlan = (props) => {
         selectedMedicine={selectedMedicine}
       />
       <View style={{flex: 5}} />
-      <TouchableOpacity style={styles.addButton} onPress={handleAdd}>
-        <Text style={styles.addText}>Add</Text>
-      </TouchableOpacity>
+      <View style={[globalStyles.buttonContainer]}>
+        <TouchableOpacity
+          style={globalStyles.nextButtonStyle}
+          onPress={handleAdd}>
+          <Text style={globalStyles.actionButtonText}>Add</Text>
+        </TouchableOpacity>
+      </View>
       {/*Search */}
       {searchVisible === true ? (
         <SearchMedication
@@ -225,16 +233,13 @@ export default AddPlan;
 const styles = StyleSheet.create({
   addPlanContainer: {
     flex: 1,
-    padding: '3%',
     backgroundColor: Colors.backgroundColor,
-  },
-  backIcon: {
-    marginTop: '5%',
   },
   stepDetailText: {
     fontSize: 35,
     fontWeight: '700',
     marginTop: '3%',
+    paddingStart: '3%',
   },
   fieldText: {
     fontSize: 20,
@@ -256,25 +261,13 @@ const styles = StyleSheet.create({
     paddingStart: '2%',
     paddingEnd: '2%',
   },
-  addButton: {
-    backgroundColor: Colors.submitBtnColor,
-    height: 45,
-    width: '70%',
-    borderRadius: 15,
-    alignSelf: 'center',
-  },
-  addText: {
-    fontSize: 20,
-    textAlign: 'center',
-    marginVertical: '3%',
-    fontWeight: '700',
-  },
   searchInput: {
-    backgroundColor: '#e6ebed',
+    backgroundColor: '#e2e8ee',
     borderRadius: 20,
-    height: '8%',
     marginTop: '9%',
     marginBottom: '3%',
     padding: '4.2%',
+    marginStart: '3%',
+    marginEnd: '3%',
   },
 });

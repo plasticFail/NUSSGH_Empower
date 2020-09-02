@@ -1,5 +1,11 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Dimensions,
+} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 import {useNavigation} from '@react-navigation/native';
 //third party libaray
@@ -9,6 +15,8 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 //component
 import DeleteConfirmation from './deleteConfirmation';
+import globalStyles from '../../../styles/globalStyles';
+import {Colors} from '../../../styles/colors';
 
 const ScheduledMedicationModal = (props) => {
   const {isVisible, closeModal} = props;
@@ -37,69 +45,69 @@ const ScheduledMedicationModal = (props) => {
   };
 
   return (
-    <>
-      <Modal
-        isVisible={isVisible}
-        coverScreen={true}
-        backdropOpacity={1}
-        backdropColor={'white'}>
-        <View style={{marginTop: '5%'}}>
-          <Entypo
-            name="chevron-thin-down"
-            onPress={closeModal}
-            size={30}
-            color="#16A950"
-          />
-        </View>
-        <View style={styles.scheduledContainer}>
-          <Text style={styles.header}>{dateString}</Text>
-          <Text style={styles.details}>Scheduled Medications:</Text>
-          {medicationList === undefined ? (
-            <Text style={styles.miss}>No Medication Set Yet</Text>
-          ) : medicationList.length === 0 ? (
-            <Text style={styles.miss}>No Medication Set Yet</Text>
-          ) : (
-            <>
-              <FlatList
-                keyExtractor={(item, index) => index.toString()}
-                data={medicationList}
-                style={{flexGrow: 0}}
-                renderItem={({item}) => (
-                  <>
-                    <MedicationAdded
-                      medication={item}
-                      handleDelete={handleDelete}
-                    />
-                  </>
-                )}
-              />
-              {deleteModalVisible ? (
-                <Modal
-                  isVisible={deleteModalVisible}
-                  onBackdropPress={handleCloseDeleteModal}
-                  onBackButtonPress={handleCloseDeleteModal}>
-                  <View style={styles.deleteContainer}>
-                    <DeleteConfirmation
-                      medication={toDelete}
-                      date={date}
-                      closeSelf={handleCloseDeleteModal}
-                      closeParent={closeModal}
-                    />
-                  </View>
-                </Modal>
-              ) : null}
-            </>
-          )}
-          <TouchableOpacity onPress={handleAdd}>
-            <Text style={styles.addbutton}>Add Medication</Text>
+    <Modal
+      isVisible={isVisible}
+      coverScreen={true}
+      backdropOpacity={1}
+      backdropColor={Colors.backgroundColor}>
+      <View style={styles.scheduledContainer}>
+        <Entypo
+          name="chevron-thin-down"
+          onPress={closeModal}
+          size={30}
+          style={globalStyles.backArrowStyle}
+        />
+        <Text style={styles.header}>{dateString}</Text>
+        <Text style={styles.details}>Scheduled Medications:</Text>
+        {medicationList === undefined ? (
+          <Text style={styles.miss}>No Medication Set Yet</Text>
+        ) : medicationList.length === 0 ? (
+          <Text style={styles.miss}>No Medication Set Yet</Text>
+        ) : (
+          <>
+            <FlatList
+              keyExtractor={(item, index) => index.toString()}
+              data={medicationList}
+              style={{flexGrow: 0}}
+              renderItem={({item}) => (
+                <>
+                  <MedicationAdded
+                    medication={item}
+                    handleDelete={handleDelete}
+                  />
+                </>
+              )}
+            />
+            {deleteModalVisible ? (
+              <Modal
+                isVisible={deleteModalVisible}
+                onBackdropPress={handleCloseDeleteModal}
+                onBackButtonPress={handleCloseDeleteModal}>
+                <View style={styles.deleteContainer}>
+                  <DeleteConfirmation
+                    medication={toDelete}
+                    date={date}
+                    closeSelf={handleCloseDeleteModal}
+                    closeParent={closeModal}
+                  />
+                </View>
+              </Modal>
+            ) : null}
+          </>
+        )}
+        <TouchableOpacity onPress={handleAdd}>
+          <Text style={styles.addbutton}>Add Medication</Text>
+        </TouchableOpacity>
+        <View style={{flex: 1}} />
+        <View style={[globalStyles.buttonContainer]}>
+          <TouchableOpacity
+            style={globalStyles.nextButtonStyle}
+            onPress={closeModal}>
+            <Text style={globalStyles.actionButtonText}>Done</Text>
           </TouchableOpacity>
-          <View style={{flex: 1}} />
-          <TouchableOpacity style={styles.button} onPress={closeModal}>
-            <Text style={styles.buttonText}>Done</Text>
-          </TouchableOpacity>
         </View>
-      </Modal>
-    </>
+      </View>
+    </Modal>
   );
 };
 
@@ -126,8 +134,7 @@ export default ScheduledMedicationModal;
 
 const styles = StyleSheet.create({
   scheduledContainer: {
-    width: '100%',
-    backgroundColor: 'white',
+    backgroundColor: Colors.backgroundColor,
     flex: 1,
   },
   deleteContainer: {

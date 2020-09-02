@@ -14,6 +14,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {storeMedications} from '../../../netcalls/requestsLog';
 //component
 import SearchResult from './searchResult';
+import {Colors} from '../../../styles/colors';
 
 Ionicons.loadFont();
 
@@ -93,7 +94,7 @@ const SearchMedication = (props) => {
       isVisible={visible}
       coverScreen={true}
       backdropOpacity={1}
-      backdropColor={'white'}>
+      backdropColor={Colors.backgroundColor}>
       <View style={{flexDirection: 'row', marginTop: '5%'}}>
         <View style={styles.searchContainer}>
           <Ionicons
@@ -172,7 +173,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 10,
     paddingBottom: 10,
-    backgroundColor: '#fff',
+    backgroundColor: '#e2e8ee',
     color: '#424242',
     backgroundColor: '#e6ebed',
     fontSize: 20,
