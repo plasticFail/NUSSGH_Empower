@@ -24,6 +24,7 @@ import {patientLoginRequest} from '../../netcalls/requestsAuth';
 //components
 import Loading from '../../components/loading';
 import globalStyles from '../../styles/globalStyles';
+import LoadingModal from '../../components/loadingModal';
 
 class Login extends Component {
   constructor(props) {
@@ -126,7 +127,7 @@ class Login extends Component {
             Forget Password?
           </Text>
           <Loading isLoading={this.state.isLoading} />
-          <View style={{justifyContent: 'flex-end'}}>
+          <View style={{justifyContent: 'flex-end', paddingTop: '3%'}}>
             <Text style={styles.light}>
               Having trouble?{' '}
               <Text
