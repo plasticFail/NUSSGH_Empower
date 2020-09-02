@@ -205,13 +205,11 @@ class AskAdd extends Component {
               />
             </TouchableOpacity>
             <View style={{flex: 1}} />
-            <View style={globalStyles.buttonContainer}>
-              <TouchableOpacity
-                style={styles.skipButton}
-                onPress={this.handleSkip}>
-                <Text style={styles.buttonText}>Skip</Text>
-              </TouchableOpacity>
-            </View>
+            <TouchableOpacity
+              style={styles.skipButton}
+              onPress={this.handleSkip}>
+              <Text style={styles.buttonText}>Skip</Text>
+            </TouchableOpacity>
           </>
         ) : showCalendar === true ? (
           <>
@@ -229,16 +227,14 @@ class AskAdd extends Component {
               }}
             />
             <View style={{flex: 1}} />
-            <View style={globalStyles.buttonContainer}>
-              <TouchableOpacity
-                style={[
-                  styles.skipButton,
-                  {backgroundColor: Colors.submitBtnColor},
-                ]}
-                onPress={this.handleNext}>
-                <Text style={styles.buttonText}>Next</Text>
-              </TouchableOpacity>
-            </View>
+            <TouchableOpacity
+              style={[
+                styles.skipButton,
+                {backgroundColor: Colors.submitBtnColor},
+              ]}
+              onPress={this.handleNext}>
+              <Text style={styles.buttonText}>Next</Text>
+            </TouchableOpacity>
           </>
         ) : (
           <>
@@ -252,13 +248,11 @@ class AskAdd extends Component {
               />
             </TouchableOpacity>
             <View style={{flex: 1}} />
-            <View style={globalStyles.buttonContainer}>
-              <TouchableOpacity
-                style={styles.skipButton}
-                onPress={this.handleSkip}>
-                <Text style={styles.buttonText}>Skip</Text>
-              </TouchableOpacity>
-            </View>
+            <TouchableOpacity
+              style={styles.skipButton}
+              onPress={this.handleSkip}>
+              <Text style={styles.buttonText}>Skip</Text>
+            </TouchableOpacity>
           </>
         )}
         <LoadingModal visible={loading} message={'Setting up your account'} />
