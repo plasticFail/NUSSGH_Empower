@@ -1,5 +1,11 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Dimensions,
+} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 import {useNavigation} from '@react-navigation/native';
 //third party libaray
@@ -9,6 +15,8 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 //component
 import DeleteConfirmation from './deleteConfirmation';
+import globalStyles from '../../../styles/globalStyles';
+import {Colors} from '../../../styles/colors';
 
 const ScheduledMedicationModal = (props) => {
   const {isVisible, closeModal} = props;
@@ -42,7 +50,7 @@ const ScheduledMedicationModal = (props) => {
         isVisible={isVisible}
         coverScreen={true}
         backdropOpacity={1}
-        backdropColor={'white'}>
+        backdropColor={Colors.backgroundColor}>
         <View style={{marginTop: '5%'}}>
           <Entypo
             name="chevron-thin-down"
@@ -94,9 +102,13 @@ const ScheduledMedicationModal = (props) => {
             <Text style={styles.addbutton}>Add Medication</Text>
           </TouchableOpacity>
           <View style={{flex: 1}} />
-          <TouchableOpacity style={styles.button} onPress={closeModal}>
-            <Text style={styles.buttonText}>Done</Text>
-          </TouchableOpacity>
+          <View style={[globalStyles.buttonContainer, {margin: 0}]}>
+            <TouchableOpacity
+              style={globalStyles.nextButtonStyle}
+              onPress={closeModal}>
+              <Text style={globalStyles.actionButtonText}>Done</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </Modal>
     </>
@@ -126,8 +138,8 @@ export default ScheduledMedicationModal;
 
 const styles = StyleSheet.create({
   scheduledContainer: {
+    backgroundColor: Colors.backgroundColor,
     width: '100%',
-    backgroundColor: 'white',
     flex: 1,
   },
   deleteContainer: {

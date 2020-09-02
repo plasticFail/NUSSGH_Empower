@@ -22,6 +22,7 @@ const CalendarTemplate = (props) => {
     hideArrows,
     monthChange,
     selectedDates41,
+    backgroundColor,
   } = props;
   const {addSelectedDate, selectAll} = props;
   return (
@@ -42,6 +43,7 @@ const CalendarTemplate = (props) => {
         theme={{
           header: 'flex-start',
           textDayHeaderFontSize: 15,
+          calendarBackground: backgroundColor,
         }}
       />
     </>

@@ -205,11 +205,13 @@ class AskAdd extends Component {
               />
             </TouchableOpacity>
             <View style={{flex: 1}} />
-            <TouchableOpacity
-              style={styles.skipButton}
-              onPress={this.handleSkip}>
-              <Text style={styles.buttonText}>Skip</Text>
-            </TouchableOpacity>
+            <View style={globalStyles.buttonContainer}>
+              <TouchableOpacity
+                style={globalStyles.skipButtonStyle}
+                onPress={this.handleSkip}>
+                <Text style={globalStyles.actionButtonText}>Skip</Text>
+              </TouchableOpacity>
+            </View>
           </>
         ) : showCalendar === true ? (
           <>
@@ -226,15 +228,14 @@ class AskAdd extends Component {
                 calendarBackground: Colors.backgroundColor,
               }}
             />
-            <View style={{flex: 1}} />
-            <TouchableOpacity
-              style={[
-                styles.skipButton,
-                {backgroundColor: Colors.submitBtnColor},
-              ]}
-              onPress={this.handleNext}>
-              <Text style={styles.buttonText}>Next</Text>
-            </TouchableOpacity>
+            <View style={{flex: 1, paddingBottom: '3%'}} />
+            <View style={globalStyles.buttonContainer}>
+              <TouchableOpacity
+                style={[globalStyles.nextButtonStyle]}
+                onPress={this.handleNext}>
+                <Text style={globalStyles.actionButtonText}>Next</Text>
+              </TouchableOpacity>
+            </View>
           </>
         ) : (
           <>
@@ -248,11 +249,13 @@ class AskAdd extends Component {
               />
             </TouchableOpacity>
             <View style={{flex: 1}} />
-            <TouchableOpacity
-              style={styles.skipButton}
-              onPress={this.handleSkip}>
-              <Text style={styles.buttonText}>Skip</Text>
-            </TouchableOpacity>
+            <View style={globalStyles.buttonContainer}>
+              <TouchableOpacity
+                style={globalStyles.skipButtonStyle}
+                onPress={this.handleSkip}>
+                <Text style={globalStyles.actionButtonText}>Skip</Text>
+              </TouchableOpacity>
+            </View>
           </>
         )}
         <LoadingModal visible={loading} message={'Setting up your account'} />
@@ -293,20 +296,5 @@ const styles = StyleSheet.create({
   addButton: {
     alignSelf: 'center',
     marginTop: '15%',
-  },
-  skipButton: {
-    backgroundColor: '#e4e4e4',
-    height: 45,
-    width: '70%',
-    borderRadius: 20,
-    margin: '5%',
-    alignSelf: 'center',
-    marginBottom: '15%',
-  },
-  buttonText: {
-    fontSize: 20,
-    textAlign: 'center',
-    marginVertical: '3%',
-    fontWeight: '700',
   },
 });

@@ -1,11 +1,20 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Dimensions,
+} from 'react-native';
 //third party library
 import Modal from 'react-native-modal';
 import moment from 'moment';
+import Entypo from 'react-native-vector-icons/Entypo';
 //component
 import CalendarDayComponent from './calendarDay';
 import CalendarTemplate from '../../calendar/calendarTemplate';
+import {Colors} from '../../../styles/colors';
+import globalStyles from '../../../styles/globalStyles';
 
 //responsible for adding a medication to the selected days*
 const SelectDaysModal = (props) => {
@@ -67,26 +76,46 @@ const SelectDaysModal = (props) => {
   };
 
   return (
-    <Modal isVisible={visible}>
-      <View style={styles.dayModalContainer}>
-        <Text style={styles.modalHeader}>Recurring Period</Text>
-        <Text style={styles.modalDetails}>
-          Select the recurring days for this medicine below
-        </Text>
-        <CalendarTemplate
-          dayComponent={CalendarDayComponent}
-          allowSelectAll={true}
-          hideArrows={true}
-          disableMonthChange={true}
-          addSelectedDate={addSelectedDate}
-          selectAll={selectAll}
-          selectedDates41={selectedDates41}
-        />
-        <TouchableOpacity style={styles.confirmButton} onPress={handleConfirm}>
-          <Text style={styles.confirmText}>Confirm</Text>
-        </TouchableOpacity>
-      </View>
-    </Modal>
+    <View>
+      <Modal
+        isVisible={visible}
+        style={{
+          justifyContent: 'flex-end',
+          margin: 0,
+        }}>
+        <View style={styles.dayModalContainer}>
+          <Entypo
+            name="chevron-thin-down"
+            onPress={closeModal}
+            size={30}
+            color="#16A950"
+            style={{marginStart: '4%'}}
+          />
+          <Text style={styles.modalHeader}>Recurring Period</Text>
+          <Text style={styles.modalDetails}>
+            Select the recurring days for this medication below.
+          </Text>
+          <CalendarTemplate
+            dayComponent={CalendarDayComponent}
+            allowSelectAll={true}
+            hideArrows={true}
+            disableMonthChange={true}
+            addSelectedDate={addSelectedDate}
+            selectAll={selectAll}
+            selectedDates41={selectedDates41}
+            backgroundColor={Colors.backgroundColor}
+          />
+          <View style={{paddingBottom: '4%'}} />
+          <View style={globalStyles.buttonContainer}>
+            <TouchableOpacity
+              style={globalStyles.nextButtonStyle}
+              onPress={handleConfirm}>
+              <Text style={globalStyles.actionButtonText}>Confirm</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+    </View>
   );
 };
 
@@ -94,9 +123,8 @@ export default SelectDaysModal;
 
 const styles = StyleSheet.create({
   dayModalContainer: {
-    backgroundColor: 'white',
-    width: '100%',
-    borderRadius: 20,
+    backgroundColor: Colors.backgroundColor,
+    paddingTop: '5%',
   },
   modalHeader: {
     fontSize: 20,
@@ -105,11 +133,11 @@ const styles = StyleSheet.create({
     marginStart: '4%',
   },
   modalDetails: {
-    fontSize: 16,
+    fontSize: 17,
     margin: '4%',
   },
   confirmButton: {
-    backgroundColor: '#aad326',
+    backgroundColor: Colors.submitBtnColor,
     height: 45,
     width: '70%',
     alignSelf: 'center',

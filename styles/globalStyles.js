@@ -1,4 +1,5 @@
 import {StyleSheet} from 'react-native';
+import {Colors} from './colors';
 
 const globalStyles = StyleSheet.create({
   scrollContainer: {
@@ -71,6 +72,38 @@ const globalStyles = StyleSheet.create({
     shadowOpacity: 0.15,
     shadowRadius: 6,
     elevation: 30,
+    paddingBottom: '10%',
+    height: 120,
+    margin: 0,
+  },
+  backArrowStyle: {
+    color: Colors.backArrowColor,
+    marginTop: '5%',
+  },
+  nextButtonStyle: {
+    backgroundColor: Colors.submitBtnColor,
+    height: 45,
+    width: '90%',
+    borderRadius: 20,
+    margin: '5%',
+    alignSelf: 'center',
+    marginBottom: '15%',
+    paddingTop: '3%',
+  },
+  skipButtonStyle: {
+    backgroundColor: '#e4e4e4',
+    height: 45,
+    width: '90%',
+    borderRadius: 20,
+    margin: '5%',
+    alignSelf: 'center',
+    marginBottom: '15%',
+    paddingTop: '3%',
+  },
+  actionButtonText: {
+    fontSize: 19,
+    textAlign: 'center',
+    fontWeight: '700',
   },
 });
 
