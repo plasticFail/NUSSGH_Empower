@@ -11,10 +11,10 @@ import PasswordStrengthMeter from '../passwordStrengthMeter';
 
 const SetPassword = (props) => {
   return (
-    <View style={{paddingBottom: '3%'}}>
+    <>
       <PasswordStrengthMeter setPassword={props.setPassword} />
       <TextInput
-        style={styles.inputBox}
+        style={styles.inputbox}
         placeholder="Confirm New Password"
         placeholderTextColor="#a1a3a0"
         secureTextEntry={true}
@@ -25,21 +25,20 @@ const SetPassword = (props) => {
         onPress={props.checkPassword}>
         <Text style={styles.buttonText}>Submit</Text>
       </TouchableOpacity>
-    </View>
+    </>
   );
 };
 
 export default SetPassword;
 
 const styles = StyleSheet.create({
-  inputBox: {
-    width: Dimensions.get('window').width - 60,
-    borderRadius: 20,
-    backgroundColor: '#EEF3BD',
-    paddingStart: 30, //position placeholder text
-    marginVertical: 10,
-    alignSelf: 'center',
+  inputbox: {
+    marginBottom: '2%',
+    backgroundColor: '#e2e8ee',
     padding: '3%',
+    marginStart: '2%',
+    marginEnd: '2%',
+    borderRadius: 9.5,
   },
   shadow: {
     shadowColor: '#000',
@@ -57,6 +56,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     padding: '3%',
     marginTop: ' 2%',
+    marginBottom: '2%',
   },
   buttonText: {
     fontSize: 20,
