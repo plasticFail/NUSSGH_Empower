@@ -142,7 +142,7 @@ function renderNutritionCol({amount, unit}, nutrient) {
 
 const modalStyles = StyleSheet.create({
     root: {
-        backgroundColor: '#fff',
+        backgroundColor: '#F7F7FB',
         flex: 1
     },
     addButtonWrapper: {

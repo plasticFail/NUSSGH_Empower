@@ -3,7 +3,6 @@ import {
     View,
     Text,
     StyleSheet,
-    ScrollView,
     TouchableHighlight,
     TextInput,
     Image,
@@ -225,7 +224,7 @@ export default class CreateMealLog extends React.Component {
                         <View style={styles.mealNameTextAndIcon}>
                             <TextInput
                                 style={styles.mealNameTextInput}
-                                placeholder="Enter Meal Name (optional)"
+                                placeholder="Give your meal a name! (optional)"
                                 value={mealName}
                                 onChangeText={this.handleMealNameChange}
                             />
@@ -330,7 +329,7 @@ function FoodItem({onPress, item, handleDelete, onQuantityChange}) {
                                              buttonColor="#288259" onChange={onQuantityChange} />
                 </View>
                 <View style={{width: '10%'}}>
-                    <Icon name='times' color='red' size={30} onPress={handleDeleteWithAnimation} />
+                    <Icon name='trash' color='red' size={30} onPress={handleDeleteWithAnimation} />
                 </View>
             </Animated.View>
         </TouchableWithoutFeedback>

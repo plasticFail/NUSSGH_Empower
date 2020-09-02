@@ -30,7 +30,7 @@ import DiaryDetail from './main/diary/diaryDetail';
 //components
 import HeaderIcon from '../components/common/headerBtnIcon';
 import CreateMealLogScreen from './main/log/meal/CreateMealLog';
-import FavouriteMealScreen from './main/log/meal/FavouriteMeals';
+import FavouriteMealComponent from './main/log/meal/FavouriteMeals';
 import RecentMealScreen from './main/log/meal/RecentMeal';
 import FoodSearchEngineScreen from './main/log/meal/FoodSearchEngine';
 import HeaderBackIcon from '../components/common/headerBackIcon';
@@ -225,7 +225,7 @@ class AppRoot extends Component {
               />
               <Stack.Screen
                 name={'FavouriteMeal'}
-                component={FavouriteMealScreen}
+                component={FavouriteMealComponent}
                 options={({route, navigation}) => ({
                   title: 'Favourites',
                   headerBackImage: () => <HeaderBackIcon />,

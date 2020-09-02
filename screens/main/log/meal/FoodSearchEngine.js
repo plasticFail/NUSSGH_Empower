@@ -18,7 +18,7 @@ import {
 // Components
 import Searchbar from '../../../../components/Searchbar';
 import FoodModalContent from '../../../../components/logs/meal/FoodModalContent';
-import FavouriteMealScreen from "./FavouriteMeals";
+import FavouriteMealComponent from "./FavouriteMeals";
 // Functions
 // Others
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
@@ -221,7 +221,7 @@ class FoodSearchEngineScreen extends React.Component {
           </View>
         ))
         }
-        { selectedTab === 'favourites' && <FavouriteMealScreen filterQuery={query} navigation={navigation} />}
+        { selectedTab === 'favourites' && <FavouriteMealComponent filterQuery={query} navigation={navigation} />}
       </AnimatedKeyboardAvoidingView>
     );
   }
@@ -347,7 +347,6 @@ const listStyles = StyleSheet.create({
     height: 90,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#fff',
     marginLeft: 20,
     marginRight: 20,
     paddingTop: 5,
@@ -373,7 +372,7 @@ const listStyles = StyleSheet.create({
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: '#fff'
+    backgroundColor: '#F7F7FB'
   },
   header: {
     height: '18%',
@@ -414,7 +413,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignSelf: 'center',
     borderRadius: 10
-    //transform: [{"translateY": 27.5}] // Half of height
   },
   buttonText: {
     color: '#000',

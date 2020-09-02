@@ -7,7 +7,7 @@ import MealList from "../../../../components/logs/meal/MealList";
 import Searchbar from "../../../../components/Searchbar";
 
 // The screen that contains a list of the user's favourite meals.
-export default class FavouriteMealScreen extends React.Component {
+export default class FavouriteMealComponent extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -58,26 +58,22 @@ export default class FavouriteMealScreen extends React.Component {
             <View style={styles.root}>
                 {
                     <MealList meals={favouriteMeals} filterQuery={filterQuery}
-                          options={{
-                                buttons: [
-                                    {
-                                        icon: {
-                                            name: 'trash',
-                                            color: '#fff'
-                                        },
-                                        onPress: this.handleUnfavouriteMeal,
-                                        buttonStyle: {
-                                            backgroundColor: 'red',
-                                            width: 40
+                              onMealAdd={this.navigateToCreateMealLogPage}
+                              options={{
+                                    buttons: [
+                                        {
+                                            icon: {
+                                                name: 'star',
+                                                color: '#aad326'
+                                            },
+                                            onPress: this.handleUnfavouriteMeal,
+                                            buttonStyle: {
+                                                width: 40
+                                            }
                                         }
-                                    },
-                                    {
-                                        text: 'Select',
-                                        onPress: this.navigateToCreateMealLogPage
-                                    }
-                                ],
-                                header: (meal) => meal.mealName,
-                            }}
+                                    ],
+                                    header: (meal) => meal.mealName,
+                                }}
                           />
                 }
             </View>
@@ -92,7 +88,6 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     root: {
-        //backgroundColor: '#fff'
-        height: '100%'
+        flexGrow: 1,
     }
 })
