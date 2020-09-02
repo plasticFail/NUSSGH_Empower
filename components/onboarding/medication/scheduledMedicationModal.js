@@ -6,9 +6,9 @@ import {useNavigation} from '@react-navigation/native';
 import Modal from 'react-native-modal';
 import moment from 'moment';
 import Entypo from 'react-native-vector-icons/Entypo';
+import Ionicon from 'react-native-vector-icons/Ionicons';
+//component
 import DeleteConfirmation from './deleteConfirmation';
-
-Entypo.loadFont();
 
 const ScheduledMedicationModal = (props) => {
   const {isVisible, closeModal} = props;
@@ -116,7 +116,7 @@ function MedicationAdded({medication, handleDelete}) {
       <TouchableOpacity
         style={styles.deleteMedication}
         onPress={() => handleDelete(medication)}>
-        <Entypo name="cross" size={60} color="#ff0844" />
+        <Ionicon name="ios-trash-bin" size={40} color="#ff0844" />
       </TouchableOpacity>
     </View>
   );
@@ -128,7 +128,6 @@ const styles = StyleSheet.create({
   scheduledContainer: {
     width: '100%',
     backgroundColor: 'white',
-    borderRadius: 20,
     flex: 1,
   },
   deleteContainer: {

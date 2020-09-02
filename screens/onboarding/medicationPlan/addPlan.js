@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   TextInput,
   Alert,
+  Dimensions,
 } from 'react-native';
 //third party library
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -15,6 +16,8 @@ import Counter from '../../../components/onboarding/medication/Counter';
 import SelectDaysModal from '../../../components/onboarding/medication/selectDaysModal';
 import SearchMedication from '../../../components/onboarding/medication/searchMedication';
 import {set} from 'react-native-reanimated';
+import {Colors} from '../../../styles/colors';
+import globalStyles from '../../../styles/globalStyles';
 
 Ionicons.loadFont();
 
@@ -200,11 +203,10 @@ const AddPlan = (props) => {
         setSelectedDates41={setSelectedDates41}
         selectedMedicine={selectedMedicine}
       />
-      <View style={{flex: 7}} />
+      <View style={{flex: 5}} />
       <TouchableOpacity style={styles.addButton} onPress={handleAdd}>
         <Text style={styles.addText}>Add</Text>
       </TouchableOpacity>
-      <View style={{flex: 1}} />
       {/*Search */}
       {searchVisible === true ? (
         <SearchMedication
@@ -223,9 +225,8 @@ export default AddPlan;
 const styles = StyleSheet.create({
   addPlanContainer: {
     flex: 1,
-    width: '100%',
     padding: '3%',
-    backgroundColor: 'white',
+    backgroundColor: Colors.backgroundColor,
   },
   backIcon: {
     marginTop: '5%',
@@ -256,7 +257,7 @@ const styles = StyleSheet.create({
     paddingEnd: '2%',
   },
   addButton: {
-    backgroundColor: '#aad326',
+    backgroundColor: Colors.submitBtnColor,
     height: 45,
     width: '70%',
     borderRadius: 15,

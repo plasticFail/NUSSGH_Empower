@@ -31,7 +31,7 @@ const CalendarMedicationDay = (props) => {
       style.border.width = '60%';
       style.border.borderColor = 'white';
     } else {
-      style.content.backgroundColor = '#e2e2e2';
+      style.content.backgroundColor = '#e3e9ef';
       style.content.borderRadius = 10;
     }
     return style;

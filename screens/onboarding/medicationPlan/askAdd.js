@@ -8,6 +8,8 @@ import {Calendar} from 'react-native-calendars';
 import CalendarMedicationDay from '../../../components/onboarding/medication/calendarMedicationDay';
 import LoadingModal from '../../../components/loadingModal';
 import {prepareData, postPlan} from '../../../netcalls/requestsMedPlan';
+import {Colors} from '../../../styles/colors';
+import globalStyles from '../../../styles/globalStyles';
 
 Ionicons.loadFont();
 
@@ -196,14 +198,20 @@ class AskAdd extends Component {
             <TouchableOpacity
               style={styles.addButton}
               onPress={this.handleAddMedication}>
-              <Ionicons name="add-circle" size={80} color="#aad326" />
+              <Ionicons
+                name="add-circle"
+                size={80}
+                color={Colors.submitBtnColor}
+              />
             </TouchableOpacity>
             <View style={{flex: 1}} />
-            <TouchableOpacity
-              style={styles.skipButton}
-              onPress={this.handleSkip}>
-              <Text style={styles.buttonText}>Skip</Text>
-            </TouchableOpacity>
+            <View style={globalStyles.buttonContainer}>
+              <TouchableOpacity
+                style={styles.skipButton}
+                onPress={this.handleSkip}>
+                <Text style={styles.buttonText}>Skip</Text>
+              </TouchableOpacity>
+            </View>
           </>
         ) : showCalendar === true ? (
           <>
@@ -217,28 +225,40 @@ class AskAdd extends Component {
               selectAll={false}
               theme={{
                 textDayHeaderFontSize: 15,
+                calendarBackground: Colors.backgroundColor,
               }}
             />
             <View style={{flex: 1}} />
-            <TouchableOpacity
-              style={[styles.skipButton, {backgroundColor: '#aad326'}]}
-              onPress={this.handleNext}>
-              <Text style={styles.buttonText}>Next</Text>
-            </TouchableOpacity>
+            <View style={globalStyles.buttonContainer}>
+              <TouchableOpacity
+                style={[
+                  styles.skipButton,
+                  {backgroundColor: Colors.submitBtnColor},
+                ]}
+                onPress={this.handleNext}>
+                <Text style={styles.buttonText}>Next</Text>
+              </TouchableOpacity>
+            </View>
           </>
         ) : (
           <>
             <TouchableOpacity
               style={styles.addButton}
               onPress={this.handleAddMedication}>
-              <Ionicons name="add-circle" size={80} color="#aad326" />
+              <Ionicons
+                name="add-circle"
+                size={80}
+                color={Colors.backgroundColor}
+              />
             </TouchableOpacity>
             <View style={{flex: 1}} />
-            <TouchableOpacity
-              style={styles.skipButton}
-              onPress={this.handleSkip}>
-              <Text style={styles.buttonText}>Skip</Text>
-            </TouchableOpacity>
+            <View style={globalStyles.buttonContainer}>
+              <TouchableOpacity
+                style={styles.skipButton}
+                onPress={this.handleSkip}>
+                <Text style={styles.buttonText}>Skip</Text>
+              </TouchableOpacity>
+            </View>
           </>
         )}
         <LoadingModal visible={loading} message={'Setting up your account'} />
@@ -251,8 +271,8 @@ export default AskAdd;
 
 const styles = StyleSheet.create({
   onboardingContainer: {
-    paddingTop: '2%',
-    backgroundColor: 'white',
+    paddingTop: '8%',
+    backgroundColor: Colors.backgroundColor,
     flex: 1,
   },
   stepText: {
@@ -287,7 +307,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     margin: '5%',
     alignSelf: 'center',
-    marginBottom: '3%',
+    marginBottom: '15%',
   },
   buttonText: {
     fontSize: 20,

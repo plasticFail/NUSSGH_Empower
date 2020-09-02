@@ -18,7 +18,7 @@ const CalendarDayComponent = (props) => {
       style.content.backgroundColor = '#aad326';
       style.content.borderRadius = 10;
     } else {
-      style.content.backgroundColor = '#e2e2e2';
+      style.content.backgroundColor = '#e2e8ee';
       style.content.borderRadius = 10;
     }
     return style;
