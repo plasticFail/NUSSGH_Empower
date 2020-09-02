@@ -1,5 +1,5 @@
 export const Colors = {
-  backgroundColor: '#f6f7fa',
+  backgroundColor: '#f7f8fb',
   submitBtnColor: '#aad326',
   skipBtnColor: '#f6f7fa',
   backArrowColor: '#16A950',

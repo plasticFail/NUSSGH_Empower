@@ -262,9 +262,8 @@ const styles = StyleSheet.create({
     paddingEnd: '2%',
   },
   searchInput: {
-    backgroundColor: '#e6ebed',
+    backgroundColor: '#e2e8ee',
     borderRadius: 20,
-    height: '8%',
     marginTop: '9%',
     marginBottom: '3%',
     padding: '4.2%',
