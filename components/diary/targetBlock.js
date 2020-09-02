@@ -214,7 +214,6 @@ class TargetBlock extends Component {
   handleOnPress = () => {
     this.props.navigation.navigate('DiaryDetail', {
       date: this.props.date,
-      avgBg: this.state.avgBg,
 
       bgLogs: this.state.bgLogs,
       foodLogs: this.state.foodLogs,
