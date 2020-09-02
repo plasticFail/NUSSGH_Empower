@@ -4,7 +4,7 @@ const fitbitOAuthUri = "https://www.fitbit.com/oauth2/authorize";
 const redirect_uri = "edu.nus.com.empower://oauth2-callback/fitbit";
 const client_id = "22BVZ4";
 const oAuthClientSecret = "81a05f0d421e7498f848bbb2ca11ad3b";
-const scope = "activity heartrate location nutrition weight settings sleep social"; // all except profile
+const scope = "profile activity heartrate location nutrition weight settings sleep social"; // all except profile
 
 function base64URLEncode(buff) {
     return buff.toString('base64')
