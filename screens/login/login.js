@@ -101,7 +101,7 @@ class Login extends Component {
           <TextInput
             style={styles.inputBox}
             placeholder="Username"
-            placeholderTextColor="#a1a3a0"
+            placeholderTextColor="white"
             value={this.state.username}
             onChangeText={this.handleUsernameInput}
           />
@@ -109,7 +109,7 @@ class Login extends Component {
             style={styles.inputBox}
             placeholder="Password"
             secureTextEntry={true}
-            placeholderTextColor="#a1a3a0"
+            placeholderTextColor="white"
             value={this.state.password}
             onChangeText={this.handlePasswordInput}
           />
@@ -177,6 +177,7 @@ const styles = StyleSheet.create({
     paddingStart: 30, //position placeholder text
     marginVertical: 10,
     alignSelf: 'center',
+    color: 'white',
   },
   light: {
     color: 'white',
