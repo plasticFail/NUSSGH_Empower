@@ -10,12 +10,12 @@ import {Colors} from '../../../styles/colors';
 import globalStyles from '../../../styles/globalStyles';
 //function
 import {
-    name: 'Medication',
   bg_key,
   food_key,
   med_key,
   weight_key,
   renderLogIcon,
+  handleSubmitBloodGlucose,
 } from '../../../commonFunctions/logFunctions';
 import {getGreetingFromHour} from '../../../commonFunctions/common';
 //components
@@ -23,6 +23,7 @@ import LastLogButton from '../../../components/logs/lastLogBtn';
 import DateSelectionBlock from '../../../components/logs/dateSelectionBlock';
 import BloodGlucoseLogBlock from '../../../components/logs/bloodGlucoseLogBlock';
 import CrossBtn from '../../../components/crossBtn';
+import SuccessDialogue from '../../../components/successDialogue';
 
 const buttonList = [bg_key, food_key, med_key, weight_key];
 
@@ -34,6 +35,10 @@ class AddLogScreen extends Component {
     this.state = {
       recordDate: new Date(),
       bloodGlucose: '',
+      eatSelection: false,
+      exerciseSelection: false,
+      alcholicSelection: false,
+
       selectedMedicationList: [],
       weight: '',
 
@@ -44,6 +49,7 @@ class AddLogScreen extends Component {
       showFood: false,
       showMed: false,
       showWeight: false,
+      showSuccess: false,
     };
 
     this.period = getGreetingFromHour(this.state.recordDate.getHours());
@@ -59,6 +65,28 @@ class AddLogScreen extends Component {
     });
   }
 
+  resetState() {
+    this.setState({
+      recordDate: new Date(),
+      bloodGlucose: '',
+      eatSelection: false,
+      exerciseSelection: false,
+      alcholicSelection: false,
+
+      selectedMedicationList: [],
+      weight: '',
+
+      showModal: false,
+      selectedLogType: '',
+
+      showBg: false,
+      showFood: false,
+      showMed: false,
+      showWeight: false,
+      showSuccess: false,
+    });
+  }
+
   openModalType = (logType) => {
     this.setState({selectedLogType: logType});
     this.setState({showModal: true});
@@ -66,6 +94,7 @@ class AddLogScreen extends Component {
 
   closeModal = () => {
     this.setState({showModal: false});
+    this.resetState();
   };
 
   setDate = (date) => {
@@ -100,10 +129,44 @@ class AddLogScreen extends Component {
     this.setState({bloodGlucose: value});
   };
 
+  setEatSelection = (boolVal) => {
+    console.log('setting eat selection ' + boolVal);
+    this.setState({eatSelection: boolVal});
+  };
+
+  setExerciseSelection = (boolVal) => {
+    console.log('setting exercise selection ' + boolVal);
+    this.setState({exerciseSelection: boolVal});
+  };
+
+  setAlcoholSelection = (boolVal) => {
+    console.log('setting alchohol selection ' + boolVal);
+    this.setState({alcholicSelection: boolVal});
+  };
+
+  //submit value
+  submitBg = async () => {
+    this.closeBgForm();
+    if (
+      await handleSubmitBloodGlucose(
+        this.state.recordDate,
+        this.state.bloodGlucose,
+      )
+    ) {
+      this.setState({showSuccess: true});
+      this.closeModal();
+    }
+  };
+
   render() {
     const {showModal, selectedLogType, recordDate} = this.state;
-    const {showBg, showMed, showWeight} = this.state;
-    const {bloodGlucose} = this.state;
+    const {showBg, showMed, showWeight, showSuccess} = this.state;
+    const {
+      bloodGlucose,
+      eatSelection,
+      exerciseSelection,
+      alcholicSelection,
+    } = this.state;
     return (
       <View style={styles.container}>
         <Text style={globalStyles.pageHeader}>Add Log</Text>
@@ -160,6 +223,14 @@ class AddLogScreen extends Component {
             closeModal={this.closeBgForm}
             bloodGlucose={bloodGlucose}
             setBloodGlucose={this.setBloodGlucose}
+            eatSelection={eatSelection}
+            exerciseSelection={exerciseSelection}
+            alcholicSelection={alcholicSelection}
+            setEatSelection={this.setEatSelection}
+            setExerciseSelection={this.setExerciseSelection}
+            setAlcoholSelection={this.setAlcoholSelection}
+            parent="addLog"
+            submitBg={this.submitBg}
           />
         </Modal>
       </View>

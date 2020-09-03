@@ -1,12 +1,5 @@
 import React, {useEffect, useState, useRef} from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  Image,
-  Animated,
-} from 'react-native';
+import {Text, View, TouchableOpacity, Image, Animated} from 'react-native';
 //styles
 import logStyles from '../../styles/logStyles';
 import globalStyles from '../../styles/globalStyles';

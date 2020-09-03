@@ -1,10 +1,14 @@
 import React, {useState, useRef} from 'react';
-import {StyleSheet, Text, TextInput, View, Animated} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  Animated,
+  TouchableOpacity,
+} from 'react-native';
 //third party libs
 import Moment from 'moment';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import DatePicker from 'react-native-date-picker';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 import logStyles from '../../styles/logStyles';
 
 const DateSelectionBlock = (props) => {
@@ -40,12 +44,12 @@ const DateSelectionBlock = (props) => {
     <>
       <Text style={logStyles.fieldName}>Record Date Time:</Text>
       <TouchableOpacity onPress={() => handleOpenCloseWithAnimation(visible)}>
-        <TextInput
+        <Text
           style={logStyles.inputField}
-          value={Moment(props.date).format('MMMM Do YYYY, h:mm a')}
           editable={false}
-          placeholderTextColor="#a1a3a0"
-        />
+          placeholderTextColor="#a1a3a0">
+          {Moment(props.date).format('MMMM Do YYYY, h:mm a')}
+        </Text>
       </TouchableOpacity>
       {visible && (
         <Animated.View

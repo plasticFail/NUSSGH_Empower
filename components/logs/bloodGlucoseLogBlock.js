@@ -10,17 +10,46 @@ import {
 import HypoglycemiaBlock from './hypoglycemiaBlock';
 import LeftArrowBtn from './leftArrowBtn';
 //functions
-import {checkBloodGlucoseText} from '../../commonFunctions/logFunctions';
+import {
+  checkBloodGlucoseText,
+  checkBloodGlucose,
+} from '../../commonFunctions/logFunctions';
 //styles
 import globalStyles from '../../styles/globalStyles';
 import {Colors} from '../../styles/colors';
 import logStyles from '../../styles/logStyles';
 //third party lib
 import Modal from 'react-native-modal';
+import {sub} from 'react-native-reanimated';
+
+const min_bg = 4;
 
 const BloodGlucoseLogBlock = (props) => {
-  const {visible, bloodGlucose} = props;
-  const {closeModal, setBloodGlucose} = props;
+  const {
+    visible,
+    parent, //important when doing edit**
+    bloodGlucose,
+    eatSelection,
+    exerciseSelection,
+    alcholicSelection,
+  } = props;
+  const {
+    closeModal,
+    setBloodGlucose,
+    setEatSelection,
+    setExerciseSelection,
+    setAlcoholSelection,
+  } = props;
+
+  console.log('Navigating to bg modal from ' + parent);
+
+  const submitBg = () => {
+    if (parent === 'addLog') {
+      props.submitBg();
+    } else {
+      //handle edit **
+    }
+  };
 
   return (
     <Modal
@@ -55,19 +84,27 @@ const BloodGlucoseLogBlock = (props) => {
         )}
 
         <HypoglycemiaBlock
-          eatSelection={props.eatSelection}
-          setEatSelection={props.setEatSelection}
-          exerciseSelection={props.exerciseSelection}
-          setExerciseSelection={props.setExerciseSelection}
-          alcoholSelection={props.alcoholSelection}
-          setAlcoholSelection={props.setAlcoholSelection}
-          bloodGlucose={props.bloodGlucose}
+          eatSelection={eatSelection}
+          setEatSelection={setEatSelection}
+          exerciseSelection={exerciseSelection}
+          setExerciseSelection={setExerciseSelection}
+          alcholicSelection={alcholicSelection}
+          setAlcoholSelection={setAlcoholSelection}
+          bloodGlucose={bloodGlucose}
         />
       </View>
       <View style={[globalStyles.buttonContainer]}>
-        <TouchableOpacity style={globalStyles.nextButtonStyle}>
-          <Text style={globalStyles.actionButtonText}>Submit</Text>
-        </TouchableOpacity>
+        {checkBloodGlucose(bloodGlucose) ? (
+          <TouchableOpacity
+            style={globalStyles.nextButtonStyle}
+            onPress={() => submitBg()}>
+            <Text style={globalStyles.actionButtonText}>Submit</Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity style={globalStyles.skipButtonStyle}>
+            <Text style={globalStyles.actionButtonText}>Submit</Text>
+          </TouchableOpacity>
+        )}
       </View>
     </Modal>
   );

@@ -1,20 +1,14 @@
-import React from 'react';
-import {
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-} from 'react-native';
+import React, {useState} from 'react';
+import {Text, StyleSheet, TouchableOpacity} from 'react-native';
 import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/AntDesign';
-import {useNavigation} from '@react-navigation/native';
 
-function SuccessDialogue({visible, type}) {
-  const navigation = useNavigation();
-  console.log({visible});
-  Icon.loadFont();
+function SuccessDialogue(props) {
+  const {visible, type} = props;
+  const [showSuccess, setShowSuccess] = useState(visible);
   return (
     <Modal
-      isVisible={visible}
+      isVisible={showSuccess}
       animationIn="slideInUp"
       style={{
         backgroundColor: 'white',
@@ -23,12 +17,12 @@ function SuccessDialogue({visible, type}) {
       }}>
       <Icon name="checkcircle" color="#aad326" size={100} />
       <Text style={{fontSize: 30, fontWeight: '500', marginTop: '3%'}}>
-        {type} Log
+        {type}
       </Text>
       <Text style={{fontSize: 18}}>Completed successfully</Text>
       <TouchableOpacity
         style={[styles.button, {backgroundColor: '#aad326'}]}
-        onPress={() => navigation.navigate('AddLog')}>
+        onPress={() => setShowSuccess(false)}>
         <Text style={styles.buttonText}>Got It</Text>
       </TouchableOpacity>
     </Modal>

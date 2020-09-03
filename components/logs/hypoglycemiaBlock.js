@@ -1,20 +1,29 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {View, StyleSheet, Text, Animated} from 'react-native';
+import {View, StyleSheet, Text, Animated, ScrollView} from 'react-native';
 //component
 import FormBlockFix from './formBlockFix';
-import {useSafeArea} from 'react-native-safe-area-context';
+//styles
+import globalStyles from '../../styles/globalStyles';
+import FormBlock from './formBlock';
 
 const formQn1 = 'Did you eat lesser than usual today?';
 const formQn2 = 'Did you exercise today';
-const formQn3 = 'Did you have any alcoholic beverages today';
+const formQn3 = 'Did you have any alcoholic beverages today?';
 
 //take in props blood glucose value, then determine whether to show form and returns the selection
 const HypoglycemiaBlock = (props) => {
   const [visible, setVisible] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
+  const {
+    bloodGlucose,
+    eatSelection,
+    exerciseSelection,
+    alcholicSelection,
+  } = props;
+  const {setEatSelection, setExerciseSelection, setAlcoholSelection} = props;
 
   useEffect(() => {
-    if (Number(props.bloodGlucose) <= 4 && props.bloodGlucose !== '') {
+    if (Number(bloodGlucose) <= 4 && bloodGlucose !== '') {
       setVisible(true);
       //fade in animation
       Animated.timing(fadeAnim, {
@@ -29,45 +38,31 @@ const HypoglycemiaBlock = (props) => {
         useNativeDriver: true,
       }).start(() => setVisible(false));
     }
-  }, [props.bloodGlucose]);
+  }, [bloodGlucose]);
 
   return (
     visible && (
       <Animated.View style={[{opacity: fadeAnim}]}>
-        <View style={{flex: 1}}>
-          <Text style={styles.header}>
-            We are very concerned about your submitted blood glucose reading
-            which is lower than your target minimum blood glucose
+        <ScrollView contentContainerStyle={styles.formContainer}>
+          <Text style={globalStyles.alertText}>
+            The reading entered is too low. We are concerned.
           </Text>
-          <FormBlockFix
+          <FormBlock
             question={formQn1}
-            color={'#aad326'}
-            getFormSelection={props.setEatSelection}
-            selectYes={props.eatSelection}
-            color={'#e958c8'}
+            getFormSelection={setEatSelection}
+            value={eatSelection}
           />
-          <FormBlockFix
+          <FormBlock
             question={formQn2}
-            color={'#aad326'}
-            getFormSelection={props.setExerciseSelection}
-            selectYes={props.exerciseSelection}
-            color={'#e958c8'}
+            getFormSelection={setExerciseSelection}
+            value={exerciseSelection}
           />
-          <FormBlockFix
+          <FormBlock
             question={formQn3}
-            color={'#aad326'}
-            getFormSelection={props.setAlcoholSelection}
-            selectYes={props.alcoholSelection}
-            color={'#e958c8'}
+            getFormSelection={setAlcoholSelection}
+            value={alcholicSelection}
           />
-
-          <View style={{marginTop: '2%'}}>
-            <Text style={{marginStart: '2%', marginEnd: '2%'}}>
-              *Submit your blood glucose now to view list of fast acting
-              carbohydrate list that you should consume immediately!
-            </Text>
-          </View>
-        </View>
+        </ScrollView>
       </Animated.View>
     )
   );
@@ -76,12 +71,9 @@ const HypoglycemiaBlock = (props) => {
 export default HypoglycemiaBlock;
 
 const styles = StyleSheet.create({
-  header: {
-    fontSize: 17,
-    alignSelf: 'center',
-    marginTop: '5%',
+  formContainer: {
+    padding: '3%',
   },
-  formContainer: {},
   shadow: {
     shadowColor: '#000',
     shadowOffset: {
