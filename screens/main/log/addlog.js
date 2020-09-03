@@ -61,8 +61,6 @@ class AddLogScreen extends Component {
   resetState() {
     this.setState({
       recordDate: new Date(),
-      selectedMedicationList: [],
-      weight: '',
 
       showModal: false,
       selectedLogType: '',
