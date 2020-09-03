@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -13,6 +13,7 @@ import LeftArrowBtn from './leftArrowBtn';
 import {
   checkBloodGlucoseText,
   checkBloodGlucose,
+  handleSubmitBloodGlucose,
 } from '../../commonFunctions/logFunctions';
 //styles
 import globalStyles from '../../styles/globalStyles';
@@ -20,34 +21,34 @@ import {Colors} from '../../styles/colors';
 import logStyles from '../../styles/logStyles';
 //third party lib
 import Modal from 'react-native-modal';
-import {sub} from 'react-native-reanimated';
-
-const min_bg = 4;
 
 const BloodGlucoseLogBlock = (props) => {
   const {
     visible,
     parent, //important when doing edit**
-    bloodGlucose,
-    eatSelection,
-    exerciseSelection,
-    alcholicSelection,
+    recordDate,
   } = props;
-  const {
-    closeModal,
-    setBloodGlucose,
-    setEatSelection,
-    setExerciseSelection,
-    setAlcoholSelection,
-  } = props;
+  const {closeModal, closeParent} = props;
+  const [bloodGlucose, setBloodGlucose] = useState('');
+  const [eatSelection, setEatSelection] = useState(false);
+  const [exerciseSelection, setExerciseSelection] = useState(false);
+  const [alcholicSelection, setAlcoholSelection] = useState(false);
 
   console.log('Navigating to bg modal from ' + parent);
 
   const submitBg = () => {
     if (parent === 'addLog') {
-      props.submitBg();
+      postBg();
     } else {
       //handle edit **
+    }
+  };
+
+  //submit value
+  const postBg = async () => {
+    if (await handleSubmitBloodGlucose(recordDate, bloodGlucose)) {
+      closeModal();
+      closeParent();
     }
   };
 

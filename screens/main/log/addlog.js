@@ -34,13 +34,6 @@ class AddLogScreen extends Component {
     this.props = props;
     this.state = {
       recordDate: new Date(),
-      bloodGlucose: '',
-      eatSelection: false,
-      exerciseSelection: false,
-      alcholicSelection: false,
-
-      selectedMedicationList: [],
-      weight: '',
 
       showModal: false,
       selectedLogType: '',
@@ -68,11 +61,6 @@ class AddLogScreen extends Component {
   resetState() {
     this.setState({
       recordDate: new Date(),
-      bloodGlucose: '',
-      eatSelection: false,
-      exerciseSelection: false,
-      alcholicSelection: false,
-
       selectedMedicationList: [],
       weight: '',
 
@@ -122,40 +110,6 @@ class AddLogScreen extends Component {
   //close forms
   closeBgForm = () => {
     this.setState({showBg: false});
-  };
-
-  //set values
-  setBloodGlucose = (value) => {
-    this.setState({bloodGlucose: value});
-  };
-
-  setEatSelection = (boolVal) => {
-    console.log('setting eat selection ' + boolVal);
-    this.setState({eatSelection: boolVal});
-  };
-
-  setExerciseSelection = (boolVal) => {
-    console.log('setting exercise selection ' + boolVal);
-    this.setState({exerciseSelection: boolVal});
-  };
-
-  setAlcoholSelection = (boolVal) => {
-    console.log('setting alchohol selection ' + boolVal);
-    this.setState({alcholicSelection: boolVal});
-  };
-
-  //submit value
-  submitBg = async () => {
-    this.closeBgForm();
-    if (
-      await handleSubmitBloodGlucose(
-        this.state.recordDate,
-        this.state.bloodGlucose,
-      )
-    ) {
-      this.setState({showSuccess: true});
-      this.closeModal();
-    }
   };
 
   render() {
@@ -220,7 +174,9 @@ class AddLogScreen extends Component {
           {/*Modal for the different form types */}
           <BloodGlucoseLogBlock
             visible={showBg}
+            recordDate={recordDate}
             closeModal={this.closeBgForm}
+            closeParent={this.closeModal}
             bloodGlucose={bloodGlucose}
             setBloodGlucose={this.setBloodGlucose}
             eatSelection={eatSelection}
