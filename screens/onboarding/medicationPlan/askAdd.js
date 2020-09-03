@@ -7,7 +7,9 @@ import {Calendar} from 'react-native-calendars';
 //component
 import CalendarMedicationDay from '../../../components/onboarding/medication/calendarMedicationDay';
 import LoadingModal from '../../../components/loadingModal';
+//function
 import {prepareData, postPlan} from '../../../netcalls/requestsMedPlan';
+//styles
 import {Colors} from '../../../styles/colors';
 import globalStyles from '../../../styles/globalStyles';
 
@@ -187,9 +189,9 @@ class AskAdd extends Component {
     const {selectedDates4All, showCalendar, loading} = this.state;
     return (
       <View style={styles.onboardingContainer}>
-        <Text style={styles.stepText}>Step 3</Text>
-        <Text style={styles.stepContent}>Add your Medicine Plan</Text>
-        <Text style={styles.stepDescription}>
+        <Text style={[globalStyles.pageHeader, styles.stepText]}>Step 3</Text>
+        <Text style={globalStyles.pageDetails}>Add your Medicine Plan</Text>
+        <Text style={[globalStyles.pageSubDetails, styles.stepContent]}>
           Would you like to add your scheduled medications for this month? We
           will help to track them.
         </Text>
@@ -274,24 +276,10 @@ const styles = StyleSheet.create({
   },
   stepText: {
     marginTop: '10%',
-    fontSize: 35,
-    fontWeight: '700',
-    marginStart: '3%',
-    marginEnd: '3%',
   },
   stepContent: {
-    fontWeight: '700',
-    fontSize: 20,
     marginTop: '3%',
-    marginStart: '3%',
-    marginEnd: '3%',
-  },
-  stepDescription: {
-    fontSize: 17,
     width: '90%',
-    marginTop: '3%',
-    marginStart: '3%',
-    marginEnd: '3%',
   },
   addButton: {
     alignSelf: 'center',

@@ -4,6 +4,8 @@ import {StyleSheet, Text, TextInput, View, Animated} from 'react-native';
 import Moment from 'moment';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import DatePicker from 'react-native-date-picker';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import logStyles from '../../styles/logStyles';
 
 const DateSelectionBlock = (props) => {
   const [visible, setVisible] = useState(false);
@@ -36,23 +38,15 @@ const DateSelectionBlock = (props) => {
 
   return (
     <>
-      <Text style={[styles.inputHeader, {marginTop: '4%'}]}>
-        Record Date Time:
-      </Text>
-      <View style={styles.subContainer}>
+      <Text style={logStyles.fieldName}>Record Date Time:</Text>
+      <TouchableOpacity onPress={() => handleOpenCloseWithAnimation(visible)}>
         <TextInput
-          style={styles.inputBoxFill}
+          style={logStyles.inputField}
           value={Moment(props.date).format('MMMM Do YYYY, h:mm a')}
           editable={false}
           placeholderTextColor="#a1a3a0"
         />
-        <Ionicons
-          name="calendar-outline"
-          size={30}
-          style={{marginStart: '5%'}}
-          onPress={() => handleOpenCloseWithAnimation(visible)}
-        />
-      </View>
+      </TouchableOpacity>
       {visible && (
         <Animated.View
           style={[
@@ -74,26 +68,10 @@ const DateSelectionBlock = (props) => {
 };
 
 const styles = StyleSheet.create({
-  subContainer: {
-    width: '100%',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  inputHeader: {
-    fontSize: 18,
-    fontWeight: '500',
-  },
-  inputBoxFill: {
-    flex: 1,
-    backgroundColor: '#EEF3BD',
-    paddingStart: 20, //position placeholder text
-    marginVertical: 10,
-    fontSize: 19,
-    color: 'black',
-    padding: '2%',
-  },
   slideAnimationWrapperForDatePicker: {
     overflow: 'hidden',
+    marginStart: '4%',
+    marginEnd: '4%',
   },
 });
 

@@ -24,13 +24,13 @@ const globalStyles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 20,
-    fontWeight: '500',
     textAlign: 'center',
   },
   alertText: {
-    fontSize: 20,
-    fontWeight: '500',
-    textAlign: 'center',
+    //tweak
+    fontSize: 18,
+    fontFamily: 'SFProDisplay-Regular',
+    color: Colors.alertColor,
   },
   cardContainer: {
     marginTop: '9%',
@@ -65,6 +65,7 @@ const globalStyles = StyleSheet.create({
     paddingHorizontal: 40,
     paddingVertical: 6,
   },
+  //added from ui / ux change
   buttonContainer: {
     backgroundColor: 'white',
     shadowColor: '#000',
@@ -75,16 +76,28 @@ const globalStyles = StyleSheet.create({
     paddingBottom: '10%',
     height: 120,
     margin: 0,
+    alignSelf: 'flex-end',
+    width: Dimensions.get('window').width,
   },
-  backArrowStyle: {
+  crossIcon: {
+    color: Colors.crossColor,
+    marginTop: '8%',
+  },
+  chevronDown: {
     color: Colors.backArrowColor,
-    marginTop: '5%',
+    marginTop: '8%',
+    marginStart: '4%',
+  },
+  leftArrowBack: {
+    color: Colors.leftArrowColor,
+    marginTop: '8%',
+    marginStart: '4%',
   },
   nextButtonStyle: {
     backgroundColor: Colors.submitBtnColor,
     height: 45,
     width: '90%',
-    borderRadius: 20,
+    borderRadius: 9.5,
     margin: '5%',
     alignSelf: 'center',
     marginBottom: '15%',
@@ -94,7 +107,7 @@ const globalStyles = StyleSheet.create({
     backgroundColor: '#e4e4e4',
     height: 45,
     width: '90%',
-    borderRadius: 20,
+    borderRadius: 9.5,
     margin: '5%',
     alignSelf: 'center',
     marginBottom: '15%',
@@ -104,6 +117,24 @@ const globalStyles = StyleSheet.create({
     fontSize: 19,
     textAlign: 'center',
     fontWeight: '700',
+  },
+  pageHeader: {
+    fontSize: 33,
+    marginStart: '4%',
+    paddingTop: '2%',
+    marginBottom: '1%',
+    fontFamily: 'SFProDisplay-Bold',
+  },
+  pageDetails: {
+    fontSize: 18,
+    fontWeight: '800',
+    marginStart: '4%',
+    fontFamily: 'SFProDisplay-Bold',
+  },
+  pageSubDetails: {
+    fontSize: 18,
+    marginStart: '4%',
+    fontFamily: 'SFProDisplay-Regular',
   },
 });
 

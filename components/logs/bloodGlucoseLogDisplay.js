@@ -1,55 +1,49 @@
-import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import React, {useState, useRef, useEffect} from 'react';
+import {StyleSheet, Text, View, Animated} from 'react-native';
+//styles
+import logStyles from '../../styles/logStyles';
+import {Colors} from '../../styles/colors';
 
-
+//show last values
 const BloodGlucoseLogDisplay = (props) => {
-    return (
-        <View style={[styles.container, styles.shadow]}>
-            <Text style={styles.textStyle}>
-                {prefix(props.isNewSubmit)}{' '}
-                <Text style={styles.bold}>{props.data.value}</Text> mmol/L at{' '}
-                <Text style={styles.bold}>{props.data.time}</Text> today.
-            </Text>
-        </View>
-    );
+  const {data, show, setShow} = props;
+  const [height, setHeight] = useState(0);
+  const dropDownAnimation = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    if (show) {
+      Animated.timing(dropDownAnimation, {
+        toValue: 1,
+        duration: 500,
+        useNativeDriver: false,
+      }).start();
+    } else {
+      Animated.timing(dropDownAnimation, {
+        toValue: 0,
+        duration: 500,
+        useNativeDriver: false,
+      }).start();
+    }
+  }, [show]);
+
+  const heightInterpolation = dropDownAnimation.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0%', '100%'],
+  });
+
+  return (
+    show && (
+      <Animated.View style={{maxHeight: heightInterpolation}}>
+        <Text style={logStyles.lastLogDate}>{data.dateString}</Text>
+        <View style={logStyles.lastLogBorder} />
+        <Text style={logStyles.fieldText}>Last Reading Recorded</Text>
+        <Text style={[logStyles.fieldText, {color: Colors.lastLogValueColor}]}>
+          {data.value} mmol/L
+        </Text>
+        <View style={logStyles.lastLogBorder} />
+      </Animated.View>
+    )
+  );
 };
 
-const prefix = isNewSubmit => {
-    if(isNewSubmit){
-        return 'Your new log of blood glucose is';
-    }else{
-        return 'Your most recent blood glucose log is';
-    }
-}
-
 export default BloodGlucoseLogDisplay;
-
-const styles = StyleSheet.create({
-    container: {
-        backgroundColor: 'white',
-        alignItems: 'center',
-        width: '100%',
-        paddingBottom: '5%',
-        borderRadius: 20,
-        padding: '4%',
-        marginBottom: 20,
-    },
-    shadow: {
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 5,
-    },
-    textStyle: {
-        fontSize: 17,
-    },
-    bold: {
-        fontWeight: '700',
-        color: '#d22b55',
-    },
-});
-

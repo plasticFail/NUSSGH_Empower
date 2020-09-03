@@ -11,12 +11,13 @@ import {useNavigation} from '@react-navigation/native';
 //third party libaray
 import Modal from 'react-native-modal';
 import moment from 'moment';
-import Entypo from 'react-native-vector-icons/Entypo';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 //component
 import DeleteConfirmation from './deleteConfirmation';
-import globalStyles from '../../../styles/globalStyles';
+import ChevronDownBtn from '../../chevronDownBtn';
+//styles
 import {Colors} from '../../../styles/colors';
+import globalStyles from '../../../styles/globalStyles';
 
 const ScheduledMedicationModal = (props) => {
   const {isVisible, closeModal} = props;
@@ -49,15 +50,11 @@ const ScheduledMedicationModal = (props) => {
       isVisible={isVisible}
       coverScreen={true}
       backdropOpacity={1}
+      style={{margin: 0}}
       backdropColor={Colors.backgroundColor}>
       <View style={styles.scheduledContainer}>
-        <Entypo
-          name="chevron-thin-down"
-          onPress={closeModal}
-          size={30}
-          style={globalStyles.backArrowStyle}
-        />
-        <Text style={styles.header}>{dateString}</Text>
+        <ChevronDownBtn close={closeModal} />
+        <Text style={globalStyles.pageHeader}>{dateString}</Text>
         <Text style={styles.details}>Scheduled Medications:</Text>
         {medicationList === undefined ? (
           <Text style={styles.miss}>No Medication Set Yet</Text>
@@ -141,12 +138,6 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: 'white',
     borderRadius: 20,
-  },
-  header: {
-    fontSize: 30,
-    fontWeight: '700',
-    marginTop: '4%',
-    marginStart: '4%',
   },
   details: {
     fontSize: 18,
