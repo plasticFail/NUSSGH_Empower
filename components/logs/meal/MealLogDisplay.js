@@ -4,7 +4,6 @@ import ReadOnlyMealDisplay from "./ReadOnlyMealDisplay";
 import Moment from 'moment';
 
 const MealLogDisplay = (props) => {
-    console.log(props.data);
     return (
         <View style={[styles.container, styles.shadow]}>
             <Text style={styles.textStyle}>

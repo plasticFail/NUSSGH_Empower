@@ -11,7 +11,7 @@ import {
     Animated, LayoutAnimation,
     Platform, UIManager,
     Alert, TouchableOpacity,
-    FlatList
+    FlatList, ScrollView
 } from 'react-native';
 // Third-party lib
 import Moment from 'moment';
@@ -24,8 +24,10 @@ import {requestFavouriteMealList} from "../../../../netcalls/mealEndpoints/reque
 // Others such as images, icons.
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import FlashMessage from "../../../../components/FlashMessage";
-import {isValidMeal} from "../../../../commonFunctions/mealLogFunctions";
+import {getDefaultMealType, isValidMeal} from "../../../../commonFunctions/mealLogFunctions";
 import RenderMealItem from "../../../../components/logs/meal/RenderMealItem";
+import DateSelectionBlock from "../../../../components/logs/dateSelectionBlock";
+import MealTypeSelectionBlock from "../../../../components/logs/meal/MealTypeSelectionBlock";
 
 Icon.loadFont()
 // Any meal log selected (e.g Create, Recent or Favourites)
@@ -38,7 +40,8 @@ if (
     UIManager.setLayoutAnimationEnabledExperimental(true);
 }
 
-// Keywords for state items
+// Global var
+const MAXIMUM_ALLOWED_FOOD_QUANTITY = 50;
 
 export default class CreateMealLog extends React.Component {
     constructor(props) {
@@ -50,6 +53,8 @@ export default class CreateMealLog extends React.Component {
             mealName: "",
             selected: null,
             modalOpen: false,
+            recordDateTime: new Date(),
+            mealType: getDefaultMealType(new Date().getHours())
         }
     }
 
@@ -81,7 +86,6 @@ export default class CreateMealLog extends React.Component {
             // Add a new field to the item, called quantity.
             item.quantity = 1;
             newState.foodItems.push(item);
-            console.log(newState.foodItems);
             // Update navigation prop param.
             this.props.navigation.setParams({
                 edited: true
@@ -94,7 +98,7 @@ export default class CreateMealLog extends React.Component {
             for (const newFoodItem of meal.foodItems) {
                 const dup = this.state.foodItems.filter(x => x['food-name'] === newFoodItem['food-name']);
                 if (dup.length > 0) {
-                    dup[0].quantity += 1;
+                    dup[0].quantity = Math.min(MAXIMUM_ALLOWED_FOOD_QUANTITY, newFoodItem.quantity + dup[0].quantity);
                 } else {
                     newFoodItems.push(newFoodItem);
                 }
@@ -156,9 +160,10 @@ export default class CreateMealLog extends React.Component {
     }
 
     // Check if meal name is not duplicate (if it is favourited).
-    // navigate back to root for confirmation.
-    onDone = () => {
+    // Submit if meal name is not duplicate.
+    onSubmitLog = () => {
         const {mealName, isFavourite, foodItems} = this.state;
+        const {mealType, recordDate} = this.props.route.params;
         if (mealName.trim() === '' && isFavourite) {
             Alert.alert('Error','Please give your favourite meal a name', [ { text: 'Ok' }]);
             return;
@@ -182,36 +187,13 @@ export default class CreateMealLog extends React.Component {
                         [ { text: 'Ok' }]);
                     return;
                 }
-                // Otherwise send back and update.
-                if (this.props.route.params.parentScreen) {
-                    this.props.navigation.navigate(this.props.route.params.parentScreen,{
-                        meal,
-                        parentScreen: this.props.route.params.parentScreen
-                    });
-                } else {
-                    this.props.navigation.navigate('MealLogRoot', {
-                        meal
-                    });
-                }
             }).catch(err => alert(err.message));
-        } else {
-            // Not favourited meals can just be sent back to parentScreen.
-            if (this.props.route.params.parentScreen) {
-                this.props.navigation.navigate(this.props.route.params.parentScreen,{
-                    meal,
-                    parentScreen: this.props.route.params.parentScreen
-                });
-            } else {
-                this.props.navigation.navigate('MealLogRoot', {
-                    meal,
-                });
-            }
         }
     }
 
     render() {
         const {navigation, route} = this.props;
-        const {isFavourite, mealName, selected, modalOpen, foodItems} = this.state;
+        const {isFavourite, mealName, selected, modalOpen, foodItems, recordDateTime, mealType} = this.state;
 
         return (
             <View style={styles.root}>
@@ -236,32 +218,30 @@ export default class CreateMealLog extends React.Component {
                         <TouchableOpacity onPress={this.redirectToFoodSearchEngine}>
                             <Text style={{fontSize: 18, color:"#9DC43D", paddingTop: 20, paddingBottom: 20}}>Add Item</Text>
                         </TouchableOpacity>
-                        <View style={{flex: 4, marginLeft: -20, marginRight: -20}}>
+                        <View style={{flex: 2, marginLeft: -20, marginRight: -20}}>
                             <FlatList style={{paddingLeft: 20, paddingRight: 20}} data={foodItems} showScrollIndicator={false} keyExtractor={i => i['food-name']}
                                       renderItem={({item}) => (
                                         <FoodItem item={item}
+                                          onImagePress={()=>this.handleModalOpen(item)}
                                           handleDelete={()=>this.handleDelete(item["food-name"])}
                                           onQuantityChange={(val) => this.onQuantityChange(item["food-name"], val)} />
                                       )}
                             />
                         </View>
-                        {   /*
-                            foodItems.map((foodItem, index) => (
-                                <FoodItem item={foodItem} key={foodItem['food-name']}
-                                          handleDelete={()=>this.handleDelete(foodItem["food-name"])}
-                                          onQuantityChange={(val) => this.onQuantityChange(foodItem["food-name"], val)} />
-                            ))
-                            */
-                        }
                         <View style={{flex: 1, justifyContent: 'flex-end'}}>
                             <TouchableHighlight
                                 style={styles.button}
-                                underlayColor='#fff' onPress={this.onDone}>
-                                <Text style={styles.buttonText}>Done</Text>
+                                underlayColor='#fff' onPress={this.onSubmitLog}>
+                                <Text style={styles.buttonText}>Submit Log</Text>
                             </TouchableHighlight>
                             <Modal visible={modalOpen} transparent={true}>
                                 {selected &&
-                                <FoodModalContent onClose={this.handleCloseModal} selected={selected}/>
+                                <FoodModalContent onClose={this.handleCloseModal} selected={selected}>
+                                    <TouchableOpacity onPress={this.handleCloseModal}
+                                                      style={styles.button}>
+                                        <Text style={styles.buttonText}>Close</Text>
+                                    </TouchableOpacity>
+                                </FoodModalContent>
                                 }
                             </Modal>
                         </View>
@@ -289,7 +269,7 @@ export default class CreateMealLog extends React.Component {
 
 // Handle delete should:
 // Box out animation before calling handleDelete method. Shrink size animated can do the trick.
-function FoodItem({onPress, item, handleDelete, onQuantityChange}) {
+function FoodItem({onImagePress, item, handleDelete, onQuantityChange}) {
     // Item here refers to the food object.
     // render view for foodObj
     const boxOutAnimation = React.useRef(new Animated.Value(1)).current;
@@ -319,7 +299,9 @@ function FoodItem({onPress, item, handleDelete, onQuantityChange}) {
                                  {scaleY: boxOutAnimation}
                                  ]
                 }]}>
-                <Image source={{uri: item.imgUrl.url}} style={{width: 65, height: 65, borderRadius: 10}}/>
+                <TouchableWithoutFeedback onPress={onImagePress}>
+                    <Image source={{uri: item.imgUrl.url}} style={{width: 65, height: 65, borderRadius: 10}}/>
+                </TouchableWithoutFeedback>
                 <View style={styles.foodTextWrapper}>
                     <Text style={{fontSize: adjustedFontSize}}>{foodName}</Text>
                     <IntegerQuantitySelector value={item.quantity}
@@ -368,6 +350,8 @@ const styles = StyleSheet.create({
         marginBottom:20,
         paddingTop:20,
         paddingBottom:20,
+        marginLeft: '3%',
+        marginRight: '3%',
         backgroundColor:'#aad326',
         borderRadius:10,
         borderWidth: 1,

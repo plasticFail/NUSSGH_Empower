@@ -23,6 +23,7 @@ import FavouriteMealComponent from "./FavouriteMeals";
 // Others
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import requestFoodSearch from '../../../../netcalls/foodEndpoints/requestFoodSearch';
+import {requestMealLogList} from "../../../../netcalls/mealEndpoints/requestMealLog";
 
 Icon.loadFont();
 
@@ -37,7 +38,8 @@ class FoodSearchEngineScreen extends React.Component {
       isLoading: false,
       foodResults: [],
       keyboardShown: false,
-      selectedTab: 'search'
+      selectedTab: 'search',
+      recentlyAddedFoodItems: []
     };
     this.timeout = setTimeout(() => {}, 0); //Initialise timeout for lazy loading
     this.keyboardHeight = new Animated.Value(0);
@@ -48,6 +50,28 @@ class FoodSearchEngineScreen extends React.Component {
   componentDidMount () {
     this.keyboardWillShowSub = Keyboard.addListener(Platform.OS == 'android' ? 'keyboardDidShow' : 'keyboardWillShow', this.keyboardWillShow);
     this.keyboardWillHideSub = Keyboard.addListener(Platform.OS == 'android' ? "keyboardDidHide" : 'keyboardWillHide', this.keyboardWillHide);
+    // Read recently selected food and add them here.
+    requestMealLogList().then(data => {
+        let unprocessedRecentFoodItems = [];
+        let recentFoodItems = [];
+        let tracker = new Set();
+        for (const mealLog of data.data) {
+            unprocessedRecentFoodItems = unprocessedRecentFoodItems.concat(mealLog.beverage);
+            unprocessedRecentFoodItems = unprocessedRecentFoodItems.concat(mealLog.main);
+            unprocessedRecentFoodItems = unprocessedRecentFoodItems.concat(mealLog.side);
+            unprocessedRecentFoodItems = unprocessedRecentFoodItems.concat(mealLog.dessert);
+        }
+      for (const food of unprocessedRecentFoodItems) {
+          if (!tracker.has(food['food-name'])) {
+            tracker.add(food['food-name']);
+            recentFoodItems.push(food);
+          }
+      }
+        this.setState({
+            isLoading: false,
+            recentlyAddedFoodItems: recentFoodItems
+        });
+    }).catch(err => Alert.alert('Error',err.message, [ { text: 'Ok' }]));
   }
 
   componentWillUnmount() {
@@ -156,7 +180,7 @@ class FoodSearchEngineScreen extends React.Component {
 
   render() {
     const {navigation, route} = this.props;
-    const {query, isLoading, foodResults, keyboardShown, selectedTab} = this.state;
+    const {query, isLoading, foodResults, keyboardShown, selectedTab, recentlyAddedFoodItems} = this.state;
     const type = route.params.type;
     return (
       <AnimatedKeyboardAvoidingView enabled={false} style={[styles.root, {transform: [{translateY: this.listResultY}]}]}>
@@ -190,19 +214,35 @@ class FoodSearchEngineScreen extends React.Component {
               onSubmit={this.onSubmit}
           />)
         }
-        {selectedTab === 'search' && (query === '' ? ( // Render search prompt "Begin your search"
-          <View style={styles.searchPromptBody}>
-            <Text style={styles.searchPromptText}>Begin your search</Text>
-            <Text style={styles.searchHintText}>
-              Type in the food name in the
-            </Text>
-            <Text style={styles.searchHintText}>search bar!</Text>
-          </View>
-        ) : isLoading ? ( // Render loading progress
-          <View style={styles.searchLoading}>
-            <ActivityIndicator size="large" color="#B3D14C" />
-          </View>
-        ) : foodResults.length > 0 ? ( // Render food result list
+        {selectedTab === 'search' && (isLoading ? ( // Render loading progress
+            <View style={styles.searchLoading}>
+              <ActivityIndicator size="large" color="#B3D14C" />
+            </View>
+        ) : (query === '' ?
+            (recentlyAddedFoodItems.length === 0 ? ( // Render search prompt "Begin your search"
+              <View style={styles.searchPromptBody}>
+                <Text style={styles.searchPromptText}>Begin your search</Text>
+                <Text style={styles.searchHintText}>
+                  Type in the food name in the
+                </Text>
+                <Text style={styles.searchHintText}>search bar!</Text>
+              </View> ) :
+                  (
+                    <View style={styles.foodSearchResults}>
+                      <Text style={{alignSelf: 'flex-start', paddingLeft: 20,
+                        paddingTop: 10,fontSize: 20,
+                        fontWeight: 'bold', color: '#7d7d7d'}}>
+                        Recently added items:
+                      </Text>
+                      <FoodResultList
+                          navigation={navigation}
+                          route={route}
+                          type={type}
+                          foodList={recentlyAddedFoodItems}
+                      />
+                    </View>
+                  )
+        )  : (foodResults.length > 0 ? ( // Render food result list
           <View style={styles.foodSearchResults}>
             <FoodResultList
               navigation={navigation}
@@ -210,8 +250,8 @@ class FoodSearchEngineScreen extends React.Component {
               type={type}
               foodList={foodResults}
             />
-          </View> // Render no search results
-        ) : (
+          </View>
+        ) : ( // Render no search results
           <View style={styles.searchPromptBody}>
             <Text style={styles.searchPromptText}>
               No results for {query} :(
@@ -219,7 +259,7 @@ class FoodSearchEngineScreen extends React.Component {
             <Text style={styles.searchHintText}>Try again with</Text>
             <Text style={styles.searchHintText}>another query!</Text>
           </View>
-        ))
+        ))))
         }
         { selectedTab === 'favourites' && <FavouriteMealComponent filterQuery={query} navigation={navigation} />}
       </AnimatedKeyboardAvoidingView>
@@ -406,13 +446,16 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
   },
-  button: {
-    width: '90%',
-    height: 55,
-    backgroundColor: '#aad326',
-    justifyContent: 'center',
-    alignSelf: 'center',
-    borderRadius: 10
+  button:{
+    marginBottom:20,
+    paddingTop:20,
+    paddingBottom:20,
+    marginLeft: '3%',
+    marginRight: '3%',
+    backgroundColor:'#aad326',
+    borderRadius:10,
+    borderWidth: 1,
+    borderColor: '#fff'
   },
   buttonText: {
     color: '#000',

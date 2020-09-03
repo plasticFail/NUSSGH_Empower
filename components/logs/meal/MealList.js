@@ -18,6 +18,7 @@ import RenderMealItem from './RenderMealItem';
 // Others
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import {unfavouriteMealEndpoint} from '../../../netcalls/urls';
+import FoodRow from "./FoodRow";
 
 Icon.loadFont();
 
@@ -116,18 +117,6 @@ export default function MealList({filterQuery, meals, options, onMealAdd}) {
                 </Modal>
             }
         </React.Fragment>
-    )
-}
-
-function FoodRow({food}) {
-    return (
-        <View style={{flexDirection: 'row', borderBottomWidth: 1, borderColor: '#E2E7EE', alignItems: 'center', paddingBottom: 10, paddingTop: 10}}>
-            <Image source={{uri: food.imgUrl.url}} style={{height: 60, width: 60, borderRadius: 10}}/>
-            <View style={{paddingLeft: '3%'}}>
-                <Text style={{fontSize: 20}}>{food["food-name"][0].toUpperCase() + food["food-name"].slice(1)}</Text>
-                <Text style={{fontSize: 16, color: '#7d7d7d'}}>{food["quantity"] + " Serving(s)"}</Text>
-            </View>
-        </View>
     )
 }
 

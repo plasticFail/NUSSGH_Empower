@@ -3,26 +3,27 @@ import {View, Text, StyleSheet} from 'react-native';
 // Third-party lib
 import Moment from 'moment';
 // Components
-import RenderMealItem from "./RenderMealItem";
+import FoodRow from "./FoodRow";
+// Others
+import Icon from 'react-native-vector-icons/FontAwesome';
 
-const ReadOnlyMealDisplay = (props) => {
+
+function ReadOnlyMealDisplay(props) {
+    const [showFoodItem, setShowFoodItem] = React.useState(false);
     const {meal, style} = props;
     return (
-        <View style={[styles.root, styles.shadow, style]}>
-            <View style={styles.dateAndMealTypeWrapper}>
-                <Text style={styles.mealTypeText}>
-                    {meal.mealType[0].toUpperCase() + meal.mealType.slice(1)}
-                </Text>
-                {
-                    /*
-                    <Text style={styles.recordDateText}>
-                        {meal.recordDate instanceof Date ? Moment(meal.recordDate).format("DD/MM/YYYY HH:mm:ss")
-                            : meal.recordDate }
-                    </Text>
-                     */
-                }
+        <View style={[styles.root, style]}>
+            <View style={styles.card}>
+                <Icon color='#fff' name='utensils' size={30} />
+                <Text style={styles.cardText}>{"Last logged for " + meal.mealType + " today."}</Text>
+                <Icon color='#fff' name='chevron-down' size={30} />
             </View>
-            <RenderMealItem item={meal} />
+            {
+                showFoodItem && (
+                    meal.foodItems.map(food => (<FoodRow key={food['food-name']} food={food}/>))
+                )
+            }
+            <Text>To create another log, fill in the rest of the form</Text>
         </View>
     )
 }
@@ -30,26 +31,21 @@ const ReadOnlyMealDisplay = (props) => {
 const styles = StyleSheet.create({
     root: {
         width: '100%',
-        alignItems: 'center',
-        justifyContent: 'space-around',
-        backgroundColor: '#fff',
-        borderRadius: 20,
-        padding: 15
+        paddingLeft: 20,
+        paddingRight: 20,
+        alignItems: 'center'
     },
-    dateAndMealTypeWrapper: {
+    card: {
+        width: '90%',
+        padding: 10,
+        backgroundColor: '#4DAA50',
         flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        width: '100%',
-
+        justifyContent: 'space-between'
     },
-    mealTypeText: {
-        fontSize: 15,
-        paddingBottom: 4,
-    },
-    recordDateText: {
-        fontSize: 15,
-        color: '#7d7d7d'
+    cardText: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: '#fff'
     },
     shadow: {
         shadowColor: '#000',

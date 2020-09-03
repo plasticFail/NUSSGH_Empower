@@ -3,18 +3,16 @@ import {View, StyleSheet, Text, TouchableOpacity, ScrollView, Alert} from 'react
 // Third-party lib
 import Moment from 'moment';
 // Functions
-import {getDefaultMealType, handleSubmitMealLog} from "../../../../commonFunctions/mealLogFunctions";
+import {getDefaultMealType} from "../../../../commonFunctions/mealLogFunctions";
 // Components
 import DateSelectionBlock from "../../../../components/logs/dateSelectionBlock";
 import MealTypeSelectionBlock from "../../../../components/logs/meal/MealTypeSelectionBlock";
 import MealFinder from "../../../../components/logs/meal/MealFinder";
 import RenderMealItem from "../../../../components/logs/meal/RenderMealItem";
 // Others
-import Entypo from 'react-native-vector-icons/Entypo';
-import SuccessDialogue from "../../../../components/successDialogue";
 import Icon from 'react-native-vector-icons/FontAwesome';
-
-Entypo.loadFont();
+import {getLastMealLog} from "../../../../storage/asyncStorageFunctions";
+import ReadOnlyMealDisplay from "../../../../components/logs/meal/ReadOnlyMealDisplay";
 
 class MealLogRoot extends React.Component {
     constructor(props) {
@@ -26,21 +24,16 @@ class MealLogRoot extends React.Component {
             selectedDateTime: now,
             selectedMealType: getDefaultMealType(hours),
             datepickerModalOpen: false,
-            selectedMeal: null,
-            successMessage: false
+            previousMealToday: null
         }
     }
 
-    // Listen to updates from route, date time and meal type
-    componentDidUpdate(prevProps, prevState) {
-
-        // MEAL CHANGED FROM CREATE MEAL LOG PAGE.
-        if (this.props.route.params?.meal && this.props.route.params.meal !== this.state.selectedMeal) {
-            const newMeal = this.props.route.params.meal;
+    componentDidMount() {
+        getLastMealLog().then(data => {
             this.setState({
-                selectedMeal: newMeal
+                previousMealToday: data
             });
-        }
+        });
     }
 
     handleSelectChange = (value) => {
@@ -49,54 +42,16 @@ class MealLogRoot extends React.Component {
         })
     }
 
-    handleDeleteMeal = () => {
-        // Clear the parameters and then set selected meal to be null.
-        this.props.navigation.setParams({meal: null});
-        this.setState({
-            selectedMeal: null
-        });
-    }
-
-    handleSubmitLog = () => {
-        // selectedMealType is one of breakfast, lunch, dinner, supper or snack.
-        // selectedDateTime is javascript's default Date object.toString().
-        const { selectedMealType, selectedDateTime } = this.state;
-        const { beverage, main, side, dessert, isFavourite, mealName } = this.state.selectedMeal;
-        const recordDate = Moment(selectedDateTime).format("DD/MM/YYYY HH:mm:ss");
-        const mealData = {
-            isFavourite,
-            beverage,
-            main,
-            side,
-            dessert,
-            mealName,
-            mealType: selectedMealType,
-            recordDate
-        };
-
-        handleSubmitMealLog(mealData, selectedDateTime).then(data => {
-            if (data) {
-                this.setState({
-                    successMessage: true
-                });
-            }
-        }).catch(err => {
-            Alert.alert("Error", err.message,
-                [ { text: 'Ok' }]);
-        });
-    }
-
-    navigateToCreateMealLogPage = (selectedMeal) => {
-        const meal = {...selectedMeal};
-
+    navigateToCreateMealLogPage = () => {
         this.props.navigation.navigate("CreateMealLog", {
-            meal,
+            mealType: this.state.selectedMealType,
+            recordDate: this.state.selectedDateTime.toString()
         });
     }
 
     render() {
         const {navigation} = this.props;
-        const {selectedDateTime, selectedMealType, selectedMeal, successMessage} = this.state;
+        const {selectedDateTime, selectedMealType, previousMealToday} = this.state;
         return (
             <View style={styles.root}>
                 <View style={styles.header}>
@@ -105,46 +60,18 @@ class MealLogRoot extends React.Component {
                     <Text style={{fontSize: 18, color:"#21283A", fontWeight: 'bold'}}>Food intake log</Text>
                 </View>
                 <ScrollView style={{flex: 1}} contentContainerStyle={{flexGrow: 1}}>
+                    {
+                        previousMealToday &&
+                            <ReadOnlyMealDisplay data={previousMealToday} />
+                    }
                     <DateSelectionBlock date={selectedDateTime}
                                         setDate={(date) => this.setState({selectedDateTime : date})} />
                     <MealTypeSelectionBlock onSelectChange={this.handleSelectChange}
                                             defaultValue={selectedMealType} />
-                    {   // If meal is not selected, display options (create, recent or favourites) for
-                        // user to select a meal from (MealFinder).
-                      !selectedMeal ? (
-                          <TouchableOpacity style={styles.startButton} onPress={()=>navigation.navigate('CreateMealLog')}>
-                              <Icon name='plus' size={30} color='#fff' />
-                          </TouchableOpacity>
-                      ) : // Meal has been selected, render a preview of the meal for confirmation before submitting.
-                          <View style={{width: '100%', flex: 1}}>
-                              <View style={{flex: 1, justifyContent: 'center'}}>
-                                  <RenderMealItem item={selectedMeal}
-                                                  options={{
-                                                      buttons: [
-                                                          {
-                                                              text: 'Remove',
-                                                              onPress: this.handleDeleteMeal,
-                                                              buttonStyle: {
-                                                                  backgroundColor: 'red',
-                                                                  width: 80
-                                                              }
-                                                          },
-                                                          {
-                                                              text: 'Edit',
-                                                              onPress: this.navigateToCreateMealLogPage
-                                                          }
-                                                      ],
-                                                      header: (meal) => meal.mealName
-                                                  }}
-                                  />
-                              </View>
-                              <TouchableOpacity style={styles.submitButton} onPress={this.handleSubmitLog}>
-                                  <Text style={styles.submitButtonText}>Submit Log!</Text>
-                              </TouchableOpacity>
-                          </View>
-                    }
+                    <TouchableOpacity style={styles.startButton} onPress={this.navigateToCreateMealLogPage}>
+                        <Icon name='plus' size={30} color='#fff' />
+                    </TouchableOpacity>
                 </ScrollView>
-                <SuccessDialogue type='Meal' visible={successMessage} />
             </View>
         )
     }
