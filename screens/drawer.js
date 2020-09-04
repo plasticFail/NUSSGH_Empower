@@ -11,10 +11,10 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import DashboardScreen from './dashboard';
 import AccountDetailScreen from './more/accountDetails';
 import AppointmentScreen from './more/appointments';
-import HypocorrectionFood from './more/hypocorrectionFood';
 import EducationalMaterial from './more/educationMaterials';
-import Reminders from './more/reminders';
-import GlucoseMonitorsScreen from './more/glucoseMonitor';
+import DiaryScreen from './main/diary/diary';
+import Goals from './more/goals';
+import Medication from './more/medications';
 
 const Drawer = createDrawerNavigator();
 
@@ -49,17 +49,33 @@ const DrawerNavigator = (props) => {
         }}
       />
       <Drawer.Screen
+        name="Diary"
+        component={DiaryScreen}
+        options={{
+          drawerIcon: () => (
+            <Icons name="book-open" size={27} color={'white'} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="Medication"
+        component={Medication}
+        options={{
+          drawerIcon: () => <Entypo name="water" size={30} color={'white'} />,
+        }}
+      />
+      <Drawer.Screen
+        name="Goals"
+        component={Goals}
+        options={{
+          drawerIcon: () => <Entypo name="water" size={30} color={'white'} />,
+        }}
+      />
+      <Drawer.Screen
         name="Appointment"
         component={AppointmentScreen}
         options={{
           drawerIcon: () => <Ant name="calendar" size={30} color={'white'} />,
-        }}
-      />
-      <Drawer.Screen
-        name="Hydro-Correction"
-        component={HypocorrectionFood}
-        options={{
-          drawerIcon: () => <Entypo name="water" size={30} color={'white'} />,
         }}
       />
       <Drawer.Screen
@@ -68,28 +84,6 @@ const DrawerNavigator = (props) => {
         options={{
           drawerIcon: () => (
             <Icons name="book-open" size={27} color={'white'} />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="Reminders"
-        component={Reminders}
-        options={{
-          drawerIcon: () => <Ant name="bells" size={30} color={'white'} />,
-        }}
-      />
-      <Drawer.Screen
-        name="Bluetooth Monitor"
-        component={GlucoseMonitorsScreen}
-        options={{
-          title: 'Menu',
-          drawerIcon: () => (
-            <Icon
-              name="bluetooth-b"
-              size={30}
-              color={'white'}
-              style={{paddingStart: '3%', paddingEnd: '2%'}}
-            />
           ),
         }}
       />
