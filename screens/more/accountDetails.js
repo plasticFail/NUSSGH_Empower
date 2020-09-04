@@ -31,28 +31,29 @@ const AccountDetailScreen = (props) => {
   };
 
   return (
-    <ScrollView
-      contentContainerStyle={{...styles.accountDetailScreen, ...props.style}}>
-      <Image source={profilePic} style={styles.profileImg} />
-      <Clickable heading={'Username'} content={username} click={false} />
-      <Clickable heading={'Name'} content={name} click={false} />
-      <Clickable
-        heading={'Phone Number'}
-        content={phoneNumber}
-        click={true}
-        phoneModalVisible={phoneModalVisible}
-        openModal={openPhoneModal}
-        closeModal={closePhoneModal}
-      />
+    <ScrollView contentContainerStyle={{...props.style}}>
+      <View style={{...styles.accountDetailScreen}}>
+        <Image source={profilePic} style={styles.profileImg} />
+        <Clickable heading={'Username'} content={username} click={false} />
+        <Clickable heading={'Name'} content={name} click={false} />
+        <Clickable
+          heading={'Phone Number'}
+          content={phoneNumber}
+          click={true}
+          phoneModalVisible={phoneModalVisible}
+          openModal={openPhoneModal}
+          closeModal={closePhoneModal}
+        />
 
-      <Clickable
-        heading={'Change Password'}
-        content={''}
-        click={true}
-        modalVisible={modalVisible}
-        openModal={openModal}
-        closeModal={closeModal}
-      />
+        <Clickable
+          heading={'Change Password'}
+          content={''}
+          click={true}
+          modalVisible={modalVisible}
+          openModal={openModal}
+          closeModal={closeModal}
+        />
+      </View>
     </ScrollView>
   );
 };

@@ -22,6 +22,8 @@ import {
 import NutritionIntakeCard from '../../components/dashboard/todayOverview/NutritionIntakeCard';
 import DailyBloodSugarLevelBarChart from '../../components/dashboard/reports/DailyBloodSugarLevelBarChart';
 import {getGreetingFromHour} from '../../commonFunctions/common';
+import globalStyles from '../../styles/globalStyles';
+import {Colors} from '../../styles/colors';
 
 const buttonList = [
   {
@@ -72,10 +74,10 @@ const HomeScreen = (props) => {
     <ScrollView
       contentContainerStyle={{
         flexGrow: 1,
-        backgroundColor: 'white',
+        backgroundColor: Colors.backgroundColor,
         padding: padding,
       }}>
-      <View style={{height: '10%', justifyContent: 'center'}}>
+      <View style={[globalStyles.pageContainer, {justifyContent: 'center'}]}>
         <Text style={styles.greetingText}>
           {getGreetingFromHour(currHour)}{' '}
           <Text style={styles.usernameText}>{username}</Text>

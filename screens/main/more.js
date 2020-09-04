@@ -15,7 +15,7 @@ import GoalsScreen from '../more/goals';
 import RemindersScreen from '../more/reminders';
 import GameCenterScreen from '../more/gameCenter';
 import GlucoseMonitorsScreen from '../more/glucoseMonitor';
-import FitbitSetup from "../onboarding/fitbit/FitbitSetup";
+import FitbitSetup from '../onboarding/fitbit/FitbitSetup';
 
 const Stack = createStackNavigator();
 
@@ -42,15 +42,7 @@ const MoreScreen = (props) => {
   return (
     <Stack.Navigator
       screenOptions={({route}) => ({
-        headerShown: getMoreHeaderTitle(route),
-        headerStyle: {
-          backgroundColor: '#aad326',
-        },
-        headerTintColor: '#000',
-        headerTitleStyle: {
-          fontWeight: 'bold',
-          alignSelf: 'center',
-        },
+        header: () => <MenuBtn />,
       })}>
       <Stack.Screen
         name="MoreRoot"
@@ -161,13 +153,13 @@ const MoreScreen = (props) => {
           headerRight: () => <View />,
         }}
       />
-        <Stack.Screen
-            name="FitbitSetup"
-            component={FitbitSetup}
-            options={{
-                headerShown: false
-            }}
-        />
+      <Stack.Screen
+        name="FitbitSetup"
+        component={FitbitSetup}
+        options={{
+          headerShown: false,
+        }}
+      />
     </Stack.Navigator>
   );
 };

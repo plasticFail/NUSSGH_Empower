@@ -9,4 +9,5 @@ export const Colors = {
   alertColor: '#fe0f49',
   crossColor: '#16A950',
   leftArrowColor: '#16A950',
+  menuColor: '#005c30',
 };

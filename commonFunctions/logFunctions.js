@@ -16,6 +16,7 @@ const bg_key = 'Blood Glucose Log';
 const food_key = 'Food Intake Log';
 const med_key = 'Medication Log';
 const weight_key = 'Weight Log';
+const min_bg = 4;
 
 const renderLogIcon = (logType) => {
   if (logType === bg_key) {
@@ -178,6 +179,7 @@ export {
   food_key,
   med_key,
   weight_key,
+  min_bg,
   renderLogIcon,
   isToday,
   isPeriod,

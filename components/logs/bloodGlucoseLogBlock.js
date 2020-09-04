@@ -14,6 +14,7 @@ import {
   checkBloodGlucoseText,
   checkBloodGlucose,
   handleSubmitBloodGlucose,
+  min_bg,
 } from '../../commonFunctions/logFunctions';
 //styles
 import globalStyles from '../../styles/globalStyles';
@@ -21,6 +22,7 @@ import {Colors} from '../../styles/colors';
 import logStyles from '../../styles/logStyles';
 //third party lib
 import Modal from 'react-native-modal';
+import {addGlucoseQuestionaire} from '../../netcalls/requestsLog';
 
 const BloodGlucoseLogBlock = (props) => {
   const {
@@ -47,6 +49,16 @@ const BloodGlucoseLogBlock = (props) => {
   //submit value
   const postBg = async () => {
     if (await handleSubmitBloodGlucose(recordDate, bloodGlucose)) {
+      if (Number(bloodGlucose) <= min_bg) {
+        addGlucoseQuestionaire(
+          eatSelection,
+          exerciseSelection,
+          alcholicSelection,
+        ).then((response) => {
+          console.log('sending questionaire');
+        });
+      }
+
       closeModal();
       closeParent();
     }

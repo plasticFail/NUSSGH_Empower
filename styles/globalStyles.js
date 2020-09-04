@@ -136,6 +136,11 @@ const globalStyles = StyleSheet.create({
     marginStart: '4%',
     fontFamily: 'SFProDisplay-Regular',
   },
+  pageContainer: {
+    flex: 1,
+    backgroundColor: Colors.backgroundColor,
+    paddingTop: '20%',
+  },
 });
 
 export default globalStyles;

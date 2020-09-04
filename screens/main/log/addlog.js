@@ -120,7 +120,7 @@ class AddLogScreen extends Component {
       alcholicSelection,
     } = this.state;
     return (
-      <View style={styles.container}>
+      <View style={globalStyles.pageContainer}>
         <Text style={globalStyles.pageHeader}>Add Log</Text>
         <Text style={globalStyles.pageDetails}>{this.todayDate}</Text>
         <Text style={[globalStyles.pageDetails, {marginTop: '4%'}]}>
@@ -193,10 +193,6 @@ class AddLogScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.backgroundColor,
-  },
   addButton: {
     alignSelf: 'center',
   },
