@@ -3,6 +3,7 @@ import {View, StyleSheet, Text, Image} from 'react-native';
 //component
 import Clickable from '../../components/account/clickable';
 import {ScrollView} from 'react-native-gesture-handler';
+import globalStyles from '../../styles/globalStyles';
 
 const profilePic = require('../../resources/images/userPic.png');
 
@@ -31,41 +32,34 @@ const AccountDetailScreen = (props) => {
   };
 
   return (
-    <ScrollView
-      contentContainerStyle={{...styles.accountDetailScreen, ...props.style}}>
-      <Image source={profilePic} style={styles.profileImg} />
-      <Clickable heading={'Username'} content={username} click={false} />
-      <Clickable heading={'Name'} content={name} click={false} />
-      <Clickable
-        heading={'Phone Number'}
-        content={phoneNumber}
-        click={true}
-        phoneModalVisible={phoneModalVisible}
-        openModal={openPhoneModal}
-        closeModal={closePhoneModal}
-      />
+    <ScrollView contentContainerStyle={{...props.style}}>
+      <View style={[globalStyles.pageContainer]}>
+        <Image source={profilePic} style={styles.profileImg} />
+        <Clickable heading={'Username'} content={username} click={false} />
+        <Clickable heading={'Name'} content={name} click={false} />
+        <Clickable
+          heading={'Phone Number'}
+          content={phoneNumber}
+          click={true}
+          phoneModalVisible={phoneModalVisible}
+          openModal={openPhoneModal}
+          closeModal={closePhoneModal}
+        />
 
-      <Clickable
-        heading={'Change Password'}
-        content={''}
-        click={true}
-        modalVisible={modalVisible}
-        openModal={openModal}
-        closeModal={closeModal}
-      />
+        <Clickable
+          heading={'Change Password'}
+          content={''}
+          click={true}
+          modalVisible={modalVisible}
+          openModal={openModal}
+          closeModal={closeModal}
+        />
+      </View>
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  accountDetailScreen: {
-    flex: 1,
-    padding: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'white',
-    paddingBottom: '4%',
-  },
   profileImg: {
     width: 150,
     height: 150,
@@ -74,6 +68,7 @@ const styles = StyleSheet.create({
     borderWidth: 4,
     borderColor: '#AAD326',
     marginTop: '7%',
+    alignSelf: 'center',
   },
 });
 

@@ -21,6 +21,9 @@ import {
 } from 'react-native-svg';
 import NutritionIntakeCard from '../../components/dashboard/todayOverview/NutritionIntakeCard';
 import DailyBloodSugarLevelBarChart from '../../components/dashboard/reports/DailyBloodSugarLevelBarChart';
+import {getGreetingFromHour} from '../../commonFunctions/common';
+import globalStyles from '../../styles/globalStyles';
+import {Colors} from '../../styles/colors';
 
 const buttonList = [
   {
@@ -42,18 +45,6 @@ const buttonList = [
     iconName: 'empire',
   },
 ];
-
-function getGreetingFromHour(hour) {
-  if (hour > 4 && hour < 12) {
-    return 'Morning';
-  } else if (hour >= 12 && hour < 18) {
-    return 'Afternoon';
-  } else if (hour >= 18 && hour < 22) {
-    return 'Evening';
-  } else {
-    return 'Night';
-  }
-}
 
 // properties
 const username = 'Jimmy';
@@ -83,10 +74,10 @@ const HomeScreen = (props) => {
     <ScrollView
       contentContainerStyle={{
         flexGrow: 1,
-        backgroundColor: 'white',
+        backgroundColor: Colors.backgroundColor,
         padding: padding,
       }}>
-      <View style={{height: '10%', justifyContent: 'center'}}>
+      <View style={[globalStyles.pageContainer, {justifyContent: 'center'}]}>
         <Text style={styles.greetingText}>
           {getGreetingFromHour(currHour)}{' '}
           <Text style={styles.usernameText}>{username}</Text>

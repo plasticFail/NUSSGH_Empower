@@ -91,8 +91,8 @@ const SelectDaysModal = (props) => {
             color="#16A950"
             style={{marginStart: '4%'}}
           />
-          <Text style={styles.modalHeader}>Recurring Period</Text>
-          <Text style={styles.modalDetails}>
+          <Text style={globalStyles.pageHeader}>Recurring Period</Text>
+          <Text style={[globalStyles.pageSubDetails, {margin: ' 4%'}]}>
             Select the recurring days for this medication below.
           </Text>
           <CalendarTemplate
@@ -125,29 +125,5 @@ const styles = StyleSheet.create({
   dayModalContainer: {
     backgroundColor: Colors.backgroundColor,
     paddingTop: '5%',
-  },
-  modalHeader: {
-    fontSize: 20,
-    fontWeight: '700',
-    marginTop: '4%',
-    marginStart: '4%',
-  },
-  modalDetails: {
-    fontSize: 17,
-    margin: '4%',
-  },
-  confirmButton: {
-    backgroundColor: Colors.submitBtnColor,
-    height: 45,
-    width: '70%',
-    alignSelf: 'center',
-    borderRadius: 15,
-    margin: '4%',
-  },
-  confirmText: {
-    fontSize: 20,
-    textAlign: 'center',
-    marginVertical: '3%',
-    fontWeight: '700',
   },
 });

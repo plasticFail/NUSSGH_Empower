@@ -18,6 +18,7 @@ import SearchMedication from '../../../components/onboarding/medication/searchMe
 import {set} from 'react-native-reanimated';
 import {Colors} from '../../../styles/colors';
 import globalStyles from '../../../styles/globalStyles';
+import LeftArrowBtn from '../../../components/logs/leftArrowBtn';
 
 Ionicons.loadFont();
 
@@ -153,18 +154,9 @@ const AddPlan = (props) => {
   return (
     <View style={styles.addPlanContainer}>
       <TouchableOpacity onPress={goPrevScreen}>
-        <Ionicons
-          name={'arrow-back'}
-          size={40}
-          color={'#aad326'}
-          style={globalStyles.backArrowStyle}
-        />
+        <LeftArrowBtn close={goPrevScreen} />
       </TouchableOpacity>
-      <Text style={styles.stepDetailText}>Add Medicine Plan</Text>
-      <Text style={{fontSize: 18, paddingStart: '3%'}}>
-        Select your medicine
-      </Text>
-
+      <Text style={globalStyles.pageHeader}>Add Medicine Plan</Text>
       <TouchableOpacity style={styles.searchInput} onPress={openSearchModal}>
         {isEmpty(selectedMedicine) === true ? (
           <Text style={{fontSize: 17, color: '#b5b5b5'}}>
@@ -235,12 +227,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.backgroundColor,
   },
-  stepDetailText: {
-    fontSize: 35,
-    fontWeight: '700',
-    marginTop: '3%',
-    paddingStart: '3%',
-  },
   fieldText: {
     fontSize: 20,
     fontWeight: '700',
@@ -263,10 +249,10 @@ const styles = StyleSheet.create({
   },
   searchInput: {
     backgroundColor: '#e2e8ee',
-    borderRadius: 20,
-    marginTop: '9%',
+    borderRadius: 9.5,
     marginBottom: '3%',
-    padding: '4.2%',
+    marginTop: '2%',
+    padding: '2%',
     marginStart: '3%',
     marginEnd: '3%',
   },

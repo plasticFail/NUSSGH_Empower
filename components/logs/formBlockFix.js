@@ -17,7 +17,11 @@ const FormBlockFix = (props) => {
         <TouchableOpacity
           style={{marginStart: '40%'}}
           onPress={() => props.getFormSelection(false)}>
-          <RadioButton btnText={'No'} color={props.color} selected={!props.selectYes}/>
+          <RadioButton
+            btnText={'No'}
+            color={props.color}
+            selected={!props.selectYes}
+          />
         </TouchableOpacity>
       </View>
     </View>

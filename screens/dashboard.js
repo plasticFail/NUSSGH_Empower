@@ -5,10 +5,13 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
 //other screens
 import Home from './main/home';
-import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import Diary from './main/diary/diary';
 import AddLog from './main/log/addlog';
-import More from './main/more';
+import AlertsScreen from './sub/alerts';
+import ChatScreen from './sub/chat';
+//third party lib
+import Icon from 'react-native-vector-icons/dist/FontAwesome';
+import Ant from 'react-native-vector-icons/AntDesign';
 
 const Tab = createBottomTabNavigator();
 
@@ -40,7 +43,7 @@ const DashboardScreen = (props) => {
     <Tab.Navigator
       backBehavior="none"
       tabBarOptions={{
-        activeTintColor: '#ea626b',
+        activeTintColor: '#16A950',
         inactiveTintColor: 'gray',
         adaptive: false,
       }}>
@@ -78,21 +81,49 @@ const DashboardScreen = (props) => {
         }}
         options={{
           title: 'Add Log',
-          tabBarIcon: ({color, size}) => (
-            <Icon name="plus-circle" size={size} color={color} />
+          tabBarIcon: () => (
+            <Ant
+              name="pluscircle"
+              size={70}
+              color={'#aad326'}
+              style={{
+                position: 'absolute',
+                bottom: 0,
+                zIndex: 1,
+                width: '100%',
+                height: 70,
+                paddingHorizontal: '7%',
+                shadowColor: 'white',
+                shadowOpacity: 0.5,
+                elevation: 2,
+              }}
+            />
           ),
         }}
       />
       <Tab.Screen
-        name="More"
-        component={More}
+        name="Alert"
+        component={AlertsScreen}
         listeners={{
-          tabPress: () => handleTabPress(props, 'More'),
+          tabPress: () => handleTabPress(props, 'Alert'),
         }}
         options={{
-          title: 'More',
+          title: 'Alerts',
           tabBarIcon: ({color, size}) => (
-            <Icon name="bars" size={size} color={color} />
+            <Icon name="bell" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Chat"
+        component={ChatScreen}
+        listeners={{
+          tabPress: () => handleTabPress(props, 'Chat'),
+        }}
+        options={{
+          title: 'Chat',
+          tabBarIcon: ({color, size}) => (
+            <Icon name="wechat" size={size} color={color} />
           ),
         }}
       />

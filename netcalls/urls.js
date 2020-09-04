@@ -3,6 +3,7 @@ const server = 'https://sghempower.com/';
 const patientLogin = server + 'auth/patient-login';
 const isTokenValid = server + 'auth/is-token-valid';
 const glucoseAddLog = server + 'log/glucose';
+const glucoseQuestionaire = server + 'log/glucose/questionnaire';
 const medicationAddLog = server + 'log/medication';
 const medicationList = server + 'log/medication/list';
 const weightAddLog = server + 'log/weight';
@@ -22,6 +23,7 @@ export {
   patientLogin,
   isTokenValid,
   glucoseAddLog,
+  glucoseQuestionaire,
   medicationAddLog,
   medicationList,
   weightAddLog,
@@ -35,5 +37,5 @@ export {
   postNewPassword,
   getDiaryEntries,
   medplanAdd,
-  fitbitTokenPostEndpoint
+  fitbitTokenPostEndpoint,
 };
