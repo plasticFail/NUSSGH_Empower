@@ -61,7 +61,7 @@ class MealLogRoot extends React.Component {
                 </View>
                 <ScrollView style={{flex: 1}} contentContainerStyle={{flexGrow: 1}}>
                     {
-                        previousMealToday &&
+                        //previousMealToday &&
                             <ReadOnlyMealDisplay data={previousMealToday} />
                     }
                     <DateSelectionBlock date={selectedDateTime}
