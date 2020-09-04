@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Alert, View, Linking, Text} from 'react-native';
+import {Alert, View, Linking, Platform} from 'react-native';
 //third party libs
 import {
   getFocusedRouteNameFromRoute,
@@ -127,10 +127,12 @@ class AppRoot extends Component {
                           //headerShown: getHeaderShown(route),
                           headerStyle: {
                             backgroundColor: (getHeaderTitle(route) === 'Home' || getHeaderTitle(route) === 'DashBoard' ? '#4EA75A' : '#fff'),
-                            height: 110,
+                            height: Platform.OS === 'android' ? 80 : 110,
+                            elevation: 0,
                             shadowRadius: 0,
                             shadowOffset: {
                               height: 0,
+                              width: 0
                             }
                           },
                           headerTintColor: '#4EA75A',

@@ -1,18 +1,21 @@
 import React from 'react';
-import {View, Text, StyleSheet, Button, Dimensions} from 'react-native';
+import {View, Text, StyleSheet, Button, Dimensions, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Foundation from 'react-native-vector-icons/Foundation';
 import {
   ScrollView,
-  TouchableOpacity,
   FlatList,
 } from 'react-native-gesture-handler';
 import {Svg, Text as SvgText, Circle, Image, Rect, G, Defs, ClipPath} from "react-native-svg";
 import NutritionIntakeCard from '../../components/dashboard/todayOverview/NutritionIntakeCard';
 import DailyBloodSugarLevelBarChart from "../../components/dashboard/reports/DailyBloodSugarLevelBarChart";
 import {WeightSlider} from "../../components/logs/weight/WeightSlider";
+import Card from "../../components/common/Card";
+import {backgroundColor} from "react-native-calendars/src/style";
+import CircularProgress from "../../components/dashboard/todayOverview/CircularProgress";
+import ProgressBar from "../../components/progressbar";
 
 const buttonList = [
   {
@@ -50,19 +53,13 @@ function getGreetingFromHour(hour) {
 // properties
 const username = "Jimmy";
 const {width, height} = Dimensions.get('window');
-const buttonSize = width * 0.26;
-const padding = 20;
 
-// button list properties
-const textXOffset = 10;
-const textYOffset = 20;
-const fontSize = 14.5;
-const circleRadius = 0.35 * buttonSize;
-const circleYOffset = 10
-const circleXOffset = 10;
-
-const bloodGlucoseBarChartWidth = width - 2 * padding;
-const bloodGlucoseBarChartHeight = height * 0.21;
+const LogsProgress = [
+  {logName: 'Medication', progress: 0.33, path: 'MedicationLog'},
+  {logName: 'Blood Glucose', progress: 1, path: 'BloodGlucoseLog'},
+  {logName: 'Food', progress: 0.67, path: 'MealLogRoot'},
+  {logName: 'Weight', progress: 0.33, path: 'WeightLog'},
+]
 
 const HomeScreen = (props) => {
   const [currHour, setCurrHour] = React.useState(new Date().getHours());
@@ -76,96 +73,148 @@ const HomeScreen = (props) => {
       contentContainerStyle={{
         flexGrow: 1,
         backgroundColor: 'white',
-        padding: padding
       }}>
-      <View style={{height: '10%', justifyContent: 'center'}}>
+      <View style={{justifyContent: 'center', paddingLeft: 20, paddingRight: 20, paddingBottom: 20, backgroundColor: '#4EA75A'}}>
         <Text style={styles.greetingText}>
-          {getGreetingFromHour(currHour)} <Text style={styles.usernameText}>{username}</Text>
+          {getGreetingFromHour(currHour)}
         </Text>
-      </View>
-      <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingBottom: 20}}>
-        <Svg width={width- 2 * padding} height={buttonSize}>
-          { // Svg container for buttons
-            buttonList.map((button, index) => {
-                return (<G key={button.id}>
-                      <Defs>
-                        <ClipPath id={`clip-${index}`}>
-                          <Circle r={circleRadius}
-                                  x={index * (buttonSize + (width - 2 * padding - 3 * (buttonSize))/ 2)
-                                  + circleRadius - circleXOffset}
-                                  y={circleRadius - circleYOffset}
-                          />
-                        </ClipPath>
-                      </Defs>
-                      <Rect
-                          width={buttonSize}
-                          x={index * (buttonSize + (width - 2 * padding - 3 * (buttonSize))/ 2)}
-                          rx={15}
-                          height={buttonSize}
-                          fill='#B2D04B'
-                      />
-                      <Rect
-                          width={buttonSize}
-                          x={index * (buttonSize + (width - 2 * padding - 3 * (buttonSize))/ 2)}
-                          rx={15}
-                          height={buttonSize}
-                          fill='#C3DA6B'
-                          clipPath={`url(#clip-${index})`}
-                      />
-                      <SvgText x={index * (buttonSize + (width - 2 * padding - 3 * (buttonSize))/ 2) + textXOffset}
-                               fontSize={fontSize}
-                               y={buttonSize - textYOffset}
-                               fontWeight='bold'
-                               fill='#fff'>
-                        {button.name}
-                      </SvgText>
-                    </G>
-                )
-              }
-            )
+        <Text style={styles.usernameText}>{username}</Text>
+        <Text style={styles.toDoText}>Completed logs today:</Text>
+        <View style={[styles.card, styles.shadow]}>
+          {
+            LogsProgress.map((log, index) => (
+                <TouchableOpacity key={log.logName}
+                                  onPress={()=>props.navigation.navigate(log.path)}
+                                  style={{borderRightWidth: index === 3 ? 0 : 0.5, flex: 1, height: 70, paddingLeft: 10, marginTop: 10, marginBottom: 10, borderColor: '#7d7d7d7d'}}>
+                  <View style={{flex: 1, justifyContent: 'center'}}>
+                    <Text style={[styles.progressText, {color: log.progress <= 0.33 ? 'red' : log.progress <= 0.67 ? 'orange' : 'green'}]}>{getFracFromPercent(log.progress, 3)}</Text>
+                    <Text style={{fontWeight: 'bold', color: '#7d7d7d', fontSize: log.logName.length > 10 ? 11: 14}}>{log.logName}</Text>
+                  </View>
+                  <ProgressBar containerStyle={{height: 7.5, width: '90%', marginBottom: 5}} progress={log.progress * 100 + "%"} useIndicatorLevel reverse />
+                </TouchableOpacity>
+            ))
           }
-        </Svg>
-        { // Icons for button
-          buttonList.map((button, index) => {
-            return (<Icon name={button.iconName} color='#fff'
-                          size={30}
-                          style={{
-                            position: 'absolute',
-                            transform: [
-                              {translateX: index * (buttonSize + (width - 2 * padding - 3 * (buttonSize)) / 2) + circleXOffset},
-                              {translateY: circleYOffset}]
-                          }}/>)
-          })
+        </View>
+      </View>
+      <View style={{paddingTop: 10}}>
+        <View style={{height: 100, width: '100%', flexDirection: 'row', justifyContent: 'space-between', paddingLeft: 20, paddingRight: 20}}>
+          <TouchableOpacity style={{width: '47.5%', height: '100%', backgroundColor: 'purple', borderRadius: 10, padding: 20}}
+                            onPress={()=>props.navigation.navigate('GameCenter')}>
+            <Text style={{color: '#fff', fontSize: 16}}>Points</Text>
+            <Text style={{color: '#fff', fontSize: 30, textAlign: 'right', fontWeight: 'bold'}}>3500</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={{width: '47.5%', height: '100%', backgroundColor: 'slateblue', borderRadius: 10, justifyContent: 'center', padding: 20}}
+                            onPress={()=>props.navigation.navigate('EducationMaterials')}>
+            <Text style={{color: '#fff', fontWeight: 'bold', fontSize: 16}}>Diabetes Management Guide</Text>
+          </TouchableOpacity>
+        </View>
+        {/* Diary overview of weight, blood glucose, food, medication and physical activity */}
+        {
+          <View style={[styles.card, styles.shadow, {margin: 20, marginTop: 20, flexDirection: 'column', alignItems: 'flex-start'}]}>
+            <View style={{borderBottomWidth: 0.5, borderColor: '#7d7d7d', width: '100%'}}>
+              <Text style={{padding: 20, fontWeight: 'bold', fontSize: 24, color: '#7d7d7d'}}>Overview</Text>
+            </View>
+            <View style={styles.overviewRow}>
+              <Text style={styles.metricText}>Blood Glucose</Text>
+              <Text style={styles.measuredText}>8 mmol/L</Text>
+            </View>
+            <View style={styles.overviewRow}>
+              <Text style={styles.metricText}>Nutrition</Text>
+              <Text style={styles.measuredText}>500 kcal</Text>
+            </View>
+            <View style={[styles.overviewRow, {borderBottomWidth: 0}]}>
+              <Text style={styles.metricText}>Weight</Text>
+              <Text style={styles.measuredText}>55.3 kg</Text>
+            </View>
+          </View>
+        }
+        {
+          <View style={[styles.card, styles.shadow, {margin: 20, flexDirection: 'column', alignItems: 'center'}]}>
+            <View style={{flexDirection: 'row', justifyContent: 'space-between', width: '100%', borderBottomWidth: 0.5, borderColor: '#7d7d7d', padding: 20}}>
+              <View style={{width: '45%', alignItems: 'center'}}>
+                <CircularProgress color="#aad326" percent={0.2}
+                                  centreComponent={{
+                                    width: 40/2,
+                                    height: 40/1.5,
+                                    component: (
+                                        <Icon name='walking' color='#aad326' size={40} />
+                                    )
+                                  }}
+                                  radius={50} padding={5} strokeWidth={5} fontSize={15}/>
+                <Text style={{fontWeight: 'bold', color: '#7d7d7d', fontSize: 16}}>Steps</Text>
+                <Text style={{fontWeight: 'bold', fontSize: 18}}>1000</Text>
+              </View>
+              <View style={{width: '45%', alignItems: 'center'}}>
+                <CircularProgress color="#aad326" percent={0.65}
+                                  centreComponent={{
+                                    width: 40/2,
+                                    height: 40/1.5,
+                                    component: (
+                                        <Icon name='fire' color='#aad326' size={40} />
+                                    )
+                                  }}
+                                  radius={50} padding={5} strokeWidth={5} fontSize={15}/>
+                <Text style={{fontWeight: 'bold', color: '#7d7d7d', fontSize: 16}}>Calories Burnt</Text>
+                <Text style={{fontWeight: 'bold', fontSize: 18}}>350 kcal</Text>
+              </View>
+            </View>
+            <View style={{flexDirection:'row', justifyContent: 'space-between', width: '100%', padding: 20}}>
+              <View style={{width: '25%'}}>
+                <Text style={{fontWeight: 'bold', color: '#7d7d7d', paddingBottom: 5}}>Carbs</Text>
+                <ProgressBar containerStyle={{height: 7.5, width: '90%', marginBottom: 5}} progress={"33%"} useIndicatorLevel />
+                <Text style={{fontWeight: 'bold'}}>300 g</Text>
+              </View>
+              <View style={{width: '25%'}}>
+                <Text style={{fontWeight: 'bold', color: '#7d7d7d', paddingBottom: 5}}>Calorie</Text>
+                <ProgressBar containerStyle={{height: 7.5, width: '90%', marginBottom: 5}} progress={"33%"} useIndicatorLevel />
+                <Text style={{fontWeight: 'bold'}}>1500 kcal</Text>
+              </View>
+              <View style={{width: '25%'}}>
+                <Text style={{fontWeight: 'bold', color: '#7d7d7d', paddingBottom: 5}}>Fat</Text>
+                <ProgressBar containerStyle={{height: 7.5, width: '90%', marginBottom: 5}} progress={"33%"} useIndicatorLevel />
+                <Text style={{fontWeight: 'bold'}}>45 g</Text>
+              </View>
+            </View>
+          </View>
         }
       </View>
-      <DailyBloodSugarLevelBarChart width={bloodGlucoseBarChartWidth}
-                                    height={bloodGlucoseBarChartHeight} />
-      <View>
-        {/* Nutrition overview, activity overview, weight overview */}
-        <NutritionIntakeCard onPress={() => alert('pressed nutrient card!')} />
-      </View>
-      <WeightSlider />
-      {
-        /*
-        <Button
-        title="Medicine Plan "
-        onPress={() => props.navigation.navigate('MedicationPlan')}
-      />
-      <Button title="Sync fitbit" onPress={() => props.navigation.navigate('FitbitSetup')}/>
-         */
-      }
     </ScrollView>
   );
 };
 
+function getFracFromPercent(perc, denom) {
+  return `${Math.round(perc * denom)} / ${denom}`;
+}
+
 const styles = StyleSheet.create({
   greetingText: {
     color: '#222939',
-    fontSize: 32,
+    fontSize: 20,
     fontWeight: 'bold'
   },
   usernameText: {
-    color: '#B2D14A'
+    color: '#fff',
+    fontSize: 32,
+    fontWeight: 'bold',
+  },
+  toDoText: {
+    color:'#fff',
+    fontSize: 16,
+    paddingTop: 10,
+    paddingBottom: 10
+  },
+  progressText: {
+    fontWeight: 'bold',
+    fontSize: 24,
+    paddingBottom: 3,
+  },
+  card: {
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    marginTop: '2%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between'
   },
   shadow: {
     shadowColor: '#000',
@@ -177,6 +226,24 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
+  overviewRow: {
+    paddingTop: 10,
+    paddingBottom: 10,
+    marginLeft: 20,
+    marginRight: 20,
+    borderBottomWidth: 0.5,
+    borderColor: '#7d7d7d',
+    width: width - 80
+  },
+  metricText: {
+    fontWeight: 'bold',
+    color: '#7d7d7d'
+  },
+  measuredText: {
+    fontWeight: 'bold',
+    color: '#000',
+    fontSize: 18
+  }
 });
 
 export default HomeScreen;
