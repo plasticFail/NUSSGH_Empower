@@ -12,19 +12,22 @@ const MenuBtn = (props) => {
   };
 
   return (
-    <TouchableOpacity
-      style={{
-        alignSelf: 'flex-start',
-        marginStart: '3%',
-        marginTop: '5%',
-      }}>
-      <Entypo
-        name="menu"
-        size={50}
-        onPress={onClick}
-        color={Colors.backArrowColor}
-      />
-    </TouchableOpacity>
+    props.isLogin && (
+      <TouchableOpacity
+        style={{
+          alignSelf: 'flex-start',
+          marginStart: '3%',
+          marginTop: '5%',
+          zIndex: -1,
+        }}>
+        <Entypo
+          name="menu"
+          size={50}
+          onPress={onClick}
+          color={Colors.backArrowColor}
+        />
+      </TouchableOpacity>
+    )
   );
 };
 

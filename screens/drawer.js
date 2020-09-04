@@ -15,6 +15,7 @@ import EducationalMaterial from './more/educationMaterials';
 import DiaryScreen from './main/diary/diary';
 import Goals from './more/goals';
 import Medication from './more/medications';
+import Login from './login/login';
 
 const Drawer = createDrawerNavigator();
 

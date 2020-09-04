@@ -121,7 +121,7 @@ class AppRoot extends Component {
                   name="DashBoard"
                   component={DrawerNavigator}
                   options={{
-                    header: () => <MenuBtn />,
+                    header: () => <MenuBtn isLogin={this.props.isLogin} />,
                   }}
                 />
                 <Stack.Screen

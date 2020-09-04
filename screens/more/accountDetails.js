@@ -3,6 +3,7 @@ import {View, StyleSheet, Text, Image} from 'react-native';
 //component
 import Clickable from '../../components/account/clickable';
 import {ScrollView} from 'react-native-gesture-handler';
+import globalStyles from '../../styles/globalStyles';
 
 const profilePic = require('../../resources/images/userPic.png');
 
@@ -32,7 +33,7 @@ const AccountDetailScreen = (props) => {
 
   return (
     <ScrollView contentContainerStyle={{...props.style}}>
-      <View style={{...styles.accountDetailScreen}}>
+      <View style={[globalStyles.pageContainer]}>
         <Image source={profilePic} style={styles.profileImg} />
         <Clickable heading={'Username'} content={username} click={false} />
         <Clickable heading={'Name'} content={name} click={false} />
@@ -59,14 +60,6 @@ const AccountDetailScreen = (props) => {
 };
 
 const styles = StyleSheet.create({
-  accountDetailScreen: {
-    flex: 1,
-    padding: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'white',
-    paddingBottom: '4%',
-  },
   profileImg: {
     width: 150,
     height: 150,
@@ -75,6 +68,7 @@ const styles = StyleSheet.create({
     borderWidth: 4,
     borderColor: '#AAD326',
     marginTop: '7%',
+    alignSelf: 'center',
   },
 });
 
