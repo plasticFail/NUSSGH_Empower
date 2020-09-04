@@ -113,12 +113,6 @@ class AddLogScreen extends Component {
   render() {
     const {showModal, selectedLogType, recordDate} = this.state;
     const {showBg, showMed, showWeight, showSuccess} = this.state;
-    const {
-      bloodGlucose,
-      eatSelection,
-      exerciseSelection,
-      alcholicSelection,
-    } = this.state;
     return (
       <View style={globalStyles.pageContainer}>
         <Text style={globalStyles.pageHeader}>Add Log</Text>
@@ -175,16 +169,7 @@ class AddLogScreen extends Component {
             recordDate={recordDate}
             closeModal={this.closeBgForm}
             closeParent={this.closeModal}
-            bloodGlucose={bloodGlucose}
-            setBloodGlucose={this.setBloodGlucose}
-            eatSelection={eatSelection}
-            exerciseSelection={exerciseSelection}
-            alcholicSelection={alcholicSelection}
-            setEatSelection={this.setEatSelection}
-            setExerciseSelection={this.setExerciseSelection}
-            setAlcoholSelection={this.setAlcoholSelection}
             parent="addLog"
-            submitBg={this.submitBg}
           />
         </Modal>
       </View>
