@@ -38,9 +38,9 @@ import HeaderBackIconClick from '../components/common/headerBackIconClick';
 import ContactUs from './contactUs';
 import AskAdd from './onboarding/medicationPlan/askAdd';
 import AddPlan from './onboarding/medicationPlan/addPlan';
-import {redirect_uri} from "../config/FitbitConfig";
-import {AuthoriseFitbit} from "../commonFunctions/AuthoriseFitbit";
-import FitbitSetup from "./onboarding/fitbit/FitbitSetup";
+import {redirect_uri} from '../config/FitbitConfig';
+import {AuthoriseFitbit} from '../commonFunctions/AuthoriseFitbit';
+import FitbitSetup from './onboarding/fitbit/FitbitSetup';
 
 Entypo.loadFont();
 
@@ -85,7 +85,7 @@ class AppRoot extends Component {
       // fitbit redirect url
       AuthoriseFitbit(url);
     }
-  }
+  };
 
   init = async () => {
     const token = await getToken();
@@ -122,44 +122,7 @@ class AppRoot extends Component {
               <Stack.Screen
                 name="DashBoard"
                 component={DashBoard}
-                options={({route, navigation}) => ({
-                  title: getHeaderTitle(route),
-                  headerLeft: () => (
-                    <HeaderIcon
-                      iconName={'bell'}
-                      text={'Alerts'}
-                      clickFunc={() => navigation.navigate('Alerts')}
-                    />
-                  ),
-                  headerRight: () => (
-                    <HeaderIcon
-                      iconName={'comments'}
-                      text={'Chat'}
-                      clickFunc={() => navigation.navigate('Chat')}
-                    />
-                  ),
-                  headerBackTitleVisible: false,
-                })}
-              />
-              <Stack.Screen
-                name="Alerts"
-                component={AlertsScreen}
-                options={{
-                  title: 'Alerts',
-                  headerBackImage: () => <HeaderBackIcon />,
-                  headerRight: () => <View />,
-                  headerBackTitleVisible: false,
-                }}
-              />
-              <Stack.Screen
-                name="Chat"
-                component={ChatScreen}
-                options={{
-                  title: 'Chat',
-                  headerBackImage: () => <HeaderBackIcon />,
-                  headerRight: () => <View />,
-                  headerBackTitleVisible: false,
-                }}
+                options={{headerShown: false}}
               />
               <Stack.Screen
                 name="DailyLog"
@@ -294,9 +257,10 @@ class AppRoot extends Component {
                 component={AddPlan}
                 options={{headerShown: false}}
               />
-              <Stack.Screen name="FitbitSetup"
-                            component={FitbitSetup}
-                            options={{headerShown: false}}
+              <Stack.Screen
+                name="FitbitSetup"
+                component={FitbitSetup}
+                options={{headerShown: false}}
               />
             </>
           ) : (

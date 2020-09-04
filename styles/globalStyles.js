@@ -72,7 +72,7 @@ const globalStyles = StyleSheet.create({
     shadowOffset: {width: 0, height: -10},
     shadowOpacity: 0.15,
     shadowRadius: 6,
-    elevation: 30,
+    elevation: 2,
     paddingBottom: '10%',
     height: 120,
     margin: 0,
