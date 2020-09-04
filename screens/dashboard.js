@@ -35,7 +35,6 @@ const handleTabPress = ({navigation}, pathName) => {
 };
 
 const DashboardScreen = (props) => {
-  Icon.loadFont();
   return (
     <Tab.Navigator
       backBehavior="none"
