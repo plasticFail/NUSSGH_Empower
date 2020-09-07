@@ -21,7 +21,7 @@ import {getGreetingFromHour} from '../../../commonFunctions/common';
 //components
 import LastLogButton from '../../../components/logs/lastLogBtn';
 import DateSelectionBlock from '../../../components/logs/dateSelectionBlock';
-import BloodGlucoseLogBlock from '../../../components/logs/bloodGlucoseLogBlock';
+import BloodGlucoseLogBlock from '../../../components/logs/bg/bloodGlucoseLogBlock';
 import CrossBtn from '../../../components/crossBtn';
 import SuccessDialogue from '../../../components/successDialogue';
 import MedicationLogBlock from '../../../components/logs/medication/medicationLogBlock';

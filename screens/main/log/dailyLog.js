@@ -23,8 +23,8 @@ import {
 } from '../../../commonFunctions/logFunctions';
 //components
 import FormBlockFix from '../../../components/logs/formBlockFix';
-import BloodGlucoseLogBlock from '../../../components/logs/bloodGlucoseLogBlock';
-import BloodGlucoseLogDisplay from '../../../components/logs/bloodGlucoseLogDisplay';
+import BloodGlucoseLogBlock from '../../../components/logs/bg/bloodGlucoseLogBlock';
+import BloodGlucoseLogDisplay from '../../../components/logs/bg/bloodGlucoseLogDisplay';
 import DailyMealLogComponent from '../../../components/logs/meal/DailyMealLogComponent';
 import {BackAndForwardButton} from '../../../components/BackAndForwardButtons';
 import WeightLogBlock from '../../../components/logs/weightLogBlock';

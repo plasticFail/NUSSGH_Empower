@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {View, StyleSheet, Text, Animated, ScrollView} from 'react-native';
 //styles
-import globalStyles from '../../styles/globalStyles';
+import globalStyles from '../../../styles/globalStyles';
 //component
 import FormBlock from './formBlock';
 

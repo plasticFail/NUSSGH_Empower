@@ -8,21 +8,21 @@ import {
 } from 'react-native';
 //components
 import HypoglycemiaBlock from './hypoglycemiaBlock';
-import LeftArrowBtn from './leftArrowBtn';
+import LeftArrowBtn from '../leftArrowBtn';
 //functions
 import {
   checkBloodGlucoseText,
   checkBloodGlucose,
   handleSubmitBloodGlucose,
   min_bg,
-} from '../../commonFunctions/logFunctions';
+} from '../../../commonFunctions/logFunctions';
+import {addGlucoseQuestionaire} from '../../../netcalls/requestsLog';
 //styles
-import globalStyles from '../../styles/globalStyles';
-import {Colors} from '../../styles/colors';
-import logStyles from '../../styles/logStyles';
+import globalStyles from '../../../styles/globalStyles';
+import {Colors} from '../../../styles/colors';
+import logStyles from '../../../styles/logStyles';
 //third party lib
 import Modal from 'react-native-modal';
-import {addGlucoseQuestionaire} from '../../netcalls/requestsLog';
 
 const BloodGlucoseLogBlock = (props) => {
   const {

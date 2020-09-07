@@ -21,7 +21,7 @@ import {
   getLastMedicationLog,
 } from '../../storage/asyncStorageFunctions';
 //component
-import BloodGlucoseLogDisplay from './bloodGlucoseLogDisplay';
+import BloodGlucoseLogDisplay from './bg/bloodGlucoseLogDisplay';
 import MedicationLogDisplay from './medication/medicationLogDisplay';
 
 //show last values
