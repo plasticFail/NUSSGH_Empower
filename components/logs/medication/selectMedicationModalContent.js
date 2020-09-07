@@ -95,7 +95,7 @@ const SelectMedicationModalContent = (props) => {
           {checkDosage(dosage, correctDosage) &&
           !checkRepeatMedicine(selectedMedicine, selectedMedList) ? (
             <TouchableOpacity
-              style={globalStyles.submitButtonStyle}
+              style={globalStyles.nextButtonStyle}
               onPress={() => addMed()}>
               <Text style={globalStyles.actionButtonText}>Add</Text>
             </TouchableOpacity>
