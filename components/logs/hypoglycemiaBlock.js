@@ -1,9 +1,8 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {View, StyleSheet, Text, Animated, ScrollView} from 'react-native';
-//component
-import FormBlockFix from './formBlockFix';
 //styles
 import globalStyles from '../../styles/globalStyles';
+//component
 import FormBlock from './formBlock';
 
 const formQn1 = 'Did you eat lesser than usual today?';
@@ -42,8 +41,8 @@ const HypoglycemiaBlock = (props) => {
 
   return (
     visible && (
-      <Animated.View style={[{opacity: fadeAnim}]}>
-        <ScrollView contentContainerStyle={styles.formContainer}>
+      <ScrollView contentContainerStyle={styles.formContainer}>
+        <Animated.View style={[{opacity: fadeAnim}]}>
           <Text style={globalStyles.alertText}>
             The reading entered is too low. We are concerned.
           </Text>
@@ -62,8 +61,8 @@ const HypoglycemiaBlock = (props) => {
             getFormSelection={setAlcoholSelection}
             value={alcholicSelection}
           />
-        </ScrollView>
-      </Animated.View>
+        </Animated.View>
+      </ScrollView>
     )
   );
 };
@@ -72,7 +71,7 @@ export default HypoglycemiaBlock;
 
 const styles = StyleSheet.create({
   formContainer: {
-    padding: '3%',
+    padding: '4%',
   },
   shadow: {
     shadowColor: '#000',

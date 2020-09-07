@@ -75,10 +75,10 @@ const BloodGlucoseLogBlock = (props) => {
       <View style={{flex: 1}}>
         <LeftArrowBtn close={closeModal} />
         <Text style={globalStyles.pageHeader}>Add Blood Glucose</Text>
+        <Text style={[logStyles.fieldName, styles.fieldStyle]}>
+          Current Reading
+        </Text>
         <View style={{flexDirection: 'row'}}>
-          <Text style={[logStyles.fieldName, styles.fieldStyle]}>
-            Current Reading: (mmol/L)
-          </Text>
           <TextInput
             style={[logStyles.inputField, styles.inputContainer]}
             placeholderTextColor="#a1a3a0"
@@ -89,6 +89,7 @@ const BloodGlucoseLogBlock = (props) => {
               setBloodGlucose(value);
             }}
           />
+          <Text style={styles.unitText}>mmol/L</Text>
         </View>
         {checkBloodGlucoseText(bloodGlucose) !== '' && (
           <Text style={[globalStyles.alertText, {marginStart: '5%'}]}>
@@ -125,11 +126,15 @@ const BloodGlucoseLogBlock = (props) => {
 
 const styles = StyleSheet.create({
   inputContainer: {
-    alignSelf: 'flex-end',
-    flex: 1,
+    width: '40%',
   },
   fieldStyle: {
     marginTop: '7%',
+  },
+  unitText: {
+    flex: 1,
+    marginTop: '10%',
+    fontSize: 18,
   },
 });
 
