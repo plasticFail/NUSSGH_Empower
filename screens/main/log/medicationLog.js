@@ -7,7 +7,7 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import {handleSubmitMedication} from '../../../commonFunctions/logFunctions';
 //components
 import SuccessDialogue from '../../../components/successDialogue';
-import MedicationLogBlock from '../../../components/logs/medicationLogBlock';
+import MedicationLogBlock from '../../../components/logs/medication/medicationLogBlock';
 
 Entypo.loadFont();
 
@@ -20,8 +20,8 @@ const MedicationLog = (props) => {
     setSelectedMedicationList([...list]);
   };
 
-  const handleSubmit = async() => {
-    if(await handleSubmitMedication(date, selectedMedicationList)){
+  const handleSubmit = async () => {
+    if (await handleSubmitMedication(date, selectedMedicationList)) {
       setShowSuccess(true);
     }
   };

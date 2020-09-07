@@ -110,7 +110,7 @@ const BloodGlucoseLogBlock = (props) => {
       <View style={[globalStyles.buttonContainer]}>
         {checkBloodGlucose(bloodGlucose) ? (
           <TouchableOpacity
-            style={globalStyles.nextButtonStyle}
+            style={globalStyles.submitButtonStyle}
             onPress={() => submitBg()}>
             <Text style={globalStyles.actionButtonText}>Submit</Text>
           </TouchableOpacity>

@@ -10,16 +10,24 @@ import {
 //third party library
 import Modal from 'react-native-modal';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import Moment from 'moment';
 //function
-import {storeMedications} from '../../../netcalls/requestsLog';
+import {
+  storeMedications,
+  getMedication4Day,
+} from '../../../netcalls/requestsLog';
+import {med_key} from '../../../commonFunctions/logFunctions';
 //component
 import SearchResult from './searchResult';
+import SearchResult2 from '../../logs/medication/searchResult_2';
+//style
 import {Colors} from '../../../styles/colors';
+import globalStyles from '../../../styles/globalStyles';
 
 Ionicons.loadFont();
 
 const SearchMedication = (props) => {
-  const {visible, closeModal} = props;
+  const {visible, closeModal, parent} = props;
   const {selectedMedicine, setSelectedMedicine} = props;
   const [searchTerm, setSearchTerm] = useState('');
   const [searchKeyCache, setSearchKeyCache] = useState('');
@@ -31,8 +39,12 @@ const SearchMedication = (props) => {
     console.log('search key ' + searchTerm + ' cache ' + searchKeyCache);
     let mounted = true;
     if (searchKeyCache == searchTerm) {
-      if (mounted) {
+      if (mounted && parent === 'plan') {
+        console.log('searching from med database');
         setTimeout(() => searchMedication(), 800);
+      } else if (mounted && parent === med_key) {
+        console.log('searching from medication plan');
+        setTimeout(() => getMedication2day(), 800);
       }
     }
     return function cleanUp() {
@@ -55,6 +67,40 @@ const SearchMedication = (props) => {
         setSearchKeyCache(query);
       }, 1000);
     }
+  };
+
+  //get the list of medication for today
+  const getMedication2day = () => {
+    const today = Moment(new Date()).format('YYYY-MM-DD');
+    getMedication4Day(today).then((response) => {
+      let d = response[today];
+      let arr = [];
+      for (var x of d) {
+        arr.push(x);
+      }
+      if (searchTerm != '') {
+        let result = arr.filter((medication) => {
+          let medicine = medication.medication
+            .replace(/\s{1,2}\[|\]/g, ' ')
+            .toLowerCase();
+          let searchArr = String(searchTerm).split(' ');
+          let count = 0;
+          for (let x of searchArr) {
+            if (medicine.includes(x.toLowerCase())) {
+              count += 1;
+            }
+          }
+          if (count === searchArr.length) {
+            return medication;
+          }
+        });
+        setSearchResult(result);
+        setIsLoading(false);
+      } else {
+        setSearchResult([]);
+        setIsLoading(false);
+      }
+    });
   };
 
   //make api call
@@ -95,7 +141,11 @@ const SearchMedication = (props) => {
       coverScreen={true}
       backdropOpacity={1}
       backdropColor={Colors.backgroundColor}>
-      <View style={{flexDirection: 'row', marginTop: '5%'}}>
+      <Text
+        style={[globalStyles.pageHeader, {marginTop: '5%', marginStart: '2%'}]}>
+        Search
+      </Text>
+      <View style={{flexDirection: 'row', marginTop: '2%'}}>
         <View style={styles.searchContainer}>
           <Ionicons
             name="search"
@@ -115,7 +165,7 @@ const SearchMedication = (props) => {
       {searchTerm === '' ? (
         <>
           <Text style={styles.prompt}>
-            Input your medication in the search bar!
+            Input your medication for the day in the search bar!
           </Text>
           <View style={{flex: 1}} />
         </>
@@ -129,13 +179,22 @@ const SearchMedication = (props) => {
           <View style={{flex: 1}} />
         </>
       ) : searchResults.length > 0 ? (
-        <View style={{flex: 1}}>
-          <SearchResult
-            medicationList={searchResults}
-            selectedMedicine={selectedMedicine}
-            setSelectedMedicine={setSelectedMedicine}
-            closeModal={closeModal}
-          />
+        <View style={{flex: 1, marginTop: '2%'}}>
+          {parent === med_key ? (
+            <SearchResult2
+              medicationList={searchResults}
+              selectedMedicine={selectedMedicine}
+              setSelectedMedicine={setSelectedMedicine}
+              closeModal={closeModal}
+            />
+          ) : (
+            <SearchResult
+              medicationList={searchResults}
+              selectedMedicine={selectedMedicine}
+              setSelectedMedicine={setSelectedMedicine}
+              closeModal={closeModal}
+            />
+          )}
         </View>
       ) : (
         <>

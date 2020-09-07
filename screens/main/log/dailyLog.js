@@ -29,8 +29,8 @@ import DailyMealLogComponent from '../../../components/logs/meal/DailyMealLogCom
 import {BackAndForwardButton} from '../../../components/BackAndForwardButtons';
 import WeightLogBlock from '../../../components/logs/weightLogBlock';
 import WeightLogDisplay from '../../../components/logs/weightLogDisplay';
-import MedicationLogDisplay from '../../../components/logs/medicationLogDisplay';
-import MedicationLogBlock from '../../../components/logs/medicationLogBlock';
+import MedicationLogDisplay from '../../../components/logs/medication/medicationLogDisplay';
+import MedicationLogBlock from '../../../components/logs/medication/medicationLogBlock';
 import MealLogDisplay from '../../../components/logs/meal/MealLogDisplay';
 
 class DailyLog extends Component {

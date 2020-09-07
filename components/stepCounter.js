@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 //third party lib
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -57,7 +56,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   countContent: {
-    flex: 1,
+    flex: 2,
     marginVertical: '3%',
     fontSize: 20,
   },

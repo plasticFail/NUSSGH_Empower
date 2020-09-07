@@ -250,7 +250,7 @@ class AppRoot extends Component {
                 <Stack.Screen
                   name="MedicationPlan"
                   component={AskAdd}
-                  options={{headerShown: false}}
+                  options={{header: () => <View />}}
                 />
                 <Stack.Screen
                   name="AddPlan"

@@ -6,8 +6,7 @@ import {Colors} from '../../styles/colors';
 
 //show last values
 const BloodGlucoseLogDisplay = (props) => {
-  const {data, show, setShow} = props;
-  const [height, setHeight] = useState(0);
+  const {data, show} = props;
   const dropDownAnimation = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {

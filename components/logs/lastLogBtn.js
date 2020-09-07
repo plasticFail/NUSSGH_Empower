@@ -16,9 +16,13 @@ import {
 //third part lib
 import Entypo from 'react-native-vector-icons/Entypo';
 //function
-import {getLastBgLog} from '../../storage/asyncStorageFunctions';
+import {
+  getLastBgLog,
+  getLastMedicationLog,
+} from '../../storage/asyncStorageFunctions';
 //component
 import BloodGlucoseLogDisplay from './bloodGlucoseLogDisplay';
+import MedicationLogDisplay from './medication/medicationLogDisplay';
 
 //show last values
 const LastLogButton = (props) => {
@@ -37,13 +41,21 @@ const LastLogButton = (props) => {
   const getLastLog = () => {
     if (logType === bg_key) {
       getLastBgLog().then((response) => {
-        if (response && isToday(response.date)) {
-          setnone4tdy(false);
-          setLastPeriod(isPeriod(response.hour));
-          setDataToDisplay(response);
-        }
+        setStates(response);
       });
     } else if (logType === weight_key) {
+    } else if (logType === med_key) {
+      getLastMedicationLog().then((response) => {
+        setStates(response);
+      });
+    }
+  };
+
+  const setStates = (response) => {
+    if (response && isToday(response.date)) {
+      setnone4tdy(false);
+      setLastPeriod(isPeriod(response.hour));
+      setDataToDisplay(response);
     }
   };
 
@@ -98,11 +110,10 @@ const LastLogButton = (props) => {
         </View>
       </TouchableOpacity>
       {!none4tdy && logType === bg_key && (
-        <BloodGlucoseLogDisplay
-          data={dataToDisplay}
-          show={show}
-          setShow={setShow}
-        />
+        <BloodGlucoseLogDisplay data={dataToDisplay} show={show} />
+      )}
+      {!none4tdy && logType === med_key && (
+        <MedicationLogDisplay data={dataToDisplay} show={show} />
       )}
     </>
   );

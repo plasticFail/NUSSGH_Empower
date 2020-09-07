@@ -1,69 +1,48 @@
 import React, {useState} from 'react';
-import {View, StyleSheet, Text, Image} from 'react-native';
+import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
+//third party lib
+import Ionicon from 'react-native-vector-icons/Ionicons';
 
-const MedicationItem = (props) => {
-  const {removable} = props.removable === undefined ? false : props.removable; //for future use
-  const {medication} = props;
-
-  console.log(medication);
-
-  if (medication != undefined) {
-    return (
-      <View style={[styles.container, styles.shadow]}>
-        <Image
-          source={{uri: medication.image_url}}
-          style={styles.medicineImg}
-        />
+function MedicationItem({medication, handleDelete}) {
+  return (
+    <View style={{flexDirection: 'row', borderBottomWidth: 0.2}}>
+      <View style={styles.medicationItem}>
         <Text style={styles.medicationName}>{medication.drugName}</Text>
-        <Text>
-          Dosage:{' '}
-          <Text style={styles.dosage}>{medication.dosage} Unit (s)</Text>
-        </Text>
+        <Text style={styles.medicationDetail}>{medication.dosage} Unit(s)</Text>
+        {medication.perDay != undefined ? (
+          <Text style={styles.medicationDetail}>
+            {medication.perDay} Times(s) Per Day
+          </Text>
+        ) : null}
       </View>
-    );
-  } else {
-    return <View></View>;
-  }
-};
-
+      <TouchableOpacity
+        style={styles.deleteMedication}
+        onPress={() => handleDelete(medication)}>
+        <Ionicon name="ios-trash-bin" size={40} color="#ff0844" />
+      </TouchableOpacity>
+    </View>
+  );
+}
 export default MedicationItem;
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#f5f5f5',
-    borderRadius: 20,
-    width: '35%',
-    alignItems: 'center',
-    padding: '2%',
-    marginEnd: '5%',
-    flex: 1,
-    margin: '4%',
-  },
-  medicineImg: {
-    width: 100,
-    height: 100,
-    resizeMode: 'contain',
-    borderWidth: 2,
-    borderColor: '#aad326',
-    alignSelf: 'center',
-  },
-  shadow: {
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
+  medicationItem: {
+    marginTop: '2%',
+    marginStart: '4%',
+    marginBottom: '4%',
+    flex: 4,
   },
   medicationName: {
-    margin: '2%',
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: '700',
-    margin: '2%',
   },
-  dosage: {
-    color: '#d22b55',
+  medicationDetail: {
+    fontSize: 16,
+    marginTop: '2%',
+  },
+  deleteMedication: {
+    padding: '3%',
+    flex: 1,
+    justifyContent: 'center',
   },
 });
