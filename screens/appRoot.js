@@ -119,7 +119,7 @@ class AppRoot extends Component {
                             drawerContent={CustomDrawerComponent}
                             backBehavior='none'>
             <Drawer.Screen
-                name='Empower' component={() => (
+                name='Empower' children={() => (
                   <Stack.Navigator
                       initialRouteName='DashBoard'
                       screenOptions={({route}) => {
