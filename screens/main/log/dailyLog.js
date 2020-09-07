@@ -27,8 +27,8 @@ import BloodGlucoseLogBlock from '../../../components/logs/bg/bloodGlucoseLogBlo
 import BloodGlucoseLogDisplay from '../../../components/logs/bg/bloodGlucoseLogDisplay';
 import DailyMealLogComponent from '../../../components/logs/meal/DailyMealLogComponent';
 import {BackAndForwardButton} from '../../../components/BackAndForwardButtons';
-import WeightLogBlock from '../../../components/logs/weightLogBlock';
-import WeightLogDisplay from '../../../components/logs/weightLogDisplay';
+import WeightLogBlock from '../../../components/logs/weight/weightLogBlock';
+import WeightLogDisplay from '../../../components/logs/weight/weightLogDisplay';
 import MedicationLogDisplay from '../../../components/logs/medication/medicationLogDisplay';
 import MedicationLogBlock from '../../../components/logs/medication/medicationLogBlock';
 import MealLogDisplay from '../../../components/logs/meal/MealLogDisplay';

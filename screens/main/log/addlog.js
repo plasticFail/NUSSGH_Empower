@@ -1,5 +1,12 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+} from 'react-native';
 //third party lib
 import Moment from 'moment';
 import Modal from 'react-native-modal';
@@ -15,7 +22,6 @@ import {
   med_key,
   weight_key,
   renderLogIcon,
-  handleSubmitBloodGlucose,
 } from '../../../commonFunctions/logFunctions';
 import {getGreetingFromHour} from '../../../commonFunctions/common';
 //components
@@ -25,7 +31,7 @@ import BloodGlucoseLogBlock from '../../../components/logs/bg/bloodGlucoseLogBlo
 import CrossBtn from '../../../components/crossBtn';
 import SuccessDialogue from '../../../components/successDialogue';
 import MedicationLogBlock from '../../../components/logs/medication/medicationLogBlock';
-import {ScrollView} from 'react-native-gesture-handler';
+import WeightLogBlock from '../../../components/logs/weight/weightLogBlock';
 
 const buttonList = [bg_key, food_key, med_key, weight_key];
 
@@ -116,11 +122,15 @@ class AddLogScreen extends Component {
     this.setState({showMed: false});
   };
 
+  closeWeightForm = () => {
+    this.setState({showWeight: false});
+  };
+
   render() {
     const {showModal, selectedLogType, recordDate} = this.state;
     const {showBg, showMed, showWeight, showSuccess} = this.state;
     return (
-      <ScrollView>
+      <ScrollView contentContainerStyle={{flexGrow: 1}}>
         <View style={globalStyles.pageContainer}>
           <Text style={globalStyles.pageHeader}>Add Log</Text>
           <Text style={globalStyles.pageDetails}>{this.todayDate}</Text>
@@ -171,20 +181,35 @@ class AddLogScreen extends Component {
               </TouchableOpacity>
             </View>
             {/*Modal for the different form types */}
-            <BloodGlucoseLogBlock
-              visible={showBg}
-              recordDate={recordDate}
-              closeModal={this.closeBgForm}
-              closeParent={this.closeModal}
-              parent="addLog"
-            />
-            <MedicationLogBlock
-              visible={showMed}
-              recordDate={recordDate}
-              closeModal={this.closeMedForm}
-              closeParent={this.closeModal}
-              parent="addLog"
-            />
+            {showBg ? (
+              <BloodGlucoseLogBlock
+                visible={showBg}
+                recordDate={recordDate}
+                closeModal={this.closeBgForm}
+                closeParent={this.closeModal}
+                parent="addLog"
+              />
+            ) : null}
+
+            {showMed ? (
+              <MedicationLogBlock
+                visible={showMed}
+                recordDate={recordDate}
+                closeModal={this.closeMedForm}
+                closeParent={this.closeModal}
+                parent="addLog"
+              />
+            ) : null}
+
+            {showWeight ? (
+              <WeightLogBlock
+                visible={showWeight}
+                recordDate={recordDate}
+                closeModal={this.closeWeightForm}
+                closeParent={this.closeModal}
+                parent="addLog"
+              />
+            ) : null}
           </Modal>
         </View>
       </ScrollView>

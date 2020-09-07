@@ -77,9 +77,9 @@ const checkWeight = (weight) => {
 const checkWeightText = (weight) => {
   if (weight) {
     if (
-      weight.match(/^[0-9]+(\.[0-9]{1})?$/g) &&
-      !weight.includes(',') &&
-      !weight.includes('-') &&
+      String(weight).match(/^[0-9]+(\.[0-9]{1})?$/g) &&
+      !String(weight).includes(',') &&
+      !String(weight).includes('-') &&
       Number(weight) <= 200 &&
       Number(weight) >= 40
     ) {
@@ -168,7 +168,8 @@ const handleSubmitWeight = async (date, weight) => {
       storeLastWeightLog({
         value: weight,
         date: Moment(date).format('YYYY/MM/DD'),
-        time: Moment(date).format('h:mm a'),
+        hour: Moment(date).format('HH:mm'), //tweaked
+        dateString: Moment(date).format('Do MMM YYYY, h:mm a'), //added
       });
       return true;
     } else {
