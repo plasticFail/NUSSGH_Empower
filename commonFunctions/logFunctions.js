@@ -53,18 +53,27 @@ const checkLogDone = async (period) => {
   let weight_data = await getLastWeightLog();
   let completed = [];
   let notCompleted = [];
-  if (String(isPeriod(bg_data.hour)) === period && isToday(bg_data.date)) {
+  if (
+    bg_data &&
+    String(isPeriod(bg_data.hour)) === period &&
+    isToday(bg_data.date)
+  ) {
     completed.push(bg_key);
   } else {
     notCompleted.push(bg_key);
   }
 
-  if (String(isPeriod(med_data.hour)) === period && isToday(med_data.date)) {
+  if (
+    med_data &&
+    String(isPeriod(med_data.hour)) === period &&
+    isToday(med_data.date)
+  ) {
     completed.push(med_key);
   } else {
     notCompleted.push(med_key);
   }
   if (
+    weight_data &&
     String(isPeriod(weight_data.hour)) === period &&
     isToday(weight_data.date)
   ) {
