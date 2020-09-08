@@ -13,7 +13,7 @@ import {TouchableOpacity, ScrollView} from 'react-native-gesture-handler';
 import Modal from 'react-native-modal';
 //component
 import Header from './header';
-import BloodGlucoseLogBlock from '../../logs/bloodGlucoseLogBlock';
+import BloodGlucoseLogBlock from '../../logs/bg/bloodGlucoseLogBlock';
 import ActionButton from './actionBtn';
 //function
 import {getTime, getDateObj} from '../../../commonFunctions/diaryFunctions';

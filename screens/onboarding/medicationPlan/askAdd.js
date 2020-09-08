@@ -203,7 +203,7 @@ class AskAdd extends Component {
               <Ionicons
                 name="add-circle"
                 size={80}
-                color={Colors.submitBtnColor}
+                color={Colors.nextBtnColor}
               />
             </TouchableOpacity>
             <View style={{flex: 1}} />
@@ -247,7 +247,7 @@ class AskAdd extends Component {
               <Ionicons
                 name="add-circle"
                 size={80}
-                color={Colors.backgroundColor}
+                color={Colors.nextBtnColor}
               />
             </TouchableOpacity>
             <View style={{flex: 1}} />

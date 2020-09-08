@@ -8,21 +8,21 @@ import {
 } from 'react-native';
 //components
 import HypoglycemiaBlock from './hypoglycemiaBlock';
-import LeftArrowBtn from './leftArrowBtn';
+import LeftArrowBtn from '../leftArrowBtn';
 //functions
 import {
   checkBloodGlucoseText,
   checkBloodGlucose,
   handleSubmitBloodGlucose,
   min_bg,
-} from '../../commonFunctions/logFunctions';
+} from '../../../commonFunctions/logFunctions';
+import {addGlucoseQuestionaire} from '../../../netcalls/requestsLog';
 //styles
-import globalStyles from '../../styles/globalStyles';
-import {Colors} from '../../styles/colors';
-import logStyles from '../../styles/logStyles';
+import globalStyles from '../../../styles/globalStyles';
+import {Colors} from '../../../styles/colors';
+import logStyles from '../../../styles/logStyles';
 //third party lib
 import Modal from 'react-native-modal';
-import {addGlucoseQuestionaire} from '../../netcalls/requestsLog';
 
 const BloodGlucoseLogBlock = (props) => {
   const {
@@ -75,10 +75,10 @@ const BloodGlucoseLogBlock = (props) => {
       <View style={{flex: 1}}>
         <LeftArrowBtn close={closeModal} />
         <Text style={globalStyles.pageHeader}>Add Blood Glucose</Text>
+        <Text style={[logStyles.fieldName, styles.fieldStyle]}>
+          Current Reading
+        </Text>
         <View style={{flexDirection: 'row'}}>
-          <Text style={[logStyles.fieldName, styles.fieldStyle]}>
-            Current Reading: (mmol/L)
-          </Text>
           <TextInput
             style={[logStyles.inputField, styles.inputContainer]}
             placeholderTextColor="#a1a3a0"
@@ -89,6 +89,7 @@ const BloodGlucoseLogBlock = (props) => {
               setBloodGlucose(value);
             }}
           />
+          <Text style={styles.unitText}>mmol/L</Text>
         </View>
         {checkBloodGlucoseText(bloodGlucose) !== '' && (
           <Text style={[globalStyles.alertText, {marginStart: '5%'}]}>
@@ -109,7 +110,7 @@ const BloodGlucoseLogBlock = (props) => {
       <View style={[globalStyles.buttonContainer]}>
         {checkBloodGlucose(bloodGlucose) ? (
           <TouchableOpacity
-            style={globalStyles.nextButtonStyle}
+            style={globalStyles.submitButtonStyle}
             onPress={() => submitBg()}>
             <Text style={globalStyles.actionButtonText}>Submit</Text>
           </TouchableOpacity>
@@ -125,11 +126,15 @@ const BloodGlucoseLogBlock = (props) => {
 
 const styles = StyleSheet.create({
   inputContainer: {
-    alignSelf: 'flex-end',
-    flex: 1,
+    width: '40%',
   },
   fieldStyle: {
     marginTop: '7%',
+  },
+  unitText: {
+    flex: 1,
+    marginTop: '10%',
+    fontSize: 18,
   },
 });
 

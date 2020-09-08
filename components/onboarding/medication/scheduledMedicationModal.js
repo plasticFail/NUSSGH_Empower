@@ -1,20 +1,13 @@
 import React, {useState} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Dimensions,
-} from 'react-native';
-import {FlatList} from 'react-native-gesture-handler';
+import {View, Text, StyleSheet, TouchableOpacity, FlatList} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 //third party libaray
 import Modal from 'react-native-modal';
 import moment from 'moment';
-import Ionicon from 'react-native-vector-icons/Ionicons';
 //component
 import DeleteConfirmation from './deleteConfirmation';
 import ChevronDownBtn from '../../chevronDownBtn';
+import MedicationItem from '../../medicationItem';
 //styles
 import {Colors} from '../../../styles/colors';
 import globalStyles from '../../../styles/globalStyles';
@@ -68,7 +61,7 @@ const ScheduledMedicationModal = (props) => {
               style={{flexGrow: 0}}
               renderItem={({item}) => (
                 <>
-                  <MedicationAdded
+                  <MedicationItem
                     medication={item}
                     handleDelete={handleDelete}
                   />
@@ -108,25 +101,6 @@ const ScheduledMedicationModal = (props) => {
   );
 };
 
-function MedicationAdded({medication, handleDelete}) {
-  return (
-    <View style={{flexDirection: 'row', borderBottomWidth: 0.2}}>
-      <View style={styles.medicationItem}>
-        <Text style={styles.medicationName}>{medication.drugName}</Text>
-        <Text style={styles.medicationDetail}>{medication.dosage} Unit(s)</Text>
-        <Text style={styles.medicationDetail}>
-          {medication.perDay} Times(s) Per Day
-        </Text>
-      </View>
-      <TouchableOpacity
-        style={styles.deleteMedication}
-        onPress={() => handleDelete(medication)}>
-        <Ionicon name="ios-trash-bin" size={40} color="#ff0844" />
-      </TouchableOpacity>
-    </View>
-  );
-}
-
 export default ScheduledMedicationModal;
 
 const styles = StyleSheet.create({
@@ -145,25 +119,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#3c3c43',
   },
-  medicationItem: {
-    marginTop: '2%',
-    marginStart: '4%',
-    marginBottom: '4%',
-    flex: 4,
-  },
-  medicationName: {
-    fontSize: 18,
-    fontWeight: '700',
-  },
-  medicationDetail: {
-    fontSize: 16,
-    marginTop: '2%',
-  },
-  deleteMedication: {
-    padding: '3%',
-    flex: 1,
-    justifyContent: 'center',
-  },
+
   button: {
     backgroundColor: '#aad326',
     height: 45,

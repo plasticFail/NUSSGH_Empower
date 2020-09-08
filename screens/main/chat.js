@@ -7,6 +7,7 @@ const ChatScreen = (props) => {
   return (
     <View style={{...globalStyles.pageContainer, ...props.style}}>
       <View style={{flex: 1}} />
+      <MenuBtn />
     </View>
   );
 };

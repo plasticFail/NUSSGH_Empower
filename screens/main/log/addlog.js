@@ -1,5 +1,12 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+} from 'react-native';
 //third party lib
 import Moment from 'moment';
 import Modal from 'react-native-modal';
@@ -15,15 +22,17 @@ import {
   med_key,
   weight_key,
   renderLogIcon,
-  handleSubmitBloodGlucose,
 } from '../../../commonFunctions/logFunctions';
 import {getGreetingFromHour} from '../../../commonFunctions/common';
 //components
 import LastLogButton from '../../../components/logs/lastLogBtn';
 import DateSelectionBlock from '../../../components/logs/dateSelectionBlock';
-import BloodGlucoseLogBlock from '../../../components/logs/bloodGlucoseLogBlock';
+import BloodGlucoseLogBlock from '../../../components/logs/bg/bloodGlucoseLogBlock';
 import CrossBtn from '../../../components/crossBtn';
 import SuccessDialogue from '../../../components/successDialogue';
+import MedicationLogBlock from '../../../components/logs/medication/medicationLogBlock';
+import WeightLogBlock from '../../../components/logs/weight/weightLogBlock';
+import MenuBtn from '../../../components/menuBtn';
 
 const buttonList = [bg_key, food_key, med_key, weight_key];
 
@@ -110,69 +119,102 @@ class AddLogScreen extends Component {
     this.setState({showBg: false});
   };
 
+  closeMedForm = () => {
+    this.setState({showMed: false});
+  };
+
+  closeWeightForm = () => {
+    this.setState({showWeight: false});
+  };
+
   render() {
     const {showModal, selectedLogType, recordDate} = this.state;
     const {showBg, showMed, showWeight, showSuccess} = this.state;
     return (
-      <View style={globalStyles.pageContainer}>
-        <Text style={globalStyles.pageHeader}>Add Log</Text>
-        <Text style={globalStyles.pageDetails}>{this.todayDate}</Text>
-        <Text style={[globalStyles.pageDetails, {marginTop: '4%'}]}>
-          Progress For {this.period}
-        </Text>
-        <Text style={logStyles.complete}>Not Complete</Text>
-        {buttonList.map((item, index) => (
-          <TouchableOpacity
-            style={logStyles.logItem}
-            onPress={() => this.openModalType(item)}>
-            <Image source={renderLogIcon(item)} style={logStyles.loglogo} />
-            <Text style={[globalStyles.pageDetails, {marginStart: '15%'}]}>
-              {item}
-            </Text>
-            <Ionicon
-              name="alert-circle-outline"
-              size={40}
-              style={logStyles.completeIcon}
-              color="red"
-            />
-          </TouchableOpacity>
-        ))}
-        {/* Modal for Add Log*/}
-        <Modal
-          isVisible={showModal}
-          coverScreen={true}
-          backdropOpacity={1}
-          onBackButtonPress={this.closeModal}
-          backdropColor={Colors.backgroundColor}>
-          <View style={logStyles.modalContainer}>
-            <CrossBtn close={this.closeModal} />
-            <Text style={globalStyles.pageHeader}>Add Log</Text>
-            <Text style={globalStyles.pageDetails}>{selectedLogType}</Text>
-            <LastLogButton logType={selectedLogType} />
-            <Text style={logStyles.fieldText}>
-              Fill in if you wish to add a new record
-            </Text>
-            <DateSelectionBlock date={recordDate} setDate={this.setDate} />
+      <ScrollView contentContainerStyle={{flexGrow: 1}}>
+        <View style={globalStyles.pageContainer}>
+          <MenuBtn />
+          <Text style={globalStyles.pageHeader}>Add Log</Text>
+          <Text style={globalStyles.pageDetails}>{this.todayDate}</Text>
+          <Text style={[globalStyles.pageDetails, {marginTop: '4%'}]}>
+            Progress For {this.period}
+          </Text>
+          <Text style={logStyles.complete}>Not Complete</Text>
+          {buttonList.map((item, index) => (
             <TouchableOpacity
-              style={styles.addButton}
-              onPress={() => this.showLogForm(selectedLogType)}>
+              style={logStyles.logItem}
+              onPress={() => this.openModalType(item)}>
+              <Image source={renderLogIcon(item)} style={logStyles.loglogo} />
+              <Text style={[globalStyles.pageDetails, {marginStart: '15%'}]}>
+                {item}
+              </Text>
               <Ionicon
-                name="add-circle"
-                size={60}
-                color={Colors.submitBtnColor}
+                name="alert-circle-outline"
+                size={40}
+                style={logStyles.completeIcon}
+                color="red"
               />
             </TouchableOpacity>
-          </View>
-          {/*Modal for the different form types */}
-          <BloodGlucoseLogBlock
-            visible={showBg}
-            recordDate={recordDate}
-            closeModal={this.closeBgForm}
-            closeParent={this.closeModal}
-            parent="addLog"
-          />
-        </Modal>
-      </View>
+          ))}
+          {/* Modal for Add Log*/}
+          <Modal
+            isVisible={showModal}
+            coverScreen={true}
+            backdropOpacity={1}
+            onBackButtonPress={this.closeModal}
+            backdropColor={Colors.backgroundColor}>
+            <View style={logStyles.modalContainer}>
+              <CrossBtn close={this.closeModal} />
+              <Text style={globalStyles.pageHeader}>Add Log</Text>
+              <Text style={globalStyles.pageDetails}>{selectedLogType}</Text>
+              <LastLogButton logType={selectedLogType} />
+              <Text style={logStyles.fieldText}>
+                Fill in if you wish to add a new record
+              </Text>
+              <DateSelectionBlock date={recordDate} setDate={this.setDate} />
+              <TouchableOpacity
+                style={styles.addButton}
+                onPress={() => this.showLogForm(selectedLogType)}>
+                <Ionicon
+                  name="add-circle"
+                  size={60}
+                  color={Colors.nextBtnColor}
+                />
+              </TouchableOpacity>
+            </View>
+            {/*Modal for the different form types */}
+            {showBg ? (
+              <BloodGlucoseLogBlock
+                visible={showBg}
+                recordDate={recordDate}
+                closeModal={this.closeBgForm}
+                closeParent={this.closeModal}
+                parent="addLog"
+              />
+            ) : null}
+
+            {showMed ? (
+              <MedicationLogBlock
+                visible={showMed}
+                recordDate={recordDate}
+                closeModal={this.closeMedForm}
+                closeParent={this.closeModal}
+                parent="addLog"
+              />
+            ) : null}
+
+            {showWeight ? (
+              <WeightLogBlock
+                visible={showWeight}
+                recordDate={recordDate}
+                closeModal={this.closeWeightForm}
+                closeParent={this.closeModal}
+                parent="addLog"
+              />
+            ) : null}
+          </Modal>
+        </View>
+      </ScrollView>
     );
   }
 }

@@ -1,5 +1,6 @@
 import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, FlatList} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {ScrollView, FlatList} from 'react-native-gesture-handler';
 //third party library
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import Moment from 'moment';
@@ -7,18 +8,17 @@ import Moment from 'moment';
 Ionicon.loadFont();
 
 //clean the medicine item passed back*
-const SearchResult = (props) => {
+//for search result when creating med log
+const SearchResult2 = (props) => {
   const {medicationList} = props;
   const {setSelectedMedicine, closeModal} = props;
 
   const handleSelect = (item) => {
     let medicineObj = {
-      drugName: item.drug_name,
-      imageUrl: item.image_url,
-      dosage: 0,
-      recordDate: Moment(new Date()).format('DD/MM/YYYY HH:mm:ss'),
-      unit: 'unit',
-      perDay: 0,
+      drugName: item.medication,
+      dosage: item.dosage,
+      recordDate: '',
+      unit: item.dosage_unit,
     };
     setSelectedMedicine(medicineObj);
     closeModal();
@@ -34,7 +34,7 @@ const SearchResult = (props) => {
             style={styles.resultContainer}
             key={index}
             onPress={() => handleSelect(item)}>
-            <Text style={styles.medicineName}>{item.drug_name}</Text>
+            <Text style={styles.medicineName}>{item.medication}</Text>
             <Ionicon name="chevron-forward" size={20} color="#aad326" />
           </TouchableOpacity>
         )}
@@ -43,7 +43,7 @@ const SearchResult = (props) => {
   );
 };
 
-export default SearchResult;
+export default SearchResult2;
 
 const styles = StyleSheet.create({
   resultContainer: {

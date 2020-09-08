@@ -13,7 +13,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import Modal from 'react-native-modal';
 //component
 import Header from './header';
-import WeightLogBlock from '../../logs/weightLogBlock';
+import WeightLogBlock from '../../logs/weight/weightLogBlock';
 import ActionButton from './actionBtn';
 //function
 import {getDateObj, getTime} from '../../../commonFunctions/diaryFunctions';

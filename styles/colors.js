@@ -1,6 +1,7 @@
 export const Colors = {
   backgroundColor: '#f7f8fb',
-  submitBtnColor: '#aad326',
+  submitBtnColor: '#16A950',
+  nextBtnColor: '#aad326',
   skipBtnColor: '#f6f7fa',
   backArrowColor: '#16A950',
   lastLogButtonColor: '#16A950',

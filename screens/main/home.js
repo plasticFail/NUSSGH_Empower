@@ -1,14 +1,14 @@
 import React from 'react';
-import {View, Text, StyleSheet, Button, Dimensions} from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome5';
-import Ionicon from 'react-native-vector-icons/Ionicons';
-import Entypo from 'react-native-vector-icons/Entypo';
-import Foundation from 'react-native-vector-icons/Foundation';
 import {
+  View,
+  Text,
+  StyleSheet,
+  Button,
+  Dimensions,
   ScrollView,
   TouchableOpacity,
-  FlatList,
-} from 'react-native-gesture-handler';
+} from 'react-native';
+//third party lib
 import {
   Svg,
   Text as SvgText,
@@ -19,9 +19,13 @@ import {
   Defs,
   ClipPath,
 } from 'react-native-svg';
+import Icon from 'react-native-vector-icons/FontAwesome5';
+//components
+import MenuBtn from '../../components/menuBtn';
 import NutritionIntakeCard from '../../components/dashboard/todayOverview/NutritionIntakeCard';
 import DailyBloodSugarLevelBarChart from '../../components/dashboard/reports/DailyBloodSugarLevelBarChart';
 import {getGreetingFromHour} from '../../commonFunctions/common';
+//styles
 import globalStyles from '../../styles/globalStyles';
 import {Colors} from '../../styles/colors';
 
@@ -71,140 +75,161 @@ const HomeScreen = (props) => {
   });
 
   return (
-    <ScrollView
-      contentContainerStyle={{
-        flexGrow: 1,
-        backgroundColor: Colors.backgroundColor,
-        padding: padding,
-      }}>
-      <View style={[globalStyles.pageContainer, {justifyContent: 'center'}]}>
-        <Text style={styles.greetingText}>
-          {getGreetingFromHour(currHour)}{' '}
-          <Text style={styles.usernameText}>{username}</Text>
-        </Text>
-      </View>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          paddingBottom: 20,
+    <View
+      style={[
+        globalStyles.pageContainer,
+        {backgroundColor: Colors.lastLogButtonColor},
+      ]}>
+      <MenuBtn green={true} />
+      <ScrollView
+        contentContainerStyle={{
+          flexGrow: 1,
+          backgroundColor: Colors.backgroundColor,
         }}>
-        <Svg width={width - 2 * padding} height={buttonSize}>
-          {
-            // Svg container for buttons
-            buttonList.map((button, index) => {
-              return (
-                <G key={button.id}>
-                  <Defs>
-                    <ClipPath id={`clip-${index}`}>
-                      <Circle
-                        r={circleRadius}
+        <View
+          style={{
+            justifyContent: 'center',
+            backgroundColor: Colors.lastLogButtonColor,
+            paddingBottom: '3%',
+          }}>
+          <Text style={styles.greetingText}>
+            {getGreetingFromHour(currHour)},
+          </Text>
+          <Text style={styles.usernameText}>{username}</Text>
+        </View>
+        <View style={{padding: padding}}>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              paddingBottom: 20,
+            }}>
+            <Svg width={width - 2 * padding} height={buttonSize}>
+              {
+                // Svg container for buttons
+                buttonList.map((button, index) => {
+                  return (
+                    <G key={button.id}>
+                      <Defs>
+                        <ClipPath id={`clip-${index}`}>
+                          <Circle
+                            r={circleRadius}
+                            x={
+                              index *
+                                (buttonSize +
+                                  (width - 2 * padding - 3 * buttonSize) / 2) +
+                              circleRadius -
+                              circleXOffset
+                            }
+                            y={circleRadius - circleYOffset}
+                          />
+                        </ClipPath>
+                      </Defs>
+                      <Rect
+                        width={buttonSize}
+                        x={
+                          index *
+                          (buttonSize +
+                            (width - 2 * padding - 3 * buttonSize) / 2)
+                        }
+                        rx={15}
+                        height={buttonSize}
+                        fill="#B2D04B"
+                      />
+                      <Rect
+                        width={buttonSize}
+                        x={
+                          index *
+                          (buttonSize +
+                            (width - 2 * padding - 3 * buttonSize) / 2)
+                        }
+                        rx={15}
+                        height={buttonSize}
+                        fill="#C3DA6B"
+                        clipPath={`url(#clip-${index})`}
+                      />
+                      <SvgText
                         x={
                           index *
                             (buttonSize +
                               (width - 2 * padding - 3 * buttonSize) / 2) +
-                          circleRadius -
-                          circleXOffset
+                          textXOffset
                         }
-                        y={circleRadius - circleYOffset}
-                      />
-                    </ClipPath>
-                  </Defs>
-                  <Rect
-                    width={buttonSize}
-                    x={
-                      index *
-                      (buttonSize + (width - 2 * padding - 3 * buttonSize) / 2)
-                    }
-                    rx={15}
-                    height={buttonSize}
-                    fill="#B2D04B"
+                        fontSize={fontSize}
+                        y={buttonSize - textYOffset}
+                        fontWeight="bold"
+                        fill="#fff">
+                        {button.name}
+                      </SvgText>
+                    </G>
+                  );
+                })
+              }
+            </Svg>
+            {
+              // Icons for button
+              buttonList.map((button, index) => {
+                return (
+                  <Icon
+                    name={button.iconName}
+                    color="#fff"
+                    size={30}
+                    style={{
+                      position: 'absolute',
+                      transform: [
+                        {
+                          translateX:
+                            index *
+                              (buttonSize +
+                                (width - 2 * padding - 3 * buttonSize) / 2) +
+                            circleXOffset,
+                        },
+                        {translateY: circleYOffset},
+                      ],
+                    }}
                   />
-                  <Rect
-                    width={buttonSize}
-                    x={
-                      index *
-                      (buttonSize + (width - 2 * padding - 3 * buttonSize) / 2)
-                    }
-                    rx={15}
-                    height={buttonSize}
-                    fill="#C3DA6B"
-                    clipPath={`url(#clip-${index})`}
-                  />
-                  <SvgText
-                    x={
-                      index *
-                        (buttonSize +
-                          (width - 2 * padding - 3 * buttonSize) / 2) +
-                      textXOffset
-                    }
-                    fontSize={fontSize}
-                    y={buttonSize - textYOffset}
-                    fontWeight="bold"
-                    fill="#fff">
-                    {button.name}
-                  </SvgText>
-                </G>
-              );
-            })
-          }
-        </Svg>
-        {
-          // Icons for button
-          buttonList.map((button, index) => {
-            return (
-              <Icon
-                name={button.iconName}
-                color="#fff"
-                size={30}
-                style={{
-                  position: 'absolute',
-                  transform: [
-                    {
-                      translateX:
-                        index *
-                          (buttonSize +
-                            (width - 2 * padding - 3 * buttonSize) / 2) +
-                        circleXOffset,
-                    },
-                    {translateY: circleYOffset},
-                  ],
-                }}
-              />
-            );
-          })
-        }
-      </View>
-      <DailyBloodSugarLevelBarChart
-        width={bloodGlucoseBarChartWidth}
-        height={bloodGlucoseBarChartHeight}
-      />
-      <View>
-        {/* Nutrition overview, activity overview, weight overview */}
-        <NutritionIntakeCard onPress={() => alert('pressed nutrient card!')} />
-      </View>
-      <TouchableOpacity
-        style={styles.buttonStyle}
-        onPress={() => props.navigation.navigate('MedicationPlan')}>
-        <Text style={styles.buttonText}>Medication Plan (Alpha)</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.buttonStyle}
-        onPress={() => props.navigation.navigate('FitbitSetup')}>
-        <Text style={styles.buttonText}>Sync Fitbit (Alpha)</Text>
-      </TouchableOpacity>
-    </ScrollView>
+                );
+              })
+            }
+          </View>
+          <DailyBloodSugarLevelBarChart
+            width={bloodGlucoseBarChartWidth}
+            height={bloodGlucoseBarChartHeight}
+          />
+          <View>
+            {/* Nutrition overview, activity overview, weight overview */}
+            <NutritionIntakeCard
+              onPress={() => alert('pressed nutrient card!')}
+            />
+          </View>
+        </View>
+        <TouchableOpacity
+          style={styles.buttonStyle}
+          onPress={() => props.navigation.navigate('MedicationPlan')}>
+          <Text style={styles.buttonText}>Medication Plan (Alpha)</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.buttonStyle}
+          onPress={() => props.navigation.navigate('FitbitSetup')}>
+          <Text style={styles.buttonText}>Sync Fitbit (Alpha)</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   greetingText: {
-    color: '#222939',
-    fontSize: 32,
-    fontWeight: 'bold',
+    color: 'black',
+    fontSize: 24,
+    fontFamily: 'SFProDisplay-Bold',
+    marginStart: '5%',
   },
   usernameText: {
-    color: '#B2D14A',
+    color: 'white',
+    fontSize: 40,
+    fontFamily: 'SFProDisplay-Bold',
+    marginStart: '5%',
   },
   shadow: {
     shadowColor: '#000',

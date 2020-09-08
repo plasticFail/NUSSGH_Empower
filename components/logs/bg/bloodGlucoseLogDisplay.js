@@ -1,13 +1,12 @@
 import React, {useState, useRef, useEffect} from 'react';
 import {StyleSheet, Text, View, Animated} from 'react-native';
 //styles
-import logStyles from '../../styles/logStyles';
-import {Colors} from '../../styles/colors';
+import logStyles from '../../../styles/logStyles';
+import {Colors} from '../../../styles/colors';
 
 //show last values
 const BloodGlucoseLogDisplay = (props) => {
-  const {data, show, setShow} = props;
-  const [height, setHeight] = useState(0);
+  const {data, show} = props;
   const dropDownAnimation = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {

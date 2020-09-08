@@ -12,13 +12,13 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import moment from 'moment';
 //component
+import LeftArrowBtn from '../../../components/logs/leftArrowBtn';
 import Counter from '../../../components/onboarding/medication/Counter';
 import SelectDaysModal from '../../../components/onboarding/medication/selectDaysModal';
 import SearchMedication from '../../../components/onboarding/medication/searchMedication';
-import {set} from 'react-native-reanimated';
+//stlye
 import {Colors} from '../../../styles/colors';
 import globalStyles from '../../../styles/globalStyles';
-import LeftArrowBtn from '../../../components/logs/leftArrowBtn';
 
 Ionicons.loadFont();
 
@@ -210,6 +210,7 @@ const AddPlan = (props) => {
       {/*Search */}
       {searchVisible === true ? (
         <SearchMedication
+          parent={'plan'}
           visible={searchVisible}
           closeModal={closeSearchModal}
           selectedMedicine={selectedMedicine}

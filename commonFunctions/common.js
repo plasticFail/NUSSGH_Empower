@@ -10,4 +10,12 @@ const getGreetingFromHour = (hour) => {
   }
 };
 
-export {getGreetingFromHour};
+//check if selected object is empty
+const isEmpty = (obj) => {
+  for (var key in obj) {
+    if (obj.hasOwnProperty(key)) return false;
+  }
+  return true;
+};
+
+export {getGreetingFromHour, isEmpty};

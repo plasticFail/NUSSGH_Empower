@@ -77,9 +77,9 @@ const checkWeight = (weight) => {
 const checkWeightText = (weight) => {
   if (weight) {
     if (
-      weight.match(/^[0-9]+(\.[0-9]{1})?$/g) &&
-      !weight.includes(',') &&
-      !weight.includes('-') &&
+      String(weight).match(/^[0-9]+(\.[0-9]{1})?$/g) &&
+      !String(weight).includes(',') &&
+      !String(weight).includes('-') &&
       Number(weight) <= 200 &&
       Number(weight) >= 40
     ) {
@@ -91,21 +91,32 @@ const checkWeightText = (weight) => {
   return '';
 };
 
-const checkDosage = (dosageString) => {
-  let dosageS = String(dosageString);
-  if (
-    dosageString.length != 0 &&
-    !dosageS.includes('.') &&
-    !dosageS.includes('-') &&
-    !dosageS.includes(',') &&
-    Number(dosageS) <= 5 &&
-    Number(dosageS) > 0
-  ) {
-    return true;
+const checkDosageText = (dosage, correctDosage) => {
+  if (dosage === correctDosage) {
+    return '';
   } else {
-    Alert.alert('Error', 'Invalid dosage input.', [{text: 'Got It'}]);
-    return false;
+    return (
+      'Invalid Dosage, make sure dosage is same as what you have set in your medication plan which is ' +
+      correctDosage +
+      ' Unit (s)'
+    );
   }
+};
+
+const checkDosage = (dosage, correctDosage) => {
+  if (dosage && checkDosageText(dosage, correctDosage) === '') {
+    return true;
+  }
+  return false;
+};
+
+const checkRepeatMedicine = (medicine, list) => {
+  for (let x of list) {
+    if (x.drugName === medicine.drugName) {
+      return true;
+    }
+  }
+  return false;
 };
 
 const handleSubmitBloodGlucose = async (date, bloodGlucose) => {
@@ -132,19 +143,14 @@ const handleSubmitMedication = async (date, selectedMedicationList) => {
   for (let x of selectedMedicationList) {
     x.recordDate = Moment(date).format('DD/MM/YYYY HH:mm:ss');
   }
+  console.log(selectedMedicationList);
 
-  //remove image to send back to database
-  let listCopySend = JSON.parse(JSON.stringify(selectedMedicationList));
-  listCopySend.map(function (item) {
-    delete item.image_url;
-    return item;
-  });
-
-  if (await medicationAddLogRequest(listCopySend)) {
+  if (await medicationAddLogRequest(selectedMedicationList)) {
     storeLastMedicationLog({
       value: selectedMedicationList,
       date: Moment(date).format('YYYY/MM/DD'),
-      time: Moment(date).format('h:mm a'),
+      hour: Moment(date).format('HH:mm'), //tweaked
+      dateString: Moment(date).format('Do MMM YYYY, h:mm a'), //added
     });
     return true;
   } else {
@@ -162,7 +168,8 @@ const handleSubmitWeight = async (date, weight) => {
       storeLastWeightLog({
         value: weight,
         date: Moment(date).format('YYYY/MM/DD'),
-        time: Moment(date).format('h:mm a'),
+        hour: Moment(date).format('HH:mm'), //tweaked
+        dateString: Moment(date).format('Do MMM YYYY, h:mm a'), //added
       });
       return true;
     } else {
@@ -187,7 +194,9 @@ export {
   checkWeight,
   checkBloodGlucoseText,
   checkWeightText,
+  checkDosageText,
   checkDosage,
+  checkRepeatMedicine,
   handleSubmitBloodGlucose,
   handleSubmitMedication,
   handleSubmitWeight,
