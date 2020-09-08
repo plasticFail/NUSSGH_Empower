@@ -26,20 +26,19 @@ import {
   isToday,
 } from '../../../commonFunctions/logFunctions';
 import {getGreetingFromHour} from '../../../commonFunctions/common';
-//components
-import LastLogButton from '../../../components/logs/lastLogBtn';
-import DateSelectionBlock from '../../../components/logs/dateSelectionBlock';
-import BloodGlucoseLogBlock from '../../../components/logs/bg/bloodGlucoseLogBlock';
-import CrossBtn from '../../../components/crossBtn';
-import SuccessDialogue from '../../../components/successDialogue';
-import MedicationLogBlock from '../../../components/logs/medication/medicationLogBlock';
-import WeightLogBlock from '../../../components/logs/weight/weightLogBlock';
-import MenuBtn from '../../../components/menuBtn';
 import {
   getLastBgLog,
   getLastMedicationLog,
   getLastWeightLog,
 } from '../../../storage/asyncStorageFunctions';
+//components
+import LastLogButton from '../../../components/logs/lastLogBtn';
+import DateSelectionBlock from '../../../components/logs/dateSelectionBlock';
+import BloodGlucoseLogBlock from '../../../components/logs/bg/bloodGlucoseLogBlock';
+import CrossBtn from '../../../components/crossBtn';
+import MedicationLogBlock from '../../../components/logs/medication/medicationLogBlock';
+import WeightLogBlock from '../../../components/logs/weight/weightLogBlock';
+import MenuBtn from '../../../components/menuBtn';
 
 // AddLog view
 class AddLogScreen extends Component {
