@@ -1,30 +1,141 @@
-import React, {useState} from 'react';
-import {Text, StyleSheet, TouchableOpacity} from 'react-native';
+import React, {useState, useEffect, useRef} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Dimensions,
+  Animated,
+} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+//third party lib
+import Icon from 'react-native-vector-icons/dist/FontAwesome';
+import Ionicon from 'react-native-vector-icons/Ionicons';
+import Feather from 'react-native-vector-icons/Feather';
 import Modal from 'react-native-modal';
-import Icon from 'react-native-vector-icons/AntDesign';
+//style
+import {Colors} from '../styles/colors';
+import globalStyles from '../styles/globalStyles';
+import {
+  bg_key,
+  med_key,
+  food_key,
+  weight_key,
+} from '../commonFunctions/logFunctions';
 
 function SuccessDialogue(props) {
   const {visible, type} = props;
-  const [showSuccess, setShowSuccess] = useState(visible);
+  const {closeSuccess} = props;
+  const navigation = useNavigation();
+  const [chance, setChance] = useState(0);
+  const springAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    let isMounted = true;
+    if (isMounted) {
+      if (type === bg_key) {
+        setChance(1);
+      }
+      if (type === food_key) {
+        setChance(3);
+      }
+      if (type === med_key) {
+        setChance(2);
+      }
+      if (type === weight_key) {
+        setChance(0.5);
+      }
+      setTimeout(() => {
+        Animated.spring(springAnim, {
+          toValue: 1,
+          friction: 2,
+          useNativeDriver: true,
+        }).start();
+      }, 500);
+    }
+    return () => {
+      isMounted = false;
+    };
+  }, [type]);
+
+  const goGameCenter = () => {
+    closeSuccess();
+    navigation.navigate('GameCenter');
+  };
+
+  const goGoals = () => {
+    closeSuccess();
+    navigation.navigate('Goals');
+  };
+
   return (
-    <Modal
-      isVisible={showSuccess}
-      animationIn="slideInUp"
-      style={{
-        backgroundColor: 'white',
-        borderRadius: 30,
-        alignItems: 'center',
-      }}>
-      <Icon name="checkcircle" color="#aad326" size={100} />
-      <Text style={{fontSize: 30, fontWeight: '500', marginTop: '3%'}}>
-        {type}
-      </Text>
-      <Text style={{fontSize: 18}}>Completed successfully</Text>
-      <TouchableOpacity
-        style={[styles.button, {backgroundColor: '#aad326'}]}
-        onPress={() => setShowSuccess(false)}>
-        <Text style={styles.buttonText}>Got It</Text>
-      </TouchableOpacity>
+    <Modal isVisible={visible} animationIn="slideInUp">
+      <View style={styles.modalContainer}>
+        <Text
+          style={{
+            fontSize: 20,
+            fontWeight: '500',
+            marginTop: '3%',
+            fontFamily: 'SFProDisplay-Bold',
+          }}>
+          {type} Completed
+        </Text>
+        <Animated.View
+          style={{
+            height: 80,
+            width: 80,
+            transform: [{scale: springAnim}],
+          }}>
+          <Ionicon
+            name="checkmark-circle-outline"
+            color={Colors.backArrowColor}
+            size={80}
+          />
+        </Animated.View>
+
+        <TouchableOpacity
+          style={[styles.button, {backgroundColor: '#aad326'}]}
+          onPress={() => closeSuccess()}>
+          <Text style={styles.buttonText}>Continue</Text>
+        </TouchableOpacity>
+        <View style={[styles.border, {marginTop: '7%'}]} />
+        {/*Game Center */}
+        <TouchableOpacity
+          style={{flexDirection: 'row', marginStart: '6%', marginTop: '3%'}}
+          onPress={() => goGameCenter()}>
+          <Icon name="gamepad" size={50} color={'black'} />
+          <View style={{marginStart: '4%', marginTop: '2%'}}>
+            <Text
+              style={[
+                globalStyles.pageDetails,
+                {color: Colors.lastLogValueColor},
+              ]}>
+              Game Center
+            </Text>
+            <Text style={globalStyles.pageDetails}>+ {chance} Chance(s)</Text>
+          </View>
+          <View style={{flex: 1}} />
+          <Icon name="chevron-right" size={20} style={styles.chevron} />
+        </TouchableOpacity>
+        <View style={[styles.border, {marginTop: '7%'}]} />
+        {/*Goals */}
+        <TouchableOpacity
+          style={{flexDirection: 'row', marginStart: '6%', marginTop: '3%'}}
+          onPress={() => goGoals()}>
+          <Feather name="target" size={50} color={'black'} />
+          <View style={{marginStart: '4%', marginTop: '2%'}}>
+            <Text
+              style={[
+                globalStyles.pageDetails,
+                {color: Colors.lastLogValueColor},
+              ]}>
+              Goal
+            </Text>
+          </View>
+          <View style={{flex: 1}} />
+          <Icon name="chevron-right" size={20} style={styles.chevron} />
+        </TouchableOpacity>
+      </View>
     </Modal>
   );
 }
@@ -32,22 +143,34 @@ function SuccessDialogue(props) {
 export default SuccessDialogue;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
+  modalContainer: {
+    backgroundColor: 'white',
     alignItems: 'center',
+    borderRadius: 20,
+    width: '100%',
+    paddingBottom: '10%',
   },
   button: {
-    marginTop: '9%',
     backgroundColor: '#EEF3BD',
-    borderRadius: 20,
+    borderRadius: 9.5,
     marginVertical: 10,
-    paddingVertical: 6,
+    paddingVertical: 10,
     paddingHorizontal: 40,
+    width: Dimensions.get('window').width - 90,
   },
   buttonText: {
     fontSize: 23,
     fontWeight: '500',
     textAlign: 'center',
+  },
+  border: {
+    borderWidth: 0.5,
+    borderColor: Colors.lastLogValueColor,
+    width: '100%',
+  },
+  chevron: {
+    marginEnd: '10%',
+    marginTop: '6%',
+    color: Colors.lastLogValueColor,
   },
 });

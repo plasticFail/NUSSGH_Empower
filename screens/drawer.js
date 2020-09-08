@@ -4,6 +4,7 @@ import {Colors} from '../styles/colors';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 //third party library
 import Ant from 'react-native-vector-icons/AntDesign';
+import Ionicon from 'react-native-vector-icons/Ionicons';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icons from 'react-native-vector-icons/FontAwesome5';
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -94,6 +95,15 @@ const DrawerNavigator = (props) => {
         options={{
           drawerIcon: () => (
             <Icons name="book-open" size={27} color={'white'} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="Log Out"
+        component={Login}
+        options={{
+          drawerIcon: () => (
+            <Ionicon name="exit-outline" size={27} color={'white'} />
           ),
         }}
       />

@@ -29,13 +29,13 @@ const HypoglycemiaBlock = (props) => {
         toValue: 1,
         duration: 1000,
         useNativeDriver: true,
-      }).start(() => setVisible(true));
+      }).start();
     } else {
       Animated.timing(fadeAnim, {
         toValue: 0,
         duration: 1000,
         useNativeDriver: true,
-      }).start(() => setVisible(false));
+      }).start();
     }
   }, [bloodGlucose]);
 

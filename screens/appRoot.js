@@ -19,10 +19,7 @@ import ForgetPasswordScreen from './login/ForgetPasswordScreen';
 import InputOTPScreen from './login/inputOTPScreen';
 import ResetPasswordScreen from './login/resetPassword';
 import DailyLog from './main/log/dailyLog';
-import BloodGlucoseLog from './main/log/bloodGlucoseLog';
-import MedicationLog from './main/log/medicationLog';
 import MealLogRoot from './main/log/meal/MealLogRoot';
-import WeightLog from './main/log/weightLog';
 import DiaryDetail from './main/diary/diaryDetail';
 //components
 import CreateMealLogScreen from './main/log/meal/CreateMealLog';
@@ -207,36 +204,6 @@ class AppRoot extends Component {
                   name={'FoodSearchEngine'}
                   component={FoodSearchEngineScreen}
                   options={{headerShown: false}}
-                />
-                <Stack.Screen
-                  name="BloodGlucoseLog"
-                  component={BloodGlucoseLog}
-                  options={{
-                    title: 'Blood Glucose Log',
-                    headerRight: () => <View />,
-                    headerBackImage: () => <HeaderBackIcon />,
-                    headerBackTitleVisible: false,
-                  }}
-                />
-                <Stack.Screen
-                  name="MedicationLog"
-                  component={MedicationLog}
-                  options={{
-                    title: 'Medication Log',
-                    headerRight: () => <View />,
-                    headerBackImage: () => <HeaderBackIcon />,
-                    headerBackTitleVisible: false,
-                  }}
-                />
-                <Stack.Screen
-                  name="WeightLog"
-                  component={WeightLog}
-                  options={{
-                    title: 'Weight Log',
-                    headerRight: () => <View />,
-                    headerBackImage: () => <HeaderBackIcon />,
-                    headerBackTitleVisible: false,
-                  }}
                 />
                 <Stack.Screen
                   name="DiaryDetail"

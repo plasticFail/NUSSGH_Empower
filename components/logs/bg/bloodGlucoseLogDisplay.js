@@ -37,7 +37,7 @@ const BloodGlucoseLogDisplay = (props) => {
         <View style={logStyles.lastLogBorder} />
         <Text style={logStyles.fieldText}>Last Reading Recorded</Text>
         <Text style={[logStyles.fieldText, {color: Colors.lastLogValueColor}]}>
-          {data.value} mmol/L
+          {Number(data.value)} mmol/L
         </Text>
         <View style={logStyles.lastLogBorder} />
       </Animated.View>

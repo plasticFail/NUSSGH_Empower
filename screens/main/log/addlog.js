@@ -22,6 +22,9 @@ import {
   med_key,
   weight_key,
   renderLogIcon,
+  isPeriod,
+  isToday,
+  checkLogDone,
 } from '../../../commonFunctions/logFunctions';
 import {getGreetingFromHour} from '../../../commonFunctions/common';
 //components
@@ -29,12 +32,9 @@ import LastLogButton from '../../../components/logs/lastLogBtn';
 import DateSelectionBlock from '../../../components/logs/dateSelectionBlock';
 import BloodGlucoseLogBlock from '../../../components/logs/bg/bloodGlucoseLogBlock';
 import CrossBtn from '../../../components/crossBtn';
-import SuccessDialogue from '../../../components/successDialogue';
 import MedicationLogBlock from '../../../components/logs/medication/medicationLogBlock';
 import WeightLogBlock from '../../../components/logs/weight/weightLogBlock';
 import MenuBtn from '../../../components/menuBtn';
-
-const buttonList = [bg_key, food_key, med_key, weight_key];
 
 // AddLog view
 class AddLogScreen extends Component {
@@ -43,6 +43,8 @@ class AddLogScreen extends Component {
     this.props = props;
     this.state = {
       recordDate: new Date(),
+      period: '',
+      todayDate: '',
 
       showModal: false,
       selectedLogType: '',
@@ -52,18 +54,32 @@ class AddLogScreen extends Component {
       showMed: false,
       showWeight: false,
       showSuccess: false,
+
+      completedTypes: [],
+      notCompletedTypes: [],
     };
 
-    this.period = getGreetingFromHour(this.state.recordDate.getHours());
-    this.todayDate = Moment(this.state.recordDate).format('Do MMMM YYYY');
-
     this.props.navigation.addListener('focus', () => {
-      //check the period, date
-      this.period = getGreetingFromHour(this.state.recordDate.getHours());
-      this.todayDate = Moment(this.state.recordDate).format('Do MMMM YYYY');
-      //check which logs have been done
-      //render new button list to display under complete, not complete
-      //in componentDidUpdate also**
+      //check the period, date and which logs done
+      this.init();
+    });
+  }
+
+  componentDidMount() {
+    this.init();
+  }
+
+  init() {
+    let period = getGreetingFromHour(this.state.recordDate.getHours());
+    this.setState({
+      period: period,
+    });
+    this.setState({
+      todayDate: Moment(this.state.recordDate).format('Do MMMM YYYY'),
+    });
+    checkLogDone(period).then((response) => {
+      this.setState({completedTypes: response.completed});
+      this.setState({notCompletedTypes: response.notCompleted});
     });
   }
 
@@ -78,7 +94,6 @@ class AddLogScreen extends Component {
       showFood: false,
       showMed: false,
       showWeight: false,
-      showSuccess: false,
     });
   }
 
@@ -90,6 +105,7 @@ class AddLogScreen extends Component {
   closeModal = () => {
     this.setState({showModal: false});
     this.resetState();
+    this.init(); //update log done check*
   };
 
   setDate = (date) => {
@@ -114,6 +130,7 @@ class AddLogScreen extends Component {
         break;
     }
   };
+
   //close forms
   closeBgForm = () => {
     this.setState({showBg: false});
@@ -128,21 +145,32 @@ class AddLogScreen extends Component {
   };
 
   render() {
-    const {showModal, selectedLogType, recordDate} = this.state;
-    const {showBg, showMed, showWeight, showSuccess} = this.state;
+    const {
+      showModal,
+      selectedLogType,
+      recordDate,
+      todayDate,
+      period,
+      notCompletedTypes,
+      completedTypes,
+    } = this.state;
+    const {showBg, showMed, showWeight} = this.state;
     return (
-      <ScrollView contentContainerStyle={{flexGrow: 1}}>
-        <View style={globalStyles.pageContainer}>
-          <MenuBtn />
+      <View style={globalStyles.pageContainer}>
+        <MenuBtn />
+        <ScrollView contentContainerStyle={{flexGrow: 1}}>
           <Text style={globalStyles.pageHeader}>Add Log</Text>
-          <Text style={globalStyles.pageDetails}>{this.todayDate}</Text>
+          <Text style={globalStyles.pageDetails}>{todayDate}</Text>
           <Text style={[globalStyles.pageDetails, {marginTop: '4%'}]}>
-            Progress For {this.period}
+            Progress For {period}
           </Text>
-          <Text style={logStyles.complete}>Not Complete</Text>
-          {buttonList.map((item, index) => (
+          {notCompletedTypes.length > 0 && (
+            <Text style={logStyles.complete}>Not Complete</Text>
+          )}
+          {notCompletedTypes.map((item, index) => (
             <TouchableOpacity
               style={logStyles.logItem}
+              key={item}
               onPress={() => this.openModalType(item)}>
               <Image source={renderLogIcon(item)} style={logStyles.loglogo} />
               <Text style={[globalStyles.pageDetails, {marginStart: '15%'}]}>
@@ -153,6 +181,26 @@ class AddLogScreen extends Component {
                 size={40}
                 style={logStyles.completeIcon}
                 color="red"
+              />
+            </TouchableOpacity>
+          ))}
+          {completedTypes.length > 0 && (
+            <Text style={logStyles.complete}>Completed</Text>
+          )}
+          {completedTypes.map((item, index) => (
+            <TouchableOpacity
+              style={logStyles.logItem}
+              onPress={() => this.openModalType(item)}
+              key={item}>
+              <Image source={renderLogIcon(item)} style={logStyles.loglogo} />
+              <Text style={[globalStyles.pageDetails, {marginStart: '15%'}]}>
+                {item}
+              </Text>
+              <Ionicon
+                name="checkmark"
+                size={40}
+                style={logStyles.completeIcon}
+                color={Colors.backArrowColor}
               />
             </TouchableOpacity>
           ))}
@@ -183,38 +231,32 @@ class AddLogScreen extends Component {
               </TouchableOpacity>
             </View>
             {/*Modal for the different form types */}
-            {showBg ? (
-              <BloodGlucoseLogBlock
-                visible={showBg}
-                recordDate={recordDate}
-                closeModal={this.closeBgForm}
-                closeParent={this.closeModal}
-                parent="addLog"
-              />
-            ) : null}
+            <BloodGlucoseLogBlock
+              visible={showBg}
+              recordDate={recordDate}
+              closeModal={this.closeBgForm}
+              closeParent={this.closeModal}
+              parent="addLog"
+            />
 
-            {showMed ? (
-              <MedicationLogBlock
-                visible={showMed}
-                recordDate={recordDate}
-                closeModal={this.closeMedForm}
-                closeParent={this.closeModal}
-                parent="addLog"
-              />
-            ) : null}
+            <MedicationLogBlock
+              visible={showMed}
+              recordDate={recordDate}
+              closeModal={this.closeMedForm}
+              closeParent={this.closeModal}
+              parent="addLog"
+            />
 
-            {showWeight ? (
-              <WeightLogBlock
-                visible={showWeight}
-                recordDate={recordDate}
-                closeModal={this.closeWeightForm}
-                closeParent={this.closeModal}
-                parent="addLog"
-              />
-            ) : null}
+            <WeightLogBlock
+              visible={showWeight}
+              recordDate={recordDate}
+              closeModal={this.closeWeightForm}
+              closeParent={this.closeModal}
+              parent="addLog"
+            />
           </Modal>
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </View>
     );
   }
 }

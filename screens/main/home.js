@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -7,13 +7,13 @@ import {
   Dimensions,
   ScrollView,
   TouchableOpacity,
+  Image,
 } from 'react-native';
 //third party lib
 import {
   Svg,
   Text as SvgText,
   Circle,
-  Image,
   Rect,
   G,
   Defs,
@@ -22,12 +22,15 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome5';
 //components
 import MenuBtn from '../../components/menuBtn';
+import HeaderCard from '../../components/home/headerCard';
 import NutritionIntakeCard from '../../components/dashboard/todayOverview/NutritionIntakeCard';
 import DailyBloodSugarLevelBarChart from '../../components/dashboard/reports/DailyBloodSugarLevelBarChart';
 import {getGreetingFromHour} from '../../commonFunctions/common';
 //styles
 import globalStyles from '../../styles/globalStyles';
 import {Colors} from '../../styles/colors';
+//function
+import {checkLogDone} from '../../commonFunctions/logFunctions';
 
 const buttonList = [
   {
@@ -68,12 +71,20 @@ const bloodGlucoseBarChartWidth = width - 2 * padding;
 const bloodGlucoseBarChartHeight = height * 0.21;
 
 const HomeScreen = (props) => {
-  const [currHour, setCurrHour] = React.useState(new Date().getHours());
-  React.useEffect(() => {
+  const [currHour, setCurrHour] = useState(new Date().getHours());
+  const [uncompleteLogs, setUncompleteLogs] = useState([]);
+  useEffect(() => {
     //Refresh every 1 minutes
     setTimeout(() => setCurrHour(new Date().getHours()), 60000);
   });
 
+  useEffect(() => {
+    props.navigation.addListener('focus', () => {
+      checkLogDone(getGreetingFromHour(currHour)).then((response) => {
+        setUncompleteLogs(response.notCompleted);
+      });
+    });
+  }, []);
   return (
     <View
       style={[
@@ -86,17 +97,12 @@ const HomeScreen = (props) => {
           flexGrow: 1,
           backgroundColor: Colors.backgroundColor,
         }}>
-        <View
-          style={{
-            justifyContent: 'center',
-            backgroundColor: Colors.lastLogButtonColor,
-            paddingBottom: '3%',
-          }}>
-          <Text style={styles.greetingText}>
-            {getGreetingFromHour(currHour)},
-          </Text>
-          <Text style={styles.usernameText}>{username}</Text>
-        </View>
+        {/* Greetings and log to do*/}
+        <HeaderCard
+          username={username}
+          hour={getGreetingFromHour(currHour)}
+          uncompleteLogs={uncompleteLogs}
+        />
         <View style={{padding: padding}}>
           <View
             style={{
@@ -221,25 +227,40 @@ const HomeScreen = (props) => {
 const styles = StyleSheet.create({
   greetingText: {
     color: 'black',
-    fontSize: 24,
+    fontSize: 18,
     fontFamily: 'SFProDisplay-Bold',
     marginStart: '5%',
+  },
+  taskText: {
+    fontFamily: 'SFProDisplay-Regular',
+    color: 'white',
+    marginStart: '5%',
+    fontSize: 18,
+  },
+  bold: {
+    fontFamily: 'SFProDisplay-Bold',
+    color: 'white',
+    marginStart: '5%',
+    fontSize: 18,
+  },
+  logCard: {
+    backgroundColor: 'white',
+    borderRadius: 9.5,
+    marginTop: '3%',
+    marginStart: '5%',
+    marginEnd: '5%',
+    padding: '3%',
+  },
+  logLogo: {
+    marginEnd: '3%',
+    marginStart: '5%',
+    marginTop: '3%',
   },
   usernameText: {
     color: 'white',
     fontSize: 40,
     fontFamily: 'SFProDisplay-Bold',
     marginStart: '5%',
-  },
-  shadow: {
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
   },
   buttonStyle: {
     backgroundColor: '#aad326',
@@ -251,6 +272,10 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '700',
     textAlign: 'center',
+  },
+  chevron: {
+    marginTop: '5%',
+    color: Colors.lastLogValueColor,
   },
 });
 

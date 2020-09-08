@@ -9,6 +9,9 @@ import {
   storeLastBgLog,
   storeLastMedicationLog,
   storeLastWeightLog,
+  getLastBgLog,
+  getLastWeightLog,
+  getLastMedicationLog,
 } from '../storage/asyncStorageFunctions';
 import {getGreetingFromHour} from './common';
 
@@ -41,6 +44,51 @@ const isPeriod = (time) => {
   let timeArr = String(time).split(':');
   let hour = timeArr[0];
   return getGreetingFromHour(hour);
+};
+
+//to add: food*
+const checkLogDone = async (period) => {
+  let bg_data = await getLastBgLog();
+  let med_data = await getLastMedicationLog();
+  let weight_data = await getLastWeightLog();
+  let completed = [];
+  let notCompleted = [];
+  if (
+    bg_data &&
+    String(isPeriod(bg_data.hour)) === period &&
+    isToday(bg_data.date)
+  ) {
+    completed.push(bg_key);
+  } else {
+    notCompleted.push(bg_key);
+  }
+
+  if (
+    med_data &&
+    String(isPeriod(med_data.hour)) === period &&
+    isToday(med_data.date)
+  ) {
+    completed.push(med_key);
+  } else {
+    notCompleted.push(med_key);
+  }
+  if (
+    weight_data &&
+    String(isPeriod(weight_data.hour)) === period &&
+    isToday(weight_data.date)
+  ) {
+    completed.push(weight_key);
+  } else {
+    notCompleted.push(weight_key);
+  }
+
+  //for now temporary push food to not done
+  notCompleted.push(food_key);
+
+  return {
+    completed: completed,
+    notCompleted: notCompleted,
+  };
 };
 
 const checkBloodGlucose = (bloodGlucose) => {
@@ -190,6 +238,7 @@ export {
   renderLogIcon,
   isToday,
   isPeriod,
+  checkLogDone,
   checkBloodGlucose,
   checkWeight,
   checkBloodGlucoseText,
