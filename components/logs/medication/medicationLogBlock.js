@@ -15,17 +15,18 @@ import Entypo from 'react-native-vector-icons/Entypo';
 // component
 import LeftArrowBtn from '../leftArrowBtn';
 import SelectMedicationModalContent from './selectMedicationModalContent';
+import MedicationItem from '../../medicationItem';
+import SuccessDialogue from '../../successDialogue';
 // functions
 import {
   checkDosage,
   handleSubmitMedication,
+  med_key,
 } from '../../../commonFunctions/logFunctions';
 //style
 import {Colors} from '../../../styles/colors';
 import globalStyles from '../../../styles/globalStyles';
 import logStyles from '../../../styles/logStyles';
-import {set} from 'react-native-reanimated';
-import MedicationItem from '../../medicationItem';
 
 Entypo.loadFont();
 
@@ -38,6 +39,7 @@ const MedicationLogBlock = (props) => {
   const {closeModal, closeParent} = props;
   const [showSelectModal, setShowSelectModal] = useState(false);
   const [selectedMedList, setSelectedMedList] = useState([]);
+  const [success, setSuccess] = useState(false);
 
   const getSelectedMedicineFromModal = (medicineObj) => {
     console.log('Setting selected medication: ' + medicineObj);
@@ -62,9 +64,14 @@ const MedicationLogBlock = (props) => {
 
   const postMed = async () => {
     if (await handleSubmitMedication(recordDate, selectedMedList)) {
-      closeModal();
-      closeParent();
+      setSuccess(true);
     }
+  };
+
+  const closeSuccess = () => {
+    setSuccess(false);
+    closeModal();
+    closeParent();
   };
 
   return (
@@ -121,6 +128,11 @@ const MedicationLogBlock = (props) => {
           )}
         </View>
       </View>
+      <SuccessDialogue
+        visible={success}
+        type={med_key}
+        closeSuccess={closeSuccess}
+      />
     </Modal>
   );
 };

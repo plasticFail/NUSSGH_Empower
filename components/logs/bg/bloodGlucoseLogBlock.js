@@ -15,6 +15,7 @@ import {
   checkBloodGlucose,
   handleSubmitBloodGlucose,
   min_bg,
+  bg_key,
 } from '../../../commonFunctions/logFunctions';
 import {addGlucoseQuestionaire} from '../../../netcalls/requestsLog';
 //styles
@@ -23,6 +24,8 @@ import {Colors} from '../../../styles/colors';
 import logStyles from '../../../styles/logStyles';
 //third party lib
 import Modal from 'react-native-modal';
+import SuccessDialogue from '../../successDialogue';
+import {set} from 'react-native-reanimated';
 
 const BloodGlucoseLogBlock = (props) => {
   const {
@@ -59,10 +62,14 @@ const BloodGlucoseLogBlock = (props) => {
           console.log('sending questionaire');
         });
       }
-
-      closeModal();
-      closeParent();
+      setSuccess(true);
     }
+  };
+
+  const closeSuccess = () => {
+    setSuccess(false);
+    closeModal();
+    closeParent();
   };
 
   return (
@@ -121,6 +128,11 @@ const BloodGlucoseLogBlock = (props) => {
           </TouchableOpacity>
         )}
       </View>
+      <SuccessDialogue
+        visible={success}
+        type={bg_key}
+        closeSuccess={closeSuccess}
+      />
     </Modal>
   );
 };

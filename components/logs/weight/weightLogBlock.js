@@ -3,6 +3,7 @@ import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
 //components
 import PickDrag from './pickDrag';
 import LeftArrowBtn from '../leftArrowBtn';
+import SuccessDialogue from '../../successDialogue';
 //third party library
 import Modal from 'react-native-modal';
 //styles
@@ -12,6 +13,7 @@ import logStyles from '../../../styles/logStyles';
 import {
   checkWeight,
   handleSubmitWeight,
+  weight_key,
 } from '../../../commonFunctions/logFunctions';
 
 const WeightLogBlock = (props) => {
@@ -22,6 +24,7 @@ const WeightLogBlock = (props) => {
   } = props;
   const {closeModal, closeParent} = props;
   const [weight, setWeight] = useState(0);
+  const [success, setSuccess] = useState(false);
 
   const submitWeight = () => {
     if (parent === 'addLog') {
@@ -33,9 +36,14 @@ const WeightLogBlock = (props) => {
 
   const postWeight = async () => {
     if (await handleSubmitWeight(recordDate, weight)) {
-      closeModal();
-      closeParent();
+      setSuccess(true);
     }
+  };
+
+  const closeSuccess = () => {
+    setSuccess(false);
+    closeModal();
+    closeParent();
   };
 
   const getValue = (value) => {
@@ -72,6 +80,11 @@ const WeightLogBlock = (props) => {
           )}
         </View>
       </View>
+      <SuccessDialogue
+        visible={success}
+        type={weight_key}
+        closeSuccess={closeSuccess}
+      />
     </Modal>
   );
 };

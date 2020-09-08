@@ -210,7 +210,9 @@ class AddLogScreen extends Component {
           <Text style={[globalStyles.pageDetails, {marginTop: '4%'}]}>
             Progress For {period}
           </Text>
-          <Text style={logStyles.complete}>Not Complete</Text>
+          {notCompletedTypes.length > 0 && (
+            <Text style={logStyles.complete}>Not Complete</Text>
+          )}
           {notCompletedTypes.map((item, index) => (
             <TouchableOpacity
               style={logStyles.logItem}
@@ -227,7 +229,9 @@ class AddLogScreen extends Component {
               />
             </TouchableOpacity>
           ))}
-          <Text style={logStyles.complete}>Completed</Text>
+          {completedTypes.length > 0 && (
+            <Text style={logStyles.complete}>Completed</Text>
+          )}
           {completedTypes.map((item, index) => (
             <TouchableOpacity
               style={logStyles.logItem}
