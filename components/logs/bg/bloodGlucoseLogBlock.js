@@ -35,6 +35,7 @@ const BloodGlucoseLogBlock = (props) => {
   const [eatSelection, setEatSelection] = useState(false);
   const [exerciseSelection, setExerciseSelection] = useState(false);
   const [alcholicSelection, setAlcoholSelection] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   console.log('Navigating to bg modal from ' + parent);
 

@@ -87,11 +87,6 @@ class AddLogScreen extends Component {
     });
   }
 
-  componentDidUpdate() {
-    //update the completed logs list
-    console.log('here in component did update');
-  }
-
   //to add: food*
   async checkLogDone() {
     let bg_data = await getLastBgLog();
@@ -125,7 +120,7 @@ class AddLogScreen extends Component {
       notCompleted.push(weight_key);
     }
 
-    //for now temporary push food to not don
+    //for now temporary push food to not done
     notCompleted.push(food_key);
 
     return {
@@ -156,7 +151,7 @@ class AddLogScreen extends Component {
   closeModal = () => {
     this.setState({showModal: false});
     this.resetState();
-    this.init();
+    this.init(); //update log done check*
   };
 
   setDate = (date) => {

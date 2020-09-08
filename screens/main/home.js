@@ -93,7 +93,7 @@ const HomeScreen = (props) => {
             paddingBottom: '3%',
           }}>
           <Text style={styles.greetingText}>
-            {getGreetingFromHour(currHour)},
+            Good {getGreetingFromHour(currHour)},
           </Text>
           <Text style={styles.usernameText}>{username}</Text>
         </View>
