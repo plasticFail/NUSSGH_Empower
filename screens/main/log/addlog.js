@@ -24,13 +24,9 @@ import {
   renderLogIcon,
   isPeriod,
   isToday,
+  checkLogDone,
 } from '../../../commonFunctions/logFunctions';
 import {getGreetingFromHour} from '../../../commonFunctions/common';
-import {
-  getLastBgLog,
-  getLastMedicationLog,
-  getLastWeightLog,
-} from '../../../storage/asyncStorageFunctions';
 //components
 import LastLogButton from '../../../components/logs/lastLogBtn';
 import DateSelectionBlock from '../../../components/logs/dateSelectionBlock';
@@ -74,58 +70,17 @@ class AddLogScreen extends Component {
   }
 
   init() {
+    let period = getGreetingFromHour(this.state.recordDate.getHours());
     this.setState({
-      period: getGreetingFromHour(this.state.recordDate.getHours()),
+      period: period,
     });
     this.setState({
       todayDate: Moment(this.state.recordDate).format('Do MMMM YYYY'),
     });
-    this.checkLogDone().then((response) => {
+    checkLogDone(period).then((response) => {
       this.setState({completedTypes: response.completed});
       this.setState({notCompletedTypes: response.notCompleted});
     });
-  }
-
-  //to add: food*
-  async checkLogDone() {
-    let bg_data = await getLastBgLog();
-    let med_data = await getLastMedicationLog();
-    let weight_data = await getLastWeightLog();
-    let completed = [];
-    let notCompleted = [];
-    if (
-      String(isPeriod(bg_data.hour)) === this.state.period &&
-      isToday(bg_data.date)
-    ) {
-      completed.push(bg_key);
-    } else {
-      notCompleted.push(bg_key);
-    }
-
-    if (
-      String(isPeriod(med_data.hour)) === this.state.period &&
-      isToday(med_data.date)
-    ) {
-      completed.push(med_key);
-    } else {
-      notCompleted.push(med_key);
-    }
-    if (
-      String(isPeriod(weight_data.hour)) === this.state.period &&
-      isToday(weight_data.date)
-    ) {
-      completed.push(weight_key);
-    } else {
-      notCompleted.push(weight_key);
-    }
-
-    //for now temporary push food to not done
-    notCompleted.push(food_key);
-
-    return {
-      completed: completed,
-      notCompleted: notCompleted,
-    };
   }
 
   resetState() {
