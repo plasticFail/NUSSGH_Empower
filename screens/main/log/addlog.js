@@ -22,6 +22,8 @@ import {
   med_key,
   weight_key,
   renderLogIcon,
+  isPeriod,
+  isToday,
 } from '../../../commonFunctions/logFunctions';
 import {getGreetingFromHour} from '../../../commonFunctions/common';
 //components
@@ -33,8 +35,11 @@ import SuccessDialogue from '../../../components/successDialogue';
 import MedicationLogBlock from '../../../components/logs/medication/medicationLogBlock';
 import WeightLogBlock from '../../../components/logs/weight/weightLogBlock';
 import MenuBtn from '../../../components/menuBtn';
-
-const buttonList = [bg_key, food_key, med_key, weight_key];
+import {
+  getLastBgLog,
+  getLastMedicationLog,
+  getLastWeightLog,
+} from '../../../storage/asyncStorageFunctions';
 
 // AddLog view
 class AddLogScreen extends Component {
@@ -43,6 +48,8 @@ class AddLogScreen extends Component {
     this.props = props;
     this.state = {
       recordDate: new Date(),
+      period: '',
+      todayDate: '',
 
       showModal: false,
       selectedLogType: '',
@@ -52,19 +59,79 @@ class AddLogScreen extends Component {
       showMed: false,
       showWeight: false,
       showSuccess: false,
+
+      completedTypes: [],
+      notCompletedTypes: [],
     };
 
-    this.period = getGreetingFromHour(this.state.recordDate.getHours());
-    this.todayDate = Moment(this.state.recordDate).format('Do MMMM YYYY');
-
     this.props.navigation.addListener('focus', () => {
-      //check the period, date
-      this.period = getGreetingFromHour(this.state.recordDate.getHours());
-      this.todayDate = Moment(this.state.recordDate).format('Do MMMM YYYY');
-      //check which logs have been done
-      //render new button list to display under complete, not complete
-      //in componentDidUpdate also**
+      //check the period, date and which logs done
+      this.init();
     });
+  }
+
+  componentDidMount() {
+    this.init();
+  }
+
+  init() {
+    this.setState({
+      period: getGreetingFromHour(this.state.recordDate.getHours()),
+    });
+    this.setState({
+      todayDate: Moment(this.state.recordDate).format('Do MMMM YYYY'),
+    });
+    this.checkLogDone().then((response) => {
+      this.setState({completedTypes: response.completed});
+      this.setState({notCompletedTypes: response.notCompleted});
+    });
+  }
+
+  componentDidUpdate() {
+    //update the completed logs list
+    console.log('here in component did update');
+  }
+
+  //to add: food*
+  async checkLogDone() {
+    let bg_data = await getLastBgLog();
+    let med_data = await getLastMedicationLog();
+    let weight_data = await getLastWeightLog();
+    let completed = [];
+    let notCompleted = [];
+    if (
+      String(isPeriod(bg_data.hour)) === this.state.period &&
+      isToday(bg_data.date)
+    ) {
+      completed.push(bg_key);
+    } else {
+      notCompleted.push(bg_key);
+    }
+
+    if (
+      String(isPeriod(med_data.hour)) === this.state.period &&
+      isToday(med_data.date)
+    ) {
+      completed.push(med_key);
+    } else {
+      notCompleted.push(med_key);
+    }
+    if (
+      String(isPeriod(weight_data.hour)) === this.state.period &&
+      isToday(weight_data.date)
+    ) {
+      completed.push(weight_key);
+    } else {
+      notCompleted.push(weight_key);
+    }
+
+    //for now temporary push food to not don
+    notCompleted.push(food_key);
+
+    return {
+      completed: completed,
+      notCompleted: notCompleted,
+    };
   }
 
   resetState() {
@@ -78,7 +145,6 @@ class AddLogScreen extends Component {
       showFood: false,
       showMed: false,
       showWeight: false,
-      showSuccess: false,
     });
   }
 
@@ -90,6 +156,7 @@ class AddLogScreen extends Component {
   closeModal = () => {
     this.setState({showModal: false});
     this.resetState();
+    this.init();
   };
 
   setDate = (date) => {
@@ -114,6 +181,7 @@ class AddLogScreen extends Component {
         break;
     }
   };
+
   //close forms
   closeBgForm = () => {
     this.setState({showBg: false});
@@ -128,19 +196,27 @@ class AddLogScreen extends Component {
   };
 
   render() {
-    const {showModal, selectedLogType, recordDate} = this.state;
-    const {showBg, showMed, showWeight, showSuccess} = this.state;
+    const {
+      showModal,
+      selectedLogType,
+      recordDate,
+      todayDate,
+      period,
+      notCompletedTypes,
+      completedTypes,
+    } = this.state;
+    const {showBg, showMed, showWeight} = this.state;
     return (
       <ScrollView contentContainerStyle={{flexGrow: 1}}>
         <View style={globalStyles.pageContainer}>
           <MenuBtn />
           <Text style={globalStyles.pageHeader}>Add Log</Text>
-          <Text style={globalStyles.pageDetails}>{this.todayDate}</Text>
+          <Text style={globalStyles.pageDetails}>{todayDate}</Text>
           <Text style={[globalStyles.pageDetails, {marginTop: '4%'}]}>
-            Progress For {this.period}
+            Progress For {period}
           </Text>
           <Text style={logStyles.complete}>Not Complete</Text>
-          {buttonList.map((item, index) => (
+          {notCompletedTypes.map((item, index) => (
             <TouchableOpacity
               style={logStyles.logItem}
               onPress={() => this.openModalType(item)}>
@@ -153,6 +229,23 @@ class AddLogScreen extends Component {
                 size={40}
                 style={logStyles.completeIcon}
                 color="red"
+              />
+            </TouchableOpacity>
+          ))}
+          <Text style={logStyles.complete}>Completed</Text>
+          {completedTypes.map((item, index) => (
+            <TouchableOpacity
+              style={logStyles.logItem}
+              onPress={() => this.openModalType(item)}>
+              <Image source={renderLogIcon(item)} style={logStyles.loglogo} />
+              <Text style={[globalStyles.pageDetails, {marginStart: '15%'}]}>
+                {item}
+              </Text>
+              <Ionicon
+                name="checkmark"
+                size={40}
+                style={logStyles.completeIcon}
+                color={Colors.backArrowColor}
               />
             </TouchableOpacity>
           ))}

@@ -9,6 +9,9 @@ import {
   storeLastBgLog,
   storeLastMedicationLog,
   storeLastWeightLog,
+  getLastBgLog,
+  getLastWeightLog,
+  getLastMedicationLog,
 } from '../storage/asyncStorageFunctions';
 import {getGreetingFromHour} from './common';
 
