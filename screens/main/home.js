@@ -22,6 +22,7 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome5';
 //components
 import MenuBtn from '../../components/menuBtn';
+import HeaderCard from '../../components/home/headerCard';
 import NutritionIntakeCard from '../../components/dashboard/todayOverview/NutritionIntakeCard';
 import DailyBloodSugarLevelBarChart from '../../components/dashboard/reports/DailyBloodSugarLevelBarChart';
 import {getGreetingFromHour} from '../../commonFunctions/common';
@@ -29,8 +30,7 @@ import {getGreetingFromHour} from '../../commonFunctions/common';
 import globalStyles from '../../styles/globalStyles';
 import {Colors} from '../../styles/colors';
 //function
-import {checkLogDone, renderLogIcon} from '../../commonFunctions/logFunctions';
-import logStyles from '../../styles/logStyles';
+import {checkLogDone} from '../../commonFunctions/logFunctions';
 
 const buttonList = [
   {
@@ -85,9 +85,6 @@ const HomeScreen = (props) => {
       });
     });
   }, []);
-
-  console.log(uncompleteLogs);
-
   return (
     <View
       style={[
@@ -101,38 +98,11 @@ const HomeScreen = (props) => {
           backgroundColor: Colors.backgroundColor,
         }}>
         {/* Greetings and log to do*/}
-        <View
-          style={{
-            justifyContent: 'center',
-            backgroundColor: Colors.lastLogButtonColor,
-            paddingBottom: '3%',
-          }}>
-          <Text style={styles.greetingText}>
-            Good {getGreetingFromHour(currHour)},
-          </Text>
-          <Text style={styles.usernameText}>{username}</Text>
-          <Text style={styles.taskText}>
-            You have <Text style={styles.bold}>{uncompleteLogs.length}</Text>{' '}
-            mandatory task (s) awaiting...
-          </Text>
-          <TouchableOpacity
-            style={styles.logCard}
-            onPress={() => props.navigation.navigate('AddLog')}>
-            <Text style={[styles.greetingText, {color: Colors.menuColor}]}>
-              Create a log for the {getGreetingFromHour(currHour)}
-            </Text>
-            <View style={{flexDirection: 'row'}}>
-              {uncompleteLogs.map((item, index) => (
-                <Image
-                  source={renderLogIcon(item)}
-                  style={[logStyles.mini_loglogo, styles.logLogo]}
-                />
-              ))}
-              <View style={{flex: 1}} />
-              <Icon name="chevron-right" size={20} style={styles.chevron} />
-            </View>
-          </TouchableOpacity>
-        </View>
+        <HeaderCard
+          username={username}
+          hour={getGreetingFromHour(currHour)}
+          uncompleteLogs={uncompleteLogs}
+        />
         <View style={{padding: padding}}>
           <View
             style={{

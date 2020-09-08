@@ -229,35 +229,29 @@ class AddLogScreen extends Component {
               </TouchableOpacity>
             </View>
             {/*Modal for the different form types */}
-            {showBg ? (
-              <BloodGlucoseLogBlock
-                visible={showBg}
-                recordDate={recordDate}
-                closeModal={this.closeBgForm}
-                closeParent={this.closeModal}
-                parent="addLog"
-              />
-            ) : null}
+            <BloodGlucoseLogBlock
+              visible={showBg}
+              recordDate={recordDate}
+              closeModal={this.closeBgForm}
+              closeParent={this.closeModal}
+              parent="addLog"
+            />
 
-            {showMed ? (
-              <MedicationLogBlock
-                visible={showMed}
-                recordDate={recordDate}
-                closeModal={this.closeMedForm}
-                closeParent={this.closeModal}
-                parent="addLog"
-              />
-            ) : null}
+            <MedicationLogBlock
+              visible={showMed}
+              recordDate={recordDate}
+              closeModal={this.closeMedForm}
+              closeParent={this.closeModal}
+              parent="addLog"
+            />
 
-            {showWeight ? (
-              <WeightLogBlock
-                visible={showWeight}
-                recordDate={recordDate}
-                closeModal={this.closeWeightForm}
-                closeParent={this.closeModal}
-                parent="addLog"
-              />
-            ) : null}
+            <WeightLogBlock
+              visible={showWeight}
+              recordDate={recordDate}
+              closeModal={this.closeWeightForm}
+              closeParent={this.closeModal}
+              parent="addLog"
+            />
           </Modal>
         </View>
       </ScrollView>

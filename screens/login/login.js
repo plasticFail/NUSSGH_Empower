@@ -43,6 +43,7 @@ class Login extends Component {
   }
 
   init = async () => {
+    this.props.logout();
     const username = await getUsername();
     if (username !== null && username !== '') {
       console.log('username : ' + username);
