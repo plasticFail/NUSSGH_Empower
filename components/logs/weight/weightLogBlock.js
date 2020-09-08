@@ -80,11 +80,13 @@ const WeightLogBlock = (props) => {
           )}
         </View>
       </View>
-      <SuccessDialogue
-        visible={success}
-        type={weight_key}
-        closeSuccess={closeSuccess}
-      />
+      {success ? (
+        <SuccessDialogue
+          visible={success}
+          type={weight_key}
+          closeSuccess={closeSuccess}
+        />
+      ) : null}
     </Modal>
   );
 };

@@ -128,11 +128,13 @@ const MedicationLogBlock = (props) => {
           )}
         </View>
       </View>
-      <SuccessDialogue
-        visible={success}
-        type={med_key}
-        closeSuccess={closeSuccess}
-      />
+      {success ? (
+        <SuccessDialogue
+          visible={success}
+          type={med_key}
+          closeSuccess={closeSuccess}
+        />
+      ) : null}
     </Modal>
   );
 };

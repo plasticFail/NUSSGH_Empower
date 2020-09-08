@@ -128,11 +128,13 @@ const BloodGlucoseLogBlock = (props) => {
           </TouchableOpacity>
         )}
       </View>
-      <SuccessDialogue
-        visible={success}
-        type={bg_key}
-        closeSuccess={closeSuccess}
-      />
+      {success ? (
+        <SuccessDialogue
+          visible={success}
+          type={bg_key}
+          closeSuccess={closeSuccess}
+        />
+      ) : null}
     </Modal>
   );
 };

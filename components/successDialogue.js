@@ -28,7 +28,7 @@ function SuccessDialogue(props) {
   const {closeSuccess} = props;
   const navigation = useNavigation();
   const [chance, setChance] = useState(0);
-  const springAnim = useRef(new Animated.Value(0.1)).current;
+  const springAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     let isMounted = true;
@@ -48,10 +48,10 @@ function SuccessDialogue(props) {
       setTimeout(() => {
         Animated.spring(springAnim, {
           toValue: 1,
-          friction: 1,
+          friction: 2,
           useNativeDriver: true,
         }).start();
-      }, 1300);
+      }, 500);
     }
     return () => {
       isMounted = false;
