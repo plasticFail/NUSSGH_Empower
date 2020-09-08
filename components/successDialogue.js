@@ -1,10 +1,11 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   Dimensions,
+  Animated,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 //third party lib
@@ -27,20 +28,34 @@ function SuccessDialogue(props) {
   const {closeSuccess} = props;
   const navigation = useNavigation();
   const [chance, setChance] = useState(0);
+  const springAnim = useRef(new Animated.Value(0.1)).current;
 
   useEffect(() => {
-    if (type === bg_key) {
-      setChance(1);
+    let isMounted = true;
+    if (isMounted) {
+      if (type === bg_key) {
+        setChance(1);
+      }
+      if (type === food_key) {
+        setChance(3);
+      }
+      if (type === med_key) {
+        setChance(2);
+      }
+      if (type === weight_key) {
+        setChance(0.5);
+      }
+      setTimeout(() => {
+        Animated.spring(springAnim, {
+          toValue: 1,
+          friction: 1,
+          useNativeDriver: true,
+        }).start();
+      }, 1300);
     }
-    if (type === food_key) {
-      setChance(3);
-    }
-    if (type === med_key) {
-      setChance(2);
-    }
-    if (type === weight_key) {
-      setChance(0.5);
-    }
+    return () => {
+      isMounted = false;
+    };
   }, [type]);
 
   const goGameCenter = () => {
@@ -65,11 +80,19 @@ function SuccessDialogue(props) {
           }}>
           {type} Completed
         </Text>
-        <Ionicon
-          name="checkmark-circle-outline"
-          color={Colors.backArrowColor}
-          size={80}
-        />
+        <Animated.View
+          style={{
+            height: 80,
+            width: 80,
+            transform: [{scale: springAnim}],
+          }}>
+          <Ionicon
+            name="checkmark-circle-outline"
+            color={Colors.backArrowColor}
+            size={80}
+          />
+        </Animated.View>
+
         <TouchableOpacity
           style={[styles.button, {backgroundColor: '#aad326'}]}
           onPress={() => closeSuccess()}>
