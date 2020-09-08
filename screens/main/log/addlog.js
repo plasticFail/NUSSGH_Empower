@@ -170,6 +170,7 @@ class AddLogScreen extends Component {
           {notCompletedTypes.map((item, index) => (
             <TouchableOpacity
               style={logStyles.logItem}
+              key={item}
               onPress={() => this.openModalType(item)}>
               <Image source={renderLogIcon(item)} style={logStyles.loglogo} />
               <Text style={[globalStyles.pageDetails, {marginStart: '15%'}]}>
@@ -189,7 +190,8 @@ class AddLogScreen extends Component {
           {completedTypes.map((item, index) => (
             <TouchableOpacity
               style={logStyles.logItem}
-              onPress={() => this.openModalType(item)}>
+              onPress={() => this.openModalType(item)}
+              key={item}>
               <Image source={renderLogIcon(item)} style={logStyles.loglogo} />
               <Text style={[globalStyles.pageDetails, {marginStart: '15%'}]}>
                 {item}
