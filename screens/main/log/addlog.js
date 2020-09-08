@@ -156,9 +156,9 @@ class AddLogScreen extends Component {
     } = this.state;
     const {showBg, showMed, showWeight} = this.state;
     return (
-      <ScrollView contentContainerStyle={{flexGrow: 1}}>
-        <View style={globalStyles.pageContainer}>
-          <MenuBtn />
+      <View style={globalStyles.pageContainer}>
+        <MenuBtn />
+        <ScrollView contentContainerStyle={{flexGrow: 1}}>
           <Text style={globalStyles.pageHeader}>Add Log</Text>
           <Text style={globalStyles.pageDetails}>{todayDate}</Text>
           <Text style={[globalStyles.pageDetails, {marginTop: '4%'}]}>
@@ -253,8 +253,8 @@ class AddLogScreen extends Component {
               parent="addLog"
             />
           </Modal>
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </View>
     );
   }
 }

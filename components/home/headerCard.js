@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
 //function
 import {renderLogIcon} from '../../commonFunctions/logFunctions';
+import {useNavigation} from '@react-navigation/native';
 //third party lib
 import Icon from 'react-native-vector-icons/FontAwesome5';
 //styles
@@ -10,6 +11,7 @@ import {Colors} from '../../styles/colors';
 
 const HeaderCard = (props) => {
   const {username, hour, uncompleteLogs} = props;
+  const navigation = useNavigation();
   return (
     <View
       style={{
@@ -25,7 +27,7 @@ const HeaderCard = (props) => {
       </Text>
       <TouchableOpacity
         style={styles.logCard}
-        onPress={() => props.navigation.navigate('AddLog')}>
+        onPress={() => navigation.navigate('AddLog')}>
         <Text style={[styles.greetingText, {color: Colors.menuColor}]}>
           Create a log for the {hour}
         </Text>

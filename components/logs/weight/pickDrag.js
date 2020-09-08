@@ -132,6 +132,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 150,
     flexGrow: 1,
+    marginTop: '-8%',
   },
   intervalContainer: {
     flexDirection: 'row',
@@ -139,7 +140,7 @@ const styles = StyleSheet.create({
   interval: {
     width: 1,
     backgroundColor: '#979797',
-    height: '20%',
+    height: '40%',
     margin: 3,
     color: '#e2e8ee',
   },
@@ -160,9 +161,10 @@ const styles = StyleSheet.create({
     borderStyle: 'solid',
     borderLeftColor: 'transparent',
     borderRightColor: 'transparent',
-    borderTopColor: Colors.submitBtnColor,
+    borderTopColor: Colors.backArrowColor,
     alignSelf: 'center',
     marginStart: '3%',
+    zIndex: 2,
   },
   wholeNumInterval: {
     height: '60%',
