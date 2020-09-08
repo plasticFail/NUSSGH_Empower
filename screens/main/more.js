@@ -9,11 +9,9 @@ import HypocorrectionFood from '../more/hypocorrectionFood';
 import AppointmentScreen from '../more/appointments';
 import ViewMore from '../../components/hypofood/viewMore';
 import HeaderIcon from '../../components/common/headerBtnIcon';
-import ReportsScreen from '../more/reports';
 import EducationMaterialsScreen from '../more/educationMaterials';
 import GoalsScreen from '../more/goals';
 import RemindersScreen from '../more/reminders';
-import GameCenterScreen from '../more/gameCenter';
 import GlucoseMonitorsScreen from '../more/glucoseMonitor';
 import FitbitSetup from '../onboarding/fitbit/FitbitSetup';
 
@@ -106,14 +104,6 @@ const MoreScreen = (props) => {
         })}
       />
       <Stack.Screen
-        name="Reports"
-        component={ReportsScreen}
-        options={{
-          title: 'Reports',
-          headerRight: () => <View />,
-        }}
-      />
-      <Stack.Screen
         name="EducationMaterials"
         component={EducationMaterialsScreen}
         options={{
@@ -134,14 +124,6 @@ const MoreScreen = (props) => {
         component={RemindersScreen}
         options={{
           title: 'Manage My Reminders',
-          headerRight: () => <View />,
-        }}
-      />
-      <Stack.Screen
-        name="GameCenter"
-        component={GameCenterScreen}
-        options={{
-          title: 'Game Center',
           headerRight: () => <View />,
         }}
       />

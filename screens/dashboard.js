@@ -1,20 +1,21 @@
 import React from 'react';
+import {StyleSheet} from 'react-native';
 //third party libs
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 //functions
 import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
 //other screens
 import Home from './main/home';
-import Diary from './main/diary/diary';
 import AddLog from './main/log/addlog';
-import AlertsScreen from './sub/alerts';
-import ChatScreen from './sub/chat';
+import ChatScreen from './main/chat';
+import ReportsScreen from './main/reports';
 //third party lib
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import Ant from 'react-native-vector-icons/AntDesign';
+import GameCenter from './main/gameCenter';
 
 const Tab = createBottomTabNavigator();
-
+/*
 function getMoreHeaderTitle(route) {
   const routeName = getFocusedRouteNameFromRoute(route) ?? 'More';
 
@@ -30,6 +31,7 @@ function getMoreHeaderTitle(route) {
       return 'Medication';
   }
 }
+*/
 
 // Method to reset the tab navigation when navigating through pages
 // Quite unclean during the development phase because of the warning shown.
@@ -46,6 +48,12 @@ const DashboardScreen = (props) => {
         activeTintColor: '#16A950',
         inactiveTintColor: 'gray',
         adaptive: false,
+        labelStyle: {
+          fontSize: 12,
+        },
+        style: {
+          height: '8%',
+        },
       }}>
       <Tab.Screen
         name="Home"
@@ -61,13 +69,13 @@ const DashboardScreen = (props) => {
         }}
       />
       <Tab.Screen
-        name="Diary"
-        component={Diary}
+        name="Reports"
+        component={ReportsScreen}
         listeners={{
-          tabPress: () => handleTabPress(props, 'Diary'),
+          tabPress: () => handleTabPress(props, 'Reports'),
         }}
         options={{
-          title: 'Diary',
+          title: 'Reports',
           tabBarIcon: ({color, size}) => (
             <Icon name="book" size={size} color={color} />
           ),
@@ -81,36 +89,21 @@ const DashboardScreen = (props) => {
         }}
         options={{
           title: 'Add Log',
-          tabBarIcon: () => (
-            <Ant
-              name="pluscircle"
-              size={70}
-              color={'#aad326'}
-              style={{
-                position: 'absolute',
-                bottom: 0,
-                zIndex: 1,
-                width: '100%',
-                height: 70,
-                paddingHorizontal: '7%',
-                shadowColor: 'white',
-                shadowOpacity: 0.5,
-                elevation: 2,
-              }}
-            />
+          tabBarIcon: ({color, size}) => (
+            <Ant name="plussquareo" size={size} color={color} />
           ),
         }}
       />
       <Tab.Screen
-        name="Alert"
-        component={AlertsScreen}
+        name="GameCenter"
+        component={GameCenter}
         listeners={{
-          tabPress: () => handleTabPress(props, 'Alert'),
+          tabPress: () => handleTabPress(props, 'Game Center'),
         }}
         options={{
-          title: 'Alerts',
+          title: 'Game Center',
           tabBarIcon: ({color, size}) => (
-            <Icon name="bell" size={size} color={color} />
+            <Icon name="gamepad" size={size} color={color} />
           ),
         }}
       />

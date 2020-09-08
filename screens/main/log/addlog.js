@@ -32,6 +32,7 @@ import CrossBtn from '../../../components/crossBtn';
 import SuccessDialogue from '../../../components/successDialogue';
 import MedicationLogBlock from '../../../components/logs/medication/medicationLogBlock';
 import WeightLogBlock from '../../../components/logs/weight/weightLogBlock';
+import MenuBtn from '../../../components/menuBtn';
 
 const buttonList = [bg_key, food_key, med_key, weight_key];
 
@@ -132,6 +133,7 @@ class AddLogScreen extends Component {
     return (
       <ScrollView contentContainerStyle={{flexGrow: 1}}>
         <View style={globalStyles.pageContainer}>
+          <MenuBtn />
           <Text style={globalStyles.pageHeader}>Add Log</Text>
           <Text style={globalStyles.pageDetails}>{this.todayDate}</Text>
           <Text style={[globalStyles.pageDetails, {marginTop: '4%'}]}>

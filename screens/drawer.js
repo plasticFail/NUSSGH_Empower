@@ -7,6 +7,7 @@ import Ant from 'react-native-vector-icons/AntDesign';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icons from 'react-native-vector-icons/FontAwesome5';
 import Entypo from 'react-native-vector-icons/Entypo';
+import Feather from 'react-native-vector-icons/Feather';
 //component
 import DashboardScreen from './dashboard';
 import AccountDetailScreen from './more/accountDetails';
@@ -16,6 +17,7 @@ import DiaryScreen from './main/diary/diary';
 import Goals from './more/goals';
 import Medication from './more/medications';
 import Login from './login/login';
+import GameCenter from './main/gameCenter';
 
 const Drawer = createDrawerNavigator();
 
@@ -38,7 +40,7 @@ const DrawerNavigator = (props) => {
         name="Home"
         component={DashboardScreen}
         options={{
-          title: 'Menu',
+          title: 'Home',
           drawerIcon: () => <Icon name="home" size={30} color={'white'} />,
         }}
       />
@@ -66,10 +68,17 @@ const DrawerNavigator = (props) => {
         }}
       />
       <Drawer.Screen
+        name="Game Center"
+        component={GameCenter}
+        options={{
+          drawerIcon: () => <Icon name="gamepad" size={30} color={'white'} />,
+        }}
+      />
+      <Drawer.Screen
         name="Goals"
         component={Goals}
         options={{
-          drawerIcon: () => <Entypo name="water" size={30} color={'white'} />,
+          drawerIcon: () => <Feather name="target" size={30} color={'white'} />,
         }}
       />
       <Drawer.Screen
