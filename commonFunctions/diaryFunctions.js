@@ -25,10 +25,9 @@ const getHour = (dateString) => {
   }
 };
 
-const getDateRange = (value) => {
-  let now = new Date();
-  let startDate = moment(now).subtract(value, 'days');
-  return getDateArray(startDate.toDate(), now);
+const getDateRange = (value, fromDate) => {
+  let startDate = moment(fromDate).subtract(value, 'days');
+  return getDateArray(startDate.toDate(), fromDate);
 };
 
 const getDateArray = (startDate, stopDate) => {

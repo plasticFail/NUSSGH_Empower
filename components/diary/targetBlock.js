@@ -330,10 +330,12 @@ function renderContent(type, miss, pass, value) {
         {type === bg_key && (
           <Text style={styles.buttonDetail}>Average {value} mmol/L</Text>
         )}
-        {type === food_key ||
-          (type === weight_key && (
-            <Text style={styles.buttonDetail}>Within Healthy Range</Text>
-          ))}
+        {type === food_key && (
+          <Text style={styles.buttonDetail}>Within Healthy Range</Text>
+        )}
+        {type === weight_key && (
+          <Text style={styles.buttonDetail}>Within Healthy Range</Text>
+        )}
         {type === activity_key && (
           <Text style={styles.buttonDetail}>{value} Active Minutes</Text>
         )}

@@ -5,6 +5,7 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
+  Dimensions,
 } from 'react-native';
 //component
 import MenuBtn from '../../../components/menuBtn';
@@ -17,6 +18,9 @@ import {Colors} from '../../../styles/colors';
 //third party lib
 import Moment from 'moment';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {Calendar} from 'react-native-calendars';
+import CalendarDayComponent from '../../../components/onboarding/medication/calendarDay';
+import CalendarTemplate from '../../../components/calendar/calendarTemplate';
 
 const DiaryScreen = (props) => {
   const today_date = Moment(new Date()).format('YYYY-MM-DD');
@@ -25,15 +29,29 @@ const DiaryScreen = (props) => {
   const [partialVisible, setPartialVisible] = useState(true); //show 7days
   const [showCalendarFull, setShowCalendarFull] = useState(false);
   const [selectedDate, setSelectedDate] = useState(today_date);
+  const [calendarselect, setCalendarSelect] = useState({});
 
   //set useeffect to render this week*
   useEffect(() => {
-    setDates(getDateRange(6));
+    setDates(getDateRange(6, new Date()));
   }, []);
 
-  //select date and show the log summary
+  //select date from half calendar
   chooseDate = (item) => {
     setSelectedDate(item);
+  };
+
+  //select date from full calendar
+  selectDate = (item) => {
+    setSelectedDate(item);
+    setDates(getDateRange(6, new Date(item)));
+    let newobj = {
+      [item]: {
+        selected: true,
+        marked: true,
+      },
+    };
+    setCalendarSelect(newobj);
   };
 
   displayCalendar = () => {
@@ -47,7 +65,39 @@ const DiaryScreen = (props) => {
       <ScrollView contentContainerStyle={{flexGrow: 0}}>
         <>
           <Text style={globalStyles.pageHeader}>Diary</Text>
-          {showCalendarFull && <Text>Show Calendar Here</Text>}
+          {showCalendarFull ? (
+            <Calendar
+              dayComponent={CalendarDayComponent}
+              maxDate={today_date}
+              hideArrows={false}
+              selectAll={false}
+              markedDates={calendarselect}
+              onDayPress={(day) => {
+                selectDate(day.dateString);
+              }}
+              theme={{
+                calendarBackground: Colors.backgroundColor,
+                'stylesheet.calendar.header': {
+                  header: {
+                    flexDirection: 'row',
+                    justifyContent: 'center', //added
+                    marginTop: 6,
+                    alignItems: 'center',
+                  },
+                  headerContainer: {
+                    width: '80%',
+                    flexDirection: 'row',
+                  },
+                  monthText: {
+                    fontSize: 20,
+                    fontFamily: 'SFProDisplay-Bold',
+                    textAlign: 'center',
+                  },
+                },
+                arrowColor: Colors.lastLogValueColor,
+              }}
+            />
+          ) : null}
           {partialVisible && (
             <View style={styles.dateList}>
               {dates.map((item, index) =>
@@ -119,7 +169,7 @@ const styles = StyleSheet.create({
   },
   dateContainer: {
     backgroundColor: '#e2e8ee',
-    width: '12%',
+    width: '11%',
     marginStart: '2%',
     paddingTop: '5%',
     paddingBottom: '5%',

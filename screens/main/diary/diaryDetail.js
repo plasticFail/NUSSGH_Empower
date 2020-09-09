@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {View, Text, StyleSheet, Dimensions} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 //component
-import Summary from '../../../components/diary/summary';
 import TimeSection from '../../../components/diary/timeSection';
 //functions
 import {getHour} from '../../../commonFunctions/diaryFunctions';
@@ -114,24 +113,6 @@ class DiaryDetail extends Component {
     return (
       <View style={styles.screen}>
         <Text style={styles.summaryText}>Overall Summary: </Text>
-        <Summary
-          bgPass={bgPass}
-          bgMiss={bgMiss}
-          avgBg={avgBg}
-          weightMiss={weightMiss}
-          weightPassCount={weightPassCount}
-          weightFailCount={weightFailCount}
-          activityMiss={activityMiss}
-          activityPassCount={activityPassCount}
-          activityFailCount={activityFailCount}
-          foodMiss={foodMiss}
-          carbs={carbs}
-          protein={protein}
-          fats={fats}
-          foodPassCount={foodPassCount}
-          foodFailCount={foodFailCount}
-        />
-
         <FlatList
           listKey={(item, index) => index.toString()}
           ListEmptyComponent={
