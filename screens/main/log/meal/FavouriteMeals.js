@@ -4,7 +4,6 @@ import {View, StyleSheet, ActivityIndicator, Alert} from 'react-native';
 import {requestUnfavouriteMeal, requestFavouriteMealList} from "../../../../netcalls/mealEndpoints/requestMealLog";
 // Others
 import MealList from "../../../../components/logs/meal/MealList";
-import Searchbar from "../../../../components/Searchbar";
 
 // The screen that contains a list of the user's favourite meals.
 export default class FavouriteMealComponent extends React.Component {

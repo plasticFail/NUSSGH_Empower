@@ -30,16 +30,22 @@ Icon.loadFont();
 const AnimatedKeyboardAvoidingView = Animated.createAnimatedComponent(KeyboardAvoidingView);
 const AnimatedIcon = Animated.createAnimatedComponent(Icon);
 
+const TABS = {
+  'Food Search': 'search',
+  'Favourites List': 'favourites'
+}
+
 class FoodSearchEngineScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       query: '',
+      favouritesQuery: '',
       isLoading: false,
       foodResults: [],
       keyboardShown: false,
       selectedTab: 'search',
-      recentlyAddedFoodItems: []
+      recentlyAddedFoodItems: [],
     };
     this.timeout = setTimeout(() => {}, 0); //Initialise timeout for lazy loading
     this.keyboardHeight = new Animated.Value(0);
@@ -123,27 +129,36 @@ class FoodSearchEngineScreen extends React.Component {
 
   // handler for making lazy requests.
   updateQuery = (text) => {
-    if (text === '') {
-      clearTimeout(this.timeout);
-      this.setState({
-        query: text,
-        isLoading: false,
-        foodResults: [],
-      });
-    } else {
-      // Do lazy loading
-      this.setState(
-        {
+    // Update query for food search text input
+    if (this.state.selectedTab == TABS["Food Search"]) {
+      // query is empty
+      if (text === '') {
+        clearTimeout(this.timeout);
+        this.setState({
           query: text,
-          isLoading: true,
-        },
-        () => {
-          clearTimeout(this.timeout);
-          this.timeout = setTimeout(() => {
-            this.makeApiCallToFoodSearchEngine();
-          }, 500); // 500ms delay before loading API.
-        },
-      );
+          isLoading: false,
+          foodResults: [],
+        });
+      } else {
+        // process query and send query request lazily.
+        this.setState(
+            {
+              query: text,
+              isLoading: true,
+            },
+            () => {
+              clearTimeout(this.timeout);
+              this.timeout = setTimeout(() => {
+                this.makeApiCallToFoodSearchEngine();
+              }, 500); // 500ms delay before loading API.
+            },
+        );
+      }
+    } else {
+      // update query for favourites filter
+      this.setState({
+        favouritesQuery: text
+      })
     }
   };
 
@@ -178,9 +193,15 @@ class FoodSearchEngineScreen extends React.Component {
       });
   };
 
+  handleTabChange = (tab) => {
+    this.setState({
+      selectedTab: tab
+    })
+  }
+
   render() {
     const {navigation, route} = this.props;
-    const {query, isLoading, foodResults, keyboardShown, selectedTab, recentlyAddedFoodItems} = this.state;
+    const {query, favouritesQuery, isLoading, foodResults, keyboardShown, selectedTab, recentlyAddedFoodItems} = this.state;
     const type = route.params.type;
     return (
       <AnimatedKeyboardAvoidingView enabled={false} style={[styles.root, {transform: [{translateY: this.listResultY}]}]}>
@@ -191,10 +212,10 @@ class FoodSearchEngineScreen extends React.Component {
         {
           !keyboardShown &&
           (<View style={styles.tabsContainer}>
-            <TouchableOpacity style={selectedTab === 'search' ? styles.selectedTab : styles.tabs} onPress={() => this.setState({selectedTab: 'search'})}>
+            <TouchableOpacity style={selectedTab === 'search' ? styles.selectedTab : styles.tabs} onPress={() => this.handleTabChange(TABS["Food Search"])}>
               <Text style={selectedTab === 'search' ? styles.selectedTabText : styles.tabText}>Search</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={selectedTab === 'favourites' ? styles.selectedTab : styles.tabs} onPress={() => this.setState({selectedTab: 'favourites'})}>
+            <TouchableOpacity style={selectedTab === 'favourites' ? styles.selectedTab : styles.tabs} onPress={() => this.handleTabChange(TABS["Favourites List"])}>
               <Text style={selectedTab === 'favourites' ? styles.selectedTabText : styles.tabText}>Favourites</Text>
             </TouchableOpacity>
           </View>)
@@ -203,12 +224,14 @@ class FoodSearchEngineScreen extends React.Component {
           selectedTab === 'search' ? (<Searchbar
               key='searchbar'
               containerStyle={{marginLeft: 20, marginRight: 20}}
+              value={query}
               onChangeText={this.updateQuery}
               placeholder='Search food'
               onSubmit={this.onSubmit}
           />) : (<Searchbar
               key='favourites-searchbar'
               containerStyle={{marginLeft: 20, marginRight: 20}}
+              value={favouritesQuery}
               onChangeText={this.updateQuery}
               placeholder='Search favourites'
               onSubmit={this.onSubmit}
@@ -261,7 +284,7 @@ class FoodSearchEngineScreen extends React.Component {
           </View>
         ))))
         }
-        { selectedTab === 'favourites' && <FavouriteMealComponent filterQuery={query} navigation={navigation} />}
+        { selectedTab === 'favourites' && <FavouriteMealComponent filterQuery={favouritesQuery} navigation={navigation} />}
       </AnimatedKeyboardAvoidingView>
     );
   }

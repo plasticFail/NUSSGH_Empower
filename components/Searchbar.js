@@ -9,7 +9,6 @@ class Searchbar extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            value: '',
             keyboardShown: false
         }
         this.searchbarWidth = new Animated.Value(1);
@@ -56,8 +55,8 @@ class Searchbar extends React.Component {
            inputRange: [0, 1],
            outputRange: ['0%', '100%']
         });
-        const {onSubmit, textInputStyle, containerStyle, placeholder, onChangeText} = this.props;
-        const {value, keyboardShown} = this.state;
+        const {onSubmit, textInputStyle, containerStyle, placeholder, onChangeText, value} = this.props;
+        const {keyboardShown} = this.state;
         return (
             <View style={{...styles.root, ...containerStyle}}>
                 <AnimatedTextInput placeholder={placeholder}
