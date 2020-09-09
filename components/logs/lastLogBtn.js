@@ -33,8 +33,6 @@ const LastLogButton = (props) => {
   const [none4tdy, setnone4tdy] = useState(true);
   const [dataToDisplay, setDataToDisplay] = useState({});
   const [show, setShow] = useState(false);
-  const [height, setHeight] = useState(0);
-  const dropDownAnimation = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     getLastLog();
@@ -63,15 +61,6 @@ const LastLogButton = (props) => {
       setDataToDisplay(response);
     }
   };
-
-  const getHeight = (event) => {
-    setHeight(event.nativeEvent.layout.height);
-  };
-
-  dropDownAnimation.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0, height],
-  });
 
   return (
     <>

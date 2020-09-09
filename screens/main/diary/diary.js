@@ -1,15 +1,16 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {
   View,
   StyleSheet,
   Text,
   TouchableOpacity,
   ScrollView,
-  Dimensions,
+  Animated,
 } from 'react-native';
 //component
 import MenuBtn from '../../../components/menuBtn';
 import TargetBlock from '../../../components/diary/targetBlock';
+import CalendarDay2Component from '../../../components/diary/calendarDay_2';
 //functions
 import {getDateRange} from '../../../commonFunctions/diaryFunctions';
 //style
@@ -19,8 +20,6 @@ import {Colors} from '../../../styles/colors';
 import Moment from 'moment';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {Calendar} from 'react-native-calendars';
-import CalendarDayComponent from '../../../components/onboarding/medication/calendarDay';
-import CalendarTemplate from '../../../components/calendar/calendarTemplate';
 
 const DiaryScreen = (props) => {
   const today_date = Moment(new Date()).format('YYYY-MM-DD');
@@ -29,12 +28,39 @@ const DiaryScreen = (props) => {
   const [partialVisible, setPartialVisible] = useState(true); //show 7days
   const [showCalendarFull, setShowCalendarFull] = useState(false);
   const [selectedDate, setSelectedDate] = useState(today_date);
-  const [calendarselect, setCalendarSelect] = useState({});
+  const [calendarselect, setCalendarSelect] = useState({
+    [today_date]: {
+      selected: true,
+      marked: true,
+    },
+  });
+  const dropDownAnimation = useRef(new Animated.Value(0)).current;
+  const heightInterpolation = dropDownAnimation.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0%', '100%'],
+  });
 
   //set useeffect to render this week*
   useEffect(() => {
     setDates(getDateRange(6, new Date()));
   }, []);
+
+  //animate drop down calendar
+  useEffect(() => {
+    if (showCalendarFull) {
+      Animated.timing(dropDownAnimation, {
+        toValue: 1,
+        duration: 500,
+        useNativeDriver: false,
+      }).start();
+    } else {
+      Animated.timing(dropDownAnimation, {
+        toValue: 0,
+        duration: 500,
+        useNativeDriver: false,
+      }).start();
+    }
+  }, [showCalendarFull]);
 
   //select date from half calendar
   chooseDate = (item) => {
@@ -66,37 +92,39 @@ const DiaryScreen = (props) => {
         <>
           <Text style={globalStyles.pageHeader}>Diary</Text>
           {showCalendarFull ? (
-            <Calendar
-              dayComponent={CalendarDayComponent}
-              maxDate={today_date}
-              hideArrows={false}
-              selectAll={false}
-              markedDates={calendarselect}
-              onDayPress={(day) => {
-                selectDate(day.dateString);
-              }}
-              theme={{
-                calendarBackground: Colors.backgroundColor,
-                'stylesheet.calendar.header': {
-                  header: {
-                    flexDirection: 'row',
-                    justifyContent: 'center', //added
-                    marginTop: 6,
-                    alignItems: 'center',
+            <Animated.View style={{maxHeight: heightInterpolation}}>
+              <Calendar
+                dayComponent={CalendarDay2Component}
+                maxDate={today_date}
+                hideArrows={false}
+                selectAll={false}
+                markedDates={calendarselect}
+                onDayPress={(day) => {
+                  selectDate(day.dateString);
+                }}
+                theme={{
+                  calendarBackground: Colors.backgroundColor,
+                  'stylesheet.calendar.header': {
+                    header: {
+                      flexDirection: 'row',
+                      justifyContent: 'center',
+                      marginTop: 6,
+                      alignItems: 'center',
+                    },
+                    headerContainer: {
+                      width: '80%',
+                      flexDirection: 'row',
+                    },
+                    monthText: {
+                      fontSize: 20,
+                      fontFamily: 'SFProDisplay-Bold',
+                      textAlign: 'center',
+                    },
                   },
-                  headerContainer: {
-                    width: '80%',
-                    flexDirection: 'row',
-                  },
-                  monthText: {
-                    fontSize: 20,
-                    fontFamily: 'SFProDisplay-Bold',
-                    textAlign: 'center',
-                  },
-                },
-                arrowColor: Colors.lastLogValueColor,
-              }}
-            />
+                  arrowColor: Colors.lastLogValueColor,
+                }}
+              />
+            </Animated.View>
           ) : null}
           {partialVisible && (
             <View style={styles.dateList}>
@@ -139,10 +167,12 @@ const DiaryScreen = (props) => {
             )}
           </TouchableOpacity>
           {/*Day Summary for Log*/}
-          <Text style={[globalStyles.pageDetails, styles.viewLog]}>
-            View Your Logs
-          </Text>
-          <TargetBlock date={selectedDate} navigation={props.navigation} />
+          <View style={{flex: 1}}>
+            <Text style={[globalStyles.pageDetails, styles.viewLog]}>
+              View Your Logs
+            </Text>
+            <TargetBlock date={selectedDate} navigation={props.navigation} />
+          </View>
         </>
       </ScrollView>
     </View>
