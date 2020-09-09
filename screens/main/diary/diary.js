@@ -1,68 +1,147 @@
 import React, {useState, useEffect} from 'react';
-import {View, StyleSheet, Text, FlatList} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native';
 //component
-import Legend from '../../../components/diary/legend';
-import TargetBlock from '../../../components/diary/targetBlock';
-import Filter from '../../../components/filter';
 import MenuBtn from '../../../components/menuBtn';
+import TargetBlock from '../../../components/diary/targetBlock';
 //functions
 import {getDateRange} from '../../../commonFunctions/diaryFunctions';
 //style
 import globalStyles from '../../../styles/globalStyles';
+import {Colors} from '../../../styles/colors';
+//third party lib
+import Moment from 'moment';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const DiaryScreen = (props) => {
+  const today_date = Moment(new Date()).format('YYYY-MM-DD');
+
   const [dates, setDates] = useState([]);
+  const [partialVisible, setPartialVisible] = useState(true); //show 7days
+  const [showCalendarFull, setShowCalendarFull] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(today_date);
 
   //set useeffect to render this week*
   useEffect(() => {
-    setDates(getDateRange(7));
+    setDates(getDateRange(6));
   }, []);
 
-  const getDateArrFromFilter = (value) => {
-    setDates(value);
+  //select date and show the log summary
+  chooseDate = (item) => {
+    setSelectedDate(item);
+  };
+
+  displayCalendar = () => {
+    setShowCalendarFull(!showCalendarFull);
+    setPartialVisible(!partialVisible);
   };
 
   return (
     <View style={globalStyles.pageContainer}>
       <MenuBtn />
-      <View style={{flexDirection: 'row', padding: '3%'}}>
-        <Text style={styles.legendHeader}>Legend</Text>
-        <Filter getDateArrFromFilter={getDateArrFromFilter} />
-      </View>
-      <View style={styles.legendContainer}>
-        <Legend />
-      </View>
-      <View style={{flex: 2}}>
-        <FlatList
-          data={dates}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({item}) => (
-            <View style={[styles.diaryContentContainer, styles.shadow]}>
-              <TargetBlock date={item} navigation={props.navigation} />
+      <ScrollView contentContainerStyle={{flexGrow: 0}}>
+        <>
+          <Text style={globalStyles.pageHeader}>Diary</Text>
+          {showCalendarFull && <Text>Show Calendar Here</Text>}
+          {partialVisible && (
+            <View style={styles.dateList}>
+              {dates.map((item, index) =>
+                selectedDate === item ? (
+                  <TouchableOpacity
+                    key={item}
+                    style={styles.selectedDateContainer}
+                    onPress={() => chooseDate(item)}>
+                    <Text style={styles.selectedDateText}>
+                      {Moment(new Date(item)).format('D MMM')}
+                    </Text>
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity
+                    key={item}
+                    style={styles.dateContainer}
+                    onPress={() => chooseDate(item)}>
+                    <Text style={styles.dateText}>
+                      {Moment(new Date(item)).format('D MMM')}
+                    </Text>
+                  </TouchableOpacity>
+                ),
+              )}
             </View>
           )}
-        />
-      </View>
+          <TouchableOpacity onPress={() => displayCalendar()}>
+            {showCalendarFull ? (
+              <Icon
+                name="angle-double-up"
+                size={40}
+                style={styles.chevronDown}
+              />
+            ) : (
+              <Icon
+                name="angle-double-down"
+                size={40}
+                style={styles.chevronDown}
+              />
+            )}
+          </TouchableOpacity>
+          {/*Day Summary for Log*/}
+          <Text style={[globalStyles.pageDetails, styles.viewLog]}>
+            View Your Logs
+          </Text>
+          <TargetBlock date={selectedDate} navigation={props.navigation} />
+        </>
+      </ScrollView>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  legendContainer: {
+  dateList: {
     flexDirection: 'row',
-    flex: 1,
-    zIndex: 1,
-    elevation: 1,
-    marginTop: '2%',
+    alignItems: 'center',
+    margin: '2%',
+    justifyContent: 'space-around',
+    marginStart: '2%',
   },
-  legendHeader: {
+  dateText: {
+    textAlign: 'center',
+    fontSize: 17,
+    fontFamily: 'SFProDisplay-Regular',
+  },
+  selectedDateText: {
+    textAlign: 'center',
     fontSize: 18,
-    fontWeight: '700',
-    flex: 1,
+    fontFamily: 'SFProDisplay-Bold',
   },
-  selectStyle: {
-    height: 43,
-    width: '40%',
+  dateContainer: {
+    backgroundColor: '#e2e8ee',
+    width: '12%',
+    marginStart: '2%',
+    paddingTop: '5%',
+    paddingBottom: '5%',
+    paddingHorizontal: '1%',
+    borderRadius: 9.5,
+  },
+  selectedDateContainer: {
+    backgroundColor: '#aad326',
+    width: '12%',
+    marginStart: '2%',
+    paddingTop: '5%',
+    paddingBottom: '5%',
+    paddingHorizontal: '1%',
+    borderRadius: 9.5,
+  },
+  viewLog: {
+    fontSize: 23,
+    color: Colors.lastLogValueColor,
+  },
+  chevronDown: {
+    color: Colors.backArrowColor,
+    alignSelf: 'center',
   },
 });
 

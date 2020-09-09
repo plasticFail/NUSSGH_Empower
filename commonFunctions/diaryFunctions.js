@@ -40,7 +40,7 @@ const getDateArray = (startDate, stopDate) => {
     current = moment(current).add(1, 'days');
   }
 
-  return dateArr.reverse();
+  return dateArr;
 };
 
 //pass a food item - beverage, main etc in to get [carbs, protein, fats] count

@@ -1,21 +1,28 @@
 import React, {Component} from 'react';
-import {View, StyleSheet, Text, Dimensions} from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import {View, StyleSheet, Text, TouchableOpacity, Image} from 'react-native';
 //function
-import {useNavigation} from '@react-navigation/native';
 import {getEntry4Day} from '../../netcalls/requestsDiary';
-import TargetContent from './targetContent';
-import {min} from 'react-native-reanimated';
 import {getNutrientCount} from '../../commonFunctions/diaryFunctions';
+import {
+  bg_key,
+  food_key,
+  weight_key,
+  med_key,
+  activity_key,
+  renderLogIcon,
+} from '../../commonFunctions/logFunctions';
+//styles
+import logStyles from '../../styles/logStyles';
+//third party lib
+import Ionicon from 'react-native-vector-icons/Ionicons';
+import diaryStyles from '../../styles/diaryStyles';
 
-const within_target = 'Within Target';
-const missed = 'Missed';
-const improved = 'Improve';
 const maxWeight = 200;
 const minWeight = 40;
 const maxCarbs = 130; //grams
 const maxProtein = 46; //grams
 const maxFats = 46; //grams
+const button_list = [bg_key, food_key, med_key, weight_key, activity_key];
 
 //mainly do the calculation for the result of the logs to display
 class TargetBlock extends Component {
@@ -23,46 +30,47 @@ class TargetBlock extends Component {
     super(props);
     this.props = props;
     this.state = {
-      avgBg: 0,
       bgLogs: [],
-      targetBg: {},
       foodLogs: [],
       medLogs: [],
       activityLogs: [],
       weightLogs: [],
 
-      bgPass: false,
-      bgPassCount: 0,
       bgMiss: false,
-      bgFailCount: 0,
-
-      foodPass: false,
-      foodPassCount: 0,
       foodMiss: false,
-      foodFailCount: 0,
+      weightMiss: false,
+      activityMiss: false,
+
+      avgBg: 0,
+      bgPass: false,
       carbs: 0,
       fats: 0,
       protein: 0,
+      foodPass: true,
+      weightPass: true,
+      activityPass: true,
 
-      weightPassCount: 0,
-      weightMiss: false,
-      weightFailCount: 0,
-
-      activityPassCount: 0,
-      activityMiss: false,
-      activityFailCount: 0,
+      targetBg: {},
       activityTarget: {},
       activitySummary: {},
+
+      showBg: false,
+      showFood: false,
+      showMed: false,
+      showWeight: false,
     };
-
-    this.init(); // for first time*
-
     this.props.navigation.addListener('focus', () => {
       this.init();
     });
   }
 
+  componentDidMount() {
+    this.init();
+  }
+
   init = () => {
+    this.resetStates();
+    console.log('initialising dairy--' + this.props.date);
     //if functional component -> states not updated correctly with hook
     //useEffect updates after render*
     getEntry4Day(String(this.props.date)).then((data) => {
@@ -81,9 +89,15 @@ class TargetBlock extends Component {
         activitySummary: d.activity.summary,
       });
       this.getAllResult();
-      this.handleOnPress = this.handleOnPress.bind(this);
     });
   };
+
+  componentDidUpdate(prevProp) {
+    if (prevProp.date != this.props.date) {
+      console.log('choosing a new date in diary');
+      this.init();
+    }
+  }
 
   getAllResult = () => {
     this.getBGResult();
@@ -92,19 +106,39 @@ class TargetBlock extends Component {
     this.getFoodResult();
   };
 
+  resetStates = () => {
+    this.setState({
+      bgLogs: [],
+      foodLogs: [],
+      medLogs: [],
+      activityLogs: [],
+      weightLogs: [],
+
+      bgMiss: false,
+      foodMiss: false,
+      weightMiss: false,
+      activityMiss: false,
+
+      avgBg: 0,
+      bgPass: false,
+      carbs: 0,
+      fats: 0,
+      protein: 0,
+      foodPass: true,
+      weightPass: true,
+      activityPass: true,
+
+      targetBg: {},
+      activityTarget: {},
+    });
+  };
+
   getBGResult = () => {
     let total = 0;
     let count = 0;
-    let passCount = 0;
     let length = this.state.bgLogs.length;
     if (length != 0) {
       for (var x of this.state.bgLogs) {
-        //get counts of bg pass
-        if (this.state.targetBg.comparator === '<=') {
-          if (x.bg_reading <= this.state.targetBg.value) {
-            passCount++;
-          }
-        }
         //calculate average
         total += x.bg_reading;
         count++;
@@ -113,8 +147,6 @@ class TargetBlock extends Component {
 
       //set states
       this.setState({avgBg: avg});
-      this.setState({bgPassCount: passCount});
-      this.setState({bgFailCount: length - passCount});
 
       if (this.state.targetBg.comparator === '<=') {
         if (avg <= this.state.targetBg.value) {
@@ -136,18 +168,11 @@ class TargetBlock extends Component {
 
   getWeightResult = () => {
     if (this.state.weightLogs.length != 0) {
-      let passCount = 0;
-
       for (var x of this.state.weightLogs) {
-        if (x.weight >= minWeight && x.weight <= maxWeight) {
-          passCount++;
+        if (x.weight <= minWeight || x.weight <= maxWeight) {
+          this.setState({weightPass: false});
         }
       }
-
-      this.setState({weightPassCount: passCount});
-      this.setState({
-        weightFailCount: this.state.weightLogs.length - passCount,
-      });
     } else {
       this.setState({weightMiss: true});
     }
@@ -178,8 +203,6 @@ class TargetBlock extends Component {
           totalFats > maxFats
         ) {
           this.setState({foodPass: false});
-        } else {
-          passCount++;
         }
       }
       this.setState({carbs: totalCarbs.toFixed(2)});
@@ -194,163 +217,105 @@ class TargetBlock extends Component {
 
   getActivityResult = () => {
     let length = this.state.activityLogs.length;
-    let passCount = 0;
     let targetType = this.state.activityTarget.type;
     let value = this.state.activityTarget.value;
     if (length != 0) {
       for (var x of this.state.activityLogs) {
-        if (x[targetType] >= value) {
-          passCount++;
+        if (x[targetType] <= value) {
+          this.setState({activityPass: false});
         }
       }
       this.setState({activityPass: true});
-      this.setState({activityPassCount: passCount});
-      this.setState({activityFailCount: length - passCount});
     } else {
       this.setState({activityMiss: true});
     }
   };
 
-  handleOnPress = () => {
-    this.props.navigation.navigate('DiaryDetail', {
-      date: this.props.date,
-
-      bgLogs: this.state.bgLogs,
-      foodLogs: this.state.foodLogs,
-      medLogs: this.state.medLogs,
-      activityLogs: this.state.activityLogs,
-      weightLogs: this.state.weightLogs,
-
-      bgPass: this.state.bgPass,
-      bgMiss: this.state.bgMiss,
-      avgBg: this.state.avgBg,
-
-      foodMiss: this.state.foodMiss,
-      carbs: this.state.carbs,
-      protein: this.state.protein,
-      fats: this.state.fats,
-      foodPassCount: this.state.foodPassCount,
-      foodFailCount: this.state.foodFailCount,
-
-      weightMiss: this.state.weightMiss,
-      weightPassCount: this.state.weightPassCount,
-      weightFailCount: this.state.weightFailCount,
-
-      activityMiss: this.state.activityMiss,
-      activityPassCount: this.state.activityPassCount,
-      activityFailCount: this.state.activityFailCount,
-      activitySummary: this.state.activitySummary,
-    });
+  openModalType = (selectedType) => {
+    if (selectedType === bg_key) {
+      this.setState({showBg: true});
+    }
+    if (selectedType === food_key) {
+      this.setState({showFood: true});
+    }
+    if (selectedType === med_key) {
+      this.setState({showMed: true});
+    }
+    if (selectedType === weight_key) {
+      this.setState({showWeight: true});
+    }
   };
 
   render() {
-    const {date, navigation} = this.props;
     const {
-      bgPass,
-      bgPassCount,
-      bgFailCount,
       bgMiss,
-      weightPass,
-      weightPassCount,
-      weightFailCount,
-      weightMiss,
-      activityPass,
-      activityPassCount,
-      activityMiss,
       foodMiss,
+      weightMiss,
+      activityMiss,
+      avgBg,
+      bgPass,
       foodPass,
-      foodPassCount,
-      foodFailCount,
+      weightPass,
+      activityPass,
     } = this.state;
     return (
       <View>
-        <Text
-          style={[styles.diaryDate, {width: Dimensions.get('window').width}]}>
-          {date}
-        </Text>
-        <TouchableOpacity onPress={this.handleOnPress}>
-          <View style={styles.diaryContent}>
-            <View style={styles.diaryContent1}>
-              <Text style={[styles.diaryContentHeader, {color: '#7d9a22'}]}>
-                {within_target}
-              </Text>
-              <TargetContent
-                bgPass={bgPass}
-                bgPassCount={bgPassCount}
-                weightPass={weightPass}
-                weightPassCount={weightPassCount}
-                activityPass={activityPass}
-                activityPassCount={activityPassCount}
-                foodPass={foodPass}
-                foodPassCount={foodPassCount}
-                type={within_target}
-              />
+        {button_list.map((item, index) => (
+          <TouchableOpacity
+            style={diaryStyles.diaryLogItem}
+            onPress={() => this.openModalType(item)}
+            key={item}>
+            <Image
+              source={renderLogIcon(item)}
+              style={diaryStyles.diarylogIcon}
+            />
+            <View style={styles.buttonContentContainer}>
+              <Text style={[logStyles.fieldName, {fontSize: 15}]}>{item}s</Text>
+              {renderContent(item, bgMiss, avgBg, bgPass)}
             </View>
-            <View style={styles.diaryContent2}>
-              <Text style={[styles.diaryContentHeader, {color: 'black'}]}>
-                {missed}
-              </Text>
-              <TargetContent
-                bgMiss={bgMiss}
-                weightMiss={weightMiss}
-                foodMiss={foodMiss}
-                activityMiss={activityMiss}
-                type={missed}
-              />
-            </View>
-            <View style={styles.diaryContent3}>
-              <Text style={[styles.diaryContentHeader, {color: '#9a228a'}]}>
-                {improved}
-              </Text>
-              <TargetContent
-                bgFailCount={bgFailCount}
-                weightFailCount={weightFailCount}
-                foodFailCount={foodFailCount}
-                type={improved}
-              />
-            </View>
-          </View>
-        </TouchableOpacity>
+          </TouchableOpacity>
+        ))}
       </View>
     );
+  }
+}
+
+function renderContent(logType, bgMiss, avgBg, bgPass) {
+  if (logType === bg_key) {
+    if (bgMiss) {
+      return <Text style={styles.buttonDetail}>Missed</Text>;
+    } else if (bgPass) {
+      return (
+        <View style={{flexDirection: 'row'}}>
+          <Text style={styles.buttonDetail}>Average {avgBg} mmol/L</Text>
+          <Ionicon name="checkmark" style={diaryStyles.passIcon} size={25} />
+        </View>
+      );
+    } else if (!bgPass) {
+      return (
+        <View style={{flexDirection: 'row'}}>
+          <Text style={styles.buttonDetail}>Average {avgBg} mmol/L</Text>
+          <Ionicon
+            name="alert-circle-outline"
+            style={diaryStyles.failIcon}
+            size={25}
+          />
+        </View>
+      );
+    }
   }
 }
 
 export default TargetBlock;
 
 const styles = StyleSheet.create({
-  diaryDate: {
-    flex: 1,
-    fontSize: 18,
-    marginTop: '2%',
-    backgroundColor: '#f5f5f5',
-    fontWeight: '700',
+  buttonContentContainer: {
+    marginTop: '-3%',
+    marginStart: '15%',
   },
-  diaryContent: {
-    flex: 1,
-    flexDirection: 'row',
-    borderRadius: 25,
-    margin: '2%',
-  },
-  diaryContent1: {
-    flex: 1,
-    height: '100%',
-    backgroundColor: '#e8fee4',
-  },
-  diaryContent2: {
-    flex: 1,
-    height: '100%',
-    backgroundColor: '#cecece',
-  },
-  diaryContent3: {
-    flex: 1,
-    height: '100%',
-    backgroundColor: '#fae6e6',
-  },
-  diaryContentHeader: {
-    margin: '2%',
-    alignSelf: 'center',
-    fontSize: 18,
-    fontWeight: '700',
+  buttonDetail: {
+    marginStart: '3%',
+    fontFamily: 'SFProDisplay-Bold',
+    fontSize: 20,
   },
 });
