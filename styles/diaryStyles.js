@@ -5,7 +5,7 @@ const diaryStyles = StyleSheet.create({
   diaryLogItem: {
     backgroundColor: 'white',
     borderRadius: 9.31,
-    margin: '3%',
+    margin: '2%',
     padding: '3%',
     flexDirection: 'row',
     borderWidth: 1,

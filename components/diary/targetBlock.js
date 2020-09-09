@@ -16,6 +16,7 @@ import logStyles from '../../styles/logStyles';
 //third party lib
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import diaryStyles from '../../styles/diaryStyles';
+import {Colors} from '../../styles/colors';
 
 const maxWeight = 200;
 const minWeight = 40;
@@ -39,6 +40,7 @@ class TargetBlock extends Component {
       bgMiss: false,
       foodMiss: false,
       weightMiss: false,
+      medMiss: false,
       activityMiss: false,
 
       avgBg: 0,
@@ -104,6 +106,7 @@ class TargetBlock extends Component {
     this.getWeightResult();
     this.getActivityResult();
     this.getFoodResult();
+    this.getMedResult();
   };
 
   resetStates = () => {
@@ -117,6 +120,7 @@ class TargetBlock extends Component {
       bgMiss: false,
       foodMiss: false,
       weightMiss: false,
+      medMiss: false,
       activityMiss: false,
 
       avgBg: 0,
@@ -130,6 +134,7 @@ class TargetBlock extends Component {
 
       targetBg: {},
       activityTarget: {},
+      activitySummary: {},
     });
   };
 
@@ -169,7 +174,7 @@ class TargetBlock extends Component {
   getWeightResult = () => {
     if (this.state.weightLogs.length != 0) {
       for (var x of this.state.weightLogs) {
-        if (x.weight <= minWeight || x.weight <= maxWeight) {
+        if (x.weight <= minWeight || x.weight >= maxWeight) {
           this.setState({weightPass: false});
         }
       }
@@ -216,18 +221,24 @@ class TargetBlock extends Component {
   };
 
   getActivityResult = () => {
-    let length = this.state.activityLogs.length;
-    let targetType = this.state.activityTarget.type;
+    //let targetType = this.state.activityTarget.type;
     let value = this.state.activityTarget.value;
-    if (length != 0) {
-      for (var x of this.state.activityLogs) {
-        if (x[targetType] <= value) {
-          this.setState({activityPass: false});
-        }
+    let duration = this.state.activitySummary.duration;
+    if (duration <= value) {
+      this.setState({activityPass: false});
+      if (Number(duration) === 0) {
+        this.setState({activityMiss: true});
       }
-      this.setState({activityPass: true});
     } else {
-      this.setState({activityMiss: true});
+      this.setState({activityPass: true});
+    }
+  };
+
+  getMedResult = () => {
+    if (this.state.medLogs.length > 0) {
+      this.setState({medMiss: false});
+    } else {
+      this.setState({medMiss: true});
     }
   };
 
@@ -251,17 +262,20 @@ class TargetBlock extends Component {
       bgMiss,
       foodMiss,
       weightMiss,
+      medMiss,
       activityMiss,
       avgBg,
       bgPass,
       foodPass,
       weightPass,
       activityPass,
+      activitySummary,
     } = this.state;
     return (
-      <View>
+      <>
         {button_list.map((item, index) => (
           <TouchableOpacity
+            key={item}
             style={diaryStyles.diaryLogItem}
             onPress={() => this.openModalType(item)}
             key={item}>
@@ -271,38 +285,81 @@ class TargetBlock extends Component {
             />
             <View style={styles.buttonContentContainer}>
               <Text style={[logStyles.fieldName, {fontSize: 15}]}>{item}s</Text>
-              {renderContent(item, bgMiss, avgBg, bgPass)}
+              {item === bg_key && renderContent(bg_key, bgMiss, bgPass, avgBg)}
+              {item === food_key && renderContent(food_key, foodMiss, foodPass)}
+              {item === med_key && renderMedContent(medMiss)}
+              {item === weight_key &&
+                renderContent(weight_key, weightMiss, weightPass)}
+              {item === activity_key &&
+                renderContent(
+                  activity_key,
+                  activityMiss,
+                  activityPass,
+                  activitySummary.duration,
+                )}
             </View>
+            <View style={{flex: 1}} />
+            <Ionicon
+              name="chevron-forward"
+              style={styles.chevronForward}
+              size={25}
+            />
           </TouchableOpacity>
         ))}
-      </View>
+      </>
     );
   }
 }
 
-function renderContent(logType, bgMiss, avgBg, bgPass) {
-  if (logType === bg_key) {
-    if (bgMiss) {
-      return <Text style={styles.buttonDetail}>Missed</Text>;
-    } else if (bgPass) {
-      return (
-        <View style={{flexDirection: 'row'}}>
-          <Text style={styles.buttonDetail}>Average {avgBg} mmol/L</Text>
-          <Ionicon name="checkmark" style={diaryStyles.passIcon} size={25} />
-        </View>
-      );
-    } else if (!bgPass) {
-      return (
-        <View style={{flexDirection: 'row'}}>
-          <Text style={styles.buttonDetail}>Average {avgBg} mmol/L</Text>
-          <Ionicon
-            name="alert-circle-outline"
-            style={diaryStyles.failIcon}
-            size={25}
-          />
-        </View>
-      );
-    }
+//for logs with criteria : miss/completed
+function renderMedContent(medMiss) {
+  if (medMiss) {
+    return <Text style={styles.buttonDetail}>Missed</Text>;
+  } else {
+    return <Text style={styles.buttonDetail}>Completed</Text>;
+  }
+}
+
+//for logs with criteria besides miss/completed
+function renderContent(type, miss, pass, value) {
+  if (miss) {
+    return <Text style={styles.buttonDetail}>Missed</Text>;
+  } else if (pass) {
+    return (
+      <View style={{flexDirection: 'row'}}>
+        {type === bg_key && (
+          <Text style={styles.buttonDetail}>Average {value} mmol/L</Text>
+        )}
+        {type === food_key ||
+          (type === weight_key && (
+            <Text style={styles.buttonDetail}>Within Healthy Range</Text>
+          ))}
+        {type === activity_key && (
+          <Text style={styles.buttonDetail}>{value} Active Minutes</Text>
+        )}
+        <Ionicon name="checkmark" style={diaryStyles.passIcon} size={25} />
+      </View>
+    );
+  } else if (!pass) {
+    return (
+      <View style={{flexDirection: 'row'}}>
+        {type === bg_key && (
+          <Text style={styles.buttonDetail}>Average {value} mmol/L</Text>
+        )}
+        {type === food_key ||
+          (type === weight_key && (
+            <Text style={styles.buttonDetail}>Not Within Healthy Range</Text>
+          ))}
+        {type === activity_key && (
+          <Text style={styles.buttonDetail}>{value} Active Minutes</Text>
+        )}
+        <Ionicon
+          name="alert-circle-outline"
+          style={diaryStyles.failIcon}
+          size={25}
+        />
+      </View>
+    );
   }
 }
 
@@ -317,5 +374,10 @@ const styles = StyleSheet.create({
     marginStart: '3%',
     fontFamily: 'SFProDisplay-Bold',
     fontSize: 20,
+  },
+  chevronForward: {
+    marginTop: '-3%',
+    color: Colors.lastLogValueColor,
+    alignSelf: 'flex-end',
   },
 });
