@@ -65,12 +65,17 @@ const DiaryScreen = (props) => {
   //select date from half calendar
   chooseDate = (item) => {
     setSelectedDate(item);
+    setSelected(item);
   };
 
   //select date from full calendar
   selectDate = (item) => {
     setSelectedDate(item);
     setDates(getDateRange(6, new Date(item)));
+    setSelected(item);
+  };
+
+  setSelected = (item) => {
     let newobj = {
       [item]: {
         selected: true,

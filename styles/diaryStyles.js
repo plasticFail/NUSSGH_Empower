@@ -29,6 +29,21 @@ const diaryStyles = StyleSheet.create({
     color: Colors.alertColor,
     marginStart: '2%',
   },
+  editIcon: {
+    color: '#aad326',
+    marginStart: '2%',
+  },
+  recordedText: {
+    fontFamily: 'SFProDisplay-Regular',
+    fontSize: 18,
+    marginStart: '5%',
+  },
+  recordContent: {
+    fontFamily: 'SFProDisplay-Regular',
+    fontSize: 18,
+    color: Colors.lastLogValueColor,
+    marginStart: '5%',
+  },
 });
 
 export default diaryStyles;

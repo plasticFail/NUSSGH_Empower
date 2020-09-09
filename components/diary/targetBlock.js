@@ -2,7 +2,13 @@ import React, {Component} from 'react';
 import {View, StyleSheet, Text, TouchableOpacity, Image} from 'react-native';
 //function
 import {getEntry4Day} from '../../netcalls/requestsDiary';
-import {getNutrientCount} from '../../commonFunctions/diaryFunctions';
+import {
+  getNutrientCount,
+  filterMorning,
+  filterAfternoon,
+  filterEvening,
+  filterNight,
+} from '../../commonFunctions/diaryFunctions';
 import {
   bg_key,
   food_key,
@@ -13,10 +19,13 @@ import {
 } from '../../commonFunctions/logFunctions';
 //styles
 import logStyles from '../../styles/logStyles';
-//third party lib
-import Ionicon from 'react-native-vector-icons/Ionicons';
 import diaryStyles from '../../styles/diaryStyles';
 import {Colors} from '../../styles/colors';
+//third party lib
+import Ionicon from 'react-native-vector-icons/Ionicons';
+import Moment from 'moment';
+//component
+import BgBlock from './blocks/bgBlock';
 
 const maxWeight = 200;
 const minWeight = 40;
@@ -25,7 +34,7 @@ const maxProtein = 46; //grams
 const maxFats = 46; //grams
 const button_list = [bg_key, food_key, med_key, weight_key, activity_key];
 
-//mainly do the calculation for the result of the logs to display
+//mainly do the calculation for the result of the logs per day
 class TargetBlock extends Component {
   constructor(props) {
     super(props);
@@ -257,6 +266,14 @@ class TargetBlock extends Component {
     }
   };
 
+  closeBgModal = () => {
+    this.setState({showBg: false});
+  };
+
+  closeWeightModal = () => {
+    this.setState({showWeight: false});
+  };
+
   render() {
     const {
       bgMiss,
@@ -270,7 +287,17 @@ class TargetBlock extends Component {
       weightPass,
       activityPass,
       activitySummary,
+      showBg,
+      showFood,
+      showMed,
+      showWeight,
+      bgLogs,
+      foodLogs,
+      medLogs,
+      weightLogs,
+      activityLogs,
     } = this.state;
+    const dateString = Moment(this.props.date).format('DD MMM YYYY');
     return (
       <>
         {button_list.map((item, index) => (
@@ -306,6 +333,18 @@ class TargetBlock extends Component {
             />
           </TouchableOpacity>
         ))}
+        {/* Displays the modal for each log type to show*/}
+        <BgBlock
+          visible={showBg}
+          closeModal={() => this.closeBgModal()}
+          morningBgLogs={filterMorning(bgLogs)}
+          afternoonBgLogs={filterAfternoon(bgLogs)}
+          eveningBgLogs={filterEvening(bgLogs)}
+          nightBgLogs={filterNight(bgLogs)}
+          avgBg={avgBg}
+          pass={bgPass}
+          day={dateString}
+        />
       </>
     );
   }

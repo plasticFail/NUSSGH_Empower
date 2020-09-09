@@ -1,4 +1,5 @@
 import moment from 'moment';
+import {morningObj, afternoonObj, eveningObj, nightObj} from './common';
 
 const getDateObj = (dateString) => {
   let dateMomentObject = moment(dateString, 'DD/MM/YYYY HH:mm:ss');
@@ -20,7 +21,7 @@ const getTime = (dateString) => {
 const getHour = (dateString) => {
   if (dateString != null) {
     let timeString = getTime(dateString);
-    let hourString = timeString.substring(0, 6).trim().replace(/[:]/, '');
+    let hourString = timeString.substring(0, 4).trim().replace(/[:]/, '');
     return Number(hourString);
   }
 };
@@ -72,4 +73,77 @@ const getNutrientCount = (array) => {
   return nutrientArr;
 };
 
-export {getDateObj, getTime, getHour, getDateRange, getNutrientCount};
+const filterMorning = (logs) => {
+  let list = new Array();
+  for (var i of logs) {
+    let date = i.record_date;
+    let hour = getHour(date);
+    if (hour >= morningObj.start && hour < morningObj.end) {
+      list.push(i);
+    }
+  }
+  return list;
+};
+
+const filterAfternoon = (logs) => {
+  let list = new Array();
+  for (var i of logs) {
+    let date = i.record_date;
+    let hour = getHour(date);
+    if (hour >= afternoonObj.start && hour < afternoonObj.end) {
+      list.push(i);
+    }
+  }
+  return list;
+};
+
+const filterEvening = (logs) => {
+  let list = new Array();
+  for (var i of logs) {
+    let date = i.record_date;
+    let hour = getHour(date);
+    if (hour >= eveningObj.start && hour < eveningObj.end) {
+      list.push(i);
+    }
+  }
+  return list;
+};
+
+const filterNight = (logs) => {
+  let list = new Array();
+  for (var i of logs) {
+    let date = i.record_date;
+    let hour = getHour(date);
+    if (hour >= nightObj.start && hour < nightObj.end) {
+      list.push(i);
+    }
+  }
+  return list;
+};
+
+//determine if edit button will show
+const showEdit = (dateToCompare) => {
+  let today = moment(new Date()).format('DD/MM/YYYY');
+  let formatedDate = String(dateToCompare).substring(
+    0,
+    String(dateToCompare).indexOf('2020') + 4,
+  );
+  if (String(today) === String(formatedDate)) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
+export {
+  getDateObj,
+  getTime,
+  getHour,
+  getDateRange,
+  getNutrientCount,
+  filterMorning,
+  filterAfternoon,
+  filterEvening,
+  filterNight,
+  showEdit,
+};
