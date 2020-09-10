@@ -9,13 +9,11 @@ import HypocorrectionFood from '../more/hypocorrectionFood';
 import AppointmentScreen from '../more/appointments';
 import ViewMore from '../../components/hypofood/viewMore';
 import HeaderIcon from '../../components/common/headerBtnIcon';
-import ReportsScreen from '../more/reports';
 import EducationMaterialsScreen from '../more/educationMaterials';
 import GoalsScreen from '../more/goals';
 import RemindersScreen from '../more/reminders';
-import GameCenterScreen from '../more/gameCenter';
 import GlucoseMonitorsScreen from '../more/glucoseMonitor';
-import FitbitSetup from "../onboarding/fitbit/FitbitSetup";
+import FitbitSetup from '../onboarding/fitbit/FitbitSetup';
 
 const Stack = createStackNavigator();
 
@@ -42,15 +40,7 @@ const MoreScreen = (props) => {
   return (
     <Stack.Navigator
       screenOptions={({route}) => ({
-        headerShown: getMoreHeaderTitle(route),
-        headerStyle: {
-          backgroundColor: '#aad326',
-        },
-        headerTintColor: '#000',
-        headerTitleStyle: {
-          fontWeight: 'bold',
-          alignSelf: 'center',
-        },
+        header: () => <MenuBtn />,
       })}>
       <Stack.Screen
         name="MoreRoot"
@@ -114,14 +104,6 @@ const MoreScreen = (props) => {
         })}
       />
       <Stack.Screen
-        name="Reports"
-        component={ReportsScreen}
-        options={{
-          title: 'Reports',
-          headerRight: () => <View />,
-        }}
-      />
-      <Stack.Screen
         name="EducationMaterials"
         component={EducationMaterialsScreen}
         options={{
@@ -146,14 +128,6 @@ const MoreScreen = (props) => {
         }}
       />
       <Stack.Screen
-        name="GameCenter"
-        component={GameCenterScreen}
-        options={{
-          title: 'Game Center',
-          headerRight: () => <View />,
-        }}
-      />
-      <Stack.Screen
         name="GlucoseMonitors"
         component={GlucoseMonitorsScreen}
         options={{
@@ -161,13 +135,13 @@ const MoreScreen = (props) => {
           headerRight: () => <View />,
         }}
       />
-        <Stack.Screen
-            name="FitbitSetup"
-            component={FitbitSetup}
-            options={{
-                headerShown: false
-            }}
-        />
+      <Stack.Screen
+        name="FitbitSetup"
+        component={FitbitSetup}
+        options={{
+          headerShown: false,
+        }}
+      />
     </Stack.Navigator>
   );
 };

@@ -73,20 +73,27 @@ const meal = {
 
 function ReadOnlyMealDisplay(props) {
     const [showFoodItem, setShowFoodItem] = React.useState(false);
-    const {style} = props;
-    return (
+    const {style, show} = props;
+    return ( show &&
         <View style={[styles.root, style]}>
-            <TouchableOpacity style={styles.card} onPress={()=>setShowFoodItem(!showFoodItem)}>
-                <Icon color='#fff' name='utensils' size={30} />
-                <Text style={styles.cardText}>{"Last logged for " + meal.mealType + " today."}</Text>
-                <Icon color='#fff' name={showFoodItem ? 'chevron-up' : 'chevron-down'} size={30} />
-            </TouchableOpacity>
+            {
+                /*
+                <TouchableOpacity style={styles.card} onPress={()=>setShowFoodItem(!showFoodItem)}>
+                    <Icon color='#fff' name='utensils' size={30} />
+                    <Text style={styles.cardText}>{"Last logged for " + meal.mealType + " today."}</Text>
+                    <Icon color='#fff' name={showFoodItem ? 'chevron-up' : 'chevron-down'} size={30} />
+                </TouchableOpacity>
+                 */
+            }
             {
                 showFoodItem && (
                     meal.foodItems.map(food => (<FoodRow key={food['food-name']} food={food}/>))
                 )
             }
-            <Text style={{fontSize: 16, width: '100%', paddingTop: 10}}>To create another log, fill in the rest of the form</Text>
+            { /*
+                <Text style={{fontSize: 16, width: '100%', paddingTop: 10}}>To create another log, fill in the rest of the form</Text>
+                */
+            }
         </View>
     )
 }

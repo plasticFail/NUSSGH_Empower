@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, Text, TouchableOpacity, ScrollView, Alert} from 'react-native';
+import {View, StyleSheet, Text, TouchableOpacity, ScrollView, Alert, Modal} from 'react-native';
 // Third-party lib
 import Moment from 'moment';
 // Functions
@@ -50,9 +50,10 @@ class MealLogRoot extends React.Component {
     }
 
     render() {
-        const {navigation} = this.props;
+        const {navigation, visible} = this.props;
         const {selectedDateTime, selectedMealType, previousMealToday} = this.state;
         return (
+            <Modal visible={visible}>
             <View style={styles.root}>
                 <View style={styles.header}>
                     <Icon name='times' size={50} color='#4DAA50' onPress={()=>navigation.goBack()} />
@@ -73,6 +74,7 @@ class MealLogRoot extends React.Component {
                     </TouchableOpacity>
                 </ScrollView>
             </View>
+            </Modal>
         )
     }
 }

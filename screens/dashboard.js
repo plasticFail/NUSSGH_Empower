@@ -1,17 +1,21 @@
 import React from 'react';
+import {StyleSheet} from 'react-native';
 //third party libs
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 //functions
 import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
 //other screens
 import Home from './main/home';
-import Icon from 'react-native-vector-icons/dist/FontAwesome';
-import Diary from './main/diary/diary';
 import AddLog from './main/log/addlog';
-import More from './main/more';
+import ChatScreen from './main/chat';
+import ReportsScreen from './main/reports';
+//third party lib
+import Icon from 'react-native-vector-icons/dist/FontAwesome';
+import Ant from 'react-native-vector-icons/AntDesign';
+import GameCenter from './main/gameCenter';
 
 const Tab = createBottomTabNavigator();
-
+/*
 function getMoreHeaderTitle(route) {
   const routeName = getFocusedRouteNameFromRoute(route) ?? 'More';
 
@@ -27,28 +31,26 @@ function getMoreHeaderTitle(route) {
       return 'Medication';
   }
 }
-
-// Method to reset the tab navigation when navigating through pages
-// Quite unclean during the development phase because of the warning shown.
-const handleTabPress = ({navigation}, pathName) => {
-  navigation.popToTop() && navigation.navigate(pathName);
-};
+*/
 
 const DashboardScreen = (props) => {
   return (
     <Tab.Navigator
       backBehavior="none"
       tabBarOptions={{
-        activeTintColor: '#ea626b',
+        activeTintColor: '#16A950',
         inactiveTintColor: 'gray',
         adaptive: false,
+        labelStyle: {
+          fontSize: 12,
+        },
+        style: {
+          height: '8%',
+        },
       }}>
       <Tab.Screen
         name="Home"
         component={Home}
-        listeners={{
-          tabPress: () => handleTabPress(props, 'Home'),
-        }}
         options={{
           title: 'Home',
           tabBarIcon: ({color, size}) => (
@@ -57,13 +59,10 @@ const DashboardScreen = (props) => {
         }}
       />
       <Tab.Screen
-        name="Diary"
-        component={Diary}
-        listeners={{
-          tabPress: () => handleTabPress(props, 'Diary'),
-        }}
+        name="Reports"
+        component={ReportsScreen}
         options={{
-          title: 'Diary',
+          title: 'Reports',
           tabBarIcon: ({color, size}) => (
             <Icon name="book" size={size} color={color} />
           ),
@@ -72,26 +71,30 @@ const DashboardScreen = (props) => {
       <Tab.Screen
         name="AddLog"
         component={AddLog}
-        listeners={{
-          tabPress: () => handleTabPress(props, 'AddLog'),
-        }}
         options={{
           title: 'Add Log',
           tabBarIcon: ({color, size}) => (
-            <Icon name="plus-circle" size={size} color={color} />
+            <Ant name="plussquareo" size={size} color={color} />
           ),
         }}
       />
       <Tab.Screen
-        name="More"
-        component={More}
-        listeners={{
-          tabPress: () => handleTabPress(props, 'More'),
-        }}
+        name="GameCenter"
+        component={GameCenter}
         options={{
-          title: 'More',
+          title: 'Game Center',
           tabBarIcon: ({color, size}) => (
-            <Icon name="bars" size={size} color={color} />
+            <Icon name="gamepad" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Chat"
+        component={ChatScreen}
+        options={{
+          title: 'Chat',
+          tabBarIcon: ({color, size}) => (
+            <Icon name="wechat" size={size} color={color} />
           ),
         }}
       />

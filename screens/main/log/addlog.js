@@ -1,146 +1,292 @@
-import React from 'react';
+import React, {Component} from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
-  ImageBackground,
   Image,
-  FlatList,
+  ScrollView,
 } from 'react-native';
-import {createStackNavigator} from '@react-navigation/stack';
-
-const Stack = createStackNavigator();
-
-const buttonList = [
-  {
-    id: '1',
-    name: 'Blood Glucose',
-    logo: require('../../../resources/images/bloodglucose_logo.png'),
-    image: require('../../../resources/images/bloodglucose.jpg'),
-    route: 'BloodGlucoseLog', //Fill in the route yourself. If null, it does not redirect
-  },
-  {
-    id: '2',
-    name: 'Food Intake',
-    logo: require('../../../resources/images/foodintake_logo.png'),
-    image: require('../../../resources/images/foodintake.jpg'),
-    route: 'MealLogRoot', //Fill in the route yourself. If null, it does not redirect
-  },
-  {
-    id: '3',
-    name: 'Medication',
-    logo: require('../../../resources/images/medication_logo.png'),
-    image: require('../../../resources/images/medication.jpeg'),
-    route: 'MedicationLog', //Fill in the route yourself. If null, it does not redirect
-  },
-  {
-    id: '4',
-    name: 'Weight',
-    logo: require('../../../resources/images/weight_logo.png'),
-    image: require('../../../resources/images/weight.jpg'),
-    route: 'WeightLog', //Fill in the route yourself. If null, it does not redirect
-  },
-];
+//third party lib
+import Moment from 'moment';
+import Modal from 'react-native-modal';
+import Ionicon from 'react-native-vector-icons/Ionicons';
+//styles
+import logStyles from '../../../styles/logStyles';
+import {Colors} from '../../../styles/colors';
+import globalStyles from '../../../styles/globalStyles';
+//function
+import {
+  bg_key,
+  food_key,
+  med_key,
+  weight_key,
+  renderLogIcon,
+  isPeriod,
+  isToday,
+  checkLogDone,
+} from '../../../commonFunctions/logFunctions';
+import {getGreetingFromHour} from '../../../commonFunctions/common';
+//components
+import LastLogButton from '../../../components/logs/lastLogBtn';
+import DateSelectionBlock from '../../../components/logs/dateSelectionBlock';
+import BloodGlucoseLogBlock from '../../../components/logs/bg/bloodGlucoseLogBlock';
+import CrossBtn from '../../../components/crossBtn';
+import MedicationLogBlock from '../../../components/logs/medication/medicationLogBlock';
+import WeightLogBlock from '../../../components/logs/weight/weightLogBlock';
+import MenuBtn from '../../../components/menuBtn';
+import MealLogRoot from "./meal/MealLogRoot";
+import {getDefaultMealType} from "../../../commonFunctions/mealLogFunctions";
+import MealTypeSelectionBlock from "../../../components/logs/meal/MealTypeSelectionBlock";
+import CreateMealLog from "./meal/CreateMealLog";
+// Functions
 
 // AddLog view
-const AddLogScreen = ({navigation}) => {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.headerText}>Choose from the following: </Text>
-      <Text style={styles.headerText2}>1. Schedule 3 times a day</Text>
+class AddLogScreen extends Component {
+  constructor(props) {
+    super(props);
+    this.props = props;
+    this.state = {
+      recordDate: new Date(),
+      period: '',
+      todayDate: '',
 
-      <TouchableOpacity
-        style={styles.buttonStyle}
-        onPress={() => navigation.navigate('DailyLog')}>
-        <Text style={styles.buttonText}>Daily Log</Text>
-        <ImageBackground
-          source={require('../../../resources/images/dailylog.jpg')}
-          style={styles.backgroundImg}
-        />
-      </TouchableOpacity>
+      showModal: false,
+      selectedLogType: '',
+      selectedMealType: getDefaultMealType(new Date().getHours()),
 
-      <Text style={styles.headerText2}>2. Own Time Own Pace (Anytime): </Text>
-      <FlatList
-        keyExtractor={(item, index) => item.name}
-        data={buttonList}
-        width="100%"
-        renderItem={({item}) => (
-          <TouchableOpacity
-            style={styles.buttonStyle}
-            onPress={() => {
-              item.route ? navigation.push(item.route) : null;
-            }}>
-            <Image source={item.logo} style={styles.iconImg} />
-            <Text style={styles.buttonText1}>{item.name}</Text>
-            <ImageBackground source={item.image} style={styles.backgroundImg} />
-          </TouchableOpacity>
-        )}
-      />
-    </View>
-  );
-};
+      showBg: false,
+      showFood: false,
+      showMed: false,
+      showWeight: false,
+      showSuccess: false,
+
+      completedTypes: [],
+      notCompletedTypes: [],
+    };
+
+    this.props.navigation.addListener('focus', () => {
+      //check the period, date and which logs done
+      this.init();
+    });
+  }
+
+  componentDidMount() {
+    this.init();
+  }
+
+  init() {
+    let period = getGreetingFromHour(this.state.recordDate.getHours());
+    this.setState({
+      period: period,
+    });
+    this.setState({
+      todayDate: Moment(this.state.recordDate).format('Do MMMM YYYY'),
+    });
+    checkLogDone(period).then((response) => {
+      this.setState({completedTypes: response.completed});
+      this.setState({notCompletedTypes: response.notCompleted});
+    });
+  }
+
+  resetState() {
+    this.setState({
+      recordDate: new Date(),
+
+      showModal: false,
+      selectedLogType: '',
+
+      showBg: false,
+      showFood: false,
+      showMed: false,
+      showWeight: false,
+    });
+  }
+
+  openModalType = (logType) => {
+    this.setState({selectedLogType: logType});
+    this.setState({showModal: true});
+  };
+
+  closeModal = () => {
+    this.setState({showModal: false});
+    this.resetState();
+    this.init(); //update log done check*
+  };
+
+  setDate = (date) => {
+    this.setState({recordDate: date});
+  };
+
+  showLogForm = (logType) => {
+    switch (logType) {
+      case bg_key:
+        this.setState({showBg: true});
+        break;
+      case food_key:
+        this.setState({showFood: true});
+        break;
+
+      case med_key:
+        this.setState({showMed: true});
+        break;
+
+      case weight_key:
+        this.setState({showWeight: true});
+        break;
+    }
+  };
+
+  //close forms
+  closeBgForm = () => {
+    this.setState({showBg: false});
+  };
+
+  closeMedForm = () => {
+    this.setState({showMed: false});
+  };
+
+  closeWeightForm = () => {
+    this.setState({showWeight: false});
+  };
+
+  closeFoodForm = () => {
+    this.setState({showFood: false})
+  }
+
+  render() {
+    const {
+      showModal,
+      selectedLogType,
+      recordDate,
+      todayDate,
+      period,
+      notCompletedTypes,
+      completedTypes,
+    } = this.state;
+    const {showBg, showMed, showWeight, showFood} = this.state;
+    return (
+      <View style={globalStyles.pageContainer}>
+        <MenuBtn />
+        <ScrollView contentContainerStyle={{flexGrow: 1}}>
+          <Text style={globalStyles.pageHeader}>Add Log</Text>
+          <Text style={globalStyles.pageDetails}>{todayDate}</Text>
+          <Text style={[globalStyles.pageDetails, {marginTop: '4%'}]}>
+            Progress For {period}
+          </Text>
+          {notCompletedTypes.length > 0 && (
+            <Text style={logStyles.complete}>Not Complete</Text>
+          )}
+          {notCompletedTypes.map((item, index) => (
+            <TouchableOpacity
+              style={logStyles.logItem}
+              key={item}
+              onPress={() => this.openModalType(item)}>
+              <Image source={renderLogIcon(item)} style={logStyles.loglogo} />
+              <Text style={[globalStyles.pageDetails, {marginStart: '15%'}]}>
+                {item}
+              </Text>
+              <Ionicon
+                name="alert-circle-outline"
+                size={40}
+                style={logStyles.completeIcon}
+                color="red"
+              />
+            </TouchableOpacity>
+          ))}
+          {completedTypes.length > 0 && (
+            <Text style={logStyles.complete}>Completed</Text>
+          )}
+          {completedTypes.map((item, index) => (
+            <TouchableOpacity
+              style={logStyles.logItem}
+              onPress={() => this.openModalType(item)}
+              key={item}>
+              <Image source={renderLogIcon(item)} style={logStyles.loglogo} />
+              <Text style={[globalStyles.pageDetails, {marginStart: '15%'}]}>
+                {item}
+              </Text>
+              <Ionicon
+                name="checkmark"
+                size={40}
+                style={logStyles.completeIcon}
+                color={Colors.backArrowColor}
+              />
+            </TouchableOpacity>
+          ))}
+          {/* Modal for Add Log*/}
+          <Modal
+            isVisible={showModal}
+            coverScreen={true}
+            backdropOpacity={1}
+            onBackButtonPress={this.closeModal}
+            backdropColor={Colors.backgroundColor}>
+            <View style={logStyles.modalContainer}>
+              <CrossBtn close={this.closeModal} />
+              <Text style={globalStyles.pageHeader}>Add Log</Text>
+              <Text style={globalStyles.pageDetails}>{selectedLogType}</Text>
+              <LastLogButton logType={selectedLogType} />
+              <Text style={logStyles.fieldText}>
+                Fill in if you wish to add a new record
+              </Text>
+              <DateSelectionBlock date={recordDate} setDate={this.setDate} />
+              {selectedLogType === food_key &&
+              (
+                  <MealTypeSelectionBlock onSelectChange={option => this.setState({selectedMealType: option})}
+                                          defaultValue={this.state.selectedMealType} />
+              )}
+              <TouchableOpacity
+                style={styles.addButton}
+                onPress={() => this.showLogForm(selectedLogType)}>
+                <Ionicon
+                  name="add-circle"
+                  size={60}
+                  color={Colors.nextBtnColor}
+                />
+              </TouchableOpacity>
+            </View>
+            {/*Modal for the different form types */}
+            <BloodGlucoseLogBlock
+              visible={showBg}
+              recordDate={recordDate}
+              closeModal={this.closeBgForm}
+              closeParent={this.closeModal}
+              parent="addLog"
+            />
+
+            <MedicationLogBlock
+              visible={showMed}
+              recordDate={recordDate}
+              closeModal={this.closeMedForm}
+              closeParent={this.closeModal}
+              parent="addLog"
+            />
+
+            <WeightLogBlock
+              visible={showWeight}
+              recordDate={recordDate}
+              closeModal={this.closeWeightForm}
+              closeParent={this.closeModal}
+              parent="addLog"
+            />
+            <CreateMealLog visible={showFood}
+                           parent="addLog"
+                           recordDate={recordDate}
+                           mealType={this.state.selectedMealType}
+                           closeModal={this.closeFoodForm}
+                           closeParent={this.closeModal}
+                           navigation={this.props.navigation}
+            />
+          </Modal>
+        </ScrollView>
+      </View>
+    );
+  }
+}
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-    backgroundColor: 'white',
-  },
-  headerText: {
-    fontSize: 20,
-    fontWeight: '600',
-    marginTop: '5%',
-    marginStart: '4%',
-    marginBottom: '4%',
-    color: '#133D2c',
-  },
-  headerText2: {
-    fontSize: 20,
-    fontWeight: '400',
-    marginStart: '4%',
-    marginTop: '3%',
-    marginBottom: '2%',
-    color: '#133D2c',
-  },
-  buttonStyle: {
-    width: '80%', // This should be the same size as backgroundImg height
+  addButton: {
     alignSelf: 'center',
-    paddingTop: 10,
-    paddingBottom: 10,
-  },
-  backgroundImg: {
-    width: '100%',
-    height: 120,
-    opacity: 0.3,
-    borderRadius: 20,
-    borderWidth: 0.4,
-    overflow: 'hidden',
-  },
-  buttonText: {
-    position: 'absolute',
-    top: '65%',
-    right: '6%',
-    fontSize: 20,
-    fontWeight: '700',
-    color: '#072d08',
-  },
-  buttonText1: {
-    position: 'absolute',
-    top: '70%',
-    right: '6%',
-    fontSize: 20,
-    fontWeight: '700',
-    color: '#072d08',
-  },
-  iconImg: {
-    position: 'absolute',
-    top: '30%',
-    right: '7%',
-    width: 40,
-    height: 40,
-    resizeMode: 'contain', //resize image so dont cut off
   },
 });
 

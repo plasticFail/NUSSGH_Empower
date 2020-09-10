@@ -7,6 +7,11 @@ import {Calendar} from 'react-native-calendars';
 //component
 import CalendarMedicationDay from '../../../components/onboarding/medication/calendarMedicationDay';
 import LoadingModal from '../../../components/loadingModal';
+//function
+import {prepareData, postPlan} from '../../../netcalls/requestsMedPlan';
+//styles
+import {Colors} from '../../../styles/colors';
+import globalStyles from '../../../styles/globalStyles';
 
 Ionicons.loadFont();
 
@@ -31,7 +36,7 @@ class AskAdd extends Component {
         console.log('setting new state for marked dates in calendar');
         const {list} = this.props.route.params;
         this.onReturn(list);
-        console.log(this.state.selectedDates4All);
+        //
       } else if (parent === 'deleteConfirmation') {
         //if return from delete dialogue
         const {dateString, type, medication} = this.props.route.params;
@@ -47,7 +52,6 @@ class AskAdd extends Component {
         }
       }
     }
-    console.log('show calendar ' + this.state.showCalendar);
   }
 
   //get the selected dates for a particular medication from ask plan
@@ -96,7 +100,23 @@ class AskAdd extends Component {
   };
 
   handleNext = () => {
-    this.handleSkip();
+    let data = prepareData(this.state.selectedDates4All);
+    postPlan(data).then((response) => {
+      if (response != null) {
+        this.handleSkip();
+      } else {
+        Alert.alert(
+          'Network Error',
+          'Please try again later.',
+          [
+            {
+              text: 'Got It',
+            },
+          ],
+          {cancelable: false},
+        );
+      }
+    });
   };
 
   handleAddMedication = () => {
@@ -169,9 +189,9 @@ class AskAdd extends Component {
     const {selectedDates4All, showCalendar, loading} = this.state;
     return (
       <View style={styles.onboardingContainer}>
-        <Text style={styles.stepText}>Step 3</Text>
-        <Text style={styles.stepContent}>Add your Medicine Plan</Text>
-        <Text style={styles.stepDescription}>
+        <Text style={[globalStyles.pageHeader, styles.stepText]}>Step 3</Text>
+        <Text style={globalStyles.pageDetails}>Add your Medicine Plan</Text>
+        <Text style={[globalStyles.pageSubDetails, styles.stepContent]}>
           Would you like to add your scheduled medications for this month? We
           will help to track them.
         </Text>
@@ -180,14 +200,20 @@ class AskAdd extends Component {
             <TouchableOpacity
               style={styles.addButton}
               onPress={this.handleAddMedication}>
-              <Ionicons name="add-circle" size={80} color="#aad326" />
+              <Ionicons
+                name="add-circle"
+                size={80}
+                color={Colors.nextBtnColor}
+              />
             </TouchableOpacity>
             <View style={{flex: 1}} />
-            <TouchableOpacity
-              style={styles.skipButton}
-              onPress={this.handleSkip}>
-              <Text style={styles.buttonText}>Skip</Text>
-            </TouchableOpacity>
+            <View style={globalStyles.buttonContainer}>
+              <TouchableOpacity
+                style={globalStyles.skipButtonStyle}
+                onPress={this.handleSkip}>
+                <Text style={globalStyles.actionButtonText}>Skip</Text>
+              </TouchableOpacity>
+            </View>
           </>
         ) : showCalendar === true ? (
           <>
@@ -201,28 +227,37 @@ class AskAdd extends Component {
               selectAll={false}
               theme={{
                 textDayHeaderFontSize: 15,
+                calendarBackground: Colors.backgroundColor,
               }}
             />
-            <View style={{flex: 1}} />
-            <TouchableOpacity
-              style={[styles.skipButton, {backgroundColor: '#aad326'}]}
-              onPress={this.handleNext}>
-              <Text style={styles.buttonText}>Next</Text>
-            </TouchableOpacity>
+            <View style={{flex: 1, paddingBottom: '3%'}} />
+            <View style={globalStyles.buttonContainer}>
+              <TouchableOpacity
+                style={[globalStyles.nextButtonStyle]}
+                onPress={this.handleNext}>
+                <Text style={globalStyles.actionButtonText}>Next</Text>
+              </TouchableOpacity>
+            </View>
           </>
         ) : (
           <>
             <TouchableOpacity
               style={styles.addButton}
               onPress={this.handleAddMedication}>
-              <Ionicons name="add-circle" size={80} color="#aad326" />
+              <Ionicons
+                name="add-circle"
+                size={80}
+                color={Colors.nextBtnColor}
+              />
             </TouchableOpacity>
             <View style={{flex: 1}} />
-            <TouchableOpacity
-              style={styles.skipButton}
-              onPress={this.handleSkip}>
-              <Text style={styles.buttonText}>Skip</Text>
-            </TouchableOpacity>
+            <View style={globalStyles.buttonContainer}>
+              <TouchableOpacity
+                style={globalStyles.skipButtonStyle}
+                onPress={this.handleSkip}>
+                <Text style={globalStyles.actionButtonText}>Skip</Text>
+              </TouchableOpacity>
+            </View>
           </>
         )}
         <LoadingModal visible={loading} message={'Setting up your account'} />
@@ -235,48 +270,19 @@ export default AskAdd;
 
 const styles = StyleSheet.create({
   onboardingContainer: {
-    paddingTop: '2%',
-    backgroundColor: 'white',
+    paddingTop: '8%',
+    backgroundColor: Colors.backgroundColor,
     flex: 1,
   },
   stepText: {
     marginTop: '10%',
-    fontSize: 35,
-    fontWeight: '700',
-    marginStart: '3%',
-    marginEnd: '3%',
   },
   stepContent: {
-    fontWeight: '700',
-    fontSize: 20,
     marginTop: '3%',
-    marginStart: '3%',
-    marginEnd: '3%',
-  },
-  stepDescription: {
-    fontSize: 17,
     width: '90%',
-    marginTop: '3%',
-    marginStart: '3%',
-    marginEnd: '3%',
   },
   addButton: {
     alignSelf: 'center',
     marginTop: '15%',
-  },
-  skipButton: {
-    backgroundColor: '#e4e4e4',
-    height: 45,
-    width: '70%',
-    borderRadius: 20,
-    margin: '5%',
-    alignSelf: 'center',
-    marginBottom: '3%',
-  },
-  buttonText: {
-    fontSize: 20,
-    textAlign: 'center',
-    marginVertical: '3%',
-    fontWeight: '700',
   },
 });

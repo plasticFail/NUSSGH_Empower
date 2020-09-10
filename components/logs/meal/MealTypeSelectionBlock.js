@@ -12,8 +12,8 @@ const options = [{name: "Breakfast", value: "breakfast"},
 
 export default function MealTypeSelectionBlock({onSelectChange, defaultValue}) {
     return (
-        <View style={{flexDirection: 'column', paddingTop: 30, paddingBottom: 30, width: '100%'}}>
-            <Text style={{paddingBottom: 10, fontSize: 20}}>Meal Type:</Text>
+        <View style={{flexDirection: 'column', width: '100%', paddingLeft: '4%', paddingRight: '4%'}}>
+            <Text style={{paddingBottom: 10, fontSize: 16, fontWeight: 'bold'}}>Meal Type:</Text>
             <Select
                 defaultValue={defaultValue}
                 options={options}

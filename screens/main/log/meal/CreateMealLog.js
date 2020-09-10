@@ -7,11 +7,10 @@ import {
     TextInput,
     Image,
     TouchableWithoutFeedback,
-    Modal,
     Animated, LayoutAnimation,
     Platform, UIManager,
     Alert, TouchableOpacity,
-    FlatList, ScrollView
+    FlatList, Modal
 } from 'react-native';
 // Third-party lib
 import Moment from 'moment';
@@ -29,6 +28,7 @@ import RenderMealItem from "../../../../components/logs/meal/RenderMealItem";
 import DateSelectionBlock from "../../../../components/logs/dateSelectionBlock";
 import MealTypeSelectionBlock from "../../../../components/logs/meal/MealTypeSelectionBlock";
 import {mealAddLogRequest} from "../../../../netcalls/requestsLog";
+import FoodSearchEngineScreen from "./FoodSearchEngine";
 
 Icon.loadFont()
 // Any meal log selected (e.g Create, Recent or Favourites)
@@ -54,8 +54,7 @@ export default class CreateMealLog extends React.Component {
             mealName: "",
             selected: null,
             modalOpen: false,
-            recordDateTime: new Date(),
-            mealType: getDefaultMealType(new Date().getHours())
+            showFoodSearchEngineModal: false,
         }
     }
 
@@ -67,19 +66,28 @@ export default class CreateMealLog extends React.Component {
     };
 
     redirectToFoodSearchEngine = () => {
+        /*
         this.props.navigation.push('FoodSearchEngine', {
             type: 'ALL',
             // Send in existing items belonging to this food type (beverage, main, side, dessert so that it can be checked).
             existingItems: this.state.foodItems.map(foodItem => foodItem["food-name"])
-        })
+        })*/
+        this.setState({
+            showFoodSearchEngineModal: true
+        });
     }
 
     componentDidMount() {
+        /*
         if (this.props.route.params?.meal) {
             this.setState(this.props.route.params.meal);
+        }*/
+        if (this.props.meal) {
+            this.setState(this.props.meal);
         }
     }
 
+    /*
     componentDidUpdate(prevProps) {
         if (prevProps.route.params?.item !== this.props.route.params?.item) {
             const { item } = this.props.route.params;
@@ -111,6 +119,40 @@ export default class CreateMealLog extends React.Component {
                 foodItems: newFoodItems
             });
         }
+    }*/
+
+    // Callback function to add a food item to this meal log.
+    addFoodItemCallback = (item) => {
+        const copy = {...item};
+        copy.quantity = 1;
+        const newFoodItems = this.state.foodItems.map(x => x);
+        const dup = this.state.foodItems.filter(x => x['food-name'] === item['food-name']);
+        if (dup.length > 0) {
+            dup[0].quantity += 1;
+        } else {
+            newFoodItems.push(copy);
+        }
+        this.setState({
+            foodItems: newFoodItems,
+            showFoodSearchEngineModal: false
+        });
+    }
+
+    // Callback function to add all food items in a meal to this meal log.
+    addMealCallback = (meal) => {
+        const newFoodItems = this.state.foodItems.map(x => x);
+        for (const newFoodItem of meal.foodItems) {
+            const dup = this.state.foodItems.filter(x => x['food-name'] === newFoodItem['food-name']);
+            if (dup.length > 0) {
+                dup[0].quantity = Math.min(MAXIMUM_ALLOWED_FOOD_QUANTITY, newFoodItem.quantity + dup[0].quantity);
+            } else {
+                newFoodItems.push(newFoodItem);
+            }
+        }
+        this.setState({
+            foodItems: newFoodItems,
+            showFoodSearchEngineModal: false
+        })
     }
 
     handleMealNameChange = (text) => {
@@ -123,7 +165,7 @@ export default class CreateMealLog extends React.Component {
         const toggledBoolean = !this.state.isFavourite;
         this.setState({
             isFavourite: toggledBoolean
-        })
+        });
     }
 
     // Find the food item and its index, replace the index with a new food item.
@@ -164,7 +206,7 @@ export default class CreateMealLog extends React.Component {
     // Submit if meal name is not duplicate.
     onSubmitLog = () => {
         const {mealName, isFavourite, foodItems} = this.state;
-        const {mealType, recordDate, navigation} = this.props.route.params;
+        const {mealType, recordDate, parent} = this.props;
         if (mealName.trim() === '' && isFavourite) {
             Alert.alert('Error','Please give your favourite meal a name', [ { text: 'Ok' }]);
             return;
@@ -179,7 +221,7 @@ export default class CreateMealLog extends React.Component {
             mealName,
             isFavourite,
             foodItems,
-            recordDate: new Date(recordDate),
+            recordDate,
             mealType
         };
         if (isFavourite) {
@@ -191,27 +233,29 @@ export default class CreateMealLog extends React.Component {
                     return;
                 } else {
                     handleSubmitMealLog(meal).then(resp => {
-                        navigation.navigate('AddLog');
+                        this.props.closeModal();
+                        this.props.closeParent();
                     });
                 }
             }).catch(err => alert(err.message));
         } else {
             handleSubmitMealLog(meal).then(resp => {
-                    navigation.navigate('AddLog');
+                    this.props.closeModal();
+                    this.props.closeParent();
                 }
             );
         }
     }
 
     render() {
-        const {navigation, route} = this.props;
-        const {isFavourite, mealName, selected, modalOpen, foodItems, recordDateTime, mealType} = this.state;
-
+        const {isFavourite, mealName, selected, modalOpen, foodItems, showFoodSearchEngineModal} = this.state;
+        const {mealType, recordDate, parent, closeModal, closeParent, visible} = this.props;
         return (
-            <View style={styles.root}>
+            <Modal visible={visible} transparent={true}>
+                <View style={styles.root}>
                     <View style={{flexGrow: 1, padding: 20}}>
                         <View style={styles.header}>
-                            <Icon name='times' size={50} color='#4DAA50' onPress={()=>navigation.goBack()} />
+                            <Icon name='times' size={50} color='#4DAA50' onPress={closeModal} />
                             <Text style={{fontSize: 30, color:"#21283A", fontWeight: 'bold', paddingBottom: '2%'}}>Add Meal</Text>
                             <Text style={{fontSize: 18, color:"#21283A", fontWeight: 'bold'}} />
                         </View>
@@ -246,7 +290,7 @@ export default class CreateMealLog extends React.Component {
                                 underlayColor='#fff' onPress={this.onSubmitLog}>
                                 <Text style={styles.buttonText}>Submit Log</Text>
                             </TouchableHighlight>
-                            <Modal visible={modalOpen} transparent={true}>
+                            <Modal visible={modalOpen} coverScreen={true}>
                                 {selected &&
                                 <FoodModalContent onClose={this.handleCloseModal} selected={selected}>
                                     <TouchableOpacity onPress={this.handleCloseModal}
@@ -258,7 +302,7 @@ export default class CreateMealLog extends React.Component {
                             </Modal>
                         </View>
                     </View>
-                <FlashMessage triggerValue={this.state.isFavourite}
+                    <FlashMessage triggerValue={this.state.isFavourite}
                               renderFlashMessageComponent={(val) => val ? <View
                                       style={{height: 40, width: 150, borderRadius: 10,
                                           backgroundColor:'#288259', justifyContent: 'center', alignItems: 'center'}}
@@ -272,8 +316,16 @@ export default class CreateMealLog extends React.Component {
                                       <Text style={{color: '#fff', fontSize: 20}}>Unfavourited</Text>
                                   </View>}
                               messageComponentHeight={40}
-                />
-            </View>
+                    />
+                    {   showFoodSearchEngineModal &&
+                        <FoodSearchEngineScreen
+                            addFoodItemCallback={this.addFoodItemCallback}
+                            addMealCallback={this.addMealCallback}
+                            goBack={()=>this.setState({showFoodSearchEngineModal: false})}
+                            visible={showFoodSearchEngineModal} />
+                    }
+                </View>
+            </Modal>
         )
     }
 }

@@ -164,13 +164,12 @@ export default EditPasswordModal;
 
 const styles = StyleSheet.create({
   inputBox: {
-    width: Dimensions.get('window').width - 60,
-    borderRadius: 20,
-    backgroundColor: '#EEF3BD',
-    paddingStart: 30, //position placeholder text
+    backgroundColor: '#e2e8ee',
     marginVertical: 10,
-    alignSelf: 'center',
     padding: '3%',
     marginTop: '7%',
+    borderRadius: 9.5,
+    marginStart: '2%',
+    marginEnd: '2%',
   },
 });

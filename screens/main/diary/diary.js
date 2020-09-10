@@ -4,10 +4,11 @@ import {View, StyleSheet, Text, FlatList} from 'react-native';
 import Legend from '../../../components/diary/legend';
 import TargetBlock from '../../../components/diary/targetBlock';
 import Filter from '../../../components/filter';
-//third party
-import moment from 'moment';
+import MenuBtn from '../../../components/menuBtn';
 //functions
 import {getDateRange} from '../../../commonFunctions/diaryFunctions';
+//style
+import globalStyles from '../../../styles/globalStyles';
 
 const DiaryScreen = (props) => {
   const [dates, setDates] = useState([]);
@@ -22,8 +23,9 @@ const DiaryScreen = (props) => {
   };
 
   return (
-    <View style={styles.diaryScreen}>
-      <View style={{flexDirection: 'row'}}>
+    <View style={globalStyles.pageContainer}>
+      <MenuBtn />
+      <View style={{flexDirection: 'row', padding: '3%'}}>
         <Text style={styles.legendHeader}>Legend</Text>
         <Filter getDateArrFromFilter={getDateArrFromFilter} />
       </View>
@@ -46,15 +48,6 @@ const DiaryScreen = (props) => {
 };
 
 const styles = StyleSheet.create({
-  diaryScreen: {
-    flex: 1,
-    padding: 10,
-    backgroundColor: 'white',
-  },
-  diaryContentContainer: {
-    flex: 1,
-    justifyContent: 'space-between',
-  },
   legendContainer: {
     flexDirection: 'row',
     flex: 1,

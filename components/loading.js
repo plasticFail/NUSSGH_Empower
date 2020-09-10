@@ -5,6 +5,7 @@ function Loading({isLoading}) {
   return (
     <ActivityIndicator
       animating={isLoading}
+      color="white"
       style={{marginTop: '5%'}}></ActivityIndicator>
   );
 }

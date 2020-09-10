@@ -23,6 +23,8 @@ import {
 import {patientLoginRequest} from '../../netcalls/requestsAuth';
 //components
 import Loading from '../../components/loading';
+import globalStyles from '../../styles/globalStyles';
+import LoadingModal from '../../components/loadingModal';
 
 class Login extends Component {
   constructor(props) {
@@ -41,6 +43,7 @@ class Login extends Component {
   }
 
   init = async () => {
+    this.props.logout();
     const username = await getUsername();
     if (username !== null && username !== '') {
       console.log('username : ' + username);
@@ -87,16 +90,19 @@ class Login extends Component {
         style={{flex: 1}}
         behavior={Platform.OS === 'ios' ? 'padding' : null}>
         <View style={styles.container}>
-          <Text
-            style={{fontSize: 30, marginBottom: 20, fontWeight: '500'}}></Text>
           <Image
-            source={require('../../resources/images/logo_v1.png')}
-            style={{width: 300, height: 300, marginBottom: 10}}
+            source={require('../../resources/images/empower_logo.png')}
+            style={styles.logoStyle}
           />
+          <Text style={styles.welcomeText}>Welcome</Text>
+          <Text style={styles.detailText}>
+            To proceed with the app, please log in with your credentials
+          </Text>
+          <View style={{flex: 0.5}} />
           <TextInput
             style={styles.inputBox}
             placeholder="Username"
-            placeholderTextColor="#a1a3a0"
+            placeholderTextColor="white"
             value={this.state.username}
             onChangeText={this.handleUsernameInput}
           />
@@ -104,31 +110,36 @@ class Login extends Component {
             style={styles.inputBox}
             placeholder="Password"
             secureTextEntry={true}
-            placeholderTextColor="#a1a3a0"
+            placeholderTextColor="white"
             value={this.state.password}
             onChangeText={this.handlePasswordInput}
           />
+          <TouchableOpacity
+            style={[
+              globalStyles.nextButtonStyle,
+              {backgroundColor: 'white', marginBottom: 0},
+            ]}
+            onPress={this.handleLogin}>
+            <Text style={globalStyles.actionButtonText}>Login</Text>
+          </TouchableOpacity>
           <Text
-            style={{
-              marginLeft: '40%',
-              marginVertical: 5,
-              color: '#a1a3a0',
-            }}
+            style={styles.forgetPassword}
             onPress={() => this.props.navigation.navigate('ForgetPassword')}>
             Forget Password?
           </Text>
-          <TouchableOpacity style={styles.button} onPress={this.handleLogin}>
-            <Text style={styles.buttonText}>Login</Text>
-          </TouchableOpacity>
-          <Text style={styles.light}>
-            Having troubles logging in?{'  '}
-            <Text
-              style={styles.bold}
-              onPress={() => this.props.navigation.navigate('ContactUsScreen')}>
-              Contact Us Now!{' '}
-            </Text>
-          </Text>
           <Loading isLoading={this.state.isLoading} />
+          <View style={{justifyContent: 'flex-end', paddingTop: '3%'}}>
+            <Text style={styles.light}>
+              Having trouble?{' '}
+              <Text
+                style={styles.bold}
+                onPress={() =>
+                  this.props.navigation.navigate('ContactUsScreen')
+                }>
+                Contact Us Now!{' '}
+              </Text>
+            </Text>
+          </View>
         </View>
       </KeyboardAvoidingView>
     );
@@ -140,37 +151,48 @@ export default connect(mapStateToProps, mapDispatchToProps)(Login);
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#ffffff',
+    backgroundColor: '#0D8b43',
+    padding: '6%',
+  },
+  logoStyle: {
+    width: 100,
+    height: 100,
+    marginBottom: 10,
+    borderRadius: 20,
+  },
+  welcomeText: {
+    fontSize: 30,
+    color: 'white',
+    fontWeight: '700',
+  },
+  detailText: {
+    fontSize: 20,
+    color: 'white',
   },
   inputBox: {
-    width: 300,
-    height: 40,
+    width: '90%',
+    height: 50,
     borderRadius: 20,
-    backgroundColor: '#EEF3BD',
+    backgroundColor: '#12683E',
     paddingStart: 30, //position placeholder text
     marginVertical: 10,
-  },
-  button: {
-    backgroundColor: '#AAD326',
-    width: 300,
-    height: 40,
-    borderRadius: 20,
-    marginVertical: 10,
-    paddingVertical: 6,
-  },
-  buttonText: {
-    fontSize: 23,
-    fontWeight: '500',
-    textAlign: 'center',
+    alignSelf: 'center',
+    color: 'white',
   },
   light: {
-    color: '#949494',
+    color: 'white',
+    fontSize: 17,
     marginTop: '3%',
   },
   bold: {
-    fontWeight: '700',
-    color: 'black',
+    fontWeight: '800',
+    color: 'white',
+  },
+  forgetPassword: {
+    margin: '4%',
+    color: 'white',
+    textAlign: 'center',
+    fontSize: 17,
   },
 });

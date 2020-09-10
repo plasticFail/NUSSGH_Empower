@@ -1,9 +1,11 @@
 import React from 'react';
-import {View, StyleSheet, ActivityIndicator, Alert} from 'react-native';
+import {View, StyleSheet, ActivityIndicator, Alert, TouchableOpacity, Text} from 'react-native';
 // Functions
 import {requestUnfavouriteMeal, requestFavouriteMealList} from "../../../../netcalls/mealEndpoints/requestMealLog";
 // Others
 import MealList from "../../../../components/logs/meal/MealList";
+// third party lib
+import Modal from 'react-native-modal';
 
 // The screen that contains a list of the user's favourite meals.
 export default class FavouriteMealComponent extends React.Component {
@@ -11,7 +13,11 @@ export default class FavouriteMealComponent extends React.Component {
         super(props);
         this.state = {
             isLoading: true,
-            favouriteMeals: []
+            favouriteMeals: [],
+
+            // State var for handling unfavouriting
+            showUnfavouriteConfirmation: false,
+            targetMealToUnfavourite: null
         }
     }
 
@@ -28,26 +34,40 @@ export default class FavouriteMealComponent extends React.Component {
 
     navigateToCreateMealLogPage = (selectedMeal) => {
         const meal = {...selectedMeal};
-        meal.isFavourite = false;
-        meal.mealName = "";
-        this.props.navigation.navigate("CreateMealLog", {
-            meal
-        });
+        this.props.addMealCallback(meal);
     }
 
-    handleUnfavouriteMeal = (meal) => {
+    // confirm unfavourite
+    unfavouriteMeal = () => {
+        const meal = this.state.targetMealToUnfavourite;
         requestUnfavouriteMeal(meal.mealName)
             .then(data => {
                 // unfavourite the item from local state.
                 this.setState({
-                    favouriteMeals: this.state.favouriteMeals.filter(m => m.mealName !== meal.mealName)
+                    favouriteMeals: this.state.favouriteMeals.filter(m => m.mealName !== meal.mealName),
+                    showUnfavouriteConfirmation: false
                 })
             })
             .catch(err => Alert.alert("Error", err.message, [ { text: 'Ok' }]));
     }
 
+    handleUnfavouriteMeal = (meal) => {
+        // Show confirmation
+        this.setState({
+            showUnfavouriteConfirmation: true,
+            targetMealToUnfavourite: meal
+        });
+    }
+
+    abortUnfavouriteMeal = () => {
+        this.setState({
+            showUnfavouriteConfirmation: false,
+            targetMealToUnfavourite: null
+        })
+    }
+
     render() {
-        const {isLoading, favouriteMeals} = this.state;
+        const {isLoading, favouriteMeals, showUnfavouriteConfirmation, targetMealToUnfavourite} = this.state;
         const {filterQuery} = this.props;
         return (
             isLoading ?
@@ -75,6 +95,22 @@ export default class FavouriteMealComponent extends React.Component {
                                 }}
                           />
                 }
+                {   showUnfavouriteConfirmation &&
+                    <Modal isVisible={showUnfavouriteConfirmation} onBackdropPress={this.abortUnfavouriteMeal}>
+                        <View style={{backgroundColor: '#fff', padding: 20, width: '85%',
+                                        borderRadius: 15, justifyContent: 'space-between',
+                                        alignSelf: 'center'}}>
+                            <Text style={{fontWeight: 'bold', fontSize: 20, paddingTop: '4%'}}>Remove from favourites</Text>
+                            <Text style={{fontSize: 20, paddingTop: '4%'}}>{targetMealToUnfavourite.mealName}</Text>
+                            <TouchableOpacity onPress={this.unfavouriteMeal} style={[styles.removeButton, {marginTop: '4%'}]}>
+                                <Text style={{fontWeight: 'bold', color: '#fff', fontSize: 18}}>Remove</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={this.abortUnfavouriteMeal} style={styles.cancelButton}>
+                                <Text style={{fontWeight: 'bold', color: 'red', fontSize: 18}}>Cancel</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </Modal>
+                }
             </View>
         );
     }
@@ -84,9 +120,23 @@ const styles = StyleSheet.create({
     loadingContainer: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
     },
     root: {
         flexGrow: 1,
+    },
+    cancelButton: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '100%',
+        padding: 15
+    },
+    removeButton: {
+        backgroundColor: 'red',
+        borderRadius: 10,
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '100%',
+        padding: 15
     }
 })

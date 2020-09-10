@@ -4,6 +4,8 @@ import {
   medicationAddLog,
   medicationList,
   weightAddLog,
+  glucoseQuestionaire,
+  medplanAdd,
 } from './urls';
 import {getToken} from '../storage/asyncStorageFunctions';
 
@@ -30,6 +32,34 @@ const glucoseAddLogRequest = async (bgReading, date) => {
   }
 };
 
+const addGlucoseQuestionaire = async (
+  eatSelection,
+  exercisesSelection,
+  alcoholSelection,
+) => {
+  try {
+    let response = await fetch(glucoseQuestionaire, {
+      method: 'POST',
+      headers: {
+        Authorization: 'Bearer ' + (await getToken()),
+        Accept: 'application/json',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        alcohol: alcoholSelection,
+        exercised: exercisesSelection,
+        eat_lesser: eatSelection,
+      }),
+    });
+    let responseJson = await response.json();
+    console.log('glucoseQuestionaire : ' + responseJson);
+    return true;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+};
+
 const storeMedications = async () => {
   try {
     let response = await fetch(medicationList, {
@@ -42,6 +72,26 @@ const storeMedications = async () => {
     });
     let responseJson = await response.json();
     console.log('storeMedications : ' + responseJson);
+    return responseJson;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+};
+
+const getMedication4Day = async (dateString) => {
+  const string = medplanAdd + '?start=' + dateString + '&end=' + dateString;
+  try {
+    let response = await fetch(string, {
+      method: 'GET',
+      headers: {
+        Authorization: 'Bearer ' + (await getToken()),
+        Accept: 'application/json',
+        'Content-type': 'application/json',
+      },
+    });
+    let responseJson = await response.json();
+    console.log('get medication for 2day : ' + responseJson);
     return responseJson;
   } catch (error) {
     console.error(error);
@@ -121,6 +171,8 @@ export {
   glucoseAddLogRequest,
   storeMedications,
   medicationAddLogRequest,
+  getMedication4Day,
   weightAddLogRequest,
   mealAddLogRequest,
+  addGlucoseQuestionaire,
 };

@@ -131,7 +131,7 @@ function renderWeightResult(weightPassCount, weightFailCount, weightMiss) {
     let percentage = getPercentage(weightPassCount, weightFailCount);
     let finalMsg = '';
     if (percentage != 0) {
-      let message = 'Activity log completed.';
+      let message = 'Weight log completed.';
       let s =
         percentage + '% of your weight logs are above 40 kg and below 200 kg';
       finalMsg = message + ' ' + s;

@@ -7,13 +7,13 @@ import {
   FlatList,
   Image,
   TouchableOpacity,
-  Modal,
   TouchableHighlight,
   Alert,
-    Animated,
-    Keyboard,
-    Platform,
-    KeyboardAvoidingView
+  Animated,
+  Keyboard,
+  Platform,
+  KeyboardAvoidingView,
+  Modal
 } from 'react-native';
 // Components
 import Searchbar from '../../../../components/Searchbar';
@@ -24,6 +24,7 @@ import FavouriteMealComponent from "./FavouriteMeals";
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import requestFoodSearch from '../../../../netcalls/foodEndpoints/requestFoodSearch';
 import {requestMealLogList} from "../../../../netcalls/mealEndpoints/requestMealLog";
+// third party lib
 
 Icon.loadFont();
 
@@ -35,7 +36,7 @@ const TABS = {
   'Favourites List': 'favourites'
 }
 
-class FoodSearchEngineScreen extends React.Component {
+export default class FoodSearchEngineScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -200,97 +201,100 @@ class FoodSearchEngineScreen extends React.Component {
   }
 
   render() {
-    const {navigation, route} = this.props;
+    const {visible, addMealCallback, addFoodItemCallback, goBack} = this.props;
     const {query, favouritesQuery, isLoading, foodResults, keyboardShown, selectedTab, recentlyAddedFoodItems} = this.state;
-    const type = route.params.type;
     return (
-      <AnimatedKeyboardAvoidingView enabled={false} style={[styles.root, {transform: [{translateY: this.listResultY}]}]}>
-        <View style={styles.header}>
-            <AnimatedIcon name="arrow-left" onPress={navigation.goBack} color={'#4DAA50'} size={40} style={{opacity: this.backbuttonOpacity}} />
-            <Text style={styles.addItemText}>{keyboardShown ? "Search" : "Add Item"}</Text>
-        </View>
-        {
-          !keyboardShown &&
-          (<View style={styles.tabsContainer}>
-            <TouchableOpacity style={selectedTab === 'search' ? styles.selectedTab : styles.tabs} onPress={() => this.handleTabChange(TABS["Food Search"])}>
-              <Text style={selectedTab === 'search' ? styles.selectedTabText : styles.tabText}>Search</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={selectedTab === 'favourites' ? styles.selectedTab : styles.tabs} onPress={() => this.handleTabChange(TABS["Favourites List"])}>
-              <Text style={selectedTab === 'favourites' ? styles.selectedTabText : styles.tabText}>Favourites</Text>
-            </TouchableOpacity>
-          </View>)
-        }
-        {
-          selectedTab === 'search' ? (<Searchbar
-              key='searchbar'
-              containerStyle={{marginLeft: 20, marginRight: 20}}
-              value={query}
-              onChangeText={this.updateQuery}
-              placeholder='Search food'
-              onSubmit={this.onSubmit}
-          />) : (<Searchbar
-              key='favourites-searchbar'
-              containerStyle={{marginLeft: 20, marginRight: 20}}
-              value={favouritesQuery}
-              onChangeText={this.updateQuery}
-              placeholder='Search favourites'
-              onSubmit={this.onSubmit}
-          />)
-        }
-        {selectedTab === 'search' && (isLoading ? ( // Render loading progress
-            <View style={styles.searchLoading}>
-              <ActivityIndicator size="large" color="#B3D14C" />
+        <Modal isVisible={visible}>
+          <AnimatedKeyboardAvoidingView enabled={false} style={[styles.root, {transform: [{translateY: this.listResultY}]}]}>
+            <View style={styles.header}>
+                <AnimatedIcon name="arrow-left" onPress={goBack} color={'#4DAA50'} size={40} style={{opacity: this.backbuttonOpacity}} />
+                <Text style={styles.addItemText}>{keyboardShown ? "Search" : "Add Item"}</Text>
             </View>
-        ) : (query === '' ?
-            (recentlyAddedFoodItems.length === 0 ? ( // Render search prompt "Begin your search"
+            {
+              !keyboardShown &&
+              (<View style={styles.tabsContainer}>
+                <TouchableOpacity style={selectedTab === 'search' ? styles.selectedTab : styles.tabs} onPress={() => this.handleTabChange(TABS["Food Search"])}>
+                  <Text style={selectedTab === 'search' ? styles.selectedTabText : styles.tabText}>Search</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={selectedTab === 'favourites' ? styles.selectedTab : styles.tabs} onPress={() => this.handleTabChange(TABS["Favourites List"])}>
+                  <Text style={selectedTab === 'favourites' ? styles.selectedTabText : styles.tabText}>Favourites</Text>
+                </TouchableOpacity>
+              </View>)
+            }
+            {
+              selectedTab === 'search' ? (<Searchbar
+                  key='searchbar'
+                  containerStyle={{marginLeft: 20, marginRight: 20}}
+                  value={query}
+                  onChangeText={this.updateQuery}
+                  placeholder='Search food'
+                  onSubmit={this.onSubmit}
+              />) : (<Searchbar
+                  key='favourites-searchbar'
+                  containerStyle={{marginLeft: 20, marginRight: 20}}
+                  value={favouritesQuery}
+                  onChangeText={this.updateQuery}
+                  placeholder='Search favourites'
+                  onSubmit={this.onSubmit}
+              />)
+            }
+            {selectedTab === 'search' && (isLoading ? ( // Render loading progress
+                <View style={styles.searchLoading}>
+                  <ActivityIndicator size="large" color="#B3D14C" />
+                </View>
+            ) : (query === '' ?
+                (recentlyAddedFoodItems.length === 0 ? ( // Render search prompt "Begin your search"
+                  <View style={styles.searchPromptBody}>
+                    <Text style={styles.searchPromptText}>Begin your search</Text>
+                    <Text style={styles.searchHintText}>
+                      Type in the food name in the
+                    </Text>
+                    <Text style={styles.searchHintText}>search bar!</Text>
+                  </View> ) :
+                      (
+                        <View style={styles.foodSearchResults}>
+                          <Text style={{alignSelf: 'flex-start', paddingLeft: 20,
+                            paddingTop: 10,fontSize: 20,
+                            fontWeight: 'bold', color: '#7d7d7d'}}>
+                            Recently added items:
+                          </Text>
+                          <FoodResultList
+                              //navigation={navigation}
+                              //route={route}
+                              addFoodItemCallback={addFoodItemCallback}
+                              //type={type}
+                              foodList={recentlyAddedFoodItems}
+                          />
+                        </View>
+                      )
+            )  : (foodResults.length > 0 ? ( // Render food result list
+              <View style={styles.foodSearchResults}>
+                <FoodResultList
+                  //navigation={navigation}
+                  //route={route}
+                  addFoodItemCallback={addFoodItemCallback}
+                  //type={type}
+                  foodList={foodResults}
+                />
+              </View>
+            ) : ( // Render no search results
               <View style={styles.searchPromptBody}>
-                <Text style={styles.searchPromptText}>Begin your search</Text>
-                <Text style={styles.searchHintText}>
-                  Type in the food name in the
+                <Text style={styles.searchPromptText}>
+                  No results for {query} :(
                 </Text>
-                <Text style={styles.searchHintText}>search bar!</Text>
-              </View> ) :
-                  (
-                    <View style={styles.foodSearchResults}>
-                      <Text style={{alignSelf: 'flex-start', paddingLeft: 20,
-                        paddingTop: 10,fontSize: 20,
-                        fontWeight: 'bold', color: '#7d7d7d'}}>
-                        Recently added items:
-                      </Text>
-                      <FoodResultList
-                          navigation={navigation}
-                          route={route}
-                          type={type}
-                          foodList={recentlyAddedFoodItems}
-                      />
-                    </View>
-                  )
-        )  : (foodResults.length > 0 ? ( // Render food result list
-          <View style={styles.foodSearchResults}>
-            <FoodResultList
-              navigation={navigation}
-              route={route}
-              type={type}
-              foodList={foodResults}
-            />
-          </View>
-        ) : ( // Render no search results
-          <View style={styles.searchPromptBody}>
-            <Text style={styles.searchPromptText}>
-              No results for {query} :(
-            </Text>
-            <Text style={styles.searchHintText}>Try again with</Text>
-            <Text style={styles.searchHintText}>another query!</Text>
-          </View>
-        ))))
-        }
-        { selectedTab === 'favourites' && <FavouriteMealComponent filterQuery={favouritesQuery} navigation={navigation} />}
-      </AnimatedKeyboardAvoidingView>
+                <Text style={styles.searchHintText}>Try again with</Text>
+                <Text style={styles.searchHintText}>another query!</Text>
+              </View>
+            ))))
+            }
+            { selectedTab === 'favourites' && <FavouriteMealComponent filterQuery={favouritesQuery} addMealCallback={addMealCallback} />}
+          </AnimatedKeyboardAvoidingView>
+        </Modal>
     );
   }
 }
 
-function FoodResultList({foodList, navigation, route, type}) {
+function FoodResultList({foodList, navigation, route, type, addFoodItemCallback}) {
   const [modalOpen, setModalOpen] = React.useState(false);
   const [selected, setSelected] = React.useState(null); // Selected food item modal to show.
 
@@ -304,6 +308,7 @@ function FoodResultList({foodList, navigation, route, type}) {
     setSelected(null);
   };
 
+  /*
   const navigateBackToCreateMealLog = () => {
     navigation.navigate('CreateMealLog', {
       item: {...selected},
@@ -311,9 +316,11 @@ function FoodResultList({foodList, navigation, route, type}) {
     });
     handleClose();
   };
+   */
 
   const addFoodToLog = () => {
     // Check if it already exists in the list. If yes, throw alert, otherwise navigate back to create meal log.
+    /*
     const selectedFoodName = selected['food-name'];
     if (route.params.existingItems.indexOf(selectedFoodName) != -1) {
       // We already have this food item in the cart.
@@ -324,7 +331,9 @@ function FoodResultList({foodList, navigation, route, type}) {
       );
     } else {
       navigateBackToCreateMealLog();
-    }
+    }*/
+    handleClose();
+    addFoodItemCallback(selected);
   };
 
   const renderFoodListItem = ({item}) => {
@@ -511,5 +520,3 @@ const styles = StyleSheet.create({
     fontSize: 20
   }
 });
-
-export default FoodSearchEngineScreen;

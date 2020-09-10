@@ -3,6 +3,7 @@ import {View, StyleSheet, SectionList, Text} from 'react-native';
 import Carousel from '../../components/hypofood/carousel';
 import SampleData from './sampleHypoList.json';
 import {FlatList} from 'react-native-gesture-handler';
+import globalStyles from '../../styles/globalStyles';
 
 const HypocorrectionFood = (props) => {
   /*
@@ -15,7 +16,7 @@ const HypocorrectionFood = (props) => {
   }, []);
 */
   return (
-    <View style={styles.screen}>
+    <View style={globalStyles.pageContainer}>
       <Text style={styles.header}>Consume 15g from this food list now!</Text>
       <FlatList
         data={SampleData.data}
@@ -38,10 +39,6 @@ const HypocorrectionFood = (props) => {
 };
 
 const styles = StyleSheet.create({
-  screen: {
-    width: '100%',
-    backgroundColor: 'white',
-  },
   header: {
     alignSelf: 'center',
     fontSize: 20,

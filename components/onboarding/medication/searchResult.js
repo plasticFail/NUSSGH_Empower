@@ -1,6 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
-import {ScrollView, FlatList} from 'react-native-gesture-handler';
+import {View, Text, StyleSheet, TouchableOpacity, FlatList} from 'react-native';
 //third party library
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import Moment from 'moment';
@@ -11,7 +10,6 @@ Ionicon.loadFont();
 const SearchResult = (props) => {
   const {medicationList} = props;
   const {setSelectedMedicine, closeModal} = props;
-  console.log('in search result');
 
   const handleSelect = (item) => {
     let medicineObj = {
@@ -49,7 +47,7 @@ export default SearchResult;
 
 const styles = StyleSheet.create({
   resultContainer: {
-    borderBottomWidth: 0.17,
+    borderBottomWidth: 0.2,
     borderColor: 'black',
     padding: '3%',
     flexDirection: 'row',
