@@ -102,7 +102,7 @@ const filterEvening = (logs) => {
   for (var i of logs) {
     let date = i.record_date;
     let hour = getHour(date);
-    if (hour >= eveningObj.start && hour < eveningObj.end) {
+    if (hour >= eveningObj.start) {
       list.push(i);
     }
   }

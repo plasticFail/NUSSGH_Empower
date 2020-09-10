@@ -13,7 +13,14 @@ import {
   getLastWeightLog,
   getLastMedicationLog,
 } from '../storage/asyncStorageFunctions';
-import {getGreetingFromHour} from './common';
+import {getGreetingFromHour, morningObj} from './common';
+import {getEntry4Day} from '../netcalls/requestsDiary';
+import {
+  filterMorning,
+  filterAfternoon,
+  getTime,
+  getHour,
+} from './diaryFunctions';
 
 const bg_key = 'Blood Glucose Log';
 const food_key = 'Food Intake Log';
@@ -52,47 +59,62 @@ const isPeriod = (time) => {
 
 //to add: food*
 const checkLogDone = async (period) => {
-  let bg_data = await getLastBgLog();
-  let med_data = await getLastMedicationLog();
-  let weight_data = await getLastWeightLog();
   let completed = [];
   let notCompleted = [];
-  if (
-    bg_data &&
-    String(isPeriod(bg_data.hour)) === period &&
-    isToday(bg_data.date)
-  ) {
+  let bgLogs = [];
+  let foodLogs = [];
+  let medLogs = [];
+  let weightLogs = [];
+  let today = Moment(new Date()).format('YYYY-MM-DD');
+  let data = await getEntry4Day(String(today));
+
+  let d = data[today];
+  bgLogs = d.glucose.logs;
+  foodLogs = d.food.logs;
+  medLogs = d.medication.logs;
+  weightLogs = d.weight.logs;
+
+  if (inPeriod(bgLogs, period)) {
     completed.push(bg_key);
   } else {
     notCompleted.push(bg_key);
   }
 
-  if (
-    med_data &&
-    String(isPeriod(med_data.hour)) === period &&
-    isToday(med_data.date)
-  ) {
+  if (inPeriod(foodLogs, period)) {
+    completed.push(food_key);
+  } else {
+    notCompleted.push(food_key);
+  }
+
+  if (inPeriod(medLogs, period)) {
     completed.push(med_key);
   } else {
     notCompleted.push(med_key);
   }
-  if (
-    weight_data &&
-    String(isPeriod(weight_data.hour)) === period &&
-    isToday(weight_data.date)
-  ) {
+
+  if (inPeriod(weightLogs, period)) {
     completed.push(weight_key);
   } else {
     notCompleted.push(weight_key);
   }
-
-  //for now temporary push food to not done
-  notCompleted.push(food_key);
-
   return {
     completed: completed,
     notCompleted: notCompleted,
   };
+};
+
+const inPeriod = (logs, period) => {
+  if (logs.length === 0) {
+    return false;
+  }
+  for (var x of logs) {
+    let time = getHour(x.record_date);
+    let greeting = getGreetingFromHour(time);
+    if (greeting === period) {
+      return true;
+    }
+  }
+  return false;
 };
 
 const checkBloodGlucose = (bloodGlucose) => {

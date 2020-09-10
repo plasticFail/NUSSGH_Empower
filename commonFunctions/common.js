@@ -20,7 +20,7 @@ const getGreetingFromHour = (hour) => {
     return morningObj.name;
   } else if (hour >= afternoonObj.start && hour < afternoonObj.end) {
     return afternoonObj.name;
-  } else if (hour >= eveningObj.start && hour < eveningObj.end) {
+  } else {
     return eveningObj.name;
   }
 };
