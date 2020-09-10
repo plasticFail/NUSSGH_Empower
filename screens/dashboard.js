@@ -33,12 +33,6 @@ function getMoreHeaderTitle(route) {
 }
 */
 
-// Method to reset the tab navigation when navigating through pages
-// Quite unclean during the development phase because of the warning shown.
-const handleTabPress = ({navigation}, pathName) => {
-  navigation.popToTop() && navigation.navigate(pathName);
-};
-
 const DashboardScreen = (props) => {
   Icon.loadFont();
   return (
@@ -58,9 +52,6 @@ const DashboardScreen = (props) => {
       <Tab.Screen
         name="Home"
         component={Home}
-        listeners={{
-          tabPress: () => handleTabPress(props, 'Home'),
-        }}
         options={{
           title: 'Home',
           tabBarIcon: ({color, size}) => (
@@ -71,9 +62,6 @@ const DashboardScreen = (props) => {
       <Tab.Screen
         name="Reports"
         component={ReportsScreen}
-        listeners={{
-          tabPress: () => handleTabPress(props, 'Reports'),
-        }}
         options={{
           title: 'Reports',
           tabBarIcon: ({color, size}) => (
@@ -84,9 +72,6 @@ const DashboardScreen = (props) => {
       <Tab.Screen
         name="AddLog"
         component={AddLog}
-        listeners={{
-          tabPress: () => handleTabPress(props, 'AddLog'),
-        }}
         options={{
           title: 'Add Log',
           tabBarIcon: ({color, size}) => (
@@ -97,9 +82,6 @@ const DashboardScreen = (props) => {
       <Tab.Screen
         name="GameCenter"
         component={GameCenter}
-        listeners={{
-          tabPress: () => handleTabPress(props, 'Game Center'),
-        }}
         options={{
           title: 'Game Center',
           tabBarIcon: ({color, size}) => (
@@ -110,9 +92,6 @@ const DashboardScreen = (props) => {
       <Tab.Screen
         name="Chat"
         component={ChatScreen}
-        listeners={{
-          tabPress: () => handleTabPress(props, 'Chat'),
-        }}
         options={{
           title: 'Chat',
           tabBarIcon: ({color, size}) => (
