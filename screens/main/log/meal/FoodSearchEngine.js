@@ -63,10 +63,7 @@ export default class FoodSearchEngineScreen extends React.Component {
         let recentFoodItems = [];
         let tracker = new Set();
         for (const mealLog of data.data) {
-            unprocessedRecentFoodItems = unprocessedRecentFoodItems.concat(mealLog.beverage);
-            unprocessedRecentFoodItems = unprocessedRecentFoodItems.concat(mealLog.main);
-            unprocessedRecentFoodItems = unprocessedRecentFoodItems.concat(mealLog.side);
-            unprocessedRecentFoodItems = unprocessedRecentFoodItems.concat(mealLog.dessert);
+            unprocessedRecentFoodItems = unprocessedRecentFoodItems.concat(mealLog.foodItems);
         }
       for (const food of unprocessedRecentFoodItems) {
           if (!tracker.has(food['food-name'])) {
@@ -259,10 +256,7 @@ export default class FoodSearchEngineScreen extends React.Component {
                             Recently added items:
                           </Text>
                           <FoodResultList
-                              //navigation={navigation}
-                              //route={route}
                               addFoodItemCallback={addFoodItemCallback}
-                              //type={type}
                               foodList={recentlyAddedFoodItems}
                           />
                         </View>

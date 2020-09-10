@@ -132,58 +132,6 @@ class AppRoot extends Component {
                   }}
                 />
                 <Stack.Screen
-                  name="MealLogRoot"
-                  component={MealLogRoot}
-                  options={({route, navigation}) => ({
-                    title: 'Meal Log',
-                    headerBackImage: () => <HeaderBackIcon />,
-                    headerRight: () => <View />,
-                    headerBackTitleVisible: false,
-                  })}
-                />
-                <Stack.Screen
-                  name={'CreateMealLog'}
-                  component={CreateMealLogScreen}
-                  options={({route, navigation}) => ({
-                    animationEnabled: true,
-                    title: 'Create Meal Log',
-                    headerBackImage: () => (
-                      <HeaderBackIconClick
-                        clickFunc={() => {
-                          if (route.params.edited) {
-                            // Confirmation message before going back.
-                            // If the meal has been edited, this dialogue will be popped.
-                            // otherwise the user will be sent back to the previous page.
-                            Alert.alert(
-                              'Going back?',
-                              'You have not submitted your meal log. Are you sure you want to leave this page?',
-                              [
-                                {
-                                  text: 'Ok',
-                                  onPress: navigation.goBack,
-                                },
-                                {
-                                  text: 'Cancel',
-                                  onPress: () => {},
-                                },
-                              ],
-                            );
-                          } else {
-                            navigation.goBack();
-                          }
-                        }}
-                      />
-                    ),
-                    headerRight: () => <View />,
-                    headerBackTitleVisible: false,
-                  })}
-                />
-                <Stack.Screen
-                  name={'FoodSearchEngine'}
-                  component={FoodSearchEngineScreen}
-                  options={{headerShown: false}}
-                />
-                <Stack.Screen
                   name="DiaryDetail"
                   component={DiaryDetail}
                   options={({route}) => ({

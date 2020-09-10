@@ -29,6 +29,8 @@ import DateSelectionBlock from "../../../../components/logs/dateSelectionBlock";
 import MealTypeSelectionBlock from "../../../../components/logs/meal/MealTypeSelectionBlock";
 import {mealAddLogRequest} from "../../../../netcalls/requestsLog";
 import FoodSearchEngineScreen from "./FoodSearchEngine";
+import SuccessDialogue from "../../../../components/successDialogue";
+import {food_key} from "../../../../commonFunctions/logFunctions";
 
 Icon.loadFont()
 // Any meal log selected (e.g Create, Recent or Favourites)
@@ -55,6 +57,7 @@ export default class CreateMealLog extends React.Component {
             selected: null,
             modalOpen: false,
             showFoodSearchEngineModal: false,
+            success: false
         }
     }
 
@@ -66,60 +69,16 @@ export default class CreateMealLog extends React.Component {
     };
 
     redirectToFoodSearchEngine = () => {
-        /*
-        this.props.navigation.push('FoodSearchEngine', {
-            type: 'ALL',
-            // Send in existing items belonging to this food type (beverage, main, side, dessert so that it can be checked).
-            existingItems: this.state.foodItems.map(foodItem => foodItem["food-name"])
-        })*/
         this.setState({
             showFoodSearchEngineModal: true
         });
     }
 
     componentDidMount() {
-        /*
-        if (this.props.route.params?.meal) {
-            this.setState(this.props.route.params.meal);
-        }*/
         if (this.props.meal) {
             this.setState(this.props.meal);
         }
     }
-
-    /*
-    componentDidUpdate(prevProps) {
-        if (prevProps.route.params?.item !== this.props.route.params?.item) {
-            const { item } = this.props.route.params;
-            const newState = {...this.state};
-            // Add a new field to the item, called quantity.
-            item.quantity = 1;
-            newState.foodItems.push(item);
-            // Update navigation prop param.
-            this.props.navigation.setParams({
-                edited: true
-            });
-            this.setState(newState);
-        }
-        if (prevProps.route.params?.meal !== this.props.route.params?.meal) {
-            const {meal} = this.props.route.params;
-            const newFoodItems = this.state.foodItems.map(x => x);
-            for (const newFoodItem of meal.foodItems) {
-                const dup = this.state.foodItems.filter(x => x['food-name'] === newFoodItem['food-name']);
-                if (dup.length > 0) {
-                    dup[0].quantity = Math.min(MAXIMUM_ALLOWED_FOOD_QUANTITY, newFoodItem.quantity + dup[0].quantity);
-                } else {
-                    newFoodItems.push(newFoodItem);
-                }
-            }
-            this.props.navigation.setParams({
-                edited: true
-            });
-            this.setState({
-                foodItems: newFoodItems
-            });
-        }
-    }*/
 
     // Callback function to add a food item to this meal log.
     addFoodItemCallback = (item) => {
@@ -233,22 +192,28 @@ export default class CreateMealLog extends React.Component {
                     return;
                 } else {
                     handleSubmitMealLog(meal).then(resp => {
-                        this.props.closeModal();
-                        this.props.closeParent();
+                        this.setState({success: true});
                     });
                 }
             }).catch(err => alert(err.message));
         } else {
             handleSubmitMealLog(meal).then(resp => {
-                    this.props.closeModal();
-                    this.props.closeParent();
+                    this.setState({success: true});
                 }
             );
         }
     }
 
+    handleSuccessLog = () => {
+        this.setState({
+            success: false
+        })
+        this.props.closeModal();
+        this.props.closeParent();
+    }
+
     render() {
-        const {isFavourite, mealName, selected, modalOpen, foodItems, showFoodSearchEngineModal} = this.state;
+        const {isFavourite, mealName, selected, modalOpen, foodItems, showFoodSearchEngineModal, success} = this.state;
         const {mealType, recordDate, parent, closeModal, closeParent, visible} = this.props;
         return (
             <Modal visible={visible} transparent={true}>
@@ -272,7 +237,10 @@ export default class CreateMealLog extends React.Component {
                         </View>
                         <Text style={{fontSize: 18, color:"#8A8A8E", fontWeight: 'bold'}} >Food intake</Text>
                         <TouchableOpacity onPress={this.redirectToFoodSearchEngine}>
-                            <Text style={{fontSize: 18, color:"#9DC43D", paddingTop: 20, paddingBottom: 20}}>Add Item</Text>
+                            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                                <Icon name='plus-square' size={30} color='#4DAA50' />
+                                <Text style={{fontSize: 18, color:'#4DAA50', paddingTop: 20, paddingBottom: 20, paddingLeft: 5}}>Add Item</Text>
+                            </View>
                         </TouchableOpacity>
                         <View style={{flex: 2, marginLeft: -20, marginRight: -20}}>
                             <FlatList style={{paddingLeft: 20, paddingRight: 20}} data={foodItems} showScrollIndicator={false} keyExtractor={i => i['food-name']}
@@ -323,6 +291,9 @@ export default class CreateMealLog extends React.Component {
                             addMealCallback={this.addMealCallback}
                             goBack={()=>this.setState({showFoodSearchEngineModal: false})}
                             visible={showFoodSearchEngineModal} />
+                    }
+                    {
+                        success && <SuccessDialogue visible={success} type={food_key} closeSuccess={this.handleSuccessLog} />
                     }
                 </View>
             </Modal>

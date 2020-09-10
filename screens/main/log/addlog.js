@@ -53,6 +53,8 @@ class AddLogScreen extends Component {
 
       showModal: false,
       selectedLogType: '',
+
+      // exclusive for meal log
       selectedMealType: getDefaultMealType(new Date().getHours()),
 
       showBg: false,
@@ -95,6 +97,9 @@ class AddLogScreen extends Component {
 
       showModal: false,
       selectedLogType: '',
+
+      // exclusive for meal log
+      selectedMealType: getDefaultMealType(new Date().getHours()),
 
       showBg: false,
       showFood: false,

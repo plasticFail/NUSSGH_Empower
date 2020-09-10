@@ -130,7 +130,7 @@ const LastLogButton = (props) => {
       )}
       {
         !none4tdy && logType === food_key && (
-          <ReadOnlyMealDisplay data={dataToDisplay} show={show}/>
+          <ReadOnlyMealDisplay data={dataToDisplay.value} show={show}/>
         )
       }
     </>

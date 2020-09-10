@@ -46,6 +46,7 @@ Icon.loadFont();
 export default function MealList({filterQuery, meals, options, onMealAdd}) {
     const [selectedMeal, setSelectedMeal] = React.useState(null);
     const [openModal, setOpenModal] = React.useState(false);
+    /*
     const processed = meals.map(m => {
         if (m.foodItems) {
             return m;
@@ -57,6 +58,8 @@ export default function MealList({filterQuery, meals, options, onMealAdd}) {
         delete m['beverage'];
         return m;
     });
+
+     */
 
     const onMealItemClick = (meal) => {
         setSelectedMeal(meal);
@@ -74,7 +77,7 @@ export default function MealList({filterQuery, meals, options, onMealAdd}) {
         onMealAdd(meal);
     }
 
-    const filtered = processed.filter(x => x.mealName.toLowerCase().indexOf(filterQuery.trim().toLowerCase()) != -1);
+    const filtered = meals.filter(x => x.mealName.toLowerCase().indexOf(filterQuery.trim().toLowerCase()) != -1);
     return (
         <React.Fragment>
             <FlatList data={filtered}
