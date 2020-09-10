@@ -19,7 +19,7 @@ const TimeSection = (props) => {
       <View style={styles.headerStyle}>
         <Ionicon name="sunny" size={30} style={styles.periodIcon} />
         <Text style={styles.periodText}>Morning</Text>
-        <Text style={styles.periodTiming}>(4:00 AM - 11:59 AM)</Text>
+        <Text style={styles.periodTiming}>(5:00 AM - 11:59 AM)</Text>
       </View>
       <View style={styles.border} />
     </>
@@ -28,7 +28,7 @@ const TimeSection = (props) => {
       <View style={styles.headerStyle}>
         <Icon name="weather-sunset" size={30} style={styles.periodIcon} />
         <Text style={styles.periodText}>Afternoon</Text>
-        <Text style={styles.periodTiming}>(12:00 PM - 5:59 PM)</Text>
+        <Text style={styles.periodTiming}>(12:00 PM - 4:59 PM)</Text>
       </View>
       <View style={styles.border} />
     </>
@@ -37,7 +37,7 @@ const TimeSection = (props) => {
       <View style={styles.headerStyle}>
         <Icon name="weather-sunset-down" size={30} style={styles.periodIcon} />
         <Text style={styles.periodText}>Evening</Text>
-        <Text style={styles.periodTiming}>(6:00 PM - 9.59 PM)</Text>
+        <Text style={styles.periodTiming}>(5:00 PM - 4:59 AM)</Text>
       </View>
       <View style={styles.border} />
     </>

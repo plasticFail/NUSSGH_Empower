@@ -11,7 +11,7 @@ import ProgressBar from '../../progressbar';
 import {Colors} from '../../../styles/colors';
 
 const ProgressContent = (props) => {
-  const {header, value, target, flip, details} = props;
+  const {header, value, target, flip, details, targetUnit} = props;
   const percentage = Math.floor((Number(value) / Number(target)) * 100) + '%';
   return !flip ? (
     <View style={{marginEnd: '5%'}}>
@@ -29,7 +29,11 @@ const ProgressContent = (props) => {
   ) : (
     <View style={{marginEnd: '5%'}}>
       <Text style={styles.valueStyle}>
-        {value} <Text style={styles.outOf}> / {target}</Text>
+        {value}{' '}
+        <Text style={styles.outOf}>
+          {' '}
+          / {target} {targetUnit}
+        </Text>
       </Text>
       <ProgressBar
         progress={percentage}

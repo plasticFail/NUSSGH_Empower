@@ -7,7 +7,6 @@ import {
   filterMorning,
   filterAfternoon,
   filterEvening,
-  filterNight,
 } from '../../commonFunctions/diaryFunctions';
 import {
   bg_key,
@@ -28,6 +27,7 @@ import Moment from 'moment';
 import BgBlock from './blocks/bgBlock';
 import WeightBlock from './blocks/weightBlock';
 import ActivityBlock from './blocks/activityBlock';
+import MedBlock from './blocks/medBlock';
 
 const maxWeight = 200;
 const minWeight = 40;
@@ -280,6 +280,10 @@ class TargetBlock extends Component {
     this.setState({showWeight: false});
   };
 
+  closeMedModal = () => {
+    this.setState({showMed: false});
+  };
+
   closeActivityModal = () => {
     this.setState({showActivity: false});
   };
@@ -345,29 +349,45 @@ class TargetBlock extends Component {
           </TouchableOpacity>
         ))}
         {/* Displays the modal for each log type to show*/}
-        <BgBlock
-          visible={showBg}
-          closeModal={() => this.closeBgModal()}
-          morningBgLogs={filterMorning(bgLogs)}
-          afternoonBgLogs={filterAfternoon(bgLogs)}
-          eveningBgLogs={filterEvening(bgLogs)}
-          nightBgLogs={filterNight(bgLogs)}
-          avgBg={avgBg}
-          pass={bgPass}
-          miss={bgMiss}
-          day={dateString}
-        />
-        <WeightBlock
-          visible={showWeight}
-          closeModal={() => this.closeWeightModal()}
-          morningWeightLogs={filterMorning(weightLogs)}
-          afternoonWeightLogs={filterAfternoon(weightLogs)}
-          eveningWeightLogs={filterEvening(weightLogs)}
-          nightWeightLogs={filterNight(weightLogs)}
-          miss={weightMiss}
-          pass={weightPass}
-          day={dateString}
-        />
+        {showBg ? (
+          <BgBlock
+            visible={showBg}
+            closeModal={() => this.closeBgModal()}
+            morningBgLogs={filterMorning(bgLogs)}
+            afternoonBgLogs={filterAfternoon(bgLogs)}
+            eveningBgLogs={filterEvening(bgLogs)}
+            avgBg={avgBg}
+            pass={bgPass}
+            miss={bgMiss}
+            day={dateString}
+          />
+        ) : null}
+
+        {showWeight ? (
+          <WeightBlock
+            visible={showWeight}
+            closeModal={() => this.closeWeightModal()}
+            morningWeightLogs={filterMorning(weightLogs)}
+            afternoonWeightLogs={filterAfternoon(weightLogs)}
+            eveningWeightLogs={filterEvening(weightLogs)}
+            miss={weightMiss}
+            pass={weightPass}
+            day={dateString}
+          />
+        ) : null}
+
+        {showMed ? (
+          <MedBlock
+            visible={showMed}
+            closeModal={() => this.closeMedModal()}
+            morningMedLogs={filterMorning(medLogs)}
+            afternoonMedLogs={filterAfternoon(medLogs)}
+            eveningMedLogs={filterEvening(medLogs)}
+            miss={medMiss}
+            day={dateString}
+          />
+        ) : null}
+
         <ActivityBlock
           visible={showActivity}
           closeModal={() => this.closeActivityModal()}

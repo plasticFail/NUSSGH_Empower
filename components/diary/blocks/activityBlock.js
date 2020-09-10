@@ -36,8 +36,9 @@ const images = {
 
 const maxCalBurnt = 500;
 const maxSteps = 2000;
+const maxDuration = 150; //min
 const steps_taken = 'Steps Taken';
-const exercise = 'Exercise';
+const excerise = 'Exercise';
 
 const ActivityBlock = (props) => {
   const {visible, pass, summary, miss, day} = props;
@@ -88,6 +89,8 @@ const ActivityBlock = (props) => {
         <Text style={styles.header}>Summary</Text>
         <View style={styles.border} />
         {renderSummaryContent(images.distance, distance, 'Distance')}
+        {renderSummaryContent(images.walk, steps_taken, summary)}
+        {renderSummaryContent(images.run, excerise, summary)}
       </ScrollView>
     </Modal>
   );
@@ -98,9 +101,28 @@ function renderSummaryContent(icon, content, detail) {
     <>
       <View style={{margin: '3%', flexDirection: 'row'}}>
         <Image source={icon} style={styles.iconImg2} />
-        <View>
-          <Text style={styles.content}>{content}</Text>
-          <Text style={styles.contentDetail}>{detail}</Text>
+        <View style={{marginStart: '2%'}}>
+          {content === steps_taken ? (
+            <ProgressContent
+              value={detail.steps}
+              target={maxSteps}
+              flip={true}
+              details={steps_taken}
+            />
+          ) : content === excerise ? (
+            <ProgressContent
+              value={detail.duration}
+              target={maxDuration}
+              flip={true}
+              details={excerise}
+              targetUnit={'Mins'}
+            />
+          ) : (
+            <>
+              <Text style={styles.content}>{content}</Text>
+              <Text style={styles.contentDetail}>{detail}</Text>
+            </>
+          )}
         </View>
       </View>
       <View style={styles.detailBorder} />
@@ -116,11 +138,6 @@ function renderProgress(summary) {
         flexDirection: 'row',
         alignItems: 'space-around',
       }}>
-      <ProgressContent
-        header={'Steps'}
-        value={summary.steps}
-        target={maxSteps}
-      />
       <ProgressContent
         header={'Cal Burnt'}
         value={summary.calories}
@@ -199,7 +216,7 @@ const styles = StyleSheet.create({
     margin: '3%',
   },
   detailBorder: {
-    borderWidth: 0.2,
+    borderWidth: 0.3,
     borderColor: Colors.lastLogValueColor,
     margin: '3%',
   },

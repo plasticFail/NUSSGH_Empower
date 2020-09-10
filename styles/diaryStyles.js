@@ -44,6 +44,12 @@ const diaryStyles = StyleSheet.create({
     color: Colors.lastLogValueColor,
     marginStart: '5%',
   },
+  noRecordText: {
+    fontFamily: 'SFProDisplay-Regular',
+    fontSize: 18,
+    marginStart: '5%',
+    color: Colors.alertColor,
+  },
 });
 
 export default diaryStyles;

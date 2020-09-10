@@ -5,9 +5,12 @@ import {
   morningObj,
   afternoonObj,
   eveningObj,
-  nightObj,
 } from '../../../commonFunctions/common';
-import {getTime, showEdit} from '../../../commonFunctions/diaryFunctions';
+import {
+  getTime,
+  showEdit,
+  getMissedArr,
+} from '../../../commonFunctions/diaryFunctions';
 //third party library
 import Modal from 'react-native-modal';
 import Ionicon from 'react-native-vector-icons/Ionicons';
@@ -20,6 +23,8 @@ import diaryStyles from '../../../styles/diaryStyles';
 import LeftArrowBtn from '../../logs/leftArrowBtn';
 import TimeSection from '../timeSection';
 import {ScrollView} from 'react-native-gesture-handler';
+import MissedContent from './missedContent';
+import {bg_key} from '../../../commonFunctions/logFunctions';
 
 const BgBlock = (props) => {
   const {
@@ -27,7 +32,6 @@ const BgBlock = (props) => {
     morningBgLogs,
     afternoonBgLogs,
     eveningBgLogs,
-    nightBgLogs,
     avgBg,
     pass,
     miss,
@@ -35,6 +39,11 @@ const BgBlock = (props) => {
   } = props;
   const {closeModal} = props;
   const [selectedLog, setSelectedLog] = useState({});
+  const [missedArr, setMissedArr] = useState([]);
+
+  useEffect(() => {
+    setMissedArr(getMissedArr(morningBgLogs, afternoonBgLogs, eveningBgLogs));
+  }, []);
 
   const editLog = (item) => {
     console.log('selecting item to edit');
@@ -53,11 +62,10 @@ const BgBlock = (props) => {
         <LeftArrowBtn close={closeModal} />
         <Text style={globalStyles.pageHeader}>Blood Glucose</Text>
         <Text style={globalStyles.pageDetails}>{day}</Text>
+        <MissedContent arr={missedArr} type={bg_key} />
         <View
           style={{flexDirection: 'row', marginTop: '3%', marginBottom: '2%'}}>
-          {miss ? (
-            <Text style={globalStyles.pageDetails}>Missed</Text>
-          ) : pass ? (
+          {pass ? (
             <>
               <Text style={globalStyles.pageDetails}>
                 Average {avgBg} mmol/L
@@ -90,8 +98,6 @@ const BgBlock = (props) => {
         {renderLogs(afternoonBgLogs, editLog)}
         <TimeSection name={eveningObj.name} />
         {renderLogs(eveningBgLogs, editLog)}
-        <TimeSection name={nightObj.name} />
-        {renderLogs(nightBgLogs, editLog)}
       </ScrollView>
     </Modal>
   );
@@ -127,7 +133,7 @@ function renderLogs(logs, editLog) {
   } else {
     return (
       <View style={styles.noRecordContainer}>
-        <Text style={diaryStyles.recordedText}>No Record Found </Text>
+        <Text style={diaryStyles.noRecordText}>No Record Found </Text>
         <Text style={diaryStyles.recordContent}>-</Text>
       </View>
     );

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -13,6 +13,7 @@ import Entypo from 'react-native-vector-icons/Entypo';
 //component
 import LeftArrowBtn from '../../logs/leftArrowBtn';
 import TimeSection from '../timeSection';
+import MissedContent from './missedContent';
 //style
 import {Colors} from '../../../styles/colors';
 import globalStyles from '../../../styles/globalStyles';
@@ -22,9 +23,13 @@ import {
   morningObj,
   afternoonObj,
   eveningObj,
-  nightObj,
 } from '../../../commonFunctions/common';
-import {getTime, showEdit} from '../../../commonFunctions/diaryFunctions';
+import {
+  getTime,
+  showEdit,
+  getMissedArr,
+} from '../../../commonFunctions/diaryFunctions';
+import {weight_key} from '../../../commonFunctions/logFunctions';
 
 const WeightBlock = (props) => {
   const {
@@ -32,13 +37,19 @@ const WeightBlock = (props) => {
     morningWeightLogs,
     afternoonWeightLogs,
     eveningWeightLogs,
-    nightWeightLogs,
     pass,
     miss,
     day,
   } = props;
   const {closeModal} = props;
   const [selectedLog, setSelectedLog] = useState({});
+  const [missedArr, setMissedArr] = useState([]);
+
+  useEffect(() => {
+    setMissedArr(
+      getMissedArr(morningWeightLogs, afternoonWeightLogs, eveningWeightLogs),
+    );
+  }, []);
 
   const editWeightLog = (item) => {};
 
@@ -54,10 +65,9 @@ const WeightBlock = (props) => {
         <LeftArrowBtn close={closeModal} />
         <Text style={globalStyles.pageHeader}>Weight</Text>
         <Text style={globalStyles.pageDetails}>{day}</Text>
+        <MissedContent arr={missedArr} type={weight_key} />
         <View style={{flexDirection: 'row', marginTop: '3%'}}>
-          {miss ? (
-            <Text style={globalStyles.pageDetails}>Missed</Text>
-          ) : pass ? (
+          {pass ? (
             <>
               <Text style={globalStyles.pageDetails}>Within Healthy Range</Text>
 
@@ -88,8 +98,6 @@ const WeightBlock = (props) => {
         {renderWeightLogs(afternoonWeightLogs, editWeightLog)}
         <TimeSection name={eveningObj.name} />
         {renderWeightLogs(eveningWeightLogs, editWeightLog)}
-        <TimeSection name={nightObj.name} />
-        {renderWeightLogs(nightWeightLogs, editWeightLog)}
       </ScrollView>
     </Modal>
   );
@@ -123,7 +131,7 @@ function renderWeightLogs(logs, editLog) {
   } else {
     return (
       <View style={styles.noRecordContainer}>
-        <Text style={diaryStyles.recordedText}>No Record Found </Text>
+        <Text style={diaryStyles.noRecordText}>No Record Found </Text>
         <Text style={diaryStyles.recordContent}>-</Text>
       </View>
     );

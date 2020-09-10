@@ -1,5 +1,5 @@
 import moment from 'moment';
-import {morningObj, afternoonObj, eveningObj, nightObj} from './common';
+import {morningObj, afternoonObj, eveningObj} from './common';
 
 const getDateObj = (dateString) => {
   let dateMomentObject = moment(dateString, 'DD/MM/YYYY HH:mm:ss');
@@ -109,18 +109,6 @@ const filterEvening = (logs) => {
   return list;
 };
 
-const filterNight = (logs) => {
-  let list = new Array();
-  for (var i of logs) {
-    let date = i.record_date;
-    let hour = getHour(date);
-    if (hour >= nightObj.start && hour < nightObj.end) {
-      list.push(i);
-    }
-  }
-  return list;
-};
-
 //determine if edit button will show
 const showEdit = (dateToCompare) => {
   let today = moment(new Date()).format('DD/MM/YYYY');
@@ -135,6 +123,22 @@ const showEdit = (dateToCompare) => {
   }
 };
 
+const getMissedArr = (morningLog, afternoonLog, eveningLog) => {
+  let list = [];
+  console.log(morningLog);
+  if (morningLog.length === 0) {
+    list.push(morningObj.name);
+  }
+  if (afternoonLog.length === 0) {
+    list.push(afternoonObj.name);
+  }
+  if (eveningLog.length === 0) {
+    list.push(eveningObj.name);
+  }
+
+  return list;
+};
+
 export {
   getDateObj,
   getTime,
@@ -144,6 +148,6 @@ export {
   filterMorning,
   filterAfternoon,
   filterEvening,
-  filterNight,
   showEdit,
+  getMissedArr,
 };

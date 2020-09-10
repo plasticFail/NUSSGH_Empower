@@ -1,24 +1,18 @@
 const morningObj = {
   name: 'Morning',
-  start: 4,
+  start: 5,
   end: 12,
 };
 const afternoonObj = {
   name: 'Afternoon',
   start: 12,
-  end: 18,
+  end: 17,
 };
 
 const eveningObj = {
   name: 'Evening',
-  start: 18,
-  end: 22,
-};
-
-const nightObj = {
-  name: 'Night',
-  start: 22,
-  end: 4,
+  start: 17,
+  end: 5,
 };
 
 const getGreetingFromHour = (hour) => {
@@ -28,8 +22,6 @@ const getGreetingFromHour = (hour) => {
     return afternoonObj.name;
   } else if (hour >= eveningObj.start && hour < eveningObj.end) {
     return eveningObj.name;
-  } else {
-    return nightObj.name;
   }
 };
 
@@ -41,11 +33,4 @@ const isEmpty = (obj) => {
   return true;
 };
 
-export {
-  getGreetingFromHour,
-  isEmpty,
-  morningObj,
-  afternoonObj,
-  eveningObj,
-  nightObj,
-};
+export {getGreetingFromHour, isEmpty, morningObj, afternoonObj, eveningObj};
