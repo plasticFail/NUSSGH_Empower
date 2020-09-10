@@ -30,10 +30,10 @@ const BgBlock = (props) => {
     nightBgLogs,
     avgBg,
     pass,
+    miss,
     day,
   } = props;
   const {closeModal} = props;
-  const [todayDate, setTodayDate] = useState('');
   const [selectedLog, setSelectedLog] = useState({});
 
   const editLog = (item) => {
@@ -53,16 +53,34 @@ const BgBlock = (props) => {
         <LeftArrowBtn close={closeModal} />
         <Text style={globalStyles.pageHeader}>Blood Glucose</Text>
         <Text style={globalStyles.pageDetails}>{day}</Text>
-        <View style={{flexDirection: 'row', marginTop: '3%'}}>
-          <Text style={globalStyles.pageDetails}>Average {avgBg} mmol/L</Text>
-          {pass ? (
-            <Ionicon name="checkmark" style={diaryStyles.passIcon} size={25} />
+        <View
+          style={{flexDirection: 'row', marginTop: '3%', marginBottom: '2%'}}>
+          {miss ? (
+            <Text style={globalStyles.pageDetails}>Missed</Text>
+          ) : pass ? (
+            <>
+              <Text style={globalStyles.pageDetails}>
+                Average {avgBg} mmol/L
+              </Text>
+
+              <Ionicon
+                name="checkmark"
+                style={diaryStyles.passIcon}
+                size={25}
+              />
+            </>
           ) : (
-            <Ionicon
-              name="alert-circle-outline"
-              style={diaryStyles.failIcon}
-              size={25}
-            />
+            <>
+              <Text style={globalStyles.pageDetails}>
+                Average {avgBg} mmol/L
+              </Text>
+
+              <Ionicon
+                name="alert-circle-outline"
+                style={diaryStyles.failIcon}
+                size={25}
+              />
+            </>
           )}
         </View>
         {/*Show time section and data for log*/}

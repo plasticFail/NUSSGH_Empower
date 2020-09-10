@@ -23,13 +23,13 @@ const nightObj = {
 
 const getGreetingFromHour = (hour) => {
   if (hour > morningObj.start && hour < morningObj.end) {
-    return 'Morning';
+    return morningObj.name;
   } else if (hour >= afternoonObj.start && hour < afternoonObj.end) {
-    return 'Afternoon';
+    return afternoonObj.name;
   } else if (hour >= eveningObj.start && hour < eveningObj.end) {
-    return 'Evening';
+    return eveningObj.name;
   } else {
-    return 'Night';
+    return nightObj.name;
   }
 };
 

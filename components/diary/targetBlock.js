@@ -26,6 +26,8 @@ import Ionicon from 'react-native-vector-icons/Ionicons';
 import Moment from 'moment';
 //component
 import BgBlock from './blocks/bgBlock';
+import WeightBlock from './blocks/weightBlock';
+import ActivityBlock from './blocks/activityBlock';
 
 const maxWeight = 200;
 const minWeight = 40;
@@ -69,6 +71,7 @@ class TargetBlock extends Component {
       showFood: false,
       showMed: false,
       showWeight: false,
+      showActivity: false,
     };
     this.props.navigation.addListener('focus', () => {
       this.init();
@@ -264,6 +267,9 @@ class TargetBlock extends Component {
     if (selectedType === weight_key) {
       this.setState({showWeight: true});
     }
+    if (selectedType === activity_key) {
+      this.setState({showActivity: true});
+    }
   };
 
   closeBgModal = () => {
@@ -272,6 +278,10 @@ class TargetBlock extends Component {
 
   closeWeightModal = () => {
     this.setState({showWeight: false});
+  };
+
+  closeActivityModal = () => {
+    this.setState({showActivity: false});
   };
 
   render() {
@@ -291,6 +301,7 @@ class TargetBlock extends Component {
       showFood,
       showMed,
       showWeight,
+      showActivity,
       bgLogs,
       foodLogs,
       medLogs,
@@ -343,6 +354,26 @@ class TargetBlock extends Component {
           nightBgLogs={filterNight(bgLogs)}
           avgBg={avgBg}
           pass={bgPass}
+          miss={bgMiss}
+          day={dateString}
+        />
+        <WeightBlock
+          visible={showWeight}
+          closeModal={() => this.closeWeightModal()}
+          morningWeightLogs={filterMorning(weightLogs)}
+          afternoonWeightLogs={filterAfternoon(weightLogs)}
+          eveningWeightLogs={filterEvening(weightLogs)}
+          nightWeightLogs={filterNight(weightLogs)}
+          miss={weightMiss}
+          pass={weightPass}
+          day={dateString}
+        />
+        <ActivityBlock
+          visible={showActivity}
+          closeModal={() => this.closeActivityModal()}
+          pass={activityPass}
+          summary={activitySummary}
+          miss={activityMiss}
           day={dateString}
         />
       </>

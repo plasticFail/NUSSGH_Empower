@@ -40,10 +40,18 @@ const DiaryScreen = (props) => {
     outputRange: ['0%', '100%'],
   });
 
-  //set useeffect to render this week*
   useEffect(() => {
-    setDates(getDateRange(6, new Date()));
+    props.navigation.addListener('focus', () => {
+      setDates(getDateRange(6, new Date()));
+    });
   }, []);
+
+  //set useeffect to render this week refresh every 1min
+  useEffect(() => {
+    setTimeout(() => {
+      setDates(getDateRange(6, new Date()));
+    }, 60000);
+  });
 
   //animate drop down calendar
   useEffect(() => {

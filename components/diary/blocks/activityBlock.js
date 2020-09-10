@@ -4,18 +4,23 @@ import {
   Text,
   StyleSheet,
   Image,
-  ImageBackground,
-  Dimensions,
+  TouchableOpacity,
+  ScrollView,
 } from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+//component
+import LeftArrowBtn from '../../logs/leftArrowBtn';
 //third party library
 import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-//components
-import Header from './header';
-//function
-import {getTime} from '../../../commonFunctions/diaryFunctions';
+import Ionicon from 'react-native-vector-icons/Ionicons';
+//styles
+import {Colors} from '../../../styles/colors';
+import globalStyles from '../../../styles/globalStyles';
+import diaryStyles from '../../../styles/diaryStyles';
+import TimeSection from '../timeSection';
+import {morningObj} from '../../../commonFunctions/common';
+import ProgressBar from '../../progressbar';
+import ProgressContent from './progressContent';
 
 const images = {
   run: require('../../../resources/images/activity/type_RUN.png'),
@@ -25,79 +30,105 @@ const images = {
   sports: require('../../../resources/images/activity/type_AEROBICWORKOUT.png'),
   caloriesBurnt: require('../../../resources/images/activity/calories.png'),
   distance: require('../../../resources/images/activity/distance.png'),
+  heart_rate: require('../../../resources/images/activity/heart_rate.png'),
   steps_taken: require('../../../resources/images/activity/steps_taken.png'),
 };
 
-Icon.loadFont();
-AntDesign.loadFont();
+const maxCalBurnt = 500;
+const maxSteps = 2000;
+const steps_taken = 'Steps Taken';
+const exercise = 'Exercise';
 
 const ActivityBlock = (props) => {
-  const {activity} = props;
-  //format date
-  let dateString = String(activity.record_date);
-  let time = getTime(dateString);
-
-  const img = require('../../../resources/images/activity.jpg');
-  const [modalVisible, setModalVisible] = useState(false);
-  const [activityName, setActivityName] = useState('');
-
-  useEffect(() => {
-    setActivityName(String(activity.name).toUpperCase().replace(/\s/g, ''));
-  }, []);
-
-  //close itself
-  const closeModal = () => {
-    setModalVisible(false);
-  };
+  const {visible, pass, summary, miss, day} = props;
+  const {closeModal} = props;
+  const distance = summary.distance + ' KM';
 
   return (
-    <View style={{flexBasis: '33.3%'}}>
-      <TouchableOpacity
-        style={styles.buttonStyle}
-        onPress={() => setModalVisible(true)}>
-        {renderIcon(activityName, false)}
-        <Text style={styles.buttonText1}>Activity</Text>
-        <ImageBackground source={img} style={styles.backgroundImg} />
-      </TouchableOpacity>
-      <Text style={{textAlign: 'center'}}>{time}</Text>
-      <Modal
-        isVisible={modalVisible}
-        animationIn="slideInUp"
-        onBackdropPress={() => setModalVisible(false)}
-        onBackButtonPress={() => setModalVisible(false)}
-        style={{justifyContent: 'flex-end'}}>
-        <Header title={'Activity:' + time} closeModal={closeModal} />
-
-        <View style={styles.modalContainer}>
-          <View style={{flexDirection: 'row', paddingTop: '3%'}}>
-            {renderIcon(activityName, true)}
-            <Text style={styles.details}>
-              {String(activity.name).charAt(0).toUpperCase() +
-                String(activity.name).slice(1)}
-            </Text>
-            <View style={{flexDirection: 'row', flex: 3}}>
-              <Image
-                source={images.caloriesBurnt}
-                style={{marginStart: '10%'}}
-              />
-              <Text style={styles.details}>
-                {activity.calories} calories burnt
+    <Modal
+      isVisible={visible}
+      coverScreen={true}
+      backdropOpacity={1}
+      onBackButtonPress={() => closeModal()}
+      backdropColor={Colors.backgroundColor}
+      style={{margin: 0}}>
+      <ScrollView style={{flex: 1}}>
+        <LeftArrowBtn close={closeModal} />
+        <Text style={globalStyles.pageHeader}>Activity</Text>
+        <Text style={globalStyles.pageDetails}>{day}</Text>
+        <View
+          style={{flexDirection: 'row', marginTop: '3%', marginBottom: '2%'}}>
+          {miss ? (
+            <Text style={globalStyles.pageDetails}>Missed</Text>
+          ) : pass ? (
+            <>
+              <Text style={globalStyles.pageDetails}>
+                {summary.duration} Mins Active
               </Text>
-            </View>
-          </View>
-          <View style={{flexDirection: 'row'}}>
-            <Image source={images.steps_taken} />
-            <Text style={styles.details}>{activity.steps}</Text>
-            <View style={{flexDirection: 'row', flex: 2}}>
-              <AntDesign name="clockcircle" color="#3ec1c1" size={40} />
-              <Text style={styles.details}>{activity.duration} mins</Text>
-            </View>
-          </View>
+              <Ionicon
+                name="checkmark"
+                style={diaryStyles.passIcon}
+                size={25}
+              />
+            </>
+          ) : (
+            <>
+              <Text style={globalStyles.pageDetails}>
+                {summary.duration} Mins Active
+              </Text>
+              <Ionicon
+                name="alert-circle-outline"
+                style={diaryStyles.failIcon}
+                size={25}
+              />
+            </>
+          )}
         </View>
-      </Modal>
-    </View>
+        {renderProgress(summary)}
+        <Text style={styles.header}>Summary</Text>
+        <View style={styles.border} />
+        {renderSummaryContent(images.distance, distance, 'Distance')}
+      </ScrollView>
+    </Modal>
   );
 };
+
+function renderSummaryContent(icon, content, detail) {
+  return (
+    <>
+      <View style={{margin: '3%', flexDirection: 'row'}}>
+        <Image source={icon} style={styles.iconImg2} />
+        <View>
+          <Text style={styles.content}>{content}</Text>
+          <Text style={styles.contentDetail}>{detail}</Text>
+        </View>
+      </View>
+      <View style={styles.detailBorder} />
+    </>
+  );
+}
+
+function renderProgress(summary) {
+  return (
+    <View
+      style={{
+        marginStart: '5%',
+        flexDirection: 'row',
+        alignItems: 'space-around',
+      }}>
+      <ProgressContent
+        header={'Steps'}
+        value={summary.steps}
+        target={maxSteps}
+      />
+      <ProgressContent
+        header={'Cal Burnt'}
+        value={summary.calories}
+        target={maxCalBurnt}
+      />
+    </View>
+  );
+}
 
 function renderIcon(activityName, bool) {
   if (bool === true) {
@@ -142,9 +173,39 @@ function renderIcon(activityName, bool) {
 export default ActivityBlock;
 
 const styles = StyleSheet.create({
-  buttonStyle: {
-    width: '100%', // This should be the same size as backgroundImg height
-    padding: 10,
+  header: {
+    fontFamily: 'SFProDisplay-Bold',
+    color: Colors.lastLogValueColor,
+    fontSize: 20,
+    marginTop: '7%',
+    marginStart: '5%',
+  },
+  content: {
+    fontFamily: 'SFProDisplay-Bold',
+    fontSize: 18,
+    marginTop: '7%',
+    marginStart: '5%',
+  },
+  contentDetail: {
+    fontFamily: 'SFProDisplay-Bold',
+    color: Colors.lastLogValueColor,
+    fontSize: 17,
+    marginTop: '7%',
+    marginStart: '5%',
+  },
+  border: {
+    borderWidth: 0.4,
+    borderColor: Colors.lastLogValueColor,
+    margin: '3%',
+  },
+  detailBorder: {
+    borderWidth: 0.2,
+    borderColor: Colors.lastLogValueColor,
+    margin: '3%',
+  },
+  iconImg2: {
+    height: 50,
+    width: 50,
   },
   iconImg: {
     position: 'absolute',
@@ -154,46 +215,4 @@ const styles = StyleSheet.create({
     height: 30,
     resizeMode: 'contain', //resize image so dont cut off
   },
-  iconImg2: {
-    height: 50,
-    width: 50,
-  },
-  backgroundImg: {
-    width: '100%',
-    height: 120,
-    opacity: 0.2,
-    borderWidth: 0.4,
-    overflow: 'hidden',
-    borderWidth: 2,
-    borderColor: '#aad326',
-  },
-  buttonText1: {
-    position: 'absolute',
-    top: '70%',
-    left: '18%',
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#072d08',
-  },
-  modalContainer: {
-    backgroundColor: 'white',
-    padding: '3%',
-    width: '100%',
-  },
-  actionButton: {
-    borderRadius: 20,
-    margin: '2%',
-    flexDirection: 'row',
-    padding: '10%',
-    alignSelf: 'center',
-    marginVertical: 10,
-    paddingHorizontal: 40,
-    paddingVertical: 6,
-  },
-  actionText: {
-    fontWeight: '700',
-    fontSize: 17,
-    textAlign: 'center',
-  },
-  details: {flex: 1, margin: '3%', fontSize: 20},
 });
