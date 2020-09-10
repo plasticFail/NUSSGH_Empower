@@ -20,7 +20,9 @@ function isValidMeal(meal) {
     return meal.length !== 0;
 }
 
-async function handleSubmitMealLog(mealData, recordDate) {
+async function handleSubmitMealLog(mealData) {
+    const recordDate = mealData.recordDate;
+    mealData.recordDate = Moment(recordDate).format("DD/MM/YYYY HH:mm:ss");
     if (isValidMeal(mealData)) {
         let resp = await mealAddLogRequest(mealData);
         if (resp) {

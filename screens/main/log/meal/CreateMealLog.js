@@ -24,10 +24,11 @@ import {requestFavouriteMealList} from "../../../../netcalls/mealEndpoints/reque
 // Others such as images, icons.
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import FlashMessage from "../../../../components/FlashMessage";
-import {getDefaultMealType, isValidMeal} from "../../../../commonFunctions/mealLogFunctions";
+import {getDefaultMealType, handleSubmitMealLog, isValidMeal} from "../../../../commonFunctions/mealLogFunctions";
 import RenderMealItem from "../../../../components/logs/meal/RenderMealItem";
 import DateSelectionBlock from "../../../../components/logs/dateSelectionBlock";
 import MealTypeSelectionBlock from "../../../../components/logs/meal/MealTypeSelectionBlock";
+import {mealAddLogRequest} from "../../../../netcalls/requestsLog";
 
 Icon.loadFont()
 // Any meal log selected (e.g Create, Recent or Favourites)
@@ -163,7 +164,7 @@ export default class CreateMealLog extends React.Component {
     // Submit if meal name is not duplicate.
     onSubmitLog = () => {
         const {mealName, isFavourite, foodItems} = this.state;
-        const {mealType, recordDate} = this.props.route.params;
+        const {mealType, recordDate, navigation} = this.props.route.params;
         if (mealName.trim() === '' && isFavourite) {
             Alert.alert('Error','Please give your favourite meal a name', [ { text: 'Ok' }]);
             return;
@@ -178,6 +179,8 @@ export default class CreateMealLog extends React.Component {
             mealName,
             isFavourite,
             foodItems,
+            recordDate: new Date(recordDate),
+            mealType
         };
         if (isFavourite) {
             requestFavouriteMealList().then(data => {
@@ -186,8 +189,17 @@ export default class CreateMealLog extends React.Component {
                     Alert.alert('Error', `There is already another favourite meal with the same name as ${mealName}`,
                         [ { text: 'Ok' }]);
                     return;
+                } else {
+                    handleSubmitMealLog(meal).then(resp => {
+                        navigation.navigate('AddLog');
+                    });
                 }
             }).catch(err => alert(err.message));
+        } else {
+            handleSubmitMealLog(meal).then(resp => {
+                    navigation.navigate('AddLog');
+                }
+            );
         }
     }
 
