@@ -17,7 +17,7 @@ import EducationalMaterial from './more/educationMaterials';
 import DiaryScreen from './main/diary/diary';
 import Goals from './more/goals';
 import Medication from './more/medications';
-import Login from './login/login';
+import Logout from './more/logout';
 import GameCenter from './main/gameCenter';
 
 const Drawer = createDrawerNavigator();
@@ -100,7 +100,7 @@ const DrawerNavigator = (props) => {
       />
       <Drawer.Screen
         name="Log Out"
-        component={Login}
+        component={Logout}
         options={{
           drawerIcon: () => (
             <Ionicon name="exit-outline" size={27} color={'white'} />
