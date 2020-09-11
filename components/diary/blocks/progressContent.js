@@ -8,7 +8,16 @@ import {Colors} from '../../../styles/colors';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 
 const ProgressContent = (props) => {
-  const {header, value, target, flip, details, targetUnit, clickable} = props;
+  const {
+    header,
+    value,
+    target,
+    flip,
+    details,
+    targetUnit,
+    clickable,
+    small,
+  } = props;
   const {chevronDownMethod} = props;
   const percentage = Math.floor((Number(value) / Number(target)) * 100) + '%';
   return !flip ? (
@@ -29,33 +38,49 @@ const ProgressContent = (props) => {
       </Text>
     </View>
   ) : (
-    <View style={{marginEnd: '5%', flexBasis: '70%'}}>
-      <View style={{flexDirection: 'row'}}>
-        <Text style={styles.valueStyle}>
-          {value}{' '}
-          <Text style={styles.outOf}>
-            {' '}
-            / {target} {targetUnit}
+    <View style={{flexDirection: 'row'}}>
+      <View style={{marginEnd: '5%'}}>
+        <View style={{flexDirection: 'row'}}>
+          <Text style={styles.valueStyle}>
+            {value}{' '}
+            <Text style={styles.outOf}>
+              {' '}
+              / {target} {targetUnit}
+            </Text>
           </Text>
-        </Text>
-        {clickable === true && (
-          <TouchableOpacity onPress={() => chevronDownMethod(!clickable)}>
-            <EvilIcons name="chevron-down" size={30} />
-          </TouchableOpacity>
+        </View>
+        {small ? (
+          <ProgressBar
+            progress={percentage}
+            useIndicatorLevel={true}
+            reverse={true}
+            containerStyle={styles.progressContainer}
+          />
+        ) : (
+          <ProgressBar
+            progress={percentage}
+            useIndicatorLevel={true}
+            reverse={true}
+            containerStyle={styles.progressContainerLarge}
+          />
         )}
-        {clickable === false && (
-          <TouchableOpacity onPress={() => chevronDownMethod(!clickable)}>
-            <EvilIcons name="chevron-up" size={30} />
-          </TouchableOpacity>
-        )}
+        <Text style={styles.header}>{details}</Text>
       </View>
-      <ProgressBar
-        progress={percentage}
-        useIndicatorLevel={true}
-        reverse={true}
-        containerStyle={styles.progressContainer}
-      />
-      <Text style={styles.header}>{details}</Text>
+      <View style={{flex: 1}} />
+      {clickable === true && (
+        <TouchableOpacity
+          style={styles.chevron}
+          onPress={() => chevronDownMethod(!clickable)}>
+          <EvilIcons name="chevron-down" size={50} />
+        </TouchableOpacity>
+      )}
+      {clickable === false && (
+        <TouchableOpacity
+          style={styles.chevron}
+          onPress={() => chevronDownMethod(!clickable)}>
+          <EvilIcons name="chevron-up" size={50} />
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
@@ -66,6 +91,11 @@ const styles = StyleSheet.create({
   progressContainer: {
     borderRadius: 9.5,
     width: '100%',
+    height: 7,
+  },
+  progressContainerLarge: {
+    borderRadius: 9.5,
+    width: 250,
     height: 7,
   },
   header: {
@@ -84,5 +114,8 @@ const styles = StyleSheet.create({
     fontFamily: 'SFProDisplay-Bold',
     fontSize: 19,
     margin: '1%',
+  },
+  chevron: {
+    alignSelf: 'flex-end',
   },
 });

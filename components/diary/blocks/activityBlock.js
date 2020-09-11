@@ -122,6 +122,7 @@ function renderSummaryContent(icon, content, detail, expand, setExpand) {
               target={maxSteps}
               flip={true}
               details={steps_taken}
+              small={false}
             />
           ) : content === excerise ? (
             <ProgressContent
@@ -132,6 +133,7 @@ function renderSummaryContent(icon, content, detail, expand, setExpand) {
               targetUnit={'Mins'}
               clickable={expand}
               chevronDownMethod={setExpand}
+              small={false}
             />
           ) : content === caloriesBurnt ? (
             <ProgressContent
@@ -139,6 +141,7 @@ function renderSummaryContent(icon, content, detail, expand, setExpand) {
               target={maxCalBurnt}
               flip={true}
               details={caloriesBurnt}
+              small={false}
             />
           ) : (
             <>
@@ -203,7 +206,7 @@ const styles = StyleSheet.create({
     margin: '3%',
   },
   detailBorder: {
-    borderWidth: 0.3,
+    borderWidth: 0.5,
     borderColor: Colors.lastLogValueColor,
     margin: '3%',
   },
