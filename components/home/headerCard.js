@@ -36,6 +36,7 @@ const HeaderCard = (props) => {
             <View style={{flexDirection: 'row'}}>
               {uncompleteLogs.map((item, index) => (
                 <Image
+                  key={item}
                   source={renderLogIcon(item)}
                   style={[logStyles.mini_loglogo, styles.logLogo]}
                 />
