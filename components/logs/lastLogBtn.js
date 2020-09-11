@@ -69,7 +69,7 @@ const LastLogButton = (props) => {
         onPress={() => setShow(!show)}>
         <View style={{marginEnd: '4%'}}>
           <Image
-            source={renderLogIcon(bg_key)}
+            source={renderLogIcon(logType)}
             style={logStyles.mini_loglogo}
           />
         </View>
