@@ -401,6 +401,7 @@ class TargetBlock extends Component {
         <ActivityBlock
           visible={showActivity}
           closeModal={() => this.closeActivityModal()}
+          activityLogs={activityLogs}
           pass={activityPass}
           summary={activitySummary}
           miss={activityMiss}
