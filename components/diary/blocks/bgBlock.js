@@ -58,39 +58,30 @@ const BgBlock = (props) => {
       onBackButtonPress={() => closeModal()}
       backdropColor={Colors.backgroundColor}
       style={{margin: 0}}>
+      <LeftArrowBtn close={closeModal} />
+      <Text style={globalStyles.pageHeader}>Blood Glucose</Text>
+      <Text style={globalStyles.pageDetails}>{day}</Text>
+      <MissedContent arr={missedArr} type={bg_key} />
+      <View style={{flexDirection: 'row', marginTop: '3%', marginBottom: '2%'}}>
+        {pass ? (
+          <>
+            <Text style={globalStyles.pageDetails}>Average {avgBg} mmol/L</Text>
+
+            <Ionicon name="checkmark" style={diaryStyles.passIcon} size={25} />
+          </>
+        ) : (
+          <>
+            <Text style={globalStyles.pageDetails}>Average {avgBg} mmol/L</Text>
+
+            <Ionicon
+              name="alert-circle-outline"
+              style={diaryStyles.failIcon}
+              size={25}
+            />
+          </>
+        )}
+      </View>
       <ScrollView style={{flex: 1}}>
-        <LeftArrowBtn close={closeModal} />
-        <Text style={globalStyles.pageHeader}>Blood Glucose</Text>
-        <Text style={globalStyles.pageDetails}>{day}</Text>
-        <MissedContent arr={missedArr} type={bg_key} />
-        <View
-          style={{flexDirection: 'row', marginTop: '3%', marginBottom: '2%'}}>
-          {pass ? (
-            <>
-              <Text style={globalStyles.pageDetails}>
-                Average {avgBg} mmol/L
-              </Text>
-
-              <Ionicon
-                name="checkmark"
-                style={diaryStyles.passIcon}
-                size={25}
-              />
-            </>
-          ) : (
-            <>
-              <Text style={globalStyles.pageDetails}>
-                Average {avgBg} mmol/L
-              </Text>
-
-              <Ionicon
-                name="alert-circle-outline"
-                style={diaryStyles.failIcon}
-                size={25}
-              />
-            </>
-          )}
-        </View>
         {/*Show time section and data for log*/}
         <TimeSection name={morningObj.name} />
         {renderLogs(morningBgLogs, editLog)}

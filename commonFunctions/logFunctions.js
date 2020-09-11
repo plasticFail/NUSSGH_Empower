@@ -66,37 +66,42 @@ const checkLogDone = async (period) => {
   let medLogs = [];
   let weightLogs = [];
   let today = Moment(new Date()).format('YYYY-MM-DD');
-  let data = await getEntry4Day(String(today));
 
-  let d = data[today];
-  bgLogs = d.glucose.logs;
-  foodLogs = d.food.logs;
-  medLogs = d.medication.logs;
-  weightLogs = d.weight.logs;
+  try {
+    let data = await getEntry4Day(String(today));
+    let d = data[today];
+    bgLogs = d.glucose.logs;
+    foodLogs = d.food.logs;
+    medLogs = d.medication.logs;
+    weightLogs = d.weight.logs;
 
-  if (inPeriod(bgLogs, period)) {
-    completed.push(bg_key);
-  } else {
-    notCompleted.push(bg_key);
+    if (inPeriod(bgLogs, period)) {
+      completed.push(bg_key);
+    } else {
+      notCompleted.push(bg_key);
+    }
+
+    if (inPeriod(foodLogs, period)) {
+      completed.push(food_key);
+    } else {
+      notCompleted.push(food_key);
+    }
+
+    if (inPeriod(medLogs, period)) {
+      completed.push(med_key);
+    } else {
+      notCompleted.push(med_key);
+    }
+
+    if (inPeriod(weightLogs, period)) {
+      completed.push(weight_key);
+    } else {
+      notCompleted.push(weight_key);
+    }
+  } catch (e) {
+    return Alert.alert('Network Error', '', [{text: 'Try again later'}]);
   }
 
-  if (inPeriod(foodLogs, period)) {
-    completed.push(food_key);
-  } else {
-    notCompleted.push(food_key);
-  }
-
-  if (inPeriod(medLogs, period)) {
-    completed.push(med_key);
-  } else {
-    notCompleted.push(med_key);
-  }
-
-  if (inPeriod(weightLogs, period)) {
-    completed.push(weight_key);
-  } else {
-    notCompleted.push(weight_key);
-  }
   return {
     completed: completed,
     notCompleted: notCompleted,

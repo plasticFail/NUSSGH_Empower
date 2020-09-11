@@ -61,37 +61,33 @@ const WeightBlock = (props) => {
       onBackButtonPress={() => closeModal()}
       backdropColor={Colors.backgroundColor}
       style={{margin: 0}}>
+      <LeftArrowBtn close={closeModal} />
+      <Text style={globalStyles.pageHeader}>Weight</Text>
+      <Text style={globalStyles.pageDetails}>{day}</Text>
+      <MissedContent arr={missedArr} type={weight_key} />
+      <View style={{flexDirection: 'row', marginTop: '3%'}}>
+        {pass ? (
+          <>
+            <Text style={globalStyles.pageDetails}>Within Healthy Range</Text>
+
+            <Ionicon name="checkmark" style={diaryStyles.passIcon} size={25} />
+          </>
+        ) : (
+          <>
+            <Text style={globalStyles.pageDetails}>
+              Not Within Healthy Range
+            </Text>
+
+            <Ionicon
+              name="alert-circle-outline"
+              style={diaryStyles.failIcon}
+              size={25}
+            />
+          </>
+        )}
+      </View>
+      {/*Show time section and data for log*/}
       <ScrollView style={{flex: 1}}>
-        <LeftArrowBtn close={closeModal} />
-        <Text style={globalStyles.pageHeader}>Weight</Text>
-        <Text style={globalStyles.pageDetails}>{day}</Text>
-        <MissedContent arr={missedArr} type={weight_key} />
-        <View style={{flexDirection: 'row', marginTop: '3%'}}>
-          {pass ? (
-            <>
-              <Text style={globalStyles.pageDetails}>Within Healthy Range</Text>
-
-              <Ionicon
-                name="checkmark"
-                style={diaryStyles.passIcon}
-                size={25}
-              />
-            </>
-          ) : (
-            <>
-              <Text style={globalStyles.pageDetails}>
-                Not Within Healthy Range
-              </Text>
-
-              <Ionicon
-                name="alert-circle-outline"
-                style={diaryStyles.failIcon}
-                size={25}
-              />
-            </>
-          )}
-        </View>
-        {/*Show time section and data for log*/}
         <TimeSection name={morningObj.name} />
         {renderWeightLogs(morningWeightLogs, editWeightLog)}
         <TimeSection name={afternoonObj.name} />

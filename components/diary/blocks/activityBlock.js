@@ -20,6 +20,11 @@ import {Colors} from '../../../styles/colors';
 import globalStyles from '../../../styles/globalStyles';
 import diaryStyles from '../../../styles/diaryStyles';
 import {renderLogIcon} from '../../../commonFunctions/logFunctions';
+import {
+  maxSteps,
+  maxDuration,
+  maxCalBurnt,
+} from '../../../commonFunctions/diaryFunctions';
 
 const images = {
   run: require('../../../resources/images/activity/type_RUN.png'),
@@ -33,9 +38,6 @@ const images = {
   steps_taken: require('../../../resources/images/activity/steps_taken.png'),
 };
 
-const maxCalBurnt = 500;
-const maxSteps = 2000;
-const maxDuration = 150; //min
 const steps_taken = 'Steps Taken';
 const excerise = 'Exercise';
 const caloriesBurnt = 'Calories Burnt';
@@ -55,44 +57,40 @@ const ActivityBlock = (props) => {
       onBackButtonPress={() => closeModal()}
       backdropColor={Colors.backgroundColor}
       style={{margin: 0}}>
+      <LeftArrowBtn close={closeModal} />
+      <Text style={globalStyles.pageHeader}>Activity</Text>
+      <Text style={globalStyles.pageDetails}>{day}</Text>
+      <View style={{flexDirection: 'row', marginTop: '3%'}}>
+        {miss ? (
+          <Text style={globalStyles.pageDetails}>Missed</Text>
+        ) : pass ? (
+          <>
+            <Text style={globalStyles.pageDetails}>
+              {summary.duration} Mins Active
+            </Text>
+            <Ionicon name="checkmark" style={diaryStyles.passIcon} size={25} />
+          </>
+        ) : (
+          <>
+            <Text style={globalStyles.pageDetails}>
+              {summary.duration} Mins Active
+            </Text>
+            <Ionicon
+              name="alert-circle-outline"
+              style={diaryStyles.failIcon}
+              size={25}
+            />
+          </>
+        )}
+      </View>
+      <Text style={styles.header}>Summary</Text>
+      <View style={styles.border} />
       <ScrollView
         style={{flex: 1}}
         ref={scrollViewRef}
         onContentSizeChange={() =>
           scrollViewRef.current.scrollToEnd({animated: true})
         }>
-        <LeftArrowBtn close={closeModal} />
-        <Text style={globalStyles.pageHeader}>Activity</Text>
-        <Text style={globalStyles.pageDetails}>{day}</Text>
-        <View style={{flexDirection: 'row', marginTop: '3%'}}>
-          {miss ? (
-            <Text style={globalStyles.pageDetails}>Missed</Text>
-          ) : pass ? (
-            <>
-              <Text style={globalStyles.pageDetails}>
-                {summary.duration} Mins Active
-              </Text>
-              <Ionicon
-                name="checkmark"
-                style={diaryStyles.passIcon}
-                size={25}
-              />
-            </>
-          ) : (
-            <>
-              <Text style={globalStyles.pageDetails}>
-                {summary.duration} Mins Active
-              </Text>
-              <Ionicon
-                name="alert-circle-outline"
-                style={diaryStyles.failIcon}
-                size={25}
-              />
-            </>
-          )}
-        </View>
-        <Text style={styles.header}>Summary</Text>
-        <View style={styles.border} />
         {renderSummaryContent(images.caloriesBurnt, caloriesBurnt, summary)}
         {renderSummaryContent(images.distance, distance, 'Distance')}
         {renderSummaryContent(images.walk, steps_taken, summary)}

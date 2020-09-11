@@ -10,6 +10,9 @@ import {
   checkMedTaken4Day,
   getMedDonePeriods,
   renderGreetingText,
+  maxCarbs,
+  maxProtein,
+  maxFats,
 } from '../../commonFunctions/diaryFunctions';
 import {
   bg_key,
@@ -31,12 +34,8 @@ import BgBlock from './blocks/bgBlock';
 import WeightBlock from './blocks/weightBlock';
 import ActivityBlock from './blocks/activityBlock';
 import MedBlock from './blocks/medBlock';
+import FoodBlock from './blocks/foodBlock';
 
-const maxWeight = 200;
-const minWeight = 40;
-const maxCarbs = 130; //grams
-const maxProtein = 46; //grams
-const maxFats = 46; //grams
 const button_list = [bg_key, food_key, med_key, weight_key, activity_key];
 
 //mainly do the calculation for the result of the logs per day
@@ -203,21 +202,16 @@ class TargetBlock extends Component {
     let passCount = 0;
     if (length != 0) {
       for (var a of this.state.foodLogs) {
-        let arr = getNutrientCount(a.beverage);
-        let arr1 = getNutrientCount(a.dessert);
-        let arr2 = getNutrientCount(a.main);
-        let arr3 = getNutrientCount(a.side);
-        totalCarbs +=
-          Number(arr[0]) + Number(arr1[0]) + Number(arr2[0]) + Number(arr3[0]);
-        totalProtein +=
-          Number(arr[1]) + Number(arr1[1]) + Number(arr2[1]) + Number(arr3[1]);
-        totalFats +=
-          Number(arr[2]) + Number(arr1[2]) + Number(arr2[2]) + Number(arr3[2]);
+        let arr = getNutrientCount(a.foodItems);
+        totalCarbs += Number(arr[0]);
+        totalProtein += Number(arr[1]);
+        totalFats += Number(arr[2]);
 
         if (
-          totalCarbs > maxCarbs ||
-          totalProtein > maxProtein ||
-          totalFats > maxFats
+          totalCarbs > maxCarbs &&
+          totalProtein > maxProtein &&
+          totalFats &&
+          maxFats
         ) {
           this.setState({foodPass: false});
         }
@@ -284,6 +278,10 @@ class TargetBlock extends Component {
     this.setState({showBg: false});
   };
 
+  closeFoodModal = () => {
+    this.setState({showFood: false});
+  };
+
   closeWeightModal = () => {
     this.setState({showWeight: false});
   };
@@ -304,12 +302,16 @@ class TargetBlock extends Component {
       medMiss,
       activityMiss,
 
-      avgBg,
       bgPass,
       foodPass,
       activityPass,
       activitySummary,
       medCompleted,
+
+      avgBg,
+      carbs,
+      protein,
+      fats,
 
       showBg,
       showFood,
@@ -374,6 +376,22 @@ class TargetBlock extends Component {
           />
         ) : null}
 
+        {showFood ? (
+          <FoodBlock
+            visible={showFood}
+            closeModal={() => this.closeFoodModal()}
+            morningMealLogs={filterMorning(foodLogs)}
+            afternoonMealLogs={filterAfternoon(foodLogs)}
+            eveningMealLogs={filterEvening(foodLogs)}
+            carbs={carbs}
+            fats={fats}
+            protein={protein}
+            pass={foodPass}
+            miss={foodMiss}
+            day={dateString}
+          />
+        ) : null}
+
         {showWeight ? (
           <WeightBlock
             visible={showWeight}
@@ -398,15 +416,17 @@ class TargetBlock extends Component {
           />
         ) : null}
 
-        <ActivityBlock
-          visible={showActivity}
-          closeModal={() => this.closeActivityModal()}
-          activityLogs={activityLogs}
-          pass={activityPass}
-          summary={activitySummary}
-          miss={activityMiss}
-          day={dateString}
-        />
+        {showActivity ? (
+          <ActivityBlock
+            visible={showActivity}
+            closeModal={() => this.closeActivityModal()}
+            activityLogs={activityLogs}
+            pass={activityPass}
+            summary={activitySummary}
+            miss={activityMiss}
+            day={dateString}
+          />
+        ) : null}
       </>
     );
   }
