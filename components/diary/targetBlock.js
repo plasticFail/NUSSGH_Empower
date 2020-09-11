@@ -7,6 +7,9 @@ import {
   filterMorning,
   filterAfternoon,
   filterEvening,
+  checkMedTaken4Day,
+  getMedDonePeriods,
+  renderGreetingText,
 } from '../../commonFunctions/diaryFunctions';
 import {
   bg_key,
@@ -60,7 +63,8 @@ class TargetBlock extends Component {
       fats: 0,
       protein: 0,
       foodPass: true,
-      weightPass: true,
+      medInProgress: false,
+      medCompleted: false,
       activityPass: true,
 
       targetBg: {},
@@ -141,7 +145,7 @@ class TargetBlock extends Component {
       fats: 0,
       protein: 0,
       foodPass: true,
-      weightPass: true,
+      medCompleted: false,
       activityPass: true,
 
       targetBg: {},
@@ -185,11 +189,7 @@ class TargetBlock extends Component {
 
   getWeightResult = () => {
     if (this.state.weightLogs.length != 0) {
-      for (var x of this.state.weightLogs) {
-        if (x.weight <= minWeight || x.weight >= maxWeight) {
-          this.setState({weightPass: false});
-        }
-      }
+      this.setState({weightMiss: false});
     } else {
       this.setState({weightMiss: true});
     }
@@ -248,7 +248,15 @@ class TargetBlock extends Component {
 
   getMedResult = () => {
     if (this.state.medLogs.length > 0) {
-      this.setState({medMiss: false});
+      checkMedTaken4Day(this.state.medLogs, this.props.date).then(
+        (response) => {
+          if (response === false) {
+            this.setState({medCompleted: false});
+          } else {
+            this.setState({medCompleted: true});
+          }
+        },
+      );
     } else {
       this.setState({medMiss: true});
     }
@@ -295,17 +303,20 @@ class TargetBlock extends Component {
       weightMiss,
       medMiss,
       activityMiss,
+
       avgBg,
       bgPass,
       foodPass,
-      weightPass,
       activityPass,
       activitySummary,
+      medCompleted,
+
       showBg,
       showFood,
       showMed,
       showWeight,
       showActivity,
+
       bgLogs,
       foodLogs,
       medLogs,
@@ -329,9 +340,9 @@ class TargetBlock extends Component {
               <Text style={[logStyles.fieldName, {fontSize: 15}]}>{item}s</Text>
               {item === bg_key && renderContent(bg_key, bgMiss, bgPass, avgBg)}
               {item === food_key && renderContent(food_key, foodMiss, foodPass)}
-              {item === med_key && renderMedContent(medMiss)}
-              {item === weight_key &&
-                renderContent(weight_key, weightMiss, weightPass)}
+              {item === med_key &&
+                renderMedContent(medMiss, medCompleted, medLogs)}
+              {item === weight_key && renderContent2(weightMiss)}
               {item === activity_key &&
                 renderContent(
                   activity_key,
@@ -371,7 +382,6 @@ class TargetBlock extends Component {
             afternoonWeightLogs={filterAfternoon(weightLogs)}
             eveningWeightLogs={filterEvening(weightLogs)}
             miss={weightMiss}
-            pass={weightPass}
             day={dateString}
           />
         ) : null}
@@ -401,19 +411,41 @@ class TargetBlock extends Component {
   }
 }
 
-//for logs with criteria : miss/completed
-function renderMedContent(medMiss) {
+//for med log
+function renderMedContent(medMiss, medCompleted, medLogs) {
   if (medMiss) {
+    return <Text style={styles.buttonDetail}>Missed</Text>;
+  } else if (!medCompleted) {
+    let arr = getMedDonePeriods(medLogs);
+    let greetings = renderGreetingText(arr);
+    return <Text style={styles.buttonDetail2}>Taken in the {greetings}</Text>;
+  } else {
+    return <Text style={styles.buttonDetail}>Completed</Text>;
+  }
+}
+
+//for logs with criteria : miss/completed
+function renderContent2(miss) {
+  if (miss) {
     return <Text style={styles.buttonDetail}>Missed</Text>;
   } else {
     return <Text style={styles.buttonDetail}>Completed</Text>;
   }
 }
 
-//for logs with criteria besides miss/completed
+//for logs with criteria besides miss - render result with diff icons
 function renderContent(type, miss, pass, value) {
   if (miss) {
-    return <Text style={styles.buttonDetail}>Missed</Text>;
+    return (
+      <View style={{flexDirection: 'row'}}>
+        <Text style={styles.buttonDetail}>Missed</Text>
+        <Ionicon
+          name="alert-circle-outline"
+          style={diaryStyles.failIcon}
+          size={25}
+        />
+      </View>
+    );
   } else if (pass) {
     return (
       <View style={{flexDirection: 'row'}}>
@@ -421,9 +453,6 @@ function renderContent(type, miss, pass, value) {
           <Text style={styles.buttonDetail}>Average {value} mmol/L</Text>
         )}
         {type === food_key && (
-          <Text style={styles.buttonDetail}>Within Healthy Range</Text>
-        )}
-        {type === weight_key && (
           <Text style={styles.buttonDetail}>Within Healthy Range</Text>
         )}
         {type === activity_key && (
@@ -438,10 +467,9 @@ function renderContent(type, miss, pass, value) {
         {type === bg_key && (
           <Text style={styles.buttonDetail}>Average {value} mmol/L</Text>
         )}
-        {type === food_key ||
-          (type === weight_key && (
-            <Text style={styles.buttonDetail}>Not Within Healthy Range</Text>
-          ))}
+        {type === food_key && (
+          <Text style={styles.buttonDetail}>Not Within Healthy Range</Text>
+        )}
         {type === activity_key && (
           <Text style={styles.buttonDetail}>{value} Active Minutes</Text>
         )}
@@ -466,6 +494,11 @@ const styles = StyleSheet.create({
     marginStart: '3%',
     fontFamily: 'SFProDisplay-Bold',
     fontSize: 20,
+  },
+  buttonDetail2: {
+    marginStart: '3%',
+    fontFamily: 'SFProDisplay-Bold',
+    fontSize: 18,
   },
   chevronForward: {
     marginTop: '-3%',

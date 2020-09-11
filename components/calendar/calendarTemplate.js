@@ -27,6 +27,7 @@ const CalendarTemplate = (props) => {
       <Calendar
         dayComponent={dayComponent}
         current={new Date()}
+        hideExtraDays={true}
         hideArrows={hideArrows}
         disableMonthChange={monthChange}
         onDayPress={(day) => {
