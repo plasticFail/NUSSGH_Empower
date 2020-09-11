@@ -4,29 +4,22 @@ import {
   View,
   Text,
   StyleSheet,
-  Button,
   Dimensions,
   ScrollView,
   TouchableOpacity,
-  Image,
-  FlatList
 } from 'react-native';
 //third party lib
 //components
 import MenuBtn from '../../components/menuBtn';
 import HeaderCard from '../../components/home/headerCard';
-import {getGreetingFromHour} from '../../commonFunctions/common';
+import CircularProgress from "../../components/dashboard/todayOverview/CircularProgress";
+import ProgressBar from "../../components/progressbar";
 //styles
 import globalStyles from '../../styles/globalStyles';
 import {Colors} from '../../styles/colors';
 //function
 import {checkLogDone} from '../../commonFunctions/logFunctions';
-import DailyBloodSugarLevelBarChart from "../../components/dashboard/reports/DailyBloodSugarLevelBarChart";
-import {WeightSlider} from "../../components/logs/weight/WeightSlider";
-import Card from "../../components/common/Card";
-import {backgroundColor} from "react-native-calendars/src/style";
-import CircularProgress from "../../components/dashboard/todayOverview/CircularProgress";
-import ProgressBar from "../../components/progressbar";
+import {getGreetingFromHour} from '../../commonFunctions/common';
 
 const buttonList = [
   {

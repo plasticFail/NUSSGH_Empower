@@ -35,10 +35,9 @@ import CrossBtn from '../../../components/crossBtn';
 import MedicationLogBlock from '../../../components/logs/medication/medicationLogBlock';
 import WeightLogBlock from '../../../components/logs/weight/weightLogBlock';
 import MenuBtn from '../../../components/menuBtn';
-import MealLogRoot from "./meal/MealLogRoot";
 import {getDefaultMealType} from "../../../commonFunctions/mealLogFunctions";
 import MealTypeSelectionBlock from "../../../components/logs/meal/MealTypeSelectionBlock";
-import CreateMealLog from "./meal/CreateMealLog";
+import CreateMealLogBlock from "../../../components/logs/meal/CreateMealLogBlock";
 // Functions
 
 // AddLog view
@@ -274,13 +273,13 @@ class AddLogScreen extends Component {
               closeParent={this.closeModal}
               parent="addLog"
             />
-            <CreateMealLog visible={showFood}
-                           parent="addLog"
-                           recordDate={recordDate}
-                           mealType={this.state.selectedMealType}
-                           closeModal={this.closeFoodForm}
-                           closeParent={this.closeModal}
-                           navigation={this.props.navigation}
+            <CreateMealLogBlock visible={showFood}
+                                parent="addLog"
+                                recordDate={recordDate}
+                                mealType={this.state.selectedMealType}
+                                closeModal={this.closeFoodForm}
+                                closeParent={this.closeModal}
+                                navigation={this.props.navigation}
             />
           </Modal>
         </ScrollView>

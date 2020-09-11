@@ -16,14 +16,14 @@ import {
   Modal
 } from 'react-native';
 // Components
-import Searchbar from '../../../../components/Searchbar';
-import FoodModalContent from '../../../../components/logs/meal/FoodModalContent';
+import Searchbar from '../../Searchbar';
+import FoodModalContent from './FoodModalContent';
 import FavouriteMealComponent from "./FavouriteMeals";
 // Functions
 // Others
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
-import requestFoodSearch from '../../../../netcalls/foodEndpoints/requestFoodSearch';
-import {requestMealLogList} from "../../../../netcalls/mealEndpoints/requestMealLog";
+import requestFoodSearch from '../../../netcalls/foodEndpoints/requestFoodSearch';
+import {requestMealLogList} from "../../../netcalls/mealEndpoints/requestMealLog";
 // third party lib
 
 Icon.loadFont();
@@ -304,7 +304,7 @@ function FoodResultList({foodList, navigation, route, type, addFoodItemCallback}
 
   /*
   const navigateBackToCreateMealLog = () => {
-    navigation.navigate('CreateMealLog', {
+    navigation.navigate('CreateMealLogBlock', {
       item: {...selected},
       type: type,
     });

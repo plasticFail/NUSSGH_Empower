@@ -15,22 +15,22 @@ import {
 // Third-party lib
 import Moment from 'moment';
 // Components
-import ImageWithBadge from "../../../../components/ImageWithBadge";
-import FoodModalContent from "../../../../components/logs/meal/FoodModalContent";
-import IntegerQuantitySelector from "../../../../components/IntegerQuantitySelector";
+import ImageWithBadge from "../../ImageWithBadge";
+import FoodModalContent from "./FoodModalContent";
+import IntegerQuantitySelector from "../../IntegerQuantitySelector";
 // Functions
-import {requestFavouriteMealList} from "../../../../netcalls/mealEndpoints/requestMealLog";
+import {requestFavouriteMealList} from "../../../netcalls/mealEndpoints/requestMealLog";
 // Others such as images, icons.
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
-import FlashMessage from "../../../../components/FlashMessage";
-import {getDefaultMealType, handleSubmitMealLog, isValidMeal} from "../../../../commonFunctions/mealLogFunctions";
-import RenderMealItem from "../../../../components/logs/meal/RenderMealItem";
-import DateSelectionBlock from "../../../../components/logs/dateSelectionBlock";
-import MealTypeSelectionBlock from "../../../../components/logs/meal/MealTypeSelectionBlock";
-import {mealAddLogRequest} from "../../../../netcalls/requestsLog";
+import FlashMessage from "../../FlashMessage";
+import {getDefaultMealType, handleSubmitMealLog, isValidMeal} from "../../../commonFunctions/mealLogFunctions";
+import RenderMealItem from "./RenderMealItem";
+import DateSelectionBlock from "../dateSelectionBlock";
+import MealTypeSelectionBlock from "./MealTypeSelectionBlock";
+import {mealAddLogRequest} from "../../../netcalls/requestsLog";
 import FoodSearchEngineScreen from "./FoodSearchEngine";
-import SuccessDialogue from "../../../../components/successDialogue";
-import {food_key} from "../../../../commonFunctions/logFunctions";
+import SuccessDialogue from "../../successDialogue";
+import {food_key} from "../../../commonFunctions/logFunctions";
 
 Icon.loadFont()
 // Any meal log selected (e.g Create, Recent or Favourites)
@@ -46,7 +46,7 @@ if (
 // Global var
 const MAXIMUM_ALLOWED_FOOD_QUANTITY = 50;
 
-export default class CreateMealLog extends React.Component {
+export default class CreateMealLogBlock extends React.Component {
     constructor(props) {
         super(props);
         // NAMING MUST FOLLOW KEYWORDS FOR STATE ITEMS.

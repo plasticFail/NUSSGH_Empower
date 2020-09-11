@@ -1,9 +1,9 @@
 import React from 'react';
 import {View, StyleSheet, ActivityIndicator, Alert, TouchableOpacity, Text} from 'react-native';
 // Functions
-import {requestUnfavouriteMeal, requestFavouriteMealList} from "../../../../netcalls/mealEndpoints/requestMealLog";
+import {requestUnfavouriteMeal, requestFavouriteMealList} from "../../../netcalls/mealEndpoints/requestMealLog";
 // Others
-import MealList from "../../../../components/logs/meal/MealList";
+import MealList from "./MealList";
 // third party lib
 import Modal from 'react-native-modal';
 
