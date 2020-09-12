@@ -46,20 +46,6 @@ Icon.loadFont();
 export default function MealList({filterQuery, meals, options, onMealAdd}) {
     const [selectedMeal, setSelectedMeal] = React.useState(null);
     const [openModal, setOpenModal] = React.useState(false);
-    /*
-    const processed = meals.map(m => {
-        if (m.foodItems) {
-            return m;
-        }
-        m.foodItems = m.beverage.concat(m.side, m.main, m.dessert)
-        delete m['main'];
-        delete m['side'];
-        delete m['dessert'];
-        delete m['beverage'];
-        return m;
-    });
-
-     */
 
     const onMealItemClick = (meal) => {
         setSelectedMeal(meal);
@@ -102,7 +88,7 @@ export default function MealList({filterQuery, meals, options, onMealAdd}) {
                                     <Text style={{fontSize: 24, fontWeight: "bold", color: '#7d7d7d', paddingTop: '3%'}}>Meal Includes</Text>
                                     {
                                         selectedMeal.foodItems.map(food => (
-                                            <FoodRow food={food} />
+                                            <FoodRow key={food['food-name']} food={food} />
                                         ))
                                     }
                                 </View>

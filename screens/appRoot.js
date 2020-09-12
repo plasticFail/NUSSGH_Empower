@@ -72,11 +72,11 @@ class AppRoot extends Component {
   handleRedirectUrl = (event) => {
     const url = event.url;
     /*
-    for now i'm no longer using native Linking to open application.
     if (url.startsWith(redirect_uri)) {
       // fitbit redirect url
       AuthoriseFitbit(url);
-    }*/
+    }
+    */
   };
 
   init = async () => {

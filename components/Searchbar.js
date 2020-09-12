@@ -27,7 +27,7 @@ class Searchbar extends React.Component {
     keyboardWillShow = (event) => {
         this.setState({keyboardShown: true});
         Animated.timing(this.searchbarWidth, {
-            toValue: 0.9,
+            toValue: 0.82,
             duration: 200,
             useNativeDriver: false
         }).start();
@@ -37,7 +37,7 @@ class Searchbar extends React.Component {
         this.setState({keyboardShown: false});
         Animated.timing(this.searchbarWidth, {
             toValue: 1,
-            duration: 200,
+            duration: 350,
             useNativeDriver: false
         }).start();
     }
@@ -92,7 +92,8 @@ const styles = StyleSheet.create({
         marginRight: 10
     },
     cancelText: {
-        color: '#288259'
+        color: '#288259',
+        fontSize: 16
     }
 })
 

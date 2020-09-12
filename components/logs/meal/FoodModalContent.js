@@ -3,38 +3,18 @@ import {Image, ScrollView, StyleSheet, Text, TouchableOpacity, View, Dimensions,
 // Components
 import ProgressBar from "../../progressbar";
 // Others
-import Icon from 'react-native-vector-icons/dist/FontAwesome';
-import {add} from "react-native-reanimated";
+import Icon from 'react-native-vector-icons/FontAwesome5';
+import Ionicon from 'react-native-vector-icons/Ionicons';
 import CircularProgress from "../../dashboard/todayOverview/CircularProgress";
-
-Icon.loadFont()
 
 const {height, width} = Dimensions.get('window');
 
 const addButtonPadding = 0.18;
-const offsetY = height * (1 - addButtonPadding)
-
 // Children prop is any react component passed to serve as a button at the bottom of the modal paper.
 export default function FoodModalContent({onClose, selected, children}) {
-    const [didMount, setDidMount] = React.useState(false);
     const [showImage, setShowImage] = React.useState(false);
     const [showFacts, setShowFacts] = React.useState(false);
-    const animatedY = React.useRef(new Animated.Value(offsetY));
-    const addButtonRef = React.useRef();
 
-    React.useEffect(() => {
-        if (!didMount) {
-            animatedY.current.addListener(({value}) => _moveAddButton(value));
-            _moveAddButton(0);
-            setDidMount(true);
-        }
-    })
-
-    const _moveAddButton = (value) => {
-        addButtonRef.current.setNativeProps({
-            top: offsetY
-        });
-    }
 
     const toggleShowImage = () => {
         setShowImage(!showImage);
@@ -46,26 +26,13 @@ export default function FoodModalContent({onClose, selected, children}) {
 
     return (
         <View style={modalStyles.root}>
-        <Animated.ScrollView
-                    onScroll={Animated.event(
-                        [
-                            {
-                                nativeEvent: {
-                                    contentOffset: { y: animatedY.current },
-                                },
-                            },
-                        ],
-                        { useNativeDriver: true },
-                    )}
-                    bounces={false}
-                    contentContainerStyle={{flexGrow: 1}}
-                    scrollEventThrottle={1}>
+        <ScrollView contentContainerStyle={{padding: 20}}>
             <View style={modalStyles.header}>
-                <Icon name="arrow-left" color={'#4DAA50'} size={40} onPress={onClose} style={modalStyles.closeButton}/>
-                <Text style={modalStyles.foodNameText}>
-                    {selected['food-name'][0].toUpperCase() + selected['food-name'].slice(1) + ' - ' + selected['household-measure']}
-                </Text>
+                <Ionicon name="arrow-back-outline" color={'#4DAA50'} size={40} onPress={onClose} style={modalStyles.closeButton}/>
             </View>
+            <Text style={modalStyles.foodNameText}>
+                {selected['food-name'][0].toUpperCase() + selected['food-name'].slice(1) + ' - ' + selected['household-measure']}
+            </Text>
             <View style={modalStyles.nutritionInfoContainer}>
                 <Text style={modalStyles.nutrientHeaderText}>Nutrition per serving</Text>
                 <View style={{flexDirection: 'row', minHeight: 100}}>
@@ -103,10 +70,8 @@ export default function FoodModalContent({onClose, selected, children}) {
                     ))
                 }
             </View>
-        </Animated.ScrollView>
-            <Animated.View ref={addButtonRef} style={[modalStyles.addButtonWrapper, modalStyles.shadow]}>
-                {children}
-            </Animated.View>
+        </ScrollView>
+            {children}
         </View>)
 }
 
@@ -143,7 +108,7 @@ function renderNutritionCol({amount, unit}, nutrient) {
 const modalStyles = StyleSheet.create({
     root: {
         backgroundColor: '#F7F7FB',
-        flex: 1
+        flex: 1,
     },
     addButtonWrapper: {
         position: 'absolute',
@@ -154,7 +119,7 @@ const modalStyles = StyleSheet.create({
         paddingBottom: height * addButtonPadding
     },
     foodInfoButtonsContainer: {
-        paddingBottom: addButtonPadding * height + 40,
+        paddingBottom: 40,
     },
     foodInfoButton: {
         backgroundColor: '#E3E7EE',
@@ -208,23 +173,26 @@ const modalStyles = StyleSheet.create({
         elevation: 5,
     },
     header: {
-        height: 0.18 * height,
+        height: 0.11 * height,
         justifyContent: 'flex-end',
-        padding: 20,
+        marginStart: '4%',
     },
     nutritionInfoContainer: {
         paddingLeft: 20,
         paddingRight: 20,
     },
     nutrientCol: {
-        width: (width - 40) / 4,
+        width: (width * 0.92 - 40) / 4,
         paddingTop: 10,
         alignItems: 'center',
         justifyContent: 'center'
     },
     foodNameText: {
         fontSize: 26,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        marginStart: '4%',
+        marginEnd: '4%',
+        paddingBottom: 10
     },
     nutrientHeaderText: {
         fontSize: 20,

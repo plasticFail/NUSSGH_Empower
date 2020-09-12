@@ -14,6 +14,8 @@ import {Colors} from "../../../styles/colors";
 import Modal from 'react-native-modal';
 import InAppBrowser from 'react-native-inappbrowser-reborn'
 import {AuthoriseFitbit} from "../../../commonFunctions/AuthoriseFitbit";
+import {STATUS} from "../../../components/onboarding/fitbit/Status";
+import ResponseModal from "../../../components/onboarding/fitbit/ResponseModal";
 
 const qs = require('qs');
 
@@ -31,14 +33,10 @@ const circleRadius = height;
 const circleOffset = height - headerHeight;
 Icon.loadFont();
 
-const NOT_STARTED = 'NotStarted';
-const IN_PROGRESS = 'InProgress';
-const CANCELLED = 'Cancelled';
-const FINISHED_SUCCESSFULLY = 'Finish';
-
 export default function FitbitSetup(props) {
     const [expand, setExpand] = React.useState(false);
-    const [processingStatus, setProcessingStatus] = React.useState(NOT_STARTED);
+    const [modalVisible, setModalVisible] = React.useState(false);
+    const [processingStatus, setProcessingStatus] = React.useState(STATUS.NOT_STARTED);
     const authorised = React.useRef(false);
     const expandAnimation = React.useRef(new Animated.Value(0));
     React.useEffect(() => {
@@ -86,7 +84,8 @@ export default function FitbitSetup(props) {
         */
         try {
             if (await InAppBrowser.isAvailable()) {
-                setProcessingStatus(IN_PROGRESS);
+                setProcessingStatus(STATUS.IN_PROGRESS);
+                setModalVisible(true);
                 InAppBrowser.openAuth(oAuthUrl, redirect_uri, {
                     // iOS Properties
                     ephemeralWebSession: false,
@@ -102,12 +101,15 @@ export default function FitbitSetup(props) {
                         AuthoriseFitbit(response.url).then((resp) => {
                             if (resp) {
                                 authorised.current = true;
-                                setProcessingStatus(FINISHED_SUCCESSFULLY);
+                                setProcessingStatus(STATUS.FINISHED_SUCCESSFULLY);
+                            } else {
+                                setProcessingStatus(STATUS.ERROR);
                             }
                         });
+                        //Linking.openURL(response.url);
                     } else if (response.type === 'dismiss' || response.type === 'cancel') {
                         // Cancel loading
-                        setProcessingStatus(CANCELLED);
+                        setProcessingStatus(STATUS.CANCELLED);
                     }
                 })
             } else {
@@ -117,6 +119,11 @@ export default function FitbitSetup(props) {
             await Linking.openURL(oAuthUrl);
         }
 
+    }
+
+    const handleCloseModal = () => {
+        setProcessingStatus(STATUS.NOT_STARTED);
+        setModalVisible(false);
     }
 
     return (
@@ -199,6 +206,7 @@ export default function FitbitSetup(props) {
                         </TouchableOpacity>
                     </View>)
             }
+            <ResponseModal visible={modalVisible} closeModal={handleCloseModal} status={processingStatus}/>
         </View>
     )
 }

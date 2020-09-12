@@ -13,7 +13,6 @@ import {
   Keyboard,
   Platform,
   KeyboardAvoidingView,
-  Modal
 } from 'react-native';
 // Components
 import Searchbar from '../../Searchbar';
@@ -21,15 +20,17 @@ import FoodModalContent from './FoodModalContent';
 import FavouriteMealComponent from "./FavouriteMeals";
 // Functions
 // Others
-import Icon from 'react-native-vector-icons/dist/FontAwesome';
+import Ionicon from 'react-native-vector-icons/Ionicons';
 import requestFoodSearch from '../../../netcalls/foodEndpoints/requestFoodSearch';
 import {requestMealLogList} from "../../../netcalls/mealEndpoints/requestMealLog";
+import globalStyles from "../../../styles/globalStyles";
+import logStyles from "../../../styles/logStyles";
+import {Colors} from "../../../styles/colors";
+import Modal from 'react-native-modal';
 // third party lib
 
-Icon.loadFont();
-
 const AnimatedKeyboardAvoidingView = Animated.createAnimatedComponent(KeyboardAvoidingView);
-const AnimatedIcon = Animated.createAnimatedComponent(Icon);
+const AnimatedIcon = Animated.createAnimatedComponent(Ionicon);
 
 const TABS = {
   'Food Search': 'search',
@@ -201,10 +202,10 @@ export default class FoodSearchEngineScreen extends React.Component {
     const {visible, addMealCallback, addFoodItemCallback, goBack} = this.props;
     const {query, favouritesQuery, isLoading, foodResults, keyboardShown, selectedTab, recentlyAddedFoodItems} = this.state;
     return (
-        <Modal isVisible={visible}>
+        <Modal isVisible={visible} style={{margin: 0}}>
           <AnimatedKeyboardAvoidingView enabled={false} style={[styles.root, {transform: [{translateY: this.listResultY}]}]}>
             <View style={styles.header}>
-                <AnimatedIcon name="arrow-left" onPress={goBack} color={'#4DAA50'} size={40} style={{opacity: this.backbuttonOpacity}} />
+                <AnimatedIcon name="arrow-back-outline" onPress={goBack} color={'#4DAA50'} size={40} style={{opacity: this.backbuttonOpacity, marginLeft: '4%'}} />
                 <Text style={styles.addItemText}>{keyboardShown ? "Search" : "Add Item"}</Text>
             </View>
             {
@@ -218,23 +219,25 @@ export default class FoodSearchEngineScreen extends React.Component {
                 </TouchableOpacity>
               </View>)
             }
+            <View style={globalStyles.pageHeader}>
             {
               selectedTab === 'search' ? (<Searchbar
                   key='searchbar'
-                  containerStyle={{marginLeft: 20, marginRight: 20}}
+                  //containerStyle={{marginLeft: 20, marginRight: 20}}
                   value={query}
                   onChangeText={this.updateQuery}
                   placeholder='Search food'
                   onSubmit={this.onSubmit}
               />) : (<Searchbar
                   key='favourites-searchbar'
-                  containerStyle={{marginLeft: 20, marginRight: 20}}
+                  //containerStyle={{marginLeft: 20, marginRight: 20}}
                   value={favouritesQuery}
                   onChangeText={this.updateQuery}
                   placeholder='Search favourites'
                   onSubmit={this.onSubmit}
               />)
             }
+            </View>
             {selectedTab === 'search' && (isLoading ? ( // Render loading progress
                 <View style={styles.searchLoading}>
                   <ActivityIndicator size="large" color="#B3D14C" />
@@ -347,17 +350,18 @@ function FoodResultList({foodList, navigation, route, type, addFoodItemCallback}
   };
   return (
     <React.Fragment>
-      <Modal visible={modalOpen} transparent={true}>
-        {selected && (
-          <FoodModalContent selected={selected} onClose={handleClose}>
-            <TouchableHighlight
-              style={styles.button}
-              underlayColor="#fff"
-              onPress={addFoodToLog}>
-              <Text style={styles.buttonText}>Add</Text>
-            </TouchableHighlight>
-          </FoodModalContent>
-        )}
+      <Modal visible={modalOpen} transparent={true} style={{margin: 0}}>
+          {selected && (
+              <FoodModalContent selected={selected} onClose={handleClose}>
+                <View style={globalStyles.buttonContainer}>
+                  <TouchableHighlight
+                      style={globalStyles.submitButtonStyle}
+                      underlayColor='#fff' onPress={addFoodToLog}>
+                    <Text style={[globalStyles.actionButtonText, {color: '#fff'}]}>Add</Text>
+                  </TouchableHighlight>
+                </View>
+              </FoodModalContent>
+          )}
       </Modal>
       <FlatList
         style={listStyles.container}
@@ -437,17 +441,18 @@ const listStyles = StyleSheet.create({
 
 const styles = StyleSheet.create({
   root: {
+    backgroundColor: Colors.backgroundColor,
     flex: 1,
-    backgroundColor: '#F7F7FB'
+    paddingLeft: '4%',
+    paddingRight: '4%'
   },
   header: {
     height: '18%',
-    padding: 20,
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-end'
   },
   addItemText: {
-    fontSize: 30,
-    fontWeight: 'bold',
+    ...globalStyles.pageHeader,
+    paddingBottom: 10
   },
   searchPromptBody: {
     display: 'flex',
@@ -492,7 +497,7 @@ const styles = StyleSheet.create({
   tabsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginBottom: '4%'
+    marginBottom: '5%'
   },
   tabs: {
     height: 35,

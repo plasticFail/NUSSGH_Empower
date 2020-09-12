@@ -100,13 +100,21 @@ export default class FavouriteMealComponent extends React.Component {
                         <View style={{backgroundColor: '#fff', padding: 20, width: '85%',
                                         borderRadius: 15, justifyContent: 'space-between',
                                         alignSelf: 'center'}}>
-                            <Text style={{fontWeight: 'bold', fontSize: 20, paddingTop: '4%'}}>Remove from favourites</Text>
-                            <Text style={{fontSize: 20, paddingTop: '4%'}}>{targetMealToUnfavourite.mealName}</Text>
+                            <Text style={{fontSize: 20, paddingTop: '4%', fontFamily: 'SFProDisplay-Bold'}}>
+                                Remove from favourites
+                            </Text>
+                            <Text style={{fontSize: 20, paddingTop: '8%', paddingBottom: '8%', fontFamily: 'SFProDisplay-Regular'}}>
+                                {targetMealToUnfavourite.mealName}
+                            </Text>
                             <TouchableOpacity onPress={this.unfavouriteMeal} style={[styles.removeButton, {marginTop: '4%'}]}>
-                                <Text style={{fontWeight: 'bold', color: '#fff', fontSize: 18}}>Remove</Text>
+                                <Text style={{fontWeight: 'bold', color: '#fff', fontSize: 18}}>
+                                    Remove
+                                </Text>
                             </TouchableOpacity>
                             <TouchableOpacity onPress={this.abortUnfavouriteMeal} style={styles.cancelButton}>
-                                <Text style={{fontWeight: 'bold', color: 'red', fontSize: 18}}>Cancel</Text>
+                                <Text style={{fontWeight: 'bold', color: 'red', fontSize: 18}}>
+                                    Cancel
+                                </Text>
                             </TouchableOpacity>
                         </View>
                     </Modal>

@@ -31,6 +31,10 @@ import {mealAddLogRequest} from "../../../netcalls/requestsLog";
 import FoodSearchEngineScreen from "./FoodSearchEngine";
 import SuccessDialogue from "../../successDialogue";
 import {food_key} from "../../../commonFunctions/logFunctions";
+import globalStyles from "../../../styles/globalStyles";
+import logStyles from "../../../styles/logStyles";
+import CrossBtn from "../../crossBtn";
+import {Colors} from "../../../styles/colors";
 
 Icon.loadFont()
 // Any meal log selected (e.g Create, Recent or Favourites)
@@ -215,16 +219,13 @@ export default class CreateMealLogBlock extends React.Component {
     render() {
         const {isFavourite, mealName, selected, modalOpen, foodItems, showFoodSearchEngineModal, success} = this.state;
         const {mealType, recordDate, parent, closeModal, closeParent, visible} = this.props;
-        return (
+        return ( visible &&
             <Modal visible={visible} transparent={true}>
-                <View style={styles.root}>
+                <View style={[logStyles.modalContainer, styles.root]}>
                     <View style={{flexGrow: 1, padding: 20}}>
-                        <View style={styles.header}>
-                            <Icon name='times' size={50} color='#4DAA50' onPress={closeModal} />
-                            <Text style={{fontSize: 30, color:"#21283A", fontWeight: 'bold', paddingBottom: '2%'}}>Add Meal</Text>
-                            <Text style={{fontSize: 18, color:"#21283A", fontWeight: 'bold'}} />
-                        </View>
-                        <View style={styles.mealNameTextAndIcon}>
+                        <CrossBtn close={closeModal} />
+                        <Text style={[globalStyles.pageHeader, {marginBottom: 10}]}>Add Meal</Text>
+                        <View style={[globalStyles.pageDetails, styles.mealNameTextAndIcon]}>
                             <TextInput
                                 style={styles.mealNameTextInput}
                                 placeholder="Give your meal a name! (optional)"
@@ -235,15 +236,15 @@ export default class CreateMealLogBlock extends React.Component {
                                   onPress={this.toggleFavouriteIcon}
                                   style={styles.favouriteIcon}/>
                         </View>
-                        <Text style={{fontSize: 18, color:"#8A8A8E", fontWeight: 'bold'}} >Food intake</Text>
+                        <Text style={[globalStyles.pageDetails, {fontSize: 18, color:"#8A8A8E", fontWeight: 'bold'}]} >Food intake</Text>
                         <TouchableOpacity onPress={this.redirectToFoodSearchEngine}>
-                            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                            <View style={[globalStyles.pageDetails, {flexDirection: 'row', alignItems: 'center'}]}>
                                 <Icon name='plus-square' size={30} color='#4DAA50' />
                                 <Text style={{fontSize: 18, color:'#4DAA50', paddingTop: 20, paddingBottom: 20, paddingLeft: 5}}>Add Item</Text>
                             </View>
                         </TouchableOpacity>
-                        <View style={{flex: 2, marginLeft: -20, marginRight: -20}}>
-                            <FlatList style={{paddingLeft: 20, paddingRight: 20}} data={foodItems} showScrollIndicator={false} keyExtractor={i => i['food-name']}
+                        <View style={[globalStyles.pageDetails, {flex: 1, paddingBottom: 15}]}>
+                            <FlatList data={foodItems} showScrollIndicator={false} keyExtractor={i => i['food-name']}
                                       renderItem={({item}) => (
                                         <FoodItem item={item}
                                           onImagePress={()=>this.handleModalOpen(item)}
@@ -252,48 +253,43 @@ export default class CreateMealLogBlock extends React.Component {
                                       )}
                             />
                         </View>
-                        <View style={{flex: 1, justifyContent: 'flex-end'}}>
-                            <TouchableHighlight
-                                style={styles.button}
-                                underlayColor='#fff' onPress={this.onSubmitLog}>
-                                <Text style={styles.buttonText}>Submit Log</Text>
-                            </TouchableHighlight>
-                            <Modal visible={modalOpen} coverScreen={true}>
-                                {selected &&
-                                <FoodModalContent onClose={this.handleCloseModal} selected={selected}>
-                                    <TouchableOpacity onPress={this.handleCloseModal}
-                                                      style={styles.button}>
-                                        <Text style={styles.buttonText}>Close</Text>
-                                    </TouchableOpacity>
-                                </FoodModalContent>
-                                }
-                            </Modal>
-                        </View>
+                    </View>
+                    <View style={globalStyles.buttonContainer}>
+                        <TouchableHighlight
+                            style={globalStyles.submitButtonStyle}
+                            underlayColor='#fff' onPress={this.onSubmitLog}>
+                            <Text style={[globalStyles.actionButtonText, {color: '#fff'}]}>Submit</Text>
+                        </TouchableHighlight>
                     </View>
                     <FlashMessage triggerValue={this.state.isFavourite}
-                              renderFlashMessageComponent={(val) => val ? <View
-                                      style={{height: 40, width: 150, borderRadius: 10,
-                                          backgroundColor:'#288259', justifyContent: 'center', alignItems: 'center'}}
-                                  >
-                                    <Text style={{color: '#fff', fontSize: 20}}>Favourited!</Text>
-                                  </View>:
-                                  <View
-                                      style={{height: 40, width: 150, borderRadius: 10,
-                                          backgroundColor:'red', justifyContent: 'center', alignItems: 'center'}}
-                                  >
-                                      <Text style={{color: '#fff', fontSize: 20}}>Unfavourited</Text>
-                                  </View>}
-                              messageComponentHeight={40}
+                              renderFlashMessageComponent={(val) => val ?
+                                    <Text style={{color: '#288259', fontSize: 24, fontWeight:'bold'}}>Favourited!</Text> :
+                                  <Text style={{color: 'red', fontSize: 24, fontWeight:'bold'}}>Unfavourited!</Text>
+                                 }
+                              messageComponentHeight={100}
                     />
+                    <Modal visible={modalOpen} coverScreen={true}>
+                        {selected &&
+                        <FoodModalContent onClose={this.handleCloseModal} selected={selected}>
+                            <View style={globalStyles.buttonContainer}>
+                                <TouchableHighlight
+                                    style={globalStyles.submitButtonStyle}
+                                    underlayColor='#fff' onPress={this.handleCloseModal}>
+                                    <Text style={[globalStyles.actionButtonText, {color: '#fff'}]}>Close</Text>
+                                </TouchableHighlight>
+                            </View>
+                        </FoodModalContent>
+                        }
+                    </Modal>
+                    {
+                        success && <SuccessDialogue visible={success} type={food_key} closeSuccess={this.handleSuccessLog} />
+                    }
                     {   showFoodSearchEngineModal &&
                         <FoodSearchEngineScreen
                             addFoodItemCallback={this.addFoodItemCallback}
                             addMealCallback={this.addMealCallback}
                             goBack={()=>this.setState({showFoodSearchEngineModal: false})}
                             visible={showFoodSearchEngineModal} />
-                    }
-                    {
-                        success && <SuccessDialogue visible={success} type={food_key} closeSuccess={this.handleSuccessLog} />
                     }
                 </View>
             </Modal>
@@ -355,8 +351,7 @@ function FoodItem({onImagePress, item, handleDelete, onQuantityChange}) {
 
 const styles = StyleSheet.create({
     root: {
-        flex: 1,
-        backgroundColor: '#ffffff'
+
     },
     mealNameTextAndIcon: {
         display: 'flex',
@@ -382,15 +377,7 @@ const styles = StyleSheet.create({
         paddingTop: 10
     },
     button:{
-        marginBottom:20,
-        paddingTop:20,
-        paddingBottom:20,
-        marginLeft: '3%',
-        marginRight: '3%',
-        backgroundColor:'#aad326',
-        borderRadius:10,
-        borderWidth: 1,
-        borderColor: '#fff'
+        ...globalStyles.buttonContainer
     },
     emptyButton: {
         width: 80,
@@ -405,7 +392,7 @@ const styles = StyleSheet.create({
         height: 80,
     },
     buttonText:{
-        color:'#000',
+        color:'#fff',
         textAlign:'center',
         fontSize: 22,
         fontWeight: 'bold'
@@ -428,7 +415,6 @@ const styles = StyleSheet.create({
         flex: 1
     },
     header: {
-        height: '18%',
         justifyContent: 'flex-end',
     }
 });
