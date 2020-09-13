@@ -10,6 +10,7 @@ const weightAddLog = server + 'log/weight';
 const mealAddLogEndpoint = server + 'log/meal';
 const unfavouriteMealEndpoint = server + 'log/meal/unfavourite-meal';
 const mealListEndpoint = server + 'log/meal';
+const nutrientConsumptionEndpoint = server + 'log/meal/nutrient-consumption';
 const favouriteMealListEndpoint = server + 'log/meal/favourite-list';
 const foodSearchEndpoint = server + 'food/search';
 const requestOTP = server + 'auth/patient/password-reset/request-otp';
@@ -31,6 +32,7 @@ export {
   mealListEndpoint,
   favouriteMealListEndpoint,
   unfavouriteMealEndpoint,
+  nutrientConsumptionEndpoint,
   foodSearchEndpoint,
   requestOTP,
   verifyOTP,

@@ -35,6 +35,9 @@ class Searchbar extends React.Component {
 
     keyboardWillHide = (event) => {
         this.setState({keyboardShown: false});
+        if (this.props.value !== '') {
+            return ;
+        }
         Animated.timing(this.searchbarWidth, {
             toValue: 1,
             duration: 350,
@@ -45,9 +48,16 @@ class Searchbar extends React.Component {
     handleChangeText = (text) => {
         const {onSubmit, textInputStyle, containerStyle, placeholder, onChangeText} = this.props;
         onChangeText(text);
-        this.setState({
-            value: text
-        })
+    }
+
+    handleCancel = () => {
+        const {onSubmit, textInputStyle, containerStyle, placeholder, onChangeText} = this.props;
+        onChangeText('');
+        Animated.timing(this.searchbarWidth, {
+            toValue: 1,
+            duration: 350,
+            useNativeDriver: false
+        }).start();
     }
 
     render() {
@@ -64,12 +74,15 @@ class Searchbar extends React.Component {
                            onChangeText={this.handleChangeText}
                            placeholder={placeholder}
                            style={[{...styles.textInput, ...textInputStyle}, {width}]}/>
-                {   keyboardShown &&
-                    <TouchableOpacity onPress={() => this.handleChangeText("")}>
+                {   (keyboardShown || value !== '')  &&
+                    <TouchableOpacity onPress={this.handleCancel}>
                         <Text style={styles.cancelText}>Cancel</Text>
                     </TouchableOpacity>
                 }
-                <Icon style={{position: 'absolute', paddingLeft: styles.textInput.paddingLeft / 4}} name="search" size={20} color={'#4d4d4d'} onPress={onSubmit}></Icon>
+                <Icon style={{position: 'absolute', paddingLeft: styles.textInput.paddingLeft / 4}}
+                      name="search" size={20}
+                      color={'#4d4d4d'}
+                      onPress={onSubmit} />
             </View>
         )
     }

@@ -19,7 +19,13 @@ import globalStyles from '../../styles/globalStyles';
 import {Colors} from '../../styles/colors';
 //function
 import {checkLogDone} from '../../commonFunctions/logFunctions';
-import {getGreetingFromHour} from '../../commonFunctions/common';
+import {getGreetingFromHour, getLastMinuteFromTodayDate, getTodayDate} from '../../commonFunctions/common';
+import NotificationsCard from "../../components/dashboard/todayOverview/NotificationsCard";
+import DiaryCard from "../../components/dashboard/todayOverview/DiaryCard";
+import ActivityCard from "../../components/dashboard/todayOverview/ActivityCard";
+import {requestNutrientConsumption} from "../../netcalls/mealEndpoints/requestMealLog";
+import Moment from "moment";
+import {getEntry4Day} from "../../netcalls/requestsDiary";
 
 const buttonList = [
   {
@@ -45,19 +51,7 @@ const buttonList = [
 // properties
 const username = 'Jimmy';
 const {width, height} = Dimensions.get('window');
-const buttonSize = width * 0.26;
-const padding = 20;
 
-// button list properties
-const textXOffset = 10;
-const textYOffset = 20;
-const fontSize = 14.5;
-const circleRadius = 0.35 * buttonSize;
-const circleYOffset = 10;
-const circleXOffset = 10;
-
-const bloodGlucoseBarChartWidth = width - 2 * padding;
-const bloodGlucoseBarChartHeight = height * 0.21;
 const LogsProgress = [
   {logName: 'Medication', progress: 0.33, path: 'MedicationLog'},
   {logName: 'Blood Glucose', progress: 1, path: 'BloodGlucoseLog'},
@@ -68,6 +62,17 @@ const LogsProgress = [
 const HomeScreen = (props) => {
   const [currHour, setCurrHour] = useState(new Date().getHours());
   const [uncompleteLogs, setUncompleteLogs] = useState([]);
+
+  // diary card
+  const [bgl, setBgl] = React.useState(null);
+  const [calorie, setCalorie] = React.useState(null);
+  const [weight, setWeight] = React.useState(null);
+  // activity card
+  const [protein, setProtein] = React.useState(null);
+  const [carb, setCarb] = React.useState(null);
+  const [fat, setFat] = React.useState(null);
+  const [stepsTaken, setStepsTaken] = React.useState(null);
+
   useEffect(() => {
     //Refresh every 1 minutes
     setTimeout(() => setCurrHour(new Date().getHours()), 60000);
@@ -78,6 +83,39 @@ const HomeScreen = (props) => {
       checkLogDone(getGreetingFromHour(currHour)).then((response) => {
         setUncompleteLogs(response.notCompleted);
       });
+
+      // reload nutrition data
+      requestNutrientConsumption(getTodayDate(), getLastMinuteFromTodayDate()).then(data => {
+        const nutrientData = data.data;
+        const calorieAmount = Math.round(nutrientData.reduce((acc, curr, index) => acc + curr.nutrients.energy.amount, 0));
+        const proteinAmount = Math.round(nutrientData.reduce((acc, curr, index) => acc + curr.nutrients.protein.amount, 0));
+        const carbAmount = Math.round(nutrientData.reduce((acc, curr, index) => acc + curr.nutrients.carbohydrate.amount, 0));
+        const fatAmount = Math.round(nutrientData.reduce((acc, curr, index) => acc + curr.nutrients['total-fat'].amount, 0));
+        setCalorie(calorieAmount);
+        setProtein(proteinAmount);
+        setCarb(carbAmount);
+        setFat(fatAmount);
+      });
+      // reload diary data
+      const d = Moment(new Date()).format("YYYY-MM-DD");
+      getEntry4Day(d).then(data => {
+        const bglLogs = data[d].glucose.logs;
+        const weightLogs = data[d].weight.logs;
+        const activityLogs = data[d].activity.logs;
+        const steps = activityLogs.reduce((acc, curr, index) => acc + curr.steps, 0);
+        let averageBgl = bglLogs.reduce((acc, curr, index) => acc + curr.bg_reading, 0);
+        let averageWeight = weightLogs.reduce((acc, curr, index) => acc + curr.weight, 0);
+        if (bglLogs.length > 0) {
+          averageBgl = averageBgl / bglLogs.length;
+          setBgl(averageBgl);
+        }
+        if (weightLogs.length > 0) {
+          averageWeight = averageWeight / weightLogs.length;
+          setWeight(averageWeight);
+        }
+        setStepsTaken(steps);
+      });
+
     });
   }, []);
   return (
@@ -98,88 +136,11 @@ const HomeScreen = (props) => {
           hour={getGreetingFromHour(currHour)}
           uncompleteLogs={uncompleteLogs}
         />
-        <View style={{marginTop: padding}}>
-            <View style={{height: 100, width: '100%', flexDirection: 'row', justifyContent: 'space-between', paddingLeft: 20, paddingRight: 20}}>
-              <TouchableOpacity style={{width: '47.5%', height: '100%', backgroundColor: 'purple', borderRadius: 10, padding: 20}}
-                                onPress={()=>props.navigation.navigate('GameCenter')}>
-                <Text style={{color: '#fff', fontSize: 16}}>Points</Text>
-                <Text style={{color: '#fff', fontSize: 30, textAlign: 'right', fontWeight: 'bold'}}>3500</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={{width: '47.5%', height: '100%', backgroundColor: 'slateblue', borderRadius: 10, justifyContent: 'center', padding: 20}}
-                                onPress={()=>props.navigation.navigate('EducationMaterials')}>
-                <Text style={{color: '#fff', fontWeight: 'bold', fontSize: 16}}>Diabetes Management Guide</Text>
-              </TouchableOpacity>
-            </View>
-            {/* Diary overview of weight, blood glucose, food, medication and physical activity */}
-            {
-              <View style={[styles.card, styles.shadow, {margin: 20, marginTop: 20, flexDirection: 'column', alignItems: 'flex-start'}]}>
-                <View style={{borderBottomWidth: 0.5, borderColor: '#7d7d7d', width: '100%'}}>
-                  <Text style={{padding: 20, fontWeight: 'bold', fontSize: 24, color: '#7d7d7d'}}>Overview</Text>
-                </View>
-                <View style={styles.overviewRow}>
-                  <Text style={styles.metricText}>Blood Glucose</Text>
-                  <Text style={styles.measuredText}>8 mmol/L</Text>
-                </View>
-                <View style={styles.overviewRow}>
-                  <Text style={styles.metricText}>Nutrition</Text>
-                  <Text style={styles.measuredText}>500 kcal</Text>
-                </View>
-                <View style={[styles.overviewRow, {borderBottomWidth: 0}]}>
-                  <Text style={styles.metricText}>Weight</Text>
-                  <Text style={styles.measuredText}>55.3 kg</Text>
-                </View>
-              </View>
-            }
-            {
-              <View style={[styles.card, styles.shadow, {margin: 20, flexDirection: 'column', alignItems: 'center'}]}>
-                <View style={{flexDirection: 'row', justifyContent: 'space-between', width: '100%', borderBottomWidth: 0.5, borderColor: '#7d7d7d', padding: 20}}>
-                  <View style={{width: '45%', alignItems: 'center'}}>
-                    <CircularProgress color="#aad326" percent={0.2}
-                                      centreComponent={{
-                                        width: 40/2,
-                                        height: 40/1.5,
-                                        component: (
-                                            <Icon name='walking' color='#aad326' size={40} />
-                                        )
-                                      }}
-                                      radius={50} padding={5} strokeWidth={5} fontSize={15}/>
-                    <Text style={{fontWeight: 'bold', color: '#7d7d7d', fontSize: 16}}>Steps</Text>
-                    <Text style={{fontWeight: 'bold', fontSize: 18}}>1000</Text>
-                  </View>
-                  <View style={{width: '45%', alignItems: 'center'}}>
-                    <CircularProgress color="#aad326" percent={0.65}
-                                      centreComponent={{
-                                        width: 40/2,
-                                        height: 40/1.5,
-                                        component: (
-                                            <Icon name='fire' color='#aad326' size={40} />
-                                        )
-                                      }}
-                                      radius={50} padding={5} strokeWidth={5} fontSize={15}/>
-                    <Text style={{fontWeight: 'bold', color: '#7d7d7d', fontSize: 16}}>Calories Burnt</Text>
-                    <Text style={{fontWeight: 'bold', fontSize: 18}}>350 kcal</Text>
-                  </View>
-                </View>
-                <View style={{flexDirection:'row', justifyContent: 'space-between', width: '100%', padding: 20}}>
-                  <View style={{width: '25%'}}>
-                    <Text style={{fontWeight: 'bold', color: '#7d7d7d', paddingBottom: 5}}>Carbs</Text>
-                    <ProgressBar containerStyle={{height: 7.5, width: '90%', marginBottom: 5}} progress={"33%"} useIndicatorLevel />
-                    <Text style={{fontWeight: 'bold'}}>300 g</Text>
-                  </View>
-                  <View style={{width: '25%'}}>
-                    <Text style={{fontWeight: 'bold', color: '#7d7d7d', paddingBottom: 5}}>Calorie</Text>
-                    <ProgressBar containerStyle={{height: 7.5, width: '90%', marginBottom: 5}} progress={"33%"} useIndicatorLevel />
-                    <Text style={{fontWeight: 'bold'}}>1500 kcal</Text>
-                  </View>
-                  <View style={{width: '25%'}}>
-                    <Text style={{fontWeight: 'bold', color: '#7d7d7d', paddingBottom: 5}}>Fat</Text>
-                    <ProgressBar containerStyle={{height: 7.5, width: '90%', marginBottom: 5}} progress={"33%"} useIndicatorLevel />
-                    <Text style={{fontWeight: 'bold'}}>45 g</Text>
-                  </View>
-                </View>
-              </View>
-            }
-        </View>
+          {/* Notifications */}
+          <NotificationsCard />
+          {/* Diary overview of weight, blood glucose, food, medication and physical activity */}
+          <DiaryCard bgl={bgl} calorie={calorie} weight={weight} />
+          <ActivityCard stepsTaken={stepsTaken} carb={carb} protein={protein} fat={fat}/>
       </ScrollView>
     </View>
   );
@@ -238,55 +199,6 @@ const styles = StyleSheet.create({
     marginTop: '5%',
     color: Colors.lastLogValueColor,
   },
-
-  // extra
-  toDoText: {
-    color:'#fff',
-    fontSize: 16,
-    paddingTop: 10,
-    paddingBottom: 10
-  },
-  progressText: {
-    fontWeight: 'bold',
-    fontSize: 24,
-    paddingBottom: 3,
-  },
-  card: {
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    marginTop: '2%',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between'
-  },
-  shadow: {
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  overviewRow: {
-    paddingTop: 10,
-    paddingBottom: 10,
-    marginLeft: 20,
-    marginRight: 20,
-    borderBottomWidth: 0.5,
-    borderColor: '#7d7d7d',
-    width: width - 80
-  },
-  metricText: {
-    fontWeight: 'bold',
-    color: '#7d7d7d'
-  },
-  measuredText: {
-    fontWeight: 'bold',
-    color: '#000',
-    fontSize: 18
-  }
 });
 
 export default HomeScreen;

@@ -13,6 +13,8 @@ import {
   Keyboard,
   Platform,
   KeyboardAvoidingView,
+    Modal,
+  ScrollView
 } from 'react-native';
 // Components
 import Searchbar from '../../Searchbar';
@@ -26,7 +28,6 @@ import {requestMealLogList} from "../../../netcalls/mealEndpoints/requestMealLog
 import globalStyles from "../../../styles/globalStyles";
 import logStyles from "../../../styles/logStyles";
 import {Colors} from "../../../styles/colors";
-import Modal from 'react-native-modal';
 // third party lib
 
 const AnimatedKeyboardAvoidingView = Animated.createAnimatedComponent(KeyboardAvoidingView);
@@ -94,7 +95,7 @@ export default class FoodSearchEngineScreen extends React.Component {
       }),
       Animated.timing(this.listResultY, {
         duration: 500,
-        toValue: -50,
+        toValue: Platform.OS === 'android' ? 0 : -50,
         useNativeDriver: true
       }),
       Animated.timing(this.backbuttonOpacity, {
@@ -114,7 +115,7 @@ export default class FoodSearchEngineScreen extends React.Component {
         useNativeDriver: true
       }),
       Animated.timing(this.listResultY, {
-        duration: 500,
+        duration: 200,
         toValue: 0,
         useNativeDriver: true
       }),
@@ -202,8 +203,9 @@ export default class FoodSearchEngineScreen extends React.Component {
     const {visible, addMealCallback, addFoodItemCallback, goBack} = this.props;
     const {query, favouritesQuery, isLoading, foodResults, keyboardShown, selectedTab, recentlyAddedFoodItems} = this.state;
     return (
-        <Modal isVisible={visible} style={{margin: 0}}>
-          <AnimatedKeyboardAvoidingView enabled={false} style={[styles.root, {transform: [{translateY: this.listResultY}]}]}>
+        <Modal visible={visible} style={{margin: 0}} useNativeDriver={true}>
+          <AnimatedKeyboardAvoidingView enabled={false}
+                                        style={[styles.root, {transform: [{translateY: this.listResultY}]}]}>
             <View style={styles.header}>
                 <AnimatedIcon name="arrow-back-outline" onPress={goBack} color={'#4DAA50'} size={40} style={{opacity: this.backbuttonOpacity, marginLeft: '4%'}} />
                 <Text style={styles.addItemText}>{keyboardShown ? "Search" : "Add Item"}</Text>
@@ -336,7 +338,7 @@ function FoodResultList({foodList, navigation, route, type, addFoodItemCallback}
   const renderFoodListItem = ({item}) => {
     return (
       <TouchableOpacity style={listStyles.li} onPress={() => handleOpen(item)}>
-        <Image source={{uri: item.imgUrl.url}} style={{width: 55, height: 55, borderRadius: 10, marginRight: 15}} />
+        <Image source={{uri: item.imgUrl.url}} style={{width: 70, height: 70, borderRadius: 10, marginRight: 15}} />
         <View style={listStyles.foodDescription}>
           <Text style={listStyles.foodServingText}>
             {item['household-measure']}
@@ -414,13 +416,12 @@ const listStyles = StyleSheet.create({
   },
   li: {
     flex: 1,
-    height: 90,
     flexDirection: 'row',
     alignItems: 'center',
     marginLeft: 20,
     marginRight: 20,
-    paddingTop: 5,
-    paddingBottom: 5,
+    paddingTop: 20,
+    paddingBottom: 20,
     borderBottomWidth: 1,
     borderColor: '#E2E7EE'
   },
@@ -512,7 +513,8 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   tabText: {
-    fontSize: 20
+    fontSize: 20,
+    color: '#8d8d8d'
   },
   selectedTabText: {
     color: '#aad326',
