@@ -17,12 +17,10 @@ function getDefaultMealType(hours) {
 }
 
 function isValidMeal(meal) {
-    return meal.length !== 0;
+    return meal && meal.beverage.length + meal.main.length + meal.side.length + meal.dessert.length !== 0;
 }
 
-async function handleSubmitMealLog(mealData) {
-    const recordDate = mealData.recordDate;
-    mealData.recordDate = Moment(recordDate).format("DD/MM/YYYY HH:mm:ss");
+async function handleSubmitMealLog(mealData, recordDate) {
     if (isValidMeal(mealData)) {
         let resp = await mealAddLogRequest(mealData);
         if (resp) {

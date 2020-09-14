@@ -2,7 +2,6 @@ import React from 'react';
 import {Text, View, StyleSheet} from "react-native";
 // Components
 import Select from "../../select";
-import Icon from "react-native-vector-icons/FontAwesome";
 
 const options = [{name: "Breakfast", value: "breakfast"},
     {name: "Lunch", value: "lunch"},
@@ -12,8 +11,8 @@ const options = [{name: "Breakfast", value: "breakfast"},
 
 export default function MealTypeSelectionBlock({onSelectChange, defaultValue}) {
     return (
-        <View style={{flexDirection: 'column', width: '100%', paddingLeft: '4%', paddingRight: '4%'}}>
-            <Text style={{paddingBottom: 10, fontSize: 16, fontWeight: 'bold'}}>Meal Type:</Text>
+        <View style={{flexDirection: 'column', paddingTop: 30, paddingBottom: 30, width: '100%'}}>
+            <Text style={{paddingBottom: 10, fontSize: 20}}>Meal Type:</Text>
             <Select
                 defaultValue={defaultValue}
                 options={options}
@@ -26,5 +25,5 @@ export default function MealTypeSelectionBlock({onSelectChange, defaultValue}) {
 const styles = StyleSheet.create({
     selectStyle: {
         height: 43,
-    },
+    }
 })

@@ -8,7 +8,7 @@ export function AuthoriseFitbit(callback_url) {
     const codeResponse = qs.parse(params);
     const authorisationCode = codeResponse['code'].replace(/(_|=|#)/g, '');
     // Make call to get tokens
-    return fetch(fitbitTokenUri, {
+    fetch(fitbitTokenUri, {
         method: "POST",
         headers: {
             Authorization: "Basic " + authorisationHeader,
@@ -22,6 +22,6 @@ export function AuthoriseFitbit(callback_url) {
         })
     }).then(resp => resp.json())
         .then(data => {
-            return postFitbitToken(data);
+            postFitbitToken(data).then(resp => {});
         }).catch(err => alert(err.message));
 }

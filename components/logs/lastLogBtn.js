@@ -17,7 +17,7 @@ import {
 import Entypo from 'react-native-vector-icons/Entypo';
 //function
 import {
-  getLastBgLog, getLastMealLog,
+  getLastBgLog,
   getLastMedicationLog,
   getLastWeightLog,
 } from '../../storage/asyncStorageFunctions';
@@ -25,7 +25,6 @@ import {
 import BloodGlucoseLogDisplay from './bg/bloodGlucoseLogDisplay';
 import MedicationLogDisplay from './medication/medicationLogDisplay';
 import WeightLogDisplay from './weight/weightLogDisplay';
-import ReadOnlyMealDisplay from "./meal/ReadOnlyMealDisplay";
 
 //show last values
 const LastLogButton = (props) => {
@@ -54,10 +53,6 @@ const LastLogButton = (props) => {
       getLastMedicationLog().then((response) => {
         setStates(response);
       });
-    } else if (logType === food_key) {
-      getLastMealLog().then(response => {
-        setStates(response);
-      })
     }
   };
 
@@ -128,11 +123,6 @@ const LastLogButton = (props) => {
       {!none4tdy && logType === weight_key && (
         <WeightLogDisplay data={dataToDisplay} show={show} />
       )}
-      {
-        !none4tdy && logType === food_key && (
-          <ReadOnlyMealDisplay data={dataToDisplay.value} show={show}/>
-        )
-      }
     </>
   );
 };
