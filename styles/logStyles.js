@@ -1,4 +1,4 @@
-import {StyleSheet, Dimensions} from 'react-native';
+import {StyleSheet, Dimensions, Platform} from 'react-native';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 import {Colors} from './colors';
 
@@ -9,7 +9,7 @@ const headerTextFontSize = width * 0.09;
 const normalTextFontSize = width * 0.05;
 const verticalMarginsBetweenComponent = 0.005 * height;
 const horizontalMargins = 0.03 * width;
-const headerHeight = 0.09 * height;
+const headerHeight = Platform.OS === 'ios' ? 0.09 * height : 0.06 * height;
 const boldFontFamily = 'SFProDisplay-Bold';
 const regularFontFamily = 'SFProDisplay-Regular';
 const backArrowMarginLeft = '2%';

@@ -6,6 +6,7 @@ import ProgressBar from "../../progressbar";
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import CircularProgress from "../../dashboard/todayOverview/CircularProgress";
+import logStyles from "../../../styles/logStyles";
 
 const {height, width} = Dimensions.get('window');
 
@@ -25,50 +26,50 @@ export default function FoodModalContent({onClose, selected, children}) {
     }
 
     return (
-        <View style={modalStyles.root}>
-        <ScrollView contentContainerStyle={{padding: 20}}>
-            <View style={modalStyles.header}>
-                <Ionicon name="arrow-back-outline" color={'#4DAA50'} size={40} onPress={onClose} style={modalStyles.closeButton}/>
+        <View style={logStyles.modalContainer}>
+        <ScrollView contentContainerStyle={{flexGrow: 1}}>
+            <View style={[logStyles.menuBarContainer]}>
+                <Ionicon name="arrow-back-outline" color={'#4DAA50'} size={40} onPress={onClose} style={{marginLeft: '2%'}}/>
             </View>
-            <Text style={modalStyles.foodNameText}>
+            <View style={[logStyles.bodyPadding, {flex: 1}]}>
+            <Text style={[logStyles.headersubText, logStyles.componentMargin, {fontSize: 24}]}>
                 {selected['food-name'][0].toUpperCase() + selected['food-name'].slice(1) + ' - ' + selected['household-measure']}
             </Text>
-            <View style={modalStyles.nutritionInfoContainer}>
+            <View style={logStyles.componentMargin}>
                 <Text style={modalStyles.nutrientHeaderText}>Nutrition per serving</Text>
-                <View style={{flexDirection: 'row', minHeight: 100}}>
+                <View style={{flexDirection: 'row', minHeight: 100, justifyContent: 'space-between'}}>
                     {renderNutritionCol(selected.nutrients["energy"], "Cal")}
                     {renderNutritionCol(selected.nutrients["carbohydrate"], "Carb")}
                     {renderNutritionCol(selected.nutrients["total-fat"], "Fat")}
                     {renderNutritionCol(selected.nutrients["protein"], "Protein")}
                 </View>
             </View>
-            <View style={modalStyles.foodInfoButtonsContainer}>
-                <TouchableOpacity style={modalStyles.foodInfoButton} onPress={toggleShowImage}>
-                    <Text style={modalStyles.foodInfoButtonText}>Show Product Image</Text>
-                    <Icon name={showImage ? 'chevron-up' : 'chevron-down'} size={20} color='#000' />
-                </TouchableOpacity>
-                {
-                    showImage && (
-                        <Image source={{uri: selected.imgUrl.url}}
-                               style={modalStyles.image} />
-                    )
-                }
-                <TouchableOpacity style={modalStyles.foodInfoButton} onPress={toggleShowFacts}>
-                    <Text style={modalStyles.foodInfoButtonText}>Show Nutrition Facts</Text>
-                    <Icon name={showFacts ? 'chevron-up' : 'chevron-down'} size={20} color='#000' />
-                </TouchableOpacity>
-                {
-                    showFacts && Object.keys(selected.nutrients).map((nutrient, index) => (
-                       <View style={modalStyles.foodInfoRow}>
-                           <Text style={modalStyles.foodInfoRowNutrientText}>{nutrient[0].toUpperCase() + nutrient.slice(1)}</Text>
-                           <Text style={modalStyles.foodInfoRowQuantityText}>
-                               {    selected.nutrients[nutrient].amount === 'N.A' ? 'N.A' :
-                                    selected.nutrients[nutrient].amount + ' ' + selected.nutrients[nutrient].unit
-                                }
-                           </Text>
-                       </View>
-                    ))
-                }
+            <TouchableOpacity style={[logStyles.componentMargin, modalStyles.foodInfoButton]} onPress={toggleShowImage}>
+                <Text style={modalStyles.foodInfoButtonText}>Show Product Image</Text>
+                <Icon name={showImage ? 'chevron-up' : 'chevron-down'} size={20} color='#000' />
+            </TouchableOpacity>
+            {
+                showImage && (
+                    <Image source={{uri: selected.imgUrl.url}}
+                           style={modalStyles.image} />
+                )
+            }
+            <TouchableOpacity style={[logStyles.componentMargin, modalStyles.foodInfoButton, {marginTop: 15}]} onPress={toggleShowFacts}>
+                <Text style={modalStyles.foodInfoButtonText}>Show Nutrition Facts</Text>
+                <Icon name={showFacts ? 'chevron-up' : 'chevron-down'} size={20} color='#000' />
+            </TouchableOpacity>
+            {
+                showFacts && Object.keys(selected.nutrients).map((nutrient, index) => (
+                   <View key={nutrient} style={modalStyles.foodInfoRow}>
+                       <Text style={modalStyles.foodInfoRowNutrientText}>{nutrient[0].toUpperCase() + nutrient.slice(1)}</Text>
+                       <Text style={modalStyles.foodInfoRowQuantityText}>
+                           {    selected.nutrients[nutrient].amount === 'N.A' ? 'N.A' :
+                                selected.nutrients[nutrient].amount + ' ' + selected.nutrients[nutrient].unit
+                            }
+                       </Text>
+                   </View>
+                ))
+            }
             </View>
         </ScrollView>
             {children}
@@ -125,7 +126,6 @@ const modalStyles = StyleSheet.create({
         backgroundColor: '#E3E7EE',
         borderRadius: 15,
         height: 45,
-        margin: 20,
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'row'
@@ -176,10 +176,6 @@ const modalStyles = StyleSheet.create({
         height: 0.11 * height,
         justifyContent: 'flex-end',
         marginStart: '4%',
-    },
-    nutritionInfoContainer: {
-        paddingLeft: 20,
-        paddingRight: 20,
     },
     nutrientCol: {
         width: (width * 0.92 - 40) / 4,

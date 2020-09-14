@@ -246,7 +246,7 @@ export default class CreateMealLogBlock extends React.Component {
                                 <Text style={{fontSize: 18, color:'#4DAA50', paddingLeft: 7.5}}>Add Item</Text>
                             </View>
                         </TouchableOpacity>
-                        <View style={[globalStyles.pageDetails, {flex: 1, paddingBottom: 15}]}>
+                        <View style={{flex: 1, paddingBottom: 15}}>
                             <FlatList data={foodItems} showScrollIndicator={false} keyExtractor={i => i['food-name']}
                                       renderItem={({item}) => (
                                         <FoodItem item={item}

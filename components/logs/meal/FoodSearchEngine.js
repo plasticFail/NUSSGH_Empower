@@ -13,7 +13,6 @@ import {
   Keyboard,
   Platform,
   KeyboardAvoidingView,
-  ScrollView
 } from 'react-native';
 // Components
 import Searchbar from '../../Searchbar';
@@ -27,6 +26,7 @@ import {requestMealLogList} from "../../../netcalls/mealEndpoints/requestMealLog
 import globalStyles from "../../../styles/globalStyles";
 import logStyles from "../../../styles/logStyles";
 import Modal from 'react-native-modal';
+import {Colors} from "../../../styles/colors";
 // third party lib
 
 const AnimatedKeyboardAvoidingView = Animated.createAnimatedComponent(KeyboardAvoidingView);
@@ -94,7 +94,7 @@ export default class FoodSearchEngineScreen extends React.Component {
       }),
       Animated.timing(this.listResultY, {
         duration: 500,
-        toValue: Platform.OS === 'android' ? 0 : -50,
+        toValue: Platform.OS === 'android' ? -50 : -50,
         useNativeDriver: true
       }),
       Animated.timing(this.backbuttonOpacity, {
@@ -203,8 +203,8 @@ export default class FoodSearchEngineScreen extends React.Component {
     const {query, favouritesQuery, isLoading, foodResults, keyboardShown, selectedTab, recentlyAddedFoodItems} = this.state;
     console.log(selectedTab);
     return (
-        <Modal isVisible={visible} style={{margin: 0}} useNativeDriver={true}>
-          <AnimatedKeyboardAvoidingView enabled={false}
+        <Modal isVisible={visible} style={{margin: 0}} backdropColor={Colors.backgroundColor} useNativeDriver={true}>
+          <AnimatedKeyboardAvoidingView enabled={true}
                                         style={[logStyles.modalContainer, {transform: [{translateY: this.listResultY}]}]}>
             <View style={[logStyles.menuBarContainer]}>
                 <AnimatedIcon name="arrow-back-outline" onPress={goBack} color={'#4DAA50'} size={40} style={{opacity: this.backbuttonOpacity, marginLeft: '2%'}} />
@@ -337,7 +337,7 @@ function FoodResultList({foodList, addFoodItemCallback}) {
   };
   return (
     <React.Fragment>
-      <Modal visible={modalOpen} transparent={true} style={{margin: 0}}>
+      <Modal isVisible={modalOpen} transparent={true} style={{margin: 0}}>
           {selected && (
               <FoodModalContent selected={selected} onClose={handleClose}>
                 <View style={globalStyles.buttonContainer}>
