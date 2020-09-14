@@ -1,3 +1,21 @@
+//comment
+const morningObj = {
+  name: 'Morning',
+  start: 5,
+  end: 12,
+};
+const afternoonObj = {
+  name: 'Afternoon',
+  start: 12,
+  end: 17,
+};
+
+const eveningObj = {
+  name: 'Evening',
+  start: 17,
+  end: 5,
+};
+
 const getGreetingFromHour = (hour) => {
   if (hour > 4 && hour < 12) {
     return 'Morning';
@@ -18,4 +36,6 @@ const isEmpty = (obj) => {
   return true;
 };
 
-export {getGreetingFromHour, isEmpty};
+export {getGreetingFromHour, isEmpty, morningObj, afternoonObj, eveningObj};
+
+//comment
