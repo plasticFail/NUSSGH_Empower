@@ -11,9 +11,9 @@ import {
   storeLastWeightLog,
   getLastBgLog,
   getLastWeightLog,
-  getLastMedicationLog, getLastMealLog,
+  getLastMedicationLog,
 } from '../storage/asyncStorageFunctions';
-import {getGreetingFromHour, getPeriodFromMealType} from './common';
+import {getGreetingFromHour} from './common';
 
 const bg_key = 'Blood Glucose Log';
 const food_key = 'Food Intake Log';
@@ -46,12 +46,11 @@ const isPeriod = (time) => {
   return getGreetingFromHour(hour);
 };
 
-//to add: food - done
+//to add: food*
 const checkLogDone = async (period) => {
   let bg_data = await getLastBgLog();
   let med_data = await getLastMedicationLog();
   let weight_data = await getLastWeightLog();
-  let food_data = await getLastMealLog();
   let completed = [];
   let notCompleted = [];
   if (
@@ -84,15 +83,7 @@ const checkLogDone = async (period) => {
   }
 
   //for now temporary push food to not done
-  if (
-      food_data &&
-      String(getPeriodFromMealType(food_data.value.mealType)) === period &&
-      isToday(food_data.date)
-  ) {
-    completed.push(food_key);
-  } else {
-    notCompleted.push(food_key);
-  }
+  notCompleted.push(food_key);
 
   return {
     completed: completed,

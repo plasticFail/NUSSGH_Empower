@@ -86,13 +86,10 @@ export default function DailyBloodSugarLevelBarChart(props) {
                         ))
                     }
                     {
-                        /*
                         // healthy bounds (lower and upper).
                         <Path key='healthyRange' stroke='none' fill='#F1F6D7'
                               d={`M 0 ${scaleY(lowerBound)} l ${width - paddingLeft - paddingRight + barWidth + 2 * axisMargin} 0
                               l 0 ${-scaleY(upperBound)} l ${-(width - paddingLeft - paddingRight + barWidth + 2 * axisMargin)} 0 Z`}/>
-
-                         */
                     }
                     {
                         // vertical lines for x axis labels
