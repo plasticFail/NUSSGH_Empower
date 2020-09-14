@@ -34,6 +34,12 @@ const SearchMedication = (props) => {
   const [searchResults, setSearchResult] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
+  useEffect(() => {
+    if (parent === med_key) {
+      getMedication2day();
+    }
+  }, []);
+
   //time lag when call api*
   useEffect(() => {
     console.log('search key ' + searchTerm + ' cache ' + searchKeyCache);
@@ -97,7 +103,7 @@ const SearchMedication = (props) => {
         setSearchResult(result);
         setIsLoading(false);
       } else {
-        setSearchResult([]);
+        setSearchResult(arr);
         setIsLoading(false);
       }
     });
@@ -162,14 +168,7 @@ const SearchMedication = (props) => {
           <Text style={styles.cancelText}>Cancel</Text>
         </TouchableOpacity>
       </View>
-      {searchTerm === '' ? (
-        <>
-          <Text style={styles.prompt}>
-            Input your medication for the day in the search bar!
-          </Text>
-          <View style={{flex: 1}} />
-        </>
-      ) : isLoading ? (
+      {isLoading ? (
         <>
           <ActivityIndicator
             size="large"
@@ -196,6 +195,24 @@ const SearchMedication = (props) => {
             />
           )}
         </View>
+      ) : searchTerm === '' ? (
+        parent === med_key ? (
+          <>
+            <Text style={styles.prompt}>
+              You have no set medications. Please add to your medication plan
+              before making a medication log.
+            </Text>
+            <View style={{flex: 1}} />
+          </>
+        ) : (
+          <>
+            <Text style={styles.prompt}>
+              Input the medication you want to add for the day in the search
+              bar!
+            </Text>
+            <View style={{flex: 1}} />
+          </>
+        )
       ) : (
         <>
           <Text style={styles.prompt}>No results for {searchTerm}</Text>
@@ -242,7 +259,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginTop: '50%',
     fontSize: 20,
-    width: '80%',
+    width: '90%',
     textAlign: 'center',
   },
 });

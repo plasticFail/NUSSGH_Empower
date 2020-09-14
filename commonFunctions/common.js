@@ -5,6 +5,31 @@ const afternoon_key = 'Afternoon';
 const evening_key = 'Evening';
 const night_key = 'Night';
 
+const morningObj = {
+  name: 'Morning',
+  start: 5,
+  end: 12,
+};
+const afternoonObj = {
+  name: 'Afternoon',
+  start: 12,
+  end: 17,
+};
+
+const eveningObj = {
+  name: 'Evening',
+  start: 17,
+  end: 5,
+};
+
+const getGreetingFromHour = (hour) => {
+  if (hour > morningObj.start && hour < morningObj.end) {
+    return morningObj.name;
+  } else if (hour >= afternoonObj.start && hour < afternoonObj.end) {
+    return afternoonObj.name;
+  } else {
+    return eveningObj.name;
+
 const getGreetingFromHour = (hour) => {
   if (hour > 4 && hour < 12) {
     return morning_key;
@@ -48,5 +73,6 @@ const isEmpty = (obj) => {
   return true;
 };
 
-export {getGreetingFromHour, isEmpty, night_key,
+export {getGreetingFromHour, isEmpty, morningObj, afternoonObj, eveningObj, night_key,
   evening_key, afternoon_key, morning_key, getPeriodFromMealType, getLastMinuteFromTodayDate, getTodayDate};
+

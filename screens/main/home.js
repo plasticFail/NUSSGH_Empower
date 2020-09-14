@@ -75,7 +75,12 @@ const HomeScreen = (props) => {
 
   useEffect(() => {
     //Refresh every 1 minutes
-    setTimeout(() => setCurrHour(new Date().getHours()), 60000);
+    setTimeout(() => {
+      setCurrHour(new Date().getHours());
+      checkLogDone(getGreetingFromHour(currHour)).then((response) => {
+        setUncompleteLogs(response.notCompleted);
+      });
+    }, 60000);
   });
 
   useEffect(() => {

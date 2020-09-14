@@ -13,12 +13,21 @@ import {
   getLastWeightLog,
   getLastMedicationLog, getLastMealLog,
 } from '../storage/asyncStorageFunctions';
-import {getGreetingFromHour, getPeriodFromMealType} from './common';
+
+import {getGreetingFromHour, morningObj, getPeriodFromMealType} from './common';
+import {getEntry4Day} from '../netcalls/requestsDiary';
+import {
+  filterMorning,
+  filterAfternoon,
+  getTime,
+  getHour,
+} from './diaryFunctions';
 
 const bg_key = 'Blood Glucose Log';
 const food_key = 'Food Intake Log';
 const med_key = 'Medication Log';
 const weight_key = 'Weight Log';
+const activity_key = 'Activity Log';
 const min_bg = 4;
 
 const renderLogIcon = (logType) => {
@@ -34,6 +43,9 @@ const renderLogIcon = (logType) => {
   if (logType === weight_key) {
     return require('../resources/images/weight_logo.png');
   }
+  if (logType === activity_key) {
+    return require('../resources/images/activity_logo.png');
+  }
 };
 
 const isToday = (date) => {
@@ -48,41 +60,53 @@ const isPeriod = (time) => {
 
 //to add: food - done
 const checkLogDone = async (period) => {
+
   let bg_data = await getLastBgLog();
   let med_data = await getLastMedicationLog();
   let weight_data = await getLastWeightLog();
   let food_data = await getLastMealLog();
+
   let completed = [];
   let notCompleted = [];
-  if (
-    bg_data &&
-    String(isPeriod(bg_data.hour)) === period &&
-    isToday(bg_data.date)
-  ) {
-    completed.push(bg_key);
-  } else {
-    notCompleted.push(bg_key);
-  }
+  let bgLogs = [];
+  let foodLogs = [];
+  let medLogs = [];
+  let weightLogs = [];
+  let today = Moment(new Date()).format('YYYY-MM-DD');
 
-  if (
-    med_data &&
-    String(isPeriod(med_data.hour)) === period &&
-    isToday(med_data.date)
-  ) {
-    completed.push(med_key);
-  } else {
-    notCompleted.push(med_key);
-  }
-  if (
-    weight_data &&
-    String(isPeriod(weight_data.hour)) === period &&
-    isToday(weight_data.date)
-  ) {
-    completed.push(weight_key);
-  } else {
-    notCompleted.push(weight_key);
-  }
+  try {
+    let data = await getEntry4Day(String(today));
+    let d = data[today];
+    bgLogs = d.glucose.logs;
+    foodLogs = d.food.logs;
+    medLogs = d.medication.logs;
+    weightLogs = d.weight.logs;
 
+    if (inPeriod(bgLogs, period)) {
+      completed.push(bg_key);
+    } else {
+      notCompleted.push(bg_key);
+    }
+
+    if (inPeriod(foodLogs, period)) {
+      completed.push(food_key);
+    } else {
+      notCompleted.push(food_key);
+    }
+
+    if (inPeriod(medLogs, period)) {
+      completed.push(med_key);
+    } else {
+      notCompleted.push(med_key);
+    }
+
+    if (inPeriod(weightLogs, period)) {
+      completed.push(weight_key);
+    } else {
+      notCompleted.push(weight_key);
+    }
+  } catch (e) {
+    return Alert.alert('Network Error', '', [{text: 'Try again later'}]);
   //for now temporary push food to not done
   if (
       food_data &&
@@ -98,6 +122,20 @@ const checkLogDone = async (period) => {
     completed: completed,
     notCompleted: notCompleted,
   };
+};
+
+const inPeriod = (logs, period) => {
+  if (logs.length === 0) {
+    return false;
+  }
+  for (var x of logs) {
+    let time = getHour(x.record_date);
+    let greeting = getGreetingFromHour(time);
+    if (greeting === period) {
+      return true;
+    }
+  }
+  return false;
 };
 
 const checkBloodGlucose = (bloodGlucose) => {
@@ -243,6 +281,7 @@ export {
   food_key,
   med_key,
   weight_key,
+  activity_key,
   min_bg,
   renderLogIcon,
   isToday,
