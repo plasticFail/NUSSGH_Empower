@@ -3,8 +3,7 @@ import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {ScrollView, FlatList} from 'react-native-gesture-handler';
 //third party library
 import Ionicon from 'react-native-vector-icons/Ionicons';
-import logStyles from '../../../styles/logStyles';
-import {Colors} from '../../../styles/colors';
+import Moment from 'moment';
 
 Ionicon.loadFont();
 
@@ -27,7 +26,6 @@ const SearchResult2 = (props) => {
 
   return (
     <>
-      <Text style={styles.medicineHeader}>Medication for Today</Text>
       <FlatList
         data={medicationList}
         keyExtractor={(item, index) => index.toString()}
@@ -57,13 +55,5 @@ const styles = StyleSheet.create({
   medicineName: {
     fontSize: 20,
     flex: 1,
-  },
-  medicineHeader: {
-    fontSize: 18,
-    marginStart: '2%',
-    fontFamily: 'SFProDisplay-Bold',
-    color: Colors.logFieldColor,
-    marginTop: '3%',
-    marginBottom: '2%',
   },
 });

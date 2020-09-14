@@ -1,30 +1,21 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
   StyleSheet,
   Image,
-  TouchableOpacity,
-  ScrollView,
+  ImageBackground,
+  Dimensions,
 } from 'react-native';
-//component
-import LeftArrowBtn from '../../logs/leftArrowBtn';
-import ProgressContent from './progressContent';
-
+import {TouchableOpacity} from 'react-native-gesture-handler';
 //third party library
 import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import Ionicon from 'react-native-vector-icons/Ionicons';
-//styles
-import {Colors} from '../../../styles/colors';
-import globalStyles from '../../../styles/globalStyles';
-import diaryStyles from '../../../styles/diaryStyles';
-import {renderLogIcon} from '../../../commonFunctions/logFunctions';
-import {
-  maxSteps,
-  maxDuration,
-  maxCalBurnt,
-} from '../../../commonFunctions/diaryFunctions';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+//components
+import Header from './header';
+//function
+import {getTime} from '../../../commonFunctions/diaryFunctions';
 
 const images = {
   run: require('../../../resources/images/activity/type_RUN.png'),
@@ -34,185 +25,126 @@ const images = {
   sports: require('../../../resources/images/activity/type_AEROBICWORKOUT.png'),
   caloriesBurnt: require('../../../resources/images/activity/calories.png'),
   distance: require('../../../resources/images/activity/distance.png'),
-  heart_rate: require('../../../resources/images/activity/heart_rate.png'),
   steps_taken: require('../../../resources/images/activity/steps_taken.png'),
 };
 
-const steps_taken = 'Steps Taken';
-const excerise = 'Exercise';
-const caloriesBurnt = 'Calories Burnt';
+Icon.loadFont();
+AntDesign.loadFont();
 
 const ActivityBlock = (props) => {
-  const {visible, activityLogs, pass, summary, miss, day} = props;
-  const {closeModal} = props;
-  const distance = summary.distance + ' KM';
-  const [expand, setExpand] = useState(true);
-  const scrollViewRef = useRef();
+  const {activity} = props;
+  //format date
+  let dateString = String(activity.record_date);
+  let time = getTime(dateString);
+
+  const img = require('../../../resources/images/activity.jpg');
+  const [modalVisible, setModalVisible] = useState(false);
+  const [activityName, setActivityName] = useState('');
+
+  useEffect(() => {
+    setActivityName(String(activity.name).toUpperCase().replace(/\s/g, ''));
+  }, []);
+
+  //close itself
+  const closeModal = () => {
+    setModalVisible(false);
+  };
 
   return (
-    <Modal
-      isVisible={visible}
-      coverScreen={true}
-      backdropOpacity={1}
-      onBackButtonPress={() => closeModal()}
-      backdropColor={Colors.backgroundColor}
-      style={{margin: 0}}>
-      <LeftArrowBtn close={closeModal} />
-      <Text style={globalStyles.pageHeader}>Activity</Text>
-      <Text style={globalStyles.pageDetails}>{day}</Text>
-      <View style={{flexDirection: 'row', marginTop: '3%'}}>
-        {miss ? (
-          <Text style={globalStyles.pageDetails}>Missed</Text>
-        ) : pass ? (
-          <>
-            <Text style={globalStyles.pageDetails}>
-              {summary.duration} Mins Active
+    <View style={{flexBasis: '33.3%'}}>
+      <TouchableOpacity
+        style={styles.buttonStyle}
+        onPress={() => setModalVisible(true)}>
+        {renderIcon(activityName, false)}
+        <Text style={styles.buttonText1}>Activity</Text>
+        <ImageBackground source={img} style={styles.backgroundImg} />
+      </TouchableOpacity>
+      <Text style={{textAlign: 'center'}}>{time}</Text>
+      <Modal
+        isVisible={modalVisible}
+        animationIn="slideInUp"
+        onBackdropPress={() => setModalVisible(false)}
+        onBackButtonPress={() => setModalVisible(false)}
+        style={{justifyContent: 'flex-end'}}>
+        <Header title={'Activity:' + time} closeModal={closeModal} />
+
+        <View style={styles.modalContainer}>
+          <View style={{flexDirection: 'row', paddingTop: '3%'}}>
+            {renderIcon(activityName, true)}
+            <Text style={styles.details}>
+              {String(activity.name).charAt(0).toUpperCase() +
+                String(activity.name).slice(1)}
             </Text>
-            <Ionicon name="checkmark" style={diaryStyles.passIcon} size={25} />
-          </>
-        ) : (
-          <>
-            <Text style={globalStyles.pageDetails}>
-              {summary.duration} Mins Active
-            </Text>
-            <Ionicon
-              name="alert-circle-outline"
-              style={diaryStyles.failIcon}
-              size={25}
-            />
-          </>
-        )}
-      </View>
-      <Text style={styles.header}>Summary</Text>
-      <View style={styles.border} />
-      <ScrollView
-        style={{flex: 1}}
-        ref={scrollViewRef}
-        onContentSizeChange={() =>
-          scrollViewRef.current.scrollToEnd({animated: true})
-        }>
-        {renderSummaryContent(images.caloriesBurnt, caloriesBurnt, summary)}
-        {renderSummaryContent(images.distance, distance, 'Distance')}
-        {renderSummaryContent(images.walk, steps_taken, summary)}
-        {renderSummaryContent(images.run, excerise, summary, expand, setExpand)}
-        {!expand &&
-          activityLogs.map((item, index) => (
-            <View style={styles.activityBlock} key={item}>
-              {renderIcon(item)}
-              <View>
-                <Text style={styles.content}>{item.duration} Mins</Text>
-                <Text style={styles.contentDetail}>{item.name}</Text>
-              </View>
+            <View style={{flexDirection: 'row', flex: 3}}>
+              <Image
+                source={images.caloriesBurnt}
+                style={{marginStart: '10%'}}
+              />
+              <Text style={styles.details}>
+                {activity.calories} calories burnt
+              </Text>
             </View>
-          ))}
-      </ScrollView>
-    </Modal>
+          </View>
+          <View style={{flexDirection: 'row'}}>
+            <Image source={images.steps_taken} />
+            <Text style={styles.details}>{activity.steps}</Text>
+            <View style={{flexDirection: 'row', flex: 2}}>
+              <AntDesign name="clockcircle" color="#3ec1c1" size={40} />
+              <Text style={styles.details}>{activity.duration} mins</Text>
+            </View>
+          </View>
+        </View>
+      </Modal>
+    </View>
   );
 };
 
-function renderSummaryContent(icon, content, detail, expand, setExpand) {
-  return (
-    <>
-      <View style={{margin: '3%', flexDirection: 'row'}}>
-        <Image source={icon} style={styles.iconImg2} />
-        <View style={{marginStart: '2%'}}>
-          {content === steps_taken ? (
-            <ProgressContent
-              value={detail.steps}
-              target={maxSteps}
-              flip={true}
-              details={steps_taken}
-              small={false}
-            />
-          ) : content === excerise ? (
-            <ProgressContent
-              value={detail.duration}
-              target={maxDuration}
-              flip={true}
-              details={excerise}
-              targetUnit={'Mins'}
-              clickable={expand}
-              chevronDownMethod={setExpand}
-              small={false}
-            />
-          ) : content === caloriesBurnt ? (
-            <ProgressContent
-              value={detail.calories}
-              target={maxCalBurnt}
-              flip={true}
-              details={caloriesBurnt}
-              small={false}
-            />
-          ) : (
-            <>
-              <Text style={styles.content}>{content}</Text>
-              <Text style={styles.contentDetail}>{detail}</Text>
-            </>
-          )}
-        </View>
+function renderIcon(activityName, bool) {
+  if (bool === true) {
+    return (
+      <View style={{marginBottom: '20%'}}>
+        {activityName === 'RUN' ? (
+          <Image source={images.run} style={styles.iconImg2} />
+        ) : activityName === 'WALK' ? (
+          <Image source={images.walk} style={styles.iconImg2} />
+        ) : activityName === 'OUTDOORBIKE' ? (
+          <Image source={images.outdoor_bike} style={styles.iconImg2} />
+        ) : activityName === 'ELLIPTICAL' ? (
+          <Image source={images.elliptical} style={styles.iconImg2} />
+        ) : activityName === 'SPORTS' ? (
+          <Image source={images.sports} style={styles.iconImg2} />
+        ) : (
+          <Icon name="swim" style={styles.iconImg2} size={60} color="#3ec1c1" />
+        )}
       </View>
-      <View style={styles.detailBorder} />
-    </>
-  );
-}
-
-function renderIcon(activity) {
-  let activityName = String(activity.name).toUpperCase().replace(/\s/g, '');
-  return (
-    <View style={{marginBottom: '20%'}}>
-      {activityName === 'RUN' ? (
-        <Image source={images.run} style={styles.iconImg2} />
-      ) : activityName === 'WALK' ? (
-        <Image source={images.walk} style={styles.iconImg2} />
-      ) : activityName === 'OUTDOORBIKE' ? (
-        <Image source={images.outdoor_bike} style={styles.iconImg2} />
-      ) : activityName === 'ELLIPTICAL' ? (
-        <Image source={images.elliptical} style={styles.iconImg2} />
-      ) : activityName === 'SPORTS' ? (
-        <Image source={images.sports} style={styles.iconImg2} />
-      ) : (
-        <Icon name="swim" style={styles.iconImg2} size={60} color="#3ec1c1" />
-      )}
-    </View>
-  );
+    );
+  } else {
+    return (
+      <>
+        {activityName === 'RUN' ? (
+          <Image source={images.run} style={styles.iconImg} />
+        ) : activityName === 'WALK' ? (
+          <Image source={images.walk} style={styles.iconImg} />
+        ) : activityName === 'OUTDOORBIKE' ? (
+          <Image source={images.outdoor_bike} style={styles.iconImg} />
+        ) : activityName === 'ELLIPTICAL' ? (
+          <Image source={images.elliptical} style={styles.iconImg} />
+        ) : activityName === 'SPORTS' ? (
+          <Image source={images.sports} style={styles.iconImg} />
+        ) : (
+          <Icon name="swim" style={styles.iconImg} size={33} color="#3ec1c1" />
+        )}
+      </>
+    );
+  }
 }
 
 export default ActivityBlock;
 
 const styles = StyleSheet.create({
-  header: {
-    fontFamily: 'SFProDisplay-Bold',
-    color: Colors.lastLogValueColor,
-    fontSize: 20,
-    marginTop: '7%',
-    marginStart: '5%',
-  },
-  content: {
-    fontFamily: 'SFProDisplay-Bold',
-    fontSize: 18,
-    marginTop: '7%',
-    marginStart: '5%',
-  },
-  contentDetail: {
-    fontFamily: 'SFProDisplay-Bold',
-    color: Colors.lastLogValueColor,
-    fontSize: 17,
-    marginTop: '7%',
-    marginStart: '5%',
-  },
-  border: {
-    borderWidth: 1,
-    borderColor: Colors.lastLogValueColor,
-    margin: '3%',
-  },
-  detailBorder: {
-    borderWidth: 0.5,
-    borderColor: Colors.lastLogValueColor,
-    margin: '3%',
-  },
-  iconImg2: {
-    height: 50,
-    width: 50,
+  buttonStyle: {
+    width: '100%', // This should be the same size as backgroundImg height
+    padding: 10,
   },
   iconImg: {
     position: 'absolute',
@@ -222,8 +154,46 @@ const styles = StyleSheet.create({
     height: 30,
     resizeMode: 'contain', //resize image so dont cut off
   },
-  activityBlock: {
-    flexDirection: 'row',
-    marginStart: '2%',
+  iconImg2: {
+    height: 50,
+    width: 50,
   },
+  backgroundImg: {
+    width: '100%',
+    height: 120,
+    opacity: 0.2,
+    borderWidth: 0.4,
+    overflow: 'hidden',
+    borderWidth: 2,
+    borderColor: '#aad326',
+  },
+  buttonText1: {
+    position: 'absolute',
+    top: '70%',
+    left: '18%',
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#072d08',
+  },
+  modalContainer: {
+    backgroundColor: 'white',
+    padding: '3%',
+    width: '100%',
+  },
+  actionButton: {
+    borderRadius: 20,
+    margin: '2%',
+    flexDirection: 'row',
+    padding: '10%',
+    alignSelf: 'center',
+    marginVertical: 10,
+    paddingHorizontal: 40,
+    paddingVertical: 6,
+  },
+  actionText: {
+    fontWeight: '700',
+    fontSize: 17,
+    textAlign: 'center',
+  },
+  details: {flex: 1, margin: '3%', fontSize: 20},
 });
