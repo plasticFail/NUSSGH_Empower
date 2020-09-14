@@ -32,7 +32,7 @@ export default function FoodModalContent({onClose, selected, children}) {
                 <Ionicon name="arrow-back-outline" color={'#4DAA50'} size={40} onPress={onClose} style={{marginLeft: '2%'}}/>
             </View>
             <View style={[logStyles.bodyPadding, {flex: 1}]}>
-            <Text style={[logStyles.headersubText, logStyles.componentMargin, {fontSize: 24}]}>
+            <Text style={[logStyles.headersubText, {fontSize: 24}]}>
                 {selected['food-name'][0].toUpperCase() + selected['food-name'].slice(1) + ' - ' + selected['household-measure']}
             </Text>
             <View style={logStyles.componentMargin}>

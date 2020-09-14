@@ -227,7 +227,7 @@ export default class CreateMealLogBlock extends React.Component {
                         <View style={{flex: 1}} />
                     </View>
                     <View style={[logStyles.bodyPadding,{flex: 1}]}>
-                        <Text style={[logStyles.headerText, logStyles.componentMargin]}>Add Meal</Text>
+                        <Text style={[logStyles.headerText]}>Add Meal</Text>
                         <View style={styles.mealNameTextAndIcon}>
                             <TextInput
                                 style={[styles.mealNameTextInput, logStyles.componentMargin]}
@@ -353,9 +353,6 @@ function FoodItem({onImagePress, item, handleDelete, onQuantityChange}) {
 }
 
 const styles = StyleSheet.create({
-    root: {
-
-    },
     mealNameTextAndIcon: {
         display: 'flex',
         flexDirection: 'row',
@@ -365,7 +362,7 @@ const styles = StyleSheet.create({
     mealNameTextInput: {
         height: 50,
         padding: 10,
-        borderColor: '#4d4d4d',
+        borderColor: '#dddddd',
         borderWidth: 1,
         borderRadius: 5,
         flex: 1
@@ -373,32 +370,8 @@ const styles = StyleSheet.create({
     favouriteIcon: {
         paddingLeft: 20
     },
-    rowContent: {
-        display: 'flex',
-        flexDirection: 'row',
-        height: 185,
-        paddingTop: 10
-    },
     button:{
         ...globalStyles.buttonContainer
-    },
-    emptyButton: {
-        width: 80,
-        height: 80,
-        backgroundColor: '#e4e4e4',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    foodImage: {
-        width: 80,
-        height: 80,
-    },
-    buttonText:{
-        color:'#fff',
-        textAlign:'center',
-        fontSize: 22,
-        fontWeight: 'bold'
     },
     foodItem: {
         width: '100%',
@@ -416,8 +389,5 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         flexDirection: 'column',
         flex: 1
-    },
-    header: {
-        justifyContent: 'flex-end',
     }
 });

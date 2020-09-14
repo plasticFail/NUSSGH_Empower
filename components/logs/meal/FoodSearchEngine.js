@@ -201,7 +201,6 @@ export default class FoodSearchEngineScreen extends React.Component {
   render() {
     const {visible, addMealCallback, addFoodItemCallback, goBack} = this.props;
     const {query, favouritesQuery, isLoading, foodResults, keyboardShown, selectedTab, recentlyAddedFoodItems} = this.state;
-    console.log(selectedTab);
     return (
         <Modal isVisible={visible} style={{margin: 0}} backdropColor={Colors.backgroundColor} useNativeDriver={true}>
           <AnimatedKeyboardAvoidingView enabled={true}
@@ -210,7 +209,7 @@ export default class FoodSearchEngineScreen extends React.Component {
                 <AnimatedIcon name="arrow-back-outline" onPress={goBack} color={'#4DAA50'} size={40} style={{opacity: this.backbuttonOpacity, marginLeft: '2%'}} />
             </View>
             <View style={[logStyles.bodyPadding, {flex: 1}]}>
-              <Text style={[logStyles.headerText, logStyles.componentMargin]}>{keyboardShown ? "Search" : "Add Item"}</Text>
+              <Text style={[logStyles.headerText]}>{keyboardShown ? "Search" : "Add Item"}</Text>
             {
               !keyboardShown &&
               (<View style={[logStyles.componentMargin, styles.tabsContainer]}>
@@ -424,14 +423,6 @@ const listStyles = StyleSheet.create({
 });
 
 const styles = StyleSheet.create({
-  header: {
-    height: '18%',
-    justifyContent: 'flex-end'
-  },
-  addItemText: {
-    ...globalStyles.pageHeader,
-    paddingBottom: 10
-  },
   searchPromptBody: {
     display: 'flex',
     flex: 1,
@@ -454,23 +445,6 @@ const styles = StyleSheet.create({
   foodSearchResults: {
     flex: 1,
     alignItems: 'center',
-  },
-  button:{
-    marginBottom:20,
-    paddingTop:20,
-    paddingBottom:20,
-    marginLeft: '3%',
-    marginRight: '3%',
-    backgroundColor:'#aad326',
-    borderRadius:10,
-    borderWidth: 1,
-    borderColor: '#fff'
-  },
-  buttonText: {
-    color: '#000',
-    textAlign: 'center',
-    fontSize: 22,
-    fontWeight: 'bold',
   },
   tabsContainer: {
     flexDirection: 'row',

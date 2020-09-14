@@ -7,9 +7,9 @@ const {width, height} = Dimensions.get('window');
 const statusBarHeight =  getStatusBarHeight();
 const headerTextFontSize = width * 0.09;
 const normalTextFontSize = width * 0.05;
-const verticalMarginsBetweenComponent = 0.005 * height;
+const verticalMarginsBetweenComponent = 0.01 * height;
 const horizontalMargins = 0.03 * width;
-const headerHeight = Platform.OS === 'ios' ? 0.09 * height : 0.06 * height;
+const headerHeight = Platform.OS === 'ios' ? 0.09 * height : 0.07 * height;
 const boldFontFamily = 'SFProDisplay-Bold';
 const regularFontFamily = 'SFProDisplay-Regular';
 const backArrowMarginLeft = '2%';
@@ -27,9 +27,8 @@ const logStyles = StyleSheet.create({
   bodyPadding: {
       marginLeft: horizontalMargins,
       marginRight: horizontalMargins,
-      marginTop: verticalMarginsBetweenComponent,
       paddingLeft: '3%',
-      paddingRight: '3%'
+      paddingRight: '3%',
   },
   componentMargin: {
       marginTop: verticalMarginsBetweenComponent,
@@ -98,7 +97,6 @@ const logStyles = StyleSheet.create({
   },
   fieldName: {
     fontSize: 18,
-    marginStart: '4%',
     fontFamily: 'SFProDisplay-Bold',
     color: Colors.logFieldColor,
     marginTop: '3%',
@@ -106,7 +104,6 @@ const logStyles = StyleSheet.create({
   inputField: {
     padding: '3%',
     backgroundColor: 'white',
-    margin: '4%',
     borderRadius: 9.5,
     borderWidth: 1,
     borderColor: '#e2e8ee',
@@ -116,13 +113,12 @@ const logStyles = StyleSheet.create({
   lastLogContainer: {
     backgroundColor: Colors.lastLogButtonColor,
     padding: '3%',
-    margin: '3%',
     borderRadius: 9.31,
     flexDirection: 'row',
+    alignItems: 'center'
   },
   lastLogDetail: {
     fontSize: 18,
-    marginStart: '4%',
     fontFamily: 'SFProDisplay-Regular',
     color: 'white',
   },
@@ -134,7 +130,6 @@ const logStyles = StyleSheet.create({
   },
   lastLogDate: {
     fontSize: 18,
-    marginStart: '4%',
     fontFamily: 'SFProDisplay-Bold',
     color: Colors.logFieldColor,
   },

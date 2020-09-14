@@ -224,13 +224,17 @@ class AddLogScreen extends Component {
             coverScreen={true}
             backdropOpacity={1}
             onBackButtonPress={this.closeModal}
+            style={{margin: 0}}
             backdropColor={Colors.backgroundColor}>
             <View style={logStyles.modalContainer}>
-              <CrossBtn close={this.closeModal} />
-              <Text style={globalStyles.pageHeader}>Add Log</Text>
-              <Text style={globalStyles.pageDetails}>{selectedLogType}</Text>
+              <View style={logStyles.menuBarContainer}>
+                <CrossBtn close={this.closeModal} />
+              </View>
+              <View style={[logStyles.bodyPadding, {flex: 1}]}>
+              <Text style={[logStyles.headerText]}>Add Log</Text>
+              <Text style={[logStyles.headersubText, logStyles.componentMargin]}>{selectedLogType}</Text>
               <LastLogButton logType={selectedLogType} />
-              <Text style={logStyles.fieldText}>
+              <Text style={[logStyles.greyText, logStyles.componentMargin]}>
                 Fill in if you wish to add a new record
               </Text>
               <DateSelectionBlock date={recordDate} setDate={this.setDate} />
@@ -248,6 +252,7 @@ class AddLogScreen extends Component {
                   color={Colors.nextBtnColor}
                 />
               </TouchableOpacity>
+              </View>
             </View>
             {/*Modal for the different form types */}
             <BloodGlucoseLogBlock

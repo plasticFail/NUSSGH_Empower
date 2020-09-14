@@ -90,23 +90,21 @@ const LastLogButton = (props) => {
             </Text>
           )}
         </View>
-        <View style={{alignSelf: 'flex-end'}}>
-          {show === false ? (
-            <Entypo
-              name="chevron-down"
-              size={30}
-              color="white"
-              onPress={() => setShow(true)}
-            />
-          ) : (
-            <Entypo
-              name="chevron-up"
-              size={30}
-              color="white"
-              onPress={() => setShow(false)}
-            />
-          )}
-        </View>
+        {show === false ? (
+          <Entypo
+            name="chevron-down"
+            size={30}
+            color="white"
+            onPress={() => setShow(true)}
+          />
+        ) : (
+          <Entypo
+            name="chevron-up"
+            size={30}
+            color="white"
+            onPress={() => setShow(false)}
+          />
+        )}
       </TouchableOpacity>
       {!none4tdy && logType === bg_key && (
         <BloodGlucoseLogDisplay data={dataToDisplay} show={show} />
