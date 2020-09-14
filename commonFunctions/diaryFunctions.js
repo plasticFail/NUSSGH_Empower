@@ -1,5 +1,12 @@
 import moment from 'moment';
 
+const maxCarbs = 150; //grams
+const maxProtein = 112; //grams
+const maxFats = 50; //grams
+const maxCalBurnt = 500;
+const maxSteps = 2000;
+const maxDuration = 150; //min
+
 const getDateObj = (dateString) => {
   let dateMomentObject = moment(dateString, 'DD/MM/YYYY HH:mm:ss');
   let dateObject = dateMomentObject.toDate();

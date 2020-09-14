@@ -33,7 +33,6 @@ const logStyles = StyleSheet.create({
     right: '7%',
     width: 40,
     height: 40,
-    resizeMode: 'contain', //resize image so dont cut off
   },
   //modal content
   modalContainer: {
