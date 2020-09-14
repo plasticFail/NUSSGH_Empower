@@ -62,11 +62,11 @@ const MedBlock = (props) => {
       onBackButtonPress={() => closeModal()}
       backdropColor={Colors.backgroundColor}
       style={{margin: 0}}>
+      <LeftArrowBtn close={closeModal} />
+      <Text style={globalStyles.pageHeader}>Medication</Text>
+      <Text style={globalStyles.pageDetails}>{day}</Text>
+      <MissedContent arr={missedArr} type={med_key} />
       <ScrollView style={{flex: 1}}>
-        <LeftArrowBtn close={closeModal} />
-        <Text style={globalStyles.pageHeader}>Medication</Text>
-        <Text style={globalStyles.pageDetails}>{day}</Text>
-        <MissedContent arr={missedArr} type={med_key} />
         {/*Show time section and data for log*/}
         <TimeSection name={morningObj.name} />
         {renderMedLogs(morningMedLogs, editLog)}
