@@ -1,3 +1,4 @@
+/*
 import React, {Component} from 'react';
 import {View, Text, StyleSheet, Image, Alert, ScrollView} from 'react-native';
 // third party lib
@@ -686,3 +687,4 @@ const styles = StyleSheet.create({
 });
 
 export default DailyLog;
+ */

@@ -11,9 +11,10 @@ import {
   storeLastWeightLog,
   getLastBgLog,
   getLastWeightLog,
-  getLastMedicationLog,
+  getLastMedicationLog, getLastMealLog,
 } from '../storage/asyncStorageFunctions';
-import {getGreetingFromHour, morningObj} from './common';
+
+import {getGreetingFromHour, morningObj, getPeriodFromMealType} from './common';
 import {getEntry4Day} from '../netcalls/requestsDiary';
 import {
   filterMorning,
@@ -57,8 +58,14 @@ const isPeriod = (time) => {
   return getGreetingFromHour(hour);
 };
 
-//to add: food*
+//to add: food - done
 const checkLogDone = async (period) => {
+
+  let bg_data = await getLastBgLog();
+  let med_data = await getLastMedicationLog();
+  let weight_data = await getLastWeightLog();
+  let food_data = await getLastMealLog();
+
   let completed = [];
   let notCompleted = [];
   let bgLogs = [];
@@ -100,6 +107,15 @@ const checkLogDone = async (period) => {
     }
   } catch (e) {
     return Alert.alert('Network Error', '', [{text: 'Try again later'}]);
+  //for now temporary push food to not done
+  if (
+      food_data &&
+      String(getPeriodFromMealType(food_data.value.mealType)) === period &&
+      isToday(food_data.date)
+  ) {
+    completed.push(food_key);
+  } else {
+    notCompleted.push(food_key);
   }
 
   return {
