@@ -53,3 +53,4 @@ const diaryStyles = StyleSheet.create({
 });
 
 export default diaryStyles;
+//comment
