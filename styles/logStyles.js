@@ -1,7 +1,58 @@
-import {StyleSheet} from 'react-native';
+import {StyleSheet, Dimensions} from 'react-native';
+import { getStatusBarHeight } from 'react-native-status-bar-height';
 import {Colors} from './colors';
 
+const {width, height} = Dimensions.get('window');
+// typical variables
+const statusBarHeight =  getStatusBarHeight();
+const headerTextFontSize = width * 0.09;
+const normalTextFontSize = width * 0.05;
+const verticalMarginsBetweenComponent = 0.005 * height;
+const horizontalMargins = 0.03 * width;
+const headerHeight = 0.09 * height;
+const boldFontFamily = 'SFProDisplay-Bold';
+const regularFontFamily = 'SFProDisplay-Regular';
+const backArrowMarginLeft = '2%';
+
 const logStyles = StyleSheet.create({
+  //added
+  menuBarContainer: {
+      height: statusBarHeight + headerHeight,
+      marginLeft: horizontalMargins,
+      marginRight: horizontalMargins,
+      marginBottom: verticalMarginsBetweenComponent,
+      alignItems: 'flex-end',
+      flexDirection: 'row',
+  },
+  bodyPadding: {
+      marginLeft: horizontalMargins,
+      marginRight: horizontalMargins,
+      marginTop: verticalMarginsBetweenComponent,
+      paddingLeft: '3%',
+      paddingRight: '3%'
+  },
+  componentMargin: {
+      marginTop: verticalMarginsBetweenComponent,
+      marginBottom: verticalMarginsBetweenComponent,
+  },
+  headerText: {
+      fontSize: headerTextFontSize,
+      fontFamily: boldFontFamily
+  },
+  headersubText: {
+      fontSize: normalTextFontSize,
+      fontFamily: boldFontFamily,
+  },
+  normalText: {
+      fontSize: normalTextFontSize,
+      fontFamily: regularFontFamily,
+  },
+  greyText: {
+      fontSize: normalTextFontSize,
+      fontFamily: regularFontFamily,
+      color: Colors.logFieldColor
+  },
+  // previous
   logItem: {
     backgroundColor: 'white',
     borderRadius: 9.31,

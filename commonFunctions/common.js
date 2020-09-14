@@ -29,18 +29,8 @@ const getGreetingFromHour = (hour) => {
     return afternoonObj.name;
   } else {
     return eveningObj.name;
-
-const getGreetingFromHour = (hour) => {
-  if (hour > 4 && hour < 12) {
-    return morning_key;
-  } else if (hour >= 12 && hour < 18) {
-    return afternoon_key;
-  } else if (hour >= 18 && hour < 22) {
-    return evening_key;
-  } else {
-    return night_key;
   }
-};
+}
 
 const getPeriodFromMealType = (mealType) => {
   switch (mealType) {

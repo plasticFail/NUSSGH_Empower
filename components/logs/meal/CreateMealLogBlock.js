@@ -219,15 +219,18 @@ export default class CreateMealLogBlock extends React.Component {
     render() {
         const {isFavourite, mealName, selected, modalOpen, foodItems, showFoodSearchEngineModal, success} = this.state;
         const {mealType, recordDate, parent, closeModal, closeParent, visible} = this.props;
-        return ( visible &&
+        return (
             <Modal visible={visible} transparent={true}>
                 <View style={[logStyles.modalContainer, styles.root]}>
-                    <View style={{flexGrow: 1, padding: 20}}>
+                    <View style={logStyles.menuBarContainer}>
                         <CrossBtn close={closeModal} />
-                        <Text style={[globalStyles.pageHeader, {marginBottom: 10}]}>Add Meal</Text>
-                        <View style={[globalStyles.pageDetails, styles.mealNameTextAndIcon]}>
+                        <View style={{flex: 1}} />
+                    </View>
+                    <View style={[logStyles.bodyPadding,{flex: 1}]}>
+                        <Text style={[logStyles.headerText, logStyles.componentMargin]}>Add Meal</Text>
+                        <View style={styles.mealNameTextAndIcon}>
                             <TextInput
-                                style={styles.mealNameTextInput}
+                                style={[styles.mealNameTextInput, logStyles.componentMargin]}
                                 placeholder="Give your meal a name! (optional)"
                                 value={mealName}
                                 onChangeText={this.handleMealNameChange}
@@ -236,11 +239,11 @@ export default class CreateMealLogBlock extends React.Component {
                                   onPress={this.toggleFavouriteIcon}
                                   style={styles.favouriteIcon}/>
                         </View>
-                        <Text style={[globalStyles.pageDetails, {fontSize: 18, color:"#8A8A8E", fontWeight: 'bold'}]} >Food intake</Text>
+                        <Text style={[logStyles.componentMargin, {fontSize: 18, color:"#8A8A8E", fontWeight: 'bold'}]} >Food intake</Text>
                         <TouchableOpacity onPress={this.redirectToFoodSearchEngine}>
-                            <View style={[globalStyles.pageDetails, {flexDirection: 'row', alignItems: 'center'}]}>
+                            <View style={[logStyles.componentMargin, {flexDirection: 'row', alignItems: 'center'}]}>
                                 <Icon name='plus-square' size={30} color='#4DAA50' />
-                                <Text style={{fontSize: 18, color:'#4DAA50', paddingTop: 20, paddingBottom: 20, paddingLeft: 5}}>Add Item</Text>
+                                <Text style={{fontSize: 18, color:'#4DAA50', paddingLeft: 7.5}}>Add Item</Text>
                             </View>
                         </TouchableOpacity>
                         <View style={[globalStyles.pageDetails, {flex: 1, paddingBottom: 15}]}>

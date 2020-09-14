@@ -13,13 +13,10 @@ import {getToken} from '../storage/asyncStorageFunctions';
 import {mapStateToProps, mapDispatchToProps} from '../redux/reduxMapping';
 import {isTokenValidRequest} from '../netcalls/requestsAuth';
 //other screens
-import DashBoard from './dashboard';
 import Login from './login/login';
 import ForgetPasswordScreen from './login/ForgetPasswordScreen';
 import InputOTPScreen from './login/inputOTPScreen';
 import ResetPasswordScreen from './login/resetPassword';
-import DailyLog from './main/log/dailyLog';
-import MealLogRoot from './main/log/meal/MealLogRoot';
 import DiaryDetail from './main/diary/diaryDetail';
 
 //components

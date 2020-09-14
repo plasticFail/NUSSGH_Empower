@@ -72,7 +72,7 @@ const HomeScreen = (props) => {
   const [carb, setCarb] = React.useState(null);
   const [fat, setFat] = React.useState(null);
   const [stepsTaken, setStepsTaken] = React.useState(null);
-
+  /*
   useEffect(() => {
     //Refresh every 1 minutes
     setTimeout(() => {
@@ -82,12 +82,13 @@ const HomeScreen = (props) => {
       });
     }, 60000);
   });
+  */
 
   useEffect(() => {
     props.navigation.addListener('focus', () => {
       checkLogDone(getGreetingFromHour(currHour)).then((response) => {
         setUncompleteLogs(response.notCompleted);
-      });
+      }).catch(err => console.log(err));
 
       // reload nutrition data
       requestNutrientConsumption(getTodayDate(), getLastMinuteFromTodayDate()).then(data => {
@@ -100,7 +101,7 @@ const HomeScreen = (props) => {
         setProtein(proteinAmount);
         setCarb(carbAmount);
         setFat(fatAmount);
-      });
+      }).catch(err => console.log(err));
       // reload diary data
       const d = Moment(new Date()).format("YYYY-MM-DD");
       getEntry4Day(d).then(data => {
@@ -119,7 +120,7 @@ const HomeScreen = (props) => {
           setWeight(averageWeight);
         }
         setStepsTaken(steps);
-      });
+      }).catch(err => console.log(err));
 
     });
   }, []);

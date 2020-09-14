@@ -81,7 +81,7 @@ export default function MealList({filterQuery, meals, options, onMealAdd}) {
                             onPress={handleCloseModal}/>
                         <View style={{height: '65%', backgroundColor: '#F7F7FB'}}>
                             <Icon onPress={handleCloseModal} style={{padding: 15}} color='#4DAA50' name='chevron-down' size={34}/>
-                            <ScrollView style={{flex: 1}} contentContainerStyle={{flexGrow: 1, paddingLeft: 15, paddingRight: 15}}>
+                            <ScrollView style={{flex: 1}} contentContainerStyle={{flexGrow: 1}}>
                                 <View>
                                     <Text style={{fontSize: 32, fontWeight: "bold"}}>Meal Info</Text>
                                     <Text style={{fontSize: 24, fontWeight: "bold", paddingTop: '3%'}}>{selectedMeal.mealName}</Text>
@@ -111,9 +111,9 @@ export default function MealList({filterQuery, meals, options, onMealAdd}) {
 
 const styles = StyleSheet.create({
     listContainer: {
-        padding: 20,
         borderColor: '#cfcfcf',
-        flexGrow: 1
+        flexGrow: 1,
+        paddingTop: 10
     },
     button: {
         width: '90%',
