@@ -1,4 +1,11 @@
 import moment from 'moment';
+import {
+  morningObj,
+  afternoonObj,
+  eveningObj,
+  getGreetingFromHour,
+} from './common';
+import {getMedication4Day} from '../netcalls/requestsLog';
 
 const maxCarbs = 150; //grams
 const maxProtein = 112; //grams
@@ -27,15 +34,14 @@ const getTime = (dateString) => {
 const getHour = (dateString) => {
   if (dateString != null) {
     let timeString = getTime(dateString);
-    let hourString = timeString.substring(0, 6).trim().replace(/[:]/, '');
+    let hourString = timeString.substring(0, 4).trim().replace(/[:]/, '');
     return Number(hourString);
   }
 };
 
-const getDateRange = (value) => {
-  let now = new Date();
-  let startDate = moment(now).subtract(value, 'days');
-  return getDateArray(startDate.toDate(), now);
+const getDateRange = (value, fromDate) => {
+  let startDate = moment(fromDate).subtract(value, 'days');
+  return getDateArray(startDate.toDate(), fromDate);
 };
 
 const getDateArray = (startDate, stopDate) => {
@@ -47,7 +53,7 @@ const getDateArray = (startDate, stopDate) => {
     current = moment(current).add(1, 'days');
   }
 
-  return dateArr.reverse();
+  return dateArr;
 };
 
 //pass a food item - beverage, main etc in to get [carbs, protein, fats] count
@@ -245,5 +251,3 @@ export {
   getMissedArr,
   renderGreetingText,
 };
-
-//comment

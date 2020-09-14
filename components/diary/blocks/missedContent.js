@@ -41,5 +41,3 @@ const styles = StyleSheet.create({
     fontSize: 17,
   },
 });
-
-//comment

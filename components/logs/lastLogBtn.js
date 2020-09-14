@@ -33,8 +33,6 @@ const LastLogButton = (props) => {
   const [none4tdy, setnone4tdy] = useState(true);
   const [dataToDisplay, setDataToDisplay] = useState({});
   const [show, setShow] = useState(false);
-  const [height, setHeight] = useState(0);
-  const dropDownAnimation = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     getLastLog();
@@ -64,15 +62,6 @@ const LastLogButton = (props) => {
     }
   };
 
-  const getHeight = (event) => {
-    setHeight(event.nativeEvent.layout.height);
-  };
-
-  dropDownAnimation.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0, height],
-  });
-
   return (
     <>
       <TouchableOpacity
@@ -80,7 +69,7 @@ const LastLogButton = (props) => {
         onPress={() => setShow(!show)}>
         <View style={{marginEnd: '4%'}}>
           <Image
-            source={renderLogIcon(bg_key)}
+            source={renderLogIcon(logType)}
             style={logStyles.mini_loglogo}
           />
         </View>
