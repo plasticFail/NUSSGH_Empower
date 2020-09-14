@@ -1,11 +1,8 @@
 import {getDiaryEntries} from './urls';
 import {getToken} from '../storage/asyncStorageFunctions';
-import moment from 'moment';
 
 const getEntry4Day = async (dateString) => {
-  let anotherDate = moment(dateString).add(1, 'days').format('YYYY-MM-DD');
-  let link =
-    getDiaryEntries + '?start=' + dateString + '&end=' + String(anotherDate);
+  let link = getDiaryEntries + '?start=' + dateString + '&end=' + dateString;
   let response = await fetch(link, {
     method: 'GET',
     headers: {

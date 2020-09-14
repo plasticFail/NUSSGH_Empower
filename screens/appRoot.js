@@ -19,9 +19,7 @@ import ForgetPasswordScreen from './login/ForgetPasswordScreen';
 import InputOTPScreen from './login/inputOTPScreen';
 import ResetPasswordScreen from './login/resetPassword';
 import DailyLog from './main/log/dailyLog';
-import MealLogRoot from './main/log/meal/MealLogRoot';
 import DiaryDetail from './main/diary/diaryDetail';
-
 //components
 import HeaderBackIcon from '../components/common/headerBackIcon';
 import HeaderBackIconClick from '../components/common/headerBackIconClick';
@@ -131,80 +129,6 @@ class AppRoot extends Component {
                     headerRight: () => <View />,
                     headerBackTitleVisible: false,
                   }}
-                />
-                <Stack.Screen
-                  name="MealLogRoot"
-                  component={MealLogRoot}
-                  options={({route, navigation}) => ({
-                    title: 'Meal Log',
-                    headerBackImage: () => <HeaderBackIcon />,
-                    headerRight: () => <View />,
-                    headerBackTitleVisible: false,
-                  })}
-                />
-                <Stack.Screen
-                  name={'CreateMealLog'}
-                  component={CreateMealLogScreen}
-                  options={({route, navigation}) => ({
-                    animationEnabled: true,
-                    title: 'Create Meal Log',
-                    headerBackImage: () => (
-                      <HeaderBackIconClick
-                        clickFunc={() => {
-                          if (route.params.edited) {
-                            // Confirmation message before going back.
-                            // If the meal has been edited, this dialogue will be popped.
-                            // otherwise the user will be sent back to the previous page.
-                            Alert.alert(
-                              'Going back?',
-                              'You have not submitted your meal log. Are you sure you want to leave this page?',
-                              [
-                                {
-                                  text: 'Ok',
-                                  onPress: navigation.goBack,
-                                },
-                                {
-                                  text: 'Cancel',
-                                  onPress: () => {},
-                                },
-                              ],
-                            );
-                          } else {
-                            navigation.goBack();
-                          }
-                        }}
-                      />
-                    ),
-                    headerRight: () => <View />,
-                    headerBackTitleVisible: false,
-                  })}
-                />
-                <Stack.Screen
-                  name={'FavouriteMeal'}
-                  component={FavouriteMealScreen}
-                  options={({route, navigation}) => ({
-                    title: 'Favourites',
-                    headerBackImage: () => <HeaderBackIcon />,
-                    headerRight: () => <View />,
-                    ...TransitionPresets.ModalTransition,
-                    headerBackTitleVisible: false,
-                  })}
-                />
-                <Stack.Screen
-                  name={'RecentMeal'}
-                  component={RecentMealScreen}
-                  options={({route, navigation}) => ({
-                    title: 'Recent',
-                    headerBackImage: () => <HeaderBackIcon />,
-                    headerRight: () => <View />,
-                    ...TransitionPresets.ModalTransition,
-                    headerBackTitleVisible: false,
-                  })}
-                />
-                <Stack.Screen
-                  name={'FoodSearchEngine'}
-                  component={FoodSearchEngineScreen}
-                  options={{headerShown: false}}
                 />
                   */
                 }

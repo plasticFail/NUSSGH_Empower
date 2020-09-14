@@ -107,15 +107,13 @@ const SelectMedicationModalContent = (props) => {
         </View>
 
         {/*Search Modal */}
-        {openSearchModal ? (
-          <SearchMedication
-            parent={med_key}
-            visible={openSearchModal}
-            closeModal={() => setOpenSearchModal(false)}
-            selectedMedicine={selectedMedicine}
-            setSelectedMedicine={setSelectedMedicine}
-          />
-        ) : null}
+        <SearchMedication
+          parent={med_key}
+          visible={openSearchModal}
+          closeModal={() => setOpenSearchModal(false)}
+          selectedMedicine={selectedMedicine}
+          setSelectedMedicine={setSelectedMedicine}
+        />
       </View>
     </Modal>
   );
