@@ -62,6 +62,7 @@ class TargetBlock extends Component {
       fats: 0,
       protein: 0,
       foodPass: true,
+      medInProgress: false,
       medCompleted: false,
       activityPass: true,
 
@@ -104,6 +105,7 @@ class TargetBlock extends Component {
         activityTarget: d.activity.summary_target,
         activitySummary: d.activity.summary,
       });
+
       this.getAllResult();
     });
   };
