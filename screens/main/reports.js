@@ -5,6 +5,7 @@ import MenuBtn from '../../components/menuBtn';
 import BarChart from "../../components/dashboard/reports/BarChart";
 import LineChart from "../../components/dashboard/reports/LineChart";
 import Icon from "react-native-vector-icons/FontAwesome5";
+import {PieChart} from "../../components/dashboard/reports/SimplePieChart";
 
 const tabs = [
   {name: 'Blood Glucose', icon: 'tint'},
@@ -34,15 +35,15 @@ const ReportsScreen = (props) => {
       <ScrollView style={{...styles.screen, ...props.style}} contentContainerStyle={{flexGrow: 1}}>
         <View style={{...globalStyles.pageContainer}}>
           <MenuBtn />
-          <Text style={styles.headerText}>Report</Text>
-          <ReportsTabs style={{paddingLeft: padding, paddingBottom: padding}}
-                       currentTab={tabIndex} setTabCallback={(index) => setTabIndex(index)} />
+          <Text style={globalStyles.pageHeader}>Report</Text>
+          <ReportsTabs currentTab={tabIndex} setTabCallback={(index) => setTabIndex(index)} />
           {
             tabIndex === 0 ?
                 <BarChart width={width} height={300}/> :
                 tabIndex === 1 ?
                     <LineChart width={width} height={300} /> :
-                    null
+                    tabIndex === 2 ?
+                        <PieChart /> : null
           }
         </View>
       </ScrollView>
@@ -78,12 +79,6 @@ function TimeFilterTab(props) {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-  },
-  headerText: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    padding: 15,
-    paddingLeft: 20
   }
 });
 

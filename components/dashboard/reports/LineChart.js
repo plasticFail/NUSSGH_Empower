@@ -36,7 +36,6 @@ const paddingRight = 25;
 const xAxisGapFromText = 15;
 const yAxisGapFromText = 12;
 const axisMargin = 5;
-const barWidth = 9.5;
 let xAxisTextFontSize = 12;
 const yAxisTextFontSize = 12;
 const stepSize = 2;
@@ -51,9 +50,15 @@ const showYAxis = true;
 const showYAxisLines = true;
 
 // bar label properties
-const barLabelHeight = 20;
-const barLabelWidth = 30;
+const barLabelHeight = 25;
+const barLabelWidth = 35;
 const barLabelYOffset = 10;
+const barLabelFontSize = 14;
+const barLabelTextYOffset = barLabelFontSize/2;
+
+const pointRadius = 5;
+const strokeColor = 'slateblue';
+const strokeWidth = 1.5;
 
 export default function LineChart(props) {
     const [selectedIndex, setSelectedIndex] = React.useState(-1);
@@ -106,14 +111,14 @@ export default function LineChart(props) {
                     <Path stroke={axisLabelColour} d={`M ${paddingLeft - axisMargin} ${scaleY(yAxisStartsFrom)} l ${width - paddingLeft - paddingRight + 2 * axisMargin} 0`} />
                 }
                 {
-                    // plot points
-                    data.map((d, index) => (
-                        <Circle cx={scaleX(d.x)} cy={scaleY(d.y)} r={3} fill='#000' onPress={()=>setSelectedIndex(index)} />
-                    ))
+                    // plot lines
+                    <LinePlot data={data} scaleX={scaleX} scaleY={scaleY} lineColor={strokeColor} lineWidth={strokeWidth} />
                 }
                 {
-                    // plot lines
-                    <LinePlot data={data} scaleX={scaleX} scaleY={scaleY} lineColor='slateblue' />
+                    // plot points
+                    data.map((d, index) => (
+                        <Circle cx={scaleX(d.x)} cy={scaleY(d.y)} r={pointRadius} fill='#000' onPress={()=>setSelectedIndex(index)} />
+                    ))
                 }
                 {
                     // bar labels: rectangle, triangle and text
@@ -139,8 +144,9 @@ export default function LineChart(props) {
                                 x={scaleX(d.x) - barLabelWidth / 2}
                             />
                             <SvgText opacity={selectedIndex === index ? 1 : 0}
-                                     fontSize={11}
-                                     y={scaleY(d.y) - barLabelHeight + 11/3} textAnchor='middle'
+                                     fontSize={barLabelFontSize}
+                                     fontWeight='bold'
+                                     y={scaleY(d.y) - barLabelHeight + barLabelTextYOffset} textAnchor='middle'
                                      x={scaleX(d.x)} fill='#fff'>
                                 {d.y}
                             </SvgText>
@@ -168,7 +174,7 @@ function LinePlot({data, scaleX, scaleY, lineColor, lineWidth}) {
             const dy = nextY - currY;
             const dx = nextX - currX;
             // draw a line from the current data point to the next data point.
-            const p = <Path stroke={lineColor}
+            const p = <Path stroke={lineColor} strokeWidth={lineWidth || 1}
                             d={`M ${currX} ${currY} l ${dx} ${dy}`}
             />;
             result.push(p);

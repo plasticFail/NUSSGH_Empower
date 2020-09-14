@@ -42,9 +42,11 @@ const yAxisTextFontSize = 12;
 const stepSize = 2;
 const yAxisStartsFrom = 0;
 // bar label properties
-const barLabelHeight = 20;
-const barLabelWidth = 30;
+const barLabelHeight = 25;
+const barLabelWidth = 35;
 const barLabelYOffset = 10;
+const barLabelFontSize = 14;
+const barLabelTextYOffset = barLabelFontSize / 2;
 
 const axisColour = '#cdcdcd';
 const axisLabelColour = '#8d8d8d';
@@ -169,8 +171,9 @@ export default function BarChart(props) {
                                     x={scaleX(d.x) - barLabelWidth / 2}
                                 />
                                 <SvgText opacity={selectedIndex === index ? 1 : 0}
-                                         fontSize={11}
-                                         y={scaleY(d.y) - barLabelHeight + 11/3} textAnchor='middle'
+                                         fontSize={barLabelFontSize}
+                                         fontWeight='bold'
+                                         y={scaleY(d.y) - barLabelHeight + barLabelTextYOffset} textAnchor='middle'
                                          x={scaleX(d.x)} fill='#fff'>
                                     {d.y}
                                 </SvgText>

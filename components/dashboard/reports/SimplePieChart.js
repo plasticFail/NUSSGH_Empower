@@ -52,14 +52,14 @@ const generateCoordinates = percent => {
     return [x, y];
 };
 
-const size = 700;
 export function PieChart({style}) {
+    const size = 50;
     const radius = size / 2;
     const viewBox = `-${radius} -${radius} ${size} ${size}`;
     let cumulativePercent = 0;
 
     return (
-        <View style={[style, { width: size, height: size}]}>
+        <View style={[style, { width: size, height: size, backgroundColor: 'pink'}]}>
             <Svg
                 width={size}
                 height={size}

@@ -9,7 +9,7 @@ const headerTextFontSize = width * 0.09;
 const normalTextFontSize = width * 0.05;
 const verticalMarginsBetweenComponent = 0.01 * height;
 const horizontalMargins = 0.03 * width;
-const headerHeight = Platform.OS === 'ios' ? 0.09 * height : 0.07 * height;
+const headerHeight = 0.07 * height;
 const boldFontFamily = 'SFProDisplay-Bold';
 const regularFontFamily = 'SFProDisplay-Regular';
 const backArrowMarginLeft = '2%';
