@@ -197,3 +197,5 @@ const styles = StyleSheet.create({
   },
   details: {flex: 1, margin: '3%', fontSize: 20},
 });
+
+//comment
