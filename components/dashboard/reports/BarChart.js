@@ -12,7 +12,7 @@ const data = [
     },
     {
         x: new Date(2020, 8, 27, 11, 0, 0, 0),
-        y: 3.4,
+        y: 3,
     },
     {
         x: new Date(2020, 8, 27, 13, 45, 0, 0),
@@ -28,30 +28,36 @@ const data = [
     }
 ]
 
-export default function DailyBloodSugarLevelBarChart(props) {
+// initialise all the graph properties.
+// global style options
+const padding = 20;
+const paddingLeft = 45;
+const paddingRight = 25;
+const xAxisGapFromText = 15;
+const yAxisGapFromText = 12;
+const axisMargin = 5;
+const barWidth = 9.5;
+let xAxisTextFontSize = 12;
+const yAxisTextFontSize = 12;
+const stepSize = 2;
+const yAxisStartsFrom = 0;
+// bar label properties
+const barLabelHeight = 20;
+const barLabelWidth = 30;
+const barLabelYOffset = 10;
+
+const axisColour = '#cdcdcd';
+const axisLabelColour = '#8d8d8d';
+
+const showXSteps = false;
+const showYSteps = true;
+const showXAxis = true;
+const showYAxis = true;
+
+export default function BarChart(props) {
     const [selectedIndex, setSelectedIndex] = React.useState(-1);
 
     const {width, height} = props;
-    // initialise all the graph properties.
-    // style options
-    const padding = 20;
-    const paddingLeft = 20;
-    const paddingRight = 20;
-    const xAxisGapFromText = 15;
-    const yAxisGapFromText = 25;
-    const axisMargin = 10;
-    const barGap = 20;
-    let xAxisTextFontSize = 12;
-    const yAxisTextFontSize = 12;
-    const stepSize = 2;
-    const yAxisStartsFrom = 0;
-    // bar label properties
-    const barLabelHeight = 20;
-    const barLabelWidth = 30;
-    const barLabelYOffset = 10;
-    // lower and upper bound labels
-    const lowerBound = 4.0;
-    const upperBound = 11.0;
 
     // d3 properties
     const minX = new Date(2020, 8, 27, 0, 0, 0, 0);
@@ -62,7 +68,6 @@ export default function DailyBloodSugarLevelBarChart(props) {
     const scaleX = scaleTime().domain([minX, maxX]).range([paddingLeft, width - paddingRight]);
     const scaleY = scaleLinear().domain([yAxisStartsFrom, maxY]).range([height - padding, padding]);
     const scaleHeight = scaleLinear().domain([yAxisStartsFrom, maxY]).range([0, height - 2 * padding]);
-    const barWidth = 9.5;
 
     // event handlers
     const handleSelect = (index) => {
@@ -71,17 +76,26 @@ export default function DailyBloodSugarLevelBarChart(props) {
 
     return (
         <View style={styles.root}>
-            <Text style={styles.titleText}>Blood Sugar Level (mmol/L)</Text>
             <View style={styles.barchartContainer}>
                 <Svg width={width} height={height}>
                     {   // x axis labels
+                        showXAxis &&
                         generateXAxisLabels().map((xVal, index) => (
                             <SvgText x={scaleX(xVal)}
-                                  key={xVal.toString()}
-                                  fontSize={xAxisTextFontSize}
-                                  textAnchor='middle'
-                                  y={height - padding + xAxisGapFromText} fill='#8d8d8d'>
+                                     key={xVal.toString()}
+                                     fontSize={xAxisTextFontSize}
+                                     textAnchor='middle'
+                                     y={height - padding + xAxisGapFromText} fill={axisLabelColour}>
                                 {Moment(xVal).format("H:mm")}
+                            </SvgText>
+                        ))
+                    }
+                    {
+                        // y axis labels
+                        showYAxis &&
+                        generateYAxisValues(stepSize, yAxisStartsFrom, maxY).map((y, index) => (
+                            <SvgText x={paddingLeft - barWidth / 2 - axisMargin - yAxisGapFromText} y={scaleY(y)} fill={axisLabelColour} textAnchor='middle'>
+                                {y}
                             </SvgText>
                         ))
                     }
@@ -96,23 +110,28 @@ export default function DailyBloodSugarLevelBarChart(props) {
                     }
                     {
                         // vertical lines for x axis labels
+                        showXSteps &&
                         generateXAxisLabels().map((xVal, index) => (
-                            <Path stroke='#E7EBF0'
+                            <Path stroke={axisColour}
                                   d={`M ${scaleX(xVal)} ${height - padding} l 0 ${ - (height - 2 * padding)}`}
                             />
                         ))
                     }
                     {
                         // horizontal lines
+                        showYSteps &&
                         generateYAxisValues(stepSize, yAxisStartsFrom, maxY).map((v, index) => (
-                            <Path stroke='#E7EBF0'
+                            <Path stroke={axisColour}
                                   key={v.toString()}
                                   d={`M ${paddingLeft - barWidth / 2 - axisMargin} ${scaleY(v)} l ${width - paddingRight - paddingLeft + barWidth + 2 * axisMargin} 0`} />
                         ))
 
                     }
-                    <Path stroke='#E7EBF0'
-                          d={`M ${paddingLeft - barWidth / 2 - axisMargin} ${height - padding} l ${width - paddingRight - paddingLeft + barWidth + 2 * axisMargin} 0`} />
+                    {
+                        showYSteps &&
+                        <Path stroke={axisColour}
+                              d={`M ${paddingLeft - barWidth / 2 - axisMargin} ${height - padding} l ${width - paddingRight - paddingLeft + barWidth + 2 * axisMargin} 0`} />
+                    }
                     {   // bars
                         data.map((d, index) => (
                             <Rect
@@ -178,7 +197,7 @@ function generateXAxisLabels() {
 
 function generateYAxisValues(stepSize, startsFrom, maxY) {
     let res = [];
-    for (let i = stepSize; i <= maxY; i = i + stepSize){
+    for (let i = startsFrom; i <= maxY; i = i + stepSize){
         res.push(i);
     }
     return res;
@@ -186,12 +205,6 @@ function generateYAxisValues(stepSize, startsFrom, maxY) {
 
 const styles = StyleSheet.create({
     root: {
-        backgroundColor: '#fff'
-    },
-    titleText: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: '#B1B0B0',
     },
     barchartContainer: {
         paddingBottom: '5%',

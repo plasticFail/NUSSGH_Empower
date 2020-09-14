@@ -35,6 +35,10 @@ import CrossBtn from '../../../components/crossBtn';
 import MedicationLogBlock from '../../../components/logs/medication/medicationLogBlock';
 import WeightLogBlock from '../../../components/logs/weight/weightLogBlock';
 import MenuBtn from '../../../components/menuBtn';
+import {getDefaultMealType} from "../../../commonFunctions/mealLogFunctions";
+import MealTypeSelectionBlock from "../../../components/logs/meal/MealTypeSelectionBlock";
+import CreateMealLogBlock from "../../../components/logs/meal/CreateMealLogBlock";
+// Functions
 
 // AddLog view
 class AddLogScreen extends Component {
@@ -48,6 +52,9 @@ class AddLogScreen extends Component {
 
       showModal: false,
       selectedLogType: '',
+
+      // exclusive for meal log
+      selectedMealType: getDefaultMealType(new Date().getHours()),
 
       showBg: false,
       showFood: false,
@@ -89,6 +96,9 @@ class AddLogScreen extends Component {
 
       showModal: false,
       selectedLogType: '',
+
+      // exclusive for meal log
+      selectedMealType: getDefaultMealType(new Date().getHours()),
 
       showBg: false,
       showFood: false,
@@ -144,6 +154,10 @@ class AddLogScreen extends Component {
     this.setState({showWeight: false});
   };
 
+  closeFoodForm = () => {
+    this.setState({showFood: false})
+  }
+
   render() {
     const {
       showModal,
@@ -154,7 +168,7 @@ class AddLogScreen extends Component {
       notCompletedTypes,
       completedTypes,
     } = this.state;
-    const {showBg, showMed, showWeight} = this.state;
+    const {showBg, showMed, showWeight, showFood} = this.state;
     return (
       <View style={globalStyles.pageContainer}>
         <MenuBtn />
@@ -220,6 +234,11 @@ class AddLogScreen extends Component {
                 Fill in if you wish to add a new record
               </Text>
               <DateSelectionBlock date={recordDate} setDate={this.setDate} />
+              {selectedLogType === food_key &&
+              (
+                  <MealTypeSelectionBlock onSelectChange={option => this.setState({selectedMealType: option})}
+                                          defaultValue={this.state.selectedMealType} />
+              )}
               <TouchableOpacity
                 style={styles.addButton}
                 onPress={() => this.showLogForm(selectedLogType)}>
@@ -253,6 +272,14 @@ class AddLogScreen extends Component {
               closeModal={this.closeWeightForm}
               closeParent={this.closeModal}
               parent="addLog"
+            />
+            <CreateMealLogBlock visible={showFood}
+                                parent="addLog"
+                                recordDate={recordDate}
+                                mealType={this.state.selectedMealType}
+                                closeModal={this.closeFoodForm}
+                                closeParent={this.closeModal}
+                                navigation={this.props.navigation}
             />
           </Modal>
         </ScrollView>

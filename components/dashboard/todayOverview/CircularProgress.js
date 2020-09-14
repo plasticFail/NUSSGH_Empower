@@ -1,7 +1,9 @@
 import React from 'react';
-import {Circle, G, Svg, Text} from "react-native-svg";
+import {View, Text} from 'react-native';
+import {Circle, G, Svg, Text as SvgText} from "react-native-svg";
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
-export default function CircularProgress({percent, fontSize, radius, padding, strokeWidth, color, remainingStrokeColor}) {
+export default function CircularProgress({percent, fontSize, radius, padding, strokeWidth, color, remainingStrokeColor, centreComponent}) {
     const circumference = Math.round(2 * Math.PI * radius);
     const center = radius + padding;
     return (
@@ -15,9 +17,15 @@ export default function CircularProgress({percent, fontSize, radius, padding, st
                         strokeLinecap='round'
                         cy={center} fill='none' stroke={color} strokeWidth={strokeWidth} />
             </G>
-            <Text fontSize={fontSize} x={`${center}`}
-                  y={`${center + fontSize / 3.5}`} fill={color}
-                  stroke={color} textAnchor='middle'>{percent * 100 + "%"}</Text>
+            {   centreComponent === undefined ?
+                <SvgText fontSize={fontSize} x={`${center}`}
+                         y={`${center + fontSize / 3.5}`} fill={color}
+                         stroke={color} textAnchor='middle'>{Math.round(percent * 100) + "%"}</SvgText>
+                :
+                <View style={{transform: [{translateX: radius - centreComponent.width / 2}, {translateY: radius - centreComponent.height / 2}]}}>
+                    {centreComponent.component}
+                </View>
+            }
         </Svg>
     )
 }
