@@ -20,9 +20,9 @@ import {Colors} from '../../styles/colors';
 //function
 import {checkLogDone} from '../../commonFunctions/logFunctions';
 import {getGreetingFromHour, getLastMinuteFromTodayDate, getTodayDate} from '../../commonFunctions/common';
-import NotificationsCard from "../../components/dashboard/todayOverview/NotificationsCard";
-import DiaryCard from "../../components/dashboard/todayOverview/DiaryCard";
-import ActivityCard from "../../components/dashboard/todayOverview/ActivityCard";
+import NotificationsCard from "../../components/dashboard/todayOverview/cards/NotificationsCard";
+import DiaryCard from "../../components/dashboard/todayOverview/cards/DiaryCard";
+import ActivityCard from "../../components/dashboard/todayOverview/cards/ActivityCard";
 import {requestNutrientConsumption} from "../../netcalls/mealEndpoints/requestMealLog";
 import Moment from "moment";
 import {getEntry4Day} from "../../netcalls/requestsDiary";

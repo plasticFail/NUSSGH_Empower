@@ -1,12 +1,12 @@
 import React from 'react';
 import {View, StyleSheet, Dimensions, Text} from 'react-native';
-import CircularProgress from "./CircularProgress";
+import CircularProgress from "../CircularProgress";
 import Icon from "react-native-vector-icons/FontAwesome5";
-import ProgressBar from "../../progressbar";
-import {requestNutrientConsumption} from "../../../netcalls/mealEndpoints/requestMealLog";
+import ProgressBar from "../../../progressbar";
+import {requestNutrientConsumption} from "../../../../netcalls/mealEndpoints/requestMealLog";
 import Moment from 'moment';
-import {getEntry4Day} from "../../../netcalls/requestsDiary";
-import {getLastMinuteFromTodayDate, getTodayDate} from "../../../commonFunctions/common";
+import {getEntry4Day} from "../../../../netcalls/requestsDiary";
+import {getLastMinuteFromTodayDate, getTodayDate} from "../../../../commonFunctions/common";
 
 const TARGET_STEPS = 5000;
 

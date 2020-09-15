@@ -1,9 +1,9 @@
 import React from 'react';
 import {View, StyleSheet, Text, Dimensions} from 'react-native';
-import {requestNutrientConsumption} from "../../../netcalls/mealEndpoints/requestMealLog";
-import {getLastMinuteFromTodayDate, getTodayDate} from "../../../commonFunctions/common";
+import {requestNutrientConsumption} from "../../../../netcalls/mealEndpoints/requestMealLog";
+import {getLastMinuteFromTodayDate, getTodayDate} from "../../../../commonFunctions/common";
 import Moment from "moment";
-import {getEntry4Day} from "../../../netcalls/requestsDiary";
+import {getEntry4Day} from "../../../../netcalls/requestsDiary";
 
 const {width, height} = Dimensions.get('window');
 
