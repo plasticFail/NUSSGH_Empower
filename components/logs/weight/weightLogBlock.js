@@ -59,11 +59,14 @@ const WeightLogBlock = (props) => {
       backdropColor={Colors.backgroundColor}
       style={{margin: 0}}>
       <View style={{flex: 1}}>
-        <LeftArrowBtn close={closeModal} />
-        <Text style={globalStyles.pageHeader}>Add Weight</Text>
-        <Text style={logStyles.fieldName}>Current Weight</Text>
-        <Text style={logStyles.fieldText}>{weight}kg</Text>
-        <View style={{flex: 1}} />
+        <View style={logStyles.menuBarContainer}>
+          <LeftArrowBtn close={closeModal} />
+        </View>
+        <View style={[logStyles.bodyPadding, {flex: 1}]}>
+          <Text style={[logStyles.headerText, logStyles.componentMargin]}>Add Weight</Text>
+          <Text style={[logStyles.fieldName]}>Current Weight</Text>
+          <Text style={[logStyles.fieldText]}>{weight}kg</Text>
+        </View>
         <PickDrag min={40} max={200} onChange={getValue} interval={0.2} />
         <View style={{flex: 1}} />
         <View style={[globalStyles.buttonContainer]}>

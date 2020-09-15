@@ -111,11 +111,11 @@ const HomeScreen = (props) => {
         let averageBgl = bglLogs.reduce((acc, curr, index) => acc + curr.bg_reading, 0);
         let averageWeight = weightLogs.reduce((acc, curr, index) => acc + curr.weight, 0);
         if (bglLogs.length > 0) {
-          averageBgl = averageBgl / bglLogs.length;
+          averageBgl = Math.round(averageBgl * 100 / bglLogs.length) / 100;
           setBgl(averageBgl);
         }
         if (weightLogs.length > 0) {
-          averageWeight = averageWeight / weightLogs.length;
+          averageWeight = Math.round(averageWeight * 100 / weightLogs.length) / 100;
           setWeight(averageWeight);
         }
         setStepsTaken(steps);

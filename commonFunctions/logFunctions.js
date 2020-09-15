@@ -109,20 +109,10 @@ const checkLogDone = async (period) => {
     return Alert.alert('Network Error', '', [{text: 'Try again later'}]);
     //for now temporary push food to not done
   }
-    if (
-        food_data &&
-        String(getPeriodFromMealType(food_data.value.mealType)) === period &&
-        isToday(food_data.date)
-    ) {
-      completed.push(food_key);
-    } else {
-      notCompleted.push(food_key);
-    }
-
-    return {
-      completed: completed,
-      notCompleted: notCompleted,
-    };
+  return {
+    completed: completed,
+    notCompleted: notCompleted,
+  };
 };
 
 const inPeriod = (logs, period) => {

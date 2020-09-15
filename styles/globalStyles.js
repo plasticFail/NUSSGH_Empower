@@ -91,7 +91,7 @@ const globalStyles = StyleSheet.create({
   leftArrowBack: {
     color: Colors.leftArrowColor,
     marginTop: '8%',
-    marginStart: '4%',
+    marginStart: '2%',
   },
   nextButtonStyle: {
     backgroundColor: Colors.nextBtnColor,

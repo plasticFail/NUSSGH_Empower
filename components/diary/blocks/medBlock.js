@@ -66,9 +66,8 @@ const MedBlock = (props) => {
       <Text style={globalStyles.pageHeader}>Medication</Text>
       <Text style={globalStyles.pageDetails}>{day}</Text>
       <MissedContent arr={missedArr} type={med_key} />
-
-      {/*Show time section and data for log*/}
       <ScrollView style={{flex: 1}}>
+        {/*Show time section and data for log*/}
         <TimeSection name={morningObj.name} />
         {renderMedLogs(morningMedLogs, editLog)}
         <TimeSection name={afternoonObj.name} />
@@ -86,6 +85,7 @@ function renderMedLogs(logs, editLog) {
   if (logs.length > 0) {
     return (
       <View style={{marginBottom: '3%'}}>
+        <Text style={diaryStyles.recordedText}>Medication Recorded</Text>
         {logs.map((item, index) => (
           <View style={styles.logContent} key={index.toString()}>
             <Text style={diaryStyles.recordContent}>

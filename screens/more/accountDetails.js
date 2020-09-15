@@ -57,24 +57,6 @@ const AccountDetailScreen = (props) => {
           openModal={openModal}
           closeModal={closeModal}
         />
-
-        <Clickable heading='Medication Plan'
-                   content=''
-                   click={true}
-                   openModal={()=>props.navigation.navigate('MedicationPlan')}
-                   closeModal={()=>{}}
-                   modalVisible={false}
-        />
-
-        <Clickable
-          heading='Setup fitibt'
-          content=''
-          click={true}
-          openModal={()=>props.navigation.navigate('FitbitSetup')}
-          closeModal={()=>{}}
-          modalVisible={false}
-        />
-
         <View style={{flex: 3}} />
       </ScrollView>
     </View>

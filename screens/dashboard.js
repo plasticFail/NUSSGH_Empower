@@ -34,6 +34,7 @@ function getMoreHeaderTitle(route) {
 */
 
 const DashboardScreen = (props) => {
+  Icon.loadFont();
   return (
     <Tab.Navigator
       backBehavior="none"

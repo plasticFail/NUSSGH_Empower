@@ -83,36 +83,39 @@ const MedicationLogBlock = (props) => {
       backdropColor={Colors.backgroundColor}
       style={{margin: 0}}>
       <View style={{flex: 1}}>
-        <LeftArrowBtn close={closeModal} />
-        <Text style={globalStyles.pageHeader}>Add Medication</Text>
-        <Text style={logStyles.fieldName}>Medication Taken</Text>
-        {/*List of medication added*/}
-        <FlatList
-          keyExtractor={(item) => item.drugName}
-          data={selectedMedList}
-          style={{flexGrow: 0}}
-          renderItem={({item}) => (
-            <MedicationItem
-              medication={item}
-              handleDelete={() => handleDelete(item)}
-            />
-          )}
-        />
-        <TouchableOpacity onPress={() => setShowSelectModal(true)}>
-          <Text style={[logStyles.fieldName, {color: '#aad326'}]}>
-            Select Medicine
-          </Text>
-        </TouchableOpacity>
-        {/*Select medication modal */}
-        {showSelectModal === true ? (
-          <SelectMedicationModalContent
-            showSelectModal={showSelectModal}
-            closeSelectModal={() => setShowSelectModal(false)}
-            selectedMedList={selectedMedList}
-            getSelectedMedicineFromModal={getSelectedMedicineFromModal}
+        <View style={logStyles.menuBarContainer}>
+          <LeftArrowBtn close={closeModal} />
+        </View>
+        <View style={logStyles.bodyPadding}>
+          <Text style={[logStyles.headerText, logStyles.componentMargin]}>Add Medication</Text>
+          <Text style={[logStyles.fieldName,  logStyles.componentMargin]}>Medication Taken</Text>
+          {/*List of medication added*/}
+          <FlatList
+            keyExtractor={(item) => item.drugName}
+            data={selectedMedList}
+            style={{flexGrow: 0}}
+            renderItem={({item}) => (
+              <MedicationItem
+                medication={item}
+                handleDelete={() => handleDelete(item)}
+              />
+            )}
           />
-        ) : null}
-
+          <TouchableOpacity onPress={() => setShowSelectModal(true)}>
+            <Text style={[logStyles.fieldName, {color: '#aad326'}]}>
+              Select Medicine
+            </Text>
+          </TouchableOpacity>
+          {/*Select medication modal */}
+          {showSelectModal === true ? (
+            <SelectMedicationModalContent
+              showSelectModal={showSelectModal}
+              closeSelectModal={() => setShowSelectModal(false)}
+              selectedMedList={selectedMedList}
+              getSelectedMedicineFromModal={getSelectedMedicineFromModal}
+            />
+          ) : null}
+        </View>
         <View style={{flex: 1}} />
         <View style={globalStyles.buttonContainer}>
           {selectedMedList.length > 0 ? (

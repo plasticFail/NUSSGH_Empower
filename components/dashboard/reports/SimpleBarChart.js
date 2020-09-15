@@ -81,7 +81,7 @@ export default function SimpleBarChart(props) {
     }
 
     return (
-        <View>
+        <View style={{backgroundColor: '#fff'}}>
             <Svg width={width} height={height}>
                 {   // x axis labels
                     data.map((d, index) => (
@@ -149,7 +149,7 @@ export default function SimpleBarChart(props) {
                             x={scaleX(d.x) - scaledWidth / 2}
                             y={scaleY(d.y)}
                             width={scaledWidth}
-                            fill={selectedIndex === index ? '#4EA75A' : '#aad326'} height={scaleHeight(d.y)}
+                            fill={selectedIndex === index ? '#3caea3' : '#03dac6'} height={scaleHeight(d.y)}
                         />
                     ))
                 }

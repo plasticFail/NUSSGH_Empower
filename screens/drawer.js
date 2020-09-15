@@ -26,7 +26,6 @@ const DrawerNavigator = (props) => {
   return (
     <Drawer.Navigator
       drawerType={'slide'}
-      overlayColor={1}
       drawerStyle={{backgroundColor: Colors.menuColor}}
       drawerContentOptions={{
         marginTop: '23%',

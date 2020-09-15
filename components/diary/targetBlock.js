@@ -105,6 +105,7 @@ class TargetBlock extends Component {
         activityTarget: d.activity.summary_target,
         activitySummary: d.activity.summary,
       });
+
       this.getAllResult();
     });
   };

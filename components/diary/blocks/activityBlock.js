@@ -34,7 +34,6 @@ const images = {
   sports: require('../../../resources/images/activity/type_AEROBICWORKOUT.png'),
   caloriesBurnt: require('../../../resources/images/activity/calories.png'),
   distance: require('../../../resources/images/activity/distance.png'),
-  heart_rate: require('../../../resources/images/activity/heart_rate.png'),
   steps_taken: require('../../../resources/images/activity/steps_taken.png'),
 };
 
@@ -227,3 +226,5 @@ const styles = StyleSheet.create({
     marginStart: '2%',
   },
 });
+
+//comment

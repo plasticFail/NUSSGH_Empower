@@ -213,4 +213,3 @@ const styles = StyleSheet.create({
         paddingBottom: '5%',
     }
 });
-//edit flag

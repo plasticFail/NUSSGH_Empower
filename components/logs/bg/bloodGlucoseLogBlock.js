@@ -9,6 +9,7 @@ import {
 //components
 import HypoglycemiaBlock from './hypoglycemiaBlock';
 import LeftArrowBtn from '../leftArrowBtn';
+import DateSelectionBlock from '../dateSelectionBlock';
 //functions
 import {
   checkBloodGlucoseText,
@@ -25,7 +26,7 @@ import logStyles from '../../../styles/logStyles';
 //third party lib
 import Modal from 'react-native-modal';
 import SuccessDialogue from '../../successDialogue';
-import {set} from 'react-native-reanimated';
+import moment from 'moment';
 
 const BloodGlucoseLogBlock = (props) => {
   const {
@@ -39,6 +40,7 @@ const BloodGlucoseLogBlock = (props) => {
   const [exerciseSelection, setExerciseSelection] = useState(false);
   const [alcholicSelection, setAlcoholSelection] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [datetime, setDatetime] = useState(recordDate); //edit modal
 
   console.log('Navigating to bg modal from ' + parent);
 
@@ -47,6 +49,8 @@ const BloodGlucoseLogBlock = (props) => {
       postBg();
     } else {
       //handle edit **
+      console.log('Editing Log');
+      console.log(datetime);
     }
   };
 
@@ -72,6 +76,12 @@ const BloodGlucoseLogBlock = (props) => {
     closeParent();
   };
 
+  const setDate = (value) => {
+    setDatetime(value);
+  };
+
+  console.log(moment(datetime).format('YYYY-MM-DD HH:mm'));
+
   return (
     <Modal
       isVisible={visible}
@@ -81,12 +91,27 @@ const BloodGlucoseLogBlock = (props) => {
       backdropColor={Colors.backgroundColor}
       style={{margin: 0}}>
       <View style={{flex: 1}}>
-        <LeftArrowBtn close={closeModal} />
-        <Text style={globalStyles.pageHeader}>Add Blood Glucose</Text>
-        <Text style={[logStyles.fieldName, styles.fieldStyle]}>
-          Current Reading
-        </Text>
-        <View style={{flexDirection: 'row'}}>
+        <View style={logStyles.menuBarContainer}>
+          <LeftArrowBtn close={closeModal} />
+        </View>
+        <View style={[logStyles.bodyPadding, {flex: 1}]}>
+        {parent === 'addLog' ? (
+          <>
+            <Text style={[logStyles.headerText, logStyles.componentMargin]}>Add Blood Glucose</Text>
+            <Text style={[logStyles.fieldName, logStyles.componentMargin, styles.fieldStyle]}>
+              Current Reading
+            </Text>
+          </>
+        ) : (
+          <>
+            <Text style={[logStyles.headerText, logStyles.componentMargin]}>Edit</Text>
+            <DateSelectionBlock date={recordDate} setDate={setDate} />
+            <Text style={[logStyles.fieldName, logStyles.componentMargin, styles.fieldStyle]}>
+              Reading
+            </Text>
+          </>
+        )}
+        <View style={[logStyles.componentMargin, {flexDirection: 'row'}]}>
           <TextInput
             style={[logStyles.inputField, styles.inputContainer]}
             placeholderTextColor="#a1a3a0"
@@ -104,7 +129,7 @@ const BloodGlucoseLogBlock = (props) => {
             {checkBloodGlucoseText(bloodGlucose)}
           </Text>
         )}
-
+        </View>
         <HypoglycemiaBlock
           eatSelection={eatSelection}
           setEatSelection={setEatSelection}

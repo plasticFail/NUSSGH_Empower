@@ -148,4 +148,3 @@ const styles = StyleSheet.create({
         padding: 15
     }
 })
-//edit flag
