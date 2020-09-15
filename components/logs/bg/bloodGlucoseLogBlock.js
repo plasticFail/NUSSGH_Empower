@@ -29,6 +29,7 @@ import Modal from 'react-native-modal';
 import SuccessDialogue from '../../successDialogue';
 import moment from 'moment';
 import Ionicon from 'react-native-vector-icons/Ionicons';
+import diaryStyles from '../../../styles/diaryStyles';
 
 const BloodGlucoseLogBlock = (props) => {
   const {
@@ -188,7 +189,7 @@ const BloodGlucoseLogBlock = (props) => {
         <View style={[globalStyles.buttonContainer]}>
           <View style={{flexDirection: 'row'}}>
             <TouchableOpacity
-              style={styles.binIcon}
+              style={diaryStyles.binIcon}
               onPress={() => deleteLog()}>
               <Ionicon name="ios-trash-bin" size={40} color="#ff0844" />
             </TouchableOpacity>
@@ -232,10 +233,6 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: '10%',
     fontSize: 18,
-  },
-  binIcon: {
-    marginTop: '5%',
-    marginStart: '2%',
   },
 });
 

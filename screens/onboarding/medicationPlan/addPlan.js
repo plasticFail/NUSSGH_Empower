@@ -19,6 +19,7 @@ import SearchMedication from '../../../components/onboarding/medication/searchMe
 //stlye
 import {Colors} from '../../../styles/colors';
 import globalStyles from '../../../styles/globalStyles';
+import logStyles from '../../../styles/logStyles';
 
 Ionicons.loadFont();
 
@@ -182,7 +183,9 @@ const AddPlan = (props) => {
           parameter={'Per Day'}
           fieldName={'Frequency'}
         />
-        <Text style={styles.fieldText}>Recurring Period</Text>
+        <Text style={[logStyles.fieldName, {marginBottom: '2%'}]}>
+          Recurring Period
+        </Text>
         <TouchableOpacity style={styles.selectDaysButton} onPress={openModal}>
           {isEmpty(selectedDates41) === true ? (
             <Text style={styles.selectDaysText}>Select Days</Text>

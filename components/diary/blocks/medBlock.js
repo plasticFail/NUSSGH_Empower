@@ -13,6 +13,7 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import LeftArrowBtn from '../../logs/leftArrowBtn';
 import MissedContent from './missedContent';
 import TimeSection from '../timeSection';
+import SelectMedicationModalContent from '../../logs/medication/selectMedicationModalContent';
 //style
 import {Colors} from '../../../styles/colors';
 import globalStyles from '../../../styles/globalStyles';
@@ -22,6 +23,7 @@ import {
   getMissedArr,
   showEdit,
   getTime,
+  getDateObj,
 } from '../../../commonFunctions/diaryFunctions';
 import {med_key} from '../../../commonFunctions/logFunctions';
 import {
@@ -29,6 +31,7 @@ import {
   afternoonObj,
   eveningObj,
 } from '../../../commonFunctions/common';
+import EditMedicineBlock from './editMedicineBlock';
 
 const MedBlock = (props) => {
   const {
@@ -40,12 +43,14 @@ const MedBlock = (props) => {
     day,
   } = props;
   const {closeModal} = props;
-  const [selectedLog, setSelectedLog] = useState({});
+  const [selectedMed, setSelectedMed] = useState({});
   const [missedArr, setMissedArr] = useState([]);
+  const [editModal, setEditModal] = useState(false);
 
   const editLog = (item) => {
-    console.log('selecting item to edit');
-    setSelectedLog(item);
+    console.log('selecting medication item to edit');
+    setSelectedMed(item);
+    setEditModal(true);
   };
 
   useEffect(() => {
@@ -75,6 +80,14 @@ const MedBlock = (props) => {
         <TimeSection name={eveningObj.name} />
         {renderMedLogs(eveningMedLogs, editLog)}
       </ScrollView>
+      {editModal ? (
+        <EditMedicineBlock
+          visible={editModal}
+          closeModal={() => setEditModal(false)}
+          medicineToEdit={selectedMed}
+          initialDate={getDateObj(selectedMed.record_date)}
+        />
+      ) : null}
     </Modal>
   );
 };

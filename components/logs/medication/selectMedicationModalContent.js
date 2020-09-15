@@ -1,13 +1,5 @@
 import React, {Component, useState, useEffect} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  FlatList,
-  Alert,
-  TouchableOpacity,
-} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 //third party lib
 import Modal from 'react-native-modal';
 import Ionicons from 'react-native-vector-icons/Ionicons';

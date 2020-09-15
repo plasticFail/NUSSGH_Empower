@@ -59,6 +59,7 @@ const MedicationLogBlock = (props) => {
   const submit = () => {
     if (parent === 'addLog') {
       postMed();
+    } else {
     }
   };
 
