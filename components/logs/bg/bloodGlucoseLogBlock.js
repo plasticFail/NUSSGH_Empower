@@ -91,25 +91,27 @@ const BloodGlucoseLogBlock = (props) => {
       backdropColor={Colors.backgroundColor}
       style={{margin: 0}}>
       <View style={{flex: 1}}>
-        <LeftArrowBtn close={closeModal} />
+        <View style={logStyles.menuBarContainer}>
+          <LeftArrowBtn close={closeModal} />
+        </View>
+        <View style={[logStyles.bodyPadding, {flex: 1}]}>
         {parent === 'addLog' ? (
           <>
-            <Text style={globalStyles.pageHeader}>Add Blood Glucose</Text>
-            <Text style={[logStyles.fieldName, styles.fieldStyle]}>
+            <Text style={[logStyles.headerText, logStyles.componentMargin]}>Add Blood Glucose</Text>
+            <Text style={[logStyles.fieldName, logStyles.componentMargin, styles.fieldStyle]}>
               Current Reading
             </Text>
           </>
         ) : (
           <>
-            <Text style={globalStyles.pageHeader}>Edit</Text>
+            <Text style={[logStyles.headerText, logStyles.componentMargin]}>Edit</Text>
             <DateSelectionBlock date={recordDate} setDate={setDate} />
-            <Text style={[logStyles.fieldName, styles.fieldStyle]}>
+            <Text style={[logStyles.fieldName, logStyles.componentMargin, styles.fieldStyle]}>
               Reading
             </Text>
           </>
         )}
-
-        <View style={{flexDirection: 'row'}}>
+        <View style={[logStyles.componentMargin, {flexDirection: 'row'}]}>
           <TextInput
             style={[logStyles.inputField, styles.inputContainer]}
             placeholderTextColor="#a1a3a0"
@@ -127,7 +129,7 @@ const BloodGlucoseLogBlock = (props) => {
             {checkBloodGlucoseText(bloodGlucose)}
           </Text>
         )}
-
+        </View>
         <HypoglycemiaBlock
           eatSelection={eatSelection}
           setEatSelection={setEatSelection}

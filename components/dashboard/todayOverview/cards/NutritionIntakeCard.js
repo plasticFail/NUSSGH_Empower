@@ -1,18 +1,18 @@
 import React from 'react';
 import {View, StyleSheet, Text, Dimensions} from 'react-native';
 // components
-import Card from '../../common/Card';
-import StackedImages from "./StackedImages";
-import CircularProgress from "./CircularProgress";
+import Card from '../../../common/Card';
+import StackedImages from "../StackedImages";
+import CircularProgress from "../CircularProgress";
 // third-party-lib
 import Animated, {Easing} from 'react-native-reanimated';
 import {TapGestureHandler, State} from "react-native-gesture-handler";
 import {Svg, Circle, G} from 'react-native-svg';
 // Others
-import f1 from '../../../resources/images/icons/meal.png';
-import f2 from '../../../resources/images/icons/parfait.png';
-import f3 from '../../../resources/images/icons/salad.png';
-import f4 from '../../../resources/images/icons/carbohydrate.png';
+import f1 from '../../../../resources/images/icons/meal.png';
+import f2 from '../../../../resources/images/icons/parfait.png';
+import f3 from '../../../../resources/images/icons/salad.png';
+import f4 from '../../../../resources/images/icons/carbohydrate.png';
 
 const {
     Clock,
@@ -150,3 +150,4 @@ const styles = StyleSheet.create({
 })
 
 export default NutritionIntakeCard;
+//edit flag

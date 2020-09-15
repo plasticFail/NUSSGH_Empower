@@ -1,36 +1,31 @@
 import React, {useEffect, useState} from 'react';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 import {
   View,
   Text,
   StyleSheet,
-  Button,
   Dimensions,
   ScrollView,
   TouchableOpacity,
-  Image,
 } from 'react-native';
 //third party lib
-import {
-  Svg,
-  Text as SvgText,
-  Circle,
-  Rect,
-  G,
-  Defs,
-  ClipPath,
-} from 'react-native-svg';
-import Icon from 'react-native-vector-icons/FontAwesome5';
 //components
 import MenuBtn from '../../components/menuBtn';
 import HeaderCard from '../../components/home/headerCard';
-import NutritionIntakeCard from '../../components/dashboard/todayOverview/NutritionIntakeCard';
-import DailyBloodSugarLevelBarChart from '../../components/dashboard/reports/DailyBloodSugarLevelBarChart';
-import {getGreetingFromHour} from '../../commonFunctions/common';
+import CircularProgress from "../../components/dashboard/todayOverview/CircularProgress";
+import ProgressBar from "../../components/progressbar";
 //styles
 import globalStyles from '../../styles/globalStyles';
 import {Colors} from '../../styles/colors';
 //function
 import {checkLogDone} from '../../commonFunctions/logFunctions';
+import {getGreetingFromHour, getLastMinuteFromTodayDate, getTodayDate} from '../../commonFunctions/common';
+import NotificationsCard from "../../components/dashboard/todayOverview/cards/NotificationsCard";
+import DiaryCard from "../../components/dashboard/todayOverview/cards/DiaryCard";
+import ActivityCard from "../../components/dashboard/todayOverview/cards/ActivityCard";
+import {requestNutrientConsumption} from "../../netcalls/mealEndpoints/requestMealLog";
+import Moment from "moment";
+import {getEntry4Day} from "../../netcalls/requestsDiary";
 
 const buttonList = [
   {
@@ -56,42 +51,76 @@ const buttonList = [
 // properties
 const username = 'Jimmy';
 const {width, height} = Dimensions.get('window');
-const buttonSize = width * 0.26;
-const padding = 20;
 
-// button list properties
-const textXOffset = 10;
-const textYOffset = 20;
-const fontSize = 14.5;
-const circleRadius = 0.35 * buttonSize;
-const circleYOffset = 10;
-const circleXOffset = 10;
-
-const bloodGlucoseBarChartWidth = width - 2 * padding;
-const bloodGlucoseBarChartHeight = height * 0.21;
+const LogsProgress = [
+  {logName: 'Medication', progress: 0.33, path: 'MedicationLog'},
+  {logName: 'Blood Glucose', progress: 1, path: 'BloodGlucoseLog'},
+  {logName: 'Food', progress: 0.67, path: 'MealLogRoot'},
+  {logName: 'Weight', progress: 0.33, path: 'WeightLog'},
+]
 
 const HomeScreen = (props) => {
   const [currHour, setCurrHour] = useState(new Date().getHours());
   const [uncompleteLogs, setUncompleteLogs] = useState([]);
+
+  // diary card
+  const [bgl, setBgl] = React.useState(null);
+  const [calorie, setCalorie] = React.useState(null);
+  const [weight, setWeight] = React.useState(null);
+  // activity card
+  const [protein, setProtein] = React.useState(null);
+  const [carb, setCarb] = React.useState(null);
+  const [fat, setFat] = React.useState(null);
+  const [stepsTaken, setStepsTaken] = React.useState(null);
+  /*
   useEffect(() => {
     //Refresh every 1 minutes
     setTimeout(() => {
       setCurrHour(new Date().getHours());
-      checkLogDone(getGreetingFromHour(new Date().getHours())).then(
-        (response) => {
-          setUncompleteLogs(response.notCompleted);
-        },
-      );
+      checkLogDone(getGreetingFromHour(currHour)).then((response) => {
+        setUncompleteLogs(response.notCompleted);
+      });
     }, 60000);
-  });
+  });*/
 
   useEffect(() => {
     props.navigation.addListener('focus', () => {
-      checkLogDone(getGreetingFromHour(new Date().getHours())).then(
-        (response) => {
-          setUncompleteLogs(response.notCompleted);
-        },
-      );
+      checkLogDone(getGreetingFromHour(currHour)).then((response) => {
+        setUncompleteLogs(response.notCompleted);
+      }).catch(err => console.log(err));
+
+      // reload nutrition data
+      requestNutrientConsumption(getTodayDate(), getLastMinuteFromTodayDate()).then(data => {
+        const nutrientData = data.data;
+        const calorieAmount = Math.round(nutrientData.reduce((acc, curr, index) => acc + curr.nutrients.energy.amount, 0));
+        const proteinAmount = Math.round(nutrientData.reduce((acc, curr, index) => acc + curr.nutrients.protein.amount, 0));
+        const carbAmount = Math.round(nutrientData.reduce((acc, curr, index) => acc + curr.nutrients.carbohydrate.amount, 0));
+        const fatAmount = Math.round(nutrientData.reduce((acc, curr, index) => acc + curr.nutrients['total-fat'].amount, 0));
+        setCalorie(calorieAmount);
+        setProtein(proteinAmount);
+        setCarb(carbAmount);
+        setFat(fatAmount);
+      }).catch(err => console.log(err));
+      // reload diary data
+      const d = Moment(new Date()).format("YYYY-MM-DD");
+      getEntry4Day(d).then(data => {
+        const bglLogs = data[d].glucose.logs;
+        const weightLogs = data[d].weight.logs;
+        const activityLogs = data[d].activity.logs;
+        const steps = activityLogs.reduce((acc, curr, index) => acc + curr.steps, 0);
+        let averageBgl = bglLogs.reduce((acc, curr, index) => acc + curr.bg_reading, 0);
+        let averageWeight = weightLogs.reduce((acc, curr, index) => acc + curr.weight, 0);
+        if (bglLogs.length > 0) {
+          averageBgl = Math.round(averageBgl * 100 / bglLogs.length) / 100;
+          setBgl(averageBgl);
+        }
+        if (weightLogs.length > 0) {
+          averageWeight = Math.round(averageWeight * 100 / weightLogs.length) / 100;
+          setWeight(averageWeight);
+        }
+        setStepsTaken(steps);
+      }).catch(err => console.log(err));
+
     });
   }, []);
   return (
@@ -112,122 +141,11 @@ const HomeScreen = (props) => {
           hour={getGreetingFromHour(currHour)}
           uncompleteLogs={uncompleteLogs}
         />
-        <View style={{padding: padding}}>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              paddingBottom: 20,
-            }}>
-            <Svg width={width - 2 * padding} height={buttonSize}>
-              {
-                // Svg container for buttons
-                buttonList.map((button, index) => {
-                  return (
-                    <G key={button.id}>
-                      <Defs>
-                        <ClipPath id={`clip-${index}`}>
-                          <Circle
-                            r={circleRadius}
-                            x={
-                              index *
-                                (buttonSize +
-                                  (width - 2 * padding - 3 * buttonSize) / 2) +
-                              circleRadius -
-                              circleXOffset
-                            }
-                            y={circleRadius - circleYOffset}
-                          />
-                        </ClipPath>
-                      </Defs>
-                      <Rect
-                        width={buttonSize}
-                        x={
-                          index *
-                          (buttonSize +
-                            (width - 2 * padding - 3 * buttonSize) / 2)
-                        }
-                        rx={15}
-                        height={buttonSize}
-                        fill="#B2D04B"
-                      />
-                      <Rect
-                        width={buttonSize}
-                        x={
-                          index *
-                          (buttonSize +
-                            (width - 2 * padding - 3 * buttonSize) / 2)
-                        }
-                        rx={15}
-                        height={buttonSize}
-                        fill="#C3DA6B"
-                        clipPath={`url(#clip-${index})`}
-                      />
-                      <SvgText
-                        x={
-                          index *
-                            (buttonSize +
-                              (width - 2 * padding - 3 * buttonSize) / 2) +
-                          textXOffset
-                        }
-                        fontSize={fontSize}
-                        y={buttonSize - textYOffset}
-                        fontWeight="bold"
-                        fill="#fff">
-                        {button.name}
-                      </SvgText>
-                    </G>
-                  );
-                })
-              }
-            </Svg>
-            {
-              // Icons for button
-              buttonList.map((button, index) => {
-                return (
-                  <Icon
-                    name={button.iconName}
-                    color="#fff"
-                    size={30}
-                    style={{
-                      position: 'absolute',
-                      transform: [
-                        {
-                          translateX:
-                            index *
-                              (buttonSize +
-                                (width - 2 * padding - 3 * buttonSize) / 2) +
-                            circleXOffset,
-                        },
-                        {translateY: circleYOffset},
-                      ],
-                    }}
-                  />
-                );
-              })
-            }
-          </View>
-          <DailyBloodSugarLevelBarChart
-            width={bloodGlucoseBarChartWidth}
-            height={bloodGlucoseBarChartHeight}
-          />
-          <View>
-            {/* Nutrition overview, activity overview, weight overview */}
-            <NutritionIntakeCard
-              onPress={() => alert('pressed nutrient card!')}
-            />
-          </View>
-        </View>
-        <TouchableOpacity
-          style={styles.buttonStyle}
-          onPress={() => props.navigation.navigate('MedicationPlan')}>
-          <Text style={styles.buttonText}>Medication Plan (Alpha)</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.buttonStyle}
-          onPress={() => props.navigation.navigate('FitbitSetup')}>
-          <Text style={styles.buttonText}>Sync Fitbit (Alpha)</Text>
-        </TouchableOpacity>
+          {/* Notifications */}
+          <NotificationsCard />
+          {/* Diary overview of weight, blood glucose, food, medication and physical activity */}
+          <DiaryCard bgl={bgl} calorie={calorie} weight={weight} />
+          <ActivityCard stepsTaken={stepsTaken} carb={carb} protein={protein} fat={fat}/>
       </ScrollView>
     </View>
   );
@@ -289,4 +207,4 @@ const styles = StyleSheet.create({
 });
 
 export default HomeScreen;
-//comment
+//edit flag

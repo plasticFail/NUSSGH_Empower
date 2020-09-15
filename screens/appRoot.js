@@ -13,18 +13,13 @@ import {getToken} from '../storage/asyncStorageFunctions';
 import {mapStateToProps, mapDispatchToProps} from '../redux/reduxMapping';
 import {isTokenValidRequest} from '../netcalls/requestsAuth';
 //other screens
-import DashBoard from './dashboard';
 import Login from './login/login';
 import ForgetPasswordScreen from './login/ForgetPasswordScreen';
 import InputOTPScreen from './login/inputOTPScreen';
 import ResetPasswordScreen from './login/resetPassword';
-import DailyLog from './main/log/dailyLog';
-import MealLogRoot from './main/log/meal/MealLogRoot';
+import DiaryDetail from './main/diary/diaryDetail';
+
 //components
-import CreateMealLogScreen from './main/log/meal/CreateMealLog';
-import FavouriteMealScreen from './main/log/meal/FavouriteMeals';
-import RecentMealScreen from './main/log/meal/RecentMeal';
-import FoodSearchEngineScreen from './main/log/meal/FoodSearchEngine';
 import HeaderBackIcon from '../components/common/headerBackIcon';
 import HeaderBackIconClick from '../components/common/headerBackIconClick';
 import ContactUs from './contactUs';
@@ -75,10 +70,12 @@ class AppRoot extends Component {
 
   handleRedirectUrl = (event) => {
     const url = event.url;
+    /*
     if (url.startsWith(redirect_uri)) {
       // fitbit redirect url
       AuthoriseFitbit(url);
     }
+    */
   };
 
   init = async () => {
@@ -120,7 +117,9 @@ class AppRoot extends Component {
                     headerShown: false,
                   }}
                 />
-                <Stack.Screen
+                {
+                 /*
+                 <Stack.Screen
                   name="DailyLog"
                   component={DailyLog}
                   options={{
@@ -204,6 +203,16 @@ class AppRoot extends Component {
                   component={FoodSearchEngineScreen}
                   options={{headerShown: false}}
                 />
+                  */
+                }
+                <Stack.Screen
+                  name="DiaryDetail"
+                  component={DiaryDetail}
+                  options={({route}) => ({
+                    title: 'Diary Entry: ' + route.params.date,
+                    headerRight: () => <View />,
+                  })}
+                />
                 {/* Onboarding */}
                 <Stack.Screen
                   name="MedicationPlan"
@@ -272,4 +281,4 @@ class AppRoot extends Component {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(AppRoot);
-//comment
+//edit flag

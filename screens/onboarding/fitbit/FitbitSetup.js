@@ -1,9 +1,5 @@
 import React from 'react';
 import {View, StyleSheet, Text, Dimensions, Image, TouchableWithoutFeedback, Animated, Linking} from 'react-native';
-// third party lib
-import {Svg, Circle} from "react-native-svg";
-// component
-import {BackAndForwardButton} from "../../../components/BackAndForwardButtons";
 //function
 import {getFitbitToken} from "../../../storage/asyncStorageFunctions";
 // config
@@ -11,6 +7,17 @@ import {fitbitOAuthUri, client_id, redirect_uri, scope} from "../../../config/Fi
 // others
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import fitbitIcon from '../../../resources/images/fitbit/fitbit.png';
+import globalStyles from "../../../styles/globalStyles";
+import {TouchableOpacity} from "react-native-gesture-handler";
+import {Colors} from "../../../styles/colors";
+// third party lib
+import Modal from 'react-native-modal';
+import InAppBrowser from 'react-native-inappbrowser-reborn'
+import {AuthoriseFitbit} from "../../../commonFunctions/AuthoriseFitbit";
+import {STATUS} from "../../../components/onboarding/fitbit/Status";
+import ResponseModal from "../../../components/onboarding/fitbit/ResponseModal";
+import LeftArrowBtn from "../../../components/logs/leftArrowBtn";
+import logStyles from "../../../styles/logStyles";
 
 const qs = require('qs');
 
@@ -30,6 +37,8 @@ Icon.loadFont();
 
 export default function FitbitSetup(props) {
     const [expand, setExpand] = React.useState(false);
+    const [modalVisible, setModalVisible] = React.useState(false);
+    const [processingStatus, setProcessingStatus] = React.useState(STATUS.NOT_STARTED);
     const authorised = React.useRef(false);
     const expandAnimation = React.useRef(new Animated.Value(0));
     React.useEffect(() => {
@@ -47,6 +56,7 @@ export default function FitbitSetup(props) {
                 useNativeDriver: true
             }).start(() => !cancelled && setExpand(!expand));
         }
+
         if (!authorised.current && !cancelled) {
             setTimeout(() => {
                 getFitbitToken().then(resp => {
@@ -67,61 +77,112 @@ export default function FitbitSetup(props) {
     });
 
     const handleOpenFitbitOAuthUrl = async () => {
-        await Linking.canOpenURL(oAuthUrl).then(supported => {
-            if (supported) {
-                Linking.openURL(oAuthUrl);
+        try {
+            if (await InAppBrowser.isAvailable()) {
+                setProcessingStatus(STATUS.IN_PROGRESS);
+                setModalVisible(true);
+                InAppBrowser.openAuth(oAuthUrl, redirect_uri, {
+                    // iOS Properties
+                    ephemeralWebSession: false,
+                    // Android Properties
+                    showTitle: false,
+                    enableUrlBarHiding: true,
+                    enableDefaultShare: false
+                }).then((response) => {
+                    if (
+                        response.type === 'success' &&
+                        response.url
+                    ) {
+                        AuthoriseFitbit(response.url).then((resp) => {
+                            if (resp) {
+                                authorised.current = true;
+                                setProcessingStatus(STATUS.FINISHED_SUCCESSFULLY);
+                            } else {
+                                setProcessingStatus(STATUS.ERROR);
+                            }
+                        });
+                        //Linking.openURL(response.url);
+                    } else if (response.type === 'dismiss' || response.type === 'cancel') {
+                        // Cancel loading
+                        setProcessingStatus(STATUS.CANCELLED);
+                    }
+                })
+            } else {
+                await Linking.openURL(oAuthUrl);
             }
-        });
+        } catch (error) {
+            await Linking.openURL(oAuthUrl);
+        }
 
     }
 
+    const handleCloseModal = () => {
+        setProcessingStatus(STATUS.NOT_STARTED);
+        setModalVisible(false);
+    }
+
     return (
-        <View style={styles.root}>
-            <View style={StyleSheet.absoluteFill}>
-                <Svg width={width} height={height}>
-                    <Circle cx={width/2} r={circleRadius}
-                            cy={-circleOffset}
-                            fill="#B3D14C"/>
-                </Svg>
+        <View style={styles.onboardingContainer}>
+            <View style={logStyles.menuBarContainer}>
+                <LeftArrowBtn close={props.navigation.goBack} />
             </View>
-            <View style={styles.headerContainer}>
-                <Text style={styles.headerMainText}>Step 4: Link your fitbit</Text>
-                <Text style={styles.headerSubText}>Its as easy as logging into your Fitbit account!</Text>
-                <Text style={styles.headerSubText}>Alternatively, you can choose to set this up later!</Text>
-            </View>
-            <View style={styles.remainingContainer}>
-                <View style={[styles.fitbitPromptContainer, {flex: 4}]}>
-                    {
-                        authorised.current ?
-                            <React.Fragment>
-                                <Text style={styles.fitbitDoneMainText}>Done!</Text>
-                                <Text style={styles.fitbitDoneSubText}>You are all set</Text>
-                            </React.Fragment>
-                            : <React.Fragment>
-                            <Text style={styles.fitbitPromptText}>
-                                Tap on the Fitbit icon to begin!
-                            </Text>
-                            <TouchableWithoutFeedback onPress={handleOpenFitbitOAuthUrl}>
-                                <Animated.View style={[styles.fitbitIconStyle, {transform: [{scale}]}]}>
-                                    <Image source={fitbitIcon} style={{width: '100%', height: '100%'}} />
-                                </Animated.View>
-                            </TouchableWithoutFeedback>
-                        </React.Fragment>
-                    }
-                </View>
-                <BackAndForwardButton onPressBack={()=>props.navigation.goBack()}
-                                      onPressForward={()=>{}}
-                                      overrideForwardTitle={authorised.current ? 'Next' : 'Skip'}
-                                      enableForward={() => true} />
-            </View>
+            <Text style={[globalStyles.pageHeader, styles.stepText]}>Step 4</Text>
+            <Text style={globalStyles.pageDetails}>Link your Fitbit Account</Text>
+            <Text style={[globalStyles.pageSubDetails, styles.stepContent]}>
+                Would you like to add your Fitbit account to track your activity? Alternatively, you can set
+                this up later
+            </Text>
+            {
+                /*
+                    <Text style={{paddingLeft: 15, fontWeight: 'bold'}}>{!authorised.current && processingStatus}</Text>
+                 */
+            }
+            {   authorised.current ?
+                (<View style={{padding: 15}}>
+                    <Text style={styles.fitbitDoneMainText}>Done!</Text>
+                    <Text style={styles.fitbitDoneSubText}>You are all set</Text>
+                </View>)
+                :
+                (<TouchableOpacity onPress={handleOpenFitbitOAuthUrl}>
+                    <View style={[styles.fitbitRedirectButton, {marginTop: 50}]}>
+                        <Text style={{fontWeight: 'bold', color: '#fff', fontSize: 20}}>Continue with</Text>
+                        <Animated.View style={[styles.fitbitIconStyle, {transform: [{scale}]}]}>
+                            <Image source={fitbitIcon} style={{width: '100%', height: '100%'}} />
+                        </Animated.View>
+                    </View>
+                </TouchableOpacity>)
+            }
+            <View style={{flex: 1}} />
+            {
+                authorised.current ?
+                    (<View style={globalStyles.buttonContainer}>
+                        <TouchableOpacity
+                            style={[globalStyles.nextButtonStyle]}
+                            onPress={this.handleNext}>
+                            <Text style={globalStyles.actionButtonText}>Next</Text>
+                        </TouchableOpacity>
+                    </View>)
+                    :
+                    (<View style={globalStyles.buttonContainer}>
+                        <TouchableOpacity
+                            style={globalStyles.skipButtonStyle}
+                            onPress={this.handleSkip}>
+                            <Text style={globalStyles.actionButtonText}>Skip</Text>
+                        </TouchableOpacity>
+                    </View>)
+            }
+            <ResponseModal visible={modalVisible} closeModal={handleCloseModal} status={processingStatus}/>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
-    root: {
+    onboardingContainer: {
+        backgroundColor: Colors.backgroundColor,
         flex: 1,
-        backgroundColor: '#fff'
+    },
+    stepText: {
+       // marginTop: '10%',
     },
     headerContainer: {
         width,
@@ -130,42 +191,36 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
         paddingBottom: '15%'
     },
-    headerMainText: {
-        color: '#4d4d4d',
-        fontSize: 24,
-        fontWeight: 'bold',
-        paddingBottom: 20
-    },
-    headerSubText: {
-        color: '#4d4d4d',
-        fontSize: 16,
-        fontWeight: 'bold',
-        opacity: 0.77
-    },
     remainingContainer: {
         flex: 1,
     },
     fitbitIconStyle: {
-        width: '40%',
-        height: '40%',
+        width: 40,
+        height: 40,
+        margin: 10
     },
     fitbitPromptContainer: {
         justifyContent: 'center',
         alignItems: 'center'
     },
     fitbitPromptText: {
-        color: '#4d4d4d',
         fontSize: 24,
         fontWeight: 'bold',
         paddingBottom: 50
     },
     fitbitDoneMainText: {
-        color: '#4d4d4d',
         fontSize: 24,
         fontWeight: 'bold',
     },
     fitbitDoneSubText: {
-        color: '#4d4d4d',
         fontSize: 20,
+    },
+    fitbitRedirectButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        margin: 15,
+        backgroundColor: '#4FACB6',
+        borderRadius: 15,
+        justifyContent: 'center'
     }
 })
