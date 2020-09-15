@@ -1,5 +1,12 @@
 import React, {Component} from 'react';
-import {View, ScrollView, StyleSheet, Text} from 'react-native';
+import {
+  View,
+  ScrollView,
+  StyleSheet,
+  Text,
+  Platform,
+  InteractionManager,
+} from 'react-native';
 import {Colors} from '../../../styles/colors';
 
 //Props:
@@ -48,6 +55,18 @@ export default class PickDrag extends Component {
     this.handleScroll = this.handleScroll.bind(this);
   }
 
+  componentDidMount() {
+    const {value, min, interval} = this.props;
+    if (Platform.OS === 'android' && this.state.initial === false) {
+      console.log('updating to initial value');
+      let offset = scaleToOffset(value, min, interval);
+      this.setState({initial: true});
+      InteractionManager.runAfterInteractions(() => {
+        this.scrollView.scrollTo({x: offset, animated: true});
+      });
+    }
+  }
+
   getScrollMax(props = this.props) {
     return (props.max - props.min) * interval_width;
   }
@@ -57,6 +76,7 @@ export default class PickDrag extends Component {
     return scale(value, min, interval);
   }
 
+  //when user scroll
   handleScroll(event) {
     console.log('------Scrolling event happening');
     const {value, min, interval} = this.props;
