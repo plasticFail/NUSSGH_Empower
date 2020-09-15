@@ -29,3 +29,4 @@ export default function CircularProgress({percent, fontSize, radius, padding, st
         </Svg>
     )
 }
+//edit flag

@@ -300,3 +300,4 @@ const styles = StyleSheet.create({
 });
 
 export default AddLogScreen;
+//edit flag

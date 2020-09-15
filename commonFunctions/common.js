@@ -65,4 +65,4 @@ const isEmpty = (obj) => {
 
 export {getGreetingFromHour, isEmpty, morningObj, afternoonObj, eveningObj, night_key,
   evening_key, afternoon_key, morning_key, getPeriodFromMealType, getLastMinuteFromTodayDate, getTodayDate};
-
+//edit flag

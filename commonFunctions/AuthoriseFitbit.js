@@ -25,3 +25,4 @@ export function AuthoriseFitbit(callback_url) {
             return postFitbitToken(data);
         }).catch(err => alert(err.message));
 }
+//edit flag

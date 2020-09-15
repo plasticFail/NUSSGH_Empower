@@ -141,3 +141,4 @@ const logStyles = StyleSheet.create({
 });
 
 export default logStyles;
+//edit flag

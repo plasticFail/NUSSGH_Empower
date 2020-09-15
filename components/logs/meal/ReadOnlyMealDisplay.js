@@ -57,3 +57,4 @@ const styles = StyleSheet.create({
 })
 
 export default ReadOnlyMealDisplay;
+//edit flag

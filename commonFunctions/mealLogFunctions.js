@@ -39,3 +39,4 @@ async function handleSubmitMealLog(mealData) {
 }
 
 export {getDefaultMealType, isValidMeal, handleSubmitMealLog}
+//edit flag
