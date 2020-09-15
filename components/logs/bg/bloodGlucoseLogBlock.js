@@ -46,8 +46,8 @@ const BloodGlucoseLogBlock = (props) => {
   const [success, setSuccess] = useState(false);
 
   //for editing
-  const initialBg = selectedLog.bg_reading;
-  const initialDate = getDateObj(selectedLog.record_date);
+  const initialBg = selectedLog ? selectedLog.bg_reading : 0;
+  const initialDate = selectedLog ? getDateObj(selectedLog.record_date) : '';
   const [datetime, setDatetime] = useState(initialDate);
   const [changed, setChanged] = useState(false);
 
