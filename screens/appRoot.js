@@ -20,16 +20,11 @@ import ResetPasswordScreen from './login/resetPassword';
 import DiaryDetail from './main/diary/diaryDetail';
 
 //components
-import HeaderBackIcon from '../components/common/headerBackIcon';
-import HeaderBackIconClick from '../components/common/headerBackIconClick';
 import ContactUs from './contactUs';
 import AskAdd from './onboarding/medicationPlan/askAdd';
 import AddPlan from './onboarding/medicationPlan/addPlan';
-import {redirect_uri} from '../config/FitbitConfig';
-import {AuthoriseFitbit} from '../commonFunctions/AuthoriseFitbit';
 import FitbitSetup from './onboarding/fitbit/FitbitSetup';
 import DrawerNavigator from './drawer';
-import MenuBtn from '../components/menuBtn';
 
 Entypo.loadFont();
 
@@ -117,94 +112,6 @@ class AppRoot extends Component {
                     headerShown: false,
                   }}
                 />
-                {
-                 /*
-                 <Stack.Screen
-                  name="DailyLog"
-                  component={DailyLog}
-                  options={{
-                    title: 'Daily Log',
-                    headerBackImage: () => <HeaderBackIcon />,
-                    headerRight: () => <View />,
-                    headerBackTitleVisible: false,
-                  }}
-                />
-                <Stack.Screen
-                  name="MealLogRoot"
-                  component={MealLogRoot}
-                  options={({route, navigation}) => ({
-                    title: 'Meal Log',
-                    headerBackImage: () => <HeaderBackIcon />,
-                    headerRight: () => <View />,
-                    headerBackTitleVisible: false,
-                  })}
-                />
-                <Stack.Screen
-                  name={'CreateMealLog'}
-                  component={CreateMealLogScreen}
-                  options={({route, navigation}) => ({
-                    animationEnabled: true,
-                    title: 'Create Meal Log',
-                    headerBackImage: () => (
-                      <HeaderBackIconClick
-                        clickFunc={() => {
-                          if (route.params.edited) {
-                            // Confirmation message before going back.
-                            // If the meal has been edited, this dialogue will be popped.
-                            // otherwise the user will be sent back to the previous page.
-                            Alert.alert(
-                              'Going back?',
-                              'You have not submitted your meal log. Are you sure you want to leave this page?',
-                              [
-                                {
-                                  text: 'Ok',
-                                  onPress: navigation.goBack,
-                                },
-                                {
-                                  text: 'Cancel',
-                                  onPress: () => {},
-                                },
-                              ],
-                            );
-                          } else {
-                            navigation.goBack();
-                          }
-                        }}
-                      />
-                    ),
-                    headerRight: () => <View />,
-                    headerBackTitleVisible: false,
-                  })}
-                />
-                <Stack.Screen
-                  name={'FavouriteMeal'}
-                  component={FavouriteMealScreen}
-                  options={({route, navigation}) => ({
-                    title: 'Favourites',
-                    headerBackImage: () => <HeaderBackIcon />,
-                    headerRight: () => <View />,
-                    ...TransitionPresets.ModalTransition,
-                    headerBackTitleVisible: false,
-                  })}
-                />
-                <Stack.Screen
-                  name={'RecentMeal'}
-                  component={RecentMealScreen}
-                  options={({route, navigation}) => ({
-                    title: 'Recent',
-                    headerBackImage: () => <HeaderBackIcon />,
-                    headerRight: () => <View />,
-                    ...TransitionPresets.ModalTransition,
-                    headerBackTitleVisible: false,
-                  })}
-                />
-                <Stack.Screen
-                  name={'FoodSearchEngine'}
-                  component={FoodSearchEngineScreen}
-                  options={{headerShown: false}}
-                />
-                  */
-                }
                 <Stack.Screen
                   name="DiaryDetail"
                   component={DiaryDetail}

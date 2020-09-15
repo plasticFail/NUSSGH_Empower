@@ -58,7 +58,8 @@ const isPeriod = (time) => {
   return getGreetingFromHour(hour);
 };
 
-//to add: food - done
+
+
 const checkLogDone = async (period) => {
 
   let bg_data = await getLastBgLog();
@@ -209,12 +210,15 @@ const handleSubmitBloodGlucose = async (date, bloodGlucose) => {
   if (checkBloodGlucose(bloodGlucose)) {
     let formatDate = Moment(date).format('DD/MM/YYYY HH:mm:ss');
     if (await glucoseAddLogRequest(Number(bloodGlucose), formatDate)) {
-      storeLastBgLog({
-        value: bloodGlucose,
-        date: Moment(date).format('YYYY/MM/DD'),
-        hour: Moment(date).format('HH:mm'), //tweaked
-        dateString: Moment(date).format('Do MMM YYYY, h:mm a'), //added
-      });
+      let bg_data = await getLastBgLog();
+      if(Moment(date).format('YYYY/MM/DD') > bg_data.date || (Moment(date).format('YYYY/MM/DD') === bg_data.date && Moment(date).format('HH:mm') > bg_data.hour)){
+        storeLastBgLog({
+          value: bloodGlucose,
+          date: Moment(date).format('YYYY/MM/DD'),
+          hour: Moment(date).format('HH:mm'), //tweaked
+          dateString: Moment(date).format('Do MMM YYYY, h:mm a'), //added
+        });
+      }
       return true;
     } else {
       Alert.alert('Error', 'Unexpected Error Occured', [
@@ -232,12 +236,15 @@ const handleSubmitMedication = async (date, selectedMedicationList) => {
   console.log(selectedMedicationList);
 
   if (await medicationAddLogRequest(selectedMedicationList)) {
-    storeLastMedicationLog({
-      value: selectedMedicationList,
-      date: Moment(date).format('YYYY/MM/DD'),
-      hour: Moment(date).format('HH:mm'), //tweaked
-      dateString: Moment(date).format('Do MMM YYYY, h:mm a'), //added
-    });
+    let med_data = await getLastMedicationLog();
+    if(Moment(date).format('YYYY/MM/DD') > med_data.date || (Moment(date).format('YYYY/MM/DD') === med_data.date && Moment(date).format('HH:mm') > med_data.hour)) {
+      storeLastMedicationLog({
+        value: selectedMedicationList,
+        date: Moment(date).format('YYYY/MM/DD'),
+        hour: Moment(date).format('HH:mm'), //tweaked
+        dateString: Moment(date).format('Do MMM YYYY, h:mm a'), //added
+      });
+    }
     return true;
   } else {
     Alert.alert('Error', 'Unexpected Error Occured', [
@@ -251,12 +258,15 @@ const handleSubmitWeight = async (date, weight) => {
   if (checkWeight(weight)) {
     let formatDate = Moment(date).format('DD/MM/YYYY HH:mm:ss');
     if (await weightAddLogRequest(Number(weight), formatDate)) {
-      storeLastWeightLog({
-        value: weight,
-        date: Moment(date).format('YYYY/MM/DD'),
-        hour: Moment(date).format('HH:mm'), //tweaked
-        dateString: Moment(date).format('Do MMM YYYY, h:mm a'), //added
-      });
+      let weight_data = await getLastWeightLog();
+      if(Moment(date).format('YYYY/MM/DD') > weight_data.date || (Moment(date).format('YYYY/MM/DD') === weight_data.date && Moment(date).format('HH:mm') > weight_data.hour)) {
+        storeLastWeightLog({
+          value: weight,
+          date: Moment(date).format('YYYY/MM/DD'),
+          hour: Moment(date).format('HH:mm'), //tweaked
+          dateString: Moment(date).format('Do MMM YYYY, h:mm a'), //added
+        });
+      }
       return true;
     } else {
       Alert.alert('Error', 'Unexpected Error Occured ', [
