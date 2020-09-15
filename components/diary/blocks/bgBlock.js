@@ -1,147 +1,158 @@
 import React, {useState, useEffect} from 'react';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+//function
 import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  ImageBackground,
-  KeyboardAvoidingView,
-  Platform,
-} from 'react-native';
-import {TouchableOpacity, ScrollView} from 'react-native-gesture-handler';
+  morningObj,
+  afternoonObj,
+  eveningObj,
+} from '../../../commonFunctions/common';
+import {
+  getTime,
+  showEdit,
+  getMissedArr,
+  getDateObj,
+} from '../../../commonFunctions/diaryFunctions';
 //third party library
 import Modal from 'react-native-modal';
+import Ionicon from 'react-native-vector-icons/Ionicons';
+import Entypo from 'react-native-vector-icons/Entypo';
+//styles
+import {Colors} from '../../../styles/colors';
+import globalStyles from '../../../styles/globalStyles';
+import diaryStyles from '../../../styles/diaryStyles';
 //component
-import Header from './header';
+import LeftArrowBtn from '../../logs/leftArrowBtn';
+import TimeSection from '../timeSection';
+import {ScrollView} from 'react-native-gesture-handler';
+import MissedContent from './missedContent';
+import {bg_key} from '../../../commonFunctions/logFunctions';
 import BloodGlucoseLogBlock from '../../logs/bg/bloodGlucoseLogBlock';
-import ActionButton from './actionBtn';
-//function
-import {getTime, getDateObj} from '../../../commonFunctions/diaryFunctions';
 
 const BgBlock = (props) => {
-  const {bloodGlucose} = props;
-  //format date
-  let dateString = String(bloodGlucose.record_date);
-  let time = getTime(dateString);
+  const {
+    visible,
+    morningBgLogs,
+    afternoonBgLogs,
+    eveningBgLogs,
+    avgBg,
+    pass,
+    miss,
+    day,
+  } = props;
+  const {closeModal} = props;
+  const [selectedLog, setSelectedLog] = useState({});
+  const [missedArr, setMissedArr] = useState([]);
+  const [editModal, setEditModal] = useState(false);
 
-  const img = require('../../../resources/images/bloodglucose.jpg');
-  const logo = require('../../../resources/images/bloodglucose_logo.png');
-  const initialBg = String(bloodGlucose.bg_reading);
-  const initialDate = getDateObj(dateString);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [dateValue, setDateValue] = useState(initialDate);
-  const [bg, setBg] = useState(initialBg);
-  const [disable, setDisabled] = useState(true);
+  useEffect(() => {
+    setMissedArr(getMissedArr(morningBgLogs, afternoonBgLogs, eveningBgLogs));
+  }, []);
 
-  //close itself
-  const closeModal = () => {
-    setModalVisible(false);
-    setBgValue(initialBg);
-    setDateValue(initialDate);
-  };
-
-  const setDate = (value) => {
-    setDateValue(value);
-    if (value != initialDate) {
-      setDisabled(false);
-    } else if (value == initialDate) {
-      setDisabled(true);
-    }
-  };
-
-  //enable edit button
-  const setBgValue = (value) => {
-    setBg(value);
-    if (value != initialBg) {
-      setDisabled(false);
-    } else if (value == initialBg) {
-      setDisabled(true);
-    }
-  };
-
-  //handle delete of log
-  const handleDelete = () => {
-    console.log('delete blood glucose');
-  };
-
-  //handle edit
-  const handleEdit = () => {
-    console.log('edit blood glucose');
+  const editLog = (item) => {
+    console.log('selecting item to edit');
+    setSelectedLog(item);
+    setEditModal(true);
   };
 
   return (
-    <View style={{flexBasis: '33.3%'}}>
-      <TouchableOpacity
-        style={styles.buttonStyle}
-        onPress={() => setModalVisible(true)}>
-        <Image source={logo} style={styles.iconImg} />
-        <Text style={styles.buttonText1}>Blood Glucose</Text>
-        <ImageBackground source={img} style={styles.backgroundImg} />
-      </TouchableOpacity>
-      <Text style={{textAlign: 'center'}}>{time}</Text>
-      <Modal
-        isVisible={modalVisible}
-        animationIn="slideInUp"
-        onBackdropPress={() => closeModal()}
-        onBackButtonPress={() => closeModal()}
-        style={{flex: 1, justifyContent: 'flex-end'}}>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : null}>
-          <Header title={'Blood Glucose:' + time} closeModal={closeModal} />
-          <View style={styles.modalContainer}>
-            <BloodGlucoseLogBlock
-              date={dateValue}
-              setDate={setDate}
-              bloodGlucose={bg}
-              setBloodGlucose={setBgValue}
+    <Modal
+      isVisible={visible}
+      coverScreen={true}
+      backdropOpacity={1}
+      onBackButtonPress={() => closeModal()}
+      backdropColor={Colors.backgroundColor}
+      style={{margin: 0}}>
+      <LeftArrowBtn close={closeModal} />
+      <Text style={globalStyles.pageHeader}>Blood Glucose</Text>
+      <Text style={globalStyles.pageDetails}>{day}</Text>
+      <MissedContent arr={missedArr} type={bg_key} />
+      <View style={{flexDirection: 'row', marginTop: '3%', marginBottom: '2%'}}>
+        {pass ? (
+          <>
+            <Text style={globalStyles.pageDetails}>Average {avgBg} mmol/L</Text>
+
+            <Ionicon name="checkmark" style={diaryStyles.passIcon} size={25} />
+          </>
+        ) : (
+          <>
+            <Text style={globalStyles.pageDetails}>Average {avgBg} mmol/L</Text>
+
+            <Ionicon
+              name="alert-circle-outline"
+              style={diaryStyles.failIcon}
+              size={25}
             />
-            <ActionButton
-              disable={disable}
-              handleEdit={handleEdit}
-              handleDelete={handleDelete}
-            />
-          </View>
-        </KeyboardAvoidingView>
-      </Modal>
-    </View>
+          </>
+        )}
+      </View>
+      <ScrollView style={{flex: 1}}>
+        {/*Show time section and data for log*/}
+        <TimeSection name={morningObj.name} />
+        {renderLogs(morningBgLogs, editLog)}
+        <TimeSection name={afternoonObj.name} />
+        {renderLogs(afternoonBgLogs, editLog)}
+        <TimeSection name={eveningObj.name} />
+        {renderLogs(eveningBgLogs, editLog)}
+      </ScrollView>
+
+      {/*Edit Modal*/}
+      {editModal ? (
+        <BloodGlucoseLogBlock
+          visible={editModal}
+          recordDate={getDateObj(selectedLog.record_date)}
+          closeModal={() => setEditModal(false)}
+          parent="editLog"
+        />
+      ) : null}
+    </Modal>
   );
 };
 
 export default BgBlock;
 
+function renderLogs(logs, editLog) {
+  if (logs.length > 0) {
+    return (
+      <View style={{marginBottom: '3%'}}>
+        <Text style={diaryStyles.recordedText}>Reading Recorded</Text>
+        {logs.map((item, index) => (
+          <View style={styles.logContent} key={index.toString()}>
+            <Text style={diaryStyles.recordContent}>
+              {getTime(item.record_date)}
+            </Text>
+            <Text style={diaryStyles.recordContent}>
+              {item.bg_reading} mmol/L
+            </Text>
+            {showEdit(item.record_date) ? (
+              <>
+                <View style={{flex: 1}} />
+                <TouchableOpacity onPress={() => editLog(item)}>
+                  <Entypo name="edit" style={diaryStyles.editIcon} size={20} />
+                </TouchableOpacity>
+              </>
+            ) : null}
+          </View>
+        ))}
+      </View>
+    );
+  } else {
+    return (
+      <View style={styles.noRecordContainer}>
+        <Text style={diaryStyles.noRecordText}>No Record Found </Text>
+        <Text style={diaryStyles.recordContent}>-</Text>
+      </View>
+    );
+  }
+}
+
 const styles = StyleSheet.create({
-  buttonStyle: {
-    width: '100%', // This should be the same size as backgroundImg height
-    padding: 10,
+  noRecordContainer: {
+    marginBottom: '2%',
   },
-  iconImg: {
-    position: 'absolute',
-    top: '40%',
-    left: '20%',
-    width: 30,
-    height: 30,
-    resizeMode: 'contain', //resize image so dont cut off
-  },
-  backgroundImg: {
-    width: '100%',
-    height: 120,
-    opacity: 0.3,
-    borderWidth: 0.4,
-    overflow: 'hidden',
-    borderWidth: 2,
-    borderColor: '#aad326',
-  },
-  buttonText1: {
-    position: 'absolute',
-    top: '70%',
-    left: '19%',
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#072d08',
-  },
-  modalContainer: {
-    backgroundColor: 'white',
-    padding: '3%',
+  logContent: {
+    flexDirection: 'row',
+    marginTop: '1%',
+    marginBottom: '2%',
   },
 });
 

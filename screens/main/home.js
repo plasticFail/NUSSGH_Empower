@@ -75,14 +75,23 @@ const HomeScreen = (props) => {
   const [uncompleteLogs, setUncompleteLogs] = useState([]);
   useEffect(() => {
     //Refresh every 1 minutes
-    setTimeout(() => setCurrHour(new Date().getHours()), 60000);
+    setTimeout(() => {
+      setCurrHour(new Date().getHours());
+      checkLogDone(getGreetingFromHour(new Date().getHours())).then(
+        (response) => {
+          setUncompleteLogs(response.notCompleted);
+        },
+      );
+    }, 60000);
   });
 
   useEffect(() => {
     props.navigation.addListener('focus', () => {
-      checkLogDone(getGreetingFromHour(currHour)).then((response) => {
-        setUncompleteLogs(response.notCompleted);
-      });
+      checkLogDone(getGreetingFromHour(new Date().getHours())).then(
+        (response) => {
+          setUncompleteLogs(response.notCompleted);
+        },
+      );
     });
   }, []);
   return (

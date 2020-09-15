@@ -1,134 +1,131 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
   StyleSheet,
-  Image,
-  ImageBackground,
-  Dimensions,
+  TouchableOpacity,
+  ScrollView,
 } from 'react-native';
-import {TouchableOpacity, FlatList} from 'react-native-gesture-handler';
 //third party library
 import Modal from 'react-native-modal';
+import Entypo from 'react-native-vector-icons/Entypo';
 //component
-import Header from './header';
-import MedicationLogBlock from '../../logs/medicationLogBlock';
-import ActionButton from './actionBtn';
+import LeftArrowBtn from '../../logs/leftArrowBtn';
+import MissedContent from './missedContent';
+import TimeSection from '../timeSection';
+//style
+import {Colors} from '../../../styles/colors';
+import globalStyles from '../../../styles/globalStyles';
+import diaryStyles from '../../../styles/diaryStyles';
 //function
-import {getTime, getDateObj} from '../../../commonFunctions/diaryFunctions';
+import {
+  getMissedArr,
+  showEdit,
+  getTime,
+} from '../../../commonFunctions/diaryFunctions';
+import {med_key} from '../../../commonFunctions/logFunctions';
+import {
+  morningObj,
+  afternoonObj,
+  eveningObj,
+} from '../../../commonFunctions/common';
 
 const MedBlock = (props) => {
-  const {medicationList} = props;
-  //format date string
-  let dateString = String(medicationList[0].recordDate);
-  let time = getTime(dateString);
-  let initalList = medicationList;
-  const img = require('../../../resources/images/medication.jpeg');
-  const logo = require('../../../resources/images/medication_logo.png');
-  const [modalVisible, setModalVisible] = useState(false);
-  const [list, setList] = useState(medicationList);
-  const [date, setDate] = useState(getDateObj(dateString));
-  const [disable, setDisabled] = useState(true);
+  const {
+    visible,
+    morningMedLogs,
+    afternoonMedLogs,
+    eveningMedLogs,
+    miss,
+    day,
+  } = props;
+  const {closeModal} = props;
+  const [selectedLog, setSelectedLog] = useState({});
+  const [missedArr, setMissedArr] = useState([]);
 
-  //close itself
-  const closeModal = () => {
-    setModalVisible(false);
+  const editLog = (item) => {
+    console.log('selecting item to edit');
+    setSelectedLog(item);
   };
 
-  //open edit modal
-  const handleEdit = () => {};
-
-  //handle delete of log
-  const handleDelete = () => {};
-
-  const onListChange = (list) => {
-    setList([...list]);
-    if (JSON.stringify(list) === JSON.stringify(initalList)) {
-      setDisabled(true);
-    } else {
-      setDisabled(false);
-    }
-  };
+  useEffect(() => {
+    setMissedArr(
+      getMissedArr(morningMedLogs, afternoonMedLogs, eveningMedLogs),
+    );
+  }, []);
 
   return (
-    <View style={{flexBasis: '33.3%'}}>
-      <TouchableOpacity
-        style={styles.container}
-        onPress={() => setModalVisible(true)}>
-        <Image source={logo} style={styles.iconImg} />
-        <Text style={styles.buttonText1}>Medication</Text>
-        <ImageBackground source={img} style={styles.backgroundImg} />
-      </TouchableOpacity>
-      <Text style={{textAlign: 'center'}}>{time}</Text>
-      {/* Open details of log*/}
-      <Modal
-        isVisible={modalVisible}
-        animationIn="slideInUp"
-        onBackdropPress={() => setModalVisible(false)}
-        onBackButtonPress={() => setModalVisible(false)}
-        style={{justifyContent: 'flex-end'}}>
-        <Header title={'Medication:' + time} closeModal={closeModal} />
-        <View style={styles.modalContainer}>
-          <MedicationLogBlock
-            date={date}
-            setDate={setDate}
-            selectedMedicationList={list}
-            onListChange={onListChange}
-          />
-          <ActionButton
-            disable={disable}
-            handleEdit={handleEdit}
-            handleDelete={handleDelete}
-          />
-        </View>
-      </Modal>
-    </View>
+    <Modal
+      isVisible={visible}
+      coverScreen={true}
+      backdropOpacity={1}
+      onBackButtonPress={() => closeModal()}
+      backdropColor={Colors.backgroundColor}
+      style={{margin: 0}}>
+      <LeftArrowBtn close={closeModal} />
+      <Text style={globalStyles.pageHeader}>Medication</Text>
+      <Text style={globalStyles.pageDetails}>{day}</Text>
+      <MissedContent arr={missedArr} type={med_key} />
+      <ScrollView style={{flex: 1}}>
+        {/*Show time section and data for log*/}
+        <TimeSection name={morningObj.name} />
+        {renderMedLogs(morningMedLogs, editLog)}
+        <TimeSection name={afternoonObj.name} />
+        {renderMedLogs(afternoonMedLogs, editLog)}
+        <TimeSection name={eveningObj.name} />
+        {renderMedLogs(eveningMedLogs, editLog)}
+      </ScrollView>
+    </Modal>
   );
 };
 
 export default MedBlock;
 
+function renderMedLogs(logs, editLog) {
+  if (logs.length > 0) {
+    return (
+      <View style={{marginBottom: '3%'}}>
+        <Text style={diaryStyles.recordedText}>Medication Recorded</Text>
+        {logs.map((item, index) => (
+          <View style={styles.logContent} key={index.toString()}>
+            <Text style={diaryStyles.recordContent}>
+              {getTime(item.record_date)}
+            </Text>
+            <View style={{width: '70%'}}>
+              <Text style={diaryStyles.recordContent}>{item.medication}</Text>
+              <Text style={diaryStyles.recordContent}>
+                {item.dosage}{' '}
+                {String(item.unit).substring(0, 1).toUpperCase() +
+                  String(item.unit).substr(1, item.length)}{' '}
+                (s)
+              </Text>
+            </View>
+            {showEdit(item.record_date) ? (
+              <>
+                <View style={{flex: 1}} />
+                <TouchableOpacity onPress={() => editLog(item)}>
+                  <Entypo name="edit" style={diaryStyles.editIcon} size={20} />
+                </TouchableOpacity>
+              </>
+            ) : null}
+          </View>
+        ))}
+      </View>
+    );
+  } else {
+    return (
+      <View style={styles.noRecordContainer}>
+        <Text style={diaryStyles.noRecordText}>No Record Found </Text>
+        <Text style={diaryStyles.recordContent}>-</Text>
+      </View>
+    );
+  }
+}
+
 const styles = StyleSheet.create({
-  container: {
-    width: '100%', // This should be the same size as backgroundImg height
-    alignSelf: 'center',
-    paddingTop: 10,
-    paddingBottom: 10,
-  },
-  iconImg: {
-    position: 'absolute',
-    top: '40%',
-    left: '20%',
-    width: 30,
-    height: 30,
-    resizeMode: 'contain', //resize image so dont cut off
-  },
-  backgroundImg: {
-    width: '100%',
-    height: 120,
-    opacity: 0.3,
-    borderWidth: 0.4,
-    overflow: 'hidden',
-    borderWidth: 2,
-    borderColor: '#aad326',
-  },
-  buttonText1: {
-    position: 'absolute',
-    top: '75%',
-    left: '19%',
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#072d08',
-  },
-  modalContainer: {
-    backgroundColor: 'white',
-    padding: '3%',
-    flex: 1,
-  },
-  medicationAddedText: {
-    fontSize: 18,
-    fontWeight: '700',
+  logContent: {
+    flexDirection: 'row',
+    marginTop: '1%',
+    marginBottom: '2%',
   },
 });
-
-//comment

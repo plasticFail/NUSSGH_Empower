@@ -1,70 +1,235 @@
-import React, {useState, useEffect} from 'react';
-import {View, StyleSheet, Text, FlatList} from 'react-native';
+import React, {useState, useEffect, useRef} from 'react';
+import {
+  View,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  Animated,
+} from 'react-native';
 //component
-import Legend from '../../../components/diary/legend';
-import TargetBlock from '../../../components/diary/targetBlock';
-import Filter from '../../../components/filter';
 import MenuBtn from '../../../components/menuBtn';
+import TargetBlock from '../../../components/diary/targetBlock';
+import CalendarDay2Component from '../../../components/diary/calendarDay_2';
 //functions
 import {getDateRange} from '../../../commonFunctions/diaryFunctions';
 //style
 import globalStyles from '../../../styles/globalStyles';
+import {Colors} from '../../../styles/colors';
+//third party lib
+import Moment from 'moment';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import {Calendar} from 'react-native-calendars';
 
 const DiaryScreen = (props) => {
-  const [dates, setDates] = useState([]);
+  const today_date = Moment(new Date()).format('YYYY-MM-DD');
 
-  //set useeffect to render this week*
+  const [dates, setDates] = useState([]);
+  const [partialVisible, setPartialVisible] = useState(true); //show 7days
+  const [showCalendarFull, setShowCalendarFull] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(today_date);
+  const [calendarselect, setCalendarSelect] = useState({
+    [today_date]: {
+      selected: true,
+      marked: true,
+    },
+  });
+  const dropDownAnimation = useRef(new Animated.Value(0)).current;
+  const heightInterpolation = dropDownAnimation.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0%', '100%'],
+  });
+
+  //set useeffect to render this week refresh every 1min
   useEffect(() => {
-    setDates(getDateRange(7));
+    props.navigation.addListener('focus', () => {
+      setDates(getDateRange(6, new Date()));
+    });
   }, []);
 
-  const getDateArrFromFilter = (value) => {
-    setDates(value);
+  //animate drop down calendar
+  useEffect(() => {
+    if (showCalendarFull) {
+      Animated.timing(dropDownAnimation, {
+        toValue: 1,
+        duration: 500,
+        useNativeDriver: false,
+      }).start();
+    } else {
+      Animated.timing(dropDownAnimation, {
+        toValue: 0,
+        duration: 500,
+        useNativeDriver: false,
+      }).start();
+    }
+  }, [showCalendarFull]);
+
+  //select date from half calendar
+  chooseDate = (item) => {
+    setSelectedDate(item);
+    setSelected(item);
+  };
+
+  //select date from full calendar
+  selectDate = (item) => {
+    setSelectedDate(item);
+    setSelected(item);
+    setDates(getDateRange(6, new Date(item)));
+  };
+
+  setSelected = (item) => {
+    let newobj = {
+      [item]: {
+        selected: true,
+        marked: true,
+      },
+    };
+    setCalendarSelect(newobj);
+  };
+
+  displayCalendar = () => {
+    setShowCalendarFull(!showCalendarFull);
+    setPartialVisible(!partialVisible);
   };
 
   return (
     <View style={globalStyles.pageContainer}>
       <MenuBtn />
-      <View style={{flexDirection: 'row', padding: '3%'}}>
-        <Text style={styles.legendHeader}>Legend</Text>
-        <Filter getDateArrFromFilter={getDateArrFromFilter} />
-      </View>
-      <View style={styles.legendContainer}>
-        <Legend />
-      </View>
-      <View style={{flex: 2}}>
-        <FlatList
-          data={dates}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({item}) => (
-            <View style={[styles.diaryContentContainer, styles.shadow]}>
-              <TargetBlock date={item} navigation={props.navigation} />
+      <ScrollView contentContainerStyle={{flexGrow: 0}}>
+        <>
+          <Text style={globalStyles.pageHeader}>Diary</Text>
+          {showCalendarFull ? (
+            <Animated.View style={{maxHeight: heightInterpolation}}>
+              <Calendar
+                dayComponent={CalendarDay2Component}
+                maxDate={today_date}
+                hideArrows={false}
+                selectAll={false}
+                markedDates={calendarselect}
+                onDayPress={(day) => {
+                  selectDate(day.dateString);
+                }}
+                theme={{
+                  calendarBackground: Colors.backgroundColor,
+                  'stylesheet.calendar.header': {
+                    header: {
+                      flexDirection: 'row',
+                      justifyContent: 'center',
+                      marginTop: 6,
+                      alignItems: 'center',
+                    },
+                    headerContainer: {
+                      width: '80%',
+                      flexDirection: 'row',
+                    },
+                    monthText: {
+                      fontSize: 20,
+                      fontFamily: 'SFProDisplay-Bold',
+                      textAlign: 'center',
+                    },
+                  },
+                  arrowColor: Colors.lastLogValueColor,
+                }}
+              />
+            </Animated.View>
+          ) : null}
+          {partialVisible && (
+            <View style={styles.dateList}>
+              {dates.map((item, index) =>
+                selectedDate === item ? (
+                  <TouchableOpacity
+                    key={item}
+                    style={styles.selectedDateContainer}
+                    onPress={() => chooseDate(item)}>
+                    <Text style={styles.selectedDateText}>
+                      {Moment(new Date(item)).format('D MMM')}
+                    </Text>
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity
+                    key={item}
+                    style={styles.dateContainer}
+                    onPress={() => chooseDate(item)}>
+                    <Text style={styles.dateText}>
+                      {Moment(new Date(item)).format('D MMM')}
+                    </Text>
+                  </TouchableOpacity>
+                ),
+              )}
             </View>
           )}
-        />
-      </View>
+          <TouchableOpacity onPress={() => displayCalendar()}>
+            {showCalendarFull ? (
+              <Icon
+                name="angle-double-up"
+                size={40}
+                style={styles.chevronDown}
+              />
+            ) : (
+              <Icon
+                name="angle-double-down"
+                size={40}
+                style={styles.chevronDown}
+              />
+            )}
+          </TouchableOpacity>
+          {/*Day Summary for Log*/}
+          <View style={{flex: 1}}>
+            <Text style={[globalStyles.pageDetails, styles.viewLog]}>
+              View Your Logs
+            </Text>
+            <TargetBlock date={selectedDate} navigation={props.navigation} />
+          </View>
+        </>
+      </ScrollView>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  legendContainer: {
+  dateList: {
     flexDirection: 'row',
-    flex: 1,
-    zIndex: 1,
-    elevation: 1,
-    marginTop: '2%',
+    alignItems: 'center',
+    margin: '2%',
+    justifyContent: 'space-around',
+    marginStart: '2%',
   },
-  legendHeader: {
+  dateText: {
+    textAlign: 'center',
+    fontSize: 17,
+    fontFamily: 'SFProDisplay-Regular',
+  },
+  selectedDateText: {
+    textAlign: 'center',
     fontSize: 18,
-    fontWeight: '700',
-    flex: 1,
+    fontFamily: 'SFProDisplay-Bold',
   },
-  selectStyle: {
-    height: 43,
-    width: '40%',
+  dateContainer: {
+    backgroundColor: '#e2e8ee',
+    width: '11%',
+    marginStart: '2%',
+    paddingTop: '5%',
+    paddingBottom: '5%',
+    paddingHorizontal: '1%',
+    borderRadius: 9.5,
+  },
+  selectedDateContainer: {
+    backgroundColor: '#aad326',
+    width: '12%',
+    marginStart: '2%',
+    paddingTop: '5%',
+    paddingBottom: '5%',
+    paddingHorizontal: '1%',
+    borderRadius: 9.5,
+  },
+  viewLog: {
+    fontSize: 23,
+    color: Colors.lastLogValueColor,
+  },
+  chevronDown: {
+    color: Colors.backArrowColor,
+    alignSelf: 'center',
   },
 });
 
 export default DiaryScreen;
-//comment

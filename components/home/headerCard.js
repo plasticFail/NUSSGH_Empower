@@ -21,27 +21,36 @@ const HeaderCard = (props) => {
       }}>
       <Text style={styles.greetingText}>Good {hour},</Text>
       <Text style={styles.usernameText}>{username}</Text>
-      <Text style={styles.taskText}>
-        You have <Text style={styles.bold}>{uncompleteLogs.length}</Text>{' '}
-        mandatory task (s) awaiting...
-      </Text>
-      <TouchableOpacity
-        style={styles.logCard}
-        onPress={() => navigation.navigate('AddLog')}>
-        <Text style={[styles.greetingText, {color: Colors.menuColor}]}>
-          Create a log for the {hour}
+      {uncompleteLogs.length > 0 ? (
+        <>
+          <Text style={styles.taskText}>
+            You have <Text style={styles.bold}>{uncompleteLogs.length}</Text>{' '}
+            mandatory task (s) awaiting...
+          </Text>
+          <TouchableOpacity
+            style={styles.logCard}
+            onPress={() => navigation.navigate('AddLog')}>
+            <Text style={[styles.greetingText, {color: Colors.menuColor}]}>
+              Create a log for the {hour}
+            </Text>
+            <View style={{flexDirection: 'row'}}>
+              {uncompleteLogs.map((item, index) => (
+                <Image
+                  key={item}
+                  source={renderLogIcon(item)}
+                  style={[logStyles.mini_loglogo, styles.logLogo]}
+                />
+              ))}
+              <View style={{flex: 1}} />
+              <Icon name="chevron-right" size={20} style={styles.chevron} />
+            </View>
+          </TouchableOpacity>
+        </>
+      ) : (
+        <Text style={styles.taskText}>
+          You have completed your logs for the {hour}!
         </Text>
-        <View style={{flexDirection: 'row'}}>
-          {uncompleteLogs.map((item, index) => (
-            <Image
-              source={renderLogIcon(item)}
-              style={[logStyles.mini_loglogo, styles.logLogo]}
-            />
-          ))}
-          <View style={{flex: 1}} />
-          <Icon name="chevron-right" size={20} style={styles.chevron} />
-        </View>
-      </TouchableOpacity>
+      )}
     </View>
   );
 };

@@ -20,7 +20,6 @@ import InputOTPScreen from './login/inputOTPScreen';
 import ResetPasswordScreen from './login/resetPassword';
 import DailyLog from './main/log/dailyLog';
 import MealLogRoot from './main/log/meal/MealLogRoot';
-import DiaryDetail from './main/diary/diaryDetail';
 //components
 import CreateMealLogScreen from './main/log/meal/CreateMealLog';
 import FavouriteMealScreen from './main/log/meal/FavouriteMeals';
@@ -204,14 +203,6 @@ class AppRoot extends Component {
                   name={'FoodSearchEngine'}
                   component={FoodSearchEngineScreen}
                   options={{headerShown: false}}
-                />
-                <Stack.Screen
-                  name="DiaryDetail"
-                  component={DiaryDetail}
-                  options={({route}) => ({
-                    title: 'Diary Entry: ' + route.params.date,
-                    headerRight: () => <View />,
-                  })}
                 />
                 {/* Onboarding */}
                 <Stack.Screen
