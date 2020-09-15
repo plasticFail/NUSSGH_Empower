@@ -150,43 +150,52 @@ const BloodGlucoseLogBlock = (props) => {
       backdropColor={Colors.backgroundColor}
       style={{margin: 0}}>
       <View style={{flex: 1}}>
-        <LeftArrowBtn close={closeModal} />
-        {parent === 'addLog' ? (
-          <>
-            <Text style={globalStyles.pageHeader}>Add Blood Glucose</Text>
-            <Text style={[logStyles.fieldName, styles.fieldStyle]}>
-              Current Reading
-            </Text>
-          </>
-        ) : (
-          <>
-            <Text style={globalStyles.pageHeader}>Edit</Text>
-            <DateSelectionBlock date={datetime} setDate={setDate} />
-            <Text style={[logStyles.fieldName, styles.fieldStyle2]}>
-              Reading
-            </Text>
-          </>
-        )}
-
-        <View style={{flexDirection: 'row'}}>
-          <TextInput
-            style={[logStyles.inputField, styles.inputContainer]}
-            placeholderTextColor="#a1a3a0"
-            placeholder={bloodGlucose}
-            keyboardType="decimal-pad"
-            value={bloodGlucose}
-            onChangeText={(value) => {
-              setBloodGlucose(value);
-            }}
-          />
-          <Text style={styles.unitText}>mmol/L</Text>
+        <View style={logStyles.menuBarContainer}>
+          <LeftArrowBtn close={closeModal} />
         </View>
-        {checkBloodGlucoseText(bloodGlucose) !== '' && (
-          <Text style={[globalStyles.alertText, {marginStart: '5%'}]}>
-            {checkBloodGlucoseText(bloodGlucose)}
-          </Text>
-        )}
-
+        <View style={[logStyles.bodyPadding, {flex: 1}]}>
+          {parent === 'addLog' ? (
+            <>
+              <Text style={[logStyles.headerText, logStyles.componentMargin]}>
+                Add Blood Glucose
+              </Text>
+              <Text
+                style={[
+                  logStyles.fieldName,
+                  logStyles.componentMargin,
+                  styles.fieldStyle,
+                ]}>
+                Current Reading
+              </Text>
+            </>
+          ) : (
+            <>
+              <Text style={globalStyles.pageHeader}>Edit</Text>
+              <DateSelectionBlock date={datetime} setDate={setDate} />
+              <Text style={[logStyles.fieldName, styles.fieldStyle2]}>
+                Reading
+              </Text>
+            </>
+          )}
+          <View style={[logStyles.componentMargin, {flexDirection: 'row'}]}>
+            <TextInput
+              style={[logStyles.inputField, styles.inputContainer]}
+              placeholderTextColor="#a1a3a0"
+              placeholder={bloodGlucose}
+              keyboardType="decimal-pad"
+              value={bloodGlucose}
+              onChangeText={(value) => {
+                setBloodGlucose(value);
+              }}
+            />
+            <Text style={styles.unitText}>mmol/L</Text>
+          </View>
+          {checkBloodGlucoseText(bloodGlucose) !== '' && (
+            <Text style={[globalStyles.alertText, {marginStart: '5%'}]}>
+              {checkBloodGlucoseText(bloodGlucose)}
+            </Text>
+          )}
+        </View>
         <HypoglycemiaBlock
           eatSelection={eatSelection}
           setEatSelection={setEatSelection}

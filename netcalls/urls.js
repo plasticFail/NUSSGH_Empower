@@ -11,6 +11,7 @@ const mealAddLogEndpoint = server + 'log/meal';
 const unfavouriteMealEndpoint = server + 'log/meal/unfavourite-meal';
 const mealListEndpoint = server + 'log/meal';
 const favouriteMealListEndpoint = server + 'log/meal/favourite-list';
+const nutrientConsumptionEndpoint = server + 'log/meal/nutrient-consumption';
 const foodSearchEndpoint = server + 'food/search';
 const requestOTP = server + 'auth/patient/password-reset/request-otp';
 const verifyOTP = server + 'auth/patient/password-reset/verify-otp';
@@ -38,4 +39,5 @@ export {
   getDiaryEntries,
   medplanAdd,
   fitbitTokenPostEndpoint,
+  nutrientConsumptionEndpoint,
 };

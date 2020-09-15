@@ -3,11 +3,27 @@ import {ScrollView, Text, TouchableOpacity, View, StyleSheet} from "react-native
 import Icon from "react-native-vector-icons/dist/FontAwesome";
 import FoodItem from "./FoodItem";
 
-export default function RenderMealItem({item, options, containerStyle}) {
-    const combinedMealItems = item.beverage.map(x => x).concat(item.main, item.side, item.dessert);
+export default function RenderMealItem({item, options, containerStyle, onSelectMeal}) {
     return (
-        <View style={{...styles.mealItem, ...containerStyle}}>
+        <TouchableOpacity style={{...styles.mealItem, ...containerStyle}} onPress={onSelectMeal}>
+            {
+                options?.buttons.map(buttonOption => (
+                    <TouchableOpacity style={{...styles.button, ...buttonOption.buttonStyle}}
+                                      onPress={()=>buttonOption.onPress(item)}>
+                        {
+                            buttonOption.icon ? <Icon size={34} name={buttonOption.icon.name}
+                                                      color={buttonOption.icon.color} /> : null
+                        }
+                    </TouchableOpacity>
+                ))
+            }
             <View style={styles.headerContainer}>
+                <Text style={styles.headerText}>{item["mealName"]}</Text>
+                <Text style={[styles.headerText, {color: '#7d7d7d'}]}>{item.foodItems.length + ' Different Item(s)'}</Text>
+            </View>
+            {
+                /*
+                <View style={styles.headerContainer}>
                 <ScrollView horizontal={true} style={{flex: 1}}>
                     <Text style={styles.headerText}>{options?.header ? options.header(item) : item.mealName}</Text>
                 </ScrollView>
@@ -27,44 +43,35 @@ export default function RenderMealItem({item, options, containerStyle}) {
             <ScrollView showsHorizontalScrollIndicator={false} contentContainerStyle={{flexDirection: 'row'}}
                         horizontal={true}>
                 {
-                    combinedMealItems.map(food => <FoodItem key={food["food-name"]} food={food} />)
+                    item.foodItems.map(food => <FoodItem key={food["food-name"]} food={food} />)
                 }
             </ScrollView>
-        </View>
+
+                 */
+            }
+        </TouchableOpacity>
     )
 }
 
 const styles = StyleSheet.create({
     mealItem: {
         borderBottomWidth: 0.5,
-        borderTopWidth: 0.5,
         borderColor: '#cfcfcf',
+        paddingTop: 10,
         paddingBottom: 10,
-        width: '100%'
+        width: '100%',
+        flexDirection: 'row',
+        alignItems: 'center'
     },
     headerContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        marginTop: '3%',
-        marginBottom: '3%'
+        paddingLeft: '3%'
     },
     headerText: {
-        fontSize: 20,
-        fontWeight: 'bold',
-    },
-    recordDateText: {
-        fontSize:  18,
-        color: '#7d7d7d'
+        fontSize: 16,
     },
     button: {
-        backgroundColor: '#288259',
-        width: 60,
-        height: 35,
         justifyContent: 'center',
         alignItems: 'center',
-        borderRadius: 10,
-        marginLeft: 15
     },
     buttonText: {
         fontSize: 15,
@@ -72,3 +79,4 @@ const styles = StyleSheet.create({
         color: "#fff"
     }
 })
+//edit flag

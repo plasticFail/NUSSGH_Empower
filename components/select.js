@@ -2,6 +2,7 @@ import React from 'react';
 import {View, StyleSheet, Text, Platform, ActionSheetIOS, TouchableOpacity, Modal, Animated, TouchableWithoutFeedback} from 'react-native';
 // Others
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
+import logStyles from "../styles/logStyles";
 
 // Determine what ui to render for select. Different os render different select types.
 // Props description for customizability.
@@ -208,14 +209,17 @@ const iosStyles = StyleSheet.create({
         width: '100%',
         height: 50,
         alignItems: 'center',
-        backgroundColor: '#eff3bd',
+        backgroundColor: 'white',
+        borderWidth: 1,
+        borderColor: '#e2e8ee',
         borderRadius: 10,
         flexDirection: 'row',
-        paddingLeft: '7%',
+        paddingLeft: '4%',
         paddingRight: '3%'
     },
     textStyle: {
-        fontSize: 24,
+        fontSize: 18,
         width: '90%'
     },
 })
+//edit flag

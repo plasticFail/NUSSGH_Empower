@@ -12,8 +12,17 @@ import {
   getLastBgLog,
   getLastWeightLog,
   getLastMedicationLog,
+  getLastMealLog,
 } from '../storage/asyncStorageFunctions';
-import {getGreetingFromHour} from './common';
+
+import {getGreetingFromHour, morningObj, getPeriodFromMealType} from './common';
+import {getEntry4Day} from '../netcalls/requestsDiary';
+import {
+  filterMorning,
+  filterAfternoon,
+  getTime,
+  getHour,
+} from './diaryFunctions';
 
 const bg_key = 'Blood Glucose Log';
 const food_key = 'Food Intake Log';
@@ -50,49 +59,73 @@ const isPeriod = (time) => {
   return getGreetingFromHour(hour);
 };
 
-//to add: food*
 const checkLogDone = async (period) => {
   let bg_data = await getLastBgLog();
   let med_data = await getLastMedicationLog();
   let weight_data = await getLastWeightLog();
+  let food_data = await getLastMealLog();
+
   let completed = [];
   let notCompleted = [];
-  if (
-    bg_data &&
-    String(isPeriod(bg_data.hour)) === period &&
-    isToday(bg_data.date)
-  ) {
-    completed.push(bg_key);
-  } else {
-    notCompleted.push(bg_key);
-  }
+  let bgLogs = [];
+  let foodLogs = [];
+  let medLogs = [];
+  let weightLogs = [];
+  let today = Moment(new Date()).format('YYYY-MM-DD');
 
-  if (
-    med_data &&
-    String(isPeriod(med_data.hour)) === period &&
-    isToday(med_data.date)
-  ) {
-    completed.push(med_key);
-  } else {
-    notCompleted.push(med_key);
-  }
-  if (
-    weight_data &&
-    String(isPeriod(weight_data.hour)) === period &&
-    isToday(weight_data.date)
-  ) {
-    completed.push(weight_key);
-  } else {
-    notCompleted.push(weight_key);
-  }
+  try {
+    let data = await getEntry4Day(String(today));
+    let d = data[today];
+    bgLogs = d.glucose.logs;
+    foodLogs = d.food.logs;
+    medLogs = d.medication.logs;
+    weightLogs = d.weight.logs;
 
-  //for now temporary push food to not done
-  notCompleted.push(food_key);
+    if (inPeriod(bgLogs, period)) {
+      completed.push(bg_key);
+    } else {
+      notCompleted.push(bg_key);
+    }
 
+    if (inPeriod(foodLogs, period)) {
+      completed.push(food_key);
+    } else {
+      notCompleted.push(food_key);
+    }
+
+    if (inPeriod(medLogs, period)) {
+      completed.push(med_key);
+    } else {
+      notCompleted.push(med_key);
+    }
+
+    if (inPeriod(weightLogs, period)) {
+      completed.push(weight_key);
+    } else {
+      notCompleted.push(weight_key);
+    }
+  } catch (e) {
+    return Alert.alert('Network Error', '', [{text: 'Try again later'}]);
+    //for now temporary push food to not done
+  }
   return {
     completed: completed,
     notCompleted: notCompleted,
   };
+};
+
+const inPeriod = (logs, period) => {
+  if (logs.length === 0) {
+    return false;
+  }
+  for (var x of logs) {
+    let time = getHour(x.record_date);
+    let greeting = getGreetingFromHour(time);
+    if (greeting === period) {
+      return true;
+    }
+  }
+  return false;
 };
 
 const checkBloodGlucose = (bloodGlucose) => {
@@ -212,12 +245,19 @@ const handleSubmitMedication = async (date, selectedMedicationList) => {
   console.log(selectedMedicationList);
 
   if (await medicationAddLogRequest(selectedMedicationList)) {
-    storeLastMedicationLog({
-      value: selectedMedicationList,
-      date: Moment(date).format('YYYY/MM/DD'),
-      hour: Moment(date).format('HH:mm'), //tweaked
-      dateString: Moment(date).format('Do MMM YYYY, h:mm a'), //added
-    });
+    let med_data = await getLastMedicationLog();
+    if (
+      Moment(date).format('YYYY/MM/DD') > med_data.date ||
+      (Moment(date).format('YYYY/MM/DD') === med_data.date &&
+        Moment(date).format('HH:mm') > med_data.hour)
+    ) {
+      storeLastMedicationLog({
+        value: selectedMedicationList,
+        date: Moment(date).format('YYYY/MM/DD'),
+        hour: Moment(date).format('HH:mm'), //tweaked
+        dateString: Moment(date).format('Do MMM YYYY, h:mm a'), //added
+      });
+    }
     return true;
   } else {
     Alert.alert('Error', 'Unexpected Error Occured', [
@@ -231,12 +271,19 @@ const handleSubmitWeight = async (date, weight) => {
   if (checkWeight(weight)) {
     let formatDate = Moment(date).format('DD/MM/YYYY HH:mm:ss');
     if (await weightAddLogRequest(Number(weight), formatDate)) {
-      storeLastWeightLog({
-        value: weight,
-        date: Moment(date).format('YYYY/MM/DD'),
-        hour: Moment(date).format('HH:mm'), //tweaked
-        dateString: Moment(date).format('Do MMM YYYY, h:mm a'), //added
-      });
+      let weight_data = await getLastWeightLog();
+      if (
+        Moment(date).format('YYYY/MM/DD') > weight_data.date ||
+        (Moment(date).format('YYYY/MM/DD') === weight_data.date &&
+          Moment(date).format('HH:mm') > weight_data.hour)
+      ) {
+        storeLastWeightLog({
+          value: weight,
+          date: Moment(date).format('YYYY/MM/DD'),
+          hour: Moment(date).format('HH:mm'), //tweaked
+          dateString: Moment(date).format('Do MMM YYYY, h:mm a'), //added
+        });
+      }
       return true;
     } else {
       Alert.alert('Error', 'Unexpected Error Occured ', [
@@ -269,5 +316,4 @@ export {
   handleSubmitMedication,
   handleSubmitWeight,
 };
-
-//comment
+//edit flag

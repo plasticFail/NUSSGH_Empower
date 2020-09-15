@@ -17,7 +17,7 @@ import {
 import Entypo from 'react-native-vector-icons/Entypo';
 //function
 import {
-  getLastBgLog,
+  getLastBgLog, getLastMealLog,
   getLastMedicationLog,
   getLastWeightLog,
 } from '../../storage/asyncStorageFunctions';
@@ -25,6 +25,7 @@ import {
 import BloodGlucoseLogDisplay from './bg/bloodGlucoseLogDisplay';
 import MedicationLogDisplay from './medication/medicationLogDisplay';
 import WeightLogDisplay from './weight/weightLogDisplay';
+import ReadOnlyMealDisplay from "./meal/ReadOnlyMealDisplay";
 
 //show last values
 const LastLogButton = (props) => {
@@ -51,6 +52,10 @@ const LastLogButton = (props) => {
       getLastMedicationLog().then((response) => {
         setStates(response);
       });
+    } else if (logType === food_key) {
+      getLastMealLog().then(response => {
+        setStates(response);
+      })
     }
   };
 
@@ -85,23 +90,21 @@ const LastLogButton = (props) => {
             </Text>
           )}
         </View>
-        <View style={{alignSelf: 'flex-end'}}>
-          {show === false ? (
-            <Entypo
-              name="chevron-down"
-              size={30}
-              color="white"
-              onPress={() => setShow(true)}
-            />
-          ) : (
-            <Entypo
-              name="chevron-up"
-              size={30}
-              color="white"
-              onPress={() => setShow(false)}
-            />
-          )}
-        </View>
+        {show === false ? (
+          <Entypo
+            name="chevron-down"
+            size={30}
+            color="white"
+            onPress={() => setShow(true)}
+          />
+        ) : (
+          <Entypo
+            name="chevron-up"
+            size={30}
+            color="white"
+            onPress={() => setShow(false)}
+          />
+        )}
       </TouchableOpacity>
       {!none4tdy && logType === bg_key && (
         <BloodGlucoseLogDisplay data={dataToDisplay} show={show} />
@@ -112,9 +115,14 @@ const LastLogButton = (props) => {
       {!none4tdy && logType === weight_key && (
         <WeightLogDisplay data={dataToDisplay} show={show} />
       )}
+      {
+        !none4tdy && logType === food_key && (
+          <ReadOnlyMealDisplay data={dataToDisplay.value} show={show}/>
+        )
+      }
     </>
   );
 };
 
 export default LastLogButton;
-//comment
+//edit flag
