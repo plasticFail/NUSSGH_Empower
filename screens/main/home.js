@@ -77,17 +77,21 @@ const HomeScreen = (props) => {
     //Refresh every 1 minutes
     setTimeout(() => {
       setCurrHour(new Date().getHours());
-      checkLogDone(getGreetingFromHour(currHour)).then((response) => {
-        setUncompleteLogs(response.notCompleted);
-      });
+      checkLogDone(getGreetingFromHour(new Date().getHours())).then(
+        (response) => {
+          setUncompleteLogs(response.notCompleted);
+        },
+      );
     }, 60000);
   });
 
   useEffect(() => {
     props.navigation.addListener('focus', () => {
-      checkLogDone(getGreetingFromHour(currHour)).then((response) => {
-        setUncompleteLogs(response.notCompleted);
-      });
+      checkLogDone(getGreetingFromHour(new Date().getHours())).then(
+        (response) => {
+          setUncompleteLogs(response.notCompleted);
+        },
+      );
     });
   }, []);
   return (

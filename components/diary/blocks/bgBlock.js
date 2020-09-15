@@ -10,6 +10,7 @@ import {
   getTime,
   showEdit,
   getMissedArr,
+  getDateObj,
 } from '../../../commonFunctions/diaryFunctions';
 //third party library
 import Modal from 'react-native-modal';
@@ -25,6 +26,7 @@ import TimeSection from '../timeSection';
 import {ScrollView} from 'react-native-gesture-handler';
 import MissedContent from './missedContent';
 import {bg_key} from '../../../commonFunctions/logFunctions';
+import BloodGlucoseLogBlock from '../../logs/bg/bloodGlucoseLogBlock';
 
 const BgBlock = (props) => {
   const {
@@ -40,6 +42,7 @@ const BgBlock = (props) => {
   const {closeModal} = props;
   const [selectedLog, setSelectedLog] = useState({});
   const [missedArr, setMissedArr] = useState([]);
+  const [editModal, setEditModal] = useState(false);
 
   useEffect(() => {
     setMissedArr(getMissedArr(morningBgLogs, afternoonBgLogs, eveningBgLogs));
@@ -48,6 +51,7 @@ const BgBlock = (props) => {
   const editLog = (item) => {
     console.log('selecting item to edit');
     setSelectedLog(item);
+    setEditModal(true);
   };
 
   return (
@@ -90,6 +94,16 @@ const BgBlock = (props) => {
         <TimeSection name={eveningObj.name} />
         {renderLogs(eveningBgLogs, editLog)}
       </ScrollView>
+
+      {/*Edit Modal*/}
+      {editModal ? (
+        <BloodGlucoseLogBlock
+          visible={editModal}
+          recordDate={getDateObj(selectedLog.record_date)}
+          closeModal={() => setEditModal(false)}
+          parent="editLog"
+        />
+      ) : null}
     </Modal>
   );
 };
@@ -132,39 +146,6 @@ function renderLogs(logs, editLog) {
 }
 
 const styles = StyleSheet.create({
-  buttonStyle: {
-    width: '100%', // This should be the same size as backgroundImg height
-    padding: 10,
-  },
-  iconImg: {
-    position: 'absolute',
-    top: '40%',
-    left: '20%',
-    width: 30,
-    height: 30,
-    resizeMode: 'contain', //resize image so dont cut off
-  },
-  backgroundImg: {
-    width: '100%',
-    height: 120,
-    opacity: 0.3,
-    borderWidth: 0.4,
-    overflow: 'hidden',
-    borderWidth: 2,
-    borderColor: '#aad326',
-  },
-  buttonText1: {
-    position: 'absolute',
-    top: '70%',
-    left: '19%',
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#072d08',
-  },
-  modalContainer: {
-    backgroundColor: 'white',
-    padding: '3%',
-  },
   noRecordContainer: {
     marginBottom: '2%',
   },
