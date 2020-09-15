@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   StyleSheet,
@@ -19,6 +19,7 @@ import {
   bg_key,
 } from '../../../commonFunctions/logFunctions';
 import {addGlucoseQuestionaire} from '../../../netcalls/requestsLog';
+import {getDateObj} from '../../../commonFunctions/diaryFunctions';
 //styles
 import globalStyles from '../../../styles/globalStyles';
 import {Colors} from '../../../styles/colors';
@@ -27,30 +28,49 @@ import logStyles from '../../../styles/logStyles';
 import Modal from 'react-native-modal';
 import SuccessDialogue from '../../successDialogue';
 import moment from 'moment';
+import Ionicon from 'react-native-vector-icons/Ionicons';
 
 const BloodGlucoseLogBlock = (props) => {
   const {
     visible,
     parent, //important when doing edit**
     recordDate,
+    selectedLog, //to edit
   } = props;
+
   const {closeModal, closeParent} = props;
   const [bloodGlucose, setBloodGlucose] = useState('');
   const [eatSelection, setEatSelection] = useState(false);
   const [exerciseSelection, setExerciseSelection] = useState(false);
   const [alcholicSelection, setAlcoholSelection] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [datetime, setDatetime] = useState(recordDate); //edit modal
 
-  console.log('Navigating to bg modal from ' + parent);
+  //for editing
+  const initialBg = selectedLog.bg_reading;
+  const initialDate = getDateObj(selectedLog.record_date);
+  const [datetime, setDatetime] = useState(initialDate);
+  const [changed, setChanged] = useState(false);
+
+  useEffect(() => {
+    console.log('Navigating to bg modal from ' + parent);
+    if (selectedLog != undefined) {
+      setBloodGlucose(String(initialBg));
+      setDatetime(initialDate);
+    }
+  }, []);
+
+  useEffect(() => {
+    checkChange();
+  }, [datetime, bloodGlucose]);
 
   const submitBg = () => {
     if (parent === 'addLog') {
       postBg();
     } else {
-      //handle edit **
+      //handle edit (get the questionaire ans if have)
       console.log('Editing Log');
-      console.log(datetime);
+      console.log('New date: ' + moment(datetime).format('YYYY-MM-DD HH:mm'));
+      console.log('New value: ' + bloodGlucose);
     }
   };
 
@@ -76,11 +96,23 @@ const BloodGlucoseLogBlock = (props) => {
     closeParent();
   };
 
+  //for edit
   const setDate = (value) => {
     setDatetime(value);
   };
 
-  console.log(moment(datetime).format('YYYY-MM-DD HH:mm'));
+  const checkChange = () => {
+    if (bloodGlucose != initialBg || String(initialDate) != String(datetime)) {
+      setChanged(true);
+      return;
+    }
+    setChanged(false);
+    return;
+  };
+
+  const deleteLog = () => {
+    console.log('deleting log');
+  };
 
   return (
     <Modal
@@ -102,8 +134,8 @@ const BloodGlucoseLogBlock = (props) => {
         ) : (
           <>
             <Text style={globalStyles.pageHeader}>Edit</Text>
-            <DateSelectionBlock date={recordDate} setDate={setDate} />
-            <Text style={[logStyles.fieldName, styles.fieldStyle]}>
+            <DateSelectionBlock date={datetime} setDate={setDate} />
+            <Text style={[logStyles.fieldName, styles.fieldStyle2]}>
               Reading
             </Text>
           </>
@@ -138,19 +170,43 @@ const BloodGlucoseLogBlock = (props) => {
           bloodGlucose={bloodGlucose}
         />
       </View>
-      <View style={[globalStyles.buttonContainer]}>
-        {checkBloodGlucose(bloodGlucose) ? (
-          <TouchableOpacity
-            style={globalStyles.submitButtonStyle}
-            onPress={() => submitBg()}>
-            <Text style={globalStyles.actionButtonText}>Submit</Text>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity style={globalStyles.skipButtonStyle}>
-            <Text style={globalStyles.actionButtonText}>Submit</Text>
-          </TouchableOpacity>
-        )}
-      </View>
+      {parent === 'addLog' ? (
+        <View style={[globalStyles.buttonContainer]}>
+          {checkBloodGlucose(bloodGlucose) ? (
+            <TouchableOpacity
+              style={globalStyles.submitButtonStyle}
+              onPress={() => submitBg()}>
+              <Text style={globalStyles.actionButtonText}>Submit</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity style={globalStyles.skipButtonStyle}>
+              <Text style={globalStyles.actionButtonText}>Submit</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+      ) : (
+        <View style={[globalStyles.buttonContainer]}>
+          <View style={{flexDirection: 'row'}}>
+            <TouchableOpacity
+              style={styles.binIcon}
+              onPress={() => deleteLog()}>
+              <Ionicon name="ios-trash-bin" size={40} color="#ff0844" />
+            </TouchableOpacity>
+            {checkBloodGlucose(bloodGlucose) && changed === true ? (
+              <TouchableOpacity
+                style={logStyles.enableEditButton}
+                onPress={() => submitBg()}>
+                <Text style={globalStyles.actionButtonText}>Done</Text>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity style={logStyles.disableEditButton}>
+                <Text style={globalStyles.actionButtonText}>Done</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        </View>
+      )}
+
       {success ? (
         <SuccessDialogue
           visible={success}
@@ -169,10 +225,17 @@ const styles = StyleSheet.create({
   fieldStyle: {
     marginTop: '7%',
   },
+  fieldStyle2: {
+    marginTop: '2%',
+  },
   unitText: {
     flex: 1,
     marginTop: '10%',
     fontSize: 18,
+  },
+  binIcon: {
+    marginTop: '5%',
+    marginStart: '2%',
   },
 });
 

@@ -22,7 +22,7 @@ const HypoglycemiaBlock = (props) => {
   const {setEatSelection, setExerciseSelection, setAlcoholSelection} = props;
 
   useEffect(() => {
-    if (Number(bloodGlucose) <= 4 && bloodGlucose !== '') {
+    if (Number(bloodGlucose) <= 5 && bloodGlucose !== '') {
       setVisible(true);
       //fade in animation
       Animated.timing(fadeAnim, {

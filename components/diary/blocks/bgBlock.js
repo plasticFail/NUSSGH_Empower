@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {ScrollView} from 'react-native-gesture-handler';
 //function
 import {
   morningObj,
@@ -12,6 +13,7 @@ import {
   getMissedArr,
   getDateObj,
 } from '../../../commonFunctions/diaryFunctions';
+import {bg_key} from '../../../commonFunctions/logFunctions';
 //third party library
 import Modal from 'react-native-modal';
 import Ionicon from 'react-native-vector-icons/Ionicons';
@@ -23,9 +25,7 @@ import diaryStyles from '../../../styles/diaryStyles';
 //component
 import LeftArrowBtn from '../../logs/leftArrowBtn';
 import TimeSection from '../timeSection';
-import {ScrollView} from 'react-native-gesture-handler';
 import MissedContent from './missedContent';
-import {bg_key} from '../../../commonFunctions/logFunctions';
 import BloodGlucoseLogBlock from '../../logs/bg/bloodGlucoseLogBlock';
 
 const BgBlock = (props) => {
@@ -99,9 +99,10 @@ const BgBlock = (props) => {
       {editModal ? (
         <BloodGlucoseLogBlock
           visible={editModal}
-          recordDate={getDateObj(selectedLog.record_date)}
           closeModal={() => setEditModal(false)}
           parent="editLog"
+          toEditbloodGlucose={selectedLog.bg_reading}
+          selectedLog={selectedLog}
         />
       ) : null}
     </Modal>

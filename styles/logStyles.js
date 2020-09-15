@@ -92,6 +92,28 @@ const logStyles = StyleSheet.create({
     borderColor: Colors.lastLogValueColor,
     margin: '3%',
   },
+  enableEditButton: {
+    backgroundColor: Colors.nextBtnColor,
+    height: 45,
+    width: '90%',
+    borderRadius: 9.5,
+    margin: '5%',
+    alignSelf: 'center',
+    marginBottom: '15%',
+    paddingTop: '3%',
+    flex: 1,
+  },
+  disableEditButton: {
+    backgroundColor: '#e4e4e4',
+    height: 45,
+    width: '90%',
+    borderRadius: 9.5,
+    margin: '5%',
+    alignSelf: 'center',
+    marginBottom: '15%',
+    paddingTop: '3%',
+    flex: 1,
+  },
 });
 
 export default logStyles;
