@@ -10,6 +10,8 @@ import {Colors} from '../../../styles/colors';
 //decimalIntervalStyle: style for intervals that is decimals
 //intervalTextColor: color for interval
 const interval_width = 30;
+
+//scale from offset to value
 const scale = (v, inputMin, interval) => {
   console.log('v: ' + v);
   let factor = Math.round(v / interval_width);
@@ -28,18 +30,22 @@ const scale = (v, inputMin, interval) => {
   return num;
 };
 
+//scale from value to offset
+const scaleToOffset = (value, min, interval) => {
+  let diff = value - min;
+  let position = (diff / interval).toFixed(2) * interval_width + 30;
+  return position;
+};
+
 export default class PickDrag extends Component {
   constructor(props) {
     super(props);
     this.props = props;
-    this.scrollMin = 0;
-    this.scrollMax = this.getScrollMax(props);
-    this.handleScroll = this.handleScroll.bind(this);
-  }
+    this.state = {
+      initial: false,
+    };
 
-  componentDidUpdate(nextProp) {
-    console.log('calling component did update');
-    this.scrollMax = this.getScrollMax(nextProp);
+    this.handleScroll = this.handleScroll.bind(this);
   }
 
   getScrollMax(props = this.props) {
@@ -52,7 +58,17 @@ export default class PickDrag extends Component {
   }
 
   handleScroll(event) {
-    let offset = event.nativeEvent.contentOffset.x;
+    console.log('------Scrolling event happening');
+    const {value, min, interval} = this.props;
+    let offset = 0;
+    if (offset === 0 && !this.state.initial) {
+      console.log('entering first time');
+      offset = scaleToOffset(value, min, interval);
+      this.setState({initial: true});
+      this.scrollView.scrollTo({x: offset, animated: true});
+    } else {
+      offset = event.nativeEvent.contentOffset.x;
+    }
     let val = this.scaleValue(offset);
     this.props.onChange(val);
   }

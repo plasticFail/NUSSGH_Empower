@@ -9,7 +9,13 @@ import {
 } from './urls';
 import {getToken} from '../storage/asyncStorageFunctions';
 
-const glucoseAddLogRequest = async (bgReading, date) => {
+const glucoseAddLogRequest = async (
+  bgReading,
+  date,
+  eatSelection,
+  exerciseSelection,
+  alcoholSelection,
+) => {
   try {
     let response = await fetch(glucoseAddLog, {
       method: 'POST',
@@ -20,39 +26,16 @@ const glucoseAddLogRequest = async (bgReading, date) => {
       },
       body: JSON.stringify({
         bgReading: bgReading,
+        questionnaire: {
+          eat_lesser: eatSelection,
+          exercised: exerciseSelection,
+          alcohol: alcoholSelection,
+        },
         recordDate: date,
       }),
     });
     let responseJson = await response.json();
     console.log('glucoseAddLogRequest : ' + responseJson);
-    return true;
-  } catch (error) {
-    console.error(error);
-    return false;
-  }
-};
-
-const addGlucoseQuestionaire = async (
-  eatSelection,
-  exercisesSelection,
-  alcoholSelection,
-) => {
-  try {
-    let response = await fetch(glucoseQuestionaire, {
-      method: 'POST',
-      headers: {
-        Authorization: 'Bearer ' + (await getToken()),
-        Accept: 'application/json',
-        'Content-type': 'application/json',
-      },
-      body: JSON.stringify({
-        alcohol: alcoholSelection,
-        exercised: exercisesSelection,
-        eat_lesser: eatSelection,
-      }),
-    });
-    let responseJson = await response.json();
-    console.log('glucoseQuestionaire : ' + responseJson);
     return true;
   } catch (error) {
     console.error(error);
@@ -174,5 +157,4 @@ export {
   getMedication4Day,
   weightAddLogRequest,
   mealAddLogRequest,
-  addGlucoseQuestionaire,
 };

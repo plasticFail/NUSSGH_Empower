@@ -14,6 +14,7 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import LeftArrowBtn from '../../logs/leftArrowBtn';
 import TimeSection from '../timeSection';
 import MissedContent from './missedContent';
+import WeightLogBlock from '../../logs/weight/weightLogBlock';
 //style
 import {Colors} from '../../../styles/colors';
 import globalStyles from '../../../styles/globalStyles';
@@ -44,6 +45,7 @@ const WeightBlock = (props) => {
   const {closeModal} = props;
   const [selectedLog, setSelectedLog] = useState({});
   const [missedArr, setMissedArr] = useState([]);
+  const [editModal, setEditModal] = useState(false);
 
   useEffect(() => {
     setMissedArr(
@@ -51,7 +53,10 @@ const WeightBlock = (props) => {
     );
   }, []);
 
-  const editWeightLog = (item) => {};
+  const editWeightLog = (item) => {
+    setEditModal(true);
+    setSelectedLog(item);
+  };
 
   return (
     <Modal
@@ -75,6 +80,15 @@ const WeightBlock = (props) => {
         <TimeSection name={eveningObj.name} />
         {renderWeightLogs(eveningWeightLogs, editWeightLog)}
       </ScrollView>
+      {/*Edit Modal*/}
+      {editModal ? (
+        <WeightLogBlock
+          visible={editModal}
+          closeModal={() => setEditModal(false)}
+          parent="editLog"
+          selectedLog={selectedLog}
+        />
+      ) : null}
     </Modal>
   );
 };
@@ -123,4 +137,3 @@ const styles = StyleSheet.create({
     marginBottom: '2%',
   },
 });
-//comment

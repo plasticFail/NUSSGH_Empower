@@ -18,7 +18,6 @@ import {
   min_bg,
   bg_key,
 } from '../../../commonFunctions/logFunctions';
-import {addGlucoseQuestionaire} from '../../../netcalls/requestsLog';
 import {getDateObj} from '../../../commonFunctions/diaryFunctions';
 //styles
 import globalStyles from '../../../styles/globalStyles';
@@ -49,6 +48,19 @@ const BloodGlucoseLogBlock = (props) => {
   //for editing
   const initialBg = selectedLog ? selectedLog.bg_reading : 0;
   const initialDate = selectedLog ? getDateObj(selectedLog.record_date) : '';
+  const initialEat =
+    selectedLog && selectedLog.questionnaire != null
+      ? selectedLog.questionnaire.eat_lesser
+      : false;
+  const initialEx =
+    selectedLog && selectedLog.questionnaire != null
+      ? selectedLog.questionnaire.exercised
+      : false;
+  const initialAlcohol =
+    selectedLog && selectedLog.questionnaire != null
+      ? selectedLog.questionnaire.alcohol
+      : false;
+
   const [datetime, setDatetime] = useState(initialDate);
   const [changed, setChanged] = useState(false);
 
@@ -57,18 +69,27 @@ const BloodGlucoseLogBlock = (props) => {
     if (selectedLog != undefined) {
       setBloodGlucose(String(initialBg));
       setDatetime(initialDate);
+      setEatSelection(initialEat);
+      setExerciseSelection(initialEx);
+      setAlcoholSelection(initialAlcohol);
     }
   }, []);
 
   useEffect(() => {
     checkChange();
-  }, [datetime, bloodGlucose]);
+  }, [
+    datetime,
+    bloodGlucose,
+    exerciseSelection,
+    alcholicSelection,
+    eatSelection,
+  ]);
 
   const submitBg = () => {
     if (parent === 'addLog') {
       postBg();
     } else {
-      //handle edit (get the questionaire ans if have)
+      //handle edit (get the questionaire ans)
       console.log('Editing Log');
       console.log('New date: ' + moment(datetime).format('YYYY-MM-DD HH:mm'));
       console.log('New value: ' + bloodGlucose);
@@ -77,16 +98,15 @@ const BloodGlucoseLogBlock = (props) => {
 
   //submit value
   const postBg = async () => {
-    if (await handleSubmitBloodGlucose(recordDate, bloodGlucose)) {
-      if (Number(bloodGlucose) <= min_bg) {
-        addGlucoseQuestionaire(
-          eatSelection,
-          exerciseSelection,
-          alcholicSelection,
-        ).then((response) => {
-          console.log('sending questionaire');
-        });
-      }
+    if (
+      await handleSubmitBloodGlucose(
+        recordDate,
+        bloodGlucose,
+        eatSelection,
+        exerciseSelection,
+        alcholicSelection,
+      )
+    ) {
       setSuccess(true);
     }
   };
@@ -103,7 +123,13 @@ const BloodGlucoseLogBlock = (props) => {
   };
 
   const checkChange = () => {
-    if (bloodGlucose != initialBg || String(initialDate) != String(datetime)) {
+    if (
+      bloodGlucose != initialBg ||
+      String(initialDate) != String(datetime) ||
+      eatSelection != initialEat ||
+      exerciseSelection != initialEx ||
+      alcholicSelection != initialAlcohol
+    ) {
       setChanged(true);
       return;
     }

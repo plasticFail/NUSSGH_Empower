@@ -171,10 +171,24 @@ const checkRepeatMedicine = (medicine, list) => {
   return false;
 };
 
-const handleSubmitBloodGlucose = async (date, bloodGlucose) => {
+const handleSubmitBloodGlucose = async (
+  date,
+  bloodGlucose,
+  eatSelection,
+  exerciseSelection,
+  alcholicSelection,
+) => {
   if (checkBloodGlucose(bloodGlucose)) {
     let formatDate = Moment(date).format('DD/MM/YYYY HH:mm:ss');
-    if (await glucoseAddLogRequest(Number(bloodGlucose), formatDate)) {
+    if (
+      await glucoseAddLogRequest(
+        Number(bloodGlucose),
+        formatDate,
+        eatSelection,
+        exerciseSelection,
+        alcholicSelection,
+      )
+    ) {
       storeLastBgLog({
         value: bloodGlucose,
         date: Moment(date).format('YYYY/MM/DD'),
