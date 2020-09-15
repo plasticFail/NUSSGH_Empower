@@ -72,7 +72,7 @@ const HomeScreen = (props) => {
   const [carb, setCarb] = React.useState(null);
   const [fat, setFat] = React.useState(null);
   const [stepsTaken, setStepsTaken] = React.useState(null);
-
+  /*
   useEffect(() => {
     //Refresh every 1 minutes
     setTimeout(() => {
@@ -81,7 +81,7 @@ const HomeScreen = (props) => {
         setUncompleteLogs(response.notCompleted);
       });
     }, 60000);
-  });
+  });*/
 
   useEffect(() => {
     props.navigation.addListener('focus', () => {

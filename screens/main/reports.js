@@ -5,7 +5,7 @@ import MenuBtn from '../../components/menuBtn';
 import BarChart from "../../components/dashboard/reports/BarChart";
 import LineChart from "../../components/dashboard/reports/LineChart";
 import Icon from "react-native-vector-icons/FontAwesome5";
-import {PieChart} from "../../components/dashboard/reports/SimplePieChart";
+import {PieChart, RevampPieChart} from "../../components/dashboard/reports/SimplePieChart";
 
 const tabs = [
   {name: 'Blood Glucose', icon: 'tint'},
@@ -43,7 +43,7 @@ const ReportsScreen = (props) => {
                 tabIndex === 1 ?
                     <LineChart width={width} height={300} /> :
                     tabIndex === 2 ?
-                        <PieChart /> : null
+                        <RevampPieChart /> : null
           }
         </View>
       </ScrollView>

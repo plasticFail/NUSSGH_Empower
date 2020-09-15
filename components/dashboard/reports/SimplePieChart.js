@@ -1,5 +1,5 @@
 import React from 'react';
-import {View} from 'react-native';
+import {View, Dimensions} from 'react-native';
 import {Circle, G, Svg, Text, Path} from "react-native-svg";
 
 const data = [
@@ -29,6 +29,7 @@ const data2 = [
     },
 ]
 
+const {width, height} = Dimensions.get('window');
 const radius = 70;
 const padding = 0;
 const strokeWidth = 5;
@@ -44,6 +45,78 @@ const ColourArray = [
 ]
 
 const maxPercentage = 100;
+
+const offsetCircleRadius = 4;
+const sliceWidth = 10;
+
+function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
+    const unitCircle = getNormalizedCoorinatedOfCircle(angleInDegrees);
+    return {
+        x: centerX + (radius * unitCircle.x),
+        y: centerY + (radius * unitCircle.y)
+    };
+}
+
+function getNormalizedCoorinatedOfCircle(angle) {
+    const radius = 1;
+    const angleInRadians = angle * Math.PI / 180.0;
+    return {
+        x: radius * Math.sin(angleInRadians),
+        y: -1 * radius * Math.cos(angleInRadians),
+    }
+}
+
+function describeArc(x, y, radius, startAngle, endAngle){
+    //const ncc = polarToCartesian(0,0, offsetCircleRadius,(startAngle + endAngle) / 2);
+    const ncc = getNormalizedCoorinatedOfCircle((endAngle + startAngle) / 2);
+    //try max?
+    const ncc2 = getNormalizedCoorinatedOfCircle(endAngle);
+    const ncc3 = getNormalizedCoorinatedOfCircle(startAngle);
+    const maxNccX = (ncc.x < 0 || ncc2.x < 0 || ncc3.x < 0) ? Math.min(ncc.x, ncc2.x, ncc3.x) : Math.max(ncc.x, ncc2.x, ncc3.x);
+    const maxNccY = (ncc.y < 0 || ncc2.y < 0 || ncc3.y < 0) ? Math.min(ncc.y, ncc2.y, ncc3.y) : Math.max(ncc.y, ncc2.y, ncc3.y);
+    //const start = polarToCartesian(x + maxNccX * offsetCircleRadius, y + maxNccY * offsetCircleRadius, radius, endAngle);
+    //const end = polarToCartesian(x + maxNccX * offsetCircleRadius, y + maxNccY * offsetCircleRadius, radius, startAngle);
+    const start = polarToCartesian(x + ncc.x * offsetCircleRadius, y + ncc.y * offsetCircleRadius, radius, endAngle);
+    const end = polarToCartesian(x + ncc.x * offsetCircleRadius, y + ncc.y * offsetCircleRadius, radius, startAngle);
+    const largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
+
+    const d = [
+        "M", start.x, start.y,
+        "A", radius, radius, 0, largeArcFlag, 0, end.x, end.y
+    ].join(" ");
+
+    return d;
+}
+
+function drawSlice(startAngle, endAngle, radius, centerX, centerY) {
+    return (
+        <Path stroke="#446688" strokeWidth={sliceWidth} d={describeArc(centerX,centerY, radius, startAngle, endAngle)} />
+    )
+}
+
+export function RevampPieChart(props) {
+    return (
+        <View style={{ width, height: 300}}>
+            <Svg width={width} height={300}>
+                {
+                    drawSlice(0, 30, 40, 150, 150)
+                }
+                {
+                    drawSlice(30, 60, 40, 150, 150)
+                }
+                {
+                    drawSlice(60, 90, 40, 150, 150)
+                }
+                {
+                    drawSlice(90, 360, 40, 150, 150)
+                }
+                <Circle cx={150} cy={150} r={offsetCircleRadius} fill='red' />
+            </Svg>
+        </View>
+    );
+};
+
+
 
 const generateCoordinates = percent => {
     const a = (percent * 2 * Math.PI) / maxPercentage;
