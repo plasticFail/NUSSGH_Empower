@@ -56,11 +56,21 @@ export default class PickDrag extends Component {
   }
 
   componentDidMount() {
+    this.scrollInitial();
+  }
+
+  componentDidUpdate(prevProp) {
+    if (prevProp != this.props) {
+      this.scrollInitial();
+    }
+  }
+
+  //for android
+  scrollInitial() {
     const {value, min, interval} = this.props;
     if (Platform.OS === 'android' && this.state.initial === false) {
-      console.log('updating to initial value');
+      console.log('-----updating to initial value');
       let offset = scaleToOffset(value, min, interval);
-      this.setState({initial: true});
       InteractionManager.runAfterInteractions(() => {
         this.scrollView.scrollTo({x: offset, animated: true});
       });
