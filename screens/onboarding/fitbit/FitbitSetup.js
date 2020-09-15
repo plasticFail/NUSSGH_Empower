@@ -16,6 +16,8 @@ import InAppBrowser from 'react-native-inappbrowser-reborn'
 import {AuthoriseFitbit} from "../../../commonFunctions/AuthoriseFitbit";
 import {STATUS} from "../../../components/onboarding/fitbit/Status";
 import ResponseModal from "../../../components/onboarding/fitbit/ResponseModal";
+import LeftArrowBtn from "../../../components/logs/leftArrowBtn";
+import logStyles from "../../../styles/logStyles";
 
 const qs = require('qs');
 
@@ -75,13 +77,6 @@ export default function FitbitSetup(props) {
     });
 
     const handleOpenFitbitOAuthUrl = async () => {
-        /*
-        await Linking.canOpenURL(oAuthUrl).then(supported => {
-            if (supported) {
-                Linking.openURL(oAuthUrl).then(res => console.log(res));
-            }
-        });
-        */
         try {
             if (await InAppBrowser.isAvailable()) {
                 setProcessingStatus(STATUS.IN_PROGRESS);
@@ -128,14 +123,20 @@ export default function FitbitSetup(props) {
 
     return (
         <View style={styles.onboardingContainer}>
-            <Icon name='arrow-left' onPress={props.navigation.goBack} color={Colors.backArrowColor} size={30} style={{paddingLeft: 10}} />
+            <View style={logStyles.menuBarContainer}>
+                <LeftArrowBtn close={props.navigation.goBack} />
+            </View>
             <Text style={[globalStyles.pageHeader, styles.stepText]}>Step 4</Text>
             <Text style={globalStyles.pageDetails}>Link your Fitbit Account</Text>
             <Text style={[globalStyles.pageSubDetails, styles.stepContent]}>
                 Would you like to add your Fitbit account to track your activity? Alternatively, you can set
                 this up later
             </Text>
-            <Text style={{paddingLeft: 15, fontWeight: 'bold'}}>{!authorised.current && processingStatus}</Text>
+            {
+                /*
+                    <Text style={{paddingLeft: 15, fontWeight: 'bold'}}>{!authorised.current && processingStatus}</Text>
+                 */
+            }
             {   authorised.current ?
                 (<View style={{padding: 15}}>
                     <Text style={styles.fitbitDoneMainText}>Done!</Text>
@@ -150,42 +151,6 @@ export default function FitbitSetup(props) {
                         </Animated.View>
                     </View>
                 </TouchableOpacity>)
-            }
-            {
-            /*
-            <View style={styles.root}>
-            <Text style={globalStyles.pageHeader}>Step 4</Text>
-            <View style={styles.headerContainer}>
-                <Text style={styles.headerMainText}>Step 4: Link your fitbit</Text>
-                <Text style={styles.headerSubText}>Its as easy as logging into your Fitbit account!</Text>
-                <Text style={styles.headerSubText}>Alternatively, you can choose to set this up later!</Text>
-            </View>
-            <View style={styles.remainingContainer}>
-                <View style={[styles.fitbitPromptContainer, {flex: 4}]}>
-                    {
-                        authorised.current ?
-                            <React.Fragment>
-                                <Text style={styles.fitbitDoneMainText}>Done!</Text>
-                                <Text style={styles.fitbitDoneSubText}>You are all set</Text>
-                            </React.Fragment>
-                            : <React.Fragment>
-                            <Text style={styles.fitbitPromptText}>
-                                Tap on the Fitbit icon to begin!
-                            </Text>
-                            <TouchableWithoutFeedback onPress={handleOpenFitbitOAuthUrl}>
-                                <Animated.View style={[styles.fitbitIconStyle, {transform: [{scale}]}]}>
-                                    <Image source={fitbitIcon} style={{width: '100%', height: '100%'}} />
-                                </Animated.View>
-                            </TouchableWithoutFeedback>
-                        </React.Fragment>
-                    }
-                </View>
-                <BackAndForwardButton onPressBack={()=>props.navigation.goBack()}
-                                      onPressForward={()=>{}}
-                                      overrideForwardTitle={authorised.current ? 'Next' : 'Skip'}
-                                      enableForward={() => true} />
-            </View>
-             */
             }
             <View style={{flex: 1}} />
             {
@@ -213,7 +178,6 @@ export default function FitbitSetup(props) {
 
 const styles = StyleSheet.create({
     onboardingContainer: {
-        paddingTop: '18%',
         backgroundColor: Colors.backgroundColor,
         flex: 1,
     },
@@ -260,4 +224,3 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     }
 })
-//edit flag
