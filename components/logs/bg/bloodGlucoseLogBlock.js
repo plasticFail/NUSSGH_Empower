@@ -10,6 +10,8 @@ import {
 import HypoglycemiaBlock from './hypoglycemiaBlock';
 import LeftArrowBtn from '../leftArrowBtn';
 import DateSelectionBlock from '../dateSelectionBlock';
+import RemoveModal from '../../diary/removeModal';
+import SuccessDialogue from '../../successDialogue';
 //functions
 import {
   checkBloodGlucoseText,
@@ -19,16 +21,16 @@ import {
   bg_key,
 } from '../../../commonFunctions/logFunctions';
 import {getDateObj} from '../../../commonFunctions/diaryFunctions';
+import {deleteBgLog} from '../../../netcalls/requestsDiary';
 //styles
 import globalStyles from '../../../styles/globalStyles';
 import {Colors} from '../../../styles/colors';
 import logStyles from '../../../styles/logStyles';
+import diaryStyles from '../../../styles/diaryStyles';
 //third party lib
 import Modal from 'react-native-modal';
-import SuccessDialogue from '../../successDialogue';
-import moment from 'moment';
 import Ionicon from 'react-native-vector-icons/Ionicons';
-import diaryStyles from '../../../styles/diaryStyles';
+import moment from 'moment';
 
 const BloodGlucoseLogBlock = (props) => {
   const {
@@ -38,7 +40,7 @@ const BloodGlucoseLogBlock = (props) => {
     selectedLog, //to edit
   } = props;
 
-  const {closeModal, closeParent} = props;
+  const {closeModal, closeParent, init} = props;
   const [bloodGlucose, setBloodGlucose] = useState('');
   const [eatSelection, setEatSelection] = useState(false);
   const [exerciseSelection, setExerciseSelection] = useState(false);
@@ -63,6 +65,7 @@ const BloodGlucoseLogBlock = (props) => {
 
   const [datetime, setDatetime] = useState(initialDate);
   const [changed, setChanged] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false);
 
   useEffect(() => {
     console.log('Navigating to bg modal from ' + parent);
@@ -138,7 +141,17 @@ const BloodGlucoseLogBlock = (props) => {
   };
 
   const deleteLog = () => {
-    console.log('deleting log');
+    setDeleteModal(true);
+  };
+
+  const removeBgLog = () => {
+    console.log('Deleting bg log');
+    deleteBgLog(selectedLog['_id']).then((response) => {
+      if (response.message != null) {
+        init();
+        closeModal();
+      }
+    });
   };
 
   return (
@@ -243,6 +256,17 @@ const BloodGlucoseLogBlock = (props) => {
         </View>
       )}
 
+      {/*Delete confirmation modal */}
+      {deleteModal ? (
+        <RemoveModal
+          visible={deleteModal}
+          closeModal={() => setDeleteModal(false)}
+          logType={bg_key}
+          itemToDeleteName={selectedLog.bg_reading}
+          deleteMethod={() => removeBgLog()}
+        />
+      ) : null}
+
       {success ? (
         <SuccessDialogue
           visible={success}
@@ -267,6 +291,7 @@ const styles = StyleSheet.create({
   unitText: {
     flex: 1,
     marginTop: '10%',
+    marginStart: '3%',
     fontSize: 18,
   },
 });

@@ -140,6 +140,7 @@ const globalStyles = StyleSheet.create({
     fontWeight: '800',
     marginStart: '4%',
     fontFamily: 'SFProDisplay-Bold',
+    marginBottom: '3%',
   },
   pageSubDetails: {
     fontSize: 18,

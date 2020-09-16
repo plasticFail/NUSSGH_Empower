@@ -38,6 +38,7 @@ const BgBlock = (props) => {
     pass,
     miss,
     day,
+    init,
   } = props;
   const {closeModal} = props;
   const [selectedLog, setSelectedLog] = useState({});
@@ -103,6 +104,7 @@ const BgBlock = (props) => {
           parent="editLog"
           toEditbloodGlucose={selectedLog.bg_reading}
           selectedLog={selectedLog}
+          init={init}
         />
       ) : null}
     </Modal>

@@ -42,7 +42,7 @@ const MedBlock = (props) => {
     miss,
     day,
   } = props;
-  const {closeModal} = props;
+  const {closeModal, init} = props;
   const [selectedMed, setSelectedMed] = useState({});
   const [missedArr, setMissedArr] = useState([]);
   const [editModal, setEditModal] = useState(false);
@@ -86,6 +86,7 @@ const MedBlock = (props) => {
           closeModal={() => setEditModal(false)}
           medicineToEdit={selectedMed}
           initialDate={getDateObj(selectedMed.record_date)}
+          init={init}
         />
       ) : null}
     </Modal>
@@ -98,7 +99,6 @@ function renderMedLogs(logs, editLog) {
   if (logs.length > 0) {
     return (
       <View style={{marginBottom: '3%'}}>
-        <Text style={diaryStyles.recordedText}>Medication Recorded</Text>
         {logs.map((item, index) => (
           <View style={styles.logContent} key={index.toString()}>
             <Text style={diaryStyles.recordContent}>

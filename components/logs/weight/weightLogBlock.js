@@ -5,6 +5,7 @@ import PickDrag from './pickDrag';
 import LeftArrowBtn from '../leftArrowBtn';
 import SuccessDialogue from '../../successDialogue';
 import DateSelectionBlock from '../dateSelectionBlock';
+import RemoveModal from '../../diary/removeModal';
 //third party library
 import Modal from 'react-native-modal';
 import Ionicon from 'react-native-vector-icons/Ionicons';
@@ -12,6 +13,7 @@ import Ionicon from 'react-native-vector-icons/Ionicons';
 import {Colors} from '../../../styles/colors';
 import globalStyles from '../../../styles/globalStyles';
 import logStyles from '../../../styles/logStyles';
+import diaryStyles from '../../../styles/diaryStyles';
 //function
 import {
   checkWeight,
@@ -19,7 +21,7 @@ import {
   weight_key,
 } from '../../../commonFunctions/logFunctions';
 import {getDateObj} from '../../../commonFunctions/diaryFunctions';
-import diaryStyles from '../../../styles/diaryStyles';
+import {deleteWeightLog} from '../../../netcalls/requestsDiary';
 
 const WeightLogBlock = (props) => {
   const {
@@ -28,7 +30,7 @@ const WeightLogBlock = (props) => {
     recordDate,
     selectedLog, //to edit
   } = props;
-  const {closeModal, closeParent} = props;
+  const {closeModal, closeParent, init} = props;
   const [weight, setWeight] = useState(50);
   const [success, setSuccess] = useState(false);
 
@@ -37,6 +39,7 @@ const WeightLogBlock = (props) => {
   const initialDate = selectedLog ? getDateObj(selectedLog.record_date) : '';
   const [datetime, setDatetime] = useState(initialDate);
   const [changed, setChanged] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false);
 
   useEffect(() => {
     if (selectedLog != undefined) {
@@ -82,6 +85,19 @@ const WeightLogBlock = (props) => {
 
   const getValue = (value) => {
     setWeight(value);
+  };
+
+  const deleteLog = () => {
+    setDeleteModal(true);
+  };
+
+  const removeWeightLog = () => {
+    deleteWeightLog(selectedLog['_id']).then((response) => {
+      if (response != null) {
+        init();
+        closeModal();
+      }
+    });
   };
 
   return (
@@ -154,6 +170,17 @@ const WeightLogBlock = (props) => {
           </View>
         )}
       </View>
+      {/*Delete confirmation modal */}
+      {deleteModal ? (
+        <RemoveModal
+          visible={deleteModal}
+          closeModal={() => setDeleteModal(false)}
+          logType={weight_key}
+          itemToDeleteName={selectedLog.weight}
+          deleteMethod={() => removeWeightLog()}
+        />
+      ) : null}
+
       {success ? (
         <SuccessDialogue
           visible={success}

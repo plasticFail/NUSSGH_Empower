@@ -41,6 +41,7 @@ const WeightBlock = (props) => {
     pass,
     miss,
     day,
+    init,
   } = props;
   const {closeModal} = props;
   const [selectedLog, setSelectedLog] = useState({});
@@ -69,8 +70,7 @@ const WeightBlock = (props) => {
       <LeftArrowBtn close={closeModal} />
       <Text style={globalStyles.pageHeader}>Weight</Text>
       <Text style={globalStyles.pageDetails}>{day}</Text>
-      <MissedContent arr={missedArr} type={weight_key} />
-
+      {/* <MissedContent arr={missedArr} type={weight_key} /> */}
       {/*Show time section and data for log*/}
       <ScrollView style={{flex: 1}}>
         <TimeSection name={morningObj.name} />
@@ -87,6 +87,7 @@ const WeightBlock = (props) => {
           closeModal={() => setEditModal(false)}
           parent="editLog"
           selectedLog={selectedLog}
+          init={init}
         />
       ) : null}
     </Modal>

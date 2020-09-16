@@ -13,14 +13,19 @@ import diaryStyles from '../../../styles/diaryStyles';
 import LeftArrowBtn from '../../logs/leftArrowBtn';
 import DateSelectionBlock from '../../logs/dateSelectionBlock';
 import Counter from '../../onboarding/medication/Counter';
+//function
+import {deleteMed} from '../../../netcalls/requestsDiary';
+import RemoveModal from '../removeModal';
+import {med_key} from '../../../commonFunctions/logFunctions';
 
 const EditMedicineBlock = (props) => {
   const {visible, medicineToEdit, initialDate} = props;
-  const {closeModal} = props;
+  const {closeModal, init} = props;
 
   const [datetime, setDatetime] = useState(initialDate);
   const [changed, setChanged] = useState(false);
   const [dosage, setDosage] = useState(Number(medicineToEdit.dosage));
+  const [deleteModal, setDeleteModal] = useState(false);
 
   useEffect(() => {
     checkChange();
@@ -31,8 +36,18 @@ const EditMedicineBlock = (props) => {
     console.log(dosage);
   };
 
-  const deleteMed = () => {
+  const requestDelete = () => {
+    setDeleteModal(true);
+  };
+
+  const removeMedFromLog = () => {
     console.log('Deleting medication from log');
+    deleteMed(medicineToEdit['_id']).then((response) => {
+      if (response.message != null) {
+        init();
+        closeModal();
+      }
+    });
   };
 
   const checkChange = () => {
@@ -55,7 +70,7 @@ const EditMedicineBlock = (props) => {
       onBackButtonPress={() => closeModal()}
       backdropColor={Colors.backgroundColor}
       style={{margin: 0}}>
-      <View style={{flex: 1}}>
+      <View style={[logStyles.bodyPadding, {flex: 1}]}>
         <LeftArrowBtn close={closeModal} />
         <Text style={globalStyles.pageHeader}>Edit</Text>
         <DateSelectionBlock date={datetime} setDate={setDatetime} />
@@ -77,7 +92,7 @@ const EditMedicineBlock = (props) => {
         <View style={{flexDirection: 'row'}}>
           <TouchableOpacity
             style={diaryStyles.binIcon}
-            onPress={() => deleteMed()}>
+            onPress={() => requestDelete()}>
             <Ionicon name="ios-trash-bin" size={40} color="#ff0844" />
           </TouchableOpacity>
           {dosage != 0 && changed ? (
@@ -93,6 +108,16 @@ const EditMedicineBlock = (props) => {
           )}
         </View>
       </View>
+      {/*Delete confirmation modal */}
+      {deleteModal ? (
+        <RemoveModal
+          visible={deleteModal}
+          closeModal={() => setDeleteModal(false)}
+          logType={med_key}
+          itemToDeleteName={medicineToEdit.medication}
+          deleteMethod={() => removeMedFromLog()}
+        />
+      ) : null}
     </Modal>
   );
 };
