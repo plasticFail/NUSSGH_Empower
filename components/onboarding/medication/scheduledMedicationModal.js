@@ -14,7 +14,7 @@ import moment from 'moment';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 //component
 import DeleteConfirmation from './deleteConfirmation';
-import ChevronDownBtn from '../../chevronDownBtn';
+import CrossBtn from '../../crossBtn';
 import MedicationItem from '../../medicationItem';
 //styles
 import {Colors} from '../../../styles/colors';
@@ -55,7 +55,7 @@ const ScheduledMedicationModal = (props) => {
       backdropColor={Colors.backgroundColor}>
       <View style={{flex: 1}}>
         <View style={globalStyles.menuBarContainer}>
-          <ChevronDownBtn close={closeModal} />
+          <CrossBtn close={closeModal} />
         </View>
         <View style={styles.body}>
           <Text
