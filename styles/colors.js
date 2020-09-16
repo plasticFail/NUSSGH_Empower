@@ -11,4 +11,5 @@ export const Colors = {
   crossColor: '#16A950',
   leftArrowColor: '#16A950',
   menuColor: '#005c30',
+  subsubHeaderColor: '#828994',
 };

@@ -24,7 +24,7 @@ const getEntry4Day = async (dateString) => {
     let responseJson = await response.json();
     return responseJson;
   } catch (error) {
-    Alert.alert('Network Error', 'Try Again Later', [{text: 'Got It'}]);
+    console.error(error);
   }
 };
 
@@ -43,8 +43,7 @@ const getEntryForDateRange = async (startString, endString) => {
     let responseJson = await response.json();
     return responseJson;
   } catch (error) {
-    console.log('hereere');
-    Alert.alert('Network Error', 'Try Again Later', [{text: 'Got It'}]);
+    console.error(error);
   }
 };
 

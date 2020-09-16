@@ -59,6 +59,7 @@ const styles = StyleSheet.create({
   headerStyle: {
     marginStart: '3%',
     flexDirection: 'row',
+    marginTop: '1%',
   },
   periodIcon: {
     marginEnd: '3%',

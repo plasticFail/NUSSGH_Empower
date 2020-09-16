@@ -166,17 +166,15 @@ const BloodGlucoseLogBlock = (props) => {
         <View style={logStyles.menuBarContainer}>
           <LeftArrowBtn close={closeModal} />
         </View>
-        <View style={[logStyles.bodyPadding, {flex: 1}]}>
+        <View style={logStyles.bodyPadding}>
           {parent === 'addLog' ? (
             <>
-              <Text style={[logStyles.headerText, logStyles.componentMargin]}>
-                Add Blood Glucose
-              </Text>
+              <Text style={[logStyles.headerText]}>Add Blood Glucose</Text>
               <Text
                 style={[
-                  logStyles.fieldName,
+                  logStyles.headersubText,
                   logStyles.componentMargin,
-                  styles.fieldStyle,
+                  {color: Colors.subsubHeaderColor},
                 ]}>
                 Current Reading
               </Text>
@@ -289,8 +287,7 @@ const styles = StyleSheet.create({
     marginTop: '2%',
   },
   unitText: {
-    flex: 1,
-    marginTop: '10%',
+    marginTop: '5%',
     marginStart: '3%',
     fontSize: 18,
   },

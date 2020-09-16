@@ -91,7 +91,7 @@ const logStyles = StyleSheet.create({
   },
   fieldText: {
     fontSize: 18,
-    marginStart: '4%',
+    marginStart: width * 0.04,
     fontFamily: 'SFProDisplay-Regular',
     color: Colors.logFieldColor,
   },
@@ -102,12 +102,14 @@ const logStyles = StyleSheet.create({
     marginTop: '3%',
   },
   inputField: {
-    padding: '3%',
+    padding: '2%',
     backgroundColor: 'white',
     borderRadius: 9.5,
     borderWidth: 1,
     borderColor: '#e2e8ee',
     fontSize: 18,
+    marginTop: '2%',
+    marginBottom: '2%',
   },
   //last log
   lastLogContainer: {
@@ -117,10 +119,14 @@ const logStyles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  lastLogDetailContainer: {
+    width: '100%',
+  },
   lastLogDetail: {
     fontSize: 18,
     fontFamily: 'SFProDisplay-Regular',
     color: 'white',
+    marginStart: width * 0.04,
   },
   mini_loglogo: {
     width: 40,
@@ -132,11 +138,13 @@ const logStyles = StyleSheet.create({
     fontSize: 18,
     fontFamily: 'SFProDisplay-Bold',
     color: Colors.logFieldColor,
+    marginStart: width * 0.04,
+    marginTop: height * 0.02,
   },
   lastLogBorder: {
-    borderWidth: 0.3,
+    borderWidth: 0.4,
     borderColor: Colors.lastLogValueColor,
-    margin: '3%',
+    margin: width * 0.04,
   },
   enableEditButton: {
     backgroundColor: Colors.nextBtnColor,

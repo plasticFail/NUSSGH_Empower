@@ -1,7 +1,11 @@
 import {StyleSheet, Dimensions} from 'react-native';
 import {Colors} from './colors';
 
+const width = Dimensions.get('window').width;
+const height = Dimensions.get('window').height;
+
 const globalStyles = StyleSheet.create({
+  /*
   scrollContainer: {
     flex: 1,
     width: '100%',
@@ -64,7 +68,7 @@ const globalStyles = StyleSheet.create({
     marginVertical: 10,
     paddingHorizontal: 40,
     paddingVertical: 6,
-  },
+  }, */
   //added from ui / ux change
   buttonContainer: {
     backgroundColor: 'white',
@@ -81,17 +85,12 @@ const globalStyles = StyleSheet.create({
   },
   crossIcon: {
     color: Colors.crossColor,
-    marginTop: '8%',
   },
   chevronDown: {
     color: Colors.backArrowColor,
-    marginTop: '8%',
-    marginStart: '4%',
   },
   leftArrowBack: {
     color: Colors.leftArrowColor,
-    marginTop: '8%',
-    marginStart: '2%',
   },
   nextButtonStyle: {
     backgroundColor: Colors.nextBtnColor,
@@ -140,7 +139,7 @@ const globalStyles = StyleSheet.create({
     fontWeight: '800',
     marginStart: '4%',
     fontFamily: 'SFProDisplay-Bold',
-    marginBottom: '3%',
+    marginBottom: '2%',
   },
   pageSubDetails: {
     fontSize: 18,
