@@ -80,14 +80,13 @@ class AddLogScreen extends Component {
     let period = getGreetingFromHour(this.state.recordDate.getHours());
     this.setState({
       period: period,
-    });
-    this.setState({
       todayDate: Moment(this.state.recordDate).format('Do MMMM YYYY'),
     });
     checkLogDone(period).then((response) => {
       this.setState({completedTypes: response.completed});
       this.setState({notCompletedTypes: response.notCompleted});
     });
+
   }
 
   resetState() {

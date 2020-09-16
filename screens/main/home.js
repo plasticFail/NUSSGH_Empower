@@ -72,6 +72,7 @@ const HomeScreen = (props) => {
   const [carb, setCarb] = React.useState(null);
   const [fat, setFat] = React.useState(null);
   const [stepsTaken, setStepsTaken] = React.useState(null);
+
   /*
   useEffect(() => {
     //Refresh every 1 minutes
@@ -81,47 +82,48 @@ const HomeScreen = (props) => {
         setUncompleteLogs(response.notCompleted);
       });
     }, 60000);
-  });*/
+  });
+   */
 
   useEffect(() => {
-    props.navigation.addListener('focus', () => {
-      checkLogDone(getGreetingFromHour(currHour)).then((response) => {
-        setUncompleteLogs(response.notCompleted);
-      }).catch(err => console.log(err));
+      props.navigation.addListener('focus', () => {
+        checkLogDone(getGreetingFromHour(currHour)).then((response) => {
+          setUncompleteLogs(response.notCompleted);
+        }).catch(err => console.log(err));
 
-      // reload nutrition data
-      requestNutrientConsumption(getTodayDate(), getLastMinuteFromTodayDate()).then(data => {
-        const nutrientData = data.data;
-        const calorieAmount = Math.round(nutrientData.reduce((acc, curr, index) => acc + curr.nutrients.energy.amount, 0));
-        const proteinAmount = Math.round(nutrientData.reduce((acc, curr, index) => acc + curr.nutrients.protein.amount, 0));
-        const carbAmount = Math.round(nutrientData.reduce((acc, curr, index) => acc + curr.nutrients.carbohydrate.amount, 0));
-        const fatAmount = Math.round(nutrientData.reduce((acc, curr, index) => acc + curr.nutrients['total-fat'].amount, 0));
-        setCalorie(calorieAmount);
-        setProtein(proteinAmount);
-        setCarb(carbAmount);
-        setFat(fatAmount);
-      }).catch(err => console.log(err));
-      // reload diary data
-      const d = Moment(new Date()).format("YYYY-MM-DD");
-      getEntry4Day(d).then(data => {
-        const bglLogs = data[d].glucose.logs;
-        const weightLogs = data[d].weight.logs;
-        const activityLogs = data[d].activity.logs;
-        const steps = activityLogs.reduce((acc, curr, index) => acc + curr.steps, 0);
-        let averageBgl = bglLogs.reduce((acc, curr, index) => acc + curr.bg_reading, 0);
-        let averageWeight = weightLogs.reduce((acc, curr, index) => acc + curr.weight, 0);
-        if (bglLogs.length > 0) {
-          averageBgl = Math.round(averageBgl * 100 / bglLogs.length) / 100;
-          setBgl(averageBgl);
-        }
-        if (weightLogs.length > 0) {
-          averageWeight = Math.round(averageWeight * 100 / weightLogs.length) / 100;
-          setWeight(averageWeight);
-        }
-        setStepsTaken(steps);
-      }).catch(err => console.log(err));
-
-    });
+        // reload nutrition data
+        requestNutrientConsumption(getTodayDate(), getLastMinuteFromTodayDate()).then(data => {
+          const nutrientData = data.data;
+          const calorieAmount = Math.round(nutrientData.reduce((acc, curr, index) => acc + curr.nutrients.energy.amount, 0));
+          const proteinAmount = Math.round(nutrientData.reduce((acc, curr, index) => acc + curr.nutrients.protein.amount, 0));
+          const carbAmount = Math.round(nutrientData.reduce((acc, curr, index) => acc + curr.nutrients.carbohydrate.amount, 0));
+          const fatAmount = Math.round(nutrientData.reduce((acc, curr, index) => acc + curr.nutrients['total-fat'].amount, 0));
+          setCalorie(calorieAmount);
+          setProtein(proteinAmount);
+          setCarb(carbAmount);
+          setFat(fatAmount);
+        }).catch(err => console.log(err));
+        // reload diary data
+        const d = Moment(new Date()).format("YYYY-MM-DD");
+        getEntry4Day(d).then(data => {
+          console.log(data);
+          const bglLogs = data[d].glucose.logs;
+          const weightLogs = data[d].weight.logs;
+          const activityLogs = data[d].activity.logs;
+          const steps = activityLogs.reduce((acc, curr, index) => acc + curr.steps, 0);
+          let averageBgl = bglLogs.reduce((acc, curr, index) => acc + curr.bg_reading, 0);
+          let averageWeight = weightLogs.reduce((acc, curr, index) => acc + curr.weight, 0);
+          if (bglLogs.length > 0) {
+            averageBgl = Math.round(averageBgl * 100 / bglLogs.length) / 100;
+            setBgl(averageBgl);
+          }
+          if (weightLogs.length > 0) {
+            averageWeight = Math.round(averageWeight * 100 / weightLogs.length) / 100;
+            setWeight(averageWeight);
+          }
+          setStepsTaken(steps);
+        }).catch(err => console.log(err));
+      });
   }, []);
   return (
     <View
