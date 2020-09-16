@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, Alert} from 'react-native';
 //third party library
 import Modal from 'react-native-modal';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -14,7 +14,7 @@ import LeftArrowBtn from '../../logs/leftArrowBtn';
 import DateSelectionBlock from '../../logs/dateSelectionBlock';
 import Counter from '../../onboarding/medication/Counter';
 //function
-import {deleteMed} from '../../../netcalls/requestsDiary';
+import {deleteMed, editMedicineInLog} from '../../../netcalls/requestsDiary';
 import RemoveModal from '../removeModal';
 import {med_key} from '../../../commonFunctions/logFunctions';
 
@@ -32,8 +32,17 @@ const EditMedicineBlock = (props) => {
   }, [dosage, datetime]);
 
   const postChange = () => {
-    console.log('New date: ' + moment(datetime).format('YYYY-MM-DD HH:mm'));
-    console.log(dosage);
+    if (editMedicineInLog(dosage, medicineToEdit, datetime)) {
+      Alert.alert('Medicine edited successfully!', '', [
+        {
+          text: 'Got It',
+          onPress: () => {
+            init();
+            closeModal();
+          },
+        },
+      ]);
+    }
   };
 
   const requestDelete = () => {
@@ -43,7 +52,7 @@ const EditMedicineBlock = (props) => {
   const removeMedFromLog = () => {
     console.log('Deleting medication from log');
     deleteMed(medicineToEdit['_id']).then((response) => {
-      if (response.message != null) {
+      if (response != null) {
         init();
         closeModal();
       }

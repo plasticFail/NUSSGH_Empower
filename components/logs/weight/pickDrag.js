@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
     shadowOffset: {width: 0, height: 2}, // change this for more shadow
     shadowOpacity: 0.2,
     shadowRadius: 6,
-    elevation: 20,
+    elevation: 10,
   },
   scrollcontainer: {
     width: '100%',

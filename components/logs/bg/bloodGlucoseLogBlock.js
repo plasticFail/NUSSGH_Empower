@@ -5,6 +5,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 //components
 import HypoglycemiaBlock from './hypoglycemiaBlock';
@@ -21,7 +22,7 @@ import {
   bg_key,
 } from '../../../commonFunctions/logFunctions';
 import {getDateObj} from '../../../commonFunctions/diaryFunctions';
-import {deleteBgLog} from '../../../netcalls/requestsDiary';
+import {deleteBgLog, editBgLog} from '../../../netcalls/requestsDiary';
 //styles
 import globalStyles from '../../../styles/globalStyles';
 import {Colors} from '../../../styles/colors';
@@ -30,7 +31,6 @@ import diaryStyles from '../../../styles/diaryStyles';
 //third party lib
 import Modal from 'react-native-modal';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import moment from 'moment';
 
 const BloodGlucoseLogBlock = (props) => {
   const {
@@ -88,14 +88,31 @@ const BloodGlucoseLogBlock = (props) => {
     eatSelection,
   ]);
 
-  const submitBg = () => {
+  const submitBg = async () => {
     if (parent === 'addLog') {
       postBg();
     } else {
       //handle edit (get the questionaire ans)
-      console.log('Editing Log');
-      console.log('New date: ' + moment(datetime).format('YYYY-MM-DD HH:mm'));
-      console.log('New value: ' + bloodGlucose);
+      if (
+        await editBgLog(
+          datetime,
+          eatSelection,
+          exerciseSelection,
+          alcholicSelection,
+          selectedLog['_id'],
+          bloodGlucose,
+        )
+      ) {
+        Alert.alert('Blood Glucose Log edited successfully!', '', [
+          {
+            text: 'Got It',
+            onPress: () => {
+              init();
+              closeModal();
+            },
+          },
+        ]);
+      }
     }
   };
 
@@ -147,7 +164,7 @@ const BloodGlucoseLogBlock = (props) => {
   const removeBgLog = () => {
     console.log('Deleting bg log');
     deleteBgLog(selectedLog['_id']).then((response) => {
-      if (response.message != null) {
+      if (response != null) {
         init();
         closeModal();
       }

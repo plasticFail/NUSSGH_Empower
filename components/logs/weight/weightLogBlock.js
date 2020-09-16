@@ -1,5 +1,12 @@
 import React, {useState, useEffect} from 'react';
-import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  Alert,
+  ScrollView,
+} from 'react-native';
 //components
 import PickDrag from './pickDrag';
 import LeftArrowBtn from '../leftArrowBtn';
@@ -22,7 +29,7 @@ import {
   weight_key,
 } from '../../../commonFunctions/logFunctions';
 import {getDateObj} from '../../../commonFunctions/diaryFunctions';
-import {deleteWeightLog} from '../../../netcalls/requestsDiary';
+import {deleteWeightLog, editWeightLog} from '../../../netcalls/requestsDiary';
 
 const WeightLogBlock = (props) => {
   const {
@@ -57,9 +64,17 @@ const WeightLogBlock = (props) => {
     if (parent === 'addLog') {
       postWeight();
     } else {
-      //handle edit**
-      console.log('New Datetime: ' + datetime);
-      console.log('New weight : ' + weight);
+      if (editWeightLog(weight, datetime, selectedLog['_id'])) {
+        Alert.alert('Weight Log edited successfully!', '', [
+          {
+            text: 'Got It',
+            onPress: () => {
+              init();
+              closeModal();
+            },
+          },
+        ]);
+      }
     }
   };
 
@@ -114,36 +129,38 @@ const WeightLogBlock = (props) => {
           <LeftArrowBtn close={closeModal} />
           <View style={{flex: 1}} />
         </View>
-        {parent === 'addLog' ? (
-          <>
-            <Text style={globalStyles.pageHeader}>Add Weight</Text>
-            <View style={[logStyles.bodyPadding, {marginStart: 0}]}>
-              <Text style={logStyles.fieldName}>Current Weight</Text>
-              <Text style={[logStyles.fieldText, {marginStart: 0}]}>
-                {weight}kg
-              </Text>
+        <ScrollView contentContainerStyle={{flexGrow: 0}}>
+          {parent === 'addLog' ? (
+            <>
+              <Text style={globalStyles.pageHeader}>Add Weight</Text>
+              <View style={[logStyles.bodyPadding, {marginStart: 0}]}>
+                <Text style={logStyles.fieldName}>Current Weight</Text>
+                <Text style={[logStyles.fieldText, {marginStart: 0}]}>
+                  {weight}kg
+                </Text>
+              </View>
+            </>
+          ) : (
+            <View style={{marginBottom: '10%'}}>
+              <Text style={globalStyles.pageHeader}>Edit</Text>
+              <View style={[logStyles.bodyPadding, {marginStart: 0}]}>
+                <DateSelectionBlock date={datetime} setDate={setDatetime} />
+                <Text style={logStyles.fieldName}>Weight</Text>
+                <Text style={[logStyles.fieldText, {marginStart: 0}]}>
+                  {weight}kg
+                </Text>
+              </View>
             </View>
-          </>
-        ) : (
-          <>
-            <Text style={globalStyles.pageHeader}>Edit</Text>
-            <View style={[logStyles.bodyPadding, {marginStart: 0}]}>
-              <DateSelectionBlock date={datetime} setDate={setDatetime} />
-              <Text style={logStyles.fieldName}>Weight</Text>
-              <Text style={[logStyles.fieldText, {marginStart: 0}]}>
-                {weight}kg
-              </Text>
-            </View>
-          </>
-        )}
-        <View style={{flex: 1}} />
-        <PickDrag
-          min={40}
-          max={200}
-          onChange={getValue}
-          interval={0.2}
-          value={weight}
-        />
+          )}
+          <View style={{flex: 1}} />
+          <PickDrag
+            min={40}
+            max={200}
+            onChange={getValue}
+            interval={0.2}
+            value={weight}
+          />
+        </ScrollView>
         <View style={{flex: 1}} />
         {parent === 'addLog' ? (
           <View style={[globalStyles.buttonContainer]}>
