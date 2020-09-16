@@ -131,7 +131,7 @@ const WeightLogBlock = (props) => {
         </View>
         <ScrollView contentContainerStyle={{flexGrow: 0}}>
           {parent === 'addLog' ? (
-            <>
+            <View style={{marginBottom: '10%'}}>
               <Text style={globalStyles.pageHeader}>Add Weight</Text>
               <View style={[logStyles.bodyPadding, {marginStart: 0}]}>
                 <Text style={logStyles.fieldName}>Current Weight</Text>
@@ -139,11 +139,11 @@ const WeightLogBlock = (props) => {
                   {weight}kg
                 </Text>
               </View>
-            </>
+            </View>
           ) : (
             <View style={{marginBottom: '10%'}}>
-              <Text style={globalStyles.pageHeader}>Edit</Text>
               <View style={[logStyles.bodyPadding, {marginStart: 0}]}>
+                <Text style={logStyles.headerText}>Edit</Text>
                 <DateSelectionBlock date={datetime} setDate={setDatetime} />
                 <Text style={logStyles.fieldName}>Weight</Text>
                 <Text style={[logStyles.fieldText, {marginStart: 0}]}>

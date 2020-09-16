@@ -86,6 +86,9 @@ const EditFoodBlock = (props) => {
   };
 
   const checkFoodItemsChange = () => {
+    if (foodItems.length != initalMeal.foodItems.length) {
+      return true;
+    }
     for (var x of foodItems) {
       for (var y of initalMeal.foodItems) {
         if (x['food-name'] === y['food-name']) {
@@ -110,8 +113,8 @@ const EditFoodBlock = (props) => {
         <View style={globalStyles.menuBarContainer}>
           <LeftArrowBtn close={closeModal} />
         </View>
-        <Text style={globalStyles.pageHeader}>Edit</Text>
-        <View style={[logStyles.bodyPadding, {marginStart: 0}]}>
+        <View style={[logStyles.bodyPadding]}>
+          <Text style={logStyles.headerText}>Edit</Text>
           <DateSelectionBlock date={datetime} setDate={setDatetime} />
           <MealTypeSelectionBlock
             onSelectChange={(option) => setMealType(option)}
