@@ -50,6 +50,10 @@ const diaryStyles = StyleSheet.create({
     marginStart: '5%',
     color: Colors.alertColor,
   },
+  binIcon: {
+    marginTop: '5%',
+    marginStart: '5%',
+  },
 });
 
 export default diaryStyles;

@@ -15,6 +15,8 @@ import CalendarDayComponent from './calendarDay';
 import CalendarTemplate from '../../calendar/calendarTemplate';
 import {Colors} from '../../../styles/colors';
 import globalStyles from '../../../styles/globalStyles';
+import CrossBtn from '../../crossBtn';
+import {horizontalMargins} from '../../../styles/variables';
 
 //responsible for adding a medication to the selected days*
 const SelectDaysModal = (props) => {
@@ -84,15 +86,21 @@ const SelectDaysModal = (props) => {
           margin: 0,
         }}>
         <View style={styles.dayModalContainer}>
-          <Entypo
-            name="chevron-thin-down"
-            onPress={closeModal}
-            size={30}
-            color="#16A950"
-            style={{marginStart: '4%'}}
-          />
-          <Text style={globalStyles.pageHeader}>Recurring Period</Text>
-          <Text style={[globalStyles.pageSubDetails, {margin: ' 4%'}]}>
+          <View style={globalStyles.menuBarContainer}>
+            <CrossBtn close={closeModal} />
+          </View>
+          <Text
+            style={[
+              globalStyles.pageHeader,
+              {marginStart: horizontalMargins, marginBottom: '2%'},
+            ]}>
+            Recurring Period
+          </Text>
+          <Text
+            style={[
+              globalStyles.pageSubDetails,
+              {marginStart: horizontalMargins},
+            ]}>
             Select the recurring days for this medication below.
           </Text>
           <CalendarTemplate
@@ -124,6 +132,5 @@ export default SelectDaysModal;
 const styles = StyleSheet.create({
   dayModalContainer: {
     backgroundColor: Colors.backgroundColor,
-    paddingTop: '5%',
   },
 });

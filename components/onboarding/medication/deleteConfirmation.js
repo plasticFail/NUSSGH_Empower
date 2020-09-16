@@ -50,7 +50,7 @@ export default DeleteConfirmation;
 const styles = StyleSheet.create({
   header: {
     fontSize: 20,
-    fontWeight: '700',
+    fontFamily: 'SFProDisplay-Bold',
     marginTop: '4%',
     marginStart: '4%',
   },

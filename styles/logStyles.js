@@ -1,55 +1,55 @@
 import {StyleSheet, Dimensions, Platform} from 'react-native';
-import { getStatusBarHeight } from 'react-native-status-bar-height';
+import {getStatusBarHeight} from 'react-native-status-bar-height';
 import {Colors} from './colors';
+import {
+  statusBarHeight,
+  headerHeight,
+  horizontalMargins,
+  verticalMarginsBetweenComponent,
+  headerTextFontSize,
+  boldFontFamily,
+  normalTextFontSize,
+  regularFontFamily,
+} from './variables';
 
 const {width, height} = Dimensions.get('window');
-// typical variables
-const statusBarHeight =  getStatusBarHeight();
-const headerTextFontSize = width * 0.09;
-const normalTextFontSize = width * 0.05;
-const verticalMarginsBetweenComponent = 0.01 * height;
-const horizontalMargins = 0.03 * width;
-const headerHeight = 0.07 * height;
-const boldFontFamily = 'SFProDisplay-Bold';
-const regularFontFamily = 'SFProDisplay-Regular';
-const backArrowMarginLeft = '2%';
 
 const logStyles = StyleSheet.create({
   //added
   menuBarContainer: {
-      height: statusBarHeight + headerHeight,
-      marginLeft: horizontalMargins,
-      marginRight: horizontalMargins,
-      marginBottom: verticalMarginsBetweenComponent,
-      alignItems: 'flex-end',
-      flexDirection: 'row',
+    height: statusBarHeight + headerHeight,
+    marginLeft: horizontalMargins,
+    marginRight: horizontalMargins,
+    marginBottom: verticalMarginsBetweenComponent,
+    alignItems: 'flex-end',
+    flexDirection: 'row',
   },
   bodyPadding: {
-      marginLeft: horizontalMargins,
-      marginRight: horizontalMargins,
-      paddingLeft: '3%',
-      paddingRight: '3%',
+    marginLeft: horizontalMargins,
+    marginRight: horizontalMargins,
+    paddingLeft: '3%',
+    paddingRight: '3%',
   },
   componentMargin: {
-      marginTop: verticalMarginsBetweenComponent,
-      marginBottom: verticalMarginsBetweenComponent,
+    marginTop: verticalMarginsBetweenComponent,
+    marginBottom: verticalMarginsBetweenComponent,
   },
   headerText: {
-      fontSize: headerTextFontSize,
-      fontFamily: boldFontFamily
+    fontSize: headerTextFontSize,
+    fontFamily: boldFontFamily,
   },
   headersubText: {
-      fontSize: normalTextFontSize,
-      fontFamily: boldFontFamily,
+    fontSize: normalTextFontSize,
+    fontFamily: boldFontFamily,
   },
   normalText: {
-      fontSize: normalTextFontSize,
-      fontFamily: regularFontFamily,
+    fontSize: normalTextFontSize,
+    fontFamily: regularFontFamily,
   },
   greyText: {
-      fontSize: normalTextFontSize,
-      fontFamily: regularFontFamily,
-      color: Colors.logFieldColor
+    fontSize: normalTextFontSize,
+    fontFamily: regularFontFamily,
+    color: Colors.grey,
   },
   // previous
   logItem: {
@@ -64,13 +64,13 @@ const logStyles = StyleSheet.create({
   complete: {
     fontFamily: 'SFProDisplay-Bold',
     color: '#acacb1',
-    fontSize: 18,
+    fontSize: normalTextFontSize,
     marginStart: '4%',
     marginTop: '3%',
   },
   loglogo: {
     position: 'absolute',
-    top: '80%',
+    top: '60%',
     left: '7%',
     width: 40,
     height: 40,
@@ -90,37 +90,48 @@ const logStyles = StyleSheet.create({
     flex: 1,
   },
   fieldText: {
-    fontSize: 18,
-    marginStart: '4%',
+    fontSize: normalTextFontSize,
     fontFamily: 'SFProDisplay-Regular',
-    color: Colors.logFieldColor,
+    color: Colors.grey,
   },
   fieldName: {
-    fontSize: 18,
+    fontSize: normalTextFontSize,
     fontFamily: 'SFProDisplay-Bold',
-    color: Colors.logFieldColor,
+    color: Colors.grey,
     marginTop: '3%',
   },
   inputField: {
-    padding: '3%',
+    padding: '2%',
     backgroundColor: 'white',
     borderRadius: 9.5,
     borderWidth: 1,
     borderColor: '#e2e8ee',
-    fontSize: 18,
+    fontSize: normalTextFontSize,
+    marginTop: '2%',
+    marginBottom: '2%',
   },
   //last log
+  lastLogSummary: {
+    fontSize: 18,
+    marginStart: horizontalMargins,
+    fontFamily: 'SFProDisplay-Regular',
+    color: 'white',
+  },
   lastLogContainer: {
     backgroundColor: Colors.lastLogButtonColor,
     padding: '3%',
     borderRadius: 9.31,
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+  },
+  lastLogDetailContainer: {
+    width: '100%',
   },
   lastLogDetail: {
-    fontSize: 18,
+    fontSize: normalTextFontSize,
     fontFamily: 'SFProDisplay-Regular',
     color: 'white',
+    marginStart: width * 0.04,
   },
   mini_loglogo: {
     width: 40,
@@ -129,16 +140,45 @@ const logStyles = StyleSheet.create({
     padding: '3%',
   },
   lastLogDate: {
-    fontSize: 18,
+    fontSize: normalTextFontSize,
     fontFamily: 'SFProDisplay-Bold',
-    color: Colors.logFieldColor,
+    color: Colors.grey,
+    marginStart: horizontalMargins,
+    marginTop: height * 0.02,
+  },
+  lastLogContent: {
+    fontSize: normalTextFontSize,
+    fontFamily: 'SFProDisplay-Regular',
+    color: Colors.grey,
+    marginStart: horizontalMargins,
   },
   lastLogBorder: {
-    borderWidth: 0.3,
+    borderWidth: 0.4,
     borderColor: Colors.lastLogValueColor,
-    margin: '3%',
+    margin: horizontalMargins,
+  },
+  enableEditButton: {
+    backgroundColor: Colors.nextBtnColor,
+    height: 45,
+    width: '90%',
+    borderRadius: 9.5,
+    margin: '5%',
+    alignSelf: 'center',
+    marginBottom: '15%',
+    paddingTop: '3%',
+    flex: 1,
+  },
+  disableEditButton: {
+    backgroundColor: '#e4e4e4',
+    height: 45,
+    width: '90%',
+    borderRadius: 9.5,
+    margin: '5%',
+    alignSelf: 'center',
+    marginBottom: '15%',
+    paddingTop: '3%',
+    flex: 1,
   },
 });
 
 export default logStyles;
-//edit flag

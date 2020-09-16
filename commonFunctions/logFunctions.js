@@ -11,7 +11,8 @@ import {
   storeLastWeightLog,
   getLastBgLog,
   getLastWeightLog,
-  getLastMedicationLog, getLastMealLog,
+  getLastMedicationLog,
+  getLastMealLog,
 } from '../storage/asyncStorageFunctions';
 
 import {getGreetingFromHour, morningObj, getPeriodFromMealType} from './common';
@@ -58,10 +59,7 @@ const isPeriod = (time) => {
   return getGreetingFromHour(hour);
 };
 
-
-
 const checkLogDone = async (period) => {
-
   let bg_data = await getLastBgLog();
   let med_data = await getLastMedicationLog();
   let weight_data = await getLastWeightLog();
@@ -206,19 +204,30 @@ const checkRepeatMedicine = (medicine, list) => {
   return false;
 };
 
-const handleSubmitBloodGlucose = async (date, bloodGlucose) => {
+const handleSubmitBloodGlucose = async (
+  date,
+  bloodGlucose,
+  eatSelection,
+  exerciseSelection,
+  alcholicSelection,
+) => {
   if (checkBloodGlucose(bloodGlucose)) {
     let formatDate = Moment(date).format('DD/MM/YYYY HH:mm:ss');
-    if (await glucoseAddLogRequest(Number(bloodGlucose), formatDate)) {
-      let bg_data = await getLastBgLog();
-      if(Moment(date).format('YYYY/MM/DD') > bg_data.date || (Moment(date).format('YYYY/MM/DD') === bg_data.date && Moment(date).format('HH:mm') > bg_data.hour)){
-        storeLastBgLog({
-          value: bloodGlucose,
-          date: Moment(date).format('YYYY/MM/DD'),
-          hour: Moment(date).format('HH:mm'), //tweaked
-          dateString: Moment(date).format('Do MMM YYYY, h:mm a'), //added
-        });
-      }
+    if (
+      await glucoseAddLogRequest(
+        Number(bloodGlucose),
+        formatDate,
+        eatSelection,
+        exerciseSelection,
+        alcholicSelection,
+      )
+    ) {
+      storeLastBgLog({
+        value: bloodGlucose,
+        date: Moment(date).format('YYYY/MM/DD'),
+        hour: Moment(date).format('HH:mm'), //tweaked
+        dateString: Moment(date).format('Do MMM YYYY, h:mm a'), //added
+      });
       return true;
     } else {
       Alert.alert('Error', 'Unexpected Error Occured', [
@@ -237,7 +246,11 @@ const handleSubmitMedication = async (date, selectedMedicationList) => {
 
   if (await medicationAddLogRequest(selectedMedicationList)) {
     let med_data = await getLastMedicationLog();
-    if(Moment(date).format('YYYY/MM/DD') > med_data.date || (Moment(date).format('YYYY/MM/DD') === med_data.date && Moment(date).format('HH:mm') > med_data.hour)) {
+    if (
+      Moment(date).format('YYYY/MM/DD') > med_data.date ||
+      (Moment(date).format('YYYY/MM/DD') === med_data.date &&
+        Moment(date).format('HH:mm') > med_data.hour)
+    ) {
       storeLastMedicationLog({
         value: selectedMedicationList,
         date: Moment(date).format('YYYY/MM/DD'),
@@ -259,7 +272,11 @@ const handleSubmitWeight = async (date, weight) => {
     let formatDate = Moment(date).format('DD/MM/YYYY HH:mm:ss');
     if (await weightAddLogRequest(Number(weight), formatDate)) {
       let weight_data = await getLastWeightLog();
-      if(Moment(date).format('YYYY/MM/DD') > weight_data.date || (Moment(date).format('YYYY/MM/DD') === weight_data.date && Moment(date).format('HH:mm') > weight_data.hour)) {
+      if (
+        Moment(date).format('YYYY/MM/DD') > weight_data.date ||
+        (Moment(date).format('YYYY/MM/DD') === weight_data.date &&
+          Moment(date).format('HH:mm') > weight_data.hour)
+      ) {
         storeLastWeightLog({
           value: weight,
           date: Moment(date).format('YYYY/MM/DD'),

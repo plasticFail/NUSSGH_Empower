@@ -17,7 +17,6 @@ import Login from './login/login';
 import ForgetPasswordScreen from './login/ForgetPasswordScreen';
 import InputOTPScreen from './login/inputOTPScreen';
 import ResetPasswordScreen from './login/resetPassword';
-import DiaryDetail from './main/diary/diaryDetail';
 
 //components
 import ContactUs from './contactUs';
@@ -111,14 +110,6 @@ class AppRoot extends Component {
                   options={{
                     headerShown: false,
                   }}
-                />
-                <Stack.Screen
-                  name="DiaryDetail"
-                  component={DiaryDetail}
-                  options={({route}) => ({
-                    title: 'Diary Entry: ' + route.params.date,
-                    headerRight: () => <View />,
-                  })}
                 />
                 {/* Onboarding */}
                 <Stack.Screen

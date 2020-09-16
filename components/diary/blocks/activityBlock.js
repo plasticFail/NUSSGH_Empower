@@ -56,55 +56,69 @@ const ActivityBlock = (props) => {
       onBackButtonPress={() => closeModal()}
       backdropColor={Colors.backgroundColor}
       style={{margin: 0}}>
-      <LeftArrowBtn close={closeModal} />
-      <Text style={globalStyles.pageHeader}>Activity</Text>
-      <Text style={globalStyles.pageDetails}>{day}</Text>
-      <View style={{flexDirection: 'row', marginTop: '3%'}}>
-        {miss ? (
-          <Text style={globalStyles.pageDetails}>Missed</Text>
-        ) : pass ? (
-          <>
-            <Text style={globalStyles.pageDetails}>
-              {summary.duration} Mins Active
-            </Text>
-            <Ionicon name="checkmark" style={diaryStyles.passIcon} size={25} />
-          </>
-        ) : (
-          <>
-            <Text style={globalStyles.pageDetails}>
-              {summary.duration} Mins Active
-            </Text>
-            <Ionicon
-              name="alert-circle-outline"
-              style={diaryStyles.failIcon}
-              size={25}
-            />
-          </>
-        )}
-      </View>
-      <Text style={styles.header}>Summary</Text>
-      <View style={styles.border} />
-      <ScrollView
-        style={{flex: 1}}
-        ref={scrollViewRef}
-        onContentSizeChange={() =>
-          scrollViewRef.current.scrollToEnd({animated: true})
-        }>
-        {renderSummaryContent(images.caloriesBurnt, caloriesBurnt, summary)}
-        {renderSummaryContent(images.distance, distance, 'Distance')}
-        {renderSummaryContent(images.walk, steps_taken, summary)}
-        {renderSummaryContent(images.run, excerise, summary, expand, setExpand)}
-        {!expand &&
-          activityLogs.map((item, index) => (
-            <View style={styles.activityBlock} key={item}>
-              {renderIcon(item)}
-              <View>
-                <Text style={styles.content}>{item.duration} Mins</Text>
-                <Text style={styles.contentDetail}>{item.name}</Text>
+      <View style={globalStyles.pageContainer}>
+        <View style={globalStyles.menuBarContainer}>
+          <LeftArrowBtn close={closeModal} />
+        </View>
+        <Text style={globalStyles.pageHeader}>Activity</Text>
+        <Text style={globalStyles.pageDetails}>{day}</Text>
+        <View style={{flexDirection: 'row', marginTop: '3%'}}>
+          {miss ? (
+            <Text style={globalStyles.pageDetails}>Missed</Text>
+          ) : pass ? (
+            <>
+              <Text style={globalStyles.pageDetails}>
+                {summary.duration} Mins Active
+              </Text>
+              <Ionicon
+                name="checkmark"
+                style={diaryStyles.passIcon}
+                size={25}
+              />
+            </>
+          ) : (
+            <>
+              <Text style={globalStyles.pageDetails}>
+                {summary.duration} Mins Active
+              </Text>
+              <Ionicon
+                name="alert-circle-outline"
+                style={diaryStyles.failIcon}
+                size={25}
+              />
+            </>
+          )}
+        </View>
+        <Text style={styles.header}>Summary</Text>
+        <View style={styles.border} />
+        <ScrollView
+          style={{flex: 1}}
+          ref={scrollViewRef}
+          onContentSizeChange={() =>
+            scrollViewRef.current.scrollToEnd({animated: true})
+          }>
+          {renderSummaryContent(images.caloriesBurnt, caloriesBurnt, summary)}
+          {renderSummaryContent(images.distance, distance, 'Distance')}
+          {renderSummaryContent(images.walk, steps_taken, summary)}
+          {renderSummaryContent(
+            images.run,
+            excerise,
+            summary,
+            expand,
+            setExpand,
+          )}
+          {!expand &&
+            activityLogs.map((item, index) => (
+              <View style={styles.activityBlock} key={item}>
+                {renderIcon(item)}
+                <View>
+                  <Text style={styles.content}>{item.duration} Mins</Text>
+                  <Text style={styles.contentDetail}>{item.name}</Text>
+                </View>
               </View>
-            </View>
-          ))}
-      </ScrollView>
+            ))}
+        </ScrollView>
+      </View>
     </Modal>
   );
 };

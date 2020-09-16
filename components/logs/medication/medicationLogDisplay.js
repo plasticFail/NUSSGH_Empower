@@ -32,27 +32,28 @@ const MedicationLogDisplay = (props) => {
   return (
     show && (
       <Animated.View style={{maxHeight: heightInterpolation}}>
-        <Text style={logStyles.lastLogDate}>{data.dateString}</Text>
-        <View style={logStyles.lastLogBorder} />
-        <FlatList
-          keyExtractor={(item) => item.drugName}
-          data={data.value}
-          style={{flexGrow: 0}}
-          renderItem={({item}) => (
-            <View style={{marginBottom: '2%'}}>
-              <Text style={logStyles.fieldText}>{item.drugName}</Text>
-              <Text
-                style={[
-                  logStyles.fieldText,
-                  {color: Colors.lastLogValueColor},
-                ]}>
-                {item.dosage} Unit (s)
-              </Text>
-            </View>
-          )}
-        />
-
-        <View style={logStyles.lastLogBorder} />
+        <View style={logStyles.lastLogDetailContainer}>
+          <Text style={logStyles.lastLogDate}>{data.dateString}</Text>
+          <View style={logStyles.lastLogBorder} />
+          <FlatList
+            keyExtractor={(item) => item.drugName}
+            data={data.value}
+            style={{flexGrow: 0}}
+            renderItem={({item}) => (
+              <View style={{marginBottom: '2%'}}>
+                <Text style={logStyles.lastLogContent}>{item.drugName}</Text>
+                <Text
+                  style={[
+                    logStyles.lastLogContent,
+                    {color: Colors.lastLogValueColor},
+                  ]}>
+                  {item.dosage} Unit (s)
+                </Text>
+              </View>
+            )}
+          />
+          <View style={logStyles.lastLogBorder} />
+        </View>
       </Animated.View>
     )
   );

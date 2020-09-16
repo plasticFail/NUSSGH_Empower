@@ -1,12 +1,18 @@
 import React, {useState} from 'react';
 import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
 //third party lib
-import Ionicon from 'react-native-vector-icons/Ionicons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import logStyles from '../styles/logStyles';
 
 function MedicationItem({medication, handleDelete}) {
   return (
-    <View style={{flexDirection: 'row', borderBottomWidth: 0.2}}>
-      <View style={styles.medicationItem}>
+    <View
+      style={{
+        flexDirection: 'row',
+        borderBottomWidth: 0.2,
+        paddingBottom: '2%',
+      }}>
+      <View style={[logStyles.componentMargin, {flex: 4}]}>
         <Text style={styles.medicationName}>{medication.drugName}</Text>
         <Text style={styles.medicationDetail}>{medication.dosage} Unit(s)</Text>
         {medication.perDay != undefined ? (
@@ -18,7 +24,7 @@ function MedicationItem({medication, handleDelete}) {
       <TouchableOpacity
         style={styles.deleteMedication}
         onPress={() => handleDelete(medication)}>
-        <Ionicon name="ios-trash-bin" size={40} color="#ff0844" />
+        <FontAwesome name="trash-o" size={40} color="#ff0844" />
       </TouchableOpacity>
     </View>
   );
@@ -41,8 +47,8 @@ const styles = StyleSheet.create({
     marginTop: '2%',
   },
   deleteMedication: {
-    padding: '3%',
-    flex: 1,
+    alignSelf: 'flex-end',
     justifyContent: 'center',
+    margin: '1%',
   },
 });

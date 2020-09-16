@@ -14,6 +14,7 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import LeftArrowBtn from '../../logs/leftArrowBtn';
 import TimeSection from '../timeSection';
 import MissedContent from './missedContent';
+import WeightLogBlock from '../../logs/weight/weightLogBlock';
 //style
 import {Colors} from '../../../styles/colors';
 import globalStyles from '../../../styles/globalStyles';
@@ -40,10 +41,12 @@ const WeightBlock = (props) => {
     pass,
     miss,
     day,
+    init,
   } = props;
   const {closeModal} = props;
   const [selectedLog, setSelectedLog] = useState({});
   const [missedArr, setMissedArr] = useState([]);
+  const [editModal, setEditModal] = useState(false);
 
   useEffect(() => {
     setMissedArr(
@@ -51,7 +54,10 @@ const WeightBlock = (props) => {
     );
   }, []);
 
-  const editWeightLog = (item) => {};
+  const editWeightLog = (item) => {
+    setEditModal(true);
+    setSelectedLog(item);
+  };
 
   return (
     <Modal
@@ -61,20 +67,33 @@ const WeightBlock = (props) => {
       onBackButtonPress={() => closeModal()}
       backdropColor={Colors.backgroundColor}
       style={{margin: 0}}>
-      <LeftArrowBtn close={closeModal} />
-      <Text style={globalStyles.pageHeader}>Weight</Text>
-      <Text style={globalStyles.pageDetails}>{day}</Text>
-      <MissedContent arr={missedArr} type={weight_key} />
-
-      {/*Show time section and data for log*/}
-      <ScrollView style={{flex: 1}}>
-        <TimeSection name={morningObj.name} />
-        {renderWeightLogs(morningWeightLogs, editWeightLog)}
-        <TimeSection name={afternoonObj.name} />
-        {renderWeightLogs(afternoonWeightLogs, editWeightLog)}
-        <TimeSection name={eveningObj.name} />
-        {renderWeightLogs(eveningWeightLogs, editWeightLog)}
-      </ScrollView>
+      <View style={globalStyles.pageContainer}>
+        <View style={globalStyles.menuBarContainer}>
+          <LeftArrowBtn close={closeModal} />
+        </View>
+        <Text style={globalStyles.pageHeader}>Weight</Text>
+        <Text style={globalStyles.pageDetails}>{day}</Text>
+        {/* <MissedContent arr={missedArr} type={weight_key} /> */}
+        {/*Show time section and data for log*/}
+        <ScrollView style={{flex: 1}}>
+          <TimeSection name={morningObj.name} />
+          {renderWeightLogs(morningWeightLogs, editWeightLog)}
+          <TimeSection name={afternoonObj.name} />
+          {renderWeightLogs(afternoonWeightLogs, editWeightLog)}
+          <TimeSection name={eveningObj.name} />
+          {renderWeightLogs(eveningWeightLogs, editWeightLog)}
+        </ScrollView>
+        {/*Edit Modal*/}
+        {editModal ? (
+          <WeightLogBlock
+            visible={editModal}
+            closeModal={() => setEditModal(false)}
+            parent="editLog"
+            selectedLog={selectedLog}
+            init={init}
+          />
+        ) : null}
+      </View>
     </Modal>
   );
 };
@@ -83,7 +102,6 @@ function renderWeightLogs(logs, editLog) {
   if (logs.length > 0) {
     return (
       <View style={{marginBottom: '3%'}}>
-        <Text style={diaryStyles.recordedText}>Reading Recorded</Text>
         {logs.map((item, index) => (
           <View style={styles.logContent} key={index.toString()}>
             <Text style={diaryStyles.recordContent}>
@@ -96,7 +114,7 @@ function renderWeightLogs(logs, editLog) {
               <>
                 <View style={{flex: 1}} />
                 <TouchableOpacity onPress={() => editLog(item)}>
-                  <Entypo name="edit" style={diaryStyles.editIcon} size={20} />
+                  <Entypo name="edit" style={diaryStyles.editIcon} size={30} />
                 </TouchableOpacity>
               </>
             ) : null}
@@ -123,4 +141,3 @@ const styles = StyleSheet.create({
     marginBottom: '2%',
   },
 });
-//comment

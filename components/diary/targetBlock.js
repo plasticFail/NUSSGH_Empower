@@ -374,6 +374,7 @@ class TargetBlock extends Component {
             pass={bgPass}
             miss={bgMiss}
             day={dateString}
+            init={() => this.init()}
           />
         ) : null}
 
@@ -390,6 +391,7 @@ class TargetBlock extends Component {
             pass={foodPass}
             miss={foodMiss}
             day={dateString}
+            init={() => this.init()}
           />
         ) : null}
 
@@ -402,6 +404,7 @@ class TargetBlock extends Component {
             eveningWeightLogs={filterEvening(weightLogs)}
             miss={weightMiss}
             day={dateString}
+            init={() => this.init()}
           />
         ) : null}
 
@@ -414,6 +417,7 @@ class TargetBlock extends Component {
             eveningMedLogs={filterEvening(medLogs)}
             miss={medMiss}
             day={dateString}
+            init={() => this.init()}
           />
         ) : null}
 
@@ -426,6 +430,7 @@ class TargetBlock extends Component {
             summary={activitySummary}
             miss={activityMiss}
             day={dateString}
+            init={() => this.init()}
           />
         ) : null}
       </>
@@ -513,12 +518,10 @@ const styles = StyleSheet.create({
     marginStart: '15%',
   },
   buttonDetail: {
-    marginStart: '3%',
     fontFamily: 'SFProDisplay-Bold',
     fontSize: 20,
   },
   buttonDetail2: {
-    marginStart: '3%',
     fontFamily: 'SFProDisplay-Bold',
     fontSize: 18,
   },

@@ -170,16 +170,15 @@ const filterAfternoon = (logs) => {
   return list;
 };
 
+//cannot filter based on just hours * will get erro
 const filterEvening = (logs) => {
   let list = new Array();
   for (var i of logs) {
     let date = i.record_date;
     let hour = getHour(date);
-    console.log(hour);
-    if (hour >= eveningObj.start || hour < eveningObj.start) {
-      if (hour <= morningObj.start) {
-        list.push(i);
-      }
+    let greeting = getGreetingFromHour(hour);
+    if (greeting === eveningObj.name) {
+      list.push(i);
     }
   }
   return list;

@@ -20,6 +20,7 @@ import {Colors} from '../../../styles/colors';
 import Moment from 'moment';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {Calendar} from 'react-native-calendars';
+import LeftArrowBtn from '../../../components/logs/leftArrowBtn';
 
 const DiaryScreen = (props) => {
   const today_date = Moment(new Date()).format('YYYY-MM-DD');
@@ -94,90 +95,84 @@ const DiaryScreen = (props) => {
 
   return (
     <View style={globalStyles.pageContainer}>
-      <MenuBtn />
+      <View style={globalStyles.menuBarContainer}>
+        <LeftArrowBtn close={() => props.navigation.navigate('Home')} />
+      </View>
+      <Text style={globalStyles.pageHeader}>Diary</Text>
+      {showCalendarFull ? (
+        <Animated.View style={{maxHeight: heightInterpolation}}>
+          <Calendar
+            dayComponent={CalendarDay2Component}
+            maxDate={today_date}
+            hideArrows={false}
+            selectAll={false}
+            markedDates={calendarselect}
+            onDayPress={(day) => {
+              selectDate(day.dateString);
+            }}
+            theme={{
+              calendarBackground: Colors.backgroundColor,
+              'stylesheet.calendar.header': {
+                header: {
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  marginTop: 6,
+                  alignItems: 'center',
+                },
+                headerContainer: {
+                  width: '80%',
+                  flexDirection: 'row',
+                },
+                monthText: {
+                  fontSize: 20,
+                  fontFamily: 'SFProDisplay-Bold',
+                  textAlign: 'center',
+                },
+              },
+              arrowColor: Colors.lastLogValueColor,
+            }}
+          />
+        </Animated.View>
+      ) : null}
+      {partialVisible && (
+        <View style={styles.dateList}>
+          {dates.map((item, index) =>
+            selectedDate === item ? (
+              <TouchableOpacity
+                key={item}
+                style={styles.selectedDateContainer}
+                onPress={() => chooseDate(item)}>
+                <Text style={styles.selectedDateText}>
+                  {Moment(new Date(item)).format('D MMM')}
+                </Text>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                key={item}
+                style={styles.dateContainer}
+                onPress={() => chooseDate(item)}>
+                <Text style={styles.dateText}>
+                  {Moment(new Date(item)).format('D MMM')}
+                </Text>
+              </TouchableOpacity>
+            ),
+          )}
+        </View>
+      )}
+      <TouchableOpacity onPress={() => displayCalendar()}>
+        {showCalendarFull ? (
+          <Icon name="angle-double-up" size={40} style={styles.chevronDown} />
+        ) : (
+          <Icon name="angle-double-down" size={40} style={styles.chevronDown} />
+        )}
+      </TouchableOpacity>
+      <Text style={[globalStyles.pageDetails, styles.viewLog]}>
+        View Your Logs
+      </Text>
       <ScrollView contentContainerStyle={{flexGrow: 0}}>
         <>
-          <Text style={globalStyles.pageHeader}>Diary</Text>
-          {showCalendarFull ? (
-            <Animated.View style={{maxHeight: heightInterpolation}}>
-              <Calendar
-                dayComponent={CalendarDay2Component}
-                maxDate={today_date}
-                hideArrows={false}
-                selectAll={false}
-                markedDates={calendarselect}
-                onDayPress={(day) => {
-                  selectDate(day.dateString);
-                }}
-                theme={{
-                  calendarBackground: Colors.backgroundColor,
-                  'stylesheet.calendar.header': {
-                    header: {
-                      flexDirection: 'row',
-                      justifyContent: 'center',
-                      marginTop: 6,
-                      alignItems: 'center',
-                    },
-                    headerContainer: {
-                      width: '80%',
-                      flexDirection: 'row',
-                    },
-                    monthText: {
-                      fontSize: 20,
-                      fontFamily: 'SFProDisplay-Bold',
-                      textAlign: 'center',
-                    },
-                  },
-                  arrowColor: Colors.lastLogValueColor,
-                }}
-              />
-            </Animated.View>
-          ) : null}
-          {partialVisible && (
-            <View style={styles.dateList}>
-              {dates.map((item, index) =>
-                selectedDate === item ? (
-                  <TouchableOpacity
-                    key={item}
-                    style={styles.selectedDateContainer}
-                    onPress={() => chooseDate(item)}>
-                    <Text style={styles.selectedDateText}>
-                      {Moment(new Date(item)).format('D MMM')}
-                    </Text>
-                  </TouchableOpacity>
-                ) : (
-                  <TouchableOpacity
-                    key={item}
-                    style={styles.dateContainer}
-                    onPress={() => chooseDate(item)}>
-                    <Text style={styles.dateText}>
-                      {Moment(new Date(item)).format('D MMM')}
-                    </Text>
-                  </TouchableOpacity>
-                ),
-              )}
-            </View>
-          )}
-          <TouchableOpacity onPress={() => displayCalendar()}>
-            {showCalendarFull ? (
-              <Icon
-                name="angle-double-up"
-                size={40}
-                style={styles.chevronDown}
-              />
-            ) : (
-              <Icon
-                name="angle-double-down"
-                size={40}
-                style={styles.chevronDown}
-              />
-            )}
-          </TouchableOpacity>
           {/*Day Summary for Log*/}
           <View style={{flex: 1}}>
-            <Text style={[globalStyles.pageDetails, styles.viewLog]}>
-              View Your Logs
-            </Text>
             <TargetBlock date={selectedDate} navigation={props.navigation} />
           </View>
         </>

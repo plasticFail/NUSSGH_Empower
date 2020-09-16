@@ -1,5 +1,12 @@
 import React, {Component} from 'react';
-import {View, ScrollView, StyleSheet, Text} from 'react-native';
+import {
+  View,
+  ScrollView,
+  StyleSheet,
+  Text,
+  Platform,
+  InteractionManager,
+} from 'react-native';
 import {Colors} from '../../../styles/colors';
 
 //Props:
@@ -10,6 +17,8 @@ import {Colors} from '../../../styles/colors';
 //decimalIntervalStyle: style for intervals that is decimals
 //intervalTextColor: color for interval
 const interval_width = 30;
+
+//scale from offset to value
 const scale = (v, inputMin, interval) => {
   console.log('v: ' + v);
   let factor = Math.round(v / interval_width);
@@ -28,18 +37,44 @@ const scale = (v, inputMin, interval) => {
   return num;
 };
 
+//scale from value to offset
+const scaleToOffset = (value, min, interval) => {
+  let diff = value - min;
+  let position = (diff / interval).toFixed(2) * interval_width + 30;
+  return position;
+};
+
 export default class PickDrag extends Component {
   constructor(props) {
     super(props);
     this.props = props;
-    this.scrollMin = 0;
-    this.scrollMax = this.getScrollMax(props);
+    this.state = {
+      initial: false,
+    };
+
     this.handleScroll = this.handleScroll.bind(this);
   }
 
-  componentDidUpdate(nextProp) {
-    console.log('calling component did update');
-    this.scrollMax = this.getScrollMax(nextProp);
+  componentDidMount() {
+    this.scrollInitial();
+  }
+
+  componentDidUpdate(prevProp) {
+    if (prevProp != this.props) {
+      this.scrollInitial();
+    }
+  }
+
+  //for android
+  scrollInitial() {
+    const {value, min, interval} = this.props;
+    if (Platform.OS === 'android' && this.state.initial === false) {
+      console.log('-----updating to initial value');
+      let offset = scaleToOffset(value, min, interval);
+      InteractionManager.runAfterInteractions(() => {
+        this.scrollView.scrollTo({x: offset, animated: true});
+      });
+    }
   }
 
   getScrollMax(props = this.props) {
@@ -51,8 +86,19 @@ export default class PickDrag extends Component {
     return scale(value, min, interval);
   }
 
+  //when user scroll
   handleScroll(event) {
-    let offset = event.nativeEvent.contentOffset.x;
+    console.log('------Scrolling event happening');
+    const {value, min, interval} = this.props;
+    let offset = 0;
+    if (offset === 0 && !this.state.initial) {
+      console.log('entering first time');
+      offset = scaleToOffset(value, min, interval);
+      this.setState({initial: true});
+      this.scrollView.scrollTo({x: offset, animated: true});
+    } else {
+      offset = event.nativeEvent.contentOffset.x;
+    }
     let val = this.scaleValue(offset);
     this.props.onChange(val);
   }
@@ -126,7 +172,7 @@ const styles = StyleSheet.create({
     shadowOffset: {width: 0, height: 2}, // change this for more shadow
     shadowOpacity: 0.2,
     shadowRadius: 6,
-    elevation: 20,
+    elevation: 10,
   },
   scrollcontainer: {
     width: '100%',
