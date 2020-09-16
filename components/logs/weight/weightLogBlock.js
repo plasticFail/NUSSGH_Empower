@@ -8,7 +8,8 @@ import DateSelectionBlock from '../dateSelectionBlock';
 import RemoveModal from '../../diary/removeModal';
 //third party library
 import Modal from 'react-native-modal';
-import Ionicon from 'react-native-vector-icons/Ionicons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+
 //styles
 import {Colors} from '../../../styles/colors';
 import globalStyles from '../../../styles/globalStyles';
@@ -108,22 +109,33 @@ const WeightLogBlock = (props) => {
       onBackButtonPress={() => closeModal()}
       backdropColor={Colors.backgroundColor}
       style={{margin: 0}}>
-      <View style={{flex: 1}}>
-        <LeftArrowBtn close={closeModal} />
+      <View style={logStyles.modalContainer}>
+        <View style={globalStyles.menuBarContainer}>
+          <LeftArrowBtn close={closeModal} />
+          <View style={{flex: 1}} />
+        </View>
         {parent === 'addLog' ? (
           <>
             <Text style={globalStyles.pageHeader}>Add Weight</Text>
-            <Text style={logStyles.fieldName}>Current Weight</Text>
+            <View style={[logStyles.bodyPadding, {marginStart: 0}]}>
+              <Text style={logStyles.fieldName}>Current Weight</Text>
+              <Text style={[logStyles.fieldText, {marginStart: 0}]}>
+                {weight}kg
+              </Text>
+            </View>
           </>
         ) : (
           <>
             <Text style={globalStyles.pageHeader}>Edit</Text>
-            <DateSelectionBlock date={datetime} setDate={setDatetime} />
-            <Text style={logStyles.fieldName}>Weight</Text>
+            <View style={[logStyles.bodyPadding, {marginStart: 0}]}>
+              <DateSelectionBlock date={datetime} setDate={setDatetime} />
+              <Text style={logStyles.fieldName}>Weight</Text>
+              <Text style={[logStyles.fieldText, {marginStart: 0}]}>
+                {weight}kg
+              </Text>
+            </View>
           </>
         )}
-
-        <Text style={logStyles.fieldText}>{weight}kg</Text>
         <View style={{flex: 1}} />
         <PickDrag
           min={40}
@@ -153,7 +165,7 @@ const WeightLogBlock = (props) => {
               <TouchableOpacity
                 style={diaryStyles.binIcon}
                 onPress={() => deleteLog()}>
-                <Ionicon name="ios-trash-bin" size={40} color="#ff0844" />
+                <FontAwesome name="trash-o" size={40} color="#ff0844" />
               </TouchableOpacity>
               {checkWeight(weight) && changed ? (
                 <TouchableOpacity

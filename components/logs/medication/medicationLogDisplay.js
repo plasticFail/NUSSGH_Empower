@@ -41,10 +41,10 @@ const MedicationLogDisplay = (props) => {
             style={{flexGrow: 0}}
             renderItem={({item}) => (
               <View style={{marginBottom: '2%'}}>
-                <Text style={logStyles.fieldText}>{item.drugName}</Text>
+                <Text style={logStyles.lastLogContent}>{item.drugName}</Text>
                 <Text
                   style={[
-                    logStyles.fieldText,
+                    logStyles.lastLogContent,
                     {color: Colors.lastLogValueColor},
                   ]}>
                   {item.dosage} Unit (s)

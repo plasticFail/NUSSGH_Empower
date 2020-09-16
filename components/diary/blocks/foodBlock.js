@@ -34,6 +34,7 @@ import TimeSection from '../timeSection';
 import globalStyles from '../../../styles/globalStyles';
 import {Colors} from '../../../styles/colors';
 import diaryStyles from '../../../styles/diaryStyles';
+import {horizontalMargins} from '../../../styles/variables';
 
 //function
 
@@ -73,47 +74,53 @@ const FoodBlock = (props) => {
       onBackButtonPress={() => closeModal()}
       backdropColor={Colors.backgroundColor}
       style={{margin: 0}}>
-      <LeftArrowBtn close={closeModal} />
-      <Text style={globalStyles.pageHeader}>Food Intake</Text>
-      <Text style={globalStyles.pageDetails}>{day}</Text>
-      <MissedContent arr={missedArr} type={food_key} />
-      {renderProgressBars(carbs, fats, protein)}
-      {missedArr.length < 3 && (
-        <View
-          style={{flexDirection: 'row', marginTop: '3%', marginBottom: '2%'}}>
-          {pass ? (
-            <>
-              <Text style={globalStyles.pageDetails}>Within Healthy Range</Text>
-
-              <Ionicon
-                name="checkmark"
-                style={diaryStyles.passIcon}
-                size={25}
-              />
-            </>
-          ) : (
-            <>
-              <Text style={globalStyles.pageDetails}>
-                Not Within Healthy Range
-              </Text>
-
-              <Ionicon
-                name="alert-circle-outline"
-                style={diaryStyles.failIcon}
-                size={25}
-              />
-            </>
-          )}
+      <View style={globalStyles.pageContainer}>
+        <View style={globalStyles.menuBarContainer}>
+          <LeftArrowBtn close={closeModal} />
         </View>
-      )}
-      <ScrollView style={{flex: 1}}>
-        <TimeSection name={morningObj.name} />
-        {renderFoodItems(morningMealLogs, editLog)}
-        <TimeSection name={(afternoonObj.name, editLog)} />
-        {renderFoodItems(afternoonMealLogs, editLog)}
-        <TimeSection name={(eveningObj.name, editLog)} />
-        {renderFoodItems(eveningMealLogs, editLog)}
-      </ScrollView>
+        <Text style={globalStyles.pageHeader}>Food Intake</Text>
+        <Text style={globalStyles.pageDetails}>{day}</Text>
+        <MissedContent arr={missedArr} type={food_key} />
+        {renderProgressBars(carbs, fats, protein)}
+        {missedArr.length < 3 && (
+          <View
+            style={{flexDirection: 'row', marginTop: '3%', marginBottom: '2%'}}>
+            {pass ? (
+              <>
+                <Text style={globalStyles.pageDetails}>
+                  Within Healthy Range
+                </Text>
+
+                <Ionicon
+                  name="checkmark"
+                  style={diaryStyles.passIcon}
+                  size={25}
+                />
+              </>
+            ) : (
+              <>
+                <Text style={globalStyles.pageDetails}>
+                  Not Within Healthy Range
+                </Text>
+
+                <Ionicon
+                  name="alert-circle-outline"
+                  style={diaryStyles.failIcon}
+                  size={25}
+                />
+              </>
+            )}
+          </View>
+        )}
+        <ScrollView style={{flex: 1}}>
+          <TimeSection name={morningObj.name} />
+          {renderFoodItems(morningMealLogs, editLog)}
+          <TimeSection name={afternoonObj.name} />
+          {renderFoodItems(afternoonMealLogs, editLog)}
+          <TimeSection name={(eveningObj.name, editLog)} />
+          {renderFoodItems(eveningMealLogs, editLog)}
+        </ScrollView>
+      </View>
     </Modal>
   );
 };
@@ -147,7 +154,7 @@ function renderFoodItems(logs, editLog) {
                         <Entypo
                           name="edit"
                           style={diaryStyles.editIcon}
-                          size={20}
+                          size={30}
                         />
                       </TouchableOpacity>
                     </>
@@ -175,7 +182,7 @@ function renderProgressBars(carbs, fats, protein) {
     <View
       style={{
         flexDirection: 'row',
-        marginStart: '5%',
+        marginStart: horizontalMargins,
       }}>
       <ProgressContent
         header={'Carbs'}

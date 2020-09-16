@@ -67,29 +67,33 @@ const WeightBlock = (props) => {
       onBackButtonPress={() => closeModal()}
       backdropColor={Colors.backgroundColor}
       style={{margin: 0}}>
-      <LeftArrowBtn close={closeModal} />
-      <Text style={globalStyles.pageHeader}>Weight</Text>
-      <Text style={globalStyles.pageDetails}>{day}</Text>
-      {/* <MissedContent arr={missedArr} type={weight_key} /> */}
-      {/*Show time section and data for log*/}
-      <ScrollView style={{flex: 1}}>
-        <TimeSection name={morningObj.name} />
-        {renderWeightLogs(morningWeightLogs, editWeightLog)}
-        <TimeSection name={afternoonObj.name} />
-        {renderWeightLogs(afternoonWeightLogs, editWeightLog)}
-        <TimeSection name={eveningObj.name} />
-        {renderWeightLogs(eveningWeightLogs, editWeightLog)}
-      </ScrollView>
-      {/*Edit Modal*/}
-      {editModal ? (
-        <WeightLogBlock
-          visible={editModal}
-          closeModal={() => setEditModal(false)}
-          parent="editLog"
-          selectedLog={selectedLog}
-          init={init}
-        />
-      ) : null}
+      <View style={globalStyles.pageContainer}>
+        <View style={globalStyles.menuBarContainer}>
+          <LeftArrowBtn close={closeModal} />
+        </View>
+        <Text style={globalStyles.pageHeader}>Weight</Text>
+        <Text style={globalStyles.pageDetails}>{day}</Text>
+        {/* <MissedContent arr={missedArr} type={weight_key} /> */}
+        {/*Show time section and data for log*/}
+        <ScrollView style={{flex: 1}}>
+          <TimeSection name={morningObj.name} />
+          {renderWeightLogs(morningWeightLogs, editWeightLog)}
+          <TimeSection name={afternoonObj.name} />
+          {renderWeightLogs(afternoonWeightLogs, editWeightLog)}
+          <TimeSection name={eveningObj.name} />
+          {renderWeightLogs(eveningWeightLogs, editWeightLog)}
+        </ScrollView>
+        {/*Edit Modal*/}
+        {editModal ? (
+          <WeightLogBlock
+            visible={editModal}
+            closeModal={() => setEditModal(false)}
+            parent="editLog"
+            selectedLog={selectedLog}
+            init={init}
+          />
+        ) : null}
+      </View>
     </Modal>
   );
 };
@@ -111,7 +115,7 @@ function renderWeightLogs(logs, editLog) {
               <>
                 <View style={{flex: 1}} />
                 <TouchableOpacity onPress={() => editLog(item)}>
-                  <Entypo name="edit" style={diaryStyles.editIcon} size={20} />
+                  <Entypo name="edit" style={diaryStyles.editIcon} size={30} />
                 </TouchableOpacity>
               </>
             ) : null}

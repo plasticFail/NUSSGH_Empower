@@ -4,6 +4,7 @@ import {View, StyleSheet, Text, Animated, ScrollView} from 'react-native';
 import globalStyles from '../../../styles/globalStyles';
 //component
 import FormBlock from './formBlock';
+import logStyles from '../../../styles/logStyles';
 
 const formQn1 = 'Did you eat lesser than usual today?';
 const formQn2 = 'Did you exercise today';
@@ -42,7 +43,7 @@ const HypoglycemiaBlock = (props) => {
   return (
     visible && (
       <ScrollView contentContainerStyle={styles.formContainer}>
-        <Animated.View style={[{opacity: fadeAnim}]}>
+        <Animated.View style={[{opacity: fadeAnim}, logStyles.bodyPadding]}>
           <Text style={globalStyles.alertText}>
             The reading entered is too low. We are concerned.
           </Text>
@@ -71,7 +72,10 @@ export default HypoglycemiaBlock;
 
 const styles = StyleSheet.create({
   formContainer: {
-    padding: '4%',
+    marginTop: '3%',
+    width: '100%',
+    flexGrow: 1,
+    paddingBottom: '10%',
   },
   shadow: {
     shadowColor: '#000',

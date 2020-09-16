@@ -518,12 +518,10 @@ const styles = StyleSheet.create({
     marginStart: '15%',
   },
   buttonDetail: {
-    marginStart: '3%',
     fontFamily: 'SFProDisplay-Bold',
     fontSize: 20,
   },
   buttonDetail2: {
-    marginStart: '3%',
     fontFamily: 'SFProDisplay-Bold',
     fontSize: 18,
   },

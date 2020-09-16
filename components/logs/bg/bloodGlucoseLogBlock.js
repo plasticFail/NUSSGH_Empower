@@ -29,7 +29,7 @@ import logStyles from '../../../styles/logStyles';
 import diaryStyles from '../../../styles/diaryStyles';
 //third party lib
 import Modal from 'react-native-modal';
-import Ionicon from 'react-native-vector-icons/Ionicons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import moment from 'moment';
 
 const BloodGlucoseLogBlock = (props) => {
@@ -162,9 +162,10 @@ const BloodGlucoseLogBlock = (props) => {
       onBackButtonPress={() => closeModal()}
       backdropColor={Colors.backgroundColor}
       style={{margin: 0}}>
-      <View style={{flex: 1}}>
+      <View style={logStyles.modalContainer}>
         <View style={logStyles.menuBarContainer}>
           <LeftArrowBtn close={closeModal} />
+          <View style={{flex: 1}} />
         </View>
         <View style={logStyles.bodyPadding}>
           {parent === 'addLog' ? (
@@ -181,7 +182,7 @@ const BloodGlucoseLogBlock = (props) => {
             </>
           ) : (
             <>
-              <Text style={globalStyles.pageHeader}>Edit</Text>
+              <Text style={logStyles.headerText}>Edit</Text>
               <DateSelectionBlock date={datetime} setDate={setDate} />
               <Text style={[logStyles.fieldName, styles.fieldStyle2]}>
                 Reading
@@ -202,7 +203,7 @@ const BloodGlucoseLogBlock = (props) => {
             <Text style={styles.unitText}>mmol/L</Text>
           </View>
           {checkBloodGlucoseText(bloodGlucose) !== '' && (
-            <Text style={[globalStyles.alertText, {marginStart: '5%'}]}>
+            <Text style={[globalStyles.alertText]}>
               {checkBloodGlucoseText(bloodGlucose)}
             </Text>
           )}
@@ -217,6 +218,7 @@ const BloodGlucoseLogBlock = (props) => {
           bloodGlucose={bloodGlucose}
         />
       </View>
+
       {parent === 'addLog' ? (
         <View style={[globalStyles.buttonContainer]}>
           {checkBloodGlucose(bloodGlucose) ? (
@@ -237,7 +239,7 @@ const BloodGlucoseLogBlock = (props) => {
             <TouchableOpacity
               style={diaryStyles.binIcon}
               onPress={() => deleteLog()}>
-              <Ionicon name="ios-trash-bin" size={40} color="#ff0844" />
+              <FontAwesome name="trash-o" size={40} color="#ff0844" />
             </TouchableOpacity>
             {checkBloodGlucose(bloodGlucose) && changed === true ? (
               <TouchableOpacity

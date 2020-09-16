@@ -1,18 +1,18 @@
 import {StyleSheet, Dimensions, Platform} from 'react-native';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
 import {Colors} from './colors';
+import {
+  statusBarHeight,
+  headerHeight,
+  horizontalMargins,
+  verticalMarginsBetweenComponent,
+  headerTextFontSize,
+  boldFontFamily,
+  normalTextFontSize,
+  regularFontFamily,
+} from './variables';
 
 const {width, height} = Dimensions.get('window');
-// typical variables
-const statusBarHeight = getStatusBarHeight();
-const headerTextFontSize = width * 0.09;
-const normalTextFontSize = width * 0.05;
-const verticalMarginsBetweenComponent = 0.01 * height;
-const horizontalMargins = 0.03 * width;
-const headerHeight = 0.07 * height;
-const boldFontFamily = 'SFProDisplay-Bold';
-const regularFontFamily = 'SFProDisplay-Regular';
-const backArrowMarginLeft = '2%';
 
 const logStyles = StyleSheet.create({
   //added
@@ -49,7 +49,7 @@ const logStyles = StyleSheet.create({
   greyText: {
     fontSize: normalTextFontSize,
     fontFamily: regularFontFamily,
-    color: Colors.logFieldColor,
+    color: Colors.grey,
   },
   // previous
   logItem: {
@@ -64,13 +64,13 @@ const logStyles = StyleSheet.create({
   complete: {
     fontFamily: 'SFProDisplay-Bold',
     color: '#acacb1',
-    fontSize: 18,
+    fontSize: normalTextFontSize,
     marginStart: '4%',
     marginTop: '3%',
   },
   loglogo: {
     position: 'absolute',
-    top: '80%',
+    top: '60%',
     left: '7%',
     width: 40,
     height: 40,
@@ -90,15 +90,14 @@ const logStyles = StyleSheet.create({
     flex: 1,
   },
   fieldText: {
-    fontSize: 18,
-    marginStart: width * 0.04,
+    fontSize: normalTextFontSize,
     fontFamily: 'SFProDisplay-Regular',
-    color: Colors.logFieldColor,
+    color: Colors.grey,
   },
   fieldName: {
-    fontSize: 18,
+    fontSize: normalTextFontSize,
     fontFamily: 'SFProDisplay-Bold',
-    color: Colors.logFieldColor,
+    color: Colors.grey,
     marginTop: '3%',
   },
   inputField: {
@@ -107,11 +106,17 @@ const logStyles = StyleSheet.create({
     borderRadius: 9.5,
     borderWidth: 1,
     borderColor: '#e2e8ee',
-    fontSize: 18,
+    fontSize: normalTextFontSize,
     marginTop: '2%',
     marginBottom: '2%',
   },
   //last log
+  lastLogSummary: {
+    fontSize: 18,
+    marginStart: horizontalMargins,
+    fontFamily: 'SFProDisplay-Regular',
+    color: 'white',
+  },
   lastLogContainer: {
     backgroundColor: Colors.lastLogButtonColor,
     padding: '3%',
@@ -123,7 +128,7 @@ const logStyles = StyleSheet.create({
     width: '100%',
   },
   lastLogDetail: {
-    fontSize: 18,
+    fontSize: normalTextFontSize,
     fontFamily: 'SFProDisplay-Regular',
     color: 'white',
     marginStart: width * 0.04,
@@ -135,16 +140,22 @@ const logStyles = StyleSheet.create({
     padding: '3%',
   },
   lastLogDate: {
-    fontSize: 18,
+    fontSize: normalTextFontSize,
     fontFamily: 'SFProDisplay-Bold',
-    color: Colors.logFieldColor,
-    marginStart: width * 0.04,
+    color: Colors.grey,
+    marginStart: horizontalMargins,
     marginTop: height * 0.02,
+  },
+  lastLogContent: {
+    fontSize: normalTextFontSize,
+    fontFamily: 'SFProDisplay-Regular',
+    color: Colors.grey,
+    marginStart: horizontalMargins,
   },
   lastLogBorder: {
     borderWidth: 0.4,
     borderColor: Colors.lastLogValueColor,
-    margin: width * 0.04,
+    margin: horizontalMargins,
   },
   enableEditButton: {
     backgroundColor: Colors.nextBtnColor,

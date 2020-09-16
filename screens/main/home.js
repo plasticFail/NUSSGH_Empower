@@ -30,6 +30,7 @@ import ActivityCard from '../../components/dashboard/todayOverview/cards/Activit
 import {requestNutrientConsumption} from '../../netcalls/mealEndpoints/requestMealLog';
 import Moment from 'moment';
 import {getEntry4Day} from '../../netcalls/requestsDiary';
+import logStyles from '../../styles/logStyles';
 
 const buttonList = [
   {
@@ -173,7 +174,10 @@ const HomeScreen = (props) => {
         globalStyles.pageContainer,
         {backgroundColor: Colors.lastLogButtonColor},
       ]}>
-      <MenuBtn green={true} />
+      <View style={globalStyles.menuBarContainer}>
+        <MenuBtn green={true} />
+        <View style={{flex: 1}} />
+      </View>
       <ScrollView
         contentContainerStyle={{
           flexGrow: 1,
@@ -195,6 +199,18 @@ const HomeScreen = (props) => {
           protein={protein}
           fat={fat}
         />
+        <TouchableOpacity
+          onPress={() => props.navigation.navigate('MedicationPlan')}
+          style={[globalStyles.nextButtonStyle, {marginBottom: 0}]}>
+          <Text style={globalStyles.actionButtonText}>
+            Medication Plan Alpha
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={globalStyles.nextButtonStyle}
+          onPress={() => props.navigation.navigate('FitbitSetup')}>
+          <Text style={globalStyles.actionButtonText}>Fitbit Sync Alpha</Text>
+        </TouchableOpacity>
       </ScrollView>
     </View>
   );

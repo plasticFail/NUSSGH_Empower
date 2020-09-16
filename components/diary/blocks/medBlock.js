@@ -67,28 +67,32 @@ const MedBlock = (props) => {
       onBackButtonPress={() => closeModal()}
       backdropColor={Colors.backgroundColor}
       style={{margin: 0}}>
-      <LeftArrowBtn close={closeModal} />
-      <Text style={globalStyles.pageHeader}>Medication</Text>
-      <Text style={globalStyles.pageDetails}>{day}</Text>
-      <MissedContent arr={missedArr} type={med_key} />
-      <ScrollView style={{flex: 1}}>
-        {/*Show time section and data for log*/}
-        <TimeSection name={morningObj.name} />
-        {renderMedLogs(morningMedLogs, editLog)}
-        <TimeSection name={afternoonObj.name} />
-        {renderMedLogs(afternoonMedLogs, editLog)}
-        <TimeSection name={eveningObj.name} />
-        {renderMedLogs(eveningMedLogs, editLog)}
-      </ScrollView>
-      {editModal ? (
-        <EditMedicineBlock
-          visible={editModal}
-          closeModal={() => setEditModal(false)}
-          medicineToEdit={selectedMed}
-          initialDate={getDateObj(selectedMed.record_date)}
-          init={init}
-        />
-      ) : null}
+      <View style={globalStyles.pageContainer}>
+        <View style={globalStyles.menuBarContainer}>
+          <LeftArrowBtn close={closeModal} />
+        </View>
+        <Text style={globalStyles.pageHeader}>Medication</Text>
+        <Text style={globalStyles.pageDetails}>{day}</Text>
+        <MissedContent arr={missedArr} type={med_key} />
+        <ScrollView style={{flex: 1}}>
+          {/*Show time section and data for log*/}
+          <TimeSection name={morningObj.name} />
+          {renderMedLogs(morningMedLogs, editLog)}
+          <TimeSection name={afternoonObj.name} />
+          {renderMedLogs(afternoonMedLogs, editLog)}
+          <TimeSection name={eveningObj.name} />
+          {renderMedLogs(eveningMedLogs, editLog)}
+        </ScrollView>
+        {editModal ? (
+          <EditMedicineBlock
+            visible={editModal}
+            closeModal={() => setEditModal(false)}
+            medicineToEdit={selectedMed}
+            initialDate={getDateObj(selectedMed.record_date)}
+            init={init}
+          />
+        ) : null}
+      </View>
     </Modal>
   );
 };
@@ -117,7 +121,7 @@ function renderMedLogs(logs, editLog) {
               <>
                 <View style={{flex: 1}} />
                 <TouchableOpacity onPress={() => editLog(item)}>
-                  <Entypo name="edit" style={diaryStyles.editIcon} size={20} />
+                  <Entypo name="edit" style={diaryStyles.editIcon} size={30} />
                 </TouchableOpacity>
               </>
             ) : null}

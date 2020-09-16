@@ -1,75 +1,24 @@
 import {StyleSheet, Dimensions} from 'react-native';
 import {Colors} from './colors';
-
-const width = Dimensions.get('window').width;
-const height = Dimensions.get('window').height;
+import {
+  statusBarHeight,
+  headerHeight,
+  horizontalMargins,
+  verticalMarginsBetweenComponent,
+  onboard_marginStart,
+  onboard_marginEnd,
+  normalTextFontSize,
+  headerTextFontSize,
+} from './variables';
 
 const globalStyles = StyleSheet.create({
-  /*
-  scrollContainer: {
-    flex: 1,
-    width: '100%',
-    backgroundColor: 'white',
-  },
-  screen: {
-    flex: 1,
-    width: '100%',
-    backgroundColor: 'white',
-    padding: '4%',
-  },
-  button: {
-    marginTop: '9%',
-    backgroundColor: '#AAD326',
-    borderRadius: 20,
-    marginVertical: 10,
-    paddingHorizontal: 40,
-    paddingVertical: 6,
-    alignSelf: 'center',
-  },
-  buttonText: {
-    fontSize: 20,
-    textAlign: 'center',
-  },
+  //added from ui / ux change
   alertText: {
     //tweak
     fontSize: 18,
     fontFamily: 'SFProDisplay-Regular',
     color: Colors.alertColor,
   },
-  cardContainer: {
-    marginTop: '9%',
-    backgroundColor: 'white',
-    borderRadius: 20,
-    marginVertical: 10,
-    paddingHorizontal: 40,
-    paddingVertical: 6,
-    alignSelf: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  buttonEnabled: {
-    alignSelf: 'center',
-    backgroundColor: '#B3D14C',
-    borderRadius: 20,
-    marginVertical: 10,
-    paddingHorizontal: 40,
-    paddingVertical: 6,
-  },
-  buttonDisabled: {
-    alignSelf: 'center',
-    backgroundColor: '#EAEAFF',
-    borderRadius: 20,
-    marginVertical: 10,
-    paddingHorizontal: 40,
-    paddingVertical: 6,
-  }, */
-  //added from ui / ux change
   buttonContainer: {
     backgroundColor: 'white',
     shadowColor: '#000',
@@ -128,28 +77,38 @@ const globalStyles = StyleSheet.create({
     fontWeight: '700',
   },
   pageHeader: {
-    fontSize: 33,
-    marginStart: '4%',
+    fontSize: headerTextFontSize,
     paddingTop: '2%',
     marginBottom: '1%',
     fontFamily: 'SFProDisplay-Bold',
+    marginStart: horizontalMargins,
+    marginEnd: horizontalMargins,
   },
   pageDetails: {
-    fontSize: 18,
+    fontSize: normalTextFontSize,
     fontWeight: '800',
-    marginStart: '4%',
+    marginStart: horizontalMargins,
+    marginEnd: horizontalMargins,
     fontFamily: 'SFProDisplay-Bold',
     marginBottom: '2%',
   },
   pageSubDetails: {
-    fontSize: 18,
-    marginStart: '4%',
+    fontSize: normalTextFontSize,
+    marginStart: horizontalMargins,
+    marginEnd: horizontalMargins,
     fontFamily: 'SFProDisplay-Regular',
   },
   pageContainer: {
     flex: 1,
     backgroundColor: Colors.backgroundColor,
-    paddingTop: '20%',
+  },
+  menuBarContainer: {
+    height: statusBarHeight + headerHeight,
+    marginLeft: horizontalMargins,
+    marginRight: horizontalMargins,
+    marginBottom: verticalMarginsBetweenComponent,
+    alignItems: 'flex-end',
+    flexDirection: 'row',
   },
 });
 

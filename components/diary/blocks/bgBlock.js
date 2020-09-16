@@ -63,50 +63,63 @@ const BgBlock = (props) => {
       onBackButtonPress={() => closeModal()}
       backdropColor={Colors.backgroundColor}
       style={{margin: 0}}>
-      <LeftArrowBtn close={closeModal} />
-      <Text style={globalStyles.pageHeader}>Blood Glucose</Text>
-      <Text style={globalStyles.pageDetails}>{day}</Text>
-      <MissedContent arr={missedArr} type={bg_key} />
-      <View style={{flexDirection: 'row', marginTop: '3%', marginBottom: '2%'}}>
-        {pass ? (
-          <>
-            <Text style={globalStyles.pageDetails}>Average {avgBg} mmol/L</Text>
+      <View style={globalStyles.pageContainer}>
+        <View style={globalStyles.menuBarContainer}>
+          <LeftArrowBtn close={closeModal} />
+        </View>
+        <Text style={globalStyles.pageHeader}>Blood Glucose</Text>
+        <Text style={globalStyles.pageDetails}>{day}</Text>
+        <MissedContent arr={missedArr} type={bg_key} />
+        <View
+          style={{flexDirection: 'row', marginTop: '3%', marginBottom: '2%'}}>
+          {pass ? (
+            <>
+              <Text style={[globalStyles.pageDetails]}>
+                Average {avgBg} mmol/L
+              </Text>
 
-            <Ionicon name="checkmark" style={diaryStyles.passIcon} size={25} />
-          </>
-        ) : (
-          <>
-            <Text style={globalStyles.pageDetails}>Average {avgBg} mmol/L</Text>
+              <Ionicon
+                name="checkmark"
+                style={diaryStyles.passIcon}
+                size={25}
+              />
+            </>
+          ) : (
+            <>
+              <Text style={globalStyles.pageDetails}>
+                Average {avgBg} mmol/L
+              </Text>
 
-            <Ionicon
-              name="alert-circle-outline"
-              style={diaryStyles.failIcon}
-              size={25}
-            />
-          </>
-        )}
+              <Ionicon
+                name="alert-circle-outline"
+                style={diaryStyles.failIcon}
+                size={25}
+              />
+            </>
+          )}
+        </View>
+        <ScrollView style={{flex: 1}}>
+          {/*Show time section and data for log*/}
+          <TimeSection name={morningObj.name} />
+          {renderLogs(morningBgLogs, editLog)}
+          <TimeSection name={afternoonObj.name} />
+          {renderLogs(afternoonBgLogs, editLog)}
+          <TimeSection name={eveningObj.name} />
+          {renderLogs(eveningBgLogs, editLog)}
+        </ScrollView>
+
+        {/*Edit Modal*/}
+        {editModal ? (
+          <BloodGlucoseLogBlock
+            visible={editModal}
+            closeModal={() => setEditModal(false)}
+            parent="editLog"
+            toEditbloodGlucose={selectedLog.bg_reading}
+            selectedLog={selectedLog}
+            init={init}
+          />
+        ) : null}
       </View>
-      <ScrollView style={{flex: 1}}>
-        {/*Show time section and data for log*/}
-        <TimeSection name={morningObj.name} />
-        {renderLogs(morningBgLogs, editLog)}
-        <TimeSection name={afternoonObj.name} />
-        {renderLogs(afternoonBgLogs, editLog)}
-        <TimeSection name={eveningObj.name} />
-        {renderLogs(eveningBgLogs, editLog)}
-      </ScrollView>
-
-      {/*Edit Modal*/}
-      {editModal ? (
-        <BloodGlucoseLogBlock
-          visible={editModal}
-          closeModal={() => setEditModal(false)}
-          parent="editLog"
-          toEditbloodGlucose={selectedLog.bg_reading}
-          selectedLog={selectedLog}
-          init={init}
-        />
-      ) : null}
     </Modal>
   );
 };
@@ -130,7 +143,7 @@ function renderLogs(logs, editLog) {
               <>
                 <View style={{flex: 1}} />
                 <TouchableOpacity onPress={() => editLog(item)}>
-                  <Entypo name="edit" style={diaryStyles.editIcon} size={20} />
+                  <Entypo name="edit" style={diaryStyles.editIcon} size={30} />
                 </TouchableOpacity>
               </>
             ) : null}

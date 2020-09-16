@@ -18,6 +18,7 @@ import {
   checkDosageText,
   checkRepeatMedicine,
 } from '../../../commonFunctions/logFunctions';
+import logStyles from '../../../styles/logStyles';
 
 const SelectMedicationModalContent = (props) => {
   const {showSelectModal, selectedMedList} = props;
@@ -48,8 +49,11 @@ const SelectMedicationModalContent = (props) => {
       onBackButtonPress={() => closeSelectModal()}
       backdropColor={Colors.backgroundColor}
       style={{margin: 0}}>
-      <View style={{flex: 1}}>
-        <LeftArrowBtn close={closeSelectModal} />
+      <View style={logStyles.modalContainer}>
+        <View style={globalStyles.menuBarContainer}>
+          <LeftArrowBtn close={() => closeSelectModal()} />
+          <View style={{flex: 1}} />
+        </View>
         <Text style={globalStyles.pageHeader}>Select Medication</Text>
         <TouchableOpacity
           style={styles.searchInput}

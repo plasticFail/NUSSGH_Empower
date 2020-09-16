@@ -33,9 +33,5 @@ const MenuBtn = (props) => {
 export default MenuBtn;
 
 const styles = StyleSheet.create({
-  buttonstyle: {
-    marginStart: '3%',
-    position: 'absolute',
-    top: '5%',
-  },
+  buttonstyle: {},
 });

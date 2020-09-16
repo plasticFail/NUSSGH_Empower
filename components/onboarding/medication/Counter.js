@@ -33,6 +33,6 @@ const styles = StyleSheet.create({
   fieldText: {
     fontSize: 18,
     fontFamily: 'SFProDisplay-Regular',
-    color: Colors.logFieldColor,
+    color: Colors.grey,
   },
 });

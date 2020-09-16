@@ -34,11 +34,13 @@ import BloodGlucoseLogBlock from '../../../components/logs/bg/bloodGlucoseLogBlo
 import CrossBtn from '../../../components/crossBtn';
 import MedicationLogBlock from '../../../components/logs/medication/medicationLogBlock';
 import WeightLogBlock from '../../../components/logs/weight/weightLogBlock';
-import MenuBtn from '../../../components/menuBtn';
 import {getDefaultMealType} from '../../../commonFunctions/mealLogFunctions';
 import MealTypeSelectionBlock from '../../../components/logs/meal/MealTypeSelectionBlock';
 import CreateMealLogBlock from '../../../components/logs/meal/CreateMealLogBlock';
+import LeftArrowBtn from '../../../components/logs/leftArrowBtn';
 // Functions
+
+const button_list = [bg_key, weight_key, med_key, food_key];
 
 // AddLog view
 class AddLogScreen extends Component {
@@ -173,13 +175,15 @@ class AddLogScreen extends Component {
     const {showBg, showMed, showWeight, showFood} = this.state;
     return (
       <View style={globalStyles.pageContainer}>
-        <MenuBtn />
+        <View style={globalStyles.menuBarContainer}>
+          <LeftArrowBtn close={() => this.props.navigation.navigate('Home')} />
+        </View>
+        <Text style={globalStyles.pageHeader}>Add Log</Text>
+        <Text style={[globalStyles.pageDetails]}>{todayDate}</Text>
+        <Text style={[globalStyles.pageDetails, {marginTop: '4%'}]}>
+          Progress For {period}
+        </Text>
         <ScrollView contentContainerStyle={{flexGrow: 1}}>
-          <Text style={globalStyles.pageHeader}>Add Log</Text>
-          <Text style={globalStyles.pageDetails}>{todayDate}</Text>
-          <Text style={[globalStyles.pageDetails, {marginTop: '4%'}]}>
-            Progress For {period}
-          </Text>
           {notCompletedTypes.length > 0 && (
             <Text style={logStyles.complete}>Not Complete</Text>
           )}
@@ -229,7 +233,7 @@ class AddLogScreen extends Component {
             style={{margin: 0}}
             backdropColor={Colors.backgroundColor}>
             <View style={logStyles.modalContainer}>
-              <View style={logStyles.menuBarContainer}>
+              <View style={globalStyles.menuBarContainer}>
                 <CrossBtn close={this.closeModal} />
               </View>
               <View style={[logStyles.bodyPadding, {flex: 1}]}>

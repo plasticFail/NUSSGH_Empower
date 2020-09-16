@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 //third party library
 import Modal from 'react-native-modal';
-import Ionicon from 'react-native-vector-icons/Ionicons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import moment from 'moment';
 //style
 import {Colors} from '../../../styles/colors';
@@ -70,30 +70,34 @@ const EditMedicineBlock = (props) => {
       onBackButtonPress={() => closeModal()}
       backdropColor={Colors.backgroundColor}
       style={{margin: 0}}>
-      <View style={[logStyles.bodyPadding, {flex: 1}]}>
-        <LeftArrowBtn close={closeModal} />
+      <View style={globalStyles.pageContainer}>
+        <View style={globalStyles.menuBarContainer}>
+          <LeftArrowBtn close={closeModal} />
+        </View>
         <Text style={globalStyles.pageHeader}>Edit</Text>
-        <DateSelectionBlock date={datetime} setDate={setDatetime} />
-        <Text style={logStyles.fieldName}>Medication Taken:</Text>
-        <Text style={logStyles.inputField}>{medicineToEdit.medication}</Text>
-        <Counter
-          count={dosage}
-          setCount={setDosage}
-          parameter={'Unit (s)'}
-          fieldName={'Default Dosage'}
-        />
-        {dosage === 0 && (
-          <Text style={[globalStyles.alertText, {marginStart: '4%'}]}>
-            Please input a valid dosage number
-          </Text>
-        )}
+        <View style={[logStyles.bodyPadding, {marginStart: 0}]}>
+          <DateSelectionBlock date={datetime} setDate={setDatetime} />
+          <Text style={logStyles.fieldName}>Medication Taken:</Text>
+          <Text style={logStyles.inputField}>{medicineToEdit.medication}</Text>
+          <Counter
+            count={dosage}
+            setCount={setDosage}
+            parameter={'Unit (s)'}
+            fieldName={'Default Dosage'}
+          />
+          {dosage === 0 && (
+            <Text style={[globalStyles.alertText, {marginStart: '4%'}]}>
+              Please input a valid dosage number
+            </Text>
+          )}
+        </View>
       </View>
       <View style={[globalStyles.buttonContainer]}>
         <View style={{flexDirection: 'row'}}>
           <TouchableOpacity
             style={diaryStyles.binIcon}
             onPress={() => requestDelete()}>
-            <Ionicon name="ios-trash-bin" size={40} color="#ff0844" />
+            <FontAwesome name="trash-o" size={40} color="#ff0844" />
           </TouchableOpacity>
           {dosage != 0 && changed ? (
             <TouchableOpacity

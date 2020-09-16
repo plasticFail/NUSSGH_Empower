@@ -73,7 +73,7 @@ const LastLogButton = (props) => {
       <TouchableOpacity
         style={logStyles.lastLogContainer}
         onPress={() => setShow(!show)}>
-        <View style={{marginEnd: '4%'}}>
+        <View style={{marginEnd: '1%'}}>
           <Image
             source={renderLogIcon(logType)}
             style={logStyles.mini_loglogo}
@@ -84,11 +84,11 @@ const LastLogButton = (props) => {
             {logType}
           </Text>
           {none4tdy ? (
-            <Text style={[logStyles.lastLogDetail]}>
+            <Text style={[logStyles.lastLogSummary]}>
               No Logs Done for Today
             </Text>
           ) : (
-            <Text style={logStyles.lastLogDetail}>
+            <Text style={logStyles.lastLogSummary}>
               Last logged in the {lastPeriod}
             </Text>
           )}

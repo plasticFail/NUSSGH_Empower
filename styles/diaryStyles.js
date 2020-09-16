@@ -52,7 +52,7 @@ const diaryStyles = StyleSheet.create({
   },
   binIcon: {
     marginTop: '5%',
-    marginStart: '2%',
+    marginStart: '5%',
   },
 });
 
