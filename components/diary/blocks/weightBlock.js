@@ -102,7 +102,6 @@ function renderWeightLogs(logs, editLog) {
   if (logs.length > 0) {
     return (
       <View style={{marginBottom: '3%'}}>
-        <Text style={diaryStyles.recordedText}>Reading Recorded</Text>
         {logs.map((item, index) => (
           <View style={styles.logContent} key={index.toString()}>
             <Text style={diaryStyles.recordContent}>

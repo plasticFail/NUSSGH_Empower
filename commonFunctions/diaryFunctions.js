@@ -176,7 +176,6 @@ const filterEvening = (logs) => {
   for (var i of logs) {
     let date = i.record_date;
     let hour = getHour(date);
-    console.log(greeting);
     let greeting = getGreetingFromHour(hour);
     if (greeting === eveningObj.name) {
       list.push(i);
