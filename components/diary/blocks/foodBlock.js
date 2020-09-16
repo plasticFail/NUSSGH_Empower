@@ -14,6 +14,7 @@ import {
   maxFats,
   maxProtein,
   showEdit,
+  getDateObj,
 } from '../../../commonFunctions/diaryFunctions';
 import {food_key} from '../../../commonFunctions/logFunctions';
 import {
@@ -30,12 +31,13 @@ import LeftArrowBtn from '../../logs/leftArrowBtn';
 import MissedContent from './missedContent';
 import ProgressContent from './progressContent';
 import TimeSection from '../timeSection';
+import EditFoodBlock from './editFoodBlock';
+
 //style
 import globalStyles from '../../../styles/globalStyles';
 import {Colors} from '../../../styles/colors';
 import diaryStyles from '../../../styles/diaryStyles';
 import {horizontalMargins} from '../../../styles/variables';
-
 //function
 
 const FoodBlock = (props) => {
@@ -50,10 +52,12 @@ const FoodBlock = (props) => {
     pass,
     miss,
     day,
+    init,
   } = props;
   const {closeModal} = props;
   const [selectedLog, setSelectedLog] = useState({});
   const [missedArr, setMissedArr] = useState([]);
+  const [editModal, setEditModal] = useState(false);
 
   useEffect(() => {
     setMissedArr(
@@ -64,6 +68,7 @@ const FoodBlock = (props) => {
   const editLog = (item) => {
     console.log('selecting item to edit');
     setSelectedLog(item);
+    setEditModal(true);
   };
 
   return (
@@ -82,36 +87,7 @@ const FoodBlock = (props) => {
         <Text style={globalStyles.pageDetails}>{day}</Text>
         <MissedContent arr={missedArr} type={food_key} />
         {renderProgressBars(carbs, fats, protein)}
-        {missedArr.length < 3 && (
-          <View
-            style={{flexDirection: 'row', marginTop: '3%', marginBottom: '2%'}}>
-            {pass ? (
-              <>
-                <Text style={globalStyles.pageDetails}>
-                  Within Healthy Range
-                </Text>
 
-                <Ionicon
-                  name="checkmark"
-                  style={diaryStyles.passIcon}
-                  size={25}
-                />
-              </>
-            ) : (
-              <>
-                <Text style={globalStyles.pageDetails}>
-                  Not Within Healthy Range
-                </Text>
-
-                <Ionicon
-                  name="alert-circle-outline"
-                  style={diaryStyles.failIcon}
-                  size={25}
-                />
-              </>
-            )}
-          </View>
-        )}
         <ScrollView style={{flex: 1}}>
           <TimeSection name={morningObj.name} />
           {renderFoodItems(morningMealLogs, editLog)}
@@ -121,6 +97,15 @@ const FoodBlock = (props) => {
           {renderFoodItems(eveningMealLogs, editLog)}
         </ScrollView>
       </View>
+      {editModal ? (
+        <EditFoodBlock
+          visible={editModal}
+          closeModal={() => setEditModal(false)}
+          mealToEdit={selectedLog}
+          initialDate={getDateObj(selectedLog.record_date)}
+          init={init}
+        />
+      ) : null}
     </Modal>
   );
 };
@@ -144,7 +129,7 @@ function renderFoodItems(logs, editLog) {
                       {inner['food-name']}
                     </Text>
                     <Text style={diaryStyles.recordContent}>
-                      {inner['quantity']} qty
+                      {inner['quantity']} Servings(s)
                     </Text>
                   </View>
                   {showEdit(item.record_date) ? (
@@ -183,24 +168,26 @@ function renderProgressBars(carbs, fats, protein) {
       style={{
         flexDirection: 'row',
         marginStart: horizontalMargins,
+        marginBottom: '3%',
+        alignItems: 'space-around',
       }}>
       <ProgressContent
         header={'Carbs'}
         value={carbs}
         target={maxCarbs}
-        targetUnit={'grams'}
+        targetUnit={'g'}
       />
       <ProgressContent
         header={'Fat'}
         value={fats}
         target={maxFats}
-        targetUnit={'grams'}
+        targetUnit={'g'}
       />
       <ProgressContent
         header={'Protein'}
         value={protein}
         target={maxProtein}
-        targetUnit={'grams'}
+        targetUnit={'g'}
       />
     </View>
   );

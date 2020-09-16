@@ -28,13 +28,7 @@ const StepCounter = (props) => {
   };
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity onPress={handleAdd}>
-        <Ionicons name="add-circle" size={40} color={'#aad326'} />
-      </TouchableOpacity>
-      <Text style={[styles.countContent, textStyle]}>
-        {count} {parameter}
-      </Text>
+    <View style={{...styles.container, ...props.style}}>
       <TouchableOpacity onPress={handleMinus}>
         <Ionicons
           name="remove-circle"
@@ -42,6 +36,12 @@ const StepCounter = (props) => {
           color={'#aad326'}
           style={{flex: 1}}
         />
+      </TouchableOpacity>
+      <Text style={[styles.countContent, textStyle]}>
+        {count} {parameter}
+      </Text>
+      <TouchableOpacity onPress={handleAdd}>
+        <Ionicons name="add-circle" size={40} color={'#aad326'} />
       </TouchableOpacity>
     </View>
   );
