@@ -7,10 +7,12 @@ import {
   Image,
   ScrollView,
   Dimensions,
+  Alert,
 } from 'react-native';
 //third party libr
 import Modal from 'react-native-modal';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import moment from 'moment';
 //styles
 import {Colors} from '../../../styles/colors';
 import globalStyles from '../../../styles/globalStyles';
@@ -23,6 +25,10 @@ import MealTypeSelectionBlock from '../../logs/meal/MealTypeSelectionBlock';
 import Counter from '../../onboarding/medication/Counter';
 import RemoveModal from '../removeModal';
 import {food_key} from '../../../commonFunctions/logFunctions';
+import {deleteMealLog, editMealLog} from '../../../netcalls/requestsDiary';
+import {cos} from 'react-native-reanimated';
+import {getDefaultMealType} from '../../../commonFunctions/mealLogFunctions';
+import {getHour} from '../../../commonFunctions/diaryFunctions';
 
 const EditFoodBlock = (props) => {
   const {visible, mealToEdit, initialDate} = props;
@@ -38,10 +44,23 @@ const EditFoodBlock = (props) => {
 
   useEffect(() => {
     checkChange();
+    checkMealTypeTimeSync();
   }, [mealType, datetime, foodItems]);
+
+  const checkMealTypeTimeSync = () => {
+    let time = moment(datetime).format('DD/MM/YYYY HH:mm:ss');
+    if (mealType != getDefaultMealType(getHour(time))) {
+      return false;
+    }
+    return true;
+  };
 
   const checkChange = () => {
     //check meal type changed
+    if (!checkMealTypeTimeSync()) {
+      setChanged(false);
+      return;
+    }
     if (
       String(initalMeal.mealType) != String(mealType) ||
       String(initialDate) != String(datetime) ||
@@ -56,10 +75,38 @@ const EditFoodBlock = (props) => {
 
   const submit = () => {
     //change the mealtype and record date*
+    let newMeal = initalMeal;
+    newMeal = {
+      ...newMeal,
+      mealType: mealType,
+      foodItems: foodItems,
+      recordDate: moment(datetime).format('DD/MM/YYYY HH:mm:ss'),
+    };
+    console.log('submitting new meal');
+    console.log(newMeal);
+    editMealLog(newMeal).then((response) => {
+      if (response != null) {
+        Alert.alert('Meal Log edited successfully!', '', [
+          {
+            text: 'Got It',
+            onPress: () => {
+              init();
+              closeModal();
+            },
+          },
+        ]);
+      }
+    });
   };
 
   const deleteLog = () => {
     console.log('deleting entire log');
+    deleteMealLog(initalMeal['_id']).then((response) => {
+      if (response != null) {
+        init();
+        closeModal();
+      }
+    });
   };
 
   const editQuantity = (value, selectedItem) => {
@@ -86,7 +133,10 @@ const EditFoodBlock = (props) => {
   };
 
   const checkFoodItemsChange = () => {
-    if (foodItems.length != initalMeal.foodItems.length) {
+    if (
+      foodItems.length != initalMeal.foodItems.length &&
+      foodItems.length != 0
+    ) {
       return true;
     }
     for (var x of foodItems) {
@@ -113,20 +163,32 @@ const EditFoodBlock = (props) => {
         <View style={globalStyles.menuBarContainer}>
           <LeftArrowBtn close={closeModal} />
         </View>
-        <View style={[logStyles.bodyPadding]}>
+        <View style={[logStyles.bodyPadding, {flex: 1}]}>
           <Text style={logStyles.headerText}>Edit</Text>
           <DateSelectionBlock date={datetime} setDate={setDatetime} />
           <MealTypeSelectionBlock
             onSelectChange={(option) => setMealType(option)}
             defaultValue={mealType}
           />
+          {!checkMealTypeTimeSync() && (
+            <Text style={{color: 'red', fontSize: 17, marginTop: '2%'}}>
+              * Please ensure meal type and record time is in sync
+            </Text>
+          )}
           {foodItems.length > 0 ? (
             <Text style={logStyles.fieldName}>Number of Servings (s)</Text>
           ) : (
-            <Text style={logStyles.fieldName}>No Food Items Left</Text>
+            <>
+              <Text style={logStyles.fieldName}>No Food Items Left</Text>
+              <Text style={{fontSize: 18, marginTop: '2%'}}>
+                Please proceed to delete the log if you want to continue
+              </Text>
+            </>
           )}
 
-          <ScrollView>
+          <ScrollView
+            contentContainerStyle={{flexGrow: 1}}
+            showsVerticalScrollIndicator={false}>
             {foodItems.map((item) =>
               foodItem(item, editQuantity, confirmDeleteItem),
             )}

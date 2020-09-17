@@ -63,7 +63,7 @@ const FoodBlock = (props) => {
     setMissedArr(
       getMissedArr(morningMealLogs, afternoonMealLogs, eveningMealLogs),
     );
-  }, []);
+  }, [morningMealLogs, afternoonMealLogs, eveningMealLogs]);
 
   const editLog = (item) => {
     console.log('selecting item to edit');
@@ -87,7 +87,36 @@ const FoodBlock = (props) => {
         <Text style={globalStyles.pageDetails}>{day}</Text>
         <MissedContent arr={missedArr} type={food_key} />
         {renderProgressBars(carbs, fats, protein)}
+        {missedArr.length < 3 && (
+          <View
+            style={{flexDirection: 'row', marginTop: '3%', marginBottom: '2%'}}>
+            {pass ? (
+              <>
+                <Text style={globalStyles.pageDetails}>
+                  Within Healthy Range
+                </Text>
 
+                <Ionicon
+                  name="checkmark"
+                  style={diaryStyles.passIcon}
+                  size={25}
+                />
+              </>
+            ) : (
+              <>
+                <Text style={globalStyles.pageDetails}>
+                  Not Within Healthy Range
+                </Text>
+
+                <Ionicon
+                  name="alert-circle-outline"
+                  style={diaryStyles.failIcon}
+                  size={25}
+                />
+              </>
+            )}
+          </View>
+        )}
         <ScrollView style={{flex: 1}}>
           <TimeSection name={morningObj.name} />
           {renderFoodItems(morningMealLogs, editLog)}

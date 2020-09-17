@@ -69,13 +69,13 @@ const getNutrientCount = (array) => {
         let proteinAmount = a?.nutrients.protein.amount;
         let fatAmount = a?.nutrients['total-fat']?.amount;
         if (carbsAmount != 'N.A') {
-          totalCarbs += Number(carbsAmount);
+          totalCarbs += Number(carbsAmount) * Number(a.quantity);
         }
         if (proteinAmount != 'N.A') {
-          totalProtein += Number(proteinAmount);
+          totalProtein += Number(proteinAmount) * Number(a.quantity);
         }
         if (fatAmount != 'N.A') {
-          totalFats += Number(fatAmount);
+          totalFats += Number(fatAmount) * Number(a.quantity);
         }
       }
     }
