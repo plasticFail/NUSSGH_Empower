@@ -68,13 +68,6 @@ const DrawerNavigator = (props) => {
         }}
       />
       <Drawer.Screen
-        name="Game Center"
-        component={GameCenter}
-        options={{
-          drawerIcon: () => <Icon name="gamepad" size={30} color={'white'} />,
-        }}
-      />
-      <Drawer.Screen
         name="Goals"
         component={Goals}
         options={{
@@ -89,7 +82,7 @@ const DrawerNavigator = (props) => {
         }}
       />
       <Drawer.Screen
-        name="Educational Material"
+        name="Resources"
         component={EducationalMaterial}
         options={{
           drawerIcon: () => (
