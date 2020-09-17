@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { ActivityIndicator, StyleSheet,  View } from "react-native";
 import {getToken} from '../../storage/asyncStorageFunctions';
 import {isTokenValidRequest} from '../../netcalls/requestsAuth';
@@ -20,7 +20,10 @@ const init = async(props, finishHandler) => {
 }
 
 const LoadingScreen = props => {
-    init(props, props.finishHandler);
+    useEffect(() => {
+        init(props, props.finishHandler);
+    });
+
     return (
         <View style={[styles.container, styles.horizontal]}>
             <ActivityIndicator size="large" color="#00ff00"/>
