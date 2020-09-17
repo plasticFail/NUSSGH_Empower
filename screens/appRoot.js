@@ -1,17 +1,13 @@
 import React, {Component} from 'react';
-import {Alert, View, Linking} from 'react-native';
+import {View, Linking} from 'react-native';
 //third party libs
 import {
   getFocusedRouteNameFromRoute,
   NavigationContainer,
 } from '@react-navigation/native';
-import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
-import {connect} from 'react-redux';
+import {createStackNavigator} from '@react-navigation/stack';
 import Entypo from 'react-native-vector-icons/Entypo';
 //functions
-import {getToken} from '../storage/asyncStorageFunctions';
-import {mapStateToProps, mapDispatchToProps} from '../redux/reduxMapping';
-import {isTokenValidRequest} from '../netcalls/requestsAuth';
 //other screens
 import Login from './login/login';
 import ForgetPasswordScreen from './login/ForgetPasswordScreen';
@@ -58,29 +54,17 @@ class AppRoot extends Component {
   }
 
   componentDidMount() {
-    this.init();
     Linking.addEventListener('url', this.handleRedirectUrl);
   }
 
   handleRedirectUrl = (event) => {
-    const url = event.url;
+    // const url = event.url;
     /*
     if (url.startsWith(redirect_uri)) {
       // fitbit redirect url
       AuthoriseFitbit(url);
     }
     */
-  };
-
-  init = async () => {
-    const token = await getToken();
-    if (token !== null && token !== '') {
-      console.log('token : ' + token);
-      let tokenIsValid = await isTokenValidRequest(token);
-      if (tokenIsValid) {
-        this.props.login();
-      }
-    }
   };
 
   componentWillUnmount() {
@@ -178,5 +162,5 @@ class AppRoot extends Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AppRoot);
+export default AppRoot;
 //edit flag
