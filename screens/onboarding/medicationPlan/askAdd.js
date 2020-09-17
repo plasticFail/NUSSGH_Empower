@@ -104,17 +104,6 @@ class AskAdd extends Component {
     postPlan(data).then((response) => {
       if (response != null) {
         this.handleSkip();
-      } else {
-        Alert.alert(
-          'Network Error',
-          'Please try again later.',
-          [
-            {
-              text: 'Got It',
-            },
-          ],
-          {cancelable: false},
-        );
       }
     });
   };

@@ -6,7 +6,7 @@ import logStyles from '../../../styles/logStyles';
 import {Colors} from '../../../styles/colors';
 
 const Counter = (props) => {
-  const {count, setCount, parameter, fieldName} = props;
+  const {count, setCount, parameter, fieldName, countStyle} = props;
   return (
     <View style={styles.counterContainer}>
       <Text style={[logStyles.fieldName, {marginEnd: '2%'}]}>{fieldName}</Text>
@@ -15,6 +15,7 @@ const Counter = (props) => {
         setCount={setCount}
         textStyle={styles.fieldText}
         parameter={parameter}
+        style={countStyle}
       />
     </View>
   );

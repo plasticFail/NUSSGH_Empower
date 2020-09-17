@@ -1,5 +1,6 @@
 import {StyleSheet} from 'react-native';
 import {Colors} from './colors';
+import {normalTextFontSize} from './variables';
 
 const diaryStyles = StyleSheet.create({
   diaryLogItem: {
@@ -35,7 +36,7 @@ const diaryStyles = StyleSheet.create({
   },
   recordedText: {
     fontFamily: 'SFProDisplay-Regular',
-    fontSize: 18,
+    fontSize: normalTextFontSize,
     marginStart: '5%',
   },
   recordContent: {

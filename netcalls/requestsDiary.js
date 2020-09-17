@@ -3,6 +3,7 @@ import {
   medicationAddLog,
   glucoseAddLog,
   weightAddLog,
+  mealAddLogEndpoint,
 } from './urls';
 import {getToken} from '../storage/asyncStorageFunctions';
 import moment from 'moment';
@@ -83,6 +84,25 @@ const editBgLog = async (
   }
 };
 
+const editMealLog = async (updatedMeal) => {
+  try {
+    let response = await fetch(mealAddLogEndpoint, {
+      method: 'POST',
+      headers: {
+        Authorization: 'Bearer ' + (await getToken()),
+        Accept: 'application/json',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(updatedMeal),
+    });
+    let responseJson = await response.json();
+    return responseJson;
+  } catch (error) {
+    console.error(error);
+    Alert.alert('Network Error', 'Try Again Later', [{text: 'Got It'}]);
+  }
+};
+
 const editWeightLog = async (weight, datetime, id) => {
   try {
     let response = await fetch(weightAddLog, {
@@ -156,6 +176,24 @@ const deleteBgLog = async (bgId) => {
   }
 };
 
+const deleteMealLog = async (mealId) => {
+  try {
+    let link = mealAddLogEndpoint + '/' + mealId;
+    let response = await fetch(link, {
+      method: 'DELETE',
+      headers: {
+        Authorization: 'Bearer ' + (await getToken()),
+        Accept: 'application/json',
+        'Content-type': 'application/json',
+      },
+    });
+    let responseJson = await response.json();
+    return responseJson;
+  } catch (error) {
+    Alert.alert('Network Error', 'Try Again Later', [{text: 'Got It'}]);
+  }
+};
+
 const deleteWeightLog = async (weightId) => {
   try {
     let link = weightAddLog + '/' + weightId;
@@ -196,9 +234,11 @@ export {
   getEntry4Day,
   getEntryForDateRange,
   editBgLog,
+  editMealLog,
   editWeightLog,
   editMedicineInLog,
-  deleteMed,
   deleteBgLog,
+  deleteMealLog,
   deleteWeightLog,
+  deleteMed,
 };

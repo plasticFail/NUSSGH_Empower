@@ -1,5 +1,6 @@
 import {medplanAdd} from './urls';
 import {getToken} from '../storage/asyncStorageFunctions';
+import {Alert} from 'react-native';
 
 const prepareData = (data) => {
   let objArr = [];
@@ -62,11 +63,12 @@ const postPlan = async (data) => {
       }),
     );
     let responseJson = await response.json();
-    console.log(responseJson);
-    return true;
+    return responseJson;
   } catch (error) {
-    console.error(error);
-    return false;
+    //console.error(error);
+    Alert.alert('Error', 'Account already has existing med plan', [
+      {text: 'Got It'},
+    ]);
   }
 };
 
