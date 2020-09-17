@@ -37,11 +37,10 @@ const images = {
   distance: require('../../../resources/images/activity/distance.png'),
   steps_taken: require('../../../resources/images/activity/steps_taken.png'),
 };
-
 const steps_taken = 'Steps Taken';
 const excerise = 'Exercise';
 const caloriesBurnt = 'Calories Burnt';
-
+Icon.loadFont();
 const ActivityBlock = (props) => {
   const {visible, activityLogs, pass, summary, miss, day} = props;
   const {closeModal} = props;

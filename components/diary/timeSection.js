@@ -10,7 +10,7 @@ import {Colors} from '../../styles/colors';
 //third party lib
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-
+Icon.loadFont();
 const TimeSection = (props) => {
   const {name} = props;
 
