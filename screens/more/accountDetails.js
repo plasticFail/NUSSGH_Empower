@@ -72,6 +72,7 @@ const AccountDetailScreen = (props) => {
             content=''
             click={true}
             openModal={()=>props.navigation.navigate('FitbitSetup')}
+            closeModal={()=>{}}
             modalVisible={false}
         />
 

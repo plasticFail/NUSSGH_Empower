@@ -198,6 +198,18 @@ const HomeScreen = (props) => {
           protein={protein}
           fat={fat}
         />
+        <TouchableOpacity
+          onPress={() => props.navigation.navigate('MedicationPlan')}
+          style={[globalStyles.nextButtonStyle, {marginBottom: 0}]}>
+          <Text style={globalStyles.actionButtonText}>
+            Medication Plan Alpha
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={globalStyles.nextButtonStyle}
+          onPress={() => props.navigation.navigate('FitbitSetup')}>
+          <Text style={globalStyles.actionButtonText}>Fitbit Sync Alpha</Text>
+        </TouchableOpacity>
       </ScrollView>
     </View>
   );
@@ -259,3 +271,4 @@ const styles = StyleSheet.create({
 });
 
 export default HomeScreen;
+//edit flag

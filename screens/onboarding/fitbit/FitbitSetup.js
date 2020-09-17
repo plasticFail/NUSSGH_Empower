@@ -113,7 +113,6 @@ export default function FitbitSetup(props) {
               if (resp) {
                 authorised.current = true;
                 setProcessingStatus(STATUS.FINISHED_SUCCESSFULLY);
-                setTimeout(()=>props.navigation.navigate('Home'), 1000);
               } else {
                 setProcessingStatus(STATUS.ERROR);
               }
@@ -178,15 +177,17 @@ export default function FitbitSetup(props) {
       <View style={{flex: 1}} />
       {authorised.current ? (
         <View style={globalStyles.buttonContainer}>
-          <TouchableOpacity onPress={()=>props.navigation.navigate('Home')}
-            style={[globalStyles.nextButtonStyle]}>
+          <TouchableOpacity
+            style={[globalStyles.nextButtonStyle]}
+            onPress={this.handleNext}>
             <Text style={globalStyles.actionButtonText}>Next</Text>
           </TouchableOpacity>
         </View>
       ) : (
         <View style={globalStyles.buttonContainer}>
           <TouchableOpacity
-            style={globalStyles.skipButtonStyle}>
+            style={globalStyles.skipButtonStyle}
+            onPress={this.handleSkip}>
             <Text style={globalStyles.actionButtonText}>Skip</Text>
           </TouchableOpacity>
         </View>
