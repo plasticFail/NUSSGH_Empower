@@ -22,8 +22,6 @@ import {
   med_key,
   weight_key,
   renderLogIcon,
-  isPeriod,
-  isToday,
   checkLogDone,
 } from '../../../commonFunctions/logFunctions';
 import {getGreetingFromHour} from '../../../commonFunctions/common';
@@ -39,8 +37,6 @@ import MealTypeSelectionBlock from '../../../components/logs/meal/MealTypeSelect
 import CreateMealLogBlock from '../../../components/logs/meal/CreateMealLogBlock';
 import LeftArrowBtn from '../../../components/logs/leftArrowBtn';
 // Functions
-
-const button_list = [bg_key, weight_key, med_key, food_key];
 
 // AddLog view
 class AddLogScreen extends Component {
@@ -87,7 +83,7 @@ class AddLogScreen extends Component {
       todayDate: Moment(this.state.recordDate).format('Do MMMM YYYY'),
     });
     checkLogDone(period).then((response) => {
-      if (response != undefined) {
+      if (response !== undefined) {
         this.setState({completedTypes: response.completed});
         this.setState({notCompletedTypes: response.notCompleted});
       }
