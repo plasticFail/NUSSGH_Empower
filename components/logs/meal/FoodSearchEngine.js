@@ -61,7 +61,7 @@ export default class FoodSearchEngineScreen extends React.Component {
     this.keyboardWillShowSub = Keyboard.addListener(Platform.OS == 'android' ? 'keyboardDidShow' : 'keyboardWillShow', this.keyboardWillShow);
     this.keyboardWillHideSub = Keyboard.addListener(Platform.OS == 'android' ? "keyboardDidHide" : 'keyboardWillHide', this.keyboardWillHide);
     // Read recently selected food and add them here.
-    const endDate = Moment(new Date()).format('YYYY-MM-DD');
+    const endDate = Moment(new Date()).add(1, 'day').format('YYYY-MM-DD');
     const startDate = Moment(new Date()).subtract(7, "days").format('YYYY-MM-DD');
     requestMealLogList(startDate, endDate).then(data => {
         let unprocessedRecentFoodItems = [];
