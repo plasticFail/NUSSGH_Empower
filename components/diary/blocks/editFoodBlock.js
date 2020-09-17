@@ -20,52 +20,34 @@ import logStyles from '../../../styles/logStyles';
 import diaryStyles from '../../../styles/diaryStyles';
 //component
 import LeftArrowBtn from '../../logs/leftArrowBtn';
-import DateSelectionBlock from '../../logs/dateSelectionBlock';
-import MealTypeSelectionBlock from '../../logs/meal/MealTypeSelectionBlock';
 import Counter from '../../onboarding/medication/Counter';
 import RemoveModal from '../removeModal';
+//function
 import {food_key} from '../../../commonFunctions/logFunctions';
 import {deleteMealLog, editMealLog} from '../../../netcalls/requestsDiary';
-import {cos} from 'react-native-reanimated';
-import {getDefaultMealType} from '../../../commonFunctions/mealLogFunctions';
-import {getHour} from '../../../commonFunctions/diaryFunctions';
+
+const from_delete = 'delete';
+const from_edit = 'edit';
 
 const EditFoodBlock = (props) => {
-  const {visible, mealToEdit, initialDate} = props;
+  const {visible, mealToEdit, initialDate, selectedFood} = props;
   const {closeModal, init} = props;
   const initalMeal = mealToEdit;
-  const [datetime, setDatetime] = useState(initialDate);
-  const [mealType, setMealType] = useState(initalMeal.mealType);
+  const [quantity, setQuantity] = useState(selectedFood.quantity);
   const [foodItems, setFoodItems] = useState(mealToEdit.foodItems);
-  const [selectedFood, setSelectedFood] = useState('');
   const [deleteItemModal, setDeleteItemModal] = useState(false);
-  const [deleteLogModal, setDeleteLogModal] = useState(false);
   const [changed, setChanged] = useState(false);
 
   useEffect(() => {
     checkChange();
-    checkMealTypeTimeSync();
-  }, [mealType, datetime, foodItems]);
-
-  const checkMealTypeTimeSync = () => {
-    let time = moment(datetime).format('DD/MM/YYYY HH:mm:ss');
-    if (mealType != getDefaultMealType(getHour(time))) {
-      return false;
+    if (quantity === 0) {
+      setDeleteItemModal(true);
+      setChanged(false);
     }
-    return true;
-  };
+  }, [foodItems, quantity]);
 
   const checkChange = () => {
-    //check meal type changed
-    if (!checkMealTypeTimeSync()) {
-      setChanged(false);
-      return;
-    }
-    if (
-      String(initalMeal.mealType) != String(mealType) ||
-      String(initialDate) != String(datetime) ||
-      checkFoodItemsChange()
-    ) {
+    if (checkFoodItemsChange()) {
       setChanged(true);
       return;
     }
@@ -73,45 +55,44 @@ const EditFoodBlock = (props) => {
     return;
   };
 
-  const submit = () => {
-    //change the mealtype and record date*
+  const submit = (parent) => {
     let newMeal = initalMeal;
+    let list = [];
+    if (parent === from_delete) {
+      list = foodItems.filter((food) => food != selectedFood);
+    } else {
+      list = foodItems;
+    }
     newMeal = {
       ...newMeal,
-      mealType: mealType,
-      foodItems: foodItems,
-      recordDate: moment(datetime).format('DD/MM/YYYY HH:mm:ss'),
+      foodItems: list,
+      recordDate: moment(initialDate).format('DD/MM/YYYY HH:mm:ss'),
     };
     console.log('submitting new meal');
-    console.log(newMeal);
     editMealLog(newMeal).then((response) => {
-      if (response != null) {
-        Alert.alert('Meal Log edited successfully!', '', [
-          {
-            text: 'Got It',
-            onPress: () => {
-              init();
-              closeModal();
+      if (parent === from_edit) {
+        if (response != null) {
+          Alert.alert('Food item edited successfully!', '', [
+            {
+              text: 'Got It',
+              onPress: () => {
+                init();
+                closeModal();
+              },
             },
-          },
-        ]);
-      }
-    });
-  };
-
-  const deleteLog = () => {
-    console.log('deleting entire log');
-    deleteMealLog(initalMeal['_id']).then((response) => {
-      if (response != null) {
+          ]);
+        }
+      } else {
         init();
         closeModal();
       }
     });
   };
 
-  const editQuantity = (value, selectedItem) => {
+  const editQuantity = (value) => {
+    setQuantity(value);
     const elementIndex = foodItems.findIndex(
-      (element) => element['food-name'] == selectedItem['food-name'],
+      (element) => element['food-name'] == selectedFood['food-name'],
     );
     let newArr = [...foodItems];
     newArr[elementIndex] = {
@@ -121,26 +102,19 @@ const EditFoodBlock = (props) => {
     setFoodItems(newArr);
   };
 
-  const confirmDeleteItem = (item) => {
-    setDeleteItemModal(true);
-    setSelectedFood(item);
+  const deleteItem = () => {
+    submit(from_delete);
+    setDeleteItemModal(false);
   };
 
-  const deleteItem = () => {
-    setDeleteItemModal(false);
-    let list = foodItems.filter((food) => food != selectedFood);
-    setFoodItems(list);
+  const confirmDeleteItem = () => {
+    setDeleteItemModal(true);
   };
 
   const checkFoodItemsChange = () => {
-    if (
-      foodItems.length != initalMeal.foodItems.length &&
-      foodItems.length != 0
-    ) {
-      return true;
-    }
     for (var x of foodItems) {
       for (var y of initalMeal.foodItems) {
+        //check qty change
         if (x['food-name'] === y['food-name']) {
           if (x['quantity'] != y['quantity']) {
             return true;
@@ -165,47 +139,30 @@ const EditFoodBlock = (props) => {
         </View>
         <View style={[logStyles.bodyPadding, {flex: 1}]}>
           <Text style={logStyles.headerText}>Edit</Text>
-          <DateSelectionBlock date={datetime} setDate={setDatetime} />
-          <MealTypeSelectionBlock
-            onSelectChange={(option) => setMealType(option)}
-            defaultValue={mealType}
-          />
-          {!checkMealTypeTimeSync() && (
-            <Text style={{color: 'red', fontSize: 17, marginTop: '2%'}}>
-              * Please ensure meal type and record time is in sync
+          <Text style={logStyles.fieldName}>Record Date Time</Text>
+          <Text style={logStyles.inputField}>
+            {moment(initialDate).format('DD/MM/YYYY HH:mm a')}
+          </Text>
+          <Text style={logStyles.fieldName}>Number of Servings (s)</Text>
+          {foodItem(selectedFood, editQuantity, quantity)}
+          {quantity === 0 && (
+            <Text style={{fontSize: 18, color: 'red', marginTop: '2%'}}>
+              *Invalid Quantity for Food
             </Text>
           )}
-          {foodItems.length > 0 ? (
-            <Text style={logStyles.fieldName}>Number of Servings (s)</Text>
-          ) : (
-            <>
-              <Text style={logStyles.fieldName}>No Food Items Left</Text>
-              <Text style={{fontSize: 18, marginTop: '2%'}}>
-                Please proceed to delete the log if you want to continue
-              </Text>
-            </>
-          )}
-
-          <ScrollView
-            contentContainerStyle={{flexGrow: 1}}
-            showsVerticalScrollIndicator={false}>
-            {foodItems.map((item) =>
-              foodItem(item, editQuantity, confirmDeleteItem),
-            )}
-          </ScrollView>
         </View>
       </View>
       <View style={[globalStyles.buttonContainer]}>
         <View style={{flexDirection: 'row'}}>
           <TouchableOpacity
             style={diaryStyles.binIcon}
-            onPress={() => setDeleteLogModal(true)}>
+            onPress={() => confirmDeleteItem()}>
             <FontAwesome name="trash-o" size={40} color="#ff0844" />
           </TouchableOpacity>
           {changed ? (
             <TouchableOpacity
               style={logStyles.enableEditButton}
-              onPress={() => submit()}>
+              onPress={() => submit(from_edit)}>
               <Text style={globalStyles.actionButtonText}>Done</Text>
             </TouchableOpacity>
           ) : (
@@ -225,24 +182,14 @@ const EditFoodBlock = (props) => {
           deleteMethod={() => deleteItem()}
         />
       ) : null}
-      {/* Delete entire food log */}
-      {deleteLogModal ? (
-        <RemoveModal
-          visible={deleteLogModal}
-          closeModal={() => setDeleteLogModal(false)}
-          logType={''}
-          itemToDeleteName={''}
-          deleteMethod={() => deleteLog()}
-        />
-      ) : null}
     </Modal>
   );
 };
 
-function foodItem(item, editQuantity, confirmDeleteItem) {
+function foodItem(item, editQuantity, quantity) {
   let itemName = String(item['food-name']);
-  if (String(item.description).length > 20) {
-    itemName = itemName.slice(0, 20) + '...';
+  if (String(item.description).length > 26) {
+    itemName = itemName.slice(0, 26) + '...';
   }
   return (
     <View style={styles.foodContainer}>
@@ -252,18 +199,13 @@ function foodItem(item, editQuantity, confirmDeleteItem) {
           {itemName}
         </Text>
         <Counter
-          count={item.quantity}
-          setCount={(value) => editQuantity(value, item)}
+          count={quantity}
+          setCount={(value) => editQuantity(value)}
           parameter={''}
           fieldName={''}
           countStyle={styles.counterStyle}
         />
       </View>
-      <TouchableOpacity
-        onPress={() => confirmDeleteItem(item)}
-        style={[diaryStyles.binIcon, {marginTop: '12%'}]}>
-        <FontAwesome name="trash-o" size={40} color="#ff0844" />
-      </TouchableOpacity>
     </View>
   );
 }

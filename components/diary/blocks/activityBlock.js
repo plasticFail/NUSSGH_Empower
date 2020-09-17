@@ -27,6 +27,8 @@ import {
 } from '../../../commonFunctions/diaryFunctions';
 import logStyles from '../../../styles/logStyles';
 
+Icon.loadFont();
+
 const images = {
   run: require('../../../resources/images/activity/type_RUN.png'),
   walk: require('../../../resources/images/activity/type_WALK.png'),

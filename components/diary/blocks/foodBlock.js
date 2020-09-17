@@ -56,6 +56,7 @@ const FoodBlock = (props) => {
   } = props;
   const {closeModal} = props;
   const [selectedLog, setSelectedLog] = useState({});
+  const [selectedFood, setSelectedFood] = useState({});
   const [missedArr, setMissedArr] = useState([]);
   const [editModal, setEditModal] = useState(false);
 
@@ -65,9 +66,10 @@ const FoodBlock = (props) => {
     );
   }, [morningMealLogs, afternoonMealLogs, eveningMealLogs]);
 
-  const editLog = (item) => {
+  const editLog = (foodItem, log) => {
     console.log('selecting item to edit');
-    setSelectedLog(item);
+    setSelectedLog(log);
+    setSelectedFood(foodItem);
     setEditModal(true);
   };
 
@@ -131,6 +133,7 @@ const FoodBlock = (props) => {
           visible={editModal}
           closeModal={() => setEditModal(false)}
           mealToEdit={selectedLog}
+          selectedFood={selectedFood}
           initialDate={getDateObj(selectedLog.record_date)}
           init={init}
         />
@@ -146,37 +149,40 @@ function renderFoodItems(logs, editLog) {
       <View style={{marginBottom: '3%'}}>
         {logs.map((item, index) => (
           <>
-            {item.foodItems.map((inner, index) => (
-              <View key={inner['_id']}>
-                <View style={styles.foodItem}>
-                  <Image
-                    source={{uri: inner.imgUrl.url}}
-                    style={styles.foodImg}
-                  />
-                  <View style={{marginStart: '3%', flex: 1}}>
-                    <Text style={diaryStyles.recordedText}>
-                      {inner['food-name']}
-                    </Text>
-                    <Text style={diaryStyles.recordContent}>
-                      {inner['quantity']} Servings(s)
-                    </Text>
+            {item.foodItems.length > 0 ? (
+              item.foodItems.map((inner, index) => (
+                <View key={inner['_id']}>
+                  <View style={styles.foodItem}>
+                    <Image
+                      source={{uri: inner.imgUrl.url}}
+                      style={styles.foodImg}
+                    />
+                    <View style={{marginStart: '3%', flex: 1}}>
+                      <Text style={diaryStyles.recordedText}>
+                        {inner['food-name']}
+                      </Text>
+                      <Text style={diaryStyles.recordContent}>
+                        {inner['quantity']} Servings(s)
+                      </Text>
+                    </View>
+                    {showEdit(item.record_date) ? (
+                      <>
+                        <View style={{alignSelf: 'flex-end'}} />
+                        <TouchableOpacity onPress={() => editLog(inner, item)}>
+                          <Entypo
+                            name="edit"
+                            style={diaryStyles.editIcon}
+                            size={30}
+                          />
+                        </TouchableOpacity>
+                      </>
+                    ) : null}
                   </View>
-                  {showEdit(item.record_date) ? (
-                    <>
-                      <View style={{alignSelf: 'flex-end'}} />
-                      <TouchableOpacity onPress={() => editLog(item)}>
-                        <Entypo
-                          name="edit"
-                          style={diaryStyles.editIcon}
-                          size={30}
-                        />
-                      </TouchableOpacity>
-                    </>
-                  ) : null}
                 </View>
-              </View>
-            ))}
-            {logs.length > 1 && <View style={styles.border} />}
+              ))
+            ) : (
+              <Text>No Food Item</Text>
+            )}
           </>
         ))}
       </View>

@@ -26,7 +26,7 @@ const ProgressContent = (props) => {
       <ProgressBar
         progress={percentage}
         useIndicatorLevel={true}
-        reverse={true}
+        reverse={false}
         containerStyle={styles.progressContainer}
       />
       <Text style={styles.valueStyle}>
@@ -53,7 +53,7 @@ const ProgressContent = (props) => {
           <ProgressBar
             progress={percentage}
             useIndicatorLevel={true}
-            reverse={true}
+            reverse={false}
             containerStyle={styles.progressContainer}
           />
         ) : (
