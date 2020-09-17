@@ -18,25 +18,24 @@ const RemoveModal = (props) => {
       onBackdropPress={() => closeModal()}
       onBackButtonPress={() => closeModal()}>
       <View style={styles.container}>
-        {logType === med_key && (
+        {logType === med_key ? (
           <Text style={styles.removeHeader}>Remove This Medication</Text>
-        )}
-        {logType === food_key && (
+        ) : logType === food_key ? (
           <Text style={styles.removeHeader}>Remove This Item</Text>
-        )}
-        {logType === bg_key && (
+        ) : logType === bg_key ? (
           <Text style={styles.removeHeader}>Remove This Reading</Text>
-        )}
-        {logType === weight_key && (
+        ) : logType === weight_key ? (
           <Text style={styles.removeHeader}>Remove This Weight</Text>
+        ) : (
+          <Text style={styles.removeHeader}>Remove This Log</Text>
         )}
         {logType === bg_key ? (
           <Text style={styles.removeItem}>{itemToDeleteName} mmol/L</Text>
         ) : logType === weight_key ? (
           <Text style={styles.removeItem}>{itemToDeleteName} kg</Text>
-        ) : (
+        ) : itemToDeleteName != '' ? (
           <Text style={styles.removeItem}>{itemToDeleteName}</Text>
-        )}
+        ) : null}
 
         <TouchableOpacity
           style={styles.removeButton}

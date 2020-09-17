@@ -25,6 +25,7 @@ import {
   maxDuration,
   maxCalBurnt,
 } from '../../../commonFunctions/diaryFunctions';
+import logStyles from '../../../styles/logStyles';
 
 const images = {
   run: require('../../../resources/images/activity/type_RUN.png'),
@@ -107,16 +108,30 @@ const ActivityBlock = (props) => {
             expand,
             setExpand,
           )}
-          {!expand &&
-            activityLogs.map((item, index) => (
-              <View style={styles.activityBlock} key={item}>
-                {renderIcon(item)}
-                <View>
-                  <Text style={styles.content}>{item.duration} Mins</Text>
-                  <Text style={styles.contentDetail}>{item.name}</Text>
-                </View>
-              </View>
-            ))}
+          {!expand && (
+            <View
+              style={{
+                marginStart: '14%',
+                marginEnd: '6%',
+                marginBottom: '20%',
+              }}>
+              {activityLogs.map((item, index) => (
+                <>
+                  <View style={styles.activityBlock} key={index}>
+                    <Text style={styles.content}>{item.name}</Text>
+                    <Text
+                      style={[
+                        styles.contentDetail,
+                        {alignSelf: 'flex-end', marginStart: 0},
+                      ]}>
+                      {item.duration} Mins
+                    </Text>
+                  </View>
+                  <View style={logStyles.lastLogBorder} />
+                </>
+              ))}
+            </View>
+          )}
         </ScrollView>
       </View>
     </Modal>
@@ -205,6 +220,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginTop: '7%',
     marginStart: '5%',
+    flex: 1,
   },
   contentDetail: {
     fontFamily: 'SFProDisplay-Bold',
@@ -237,7 +253,7 @@ const styles = StyleSheet.create({
   },
   activityBlock: {
     flexDirection: 'row',
-    marginStart: '2%',
+    flex: 1,
   },
 });
 

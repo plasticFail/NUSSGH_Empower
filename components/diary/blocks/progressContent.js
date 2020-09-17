@@ -21,7 +21,7 @@ const ProgressContent = (props) => {
   const {chevronDownMethod} = props;
   const percentage = Math.floor((Number(value) / Number(target)) * 100) + '%';
   return !flip ? (
-    <View style={{marginEnd: '5%', flexBasis: '20%'}}>
+    <View style={{flex: 1, marginEnd: '1.5%', alignSelf: 'flex-start'}}>
       <Text style={styles.header}>{header}</Text>
       <ProgressBar
         progress={percentage}
@@ -38,7 +38,7 @@ const ProgressContent = (props) => {
       </Text>
     </View>
   ) : (
-    <View style={{flexDirection: 'row'}}>
+    <View style={{flexDirection: 'row', width: '100%'}}>
       <View style={{marginEnd: '5%'}}>
         <View style={{flexDirection: 'row'}}>
           <Text style={styles.valueStyle}>
@@ -90,7 +90,6 @@ export default ProgressContent;
 const styles = StyleSheet.create({
   progressContainer: {
     borderRadius: 9.5,
-    width: '100%',
     height: 7,
   },
   progressContainerLarge: {

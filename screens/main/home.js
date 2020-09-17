@@ -7,13 +7,12 @@ import {
   Dimensions,
   ScrollView,
   TouchableOpacity,
+  Platform,
 } from 'react-native';
 //third party lib
 //components
 import MenuBtn from '../../components/menuBtn';
 import HeaderCard from '../../components/home/headerCard';
-import CircularProgress from '../../components/dashboard/todayOverview/CircularProgress';
-import ProgressBar from '../../components/progressbar';
 //styles
 import globalStyles from '../../styles/globalStyles';
 import {Colors} from '../../styles/colors';
@@ -30,8 +29,6 @@ import ActivityCard from '../../components/dashboard/todayOverview/cards/Activit
 import {requestNutrientConsumption} from '../../netcalls/mealEndpoints/requestMealLog';
 import Moment from 'moment';
 import {getEntry4Day} from '../../netcalls/requestsDiary';
-import logStyles from '../../styles/logStyles';
-import {backgroundColor} from "react-native-calendars/src/style";
 
 const buttonList = [
   {
@@ -79,7 +76,6 @@ const HomeScreen = (props) => {
   const [fat, setFat] = React.useState(null);
   const [stepsTaken, setStepsTaken] = React.useState(null);
 
-  /*
   useEffect(() => {
     //Refresh every 1 minutes
     setTimeout(() => {
@@ -89,46 +85,86 @@ const HomeScreen = (props) => {
       });
     }, 60000);
   });
-   */
 
   useEffect(() => {
-      props.navigation.addListener('focus', () => {
-        checkLogDone(getGreetingFromHour(currHour)).then((response) => {
-          setUncompleteLogs(response.notCompleted);
-        }).catch(err => console.log(err));
+    props.navigation.addListener('focus', () => {
+      checkLogDone(getGreetingFromHour(currHour))
+        .then((response) => {
+          if (response != undefined) {
+            setUncompleteLogs(response.notCompleted);
+          }
+        })
+        .catch((err) => console.log(err));
 
-        // reload nutrition data
-        requestNutrientConsumption(getTodayDate(), getLastMinuteFromTodayDate()).then(data => {
+      // reload nutrition data
+      requestNutrientConsumption(getTodayDate(), getLastMinuteFromTodayDate())
+        .then((data) => {
           const nutrientData = data.data;
-          const calorieAmount = Math.round(nutrientData.reduce((acc, curr, index) => acc + curr.nutrients.energy.amount, 0));
-          const proteinAmount = Math.round(nutrientData.reduce((acc, curr, index) => acc + curr.nutrients.protein.amount, 0));
-          const carbAmount = Math.round(nutrientData.reduce((acc, curr, index) => acc + curr.nutrients.carbohydrate.amount, 0));
-          const fatAmount = Math.round(nutrientData.reduce((acc, curr, index) => acc + curr.nutrients['total-fat'].amount, 0));
+          const calorieAmount = Math.round(
+            nutrientData.reduce(
+              (acc, curr, index) => acc + curr.nutrients.energy.amount,
+              0,
+            ),
+          );
+          const proteinAmount = Math.round(
+            nutrientData.reduce(
+              (acc, curr, index) => acc + curr.nutrients.protein.amount,
+              0,
+            ),
+          );
+          const carbAmount = Math.round(
+            nutrientData.reduce(
+              (acc, curr, index) => acc + curr.nutrients.carbohydrate.amount,
+              0,
+            ),
+          );
+          const fatAmount = Math.round(
+            nutrientData.reduce(
+              (acc, curr, index) => acc + curr.nutrients['total-fat'].amount,
+              0,
+            ),
+          );
           setCalorie(calorieAmount);
           setProtein(proteinAmount);
           setCarb(carbAmount);
           setFat(fatAmount);
-        }).catch(err => console.log(err));
-        // reload diary data
-        const d = Moment(new Date()).format("YYYY-MM-DD");
-        getEntry4Day(d).then(data => {
-          const bglLogs = data[d].glucose.logs;
-          const weightLogs = data[d].weight.logs;
-          const activityLogs = data[d].activity.logs;
-          const steps = activityLogs.reduce((acc, curr, index) => acc + curr.steps, 0);
-          let averageBgl = bglLogs.reduce((acc, curr, index) => acc + curr.bg_reading, 0);
-          let averageWeight = weightLogs.reduce((acc, curr, index) => acc + curr.weight, 0);
-          if (bglLogs.length > 0) {
-            averageBgl = Math.round(averageBgl * 100 / bglLogs.length) / 100;
-            setBgl(averageBgl);
+        })
+        .catch((err) => console.log(err));
+      // reload diary data
+      const d = Moment(new Date()).format('YYYY-MM-DD');
+      getEntry4Day(d)
+        .then((data) => {
+          if (data != undefined) {
+            const bglLogs = data[d].glucose.logs;
+            const weightLogs = data[d].weight.logs;
+            const activityLogs = data[d].activity.logs;
+            const steps = activityLogs.reduce(
+              (acc, curr, index) => acc + curr.steps,
+              0,
+            );
+            let averageBgl = bglLogs.reduce(
+              (acc, curr, index) => acc + curr.bg_reading,
+              0,
+            );
+            let averageWeight = weightLogs.reduce(
+              (acc, curr, index) => acc + curr.weight,
+              0,
+            );
+            if (bglLogs.length > 0) {
+              averageBgl =
+                Math.round((averageBgl * 100) / bglLogs.length) / 100;
+              setBgl(averageBgl);
+            }
+            if (weightLogs.length > 0) {
+              averageWeight =
+                Math.round((averageWeight * 100) / weightLogs.length) / 100;
+              setWeight(averageWeight);
+            }
+            setStepsTaken(steps);
           }
-          if (weightLogs.length > 0) {
-            averageWeight = Math.round(averageWeight * 100 / weightLogs.length) / 100;
-            setWeight(averageWeight);
-          }
-          setStepsTaken(steps);
-        }).catch(err => console.log(err));
-      });
+        })
+        .catch((err) => console.log(err));
+    });
   }, []);
   return (
     <View
@@ -136,7 +172,7 @@ const HomeScreen = (props) => {
         globalStyles.pageContainer,
         {backgroundColor: Colors.lastLogButtonColor},
       ]}>
-      <View style={[globalStyles.menuBarContainer]}>
+      <View style={globalStyles.menuBarContainer}>
         <MenuBtn green={true} />
         <View style={{flex: 1}} />
       </View>

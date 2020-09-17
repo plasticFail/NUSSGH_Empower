@@ -47,7 +47,7 @@ const BgBlock = (props) => {
 
   useEffect(() => {
     setMissedArr(getMissedArr(morningBgLogs, afternoonBgLogs, eveningBgLogs));
-  }, []);
+  }, [morningBgLogs, afternoonBgLogs, eveningBgLogs]);
 
   const editLog = (item) => {
     console.log('selecting item to edit');

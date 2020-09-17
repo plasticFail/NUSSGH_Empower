@@ -83,8 +83,8 @@ const EditMedicineBlock = (props) => {
         <View style={globalStyles.menuBarContainer}>
           <LeftArrowBtn close={closeModal} />
         </View>
-        <Text style={globalStyles.pageHeader}>Edit</Text>
         <View style={[logStyles.bodyPadding, {marginStart: 0}]}>
+          <Text style={logStyles.headerText}>Edit</Text>
           <DateSelectionBlock date={datetime} setDate={setDatetime} />
           <Text style={logStyles.fieldName}>Medication Taken:</Text>
           <Text style={logStyles.inputField}>{medicineToEdit.medication}</Text>

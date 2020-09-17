@@ -52,7 +52,7 @@ const WeightBlock = (props) => {
     setMissedArr(
       getMissedArr(morningWeightLogs, afternoonWeightLogs, eveningWeightLogs),
     );
-  }, []);
+  }, [morningWeightLogs, afternoonWeightLogs, eveningWeightLogs]);
 
   const editWeightLog = (item) => {
     setEditModal(true);

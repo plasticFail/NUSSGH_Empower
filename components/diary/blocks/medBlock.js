@@ -57,7 +57,7 @@ const MedBlock = (props) => {
     setMissedArr(
       getMissedArr(morningMedLogs, afternoonMedLogs, eveningMedLogs),
     );
-  }, []);
+  }, [morningMedLogs, afternoonMedLogs, eveningMedLogs]);
 
   return (
     <Modal
