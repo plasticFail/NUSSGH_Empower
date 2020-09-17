@@ -81,6 +81,7 @@ export default function FitbitSetup(props) {
         getFitbitToken().then((resp) => {
           if (resp) {
             authorised.current = true;
+            setTimeout(() => props.navigation.navigate('Home'), 1000)
           }
         });
       }, 500);
@@ -179,7 +180,7 @@ export default function FitbitSetup(props) {
         <View style={globalStyles.buttonContainer}>
           <TouchableOpacity
             style={[globalStyles.nextButtonStyle]}
-            onPress={this.handleNext}>
+            onPress={() => props.navigation.navigate('Home')}>
             <Text style={globalStyles.actionButtonText}>Next</Text>
           </TouchableOpacity>
         </View>
@@ -187,7 +188,7 @@ export default function FitbitSetup(props) {
         <View style={globalStyles.buttonContainer}>
           <TouchableOpacity
             style={globalStyles.skipButtonStyle}
-            onPress={this.handleSkip}>
+            onPress={() => props.navigation.navigate('Home')}>
             <Text style={globalStyles.actionButtonText}>Skip</Text>
           </TouchableOpacity>
         </View>

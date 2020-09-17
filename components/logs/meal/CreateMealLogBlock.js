@@ -29,6 +29,7 @@ import {food_key} from "../../../commonFunctions/logFunctions";
 import globalStyles from "../../../styles/globalStyles";
 import logStyles from "../../../styles/logStyles";
 import CrossBtn from "../../crossBtn";
+import {Colors} from "../../../styles/colors";
 
 Icon.loadFont()
 // Any meal log selected (e.g Create, Recent or Favourites)
@@ -258,12 +259,21 @@ export default class CreateMealLogBlock extends React.Component {
                             <Text style={[globalStyles.actionButtonText, {color: '#fff'}]}>Submit</Text>
                         </TouchableHighlight>
                     </View>
-                    <FlashMessage triggerValue={this.state.isFavourite}
+                    <FlashMessage triggerValue={this.state.isFavourite} offsetY={150}
                               renderFlashMessageComponent={(val) => val ?
-                                    <Text style={{color: '#288259', fontSize: 24, fontWeight:'bold'}}>Favourited!</Text> :
-                                  <Text style={{color: 'red', fontSize: 24, fontWeight:'bold'}}>Unfavourited!</Text>
+                                  <View style={{backgroundColor: Colors.leftArrowColor,
+                                      borderRadius: 20, paddingLeft: 15, paddingRight: 15,
+                                      height: 50,
+                                      justifyContent: 'center'}}>
+                                    <Text style={{color: '#fff', fontSize: 24, fontWeight:'bold'}}>Favourited!</Text>
+                                  </View> :
+                                  <View style={{backgroundColor: Colors.alertColor,
+                                      borderRadius: 20, height: 50, paddingLeft: 15, paddingRight: 15,
+                                      justifyContent: 'center'}}>
+                                    <Text style={{color: 'fff', fontSize: 24, fontWeight:'bold'}}>Unfavourited!</Text>
+                                  </View>
                                  }
-                              messageComponentHeight={100}
+                              messageComponentHeight={50}
                     />
                     <Modal visible={modalOpen} coverScreen={true}>
                         {selected &&
