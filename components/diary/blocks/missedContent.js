@@ -3,6 +3,7 @@ import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import globalStyles from '../../../styles/globalStyles';
 import {Colors} from '../../../styles/colors';
 import {renderGreetingText} from '../../../commonFunctions/diaryFunctions';
+import {horizontalMargins} from '../../../styles/variables';
 
 const MissedContent = (props) => {
   const {arr, type} = props;
@@ -30,6 +31,7 @@ const styles = StyleSheet.create({
     fontFamily: 'SFProDisplay-Regular',
     fontSize: 17,
     marginEnd: '4%',
+    marginStart: horizontalMargins,
   },
   missedText: {
     fontFamily: 'SFProDisplay-Bold',

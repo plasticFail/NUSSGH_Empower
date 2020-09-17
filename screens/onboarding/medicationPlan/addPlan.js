@@ -19,6 +19,13 @@ import SearchMedication from '../../../components/onboarding/medication/searchMe
 //stlye
 import {Colors} from '../../../styles/colors';
 import globalStyles from '../../../styles/globalStyles';
+import logStyles from '../../../styles/logStyles';
+import {
+  horizontalMargins,
+  onboard_marginStart,
+  onboard_marginEnd,
+  normalTextFontSize,
+} from '../../../styles/variables';
 
 Ionicons.loadFont();
 
@@ -153,10 +160,12 @@ const AddPlan = (props) => {
 
   return (
     <View style={styles.addPlanContainer}>
-      <TouchableOpacity onPress={goPrevScreen}>
+      <View style={globalStyles.menuBarContainer}>
         <LeftArrowBtn close={goPrevScreen} />
-      </TouchableOpacity>
-      <Text style={globalStyles.pageHeader}>Add Medicine Plan</Text>
+      </View>
+      <Text style={[globalStyles.pageHeader, {marginStart: horizontalMargins}]}>
+        Add Medicine Plan
+      </Text>
       <TouchableOpacity style={styles.searchInput} onPress={openSearchModal}>
         {isEmpty(selectedMedicine) === true ? (
           <Text style={{fontSize: 17, color: '#b5b5b5'}}>
@@ -182,7 +191,9 @@ const AddPlan = (props) => {
           parameter={'Per Day'}
           fieldName={'Frequency'}
         />
-        <Text style={styles.fieldText}>Recurring Period</Text>
+        <Text style={[logStyles.fieldName, {marginBottom: '2%'}]}>
+          Recurring Period
+        </Text>
         <TouchableOpacity style={styles.selectDaysButton} onPress={openModal}>
           {isEmpty(selectedDates41) === true ? (
             <Text style={styles.selectDaysText}>Select Days</Text>
@@ -229,7 +240,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.backgroundColor,
   },
   fieldText: {
-    fontSize: 20,
+    fontSize: normalTextFontSize,
     fontWeight: '700',
     marginVertical: '2%',
   },
@@ -242,11 +253,11 @@ const styles = StyleSheet.create({
     borderColor: '#aad326',
   },
   selectDaysText: {
-    fontSize: 20,
+    fontSize: normalTextFontSize,
     textAlign: 'center',
     marginVertical: '2%',
-    paddingStart: '2%',
-    paddingEnd: '2%',
+    paddingStart: onboard_marginStart,
+    paddingEnd: onboard_marginEnd,
   },
   searchInput: {
     backgroundColor: '#e2e8ee',

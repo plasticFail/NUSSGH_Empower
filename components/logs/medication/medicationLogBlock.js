@@ -12,6 +12,8 @@ import {FlatList} from 'react-native-gesture-handler';
 //third party lib
 import Modal from 'react-native-modal';
 import Entypo from 'react-native-vector-icons/Entypo';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+
 // component
 import LeftArrowBtn from '../leftArrowBtn';
 import SelectMedicationModalContent from './selectMedicationModalContent';
@@ -59,6 +61,7 @@ const MedicationLogBlock = (props) => {
   const submit = () => {
     if (parent === 'addLog') {
       postMed();
+    } else {
     }
   };
 
@@ -82,13 +85,18 @@ const MedicationLogBlock = (props) => {
       onBackButtonPress={() => closeModal()}
       backdropColor={Colors.backgroundColor}
       style={{margin: 0}}>
-      <View style={{flex: 1}}>
-        <View style={logStyles.menuBarContainer}>
+      <View style={logStyles.modalContainer}>
+        <View style={globalStyles.menuBarContainer}>
           <LeftArrowBtn close={closeModal} />
+          <View style={{flex: 1}} />
         </View>
         <View style={logStyles.bodyPadding}>
-          <Text style={[logStyles.headerText, logStyles.componentMargin]}>Add Medication</Text>
-          <Text style={[logStyles.fieldName,  logStyles.componentMargin]}>Medication Taken</Text>
+          <Text style={[logStyles.headerText, logStyles.componentMargin]}>
+            Add Medication
+          </Text>
+          <Text style={[logStyles.fieldName, logStyles.componentMargin]}>
+            Medication Taken
+          </Text>
           {/*List of medication added*/}
           <FlatList
             keyExtractor={(item) => item.drugName}
@@ -101,9 +109,17 @@ const MedicationLogBlock = (props) => {
               />
             )}
           />
-          <TouchableOpacity onPress={() => setShowSelectModal(true)}>
+          <TouchableOpacity
+            onPress={() => setShowSelectModal(true)}
+            style={{flexDirection: 'row'}}>
+            <AntDesign
+              name="pluscircleo"
+              color={'#aad326'}
+              size={30}
+              style={{margin: '2%'}}
+            />
             <Text style={[logStyles.fieldName, {color: '#aad326'}]}>
-              Select Medicine
+              Add Medication
             </Text>
           </TouchableOpacity>
           {/*Select medication modal */}

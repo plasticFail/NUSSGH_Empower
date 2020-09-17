@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginStart: '2%',
     fontFamily: 'SFProDisplay-Bold',
-    color: Colors.logFieldColor,
+    color: Colors.grey,
     marginTop: '3%',
     marginBottom: '2%',
   },

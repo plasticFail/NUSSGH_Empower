@@ -12,6 +12,7 @@ import DatePicker from 'react-native-date-picker';
 import logStyles from '../../styles/logStyles';
 
 const DateSelectionBlock = (props) => {
+  const [initialDate, setInitialDate] = useState(props.date);
   const [visible, setVisible] = useState(false);
   const slideAnimation = useRef(new Animated.Value(0)).current;
 
@@ -61,8 +62,8 @@ const DateSelectionBlock = (props) => {
             visible={visible}
             date={props.date}
             onDateChange={props.setDate}
-            minimumDate={Moment(props.date).subtract(10, 'days').toDate()}
-            maximumDate={Moment(props.date).add(10, 'minutes').toDate()}
+            minimumDate={Moment(initialDate).subtract(1, 'days').toDate()}
+            maximumDate={Moment(initialDate).add(10, 'minutes').toDate()}
             mode="datetime"
           />
         </Animated.View>

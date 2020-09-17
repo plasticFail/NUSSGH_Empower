@@ -17,7 +17,8 @@ import {
 import Entypo from 'react-native-vector-icons/Entypo';
 //function
 import {
-  getLastBgLog, getLastMealLog,
+  getLastBgLog,
+  getLastMealLog,
   getLastMedicationLog,
   getLastWeightLog,
 } from '../../storage/asyncStorageFunctions';
@@ -25,7 +26,7 @@ import {
 import BloodGlucoseLogDisplay from './bg/bloodGlucoseLogDisplay';
 import MedicationLogDisplay from './medication/medicationLogDisplay';
 import WeightLogDisplay from './weight/weightLogDisplay';
-import ReadOnlyMealDisplay from "./meal/ReadOnlyMealDisplay";
+import ReadOnlyMealDisplay from './meal/ReadOnlyMealDisplay';
 
 //show last values
 const LastLogButton = (props) => {
@@ -53,9 +54,10 @@ const LastLogButton = (props) => {
         setStates(response);
       });
     } else if (logType === food_key) {
-      getLastMealLog().then(response => {
+      getLastMealLog().then((response) => {
+        console.log(response);
         setStates(response);
-      })
+      });
     }
   };
 
@@ -72,7 +74,7 @@ const LastLogButton = (props) => {
       <TouchableOpacity
         style={logStyles.lastLogContainer}
         onPress={() => setShow(!show)}>
-        <View style={{marginEnd: '4%'}}>
+        <View style={{marginEnd: '1%'}}>
           <Image
             source={renderLogIcon(logType)}
             style={logStyles.mini_loglogo}
@@ -83,9 +85,11 @@ const LastLogButton = (props) => {
             {logType}
           </Text>
           {none4tdy ? (
-            <Text style={logStyles.lastLogDetail}>No Logs Done for Today</Text>
+            <Text style={[logStyles.lastLogSummary]}>
+              No Logs Done for Today
+            </Text>
           ) : (
-            <Text style={logStyles.lastLogDetail}>
+            <Text style={logStyles.lastLogSummary}>
               Last logged in the {lastPeriod}
             </Text>
           )}
@@ -115,11 +119,9 @@ const LastLogButton = (props) => {
       {!none4tdy && logType === weight_key && (
         <WeightLogDisplay data={dataToDisplay} show={show} />
       )}
-      {
-        !none4tdy && logType === food_key && (
-          <ReadOnlyMealDisplay data={dataToDisplay.value} show={show}/>
-        )
-      }
+      {!none4tdy && logType === food_key && (
+        <ReadOnlyMealDisplay data={dataToDisplay.value} show={show} />
+      )}
     </>
   );
 };

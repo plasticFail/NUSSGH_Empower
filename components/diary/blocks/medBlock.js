@@ -13,6 +13,7 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import LeftArrowBtn from '../../logs/leftArrowBtn';
 import MissedContent from './missedContent';
 import TimeSection from '../timeSection';
+import SelectMedicationModalContent from '../../logs/medication/selectMedicationModalContent';
 //style
 import {Colors} from '../../../styles/colors';
 import globalStyles from '../../../styles/globalStyles';
@@ -22,6 +23,7 @@ import {
   getMissedArr,
   showEdit,
   getTime,
+  getDateObj,
 } from '../../../commonFunctions/diaryFunctions';
 import {med_key} from '../../../commonFunctions/logFunctions';
 import {
@@ -29,6 +31,7 @@ import {
   afternoonObj,
   eveningObj,
 } from '../../../commonFunctions/common';
+import EditMedicineBlock from './editMedicineBlock';
 
 const MedBlock = (props) => {
   const {
@@ -39,13 +42,15 @@ const MedBlock = (props) => {
     miss,
     day,
   } = props;
-  const {closeModal} = props;
-  const [selectedLog, setSelectedLog] = useState({});
+  const {closeModal, init} = props;
+  const [selectedMed, setSelectedMed] = useState({});
   const [missedArr, setMissedArr] = useState([]);
+  const [editModal, setEditModal] = useState(false);
 
   const editLog = (item) => {
-    console.log('selecting item to edit');
-    setSelectedLog(item);
+    console.log('selecting medication item to edit');
+    setSelectedMed(item);
+    setEditModal(true);
   };
 
   useEffect(() => {
@@ -62,19 +67,32 @@ const MedBlock = (props) => {
       onBackButtonPress={() => closeModal()}
       backdropColor={Colors.backgroundColor}
       style={{margin: 0}}>
-      <LeftArrowBtn close={closeModal} />
-      <Text style={globalStyles.pageHeader}>Medication</Text>
-      <Text style={globalStyles.pageDetails}>{day}</Text>
-      <MissedContent arr={missedArr} type={med_key} />
-      <ScrollView style={{flex: 1}}>
-        {/*Show time section and data for log*/}
-        <TimeSection name={morningObj.name} />
-        {renderMedLogs(morningMedLogs, editLog)}
-        <TimeSection name={afternoonObj.name} />
-        {renderMedLogs(afternoonMedLogs, editLog)}
-        <TimeSection name={eveningObj.name} />
-        {renderMedLogs(eveningMedLogs, editLog)}
-      </ScrollView>
+      <View style={globalStyles.pageContainer}>
+        <View style={globalStyles.menuBarContainer}>
+          <LeftArrowBtn close={closeModal} />
+        </View>
+        <Text style={globalStyles.pageHeader}>Medication</Text>
+        <Text style={globalStyles.pageDetails}>{day}</Text>
+        <MissedContent arr={missedArr} type={med_key} />
+        <ScrollView style={{flex: 1}}>
+          {/*Show time section and data for log*/}
+          <TimeSection name={morningObj.name} />
+          {renderMedLogs(morningMedLogs, editLog)}
+          <TimeSection name={afternoonObj.name} />
+          {renderMedLogs(afternoonMedLogs, editLog)}
+          <TimeSection name={eveningObj.name} />
+          {renderMedLogs(eveningMedLogs, editLog)}
+        </ScrollView>
+        {editModal ? (
+          <EditMedicineBlock
+            visible={editModal}
+            closeModal={() => setEditModal(false)}
+            medicineToEdit={selectedMed}
+            initialDate={getDateObj(selectedMed.record_date)}
+            init={init}
+          />
+        ) : null}
+      </View>
     </Modal>
   );
 };
@@ -85,7 +103,6 @@ function renderMedLogs(logs, editLog) {
   if (logs.length > 0) {
     return (
       <View style={{marginBottom: '3%'}}>
-        <Text style={diaryStyles.recordedText}>Medication Recorded</Text>
         {logs.map((item, index) => (
           <View style={styles.logContent} key={index.toString()}>
             <Text style={diaryStyles.recordContent}>
@@ -104,7 +121,7 @@ function renderMedLogs(logs, editLog) {
               <>
                 <View style={{flex: 1}} />
                 <TouchableOpacity onPress={() => editLog(item)}>
-                  <Entypo name="edit" style={diaryStyles.editIcon} size={20} />
+                  <Entypo name="edit" style={diaryStyles.editIcon} size={30} />
                 </TouchableOpacity>
               </>
             ) : null}

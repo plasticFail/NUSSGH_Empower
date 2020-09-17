@@ -12,20 +12,26 @@ import {
 //components
 import MenuBtn from '../../components/menuBtn';
 import HeaderCard from '../../components/home/headerCard';
-import CircularProgress from "../../components/dashboard/todayOverview/CircularProgress";
-import ProgressBar from "../../components/progressbar";
+import CircularProgress from '../../components/dashboard/todayOverview/CircularProgress';
+import ProgressBar from '../../components/progressbar';
 //styles
 import globalStyles from '../../styles/globalStyles';
 import {Colors} from '../../styles/colors';
 //function
 import {checkLogDone} from '../../commonFunctions/logFunctions';
-import {getGreetingFromHour, getLastMinuteFromTodayDate, getTodayDate} from '../../commonFunctions/common';
-import NotificationsCard from "../../components/dashboard/todayOverview/cards/NotificationsCard";
-import DiaryCard from "../../components/dashboard/todayOverview/cards/DiaryCard";
-import ActivityCard from "../../components/dashboard/todayOverview/cards/ActivityCard";
-import {requestNutrientConsumption} from "../../netcalls/mealEndpoints/requestMealLog";
-import Moment from "moment";
-import {getEntry4Day} from "../../netcalls/requestsDiary";
+import {
+  getGreetingFromHour,
+  getLastMinuteFromTodayDate,
+  getTodayDate,
+} from '../../commonFunctions/common';
+import NotificationsCard from '../../components/dashboard/todayOverview/cards/NotificationsCard';
+import DiaryCard from '../../components/dashboard/todayOverview/cards/DiaryCard';
+import ActivityCard from '../../components/dashboard/todayOverview/cards/ActivityCard';
+import {requestNutrientConsumption} from '../../netcalls/mealEndpoints/requestMealLog';
+import Moment from 'moment';
+import {getEntry4Day} from '../../netcalls/requestsDiary';
+import logStyles from '../../styles/logStyles';
+import {backgroundColor} from "react-native-calendars/src/style";
 
 const buttonList = [
   {
@@ -57,7 +63,7 @@ const LogsProgress = [
   {logName: 'Blood Glucose', progress: 1, path: 'BloodGlucoseLog'},
   {logName: 'Food', progress: 0.67, path: 'MealLogRoot'},
   {logName: 'Weight', progress: 0.33, path: 'WeightLog'},
-]
+];
 
 const HomeScreen = (props) => {
   const [currHour, setCurrHour] = useState(new Date().getHours());
@@ -106,7 +112,6 @@ const HomeScreen = (props) => {
         // reload diary data
         const d = Moment(new Date()).format("YYYY-MM-DD");
         getEntry4Day(d).then(data => {
-          console.log(data);
           const bglLogs = data[d].glucose.logs;
           const weightLogs = data[d].weight.logs;
           const activityLogs = data[d].activity.logs;
@@ -131,8 +136,12 @@ const HomeScreen = (props) => {
         globalStyles.pageContainer,
         {backgroundColor: Colors.lastLogButtonColor},
       ]}>
-      <MenuBtn green={true} />
+      <View style={[globalStyles.menuBarContainer]}>
+        <MenuBtn green={true} />
+        <View style={{flex: 1}} />
+      </View>
       <ScrollView
+        bounces={false}
         contentContainerStyle={{
           flexGrow: 1,
           backgroundColor: Colors.backgroundColor,
@@ -143,11 +152,28 @@ const HomeScreen = (props) => {
           hour={getGreetingFromHour(currHour)}
           uncompleteLogs={uncompleteLogs}
         />
-          {/* Notifications */}
-          <NotificationsCard />
-          {/* Diary overview of weight, blood glucose, food, medication and physical activity */}
-          <DiaryCard bgl={bgl} calorie={calorie} weight={weight} />
-          <ActivityCard stepsTaken={stepsTaken} carb={carb} protein={protein} fat={fat}/>
+        {/* Notifications */}
+        <NotificationsCard />
+        {/* Diary overview of weight, blood glucose, food, medication and physical activity */}
+        <DiaryCard bgl={bgl} calorie={calorie} weight={weight} />
+        <ActivityCard
+          stepsTaken={stepsTaken}
+          carb={carb}
+          protein={protein}
+          fat={fat}
+        />
+        <TouchableOpacity
+          onPress={() => props.navigation.navigate('MedicationPlan')}
+          style={[globalStyles.nextButtonStyle, {marginBottom: 0}]}>
+          <Text style={globalStyles.actionButtonText}>
+            Medication Plan Alpha
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={globalStyles.nextButtonStyle}
+          onPress={() => props.navigation.navigate('FitbitSetup')}>
+          <Text style={globalStyles.actionButtonText}>Fitbit Sync Alpha</Text>
+        </TouchableOpacity>
       </ScrollView>
     </View>
   );

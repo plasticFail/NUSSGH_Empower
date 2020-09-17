@@ -35,7 +35,9 @@ const AccountDetailScreen = (props) => {
 
   return (
     <View style={[globalStyles.pageContainer]}>
-      <MenuBtn />
+      <View style={globalStyles.menuBarContainer}>
+        <MenuBtn />
+      </View>
       <ScrollView contentContainerStyle={{...props.style}}>
         <Image source={profilePic} style={styles.profileImg} />
         <Clickable heading={'Username'} content={username} click={false} />

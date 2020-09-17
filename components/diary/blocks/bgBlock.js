@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {ScrollView} from 'react-native-gesture-handler';
 //function
 import {
   morningObj,
@@ -12,6 +13,7 @@ import {
   getMissedArr,
   getDateObj,
 } from '../../../commonFunctions/diaryFunctions';
+import {bg_key} from '../../../commonFunctions/logFunctions';
 //third party library
 import Modal from 'react-native-modal';
 import Ionicon from 'react-native-vector-icons/Ionicons';
@@ -23,9 +25,7 @@ import diaryStyles from '../../../styles/diaryStyles';
 //component
 import LeftArrowBtn from '../../logs/leftArrowBtn';
 import TimeSection from '../timeSection';
-import {ScrollView} from 'react-native-gesture-handler';
 import MissedContent from './missedContent';
-import {bg_key} from '../../../commonFunctions/logFunctions';
 import BloodGlucoseLogBlock from '../../logs/bg/bloodGlucoseLogBlock';
 
 const BgBlock = (props) => {
@@ -38,6 +38,7 @@ const BgBlock = (props) => {
     pass,
     miss,
     day,
+    init,
   } = props;
   const {closeModal} = props;
   const [selectedLog, setSelectedLog] = useState({});
@@ -62,48 +63,63 @@ const BgBlock = (props) => {
       onBackButtonPress={() => closeModal()}
       backdropColor={Colors.backgroundColor}
       style={{margin: 0}}>
-      <LeftArrowBtn close={closeModal} />
-      <Text style={globalStyles.pageHeader}>Blood Glucose</Text>
-      <Text style={globalStyles.pageDetails}>{day}</Text>
-      <MissedContent arr={missedArr} type={bg_key} />
-      <View style={{flexDirection: 'row', marginTop: '3%', marginBottom: '2%'}}>
-        {pass ? (
-          <>
-            <Text style={globalStyles.pageDetails}>Average {avgBg} mmol/L</Text>
+      <View style={globalStyles.pageContainer}>
+        <View style={globalStyles.menuBarContainer}>
+          <LeftArrowBtn close={closeModal} />
+        </View>
+        <Text style={globalStyles.pageHeader}>Blood Glucose</Text>
+        <Text style={globalStyles.pageDetails}>{day}</Text>
+        <MissedContent arr={missedArr} type={bg_key} />
+        <View
+          style={{flexDirection: 'row', marginTop: '3%', marginBottom: '2%'}}>
+          {pass ? (
+            <>
+              <Text style={[globalStyles.pageDetails]}>
+                Average {avgBg} mmol/L
+              </Text>
 
-            <Ionicon name="checkmark" style={diaryStyles.passIcon} size={25} />
-          </>
-        ) : (
-          <>
-            <Text style={globalStyles.pageDetails}>Average {avgBg} mmol/L</Text>
+              <Ionicon
+                name="checkmark"
+                style={diaryStyles.passIcon}
+                size={25}
+              />
+            </>
+          ) : (
+            <>
+              <Text style={globalStyles.pageDetails}>
+                Average {avgBg} mmol/L
+              </Text>
 
-            <Ionicon
-              name="alert-circle-outline"
-              style={diaryStyles.failIcon}
-              size={25}
-            />
-          </>
-        )}
+              <Ionicon
+                name="alert-circle-outline"
+                style={diaryStyles.failIcon}
+                size={25}
+              />
+            </>
+          )}
+        </View>
+        <ScrollView style={{flex: 1}}>
+          {/*Show time section and data for log*/}
+          <TimeSection name={morningObj.name} />
+          {renderLogs(morningBgLogs, editLog)}
+          <TimeSection name={afternoonObj.name} />
+          {renderLogs(afternoonBgLogs, editLog)}
+          <TimeSection name={eveningObj.name} />
+          {renderLogs(eveningBgLogs, editLog)}
+        </ScrollView>
+
+        {/*Edit Modal*/}
+        {editModal ? (
+          <BloodGlucoseLogBlock
+            visible={editModal}
+            closeModal={() => setEditModal(false)}
+            parent="editLog"
+            toEditbloodGlucose={selectedLog.bg_reading}
+            selectedLog={selectedLog}
+            init={init}
+          />
+        ) : null}
       </View>
-      <ScrollView style={{flex: 1}}>
-        {/*Show time section and data for log*/}
-        <TimeSection name={morningObj.name} />
-        {renderLogs(morningBgLogs, editLog)}
-        <TimeSection name={afternoonObj.name} />
-        {renderLogs(afternoonBgLogs, editLog)}
-        <TimeSection name={eveningObj.name} />
-        {renderLogs(eveningBgLogs, editLog)}
-      </ScrollView>
-
-      {/*Edit Modal*/}
-      {editModal ? (
-        <BloodGlucoseLogBlock
-          visible={editModal}
-          recordDate={getDateObj(selectedLog.record_date)}
-          closeModal={() => setEditModal(false)}
-          parent="editLog"
-        />
-      ) : null}
     </Modal>
   );
 };
@@ -114,7 +130,6 @@ function renderLogs(logs, editLog) {
   if (logs.length > 0) {
     return (
       <View style={{marginBottom: '3%'}}>
-        <Text style={diaryStyles.recordedText}>Reading Recorded</Text>
         {logs.map((item, index) => (
           <View style={styles.logContent} key={index.toString()}>
             <Text style={diaryStyles.recordContent}>
@@ -127,7 +142,7 @@ function renderLogs(logs, editLog) {
               <>
                 <View style={{flex: 1}} />
                 <TouchableOpacity onPress={() => editLog(item)}>
-                  <Entypo name="edit" style={diaryStyles.editIcon} size={20} />
+                  <Entypo name="edit" style={diaryStyles.editIcon} size={30} />
                 </TouchableOpacity>
               </>
             ) : null}

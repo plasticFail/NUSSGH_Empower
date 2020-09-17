@@ -1,12 +1,20 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, FlatList} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  FlatList,
+  Dimensions,
+} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 //third party libaray
 import Modal from 'react-native-modal';
 import moment from 'moment';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 //component
 import DeleteConfirmation from './deleteConfirmation';
-import ChevronDownBtn from '../../chevronDownBtn';
+import CrossBtn from '../../crossBtn';
 import MedicationItem from '../../medicationItem';
 //styles
 import {Colors} from '../../../styles/colors';
@@ -45,49 +53,65 @@ const ScheduledMedicationModal = (props) => {
       backdropOpacity={1}
       style={{margin: 0}}
       backdropColor={Colors.backgroundColor}>
-      <View style={styles.scheduledContainer}>
-        <ChevronDownBtn close={closeModal} />
-        <Text style={globalStyles.pageHeader}>{dateString}</Text>
-        <Text style={styles.details}>Scheduled Medications:</Text>
-        {medicationList === undefined ? (
-          <Text style={styles.miss}>No Medication Set Yet</Text>
-        ) : medicationList.length === 0 ? (
-          <Text style={styles.miss}>No Medication Set Yet</Text>
-        ) : (
-          <>
-            <FlatList
-              keyExtractor={(item, index) => index.toString()}
-              data={medicationList}
-              style={{flexGrow: 0}}
-              renderItem={({item}) => (
-                <>
-                  <MedicationItem
-                    medication={item}
-                    handleDelete={handleDelete}
-                  />
-                </>
-              )}
+      <View style={{flex: 1}}>
+        <View style={globalStyles.menuBarContainer}>
+          <CrossBtn close={closeModal} />
+        </View>
+        <View style={styles.body}>
+          <Text
+            style={[
+              globalStyles.pageHeader,
+              {fontSize: 30, marginStart: 0, marginBottom: '4%'},
+            ]}>
+            {dateString}
+          </Text>
+          <Text style={styles.details}>Scheduled Medications:</Text>
+          {medicationList === undefined ? (
+            <Text style={styles.miss}>No Medication Set Yet</Text>
+          ) : medicationList.length === 0 ? (
+            <Text style={styles.miss}>No Medication Set Yet</Text>
+          ) : (
+            <>
+              <FlatList
+                keyExtractor={(item, index) => index.toString()}
+                data={medicationList}
+                style={{flexGrow: 0}}
+                renderItem={({item}) => (
+                  <>
+                    <MedicationItem
+                      medication={item}
+                      handleDelete={handleDelete}
+                    />
+                  </>
+                )}
+              />
+              {deleteModalVisible ? (
+                <Modal
+                  isVisible={deleteModalVisible}
+                  onBackdropPress={handleCloseDeleteModal}
+                  onBackButtonPress={handleCloseDeleteModal}>
+                  <View style={styles.deleteContainer}>
+                    <DeleteConfirmation
+                      medication={toDelete}
+                      date={date}
+                      closeSelf={handleCloseDeleteModal}
+                      closeParent={closeModal}
+                    />
+                  </View>
+                </Modal>
+              ) : null}
+            </>
+          )}
+          <TouchableOpacity onPress={handleAdd} style={{flexDirection: 'row'}}>
+            <AntDesign
+              name="pluscircleo"
+              color={'#aad326'}
+              size={25}
+              style={{margin: '2%'}}
             />
-            {deleteModalVisible ? (
-              <Modal
-                isVisible={deleteModalVisible}
-                onBackdropPress={handleCloseDeleteModal}
-                onBackButtonPress={handleCloseDeleteModal}>
-                <View style={styles.deleteContainer}>
-                  <DeleteConfirmation
-                    medication={toDelete}
-                    date={date}
-                    closeSelf={handleCloseDeleteModal}
-                    closeParent={closeModal}
-                  />
-                </View>
-              </Modal>
-            ) : null}
-          </>
-        )}
-        <TouchableOpacity onPress={handleAdd}>
-          <Text style={styles.addbutton}>Add Medication</Text>
-        </TouchableOpacity>
+            <Text style={styles.addbutton}>Add Medication</Text>
+          </TouchableOpacity>
+        </View>
         <View style={{flex: 1}} />
         <View style={[globalStyles.buttonContainer]}>
           <TouchableOpacity
@@ -115,11 +139,9 @@ const styles = StyleSheet.create({
   },
   details: {
     fontSize: 18,
-    margin: '4%',
     fontWeight: '600',
     color: '#3c3c43',
   },
-
   button: {
     backgroundColor: '#aad326',
     height: 45,
@@ -148,9 +170,13 @@ const styles = StyleSheet.create({
     margin: '4%',
   },
   addbutton: {
-    flexDirection: 'row',
-    margin: '4%',
+    marginStart: '2%',
     color: '#aad326',
     fontSize: 20,
+    marginTop: '2%',
+  },
+  body: {
+    marginStart: Dimensions.get('window').width * 0.07,
+    marginEnd: Dimensions.get('window').width * 0.07,
   },
 });

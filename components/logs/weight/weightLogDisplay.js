@@ -31,13 +31,19 @@ const WeightLogDisplay = (props) => {
   return (
     show && (
       <Animated.View style={{maxHeight: heightInterpolation}}>
-        <Text style={logStyles.lastLogDate}>{data.dateString}</Text>
-        <View style={logStyles.lastLogBorder} />
-        <Text style={logStyles.fieldText}>Last Weight Recorded</Text>
-        <Text style={[logStyles.fieldText, {color: Colors.lastLogValueColor}]}>
-          {data.value} kg
-        </Text>
-        <View style={logStyles.lastLogBorder} />
+        <View style={logStyles.lastLogDetailContainer}>
+          <Text style={logStyles.lastLogDate}>{data.dateString}</Text>
+          <View style={logStyles.lastLogBorder} />
+          <Text style={logStyles.lastLogContent}>Last Weight Recorded</Text>
+          <Text
+            style={[
+              logStyles.lastLogContent,
+              {color: Colors.lastLogValueColor},
+            ]}>
+            {data.value} kg
+          </Text>
+          <View style={logStyles.lastLogBorder} />
+        </View>
       </Animated.View>
     )
   );

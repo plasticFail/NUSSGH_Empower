@@ -10,14 +10,16 @@ const FormBlock = (props) => {
       yesOptionStyle: {
         borderTopStartRadius: 9.5,
         borderBottomStartRadius: 9.5,
-        padding: '3%',
+        padding: '2%',
+        paddingHorizontal: '5%',
         borderWidth: 1,
         borderColor: '#aad326',
       },
       noOptionStyle: {
         borderTopEndRadius: 9.5,
         borderBottomEndRadius: 9.5,
-        padding: '3%',
+        padding: '2%',
+        paddingHorizontal: '5%',
         borderWidth: 1,
         borderColor: '#aad326',
       },
@@ -37,7 +39,7 @@ const FormBlock = (props) => {
     getContentStyle() && (
       <View>
         <Text style={styles.questionHeader}>{question}</Text>
-        <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
+        <View style={{flexDirection: 'row'}}>
           <TouchableOpacity
             style={contentStyle.yesOptionStyle}
             onPress={() => getFormSelection(true)}>

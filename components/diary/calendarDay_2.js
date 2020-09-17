@@ -50,13 +50,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: '10%',
+    padding: '30%',
   },
   content: {
-    width: 36,
-    height: 36,
+    width: 35,
+    height: 35,
     justifyContent: 'center',
     alignItems: 'center',
+    margin: 20,
   },
   contentText: {
     fontSize: 18,

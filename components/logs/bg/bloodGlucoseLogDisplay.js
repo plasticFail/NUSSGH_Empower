@@ -3,6 +3,7 @@ import {StyleSheet, Text, View, Animated} from 'react-native';
 //styles
 import logStyles from '../../../styles/logStyles';
 import {Colors} from '../../../styles/colors';
+import {horizontalMargins} from '../../../styles/variables';
 
 //show last values
 const BloodGlucoseLogDisplay = (props) => {
@@ -33,13 +34,19 @@ const BloodGlucoseLogDisplay = (props) => {
   return (
     show && (
       <Animated.View style={{maxHeight: heightInterpolation}}>
-        <Text style={logStyles.lastLogDate}>{data.dateString}</Text>
-        <View style={logStyles.lastLogBorder} />
-        <Text style={logStyles.fieldText}>Last Reading Recorded</Text>
-        <Text style={[logStyles.fieldText, {color: Colors.lastLogValueColor}]}>
-          {Number(data.value)} mmol/L
-        </Text>
-        <View style={logStyles.lastLogBorder} />
+        <View style={logStyles.lastLogDetailContainer}>
+          <Text style={logStyles.lastLogDate}>{data.dateString}</Text>
+          <View style={logStyles.lastLogBorder} />
+          <Text style={[logStyles.lastLogContent]}>Last Reading Recorded</Text>
+          <Text
+            style={[
+              logStyles.lastLogContent,
+              {color: Colors.lastLogValueColor},
+            ]}>
+            {Number(data.value)} mmol/L
+          </Text>
+          <View style={logStyles.lastLogBorder} />
+        </View>
       </Animated.View>
     )
   );
