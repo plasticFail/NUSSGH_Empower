@@ -7,6 +7,7 @@ import {
   Dimensions,
   ScrollView,
   TouchableOpacity,
+  Platform,
 } from 'react-native';
 //third party lib
 //components
@@ -179,6 +180,7 @@ const HomeScreen = (props) => {
         <View style={{flex: 1}} />
       </View>
       <ScrollView
+        bounces={Platform.OS === 'ios' && false}
         contentContainerStyle={{
           flexGrow: 1,
           backgroundColor: Colors.backgroundColor,
