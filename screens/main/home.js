@@ -10,28 +10,25 @@ import {
   Platform,
 } from 'react-native';
 //third party lib
-//components
+import Moment from 'moment';
+//component
+import NotificationsCard from '../../components/dashboard/todayOverview/cards/NotificationsCard';
+import DiaryCard from '../../components/dashboard/todayOverview/cards/DiaryCard';
+import ActivityCard from '../../components/dashboard/todayOverview/cards/ActivityCard';
 import MenuBtn from '../../components/menuBtn';
 import HeaderCard from '../../components/home/headerCard';
-import CircularProgress from '../../components/dashboard/todayOverview/CircularProgress';
-import ProgressBar from '../../components/progressbar';
 //styles
 import globalStyles from '../../styles/globalStyles';
 import {Colors} from '../../styles/colors';
 //function
 import {checkLogDone} from '../../commonFunctions/logFunctions';
+import {requestNutrientConsumption} from '../../netcalls/mealEndpoints/requestMealLog';
 import {
   getGreetingFromHour,
   getLastMinuteFromTodayDate,
   getTodayDate,
 } from '../../commonFunctions/common';
-import NotificationsCard from '../../components/dashboard/todayOverview/cards/NotificationsCard';
-import DiaryCard from '../../components/dashboard/todayOverview/cards/DiaryCard';
-import ActivityCard from '../../components/dashboard/todayOverview/cards/ActivityCard';
-import {requestNutrientConsumption} from '../../netcalls/mealEndpoints/requestMealLog';
-import Moment from 'moment';
 import {getEntry4Day} from '../../netcalls/requestsDiary';
-import logStyles from '../../styles/logStyles';
 import {
   checkMedTaken4Day,
   getMedDonePeriods,
@@ -84,7 +81,7 @@ const HomeScreen = (props) => {
       initLogs();
       loadNutritionalData();
     });
-  }, [bgLogs]);
+  }, [bgLogs, foodLogs, medLogs, weightLogs]);
 
   const initLogs = () => {
     getEntry4Day(today_date)

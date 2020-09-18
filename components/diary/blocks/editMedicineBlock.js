@@ -27,6 +27,8 @@ const EditMedicineBlock = (props) => {
   const [dosage, setDosage] = useState(Number(medicineToEdit.dosage));
   const [deleteModal, setDeleteModal] = useState(false);
 
+  console.log('in med bloc ' + moment(initialDate).format('DD-MM-YYYY HH:mm'));
+
   useEffect(() => {
     checkChange();
   }, [dosage, datetime]);
@@ -85,7 +87,11 @@ const EditMedicineBlock = (props) => {
         </View>
         <View style={[logStyles.bodyPadding, {marginStart: 0}]}>
           <Text style={logStyles.headerText}>Edit</Text>
-          <DateSelectionBlock date={datetime} setDate={setDatetime} />
+          <DateSelectionBlock
+            date={datetime}
+            setDate={setDatetime}
+            initialDate={initialDate}
+          />
           <Text style={logStyles.fieldName}>Medication Taken:</Text>
           <Text style={logStyles.inputField}>{medicineToEdit.medication}</Text>
           <Counter

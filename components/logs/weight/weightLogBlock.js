@@ -144,7 +144,11 @@ const WeightLogBlock = (props) => {
             <View style={{marginBottom: '10%'}}>
               <View style={[logStyles.bodyPadding, {marginStart: 0}]}>
                 <Text style={logStyles.headerText}>Edit</Text>
-                <DateSelectionBlock date={datetime} setDate={setDatetime} />
+                <DateSelectionBlock
+                  date={datetime}
+                  setDate={setDatetime}
+                  initialDate={initialDate}
+                />
                 <Text style={logStyles.fieldName}>Weight</Text>
                 <Text style={[logStyles.fieldText, {marginStart: 0}]}>
                   {weight}kg

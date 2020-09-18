@@ -30,7 +30,7 @@ const getGreetingFromHour = (hour) => {
   } else {
     return eveningObj.name;
   }
-}
+};
 
 const getPeriodFromMealType = (mealType) => {
   switch (mealType) {
@@ -45,15 +45,15 @@ const getPeriodFromMealType = (mealType) => {
     case 'snack':
       return null;
   }
-}
+};
 
 const getTodayDate = () => {
-  return Moment(new Date()).format("DD/MM/YYYY") + " 00:00:00";
-}
+  return Moment(new Date()).format('DD/MM/YYYY') + ' 00:00:00';
+};
 
 const getLastMinuteFromTodayDate = () => {
-  return Moment(new Date()).format("DD/MM/YYYY") + " 23:59:30";
-}
+  return Moment(new Date()).format('DD/MM/YYYY') + ' 23:59:30';
+};
 
 //check if selected object is empty
 const isEmpty = (obj) => {
@@ -63,6 +63,17 @@ const isEmpty = (obj) => {
   return true;
 };
 
-export {getGreetingFromHour, isEmpty, morningObj, afternoonObj, eveningObj, night_key,
-  evening_key, afternoon_key, morning_key, getPeriodFromMealType, getLastMinuteFromTodayDate, getTodayDate};
-
+export {
+  getGreetingFromHour,
+  isEmpty,
+  morningObj,
+  afternoonObj,
+  eveningObj,
+  night_key,
+  evening_key,
+  afternoon_key,
+  morning_key,
+  getPeriodFromMealType,
+  getLastMinuteFromTodayDate,
+  getTodayDate,
+};
