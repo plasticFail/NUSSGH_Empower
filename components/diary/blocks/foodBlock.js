@@ -149,7 +149,7 @@ function renderFoodItems(logs, editLog) {
       <View style={{marginBottom: '3%'}}>
         {logs.map((item, index) => (
           <>
-            {item.foodItems.length > 0 ? (
+            {item.foodItems.length > 0 &&
               item.foodItems.map((inner, index) => (
                 <View key={inner['_id']}>
                   <View style={styles.foodItem}>
@@ -179,10 +179,7 @@ function renderFoodItems(logs, editLog) {
                     ) : null}
                   </View>
                 </View>
-              ))
-            ) : (
-              <Text>No Food Item</Text>
-            )}
+              ))}
           </>
         ))}
       </View>

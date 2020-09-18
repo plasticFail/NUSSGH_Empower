@@ -1,4 +1,5 @@
 import Moment from 'moment';
+import {getDateRange, getDateObj} from './diaryFunctions';
 
 const morning_key = 'Morning';
 const afternoon_key = 'Afternoon';
@@ -63,6 +64,24 @@ const isEmpty = (obj) => {
   return true;
 };
 
+//check against storage made whether data is made in last 7 days
+const checkLast7Day = (data) => {
+  let arr = getDateRange(7, new Date());
+  let lastDate = String(convertDatestring(data.date));
+
+  if (arr.includes(lastDate)) {
+    return true;
+  }
+
+  return false;
+};
+
+//convert date with - to /
+const convertDatestring = (date) => {
+  let newDate = String(date).split('/').join('-');
+  return newDate;
+};
+
 export {
   getGreetingFromHour,
   isEmpty,
@@ -76,4 +95,5 @@ export {
   getPeriodFromMealType,
   getLastMinuteFromTodayDate,
   getTodayDate,
+  checkLast7Day,
 };

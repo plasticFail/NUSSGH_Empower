@@ -31,6 +31,26 @@ export default function DiaryCard(props) {
   const [showMed, setShowMed] = useState(false);
   const [showWeight, setShowWeight] = useState(false);
 
+  const closeBg = () => {
+    setShowBg(false);
+    init();
+  };
+
+  const closeFood = () => {
+    setShowFood(false);
+    init();
+  };
+
+  const closeMed = () => {
+    setShowMed(false);
+    init();
+  };
+
+  const closeWeight = () => {
+    setShowWeight(false);
+    init();
+  };
+
   return (
     <View
       style={[
@@ -81,7 +101,7 @@ export default function DiaryCard(props) {
       {showBg ? (
         <BgBlock
           visible={showBg}
-          closeModal={() => setShowBg(false)}
+          closeModal={() => closeBg()}
           morningBgLogs={filterMorning(bgLogs)}
           afternoonBgLogs={filterAfternoon(bgLogs)}
           eveningBgLogs={filterEvening(bgLogs)}
@@ -95,7 +115,7 @@ export default function DiaryCard(props) {
       {showFood ? (
         <FoodBlock
           visible={showFood}
-          closeModal={() => setShowFood(false)}
+          closeModal={() => closeFood()}
           morningMealLogs={filterMorning(foodLogs)}
           afternoonMealLogs={filterAfternoon(foodLogs)}
           eveningMealLogs={filterEvening(foodLogs)}
@@ -110,7 +130,7 @@ export default function DiaryCard(props) {
       {showMed ? (
         <MedBlock
           visible={showMed}
-          closeModal={() => setShowMed(false)}
+          closeModal={() => closeMed()}
           morningMedLogs={filterMorning(medLogs)}
           afternoonMedLogs={filterAfternoon(medLogs)}
           eveningMedLogs={filterEvening(medLogs)}
@@ -121,7 +141,7 @@ export default function DiaryCard(props) {
       {showWeight ? (
         <WeightBlock
           visible={showWeight}
-          closeModal={() => setShowWeight(false)}
+          closeModal={() => closeWeight()}
           morningWeightLogs={filterMorning(weightLogs)}
           afternoonWeightLogs={filterAfternoon(weightLogs)}
           eveningWeightLogs={filterEvening(weightLogs)}

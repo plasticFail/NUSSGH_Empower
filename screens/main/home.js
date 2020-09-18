@@ -79,9 +79,8 @@ const HomeScreen = (props) => {
         })
         .catch((err) => console.log(err));
       initLogs();
-      loadNutritionalData();
     });
-  }, [bgLogs, foodLogs, medLogs, weightLogs]);
+  }, []);
 
   const initLogs = () => {
     getEntry4Day(today_date)
@@ -127,6 +126,7 @@ const HomeScreen = (props) => {
             }
           } else {
             setBgMiss(true);
+            setBgl(null);
           }
 
           if (weightLogs.length > 0) {
@@ -134,6 +134,7 @@ const HomeScreen = (props) => {
               Math.round((averageWeight * 100) / weightLogs.length) / 100;
             setWeight(averageWeight);
           } else {
+            setWeight(null);
           }
           setStepsTaken(steps);
 
@@ -155,6 +156,7 @@ const HomeScreen = (props) => {
         }
       })
       .catch((err) => console.log(err));
+    loadNutritionalData();
   };
 
   const loadNutritionalData = () => {
