@@ -149,6 +149,45 @@ const mealAddLogRequest = async (mealData) => {
   return responseJson;
 };
 
+const getBloodGlucoseLogs = async (startDateString, endDateString) => {
+  let response = await fetch(glucoseAddLog + `?start=${startDateString}&end=${endDateString}`, {
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + (await getToken()),
+      Accept: 'application/json',
+      'Content-type': 'application/json',
+    }
+  });
+  let responseJson = await response.json();
+  return responseJson;
+}
+
+const getWeightLogs = async (startDateString, endDateString) => {
+  let response = await fetch(weightAddLog + `?start=${startDateString}&end=${endDateString}`, {
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + (await getToken()),
+      Accept: 'application/json',
+      'Content-type': 'application/json',
+    }
+  });
+  let responseJson = await response.json();
+  return responseJson;
+}
+
+const getMedicationLogs = async (startDateString, endDateString) => {
+  let response = await fetch(medicationAddLog + `?start=${startDateString}&end=${endDateString}`, {
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + (await getToken()),
+      Accept: 'application/json',
+      'Content-type': 'application/json',
+    }
+  });
+  let responseJson = await response.json();
+  return responseJson;
+}
+
 export {
   glucoseAddLogRequest,
   storeMedications,
@@ -156,4 +195,7 @@ export {
   getMedication4Day,
   weightAddLogRequest,
   mealAddLogRequest,
+  getBloodGlucoseLogs,
+  getMedicationLogs,
+  getWeightLogs
 };

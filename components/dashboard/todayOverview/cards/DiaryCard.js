@@ -1,7 +1,15 @@
 import React from 'react';
 import {View, StyleSheet, Text, Dimensions} from 'react-native';
+import BGL_LOGO from '../../../../resources/images/icons/SVG/icon-darkgreen-bloodglucose.svg';
+import CALORIE_LOGO from '../../../../resources/images/icons/SVG/icon-darkgreen-food.svg';
+import WEIGHT_LOGO from '../../../../resources/images/icons/SVG/icon-darkgreen-weight.svg';
 
 const {width} = Dimensions.get('window');
+
+const logoConfig = {
+    width: 30,
+    height: 30
+}
 
 export default function DiaryCard(props) {
     const {bgl, calorie, weight} = props;
@@ -12,16 +20,25 @@ export default function DiaryCard(props) {
                 <Text style={{padding: 20, fontWeight: 'bold', fontSize: 24, color: '#7d7d7d'}}>Overview</Text>
             </View>
             <View style={styles.overviewRow}>
-                <Text style={styles.metricText}>Blood Glucose</Text>
-                <Text style={styles.measuredText}>{bgl ? bgl + " mmol/L" : "Not taken yet"}</Text>
+                <BGL_LOGO {...logoConfig} />
+                <View style={{marginLeft: '4%'}}>
+                    <Text style={styles.metricText}>Blood Glucose</Text>
+                    <Text style={styles.measuredText}>{bgl ? bgl + " mmol/L" : "Not taken yet"}</Text>
+                </View>
             </View>
             <View style={styles.overviewRow}>
-                <Text style={styles.metricText}>Nutrition</Text>
-                <Text style={styles.measuredText}>{calorie} kcal</Text>
+                <CALORIE_LOGO {...logoConfig} />
+                <View style={{marginLeft: '4%'}}>
+                    <Text style={styles.metricText}>Nutrition</Text>
+                    <Text style={styles.measuredText}>{calorie} kcal</Text>
+                </View>
             </View>
             <View style={[styles.overviewRow, {borderBottomWidth: 0}]}>
-                <Text style={styles.metricText}>Weight</Text>
-                <Text style={styles.measuredText}>{weight ? weight + " kg" : "Not taken yet"}</Text>
+                <WEIGHT_LOGO {...logoConfig} />
+                <View style={{marginLeft: '4%'}}>
+                    <Text style={styles.metricText}>Weight</Text>
+                    <Text style={styles.measuredText}>{weight ? weight + " kg" : "Not taken yet"}</Text>
+                </View>
             </View>
         </View>
     )
@@ -53,7 +70,8 @@ const styles = StyleSheet.create({
         marginRight: 20,
         borderBottomWidth: 0.5,
         borderColor: '#7d7d7d',
-        width: width - 80
+        width: width - 80,
+        flexDirection: 'row'
     },
     metricText: {
         fontWeight: 'bold',

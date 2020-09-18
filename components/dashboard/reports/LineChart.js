@@ -4,29 +4,15 @@ import {View, StyleSheet, Text, Animated} from 'react-native';
 import Moment from 'moment';
 import {Svg, Rect, Text as SvgText, Path, G, Circle} from 'react-native-svg';
 import {scaleTime, scaleLinear} from "d3-scale";
-
-const data = [
-    {
-        x: new Date(2020, 8, 27, 9, 0, 0, 0),
-        y: 3.2,
-    },
-    {
-        x: new Date(2020, 8, 27, 11, 0, 0, 0),
-        y: 3,
-    },
-    {
-        x: new Date(2020, 8, 27, 13, 45, 0, 0),
-        y: 6.5,
-    },
-    {
-        x: new Date(2020, 8, 27, 17,10, 0, 0),
-        y: 12.4,
-    },
-    {
-        x: new Date(2020, 8, 27, 20, 38, 0, 0),
-        y: 8.4,
-    }
-]
+import {
+    formatY,
+    generateXAxisLabels,
+    generateYAxisValues,
+    getYStepSize,
+    processData
+} from "../../../commonFunctions/reportDataFormatter";
+import {DAY_FILTER_KEY} from "../../../screens/main/reports";
+import {Colors} from "../../../styles/colors";
 
 // initialise all the graph properties.
 // global style options
@@ -42,7 +28,8 @@ const stepSize = 2;
 const yAxisStartsFrom = 0;
 
 const axisColour = '#cdcdcd';
-const axisLabelColour = '#8d8d8d';
+const axisLabelColour = '#E1E7ED';
+const axisTextLabelColour = '#3c3c43';
 
 const showXAxis = true;
 const showXAxisLines = false;
@@ -57,17 +44,22 @@ const barLabelFontSize = 14;
 const barLabelTextYOffset = barLabelFontSize/2;
 
 const pointRadius = 5;
-const strokeColor = 'slateblue';
-const strokeWidth = 1.5;
+const pointColor = Colors.nextBtnColor;
+const strokeColor = Colors.nextBtnColor;
+const strokeWidth = 3;
 
 export default function LineChart(props) {
     const [selectedIndex, setSelectedIndex] = React.useState(-1);
     const {width, height} = props;
+    const data = processData(props.filterKey, props.data, props.xExtractor, props.yExtractor, 'average');
+    // d3 properties
+    const maxY = 1.25* Math.max(...data.map(d => d.y), props.defaultMaxY);
+    const xAxisLabels = generateXAxisLabels(props.filterKey);
+    const minX = xAxisLabels[0];
+    const maxX = xAxisLabels[xAxisLabels.length - 1];
+    const yAxisLabels = generateYAxisValues(getYStepSize(yAxisStartsFrom, maxY), yAxisStartsFrom, maxY);
 
-    const minX = new Date(2020, 8, 27, 0, 0, 0, 0);
-    const maxX = new Date(2020, 8, 27, 23, 59, 0, 0);
-    const maxY = 1.25* Math.max(...data.map(d => d.y));
-
+    // d3 scale properties
     const scaleX = scaleTime().domain([minX, maxX]).range([paddingLeft, width - paddingRight]);
     const scaleY = scaleLinear().domain([yAxisStartsFrom, maxY]).range([height - padding, padding]);
 
@@ -77,31 +69,32 @@ export default function LineChart(props) {
                 {
                     // x-axis labels
                     showXAxis &&
-                    generateXAxisLabels().map((x, index) => (
-                        <SvgText fill={axisLabelColour} y={height - padding + xAxisGapFromText} x={scaleX(x)} textAnchor='middle'>
-                            {Moment(x).format('H:mm')}
+                    xAxisLabels.map((x, index) => (
+                        <SvgText fill={axisTextLabelColour} y={height - padding + xAxisGapFromText} x={scaleX(x)} textAnchor='middle'>
+                            {Moment(x).format(props.filterKey === DAY_FILTER_KEY ? "H:mm" : "DD/MM")}
                         </SvgText>
                     ))
                 }
                 {
                     // y axis labels
                     showYAxis &&
-                    generateYAxisValues(stepSize, yAxisStartsFrom, maxY).map((y, index) => (
-                        <SvgText fill={axisLabelColour} x={paddingLeft - axisMargin - yAxisGapFromText}
+                    yAxisLabels.map((y, index) => (
+                        <SvgText fill={axisTextLabelColour} x={paddingLeft - axisMargin - yAxisGapFromText}
                                  y={scaleY(y)} textAnchor='middle'>
                             {y}
                         </SvgText>
                     ))
                 }
                 {
+
                     showXAxisLines &&
-                    generateXAxisLabels().map((x, index) => (
+                    xAxisLabels.map((x, index) => (
                         <Path stroke={axisLabelColour} d={`M ${scaleX(x)} ${padding} l 0 ${height - 2 * padding}`}/>
                     ))
                 }
                 {
                     showYAxisLines &&
-                    generateYAxisValues(stepSize, yAxisStartsFrom, maxY).map((y, index) => (
+                    yAxisLabels.map((y, index) => (
                        <Path stroke={axisLabelColour} d={`M ${paddingLeft - axisMargin} ${scaleY(y)} l ${width - paddingLeft - paddingRight + 2 * axisMargin} 0`} />
                     ))
                 }
@@ -117,11 +110,11 @@ export default function LineChart(props) {
                 {
                     // plot points
                     data.map((d, index) => (
-                        <Circle cx={scaleX(d.x)} cy={scaleY(d.y)} r={pointRadius} fill='#000' onPress={()=>setSelectedIndex(index)} />
+                        <Circle cx={scaleX(d.x)} cy={scaleY(d.y)} r={pointRadius} fill={pointColor} onPress={()=>setSelectedIndex(index)} />
                     ))
                 }
                 {
-                    // bar labels: rectangle, triangle and text
+                    // point labels: rectangle, triangle and text
                     data.map((d, index) => (
                         <G>
                             <Path opacity={selectedIndex === index ? 1 : 0}
@@ -136,19 +129,19 @@ export default function LineChart(props) {
                             <Rect
                                 rx={5}
                                 ry={5}
-                                width={barLabelWidth}
+                                width={barLabelWidth + formatY(d.y).length * 2 * 2}
                                 height={barLabelHeight}
                                 opacity={selectedIndex === index ? 1 : 0}
                                 fill='#444C54'
                                 y={scaleY(d.y) - barLabelHeight - barLabelYOffset}
-                                x={scaleX(d.x) - barLabelWidth / 2}
+                                x={scaleX(d.x) - barLabelWidth / 2 - formatY(d.y).length * 2}
                             />
                             <SvgText opacity={selectedIndex === index ? 1 : 0}
                                      fontSize={barLabelFontSize}
                                      fontWeight='bold'
                                      y={scaleY(d.y) - barLabelHeight + barLabelTextYOffset} textAnchor='middle'
                                      x={scaleX(d.x)} fill='#fff'>
-                                {d.y}
+                                {formatY(d.y)}
                             </SvgText>
                         </G>
                     ))
@@ -182,24 +175,4 @@ function LinePlot({data, scaleX, scaleY, lineColor, lineWidth}) {
         }
         return result;
     }
-}
-
-function generateXAxisLabels() {
-    let result = []
-    for (let i = 0; i <= 24; i = i + 6) {
-        if (i == 24) {
-            result.push(new Date(2020, 8, 27, 23, 59, 59, 0));
-        } else {
-            result.push(new Date(2020, 8, 27, i, 0, 0, 0));
-        }
-    }
-    return result
-}
-
-function generateYAxisValues(stepSize, startsFrom, maxY) {
-    let res = [];
-    for (let i = startsFrom; i <= maxY; i = i + stepSize){
-        res.push(i);
-    }
-    return res;
 }

@@ -20,8 +20,8 @@ import AskAdd from './onboarding/medicationPlan/askAdd';
 import AddPlan from './onboarding/medicationPlan/addPlan';
 import FitbitSetup from './onboarding/fitbit/FitbitSetup';
 import DrawerNavigator from './drawer';
-
-Entypo.loadFont();
+import {connect} from "react-redux";
+import {mapDispatchToProps, mapStateToProps} from "../redux/reduxMapping";
 
 const Stack = createStackNavigator();
 
@@ -162,5 +162,5 @@ class AppRoot extends Component {
   }
 }
 
-export default AppRoot;
+export default connect(mapStateToProps, mapDispatchToProps)(AppRoot);
 //edit flag

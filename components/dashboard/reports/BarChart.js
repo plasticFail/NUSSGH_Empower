@@ -4,29 +4,14 @@ import {View, StyleSheet, Text, Animated} from 'react-native';
 import Moment from 'moment';
 import {Svg, Rect, Text as SvgText, Path, G} from 'react-native-svg';
 import {scaleTime, scaleLinear} from "d3-scale";
-
-const data = [
-    {
-        x: new Date(2020, 8, 27, 9, 0, 0, 0),
-        y: 3.2,
-    },
-    {
-        x: new Date(2020, 8, 27, 11, 0, 0, 0),
-        y: 3,
-    },
-    {
-        x: new Date(2020, 8, 27, 13, 45, 0, 0),
-        y: 6.5,
-    },
-    {
-        x: new Date(2020, 8, 27, 17,10, 0, 0),
-        y: 12.4,
-    },
-    {
-        x: new Date(2020, 8, 27, 20, 38, 0, 0),
-        y: 8.4,
-    }
-]
+import {
+    filterToDayData,
+    filterToWeekData, formatY, generateXAxisLabels, generateYAxisValues, getYStepSize,
+    partitionDataPoints,
+    processData,
+    squashToXY
+} from "../../../commonFunctions/reportDataFormatter";
+import {DAY_FILTER_KEY, WEEK_FILTER_KEY} from "../../../screens/main/reports";
 
 // initialise all the graph properties.
 // global style options
@@ -48,8 +33,8 @@ const barLabelYOffset = 10;
 const barLabelFontSize = 14;
 const barLabelTextYOffset = barLabelFontSize / 2;
 
-const axisColour = '#cdcdcd';
-const axisLabelColour = '#8d8d8d';
+const axisColour = '#E1E7ED';
+const axisTextLabelColour = '#3c3c43';
 
 const showXSteps = false;
 const showYSteps = true;
@@ -58,13 +43,15 @@ const showYAxis = true;
 
 export default function BarChart(props) {
     const [selectedIndex, setSelectedIndex] = React.useState(-1);
-
+    const data = processData(props.filterKey, props.data, props.xExtractor, props.yExtractor, 'sum');
     const {width, height} = props;
 
     // d3 properties
-    const minX = new Date(2020, 8, 27, 0, 0, 0, 0);
-    const maxX = new Date(2020, 8, 27, 23, 59, 0, 0);
-    const maxY = 1.25* Math.max(...data.map(d => d.y));
+    const maxY = 1.25* Math.max(...data.map(d => d.y), props.defaultMaxY);
+    const xAxisLabels = generateXAxisLabels(props.filterKey);
+    const minX = xAxisLabels[0];
+    const maxX = xAxisLabels[xAxisLabels.length - 1];
+    const yAxisLabels = generateYAxisValues(getYStepSize(yAxisStartsFrom, maxY), yAxisStartsFrom, maxY);
 
     // d3 scale properties
     const scaleX = scaleTime().domain([minX, maxX]).range([paddingLeft, width - paddingRight]);
@@ -82,22 +69,23 @@ export default function BarChart(props) {
                 <Svg width={width} height={height}>
                     {   // x axis labels
                         showXAxis &&
-                        generateXAxisLabels().map((xVal, index) => (
+                        xAxisLabels.map((xVal, index) => (
                             <SvgText x={scaleX(xVal)}
                                      key={xVal.toString()}
                                      fontSize={xAxisTextFontSize}
                                      textAnchor='middle'
-                                     y={height - padding + xAxisGapFromText} fill={axisLabelColour}>
-                                {Moment(xVal).format("H:mm")}
+                                     y={height - padding + xAxisGapFromText} fill={axisTextLabelColour}>
+                                {Moment(xVal).format(props.filterKey === DAY_FILTER_KEY ? "H:mm" : "DD/MM")}
                             </SvgText>
                         ))
                     }
                     {
                         // y axis labels
                         showYAxis &&
-                        generateYAxisValues(stepSize, yAxisStartsFrom, maxY).map((y, index) => (
-                            <SvgText x={paddingLeft - barWidth / 2 - axisMargin - yAxisGapFromText} y={scaleY(y)} fill={axisLabelColour} textAnchor='middle'>
-                                {y}
+                        yAxisLabels.map((y, index) => (
+                            <SvgText x={paddingLeft - barWidth / 2 - axisMargin - yAxisGapFromText}
+                                     y={scaleY(y)} fill={axisTextLabelColour} textAnchor='middle'>
+                                {formatY(y)}
                             </SvgText>
                         ))
                     }
@@ -113,7 +101,7 @@ export default function BarChart(props) {
                     {
                         // vertical lines for x axis labels
                         showXSteps &&
-                        generateXAxisLabels().map((xVal, index) => (
+                        xAxisLabels.map((xVal, index) => (
                             <Path stroke={axisColour}
                                   d={`M ${scaleX(xVal)} ${height - padding} l 0 ${ - (height - 2 * padding)}`}
                             />
@@ -122,7 +110,7 @@ export default function BarChart(props) {
                     {
                         // horizontal lines
                         showYSteps &&
-                        generateYAxisValues(stepSize, yAxisStartsFrom, maxY).map((v, index) => (
+                        yAxisLabels.map((v, index) => (
                             <Path stroke={axisColour}
                                   key={v.toString()}
                                   d={`M ${paddingLeft - barWidth / 2 - axisMargin} ${scaleY(v)} l ${width - paddingRight - paddingLeft + barWidth + 2 * axisMargin} 0`} />
@@ -133,10 +121,11 @@ export default function BarChart(props) {
                         showYSteps &&
                         <Path stroke={axisColour}
                               d={`M ${paddingLeft - barWidth / 2 - axisMargin} ${height - padding} l ${width - paddingRight - paddingLeft + barWidth + 2 * axisMargin} 0`} />
+
                     }
                     {   // bars
-                        data.map((d, index) => (
-                            <Rect
+                        data.map((d, index) => {
+                            return (<Rect
                                 onPress={() => handleSelect(index)}
                                 rx={3}
                                 ry={3}
@@ -144,8 +133,9 @@ export default function BarChart(props) {
                                 y={scaleY(d.y)}
                                 width={barWidth}
                                 fill={selectedIndex === index ? '#60a354' : '#B2D04B'} height={scaleHeight(d.y)}
-                            />
-                        ))
+                            />)
+                        })
+
                     }
                     {
                         // bar labels: rectangle, triangle and text
@@ -154,7 +144,7 @@ export default function BarChart(props) {
                                 <Path opacity={selectedIndex === index ? 1 : 0}
                                       fill='#444C54'
                                       stroke='#444C54'
-                                      d={`M ${scaleX(d.x) - barLabelWidth / 8} 
+                                      d={`M ${scaleX(d.x) - barLabelWidth / 8}
                                       ${scaleY(d.y) - barLabelYOffset} l ${barLabelWidth / 8} ${barLabelHeight / 4}
                                       l ${barLabelWidth / 8} ${-barLabelHeight / 4} Z
                                       `} // triangle size is 1/4 of the height of the bar label, and 1/8 of bar width.
@@ -163,19 +153,19 @@ export default function BarChart(props) {
                                 <Rect
                                     rx={5}
                                     ry={5}
-                                    width={barLabelWidth}
+                                    width={barLabelWidth + formatY(d.y).length * 2 * 2}
                                     height={barLabelHeight}
                                     opacity={selectedIndex === index ? 1 : 0}
                                     fill='#444C54'
                                     y={scaleY(d.y) - barLabelHeight - barLabelYOffset}
-                                    x={scaleX(d.x) - barLabelWidth / 2}
+                                    x={scaleX(d.x) - barLabelWidth / 2 - formatY(d.y).length * 2}
                                 />
                                 <SvgText opacity={selectedIndex === index ? 1 : 0}
                                          fontSize={barLabelFontSize}
                                          fontWeight='bold'
                                          y={scaleY(d.y) - barLabelHeight + barLabelTextYOffset} textAnchor='middle'
                                          x={scaleX(d.x)} fill='#fff'>
-                                    {d.y}
+                                    {formatY(d.y)}
                                 </SvgText>
                             </G>
                         ))
@@ -184,26 +174,6 @@ export default function BarChart(props) {
             </View>
         </View>
     )
-}
-
-function generateXAxisLabels() {
-    let result = []
-    for (let i = 0; i <= 24; i = i + 6) {
-        if (i == 24) {
-            result.push(new Date(2020, 8, 27, 23, 59, 59, 0));
-        } else {
-            result.push(new Date(2020, 8, 27, i, 0, 0, 0));
-        }
-    }
-    return result
-}
-
-function generateYAxisValues(stepSize, startsFrom, maxY) {
-    let res = [];
-    for (let i = startsFrom; i <= maxY; i = i + stepSize){
-        res.push(i);
-    }
-    return res;
 }
 
 const styles = StyleSheet.create({

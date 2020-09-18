@@ -3,14 +3,12 @@ import {
   View,
   StyleSheet,
   Text,
-  Dimensions,
-  Image,
-  TouchableWithoutFeedback,
   Animated,
   Linking,
 } from 'react-native';
 //function
 import {getFitbitToken} from '../../../storage/asyncStorageFunctions';
+import {AuthoriseFitbit} from '../../../commonFunctions/AuthoriseFitbit';
 // config
 import {
   fitbitOAuthUri,
@@ -18,20 +16,17 @@ import {
   redirect_uri,
   scope,
 } from '../../../config/FitbitConfig';
+// third party lib
+import InAppBrowser from 'react-native-inappbrowser-reborn';
+// components
+import ResponseModal from '../../../components/onboarding/fitbit/ResponseModal';
+import LeftArrowBtn from '../../../components/logs/leftArrowBtn';
 // others
-import Icon from 'react-native-vector-icons/dist/FontAwesome';
-import fitbitIcon from '../../../resources/images/fitbit/fitbit.png';
+import {STATUS} from '../../../components/onboarding/fitbit/Status';
+import FitbitLogo from '../../../resources/images/icons/SVG/icon-color-fitbit.svg';
 import globalStyles from '../../../styles/globalStyles';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {Colors} from '../../../styles/colors';
-// third party lib
-import Modal from 'react-native-modal';
-import InAppBrowser from 'react-native-inappbrowser-reborn';
-import {AuthoriseFitbit} from '../../../commonFunctions/AuthoriseFitbit';
-import {STATUS} from '../../../components/onboarding/fitbit/Status';
-import ResponseModal from '../../../components/onboarding/fitbit/ResponseModal';
-import LeftArrowBtn from '../../../components/logs/leftArrowBtn';
-import logStyles from '../../../styles/logStyles';
 
 const qs = require('qs');
 
@@ -45,12 +40,6 @@ const oAuthUrl =
     scope,
     expires_in: '604800',
   });
-
-const {width, height} = Dimensions.get('window');
-const headerHeight = height / 4;
-const circleRadius = height;
-const circleOffset = height - headerHeight;
-Icon.loadFont();
 
 export default function FitbitSetup(props) {
   const [expand, setExpand] = React.useState(false);
@@ -81,7 +70,7 @@ export default function FitbitSetup(props) {
         getFitbitToken().then((resp) => {
           if (resp) {
             authorised.current = true;
-            setTimeout(() => props.navigation.navigate('Home'), 1000)
+            //setTimeout(() => props.navigation.navigate('Home'), 1000)
           }
         });
       }, 500);
@@ -154,7 +143,7 @@ export default function FitbitSetup(props) {
       {/*
                     <Text style={{paddingLeft: 15, fontWeight: 'bold'}}>{!authorised.current && processingStatus}</Text>
                  */}
-      {authorised.current ? (
+      {!authorised.current ? (
         <View style={{padding: 15}}>
           <Text style={styles.fitbitDoneMainText}>Done!</Text>
           <Text style={styles.fitbitDoneSubText}>You are all set</Text>
@@ -167,10 +156,7 @@ export default function FitbitSetup(props) {
             </Text>
             <Animated.View
               style={[styles.fitbitIconStyle, {transform: [{scale}]}]}>
-              <Image
-                source={fitbitIcon}
-                style={{width: '100%', height: '100%'}}
-              />
+              <FitbitLogo width='100%' height='100%' />
             </Animated.View>
           </View>
         </TouchableOpacity>
@@ -207,23 +193,13 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.backgroundColor,
     flex: 1,
   },
-  stepText: {
-    // marginTop: '10%',
-  },
-  headerContainer: {
-    width,
-    height: headerHeight,
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    paddingBottom: '15%',
-  },
   remainingContainer: {
     flex: 1,
   },
   fitbitIconStyle: {
-    width: 40,
-    height: 40,
-    margin: 10,
+    width: 50,
+    height: 50,
+    margin: 5,
   },
   fitbitPromptContainer: {
     justifyContent: 'center',
