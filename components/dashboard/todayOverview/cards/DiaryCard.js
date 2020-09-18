@@ -1,67 +1,173 @@
-import React from 'react';
-import {View, StyleSheet, Text, Dimensions} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  View,
+  StyleSheet,
+  Text,
+  Dimensions,
+  TouchableOpacity,
+} from 'react-native';
+import {
+  filterMorning,
+  filterAfternoon,
+  filterEvening,
+} from '../../../../commonFunctions/diaryFunctions';
+//component
+import WeightBlock from '../../../diary/blocks/weightBlock';
+import MedBlock from '../../../diary/blocks/medBlock';
+import BgBlock from '../../../diary/blocks/bgBlock';
+import FoodBlock from '../../../diary/blocks/foodBlock';
 
 const {width} = Dimensions.get('window');
 
 export default function DiaryCard(props) {
-    const {bgl, calorie, weight} = props;
+  const {today_date, bgl, calorie, weight, medResult, dateString} = props;
+  const {bgLogs, bgPass, bgMiss} = props;
+  const {foodLogs, carbs, protein, fats, foodPass} = props;
+  const {medLogs, weightLogs} = props;
+  const {init} = props;
 
-    return (
-        <View style={[styles.card, styles.shadow, {margin:'5%', flexDirection: 'column', alignItems: 'flex-start'}]}>
-            <View style={{borderBottomWidth: 0.5, borderColor: '#7d7d7d', width: '100%'}}>
-                <Text style={{padding: 20, fontWeight: 'bold', fontSize: 24, color: '#7d7d7d'}}>Overview</Text>
-            </View>
-            <View style={styles.overviewRow}>
-                <Text style={styles.metricText}>Blood Glucose</Text>
-                <Text style={styles.measuredText}>{bgl ? bgl + " mmol/L" : "Not taken yet"}</Text>
-            </View>
-            <View style={styles.overviewRow}>
-                <Text style={styles.metricText}>Nutrition</Text>
-                <Text style={styles.measuredText}>{calorie} kcal</Text>
-            </View>
-            <View style={[styles.overviewRow, {borderBottomWidth: 0}]}>
-                <Text style={styles.metricText}>Weight</Text>
-                <Text style={styles.measuredText}>{weight ? weight + " kg" : "Not taken yet"}</Text>
-            </View>
-        </View>
-    )
+  const [showBg, setShowBg] = useState(false);
+  const [showFood, setShowFood] = useState(false);
+  const [showMed, setShowMed] = useState(false);
+  const [showWeight, setShowWeight] = useState(false);
+
+  return (
+    <View
+      style={[
+        styles.card,
+        styles.shadow,
+        {margin: '5%', flexDirection: 'column', alignItems: 'flex-start'},
+      ]}>
+      <View
+        style={{borderBottomWidth: 0.5, borderColor: '#7d7d7d', width: '100%'}}>
+        <Text
+          style={{
+            padding: 20,
+            fontWeight: 'bold',
+            fontSize: 24,
+            color: '#7d7d7d',
+          }}>
+          Overview
+        </Text>
+      </View>
+      <TouchableOpacity
+        style={styles.overviewRow}
+        onPress={() => setShowBg(true)}>
+        <Text style={styles.metricText}>Blood Glucose</Text>
+        <Text style={styles.measuredText}>
+          {bgl ? bgl + ' mmol/L' : 'Not taken yet'}
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.overviewRow}
+        onPress={() => setShowFood(true)}>
+        <Text style={styles.metricText}>Nutrition</Text>
+        <Text style={styles.measuredText}>{calorie} kcal</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.overviewRow}
+        onPress={() => setShowMed(true)}>
+        <Text style={styles.metricText}>Medication</Text>
+        <Text style={styles.measuredText}>{medResult}</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[styles.overviewRow, {borderBottomWidth: 0}]}
+        onPress={() => setShowWeight(true)}>
+        <Text style={styles.metricText}>Weight</Text>
+        <Text style={styles.measuredText}>
+          {weight ? weight + ' kg' : 'Not taken yet'}
+        </Text>
+      </TouchableOpacity>
+      {showBg ? (
+        <BgBlock
+          visible={showBg}
+          closeModal={() => setShowBg(false)}
+          morningBgLogs={filterMorning(bgLogs)}
+          afternoonBgLogs={filterAfternoon(bgLogs)}
+          eveningBgLogs={filterEvening(bgLogs)}
+          avgBg={bgl}
+          pass={bgPass}
+          miss={bgMiss}
+          day={dateString}
+          init={() => init()}
+        />
+      ) : null}
+      {showFood ? (
+        <FoodBlock
+          visible={showFood}
+          closeModal={() => setShowFood(false)}
+          morningMealLogs={filterMorning(foodLogs)}
+          afternoonMealLogs={filterAfternoon(foodLogs)}
+          eveningMealLogs={filterEvening(foodLogs)}
+          carbs={carbs}
+          fats={fats}
+          protein={protein}
+          pass={foodPass}
+          day={dateString}
+          init={() => init()}
+        />
+      ) : null}
+      {showMed ? (
+        <MedBlock
+          visible={showMed}
+          closeModal={() => setShowMed(false)}
+          morningMedLogs={filterMorning(medLogs)}
+          afternoonMedLogs={filterAfternoon(medLogs)}
+          eveningMedLogs={filterEvening(medLogs)}
+          day={dateString}
+          init={() => init()}
+        />
+      ) : null}
+      {showWeight ? (
+        <WeightBlock
+          visible={showWeight}
+          closeModal={() => setShowWeight(false)}
+          morningWeightLogs={filterMorning(weightLogs)}
+          afternoonWeightLogs={filterAfternoon(weightLogs)}
+          eveningWeightLogs={filterEvening(weightLogs)}
+          day={dateString}
+          init={() => init()}
+        />
+      ) : null}
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-    card: {
-        backgroundColor: '#fff',
-        borderRadius: 10,
-        marginTop: '2%',
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between'
+  card: {
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    marginTop: '2%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  shadow: {
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
     },
-    shadow: {
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 5,
-    },
-    overviewRow: {
-        paddingTop: 10,
-        paddingBottom: 10,
-        marginLeft: 20,
-        marginRight: 20,
-        borderBottomWidth: 0.5,
-        borderColor: '#7d7d7d',
-        width: width - 80
-    },
-    metricText: {
-        fontWeight: 'bold',
-        color: '#7d7d7d'
-    },
-    measuredText: {
-        fontWeight: 'bold',
-        color: '#000',
-        fontSize: 18
-    }
-})
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  overviewRow: {
+    paddingTop: 10,
+    paddingBottom: 10,
+    marginLeft: 20,
+    marginRight: 20,
+    borderBottomWidth: 0.5,
+    borderColor: '#7d7d7d',
+    width: width - 80,
+  },
+  metricText: {
+    fontWeight: 'bold',
+    color: '#7d7d7d',
+  },
+  measuredText: {
+    fontWeight: 'bold',
+    color: '#000',
+    fontSize: 18,
+  },
+});
