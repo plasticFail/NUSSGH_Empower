@@ -144,42 +144,55 @@ const FoodBlock = (props) => {
 export default FoodBlock;
 
 function renderFoodItems(logs, editLog) {
+  if (checkLogQuantity(logs)) {
+    return (
+      <View style={styles.noRecordContainer}>
+        <Text style={diaryStyles.noRecordText}>No Record Found </Text>
+        <Text style={diaryStyles.recordContent}>-</Text>
+      </View>
+    );
+  }
+
   if (logs.length > 0) {
     return (
       <View style={{marginBottom: '3%'}}>
         {logs.map((item, index) => (
           <>
             {item.foodItems.length > 0 &&
-              item.foodItems.map((inner, index) => (
-                <View key={inner['_id']}>
-                  <View style={styles.foodItem}>
-                    <Image
-                      source={{uri: inner.imgUrl.url}}
-                      style={styles.foodImg}
-                    />
-                    <View style={{marginStart: '3%', flex: 1}}>
-                      <Text style={diaryStyles.recordedText}>
-                        {inner['food-name']}
-                      </Text>
-                      <Text style={diaryStyles.recordContent}>
-                        {inner['quantity']} Servings(s)
-                      </Text>
+              item.foodItems.map(
+                (inner, index) =>
+                  inner.quantity != 0 && (
+                    <View key={inner['_id']}>
+                      <View style={styles.foodItem}>
+                        <Image
+                          source={{uri: inner.imgUrl.url}}
+                          style={styles.foodImg}
+                        />
+                        <View style={{marginStart: '3%', flex: 1}}>
+                          <Text style={diaryStyles.recordedText}>
+                            {inner['food-name']}
+                          </Text>
+                          <Text style={diaryStyles.recordContent}>
+                            {inner['quantity']} Servings(s)
+                          </Text>
+                        </View>
+                        {showEdit(item.record_date) ? (
+                          <>
+                            <View style={{alignSelf: 'flex-end'}} />
+                            <TouchableOpacity
+                              onPress={() => editLog(inner, item)}>
+                              <Entypo
+                                name="edit"
+                                style={diaryStyles.editIcon}
+                                size={30}
+                              />
+                            </TouchableOpacity>
+                          </>
+                        ) : null}
+                      </View>
                     </View>
-                    {showEdit(item.record_date) ? (
-                      <>
-                        <View style={{alignSelf: 'flex-end'}} />
-                        <TouchableOpacity onPress={() => editLog(inner, item)}>
-                          <Entypo
-                            name="edit"
-                            style={diaryStyles.editIcon}
-                            size={30}
-                          />
-                        </TouchableOpacity>
-                      </>
-                    ) : null}
-                  </View>
-                </View>
-              ))}
+                  ),
+              )}
           </>
         ))}
       </View>
@@ -192,6 +205,18 @@ function renderFoodItems(logs, editLog) {
       </View>
     );
   }
+}
+
+//since backend dont delete the actual log, check if all food items in logs is 0
+function checkLogQuantity(logs) {
+  for (var x of logs) {
+    for (var y of x.foodItems) {
+      if (y.quantity != 0) {
+        return false;
+      }
+    }
+  }
+  return true;
 }
 
 function renderProgressBars(carbs, fats, protein) {

@@ -41,7 +41,7 @@ const EditFoodBlock = (props) => {
   useEffect(() => {
     checkChange();
     if (quantity === 0) {
-      setDeleteItemModal(true);
+      confirmDeleteItem();
       setChanged(false);
     }
   }, [foodItems, quantity]);
@@ -60,6 +60,7 @@ const EditFoodBlock = (props) => {
     let list = [];
     if (parent === from_delete) {
       list = foodItems.filter((food) => food != selectedFood);
+      console.log(list);
     } else {
       list = foodItems;
     }
@@ -68,10 +69,9 @@ const EditFoodBlock = (props) => {
       foodItems: list,
       recordDate: moment(initialDate).format('DD/MM/YYYY HH:mm:ss'),
     };
-    console.log('submitting new meal');
     editMealLog(newMeal).then((response) => {
-      if (parent === from_edit) {
-        if (response != null) {
+      if (response != null) {
+        if (parent === from_edit) {
           Alert.alert('Food item edited successfully!', '', [
             {
               text: 'Got It',
@@ -81,10 +81,10 @@ const EditFoodBlock = (props) => {
               },
             },
           ]);
+        } else {
+          init();
+          closeModal();
         }
-      } else {
-        init();
-        closeModal();
       }
     });
   };
@@ -108,6 +108,7 @@ const EditFoodBlock = (props) => {
   };
 
   const confirmDeleteItem = () => {
+    console.log('calling delete');
     setDeleteItemModal(true);
   };
 
@@ -188,7 +189,7 @@ const EditFoodBlock = (props) => {
 
 function foodItem(item, editQuantity, quantity) {
   let itemName = String(item['food-name']);
-  if (String(item.description).length > 26) {
+  if (String(itemName).length > 26) {
     itemName = itemName.slice(0, 26) + '...';
   }
   return (
