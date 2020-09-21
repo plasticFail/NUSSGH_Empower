@@ -60,6 +60,8 @@ const isPeriod = (time) => {
 };
 
 const checkLogDone = async (period) => {
+  let weight_data = await getLastWeightLog();
+
   let completed = [];
   let notCompleted = [];
   let bgLogs = [];

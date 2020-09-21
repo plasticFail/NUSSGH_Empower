@@ -8,18 +8,20 @@ import {
 import {createStackNavigator} from '@react-navigation/stack';
 import Entypo from 'react-native-vector-icons/Entypo';
 //functions
+import {connect} from 'react-redux';
+import {mapDispatchToProps, mapStateToProps} from '../redux/reduxMapping';
 //other screens
 import Login from './login/login';
 import ForgetPasswordScreen from './login/ForgetPasswordScreen';
 import InputOTPScreen from './login/inputOTPScreen';
 import ResetPasswordScreen from './login/resetPassword';
-
 //components
 import ContactUs from './contactUs';
 import AskAdd from './onboarding/medicationPlan/askAdd';
 import AddPlan from './onboarding/medicationPlan/addPlan';
 import FitbitSetup from './onboarding/fitbit/FitbitSetup';
 import DrawerNavigator from './drawer';
+
 
 Entypo.loadFont();
 
@@ -162,5 +164,5 @@ class AppRoot extends Component {
   }
 }
 
-export default AppRoot;
+export default connect(mapStateToProps, mapDispatchToProps)(AppRoot);
 //edit flag
