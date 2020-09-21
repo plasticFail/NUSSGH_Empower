@@ -15,7 +15,7 @@ import {
   getLastMealLog,
 } from '../storage/asyncStorageFunctions';
 
-import {getGreetingFromHour, morningObj, getPeriodFromMealType} from './common';
+import {getGreetingFromHour, checkLast7Day} from './common';
 import {getEntry4Day} from '../netcalls/requestsDiary';
 import {
   filterMorning,
@@ -94,12 +94,13 @@ const checkLogDone = async (period) => {
       notCompleted.push(med_key);
     }
 
-    if (inPeriod(weightLogs, period)) {
+    if (checkLast7Day(weight_data)) {
       completed.push(weight_key);
     } else {
       notCompleted.push(weight_key);
     }
   } catch (e) {
+    console.error(e);
     return Alert.alert('Network Error', '', [{text: 'Try again later'}]);
     //for now temporary push food to not done
   }
