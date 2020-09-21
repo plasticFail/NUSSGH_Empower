@@ -38,13 +38,15 @@ import CreateMealLogBlock from '../../../components/logs/meal/CreateMealLogBlock
 import LeftArrowBtn from '../../../components/logs/leftArrowBtn';
 // Functions
 
+const fixedDateTime = new Date();
+
 // AddLog view
 class AddLogScreen extends Component {
   constructor(props) {
     super(props);
     this.props = props;
     this.state = {
-      recordDate: new Date(),
+      recordDate: fixedDateTime,
       period: '',
       todayDate: '',
 
@@ -242,7 +244,11 @@ class AddLogScreen extends Component {
                 <Text style={[logStyles.greyText, logStyles.componentMargin]}>
                   Fill in if you wish to add a new record
                 </Text>
-                <DateSelectionBlock date={recordDate} setDate={this.setDate} />
+                <DateSelectionBlock
+                  date={recordDate}
+                  setDate={this.setDate}
+                  initialDate={fixedDateTime}
+                />
                 {selectedLogType === food_key && (
                   <MealTypeSelectionBlock
                     onSelectChange={(option) =>

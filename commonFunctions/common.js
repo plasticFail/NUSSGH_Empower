@@ -1,4 +1,5 @@
 import Moment from 'moment';
+import {getDateRange, getDateObj} from './diaryFunctions';
 
 const morning_key = 'Morning';
 const afternoon_key = 'Afternoon';
@@ -30,7 +31,7 @@ const getGreetingFromHour = (hour) => {
   } else {
     return eveningObj.name;
   }
-}
+};
 
 const getPeriodFromMealType = (mealType) => {
   switch (mealType) {
@@ -45,15 +46,15 @@ const getPeriodFromMealType = (mealType) => {
     case 'snack':
       return null;
   }
-}
+};
 
 const getTodayDate = () => {
-  return Moment(new Date()).format("DD/MM/YYYY") + " 00:00:00";
-}
+  return Moment(new Date()).format('DD/MM/YYYY') + ' 00:00:00';
+};
 
 const getLastMinuteFromTodayDate = () => {
-  return Moment(new Date()).format("DD/MM/YYYY") + " 23:59:30";
-}
+  return Moment(new Date()).format('DD/MM/YYYY') + ' 23:59:30';
+};
 
 //check if selected object is empty
 const isEmpty = (obj) => {
@@ -63,6 +64,36 @@ const isEmpty = (obj) => {
   return true;
 };
 
-export {getGreetingFromHour, isEmpty, morningObj, afternoonObj, eveningObj, night_key,
-  evening_key, afternoon_key, morning_key, getPeriodFromMealType, getLastMinuteFromTodayDate, getTodayDate};
+//check against storage made whether data is made in last 7 days
+const checkLast7Day = (data) => {
+  let arr = getDateRange(7, new Date());
+  let lastDate = String(convertDatestring(data.date));
 
+  if (arr.includes(lastDate)) {
+    return true;
+  }
+
+  return false;
+};
+
+//convert date with - to /
+const convertDatestring = (date) => {
+  let newDate = String(date).split('/').join('-');
+  return newDate;
+};
+
+export {
+  getGreetingFromHour,
+  isEmpty,
+  morningObj,
+  afternoonObj,
+  eveningObj,
+  night_key,
+  evening_key,
+  afternoon_key,
+  morning_key,
+  getPeriodFromMealType,
+  getLastMinuteFromTodayDate,
+  getTodayDate,
+  checkLast7Day,
+};
