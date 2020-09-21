@@ -80,8 +80,6 @@ class AddLogScreen extends Component {
     let period = getGreetingFromHour(this.state.recordDate.getHours());
     this.setState({
       period: period,
-    });
-    this.setState({
       todayDate: Moment(this.state.recordDate).format('Do MMMM YYYY'),
     });
     checkLogDone(period).then((response) => {
@@ -90,6 +88,7 @@ class AddLogScreen extends Component {
         this.setState({notCompletedTypes: response.notCompleted});
       }
     });
+
   }
 
   resetState() {
@@ -230,7 +229,7 @@ class AddLogScreen extends Component {
             onBackButtonPress={this.closeModal}
             style={{margin: 0}}
             backdropColor={Colors.backgroundColor}>
-            <View style={logStyles.modalContainer}>
+            <ScrollView style={logStyles.modalContainer} contentContainerStyle={{paddingBottom: '15%'}}>
               <View style={globalStyles.menuBarContainer}>
                 <CrossBtn close={this.closeModal} />
               </View>
@@ -244,19 +243,20 @@ class AddLogScreen extends Component {
                 <Text style={[logStyles.greyText, logStyles.componentMargin]}>
                   Fill in if you wish to add a new record
                 </Text>
+
                 <DateSelectionBlock
                   date={recordDate}
                   setDate={this.setDate}
                   initialDate={fixedDateTime}
                 />
-                {selectedLogType === food_key && (
+                {/*selectedLogType === food_key && (
                   <MealTypeSelectionBlock
                     onSelectChange={(option) =>
                       this.setState({selectedMealType: option})
                     }
                     defaultValue={this.state.selectedMealType}
                   />
-                )}
+                )*/}
                 <TouchableOpacity
                   style={styles.addButton}
                   onPress={() => this.showLogForm(selectedLogType)}>
@@ -267,7 +267,7 @@ class AddLogScreen extends Component {
                   />
                 </TouchableOpacity>
               </View>
-            </View>
+            </ScrollView>
             {/*Modal for the different form types */}
             <BloodGlucoseLogBlock
               visible={showBg}

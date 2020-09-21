@@ -60,11 +60,6 @@ const isPeriod = (time) => {
 };
 
 const checkLogDone = async (period) => {
-  let bg_data = await getLastBgLog();
-  let med_data = await getLastMedicationLog();
-  let weight_data = await getLastWeightLog();
-  let food_data = await getLastMealLog();
-
   let completed = [];
   let notCompleted = [];
   let bgLogs = [];

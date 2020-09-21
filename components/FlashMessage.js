@@ -56,14 +56,11 @@ export default class FlashMessage extends React.Component {
     }
 
     render() {
-        const paddingBottomForFlashMessage = 150
-        const yInterpolate = this.state.flashMessageAnimation.interpolate({
-            inputRange: [0, 1],
-            outputRange: [windowHeight, windowHeight - paddingBottomForFlashMessage - this.props.messageComponentHeight],
-            extrapolate: 'clamp'
-        })
+        const paddingBottomForFlashMessage = this.props.offsetY || 150;
+
         const transformOptions = {
-            transform: [{translateY: yInterpolate}]
+            transform: [{translateY: windowHeight - paddingBottomForFlashMessage - this.props.messageComponentHeight}],
+            opacity: this.state.flashMessageAnimation
         }
         const {triggerValue} = this.state;
         const messageComponent = this.props.renderFlashMessageComponent(triggerValue);

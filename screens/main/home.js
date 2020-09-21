@@ -35,6 +35,27 @@ import {
   renderGreetingText,
 } from '../../commonFunctions/diaryFunctions';
 
+const buttonList = [
+  {
+    id: '1',
+    name: 'Medications',
+    path: 'Medication',
+    iconName: 'capsules',
+  },
+  {
+    id: '2',
+    name: 'Rewards',
+    path: 'GameCenter',
+    iconName: 'gift',
+  },
+  {
+    id: '3',
+    name: 'Goals',
+    path: 'Goals',
+    iconName: 'empire',
+  },
+];
+
 // properties
 const username = 'Jimmy';
 const {width, height} = Dimensions.get('window');
@@ -68,6 +89,16 @@ const HomeScreen = (props) => {
   const [carb, setCarb] = React.useState(null);
   const [fat, setFat] = React.useState(null);
   const [stepsTaken, setStepsTaken] = React.useState(null);
+
+  useEffect(() => {
+    //Refresh every 1 minutes
+    setTimeout(() => {
+      setCurrHour(new Date().getHours());
+      checkLogDone(getGreetingFromHour(currHour)).then((response) => {
+        setUncompleteLogs(response.notCompleted);
+      });
+    }, 60000);
+  });
 
   useEffect(() => {
     props.navigation.addListener('focus', () => {
@@ -211,7 +242,7 @@ const HomeScreen = (props) => {
         <View style={{flex: 1}} />
       </View>
       <ScrollView
-        bounces={Platform.OS === 'ios' && false}
+        bounces={false}
         contentContainerStyle={{
           flexGrow: 1,
           backgroundColor: Colors.backgroundColor,
@@ -250,18 +281,6 @@ const HomeScreen = (props) => {
           protein={protein}
           fat={fat}
         />
-        <TouchableOpacity
-          onPress={() => props.navigation.navigate('MedicationPlan')}
-          style={[globalStyles.nextButtonStyle, {marginBottom: 0}]}>
-          <Text style={globalStyles.actionButtonText}>
-            Medication Plan Alpha
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={globalStyles.nextButtonStyle}
-          onPress={() => props.navigation.navigate('FitbitSetup')}>
-          <Text style={globalStyles.actionButtonText}>Fitbit Sync Alpha</Text>
-        </TouchableOpacity>
       </ScrollView>
     </View>
   );

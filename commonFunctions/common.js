@@ -53,8 +53,9 @@ const getTodayDate = () => {
 };
 
 const getLastMinuteFromTodayDate = () => {
-  return Moment(new Date()).format('DD/MM/YYYY') + ' 23:59:30';
-};
+  return Moment(new Date()).add(1, "day").format("DD/MM/YYYY") + " 00:00:00";
+}
+
 
 //check if selected object is empty
 const isEmpty = (obj) => {

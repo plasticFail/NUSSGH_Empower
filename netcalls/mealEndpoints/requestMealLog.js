@@ -19,8 +19,8 @@ const requestFavouriteMealList = async () => {
     return responseJson;
 }
 
-const requestMealLogList = async () => {
-    let response = await fetch(mealListEndpoint, {
+const requestMealLogList = async (startDate, endDate) => {
+    let response = await fetch(mealListEndpoint + `?start=${startDate}&end=${endDate}`, {
         method: 'GET',
         headers: {
             Authorization: 'Bearer ' + (await getToken()),

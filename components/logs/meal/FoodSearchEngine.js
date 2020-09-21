@@ -22,11 +22,13 @@ import FavouriteMealComponent from "./FavouriteMeals";
 // Others
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import requestFoodSearch from '../../../netcalls/foodEndpoints/requestFoodSearch';
-import {requestMealLogList} from "../../../netcalls/mealEndpoints/requestMealLog";
+import {requestMealLogList, requestNutrientConsumption} from "../../../netcalls/mealEndpoints/requestMealLog";
 import globalStyles from "../../../styles/globalStyles";
 import logStyles from "../../../styles/logStyles";
 import Modal from 'react-native-modal';
 import {Colors} from "../../../styles/colors";
+import Moment from 'moment';
+import {getLastMinuteFromTodayDate, getTodayDate} from "../../../commonFunctions/common";
 // third party lib
 
 const AnimatedKeyboardAvoidingView = Animated.createAnimatedComponent(KeyboardAvoidingView);
@@ -59,11 +61,13 @@ export default class FoodSearchEngineScreen extends React.Component {
     this.keyboardWillShowSub = Keyboard.addListener(Platform.OS == 'android' ? 'keyboardDidShow' : 'keyboardWillShow', this.keyboardWillShow);
     this.keyboardWillHideSub = Keyboard.addListener(Platform.OS == 'android' ? "keyboardDidHide" : 'keyboardWillHide', this.keyboardWillHide);
     // Read recently selected food and add them here.
-    requestMealLogList().then(data => {
+    const endDate = Moment(new Date()).add(1, 'day').format('YYYY-MM-DD');
+    const startDate = Moment(new Date()).subtract(7, "days").format('YYYY-MM-DD');
+    requestMealLogList(startDate, endDate).then(data => {
         let unprocessedRecentFoodItems = [];
         let recentFoodItems = [];
         let tracker = new Set();
-        for (const mealLog of data.data) {
+        for (const mealLog of data.logs) {
             unprocessedRecentFoodItems = unprocessedRecentFoodItems.concat(mealLog.foodItems);
         }
         for (const food of unprocessedRecentFoodItems) {

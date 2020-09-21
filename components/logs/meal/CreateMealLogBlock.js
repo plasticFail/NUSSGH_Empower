@@ -15,7 +15,6 @@ import {
 // Third-party lib
 import Moment from 'moment';
 // Components
-import ImageWithBadge from "../../ImageWithBadge";
 import FoodModalContent from "./FoodModalContent";
 import IntegerQuantitySelector from "../../IntegerQuantitySelector";
 // Functions
@@ -23,11 +22,7 @@ import {requestFavouriteMealList} from "../../../netcalls/mealEndpoints/requestM
 // Others such as images, icons.
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import FlashMessage from "../../FlashMessage";
-import {getDefaultMealType, handleSubmitMealLog, isValidMeal} from "../../../commonFunctions/mealLogFunctions";
-import RenderMealItem from "./RenderMealItem";
-import DateSelectionBlock from "../dateSelectionBlock";
-import MealTypeSelectionBlock from "./MealTypeSelectionBlock";
-import {mealAddLogRequest} from "../../../netcalls/requestsLog";
+import {handleSubmitMealLog, isValidMeal} from "../../../commonFunctions/mealLogFunctions";
 import FoodSearchEngineScreen from "./FoodSearchEngine";
 import SuccessDialogue from "../../successDialogue";
 import {food_key} from "../../../commonFunctions/logFunctions";
@@ -264,12 +259,21 @@ export default class CreateMealLogBlock extends React.Component {
                             <Text style={[globalStyles.actionButtonText, {color: '#fff'}]}>Submit</Text>
                         </TouchableHighlight>
                     </View>
-                    <FlashMessage triggerValue={this.state.isFavourite}
+                    <FlashMessage triggerValue={this.state.isFavourite} offsetY={150}
                               renderFlashMessageComponent={(val) => val ?
-                                    <Text style={{color: '#288259', fontSize: 24, fontWeight:'bold'}}>Favourited!</Text> :
-                                  <Text style={{color: 'red', fontSize: 24, fontWeight:'bold'}}>Unfavourited!</Text>
+                                  <View style={{backgroundColor: Colors.leftArrowColor,
+                                      borderRadius: 20, paddingLeft: 15, paddingRight: 15,
+                                      height: 50,
+                                      justifyContent: 'center'}}>
+                                    <Text style={{color: '#fff', fontSize: 24, fontWeight:'bold'}}>Favourited!</Text>
+                                  </View> :
+                                  <View style={{backgroundColor: Colors.alertColor,
+                                      borderRadius: 20, height: 50, paddingLeft: 15, paddingRight: 15,
+                                      justifyContent: 'center'}}>
+                                    <Text style={{color: 'fff', fontSize: 24, fontWeight:'bold'}}>Unfavourited!</Text>
+                                  </View>
                                  }
-                              messageComponentHeight={100}
+                              messageComponentHeight={50}
                     />
                     <Modal visible={modalOpen} coverScreen={true}>
                         {selected &&

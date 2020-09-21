@@ -30,7 +30,8 @@ async function handleSubmitMealLog(mealData) {
                 {
                     value: {...mealData},
                     date: Moment(recordDate).format("YYYY/MM/DD"),
-                    time: Moment(recordDate).format("h:mm a")
+                    time: Moment(recordDate).format("h:mm a"),
+                    hour: Moment(recordDate).format("HH:mm:ss")
                 });
             return resp;
         }

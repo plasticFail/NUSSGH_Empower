@@ -9,7 +9,6 @@ import {
     StyleSheet,
     Alert,
     Dimensions,
-    Modal,
     TouchableHighlight
 } from "react-native";
 // Functions
@@ -19,8 +18,8 @@ import RenderMealItem from './RenderMealItem';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import {unfavouriteMealEndpoint} from '../../../netcalls/urls';
 import FoodRow from "./FoodRow";
-
-Icon.loadFont();
+import logStyles from "../../../styles/logStyles";
+import Modal from 'react-native-modal';
 
 // Props description
 // onSelectMeal is a callback function when a meal is selected
@@ -69,20 +68,16 @@ export default function MealList({filterQuery, meals, options, onMealAdd}) {
             <FlatList data={filtered}
                       keyExtractor={meal => meal._id}
                       style={{flex: 1}}
-                      contentContainerStyle={styles.listContainer} renderItem={({item}) =>
+                      contentContainerStyle={[styles.listContainer]} renderItem={({item}) =>
                 (<RenderMealItem onSelectMeal={() => onMealItemClick(item)} item={item} options={options} />)}
             />
             {
                 openModal &&
-                <Modal visible={openModal} transparent>
-                    <View style={{flex: 1, justifyContent: 'flex-end'}}>
-                        <TouchableOpacity
-                            style={{position: 'absolute', backgroundColor: '#000', opacity: 0.4, height: '100%', width: '100%'}}
-                            onPress={handleCloseModal}/>
+                <Modal style={{margin: 0, justifyContent: 'flex-end'}} onBackdropPress={handleCloseModal} isVisible={openModal} transparent>
                         <View style={{height: '65%', backgroundColor: '#F7F7FB'}}>
-                            <Icon onPress={handleCloseModal} style={{padding: 15}} color='#4DAA50' name='chevron-down' size={34}/>
-                            <ScrollView style={{flex: 1}} contentContainerStyle={{flexGrow: 1}}>
-                                <View>
+                            <ScrollView contentContainerStyle={[{flexGrow: 1}]}>
+                                <View style={[logStyles.bodyPadding]}>
+                                    <Icon onPress={handleCloseModal} style={logStyles.componentMargin} color='#4DAA50' name='chevron-down' size={34}/>
                                     <Text style={{fontSize: 32, fontWeight: "bold"}}>Meal Info</Text>
                                     <Text style={{fontSize: 24, fontWeight: "bold", paddingTop: '3%'}}>{selectedMeal.mealName}</Text>
                                     <Text style={{fontSize: 24, fontWeight: "bold", color: '#7d7d7d', paddingTop: '3%'}}>Meal Includes</Text>
@@ -102,7 +97,6 @@ export default function MealList({filterQuery, meals, options, onMealAdd}) {
                                 </TouchableHighlight>
                             </View>
                         </View>
-                    </View>
                 </Modal>
             }
         </React.Fragment>
