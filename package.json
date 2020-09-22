@@ -36,6 +36,7 @@
     "react-native-screens": "^2.9.0",
     "react-native-status-bar-height": "^2.5.0",
     "react-native-svg": "^12.1.0",
+    "react-native-svg-charts": "^5.4.0",
     "react-native-svg-transformer": "^0.14.3",
     "react-native-vector-icons": "^7.0.0",
     "react-native-webview": "^10.7.0",

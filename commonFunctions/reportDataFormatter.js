@@ -126,6 +126,21 @@ function generateXAxisLabels(filterKey) {
     return result;
 }
 
+function getBinCount(data, keyExtractor, binQuantityAccessor) {
+    let result = {};
+    for (const d of data) {
+        const key = keyExtractor(d);
+        if (!(key in result)) {
+            result[key] = 0;
+        }
+        result[key] += binQuantityAccessor(d);
+    }
+    if (Object.keys(result).length === 0 && result.constructor === Object) {
+        return -1;
+    }
+    return result;
+}
+
 function generateYAxisValues(stepSize, startsFrom, maxY) {
     let res = [];
     for (let i = startsFrom; i <= maxY; i = i + stepSize){
@@ -153,4 +168,4 @@ function getYStepSize(minY, maxY) {
     return stepSize;
 }
 
-export {filterToDayData, filterToWeekData, partitionDataPoints, squashToXY, processData, generateYAxisValues, generateXAxisLabels, formatY, getYStepSize};
+export {filterToDayData, filterToWeekData, partitionDataPoints, getBinCount, squashToXY, processData, generateYAxisValues, generateXAxisLabels, formatY, getYStepSize};

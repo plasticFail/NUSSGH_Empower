@@ -20,6 +20,9 @@ import {getLastMinuteFromTodayDate} from "../../commonFunctions/common";
 import Moment from 'moment';
 import {filterToDayData} from "../../commonFunctions/reportDataFormatter";
 import {getBloodGlucoseLogs, getMedicationLogs, getWeightLogs} from "../../netcalls/requestsLog";
+import {MedicationTable} from "../../components/dashboard/reports/MedicationTable";
+import NutritionIntakeCard from "../../components/dashboard/todayOverview/cards/NutritionIntakeCard";
+import {NutritionPie} from "../../components/dashboard/reports/NutritionPie";
 
 const iconProps = {
   width: 30,
@@ -114,14 +117,22 @@ const ReportsScreen = (props) => {
                        width={width}
                        height={300} />
         ) : tabName === FOOD_INTAKE_KEY ? (
-            <BarChart data={foodIntakeData} filterKey={filterKey}
-                      xExtractor={d=>d.date}
-                      yExtractor={d=>d.nutrients.energy.amount}
-                      defaultMaxY={2500}
-                      width={width}
-                      height={300} />
-        ) : tabName === MEDICATION_KEY ? null
-          : tabName === WEIGHT_KEY ? (
+            <React.Fragment>
+              <BarChart data={foodIntakeData} filterKey={filterKey}
+                        xExtractor={d=>d.date}
+                        yExtractor={d=>d.nutrients.energy.amount}
+                        defaultMaxY={2500}
+                        width={width}
+                        height={300} />
+              <NutritionPie data={foodIntakeData} filterKey={filterKey} pieKeys={['carbohydrate', 'total-fat', 'protein']} />
+            </React.Fragment>
+        ) : tabName === MEDICATION_KEY ? (
+            <MedicationTable
+                data={medConsumptionData}
+                style={{marginLeft: '4%', marginRight: '4%'}}
+                filterKey={filterKey}
+                width={width} height={height} />
+        ) : tabName === WEIGHT_KEY ? (
                 <LineChart data={weightData} filterKey={filterKey} data={weightData}
                            width={width} height={300}
                            xExtractor={d=>d.record_date}
@@ -129,7 +140,7 @@ const ReportsScreen = (props) => {
                            defaultMaxY={14}/>
         )
           : tabName === ACTIVITY_KEY ? (
-                <BarChart data={weightData} filterKey={filterKey} width={width} height={300} />
+                null && <BarChart data={weightData} filterKey={filterKey} width={width} height={300} />
           ) : null
         }
       </View>
