@@ -57,6 +57,32 @@ const removeMed4All = (selectedItem, initialList) => {
   return original;
 };
 
+//prepares data received from api with diff keys
+const prepareDataFromAPI = (data) => {
+  let newObj = {};
+  for (var x of Object.keys(data)) {
+    let list = renameKey(data[x]);
+    newObj[x] = {
+      selected: true,
+      marked: true,
+      medicationList: list,
+    };
+  }
+  return newObj;
+};
+
+const renameKey = (list) => {
+  list = list.map((obj) => {
+    obj['drugName'] = obj['medication'];
+    obj['perDay'] = obj['per_day']; //assign new key
+    delete obj['medication']; //delete old key
+    delete obj['per_day'];
+    return obj;
+  });
+
+  return list;
+};
+
 //check if in medicationList array medicine name exist*
 const containsObject = (obj, list) => {
   var i;
@@ -68,4 +94,4 @@ const containsObject = (obj, list) => {
   return false;
 };
 
-export {addMedicine, removeMed4Date, removeMed4All};
+export {addMedicine, removeMed4Date, removeMed4All, prepareDataFromAPI};

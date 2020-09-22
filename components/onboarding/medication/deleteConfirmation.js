@@ -14,6 +14,7 @@ const DeleteConfirmation = (props) => {
       console.log(
         'From: viewMed4Day: removing med from this date in existing plan',
       );
+      closeSelf();
     } else {
       closeSelf();
       closeParent();
@@ -32,6 +33,7 @@ const DeleteConfirmation = (props) => {
       console.log(
         'From: viewMed4Day: removing med from all dates in existing plan',
       );
+      closeSelf();
     } else {
       closeSelf();
       closeParent();

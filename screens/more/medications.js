@@ -17,6 +17,7 @@ import {
   getMed4CurrentMonth,
 } from '../../netcalls/requestsMedPlan';
 import Medication4Day from '../../components/medication/medication4Day';
+import {prepareDataFromAPI} from '../../commonFunctions/medicationFunction';
 
 const MedicationScreen = (props) => {
   const [medicationList, setMedicationList] = useState({});
@@ -34,28 +35,7 @@ const MedicationScreen = (props) => {
   }, []);
 
   const prepareData = (data) => {
-    let newObj = {};
-    for (var x of Object.keys(data)) {
-      let list = renameKey(data[x]);
-      newObj[x] = {
-        selected: true,
-        marked: true,
-        medicationList: list,
-      };
-    }
-    setMedicationList(newObj);
-  };
-
-  const renameKey = (list) => {
-    list = list.map((obj) => {
-      obj['drugName'] = obj['medication'];
-      obj['perDay'] = obj['per_day']; //assign new key
-      delete obj['medication']; //delete old key
-      delete obj['per_day'];
-      return obj;
-    });
-
-    return list;
+    setMedicationList(prepareDataFromAPI(data));
   };
 
   return (

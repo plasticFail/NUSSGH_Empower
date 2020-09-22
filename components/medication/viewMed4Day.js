@@ -23,7 +23,6 @@ import DeleteConfirmation from '../onboarding/medication/deleteConfirmation';
 const ViewMed4Day = (props) => {
   const {isVisible, closeModal} = props;
   const {medicationList, date} = props;
-  const {addedMed} = props; // from addPlan
   const dateString = moment(date.dateString, 'YYYY-MM-DD').format(
     'Do MMMM  YYYY',
   );
