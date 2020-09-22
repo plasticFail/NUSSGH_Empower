@@ -26,6 +26,7 @@ import {
   onboard_marginEnd,
   normalTextFontSize,
 } from '../../../styles/variables';
+import ViewMed4Day from '../../../components/medication/viewMed4Day';
 
 Ionicons.loadFont();
 
@@ -38,6 +39,9 @@ const AddPlan = (props) => {
   const [selectedMedicine, setSelectedMedicine] = useState({});
   const [selectedMedicineName, setSelectedMedicineName] = useState('');
   const [searchVisible, setSearchVisible] = useState(false);
+
+  //navigate from existing medplan
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     formatSelectionString();
@@ -89,10 +93,23 @@ const AddPlan = (props) => {
     } else {
       setParameter();
       setMedicine2Obj();
-      props.navigation.navigate('MedicationPlan', {
-        list: selectedDates41,
-        parent: 'addPlan',
-      });
+      if (props.route.params != null) {
+        if (props.route.params.fromParent === 'fromExistingPlan') {
+          console.log('adding from existing plan');
+          setShowModal(true);
+        } else {
+          props.navigation.navigate('MedicationPlan', {
+            list: selectedDates41,
+            parent: 'addPlan',
+          });
+        }
+      } else {
+        //needed*
+        props.navigation.navigate('MedicationPlan', {
+          list: selectedDates41,
+          parent: 'addPlan',
+        });
+      }
     }
   };
 
@@ -226,6 +243,19 @@ const AddPlan = (props) => {
           closeModal={closeSearchModal}
           selectedMedicine={selectedMedicine}
           setSelectedMedicine={setSelectedMedicine}
+        />
+      ) : null}
+      {/*Navigating from adding existing medplan*/}
+      {showModal ? (
+        <ViewMed4Day
+          isVisible={showModal}
+          closeModal={() => {
+            setShowModal(false);
+            props.navigation.navigate('Medication');
+          }}
+          medicationList={props.route.params.medList}
+          date={props.route.params.dateValue}
+          addedMed={selectedDates41}
         />
       ) : null}
     </View>

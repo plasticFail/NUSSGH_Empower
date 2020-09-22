@@ -72,4 +72,23 @@ const postPlan = async (data) => {
   }
 };
 
-export {prepareData, postPlan};
+const getMedication4DateRange = async (start, end) => {
+  const string = medplanAdd + '?start=' + start + '&end=' + end;
+  try {
+    let response = await fetch(string, {
+      method: 'GET',
+      headers: {
+        Authorization: 'Bearer ' + (await getToken()),
+        Accept: 'application/json',
+        'Content-type': 'application/json',
+      },
+    });
+    let responseJson = await response.json();
+    console.log('get medication for date range : ' + responseJson);
+    return responseJson;
+  } catch (error) {
+    Alert.alert('Network Error', 'Try Again Later', [{text: 'Got It'}]);
+  }
+};
+
+export {prepareData, postPlan, getMedication4DateRange};

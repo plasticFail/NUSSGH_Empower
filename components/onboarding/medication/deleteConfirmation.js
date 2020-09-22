@@ -5,30 +5,42 @@ import {useNavigation} from '@react-navigation/native';
 
 //calling removeObj from askAdd.js
 const DeleteConfirmation = (props) => {
-  const {medication, date} = props;
+  const {medication, date, parent} = props;
   const {closeSelf, closeParent} = props;
   const navigation = useNavigation();
 
   const handleRemoveDate = () => {
-    closeSelf();
-    closeParent();
-    navigation.navigate('MedicationPlan', {
-      dateString: date.dateString,
-      type: 'justThis',
-      medication: medication,
-      list: {},
-      parent: 'deleteConfirmation',
-    });
+    if (parent === 'fromExistingPlan') {
+      console.log(
+        'From: viewMed4Day: removing med from this date in existing plan',
+      );
+    } else {
+      closeSelf();
+      closeParent();
+      navigation.navigate('MedicationPlan', {
+        dateString: date.dateString,
+        type: 'justThis',
+        medication: medication,
+        list: {},
+        parent: 'deleteConfirmation',
+      });
+    }
   };
 
   const handleRemoveFromAll = () => {
-    closeSelf();
-    closeParent();
-    navigation.navigate('MedicationPlan', {
-      type: 'forAll',
-      medication: medication,
-      parent: 'deleteConfirmation',
-    });
+    if (parent === 'fromExistingPlan') {
+      console.log(
+        'From: viewMed4Day: removing med from all dates in existing plan',
+      );
+    } else {
+      closeSelf();
+      closeParent();
+      navigation.navigate('MedicationPlan', {
+        type: 'forAll',
+        medication: medication,
+        parent: 'deleteConfirmation',
+      });
+    }
   };
 
   return (
