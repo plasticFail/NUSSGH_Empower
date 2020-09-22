@@ -117,7 +117,9 @@ const HomeScreen = (props) => {
 
   const initLogs = () => {
     checkLogDone(getGreetingFromHour(currHour)).then((response) => {
-      setUncompleteLogs(response.notCompleted);
+      if (response != null) {
+        setUncompleteLogs(response.notCompleted);
+      }
     });
 
     getEntry4Day(today_date)
@@ -165,14 +167,12 @@ const HomeScreen = (props) => {
             setBgMiss(true);
             setBgl(null);
           }
-
           if (weightLogs.length > 0) {
-            averageWeight =
-              Math.round((averageWeight * 100) / weightLogs.length) / 100;
-            setWeight(averageWeight);
+            setWeight(weightLogs[weightLogs.length - 1].weight);
           } else {
-            setWeight(null);
+            setWeight(0);
           }
+
           setStepsTaken(steps);
 
           //for med data log

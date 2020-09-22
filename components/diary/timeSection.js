@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     marginTop: '3%',
   },
   border: {
-    borderWidth: 0.4,
+    borderWidth: 0.8,
     borderColor: Colors.lastLogValueColor,
     margin: '3%',
   },
