@@ -114,6 +114,10 @@ const HomeScreen = (props) => {
   }, []);
 
   const initLogs = () => {
+    checkLogDone(getGreetingFromHour(currHour)).then((response) => {
+      setUncompleteLogs(response.notCompleted);
+    });
+
     getEntry4Day(today_date)
       .then((data) => {
         if (data != undefined) {
