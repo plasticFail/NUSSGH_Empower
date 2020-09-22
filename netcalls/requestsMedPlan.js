@@ -1,6 +1,7 @@
 import {medplanAdd} from './urls';
 import {getToken} from '../storage/asyncStorageFunctions';
 import {Alert} from 'react-native';
+import moments from 'moment';
 
 const prepareData = (data) => {
   let objArr = [];
@@ -91,4 +92,18 @@ const getMedication4DateRange = async (start, end) => {
   }
 };
 
-export {prepareData, postPlan, getMedication4DateRange};
+const getMed4CurrentMonth = async () => {
+  let today = new Date();
+  let lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+  let start = moments(today).format('YYYY-MM-01');
+  let end = moments(lastDayOfMonth).format('YYYY-MM-DD');
+
+  let data = await getMedication4DateRange(start, end);
+  if (data != null) {
+    return data;
+  } else {
+    return {};
+  }
+};
+
+export {prepareData, postPlan, getMedication4DateRange, getMed4CurrentMonth};

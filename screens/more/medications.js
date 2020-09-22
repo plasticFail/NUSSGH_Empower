@@ -12,23 +12,21 @@ import LeftArrowBtn from '../../components/logs/leftArrowBtn';
 import CalendarMedicationDay from '../../components/onboarding/medication/calendarMedicationDay';
 //style
 import {Colors} from '../../styles/colors';
-import {getMedication4DateRange} from '../../netcalls/requestsMedPlan';
+import {
+  getMedication4DateRange,
+  getMed4CurrentMonth,
+} from '../../netcalls/requestsMedPlan';
 import Medication4Day from '../../components/medication/medication4Day';
 
 const MedicationScreen = (props) => {
-  let today = new Date();
-  let lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-  let start = moments(today).format('YYYY-MM-01');
-  let end = moments(lastDayOfMonth).format('YYYY-MM-DD');
-
   const [medicationList, setMedicationList] = useState({});
 
   useEffect(() => {
     props.navigation.addListener('focus', () => {
-      getMedication4DateRange(start, end)
-        .then((data) => {
-          if (data != null) {
-            prepareData(data);
+      getMed4CurrentMonth()
+        .then((response) => {
+          if (response != null) {
+            prepareData(response);
           }
         })
         .catch((err) => console.log(err));

@@ -37,7 +37,6 @@ const ViewMed4Day = (props) => {
     navigation.navigate('AddPlan', {
       fromAddPlanDate: date.dateString,
       fromParent: 'fromExistingPlan',
-      medList: medicationList,
       dateValue: date,
     });
   };

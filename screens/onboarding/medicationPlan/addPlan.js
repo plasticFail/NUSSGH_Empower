@@ -27,6 +27,7 @@ import {
   normalTextFontSize,
 } from '../../../styles/variables';
 import ViewMed4Day from '../../../components/medication/viewMed4Day';
+import {addMed2Plan} from '../../../netcalls/requestsMedPlan';
 
 Ionicons.loadFont();
 
@@ -92,7 +93,7 @@ const AddPlan = (props) => {
       setMedicine2Obj();
       if (props.route.params != null) {
         if (props.route.params.fromParent === 'fromExistingPlan') {
-          console.log('adding from existing plan');
+          console.log('adding from existing plan ');
           Alert.alert('Medication Added', '', [
             {
               text: 'Got It',

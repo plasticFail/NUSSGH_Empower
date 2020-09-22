@@ -12,6 +12,11 @@ import {prepareData, postPlan} from '../../../netcalls/requestsMedPlan';
 //styles
 import {Colors} from '../../../styles/colors';
 import globalStyles from '../../../styles/globalStyles';
+import {
+  addMedicine,
+  removeMed4Date,
+  removeMed4All,
+} from '../../../commonFunctions/medicationFunction';
 
 Ionicons.loadFont();
 
@@ -58,25 +63,12 @@ class AskAdd extends Component {
   //loop through the current selectDatesForAll to see if medicine exist for day
   //if not, add the medication*
   onReturn = (data) => {
-    let object = this.state.selectedDates4All;
-    for (var x of Object.keys(data)) {
-      if (!Object.keys(object).includes(x)) {
-        console.log('no medicine for this date, adding medicine');
-        object[x] = {
-          selected: true,
-          marked: true,
-          medicationList: [data[x].medicine],
-        };
-      } else {
-        //there is an existing date with medication
-        //check if medication exist in medicationlist for that date, if not add
-        if (!this.containsObject(data[x].medicine, object[x].medicationList)) {
-          object[x].medicationList.push(data[x].medicine);
-        }
-      }
-    }
     //since calendar's markedDates property is an object , enforce new object creation**
-    this.setState({selectedDates4All: JSON.parse(JSON.stringify(object))});
+    this.setState({
+      selectedDates4All: JSON.parse(
+        JSON.stringify(addMedicine(data, this.state.selectedDates4All)),
+      ),
+    });
     this.checkCalendar();
   };
 
@@ -122,42 +114,30 @@ class AskAdd extends Component {
 
   //remove medication obj just for this date
   removeObj4Date = (dateString, selectedItem) => {
-    let original = this.state.selectedDates4All;
-    for (var x of Object.keys(original)) {
-      if (x === dateString) {
-        console.log('removing for one date');
-        let medList = original[x].medicationList;
-        let removeIndex = medList
-          .map(function (item) {
-            return item.drugName;
-          })
-          .indexOf(selectedItem.drugName);
-        medList.splice(removeIndex, 1);
-        console.log(medList);
-      }
-    }
-    this.setState({selectedDates4All: JSON.parse(JSON.stringify(original))});
+    this.setState({
+      selectedDates4All: JSON.parse(
+        JSON.stringify(
+          removeMed4Date(
+            dateString,
+            selectedItem,
+            this.state.selectedDates4All,
+          ),
+        ),
+      ),
+    });
     this.checkCalendar();
   };
 
   removeForAllDates = (selectedItem) => {
     console.log('removing ' + selectedItem.drugName + ' for all dates');
-    let original = this.state.selectedDates4All;
-    for (var x of Object.keys(original)) {
-      let medList = original[x].medicationList;
-      //check if selected medication exist for that date
-      if (this.containsObject(selectedItem, medList)) {
-        console.log('medicine exist in ' + x);
-        let removeIndex = medList
-          .map(function (item) {
-            return item.drugName;
-          })
-          .indexOf(selectedItem.drugName);
-        medList.splice(removeIndex, 1);
-        console.log(medList);
-      }
-    }
-    this.setState({selectedDates4All: JSON.parse(JSON.stringify(original))});
+
+    this.setState({
+      selectedDates4All: JSON.parse(
+        JSON.stringify(
+          removeMed4All(selectedItem, this.state.selectedDates4All),
+        ),
+      ),
+    });
     this.checkCalendar();
   };
 
