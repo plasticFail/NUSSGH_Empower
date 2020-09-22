@@ -95,7 +95,9 @@ const HomeScreen = (props) => {
     setTimeout(() => {
       setCurrHour(new Date().getHours());
       checkLogDone(getGreetingFromHour(currHour)).then((response) => {
-        setUncompleteLogs(response.notCompleted);
+        if (response != null) {
+          setUncompleteLogs(response.notCompleted);
+        }
       });
     }, 60000);
   });
@@ -104,7 +106,7 @@ const HomeScreen = (props) => {
     props.navigation.addListener('focus', () => {
       checkLogDone(getGreetingFromHour(currHour))
         .then((response) => {
-          if (response != undefined) {
+          if (response != null) {
             setUncompleteLogs(response.notCompleted);
           }
         })

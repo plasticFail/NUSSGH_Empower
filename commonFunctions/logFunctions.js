@@ -96,8 +96,10 @@ const checkLogDone = async (period) => {
       notCompleted.push(med_key);
     }
 
-    if (checkLast7Day(weight_data)) {
-      completed.push(weight_key);
+    if (weight_data != null) {
+      if (checkLast7Day(weight_data)) {
+        completed.push(weight_key);
+      }
     } else {
       notCompleted.push(weight_key);
     }
