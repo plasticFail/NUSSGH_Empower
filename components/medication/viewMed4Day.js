@@ -32,14 +32,6 @@ const ViewMed4Day = (props) => {
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [toDelete, setToDelete] = useState({});
 
-  //redirect back from addPlan - get the added medicine
-  useEffect(() => {
-    if (addedMed != null) {
-      console.log('-------');
-      console.log(addedMed);
-    }
-  });
-
   const handleAdd = () => {
     closeModal();
     navigation.navigate('AddPlan', {
@@ -122,6 +114,14 @@ const ViewMed4Day = (props) => {
               style={{margin: '2%'}}
             />
             <Text style={styles.addbutton}>Add Medication</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={{flex: 1}} />
+        <View style={[globalStyles.buttonContainer]}>
+          <TouchableOpacity
+            style={globalStyles.nextButtonStyle}
+            onPress={closeModal}>
+            <Text style={globalStyles.actionButtonText}>Done</Text>
           </TouchableOpacity>
         </View>
       </View>

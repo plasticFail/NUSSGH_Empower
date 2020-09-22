@@ -40,9 +40,6 @@ const AddPlan = (props) => {
   const [selectedMedicineName, setSelectedMedicineName] = useState('');
   const [searchVisible, setSearchVisible] = useState(false);
 
-  //navigate from existing medplan
-  const [showModal, setShowModal] = useState(false);
-
   useEffect(() => {
     formatSelectionString();
   }, [selectedDates41]);
@@ -96,7 +93,12 @@ const AddPlan = (props) => {
       if (props.route.params != null) {
         if (props.route.params.fromParent === 'fromExistingPlan') {
           console.log('adding from existing plan');
-          setShowModal(true);
+          Alert.alert('Medication Added', '', [
+            {
+              text: 'Got It',
+              onPress: () => props.navigation.navigate('Medication'),
+            },
+          ]);
         } else {
           props.navigation.navigate('MedicationPlan', {
             list: selectedDates41,
@@ -243,19 +245,6 @@ const AddPlan = (props) => {
           closeModal={closeSearchModal}
           selectedMedicine={selectedMedicine}
           setSelectedMedicine={setSelectedMedicine}
-        />
-      ) : null}
-      {/*Navigating from adding existing medplan*/}
-      {showModal ? (
-        <ViewMed4Day
-          isVisible={showModal}
-          closeModal={() => {
-            setShowModal(false);
-            props.navigation.navigate('Medication');
-          }}
-          medicationList={props.route.params.medList}
-          date={props.route.params.dateValue}
-          addedMed={selectedDates41}
         />
       ) : null}
     </View>
