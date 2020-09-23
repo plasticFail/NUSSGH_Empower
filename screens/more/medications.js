@@ -9,14 +9,14 @@ import moments from 'moment';
 import {Calendar} from 'react-native-calendars';
 //components
 import LeftArrowBtn from '../../components/logs/leftArrowBtn';
-import CalendarMedicationDay from '../../components/onboarding/medication/calendarMedicationDay';
+import Medication4Day from '../../components/medication/medication4Day';
 //style
 import {Colors} from '../../styles/colors';
 import {
   getMedication4DateRange,
   getMed4CurrentMonth,
 } from '../../netcalls/requestsMedPlan';
-import Medication4Day from '../../components/medication/medication4Day';
+
 import {prepareDataFromAPI} from '../../commonFunctions/medicationFunction';
 
 const MedicationScreen = (props) => {
@@ -60,18 +60,18 @@ const MedicationScreen = (props) => {
           'stylesheet.calendar.header': {
             header: {
               flexDirection: 'row',
-              justifyContent: 'center',
-              marginTop: 6,
+              marginTop: '2%',
               alignItems: 'center',
+              alignSelf: 'center',
             },
             headerContainer: {
               width: '80%',
               flexDirection: 'row',
+              justifyContent: 'center',
             },
             monthText: {
               fontSize: 20,
               fontFamily: 'SFProDisplay-Bold',
-              textAlign: 'center',
             },
           },
           arrowColor: Colors.lastLogValueColor,

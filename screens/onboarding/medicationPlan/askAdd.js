@@ -199,16 +199,17 @@ class AskAdd extends Component {
                 'stylesheet.calendar.header': {
                   header: {
                     flexDirection: 'row',
-                    marginTop: 6,
+                    marginTop: '2%',
                     alignItems: 'center',
                     marginStart: '2%',
+                    marginBottom: '2%',
                   },
                   headerContainer: {
                     width: '80%',
                     flexDirection: 'row',
                   },
                   monthText: {
-                    fontSize: 25,
+                    fontSize: 20,
                     fontFamily: 'SFProDisplay-Bold',
                     textAlign: 'center',
                   },

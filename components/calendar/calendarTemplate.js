@@ -53,7 +53,7 @@ const CalendarTemplate = (props) => {
               flexDirection: 'row',
             },
             monthText: {
-              fontSize: 25,
+              fontSize: 20,
               fontFamily: 'SFProDisplay-Bold',
               textAlign: 'center',
             },
@@ -62,7 +62,7 @@ const CalendarTemplate = (props) => {
         }}
       />
       <TouchableOpacity
-        style={{position: 'absolute', top: '31%', left: '70%'}}
+        style={{position: 'absolute', top: '31%', left: '75%'}}
         onPress={() => selectAll()}>
         <Text style={styles.selectAllText}>Select All</Text>
       </TouchableOpacity>
@@ -75,7 +75,7 @@ export default CalendarTemplate;
 //comment
 const styles = StyleSheet.create({
   selectAllText: {
-    fontSize: 25,
+    fontSize: 20,
     fontFamily: 'SFProDisplay-Bold',
     color: '#aad326',
   },

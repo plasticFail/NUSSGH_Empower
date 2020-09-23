@@ -115,13 +115,15 @@ const DiaryScreen = (props) => {
               'stylesheet.calendar.header': {
                 header: {
                   flexDirection: 'row',
-                  marginTop: 6,
+                  marginTop: '2%',
                   alignItems: 'center',
+                  alignSelf: 'center',
                 },
                 headerContainer: {
-                  width: '85%',
+                  width: '80%',
                   flexDirection: 'row',
                   justifyContent: 'center',
+                  alignSelf: 'center',
                 },
                 monthText: {
                   fontSize: 20,
