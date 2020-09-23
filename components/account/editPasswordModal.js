@@ -1,10 +1,10 @@
 import React, {useState, useEffect} from 'react';
 import {
   View,
-  StyleSheet,
+  TouchableOpacity,
   TextInput,
   KeyboardAvoidingView,
-  Dimensions,
+  Text,
   Alert,
   Platform,
 } from 'react-native';
@@ -20,6 +20,9 @@ import {
   storePassword,
 } from '../../storage/asyncStorageFunctions';
 import {resetPassword} from '../../netcalls/requestsPasswordReset';
+import globalStyles from '../../styles/globalStyles';
+import LeftArrowBtn from '../logs/leftArrowBtn';
+import PasswordStrengthMeter from '../passwordStrengthMeter';
 
 const EditPasswordModal = (props) => {
   const [currentPassword, setCurrentPassword] = useState('');
@@ -48,20 +51,41 @@ const EditPasswordModal = (props) => {
     }
   };
 
-  const handleSubmit = () => {
-    if (inputCurrent != currentPassword) {
-      Alert.alert(
-        'Invalid Password',
-        'Please make sure you enter your current password correctly.',
-        [
-          {
-            text: 'Got It',
-          },
-        ],
-        {cancelable: false},
-      );
-    }
+  const showSubmit = () => {
     if (
+      checkInput() === '' &&
+      currentPassword &&
+      strong &&
+      newPassword &&
+      confirmPassword
+    ) {
+      return true;
+    }
+    return false;
+  };
+
+  const checkInput = () => {
+    if (inputCurrent) {
+      if (inputCurrent != currentPassword) {
+        return 'Please make sure you enter your current password correctly.';
+      }
+    }
+    if (newPassword) {
+      if (!strong) {
+        return 'Please make sure new password is of at least strength fair';
+      }
+    }
+    if (newPassword && confirmPassword) {
+      if (newPassword != confirmPassword) {
+        return 'New passwords does not match';
+      }
+    }
+    return '';
+  };
+
+  const handleSubmit = () => {
+    if (
+      checkInput() === '' &&
       inputCurrent === currentPassword &&
       newPassword != '' &&
       confirmPassword != '' &&
@@ -88,48 +112,6 @@ const EditPasswordModal = (props) => {
         storePassword(newPassword);
       });
     }
-    if (!strong) {
-      Alert.alert(
-        'Weak Password',
-        'Please make sure new password is of at least strength fair',
-        [
-          {
-            text: 'Got It',
-          },
-        ],
-        {cancelable: false},
-      );
-    }
-
-    if (newPassword != confirmPassword) {
-      Alert.alert(
-        'Wrong password',
-        'Please make sure your new password inputs are correct.',
-        [
-          {
-            text: 'Got It',
-          },
-        ],
-        {cancelable: false},
-      );
-    }
-
-    if (
-      confirmPassword === '' ||
-      newPassword === '' ||
-      currentPassword === ''
-    ) {
-      Alert.alert(
-        'Invalid Inputs',
-        'Please make sure all fields are filled in.',
-        [
-          {
-            text: 'Got It',
-          },
-        ],
-        {cancelable: false},
-      );
-    }
   };
 
   return (
@@ -138,38 +120,56 @@ const EditPasswordModal = (props) => {
       animationIn="slideInUp"
       onBackdropPress={props.close}
       onBackButtonPress={props.close}
-      style={{justifyContent: 'flex-end'}}>
-      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : null}>
-        <View style={{backgroundColor: 'white'}}>
-          <Header title={'Change Password'} closeModal={props.close} />
+      style={{margin: 0}}>
+      <View style={globalStyles.editPageContainer}>
+        <View style={globalStyles.menuBarContainer}>
+          <LeftArrowBtn close={props.close} />
+        </View>
+        {props.parent === 'edit' ? (
+          <Text style={globalStyles.pageHeader}>Edit Password</Text>
+        ) : (
+          <Text style={globalStyles.pageHeader}>Change Password</Text>
+        )}
+        <Text style={[globalStyles.pageSubDetails, {fontSize: 18}]}>
+          Please enter the password that you wish to change to:
+        </Text>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : null}>
           <TextInput
-            style={styles.inputBox}
+            style={globalStyles.editInputBox}
             placeholder="Current Password"
             placeholderTextColor="#a1a3a0"
             secureTextEntry={true}
             onChangeText={setInputCurrent}
           />
-          <SetPassword
-            setPassword={setPassword}
-            setPassword2={setConfirmPassword}
-            checkPassword={handleSubmit}
+          <PasswordStrengthMeter setPassword={setPassword} />
+          <TextInput
+            style={globalStyles.editInputBox}
+            placeholder="Confirm New Password"
+            placeholderTextColor="#a1a3a0"
+            secureTextEntry={true}
+            onChangeText={setConfirmPassword}
           />
-        </View>
-      </KeyboardAvoidingView>
+          <Text style={[globalStyles.alertText, {marginStart: '4%'}]}>
+            {checkInput()}
+          </Text>
+        </KeyboardAvoidingView>
+      </View>
+      <View style={globalStyles.buttonContainer}>
+        {showSubmit() ? (
+          <TouchableOpacity
+            style={globalStyles.submitButtonStyle}
+            onPress={() => handleSubmit()}>
+            <Text style={globalStyles.actionButtonText}>Submit</Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity style={globalStyles.skipButtonStyle}>
+            <Text style={globalStyles.actionButtonText}>Submit</Text>
+          </TouchableOpacity>
+        )}
+      </View>
     </Modal>
   );
 };
 
 export default EditPasswordModal;
-
-const styles = StyleSheet.create({
-  inputBox: {
-    backgroundColor: '#e2e8ee',
-    marginVertical: 10,
-    padding: '3%',
-    marginTop: '7%',
-    borderRadius: 9.5,
-    marginStart: '2%',
-    marginEnd: '2%',
-  },
-});

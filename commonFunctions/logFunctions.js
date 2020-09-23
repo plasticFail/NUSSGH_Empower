@@ -105,7 +105,6 @@ const checkLogDone = async (period) => {
     }
   } catch (e) {
     console.error(e);
-    return Alert.alert('Network Error', '', [{text: 'Try again later'}]);
     //for now temporary push food to not done
   }
   return {

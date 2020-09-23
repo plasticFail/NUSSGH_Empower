@@ -1,39 +1,41 @@
 import React from 'react';
-import {View, StyleSheet, Text, Image} from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
 //third party library
 import Entypo from 'react-native-vector-icons/Entypo';
 //component
 import EditPasswordModal from './editPasswordModal';
 import EditPhoneModal from './editPhoneModal';
+import {Colors} from '../../styles/colors';
 
 Entypo.loadFont();
 
 const Clickable = (props) => {
-  const {heading, content, click} = props;
+  const {heading, content} = props;
+  const {openModal} = props;
 
   return (
     <>
-      {click == true ? (
-        <TouchableOpacity
-          containerStyle={styles.container}
-          onPress={props.openModal}>
-          <View style={styles.view}>
+      <TouchableOpacity containerStyle={styles.container}>
+        <View style={styles.view}>
+          <View style={{flex: 1}}>
             <Text style={styles.headingText}>{heading}</Text>
             <Text style={styles.contentText}>{content}</Text>
-            <Entypo name="chevron-right" size={20} />
           </View>
-        </TouchableOpacity>
-      ) : (
-        <View style={[styles.container, styles.view]}>
-          <Text style={styles.headingText}>{heading}</Text>
-          <Text style={styles.contentText}>{content}</Text>
+          <TouchableOpacity
+            onPress={() => openModal()}
+            style={{alignSelf: 'flex-end'}}>
+            <Entypo name="edit" size={25} color={'#aad326'} />
+          </TouchableOpacity>
         </View>
-      )}
-      <EditPasswordModal
-        visible={props.modalVisible}
-        close={props.closeModal}
-      />
+      </TouchableOpacity>
+      {props.modalVisible ? (
+        <EditPasswordModal
+          visible={props.modalVisible}
+          close={props.closeModal}
+          parent={'edit'}
+        />
+      ) : null}
+
       <EditPhoneModal
         visible={props.phoneModalVisible}
         close={props.closeModal}
@@ -46,20 +48,24 @@ export default Clickable;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#f5f5f5',
-    padding: '5%',
-    marginTop: '5%',
+    marginStart: '5%',
     width: '100%',
   },
-  view: {flexDirection: 'row', justifyContent: 'space-around'},
+  view: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    padding: '2%',
+    borderTopWidth: 0.5,
+    borderColor: Colors.lastLogValueColor,
+    margin: '1%',
+  },
   headingText: {
-    fontWeight: '700',
-    fontSize: 16,
-    flex: 1,
+    fontFamily: 'SFProDisplay-Regular',
+    fontSize: 14,
   },
   contentText: {
-    alignSelf: 'flex-end',
-    fontSize: 16,
+    fontSize: 18,
     marginRight: '3%',
+    fontFamily: 'SFProDisplay-Regular',
   },
 });
