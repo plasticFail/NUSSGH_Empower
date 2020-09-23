@@ -241,22 +241,24 @@ const handleSubmitMedication = async (date, selectedMedicationList) => {
   for (let x of selectedMedicationList) {
     x.recordDate = Moment(date).format('DD/MM/YYYY HH:mm:ss');
   }
-  console.log(selectedMedicationList);
 
   if (await medicationAddLogRequest(selectedMedicationList)) {
     let med_data = await getLastMedicationLog();
-    if (
-      Moment(date).format('YYYY/MM/DD') > med_data.date ||
-      (Moment(date).format('YYYY/MM/DD') === med_data.date &&
-        Moment(date).format('HH:mm') > med_data.hour)
-    ) {
-      storeLastMedicationLog({
-        value: selectedMedicationList,
-        date: Moment(date).format('YYYY/MM/DD'),
-        hour: Moment(date).format('HH:mm'), //tweaked
-        dateString: Moment(date).format('Do MMM YYYY, h:mm a'), //added
-      });
+    if (med_data != null) {
+      if (
+        Moment(date).format('YYYY/MM/DD') > med_data.date ||
+        (Moment(date).format('YYYY/MM/DD') === med_data.date &&
+          Moment(date).format('HH:mm') > med_data.hour)
+      ) {
+        storeLastMedicationLog({
+          value: selectedMedicationList,
+          date: Moment(date).format('YYYY/MM/DD'),
+          hour: Moment(date).format('HH:mm'), //tweaked
+          dateString: Moment(date).format('Do MMM YYYY, h:mm a'), //added
+        });
+      }
     }
+
     return true;
   } else {
     Alert.alert('Error', 'Unexpected Error Occured', [
