@@ -22,7 +22,6 @@ import AddPlan from './onboarding/medicationPlan/addPlan';
 import FitbitSetup from './onboarding/fitbit/FitbitSetup';
 import DrawerNavigator from './drawer';
 
-
 Entypo.loadFont();
 
 const Stack = createStackNavigator();
@@ -125,7 +124,7 @@ class AppRoot extends Component {
                   name="ContactUsScreen"
                   component={ContactUs}
                   options={{
-                    title: 'Contact Us',
+                    title: '',
                     headerRight: () => <View />,
                     headerBackTitle: 'Back',
                   }}
@@ -134,25 +133,14 @@ class AppRoot extends Component {
                   name="ForgetPassword"
                   component={ForgetPasswordScreen}
                   options={{
-                    title: 'Forget Password',
-                    headerRight: () => <View />,
-                  }}
-                />
-                <Stack.Screen
-                  name="InputOTP"
-                  component={InputOTPScreen}
-                  options={{
-                    title: 'Input OTP',
-                    headerRight: () => <View />,
-                    headerBackTitle: 'Back',
+                    headerShown: false,
                   }}
                 />
                 <Stack.Screen
                   name="ResetPasswordScreen"
                   component={ResetPasswordScreen}
                   options={{
-                    title: 'Reset Password',
-                    headerLeft: false,
+                    headerShown: false,
                   }}
                 />
               </>

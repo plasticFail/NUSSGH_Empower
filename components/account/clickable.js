@@ -34,6 +34,7 @@ const Clickable = (props) => {
         <EditPasswordModal
           visible={props.modalVisible}
           close={props.closeModal}
+          parent="edit"
         />
       ) : null}
       {props.usernameModalVisible ? (

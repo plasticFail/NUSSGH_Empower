@@ -94,11 +94,6 @@ const HomeScreen = (props) => {
     //Refresh every 1 minutes
     setTimeout(() => {
       setCurrHour(new Date().getHours());
-      checkLogDone(getGreetingFromHour(currHour)).then((response) => {
-        if (response != null) {
-          setUncompleteLogs(response.notCompleted);
-        }
-      });
     }, 60000);
   });
 

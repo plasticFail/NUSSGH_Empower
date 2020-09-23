@@ -24,6 +24,7 @@ import LeftArrowBtn from '../logs/leftArrowBtn';
 import PasswordStrengthMeter from '../passwordStrengthMeter';
 
 const EditPasswordModal = (props) => {
+  const {parent} = props;
   const [currentPassword, setCurrentPassword] = useState('');
   const [inputCurrent, setInputCurrent] = useState('');
   const [token, setToken] = useState('');
@@ -32,10 +33,11 @@ const EditPasswordModal = (props) => {
   const [strong, setStrong] = useState(false);
 
   useEffect(() => {
-    getToken().then((value) => {
-      setToken(value);
-    });
-
+    if (parent === 'edit') {
+      getToken().then((value) => {
+        setToken(value);
+      });
+    }
     getPassword().then((data) => {
       setCurrentPassword(data);
     });
@@ -83,32 +85,23 @@ const EditPasswordModal = (props) => {
   };
 
   const handleSubmit = () => {
-    if (
-      checkInput() === '' &&
-      inputCurrent === currentPassword &&
-      newPassword != '' &&
-      confirmPassword != '' &&
-      confirmPassword === newPassword &&
-      strong
-    ) {
-      resetPassword(newPassword, token).then((result) => {
-        Alert.alert(
-          'Password Changed Successfully',
-          '',
-          [
-            {
-              text: 'Got It',
-              onPress: () => {
-                setConfirmPassword('');
-                props.close();
-              },
+    resetPassword(newPassword, token).then((result) => {
+      Alert.alert(
+        'Password Changed Successfully',
+        '',
+        [
+          {
+            text: 'Got It',
+            onPress: () => {
+              setConfirmPassword('');
+              props.close();
             },
-          ],
-          {cancelable: false},
-        );
-        storePassword(newPassword);
-      });
-    }
+          },
+        ],
+        {cancelable: false},
+      );
+      storePassword(newPassword);
+    });
   };
 
   return (
@@ -122,7 +115,7 @@ const EditPasswordModal = (props) => {
         <View style={globalStyles.menuBarContainer}>
           <LeftArrowBtn close={props.close} />
         </View>
-        {props.parent === 'edit' ? (
+        {parent === 'edit' ? (
           <Text style={globalStyles.pageHeader}>Edit Password</Text>
         ) : (
           <Text style={globalStyles.pageHeader}>Change Password</Text>
