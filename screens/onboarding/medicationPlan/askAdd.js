@@ -195,8 +195,25 @@ class AskAdd extends Component {
               markingType={'custom'}
               selectAll={false}
               theme={{
-                textDayHeaderFontSize: 15,
                 calendarBackground: Colors.backgroundColor,
+                'stylesheet.calendar.header': {
+                  header: {
+                    flexDirection: 'row',
+                    marginTop: 6,
+                    alignItems: 'center',
+                    marginStart: '2%',
+                  },
+                  headerContainer: {
+                    width: '80%',
+                    flexDirection: 'row',
+                  },
+                  monthText: {
+                    fontSize: 25,
+                    fontFamily: 'SFProDisplay-Bold',
+                    textAlign: 'center',
+                  },
+                },
+                arrowColor: Colors.lastLogValueColor,
               }}
             />
             <View style={{flex: 1, paddingBottom: '3%'}} />
