@@ -1,7 +1,12 @@
 import {Alert} from 'react-native';
+import {getMedication4DateRange} from '../netcalls/requestsMedPlan';
 
 //add medication to exisiting med plan
-const addMed2Plan = (toAdd) => {};
+const addMed2Plan = async () => {
+  let plan = await getMedication4DateRange('1970-01-01', '9999-01-01');
+
+  return plan;
+};
 
 //adding to data to initialList, returning new list (no med plan existing yet)
 const addMedicine = (data, initialList) => {
@@ -105,4 +110,10 @@ const containsObject = (obj, list) => {
   return false;
 };
 
-export {addMedicine, removeMed4Date, removeMed4All, prepareDataFromAPI};
+export {
+  addMedicine,
+  removeMed4Date,
+  removeMed4All,
+  prepareDataFromAPI,
+  addMed2Plan,
+};

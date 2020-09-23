@@ -24,7 +24,7 @@ const MedicationScreen = (props) => {
 
   useEffect(() => {
     props.navigation.addListener('focus', () => {
-      getMed4CurrentMonth()
+      getMedication4DateRange('1970-01-01', '9999-01-01')
         .then((response) => {
           if (response != null) {
             prepareData(response);

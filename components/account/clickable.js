@@ -6,6 +6,8 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import EditPasswordModal from './editPasswordModal';
 import EditPhoneModal from './editPhoneModal';
 import {Colors} from '../../styles/colors';
+import EditUsernameModal from './editUsernameModal';
+import EditNameModal from './editNameModal';
 
 Entypo.loadFont();
 
@@ -32,14 +34,26 @@ const Clickable = (props) => {
         <EditPasswordModal
           visible={props.modalVisible}
           close={props.closeModal}
-          parent={'edit'}
         />
       ) : null}
-
-      <EditPhoneModal
-        visible={props.phoneModalVisible}
-        close={props.closeModal}
-      />
+      {props.usernameModalVisible ? (
+        <EditUsernameModal
+          visible={props.usernameModalVisible}
+          close={props.closeModal}
+        />
+      ) : null}
+      {props.nameModalVisible ? (
+        <EditNameModal
+          visible={props.nameModalVisible}
+          close={props.closeModal}
+        />
+      ) : null}
+      {props.phoneModalVisible ? (
+        <EditPhoneModal
+          visible={props.phoneModalVisible}
+          close={props.closeModal}
+        />
+      ) : null}
     </>
   );
 };
@@ -62,6 +76,7 @@ const styles = StyleSheet.create({
   headingText: {
     fontFamily: 'SFProDisplay-Regular',
     fontSize: 14,
+    color: Colors.lastLogValueColor,
   },
   contentText: {
     fontSize: 18,

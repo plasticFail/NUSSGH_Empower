@@ -8,9 +8,6 @@ import {
   Alert,
   Platform,
 } from 'react-native';
-//component
-import SetPassword from './setPassword';
-import Header from '../diary/blocks/header';
 //third party library
 import Modal from 'react-native-modal';
 //function
@@ -20,7 +17,9 @@ import {
   storePassword,
 } from '../../storage/asyncStorageFunctions';
 import {resetPassword} from '../../netcalls/requestsPasswordReset';
+//style
 import globalStyles from '../../styles/globalStyles';
+//component
 import LeftArrowBtn from '../logs/leftArrowBtn';
 import PasswordStrengthMeter from '../passwordStrengthMeter';
 
@@ -94,14 +93,12 @@ const EditPasswordModal = (props) => {
     ) {
       resetPassword(newPassword, token).then((result) => {
         Alert.alert(
-          'Password Change Successfully',
+          'Password Changed Successfully',
           '',
           [
             {
               text: 'Got It',
               onPress: () => {
-                setInputCurrent('');
-                setNewPassword('');
                 setConfirmPassword('');
                 props.close();
               },

@@ -26,6 +26,7 @@ import {
   onboard_marginEnd,
   normalTextFontSize,
 } from '../../../styles/variables';
+import {addMed2Plan} from '../../../commonFunctions/medicationFunction';
 
 Ionicons.loadFont();
 
@@ -92,6 +93,7 @@ const AddPlan = (props) => {
       if (props.route.params != null) {
         if (props.route.params.fromParent === 'fromExistingPlan') {
           console.log('adding from existing plan ');
+
           Alert.alert('Medication Added', '', [
             {
               text: 'Got It',

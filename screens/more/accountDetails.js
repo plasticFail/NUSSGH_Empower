@@ -17,24 +17,10 @@ const name = 'Jimmy Tan';
 const phoneNumber = '89898989';
 
 const AccountDetailScreen = (props) => {
-  const [modalVisible, setModalVisible] = useState(false);
+  const [usernameModalVisible, setUsernameModalVisible] = useState(false);
+  const [nameModalVisible, setNameModalVisible] = useState(false);
+  const [passwordModalVisible, setPasswordModalVisible] = useState(false);
   const [phoneModalVisible, setPhoneModalVisible] = useState(false);
-
-  const openModal = () => {
-    setModalVisible(true);
-  };
-
-  const closeModal = () => {
-    setModalVisible(false);
-  };
-
-  const openPhoneModal = () => {
-    setPhoneModalVisible(true);
-  };
-
-  const closePhoneModal = () => {
-    setPhoneModalVisible(false);
-  };
 
   return (
     <View style={[globalStyles.pageContainer]}>
@@ -48,24 +34,37 @@ const AccountDetailScreen = (props) => {
           <Ant name="user" size={30} color={Colors.lastLogValueColor} />
           <Text style={styles.sectionHeading}>Account Details</Text>
         </View>
-        <Clickable heading={'Username'} content={username} click={false} />
-        <Clickable heading={'Name'} content={name} click={false} />
+        <Clickable
+          heading={'Username'}
+          content={username}
+          click={true}
+          usernameModalVisible={usernameModalVisible}
+          openModal={() => setUsernameModalVisible(true)}
+          closeModal={() => setUsernameModalVisible(false)}
+        />
+        <Clickable
+          heading={'Name'}
+          content={name}
+          click={false}
+          nameModalVisible={nameModalVisible}
+          openModal={() => setNameModalVisible(true)}
+          closeModal={() => setNameModalVisible(false)}
+        />
         <Clickable
           heading={'Phone Number'}
           content={phoneNumber}
           click={true}
           phoneModalVisible={phoneModalVisible}
-          openModal={openPhoneModal}
-          closeModal={closePhoneModal}
+          openModal={() => setPhoneModalVisible(true)}
+          closeModal={() => setPhoneModalVisible(false)}
         />
-
         <Clickable
           heading={'Change Password'}
           content={''}
           click={true}
-          modalVisible={modalVisible}
-          openModal={openModal}
-          closeModal={closeModal}
+          modalVisible={passwordModalVisible}
+          openModal={() => setPasswordModalVisible(true)}
+          closeModal={() => setPasswordModalVisible(false)}
         />
 
         <Clickable
