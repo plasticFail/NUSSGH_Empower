@@ -20,9 +20,11 @@ import {horizontalMargins} from '../../../styles/variables';
 
 //responsible for adding a medication to the selected days*
 const SelectDaysModal = (props) => {
-  const {visible, closeModal} = props;
+  const {visible, closeModal, parent} = props;
   const {selectedDates41, setSelectedDates41} = props;
   const {selectedMedicine} = props;
+
+  console.log('in select days modal ' + parent);
 
   const handleConfirm = () => {
     //handle medication object.
@@ -106,12 +108,11 @@ const SelectDaysModal = (props) => {
           <CalendarTemplate
             dayComponent={CalendarDayComponent}
             allowSelectAll={true}
-            hideArrows={true}
-            disableMonthChange={true}
             addSelectedDate={addSelectedDate}
             selectAll={selectAll}
             selectedDates41={selectedDates41}
             backgroundColor={Colors.backgroundColor}
+            parent={parent}
           />
           <View style={{paddingBottom: '4%'}} />
           <View style={globalStyles.buttonContainer}>

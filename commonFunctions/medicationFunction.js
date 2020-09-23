@@ -1,12 +1,45 @@
 import {Alert} from 'react-native';
-import {getMedication4DateRange} from '../netcalls/requestsMedPlan';
+import {
+  getMedication4DateRange,
+  postPlan,
+  prepareData,
+} from '../netcalls/requestsMedPlan';
+
+const fromDate = '2020-09-01';
+const toDate = '2020-12-01';
 
 //add medication to exisiting med plan
-const addMed2Plan = async () => {
-  let plan = await getMedication4DateRange('1970-01-01', '9999-01-01');
-
-  return plan;
+const addMed2Plan = async (toAdd) => {
+  try {
+    let plan = await getMedication4DateRange(fromDate, toDate);
+    let obj = addMedicine(toAdd, prepareDataFromAPI(plan));
+    console.log('sending add req to existing med plan ------');
+    await postPlan(prepareData(obj));
+    return true;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
 };
+
+//remove all instance of medication from existing med plan
+const removeMedAllFromExisting = async (toRemove) => {
+  try {
+    let plan = await getMedication4DateRange(fromDate, toDate);
+    let obj = removeMed4All(toRemove, prepareDataFromAPI(plan));
+    console.log('--------');
+    console.log(obj);
+    console.log('sending remove ALL req to existing med plan ------');
+    console.log(prepareData(obj));
+    await postPlan(prepareData(obj));
+    return true;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+};
+
+//clear the date list
 
 //adding to data to initialList, returning new list (no med plan existing yet)
 const addMedicine = (data, initialList) => {
@@ -26,10 +59,11 @@ const addMedicine = (data, initialList) => {
         object[x].medicationList.push(data[x].medicine);
       } else {
         Alert.alert(
-          'Medication Already Exist',
+          'Medication Already Exist For Date(s) Selected',
           'Please remove it before adding again.',
           [{text: 'Got It'}],
         );
+        return;
       }
     }
   }
@@ -60,14 +94,13 @@ const removeMed4All = (selectedItem, initialList) => {
     let medList = original[x].medicationList;
     //check if selected medication exist for that date
     if (containsObject(selectedItem, medList)) {
-      console.log('medicine exist in ' + x);
+      //console.log('medicine exist in ' + x);
       let removeIndex = medList
         .map(function (item) {
           return item.drugName;
         })
         .indexOf(selectedItem.drugName);
       medList.splice(removeIndex, 1);
-      console.log(medList);
     }
   }
   return original;
@@ -90,9 +123,11 @@ const prepareDataFromAPI = (data) => {
 const renameKey = (list) => {
   list = list.map((obj) => {
     obj['drugName'] = obj['medication'];
-    obj['perDay'] = obj['per_day']; //assign new key
+    obj['perDay'] = obj['per_day'];
+    obj['unit'] = obj['dosage_unit']; //assign new key
     delete obj['medication']; //delete old key
     delete obj['per_day'];
+    delete obj['dosage_unit'];
     return obj;
   });
 
@@ -116,4 +151,7 @@ export {
   removeMed4All,
   prepareDataFromAPI,
   addMed2Plan,
+  fromDate,
+  toDate,
+  removeMedAllFromExisting,
 };

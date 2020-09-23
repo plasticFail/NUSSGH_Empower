@@ -77,7 +77,7 @@ const AddPlan = (props) => {
   };
 
   //pass selected dates with the medications back
-  const handleAdd = () => {
+  const handleAdd = async () => {
     if (
       dosage === 0 ||
       frequency === 0 ||
@@ -93,13 +93,14 @@ const AddPlan = (props) => {
       if (props.route.params != null) {
         if (props.route.params.fromParent === 'fromExistingPlan') {
           console.log('adding from existing plan ');
-
-          Alert.alert('Medication Added', '', [
-            {
-              text: 'Got It',
-              onPress: () => props.navigation.navigate('Medication'),
-            },
-          ]);
+          if (await addMed2Plan(selectedDates41)) {
+            Alert.alert('Medication Added', '', [
+              {
+                text: 'Got It',
+                onPress: () => props.navigation.navigate('Medication'),
+              },
+            ]);
+          }
         } else {
           props.navigation.navigate('MedicationPlan', {
             list: selectedDates41,
@@ -229,6 +230,7 @@ const AddPlan = (props) => {
         selectedDates41={selectedDates41}
         setSelectedDates41={setSelectedDates41}
         selectedMedicine={selectedMedicine}
+        parent={props.route.params?.fromParent}
       />
       <View style={{flex: 5}} />
       <View style={[globalStyles.buttonContainer]}>

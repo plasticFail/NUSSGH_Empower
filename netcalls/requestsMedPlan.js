@@ -14,6 +14,7 @@ const prepareData = (data) => {
         dosage: y.dosage,
         medication: y.drugName,
         per_day: y.perDay,
+        _id: y._id,
       };
       objArr.push(obj);
     }
@@ -60,10 +61,7 @@ const postPlan = async (data) => {
     let responseJson = await response.json();
     return responseJson;
   } catch (error) {
-    //console.error(error);
-    Alert.alert('Error', 'Account already has existing med plan', [
-      {text: 'Got It'},
-    ]);
+    console.error(error);
   }
 };
 

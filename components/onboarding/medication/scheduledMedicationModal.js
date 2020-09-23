@@ -167,7 +167,8 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     color: 'red',
-    margin: '4%',
+    marginTop: '2%',
+    marginBottom: '2%',
   },
   addbutton: {
     marginStart: '2%',

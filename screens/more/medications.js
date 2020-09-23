@@ -5,28 +5,34 @@ import MenuBtn from '../../components/menuBtn';
 //styles
 import globalStyles from '../../styles/globalStyles';
 //third party lib
-import moments from 'moment';
+import Modal from 'react-native-modal';
 import {Calendar} from 'react-native-calendars';
 //components
 import LeftArrowBtn from '../../components/logs/leftArrowBtn';
 import Medication4Day from '../../components/medication/medication4Day';
 //style
 import {Colors} from '../../styles/colors';
+import {getMedication4DateRange} from '../../netcalls/requestsMedPlan';
 import {
-  getMedication4DateRange,
-  getMed4CurrentMonth,
-} from '../../netcalls/requestsMedPlan';
-
-import {prepareDataFromAPI} from '../../commonFunctions/medicationFunction';
+  prepareDataFromAPI,
+  fromDate,
+  toDate,
+} from '../../commonFunctions/medicationFunction';
+import LoadingModal from '../../components/loadingModal';
 
 const MedicationScreen = (props) => {
   const [medicationList, setMedicationList] = useState({});
+  const [loading, setLoading] = useState(true);
+
+  console.log('loading : ' + loading);
 
   useEffect(() => {
     props.navigation.addListener('focus', () => {
-      getMedication4DateRange('1970-01-01', '9999-01-01')
+      setLoading(true);
+      getMedication4DateRange(fromDate, toDate)
         .then((response) => {
           if (response != null) {
+            setLoading(false);
             prepareData(response);
           }
         })
@@ -77,6 +83,12 @@ const MedicationScreen = (props) => {
           arrowColor: Colors.lastLogValueColor,
         }}
       />
+      {loading ? (
+        <LoadingModal
+          visible={loading}
+          message={'Retrieving your Medication Plan'}
+        />
+      ) : null}
     </View>
   );
 };
