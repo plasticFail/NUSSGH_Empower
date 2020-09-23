@@ -5,6 +5,7 @@ import {
   Text,
   Animated,
   Linking,
+  Image
 } from 'react-native';
 //function
 import {getFitbitToken} from '../../../storage/asyncStorageFunctions';
@@ -23,7 +24,7 @@ import ResponseModal from '../../../components/onboarding/fitbit/ResponseModal';
 import LeftArrowBtn from '../../../components/logs/leftArrowBtn';
 // others
 import {STATUS} from '../../../components/onboarding/fitbit/Status';
-import FitbitLogo from '../../../resources/images/icons/SVG/icon-color-fitbit.svg';
+import FitbitLogo from '../../../resources/images/icons/2x/icon-white-fitbit-2x.png';
 import globalStyles from '../../../styles/globalStyles';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {Colors} from '../../../styles/colors';
@@ -70,7 +71,7 @@ export default function FitbitSetup(props) {
         getFitbitToken().then((resp) => {
           if (resp) {
             authorised.current = true;
-            //setTimeout(() => props.navigation.navigate('Home'), 1000)
+            setTimeout(() => props.navigation.navigate('Home'), 1000);
           }
         });
       }, 500);
@@ -143,7 +144,7 @@ export default function FitbitSetup(props) {
       {/*
                     <Text style={{paddingLeft: 15, fontWeight: 'bold'}}>{!authorised.current && processingStatus}</Text>
                  */}
-      {!authorised.current ? (
+      {authorised.current ? (
         <View style={{padding: 15}}>
           <Text style={styles.fitbitDoneMainText}>Done!</Text>
           <Text style={styles.fitbitDoneSubText}>You are all set</Text>
@@ -155,8 +156,8 @@ export default function FitbitSetup(props) {
               Continue with
             </Text>
             <Animated.View
-              style={[styles.fitbitIconStyle, {transform: [{scale}]}]}>
-              <FitbitLogo width='100%' height='100%' />
+              style={[styles.fitbitIconStyle, {transform: [{scale}], justifyContent: 'center'}]}>
+              <Image source={FitbitLogo} resizeMode='contain' style={{height: 20, width: 90}} />
             </Animated.View>
           </View>
         </TouchableOpacity>

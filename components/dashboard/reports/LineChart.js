@@ -17,15 +17,11 @@ import {Colors} from "../../../styles/colors";
 // initialise all the graph properties.
 // global style options
 const padding = 20;
-const paddingLeft = 40;
-const paddingRight = 25;
+const paddingLeft = 60;
+const paddingRight = 40;
 const xAxisGapFromText = 15;
-const yAxisGapFromText = 12;
-const axisMargin = 5;
-let xAxisTextFontSize = 12;
-const yAxisTextFontSize = 12;
-const stepSize = 2;
-const yAxisStartsFrom = 0;
+const yAxisGapFromText = 18;
+const axisMargin = 20;
 
 const axisColour = '#cdcdcd';
 const axisLabelColour = '#E1E7ED';
@@ -53,8 +49,9 @@ export default function LineChart(props) {
     const {width, height} = props;
     const data = processData(props.filterKey, props.data, props.xExtractor, props.yExtractor, 'average');
     // d3 properties
-    const maxY = 1.25* Math.max(...data.map(d => d.y), props.defaultMaxY);
+    const maxY = Math.max(props.defaultMaxY, 1.25* Math.max(...data.map(d => d.y)));
     const xAxisLabels = generateXAxisLabels(props.filterKey);
+    const yAxisStartsFrom = Math.min(props.defaultMinY ? props.defaultMinY : 0, Math.round(0.75 * Math.min(...data.map(d => d.y))));
     const minX = xAxisLabels[0];
     const maxX = xAxisLabels[xAxisLabels.length - 1];
     const yAxisLabels = generateYAxisValues(getYStepSize(yAxisStartsFrom, maxY), yAxisStartsFrom, maxY);

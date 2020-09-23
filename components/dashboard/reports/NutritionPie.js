@@ -4,6 +4,12 @@ import { PieChart } from 'react-native-svg-charts'
 import {DAY_FILTER_KEY, WEEK_FILTER_KEY} from "../../../screens/main/reports";
 import {filterToDayData, filterToWeekData, getBinCount} from "../../../commonFunctions/reportDataFormatter";
 
+const COLOR_MAP = {
+    'carbohydrate': '#73CA93',
+    'total-fat': '#16A850',
+    'protein': '#005C30',
+}
+
 function NutritionPie(props) {
     const pieData = filterAndProcessData(props.data, props.filterKey, props.pieKeys);
     return <PieChart style={{ height: 200 }} data={pieData} />
@@ -19,20 +25,19 @@ function filterAndProcessData(data, filterKey, pieKeys) {
             result.push(binCount);
         }
     }
-    const randomColor = () => ('#' + ((Math.random() * 0xffffff) << 0).toString(16) + '000000').slice(0, 7);
-    const pieData = result.map(d => {
+    const pieData = result.map((d, index) => {
         const [nutrient, quantity] = Object.entries(d)[0];
-        return Math.round(quantity);
-    }).map((value, index) => ({
-        value,
-        svg: {
-            fill: randomColor(),
-            onPress: () => console.log('press', index),
-        },
-        key: `pie-${index}`,
-    }))
+        return ({
+            value: Math.round(quantity),
+            svg: {
+                fill: COLOR_MAP[nutrient],
+                onPress: () => console.log('press', index),
+            },
+            key: `pie-${index}`
+        });
+    });
 
     return pieData
 }
 
-export {NutritionPie};
+export {NutritionPie, COLOR_MAP};

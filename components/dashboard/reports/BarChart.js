@@ -5,26 +5,24 @@ import Moment from 'moment';
 import {Svg, Rect, Text as SvgText, Path, G} from 'react-native-svg';
 import {scaleTime, scaleLinear} from "d3-scale";
 import {
-    filterToDayData,
-    filterToWeekData, formatY, generateXAxisLabels, generateYAxisValues, getYStepSize,
-    partitionDataPoints,
+    formatY,
+    generateXAxisLabels,
+    generateYAxisValues,
+    getYStepSize,
     processData,
-    squashToXY
 } from "../../../commonFunctions/reportDataFormatter";
 import {DAY_FILTER_KEY, WEEK_FILTER_KEY} from "../../../screens/main/reports";
 
 // initialise all the graph properties.
 // global style options
 const padding = 20;
-const paddingLeft = 45;
-const paddingRight = 25;
+const paddingLeft = 60;
+const paddingRight = 40;
 const xAxisGapFromText = 15;
 const yAxisGapFromText = 12;
-const axisMargin = 5;
+const axisMargin = 20;
 const barWidth = 9.5;
 let xAxisTextFontSize = 12;
-const yAxisTextFontSize = 12;
-const stepSize = 2;
 const yAxisStartsFrom = 0;
 // bar label properties
 const barLabelHeight = 25;
@@ -45,9 +43,8 @@ export default function BarChart(props) {
     const [selectedIndex, setSelectedIndex] = React.useState(-1);
     const data = processData(props.filterKey, props.data, props.xExtractor, props.yExtractor, 'sum');
     const {width, height} = props;
-
     // d3 properties
-    const maxY = 1.25* Math.max(...data.map(d => d.y), props.defaultMaxY);
+    const maxY = Math.max(props.defaultMaxY, 1.25* Math.max(...data.map(d => d.y)));
     const xAxisLabels = generateXAxisLabels(props.filterKey);
     const minX = xAxisLabels[0];
     const maxX = xAxisLabels[xAxisLabels.length - 1];

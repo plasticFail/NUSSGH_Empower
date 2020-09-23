@@ -6,6 +6,7 @@ const glucoseAddLog = server + 'log/glucose';
 const medicationAddLog = server + 'log/medication';
 const medicationList = server + 'log/medication/list';
 const weightAddLog = server + 'log/weight';
+const getActivityLog = server + '/log/activity';
 const mealAddLogEndpoint = server + 'log/meal';
 const unfavouriteMealEndpoint = server + 'log/meal/unfavourite-meal';
 const mealListEndpoint = server + 'log/meal';
@@ -38,4 +39,5 @@ export {
   fitbitTokenPostEndpoint,
   nutrientConsumptionEndpoint,
   getDiaryEntries,
+  getActivityLog
 };

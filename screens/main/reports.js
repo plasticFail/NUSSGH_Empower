@@ -1,28 +1,27 @@
 import React from 'react';
-import {View, StyleSheet, Text, Dimensions, ScrollView, TouchableOpacity} from 'react-native';
+import {View, StyleSheet, Text, Dimensions, ScrollView, TouchableOpacity, Image} from 'react-native';
 import globalStyles from '../../styles/globalStyles';
 import BarChart from '../../components/dashboard/reports/BarChart';
 import LineChart from '../../components/dashboard/reports/LineChart';
 import LeftArrowBtn from '../../components/logs/leftArrowBtn';
 import HIGHLIGHTED_BGL_ICON from '../../resources/images/icons/SVG/icon-lightgreen-bloodglucose.svg';
-import BGL_ICON from '../../resources/images/icons/SVG/icon-darkgreen-bloodglucose.svg';
 import HIGHLIGHTED_FOOD_ICON from '../../resources/images/icons/SVG/icon-lightgreen-food.svg';
-import FOOD_ICON from '../../resources/images/icons/SVG/icon-darkgreen-food.svg';
 import HIGHLIGHTED_MED_ICON from '../../resources/images/icons/SVG/icon-lightgreen-med.svg';
-import MED_ICON from '../../resources/images/icons/SVG/icon-darkgreen-med.svg';
 import HIGHLIGHTED_WEIGHT_ICON from '../../resources/images/icons/SVG/icon-lightgreen-weight.svg';
-import WEIGHT_ICON from '../../resources/images/icons/SVG/icon-darkgreen-weight.svg';
 import HIGHLIGHTED_ACTIVITY_ICON from '../../resources/images/icons/SVG/icon-lightgreen-running-home.svg';
 import ACTIVITY_ICON from '../../resources/images/icons/SVG/icon-navy-running.svg';
 import {Colors} from "../../styles/colors";
 import {requestNutrientConsumption} from "../../netcalls/mealEndpoints/requestMealLog";
 import {getLastMinuteFromTodayDate} from "../../commonFunctions/common";
 import Moment from 'moment';
-import {filterToDayData} from "../../commonFunctions/reportDataFormatter";
-import {getBloodGlucoseLogs, getMedicationLogs, getWeightLogs} from "../../netcalls/requestsLog";
+import {getActivityLogs, getBloodGlucoseLogs, getMedicationLogs, getWeightLogs} from "../../netcalls/requestsLog";
 import {MedicationTable} from "../../components/dashboard/reports/MedicationTable";
-import NutritionIntakeCard from "../../components/dashboard/todayOverview/cards/NutritionIntakeCard";
 import {NutritionPie} from "../../components/dashboard/reports/NutritionPie";
+
+const BGL_ICON = require('../../resources/images/icons/2x/icon-navy-bloodglucose-2x.png');
+const FOOD_ICON = require('../../resources/images/icons/2x/icon-navy-food-2x.png');
+const MED_ICON = require('../../resources/images/icons/2x/icon-navy-med-2x.png');
+const WEIGHT_ICON = require('../../resources/images/icons/2x/icon-navy-weight-2x.png');
 
 const iconProps = {
   width: 30,
@@ -36,10 +35,10 @@ const WEIGHT_KEY = 'Weight';
 const ACTIVITY_KEY = "Activity"
 
 const tabs = [
-  {name: BGL_TAB_KEY, norm: () => <BGL_ICON {...iconProps} />, highlighted: () => <HIGHLIGHTED_BGL_ICON {...iconProps} />},
-  {name: FOOD_INTAKE_KEY, norm: () => <FOOD_ICON {...iconProps} />, highlighted: () => <HIGHLIGHTED_FOOD_ICON {...iconProps} />},
-  {name: MEDICATION_KEY, norm: () => <MED_ICON {...iconProps} />, highlighted: () => <HIGHLIGHTED_MED_ICON {...iconProps} />},
-  {name: WEIGHT_KEY, norm: () => <WEIGHT_ICON {...iconProps} />, highlighted: () => <HIGHLIGHTED_WEIGHT_ICON {...iconProps} />},
+  {name: BGL_TAB_KEY, norm: () => <Image source={BGL_ICON} style={iconProps} />, highlighted: () => <HIGHLIGHTED_BGL_ICON {...iconProps} />},
+  {name: FOOD_INTAKE_KEY, norm: () => <Image source={FOOD_ICON} style={iconProps} />, highlighted: () => <HIGHLIGHTED_FOOD_ICON {...iconProps} />},
+  {name: MEDICATION_KEY, norm: () => <Image source={MED_ICON} style={iconProps} />, highlighted: () => <HIGHLIGHTED_MED_ICON {...iconProps} />},
+  {name: WEIGHT_KEY, norm: () => <Image source={WEIGHT_ICON} style={iconProps} />, highlighted: () => <HIGHLIGHTED_WEIGHT_ICON {...iconProps} />},
   {name: ACTIVITY_KEY, norm: () => <ACTIVITY_ICON {...iconProps} />, highlighted: () => <HIGHLIGHTED_ACTIVITY_ICON {...iconProps} />},
 ];
 
@@ -81,6 +80,9 @@ const ReportsScreen = (props) => {
       getBloodGlucoseLogs(startDate.format('YYYY-MM-DD'), endDate.format('YYYY-MM-DD')).then(data=> {
         setBglData(data.logs);
       });
+      getActivityLogs(startDate.format('YYYY-MM-DD'), endDate.format('YYYY-MM-DD')).then(data => {
+        setActivityData(data.logs);
+      });
     });
   })
 
@@ -109,38 +111,64 @@ const ReportsScreen = (props) => {
                        style={{alignSelf: 'center', width: '50%', marginTop: '3.5%'}} />
         {
           tabName === BGL_TAB_KEY ? (
-            <LineChart data={bglData}
-                       filterKey={filterKey}
-                       xExtractor={d=>d.record_date}
-                       yExtractor={d=>d.bg_reading}
-                       defaultMaxY={14}
-                       width={width}
-                       height={300} />
+            <View style={{marginTop: 20}}>
+              <Text style={globalStyles.pageDetails}>Blood Glucose</Text>
+              <Text style={[globalStyles.pageDetails, {color: 'grey'}]}>Readings - mmol/L</Text>
+              <LineChart data={bglData}
+                         filterKey={filterKey}
+                         xExtractor={d=>d.record_date}
+                         yExtractor={d=>d.bg_reading}
+                         defaultMaxY={14}
+                         width={width}
+                         height={300} />
+            </View>
         ) : tabName === FOOD_INTAKE_KEY ? (
-            <React.Fragment>
-              <BarChart data={foodIntakeData} filterKey={filterKey}
-                        xExtractor={d=>d.date}
-                        yExtractor={d=>d.nutrients.energy.amount}
-                        defaultMaxY={2500}
-                        width={width}
-                        height={300} />
-              <NutritionPie data={foodIntakeData} filterKey={filterKey} pieKeys={['carbohydrate', 'total-fat', 'protein']} />
-            </React.Fragment>
+              <View style={{marginTop: 20}}>
+                <Text style={globalStyles.pageDetails}>Food Intake</Text>
+                <Text style={[globalStyles.pageDetails, {color: 'grey'}]}>Calories Consumed - kcal</Text>
+                <BarChart data={foodIntakeData} filterKey={filterKey}
+                          xExtractor={d=>d.date}
+                          yExtractor={d=>d.nutrients.energy.amount}
+                          defaultMaxY={2500}
+                          width={width}
+                          height={300} />
+                <Text style={[globalStyles.pageDetails, {color: 'grey'}]}>Nutrition Distribution</Text>
+                <NutritionPie data={foodIntakeData} filterKey={filterKey} pieKeys={['carbohydrate', 'total-fat', 'protein']} />
+            </View>
         ) : tabName === MEDICATION_KEY ? (
-            <MedicationTable
-                data={medConsumptionData}
-                style={{marginLeft: '4%', marginRight: '4%'}}
-                filterKey={filterKey}
-                width={width} height={height} />
+            <View style={{marginTop: 20}}>
+              <Text style={globalStyles.pageDetails}>Medication</Text>
+              <Text style={[globalStyles.pageDetails, {color: 'grey'}]}>Average Adherence - %</Text>
+              <MedicationTable
+                  data={medConsumptionData}
+                  style={{marginLeft: '4%', marginRight: '4%'}}
+                  filterKey={filterKey}
+                  width={width} height={height} />
+            </View>
         ) : tabName === WEIGHT_KEY ? (
+            <View style={{marginTop: 20}}>
+                <Text style={globalStyles.pageDetails}>Weight</Text>
+                <Text style={[globalStyles.pageDetails, {color: 'grey'}]}>Progress - kg</Text>
                 <LineChart data={weightData} filterKey={filterKey} data={weightData}
                            width={width} height={300}
                            xExtractor={d=>d.record_date}
                            yExtractor={d=>d.weight}
-                           defaultMaxY={14}/>
+                           defaultMinY={30}
+                           defaultMaxY={110}/>
+            </View>
         )
           : tabName === ACTIVITY_KEY ? (
-                null && <BarChart data={weightData} filterKey={filterKey} width={width} height={300} />
+              <View style={{marginTop: 20}}>
+                <Text style={globalStyles.pageDetails}>Activity</Text>
+                <Text style={[globalStyles.pageDetails, {color: 'grey'}]}>Steps Taken</Text>
+                <BarChart data={activityData}
+                          filterKey={filterKey}
+                          width={width}
+                          defaultMaxY={500}
+                          xExtractor={d=>d.record_date}
+                          yExtractor={d=>d.steps}
+                          height={300} />
+              </View>
           ) : null
         }
       </View>
