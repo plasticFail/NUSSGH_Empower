@@ -1,4 +1,9 @@
-//adding to data to initialList, returning new list
+import {Alert} from 'react-native';
+
+//add medication to exisiting med plan
+const addMed2Plan = (toAdd) => {};
+
+//adding to data to initialList, returning new list (no med plan existing yet)
 const addMedicine = (data, initialList) => {
   let object = initialList;
   for (var x of Object.keys(data)) {
@@ -14,6 +19,12 @@ const addMedicine = (data, initialList) => {
       //check if medication exist in medicationlist for that date, if not add
       if (!containsObject(data[x].medicine, object[x].medicationList)) {
         object[x].medicationList.push(data[x].medicine);
+      } else {
+        Alert.alert(
+          'Medication Already Exist',
+          'Please remove it before adding again.',
+          [{text: 'Got It'}],
+        );
       }
     }
   }

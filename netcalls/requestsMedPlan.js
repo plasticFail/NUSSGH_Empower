@@ -57,12 +57,6 @@ const postPlan = async (data) => {
         plans: data,
       }),
     });
-    console.log('body');
-    console.log(
-      JSON.stringify({
-        plans: data,
-      }),
-    );
     let responseJson = await response.json();
     return responseJson;
   } catch (error) {

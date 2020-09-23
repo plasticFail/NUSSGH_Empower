@@ -26,8 +26,6 @@ import {
   onboard_marginEnd,
   normalTextFontSize,
 } from '../../../styles/variables';
-import ViewMed4Day from '../../../components/medication/viewMed4Day';
-import {addMed2Plan} from '../../../netcalls/requestsMedPlan';
 
 Ionicons.loadFont();
 
