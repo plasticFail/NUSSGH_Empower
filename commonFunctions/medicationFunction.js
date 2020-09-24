@@ -6,7 +6,7 @@ import {
   deleteMedPlan,
 } from '../netcalls/requestsMedPlan';
 
-const fromDate = '2020-09-01';
+const fromDate = '2000-09-01';
 const toDate = '2020-12-01';
 
 //add medication to exisiting med plan
