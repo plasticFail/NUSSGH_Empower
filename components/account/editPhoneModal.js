@@ -1,9 +1,6 @@
-import EditPasswordModal from './editPasswordModal';
-
 import React, {useState} from 'react';
 import {
   View,
-  KeyboardAvoidingView,
   Text,
   StyleSheet,
   Dimensions,
@@ -15,10 +12,10 @@ import {
 //third party library
 import Modal from 'react-native-modal';
 //component
-import Header from '../diary/blocks/header';
-import globalStyles from '../../styles/globalStyles';
 import LeftArrowBtn from '../logs/leftArrowBtn';
 import InputOTPScreen from '../../screens/login/inputOTPScreen';
+//style
+import globalStyles from '../../styles/globalStyles';
 
 const emailRgx = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
@@ -54,14 +51,12 @@ const EditPhoneModal = (props) => {
           <Text style={globalStyles.actionButtonText}>Get OTP</Text>
         </TouchableOpacity>
       </View>
-      {inputOTPShow ? (
-        <InputOTPScreen
-          visible={inputOTPShow}
-          close={() => setInputOTPShow(false)}
-          phoneNumber={number}
-          closeParent={() => props.close()}
-        />
-      ) : null}
+      <InputOTPScreen
+        visible={inputOTPShow}
+        close={() => setInputOTPShow(false)}
+        phoneNumber={number}
+        closeParent={() => props.close()}
+      />
     </Modal>
   );
 };

@@ -172,14 +172,12 @@ const InputOTPScreen = (props) => {
           </TouchableOpacity>
         )}
       </View>
-      {editMobileModal ? (
-        <EditPhoneModal_2
-          visible={editMobileModal}
-          close={() => setEditMobileModal(false)}
-          closeParent={() => close()}
-          closeLast={() => props.closeParent()}
-        />
-      ) : null}
+      <EditPhoneModal_2
+        visible={editMobileModal}
+        close={() => setEditMobileModal(false)}
+        closeParent={() => close()}
+        closeLast={() => props.closeParent()}
+      />
     </Modal>
   );
 };

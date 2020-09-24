@@ -13,7 +13,6 @@ import {mapDispatchToProps, mapStateToProps} from '../redux/reduxMapping';
 //other screens
 import Login from './login/login';
 import ForgetPasswordScreen from './login/ForgetPasswordScreen';
-import InputOTPScreen from './login/inputOTPScreen';
 import ResetPasswordScreen from './login/resetPassword';
 //components
 import ContactUs from './contactUs';
