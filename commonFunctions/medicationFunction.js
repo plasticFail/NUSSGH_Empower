@@ -40,13 +40,36 @@ const removeMedAllFromExisting = async (toRemove) => {
 const removeMed4DateFromExisting = async (dateString, toRemove) => {
   try {
     let plan = await getMedication4DateRange(fromDate, toDate);
+    //if medication has only one date in datelist - remove instead of update*
     let obj = removeMed4Date(dateString, toRemove, prepareDataFromAPI(plan));
-    console.log('sending update for one date req to existing med plan ------');
-    await postPlan(prepareData(obj));
-    return true;
+    if (checkMedDelete(toRemove.drugName, prepareData(obj))) {
+      console.log(
+        'sending delete for one date req to existing med plan ------',
+      );
+      await removeMedAllFromExisting(toRemove);
+      return true;
+    } else {
+      console.log(
+        'sending update for one date req to existing med plan ------',
+      );
+      await postPlan(prepareData(obj));
+      return true;
+    }
   } catch (error) {
     return false;
   }
+};
+
+//check whether the length of datelist === 0 when sending to db -> if it is, call delete api
+const checkMedDelete = (medication, list) => {
+  console.log('medication ' + medication);
+  for (var x of list) {
+    console.log(x);
+    if (x.medication == medication) {
+      return false;
+    }
+  }
+  return true;
 };
 
 //adding to data to initialList, returning new list (no med plan existing yet)
