@@ -2,7 +2,10 @@ import React, {useEffect} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 //function
 import {useNavigation} from '@react-navigation/native';
-import {removeMedAllFromExisting} from '../../../commonFunctions/medicationFunction';
+import {
+  removeMedAllFromExisting,
+  removeMed4DateFromExisting,
+} from '../../../commonFunctions/medicationFunction';
 
 //calling removeObj from askAdd.js
 const DeleteConfirmation = (props) => {
@@ -10,12 +13,16 @@ const DeleteConfirmation = (props) => {
   const {closeSelf, closeParent} = props;
   const navigation = useNavigation();
 
-  const handleRemoveDate = () => {
+  const handleRemoveDate = async () => {
     if (parent === 'fromExistingPlan') {
       console.log(
         'From: viewMed4Day: removing med from this date in existing plan',
       );
-      closeSelf();
+      if (await removeMed4DateFromExisting(date.dateString, medication)) {
+        closeSelf();
+        closeParent();
+        navigation.navigate('Medication', {});
+      }
     } else {
       closeSelf();
       closeParent();
@@ -37,6 +44,7 @@ const DeleteConfirmation = (props) => {
       if (await removeMedAllFromExisting(medication)) {
         closeSelf();
         closeParent();
+        navigation.navigate('Medication', {});
       }
     } else {
       closeSelf();

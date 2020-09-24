@@ -1,4 +1,4 @@
-import {medplanAdd} from './urls';
+import {medPlan} from './urls';
 import {getToken} from '../storage/asyncStorageFunctions';
 import {Alert} from 'react-native';
 import moments from 'moment';
@@ -47,7 +47,7 @@ Array.prototype.unique = function () {
 
 const postPlan = async (data) => {
   try {
-    let response = await fetch(medplanAdd, {
+    let response = await fetch(medPlan, {
       method: 'POST',
       headers: {
         Authorization: 'Bearer ' + (await getToken()),
@@ -66,7 +66,7 @@ const postPlan = async (data) => {
 };
 
 const getMedication4DateRange = async (start, end) => {
-  const string = medplanAdd + '?start=' + start + '&end=' + end;
+  const string = medPlan + '?start=' + start + '&end=' + end;
   try {
     let response = await fetch(string, {
       method: 'GET',
@@ -98,4 +98,30 @@ const getMed4CurrentMonth = async () => {
   }
 };
 
-export {prepareData, postPlan, getMedication4DateRange, getMed4CurrentMonth};
+const deleteMedPlan = async (id) => {
+  try {
+    let response = await fetch(medPlan, {
+      method: 'DELETE',
+      headers: {
+        Authorization: 'Bearer ' + (await getToken()),
+        Accept: 'application/json',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        plans: [id],
+      }),
+    });
+    let responseJson = await response.json();
+    return responseJson;
+  } catch (error) {
+    Alert.alert('Network Error', 'Try Again Later', [{text: 'Got It'}]);
+  }
+};
+
+export {
+  prepareData,
+  postPlan,
+  getMedication4DateRange,
+  getMed4CurrentMonth,
+  deleteMedPlan,
+};

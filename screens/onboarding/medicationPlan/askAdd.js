@@ -64,11 +64,13 @@ class AskAdd extends Component {
   //if not, add the medication*
   onReturn = (data) => {
     //since calendar's markedDates property is an object , enforce new object creation**
-    this.setState({
-      selectedDates4All: JSON.parse(
-        JSON.stringify(addMedicine(data, this.state.selectedDates4All)),
-      ),
-    });
+    let obj = addMedicine(data, this.state.selectedDates4All);
+    if (obj != null) {
+      this.setState({
+        selectedDates4All: JSON.parse(JSON.stringify(obj)),
+      });
+    }
+
     this.checkCalendar();
   };
 

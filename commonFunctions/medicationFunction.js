@@ -3,6 +3,7 @@ import {
   getMedication4DateRange,
   postPlan,
   prepareData,
+  deleteMedPlan,
 } from '../netcalls/requestsMedPlan';
 
 const fromDate = '2020-09-01';
@@ -25,13 +26,9 @@ const addMed2Plan = async (toAdd) => {
 //remove all instance of medication from existing med plan
 const removeMedAllFromExisting = async (toRemove) => {
   try {
-    let plan = await getMedication4DateRange(fromDate, toDate);
-    let obj = removeMed4All(toRemove, prepareDataFromAPI(plan));
-    console.log('--------');
-    console.log(obj);
     console.log('sending remove ALL req to existing med plan ------');
-    console.log(prepareData(obj));
-    await postPlan(prepareData(obj));
+    let response = await deleteMedPlan(toRemove._id);
+    console.log(response);
     return true;
   } catch (error) {
     console.log(error);
@@ -39,7 +36,18 @@ const removeMedAllFromExisting = async (toRemove) => {
   }
 };
 
-//clear the date list
+// remove a date from medication in plan
+const removeMed4DateFromExisting = async (dateString, toRemove) => {
+  try {
+    let plan = await getMedication4DateRange(fromDate, toDate);
+    let obj = removeMed4Date(dateString, toRemove, prepareDataFromAPI(plan));
+    console.log('sending update for one date req to existing med plan ------');
+    await postPlan(prepareData(obj));
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
 
 //adding to data to initialList, returning new list (no med plan existing yet)
 const addMedicine = (data, initialList) => {
@@ -154,4 +162,5 @@ export {
   fromDate,
   toDate,
   removeMedAllFromExisting,
+  removeMed4DateFromExisting,
 };

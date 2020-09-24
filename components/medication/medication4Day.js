@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import ViewMed4Day from './viewMed4Day';
+import MedicationScreen from '../../screens/more/medications';
 
 //show the calendar view with underline when there is medication for that particular day
 //opens modal with scheduled medicine when select
@@ -60,12 +61,14 @@ const Medication4Day = (props) => {
           </Text>
           <View style={contentStyle.border} />
         </TouchableOpacity>
-        <ViewMed4Day
-          isVisible={visible}
-          closeModal={closeModal}
-          medicationList={marking.medicationList}
-          date={date}
-        />
+        {visible ? (
+          <ViewMed4Day
+            isVisible={visible}
+            closeModal={closeModal}
+            medicationList={marking.medicationList}
+            date={date}
+          />
+        ) : null}
       </View>
     )
   );

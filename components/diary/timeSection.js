@@ -82,7 +82,6 @@ const styles = StyleSheet.create({
   border: {
     borderBottomWidth: 0.8,
     borderColor: Colors.lastLogValueColor,
-
     margin: '3%',
   },
 });
