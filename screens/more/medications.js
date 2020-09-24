@@ -27,6 +27,7 @@ export default class MedicationScreen extends Component {
     this.state = {
       medicationList: {},
       loading: true,
+      returnLoad: false,
     };
 
     this.props.navigation.addListener('focus', () => {
@@ -41,6 +42,7 @@ export default class MedicationScreen extends Component {
 
   componentDidUpdate(prevProp, prevState) {
     if (prevProp.route.params != this.props.route.params) {
+      console.log('in update-----');
       this.setUp();
     }
   }
@@ -52,6 +54,7 @@ export default class MedicationScreen extends Component {
         if (response != null) {
           this.setState({loading: false});
           this.prepareData(response);
+          this.setState({returnLoad: false});
         }
       })
       .catch((err) => console.log(err));
@@ -62,7 +65,7 @@ export default class MedicationScreen extends Component {
   };
 
   render() {
-    const {loading, medicationList} = this.state;
+    const {loading, medicationList, returnLoad} = this.state;
     return (
       <View style={globalStyles.pageContainer}>
         <View style={globalStyles.menuBarContainer}>

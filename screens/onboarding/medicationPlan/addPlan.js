@@ -27,6 +27,7 @@ import {
   normalTextFontSize,
 } from '../../../styles/variables';
 import {addMed2Plan} from '../../../commonFunctions/medicationFunction';
+import LoadingModal from '../../../components/loadingModal';
 
 Ionicons.loadFont();
 
@@ -39,6 +40,8 @@ const AddPlan = (props) => {
   const [selectedMedicine, setSelectedMedicine] = useState({});
   const [selectedMedicineName, setSelectedMedicineName] = useState('');
   const [searchVisible, setSearchVisible] = useState(false);
+
+  const [actionLoading, setActionLoading] = useState(false);
 
   useEffect(() => {
     formatSelectionString();
@@ -93,14 +96,13 @@ const AddPlan = (props) => {
       if (props.route.params != null) {
         if (props.route.params.fromParent === 'fromExistingPlan') {
           console.log('adding from existing plan ');
-          if (await addMed2Plan(selectedDates41)) {
-            Alert.alert('Medication Added', '', [
-              {
-                text: 'Got It',
-                onPress: () => props.navigation.navigate('Medication'),
-              },
-            ]);
-          }
+          setActionLoading(true);
+          addMed2Plan(selectedDates41).then((response) => {
+            if (response) {
+              setActionLoading(false);
+              props.navigation.navigate('Medication', {});
+            }
+          });
         } else {
           props.navigation.navigate('MedicationPlan', {
             list: selectedDates41,
@@ -250,6 +252,10 @@ const AddPlan = (props) => {
           setSelectedMedicine={setSelectedMedicine}
         />
       ) : null}
+      <LoadingModal
+        visible={actionLoading}
+        message={'Updating your medication plan'}
+      />
     </View>
   );
 };

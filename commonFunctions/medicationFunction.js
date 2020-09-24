@@ -7,7 +7,7 @@ import {
 } from '../netcalls/requestsMedPlan';
 
 const fromDate = '2000-09-01';
-const toDate = '2020-12-01';
+const toDate = '2400-12-01';
 
 //add medication to exisiting med plan
 const addMed2Plan = async (toAdd) => {
