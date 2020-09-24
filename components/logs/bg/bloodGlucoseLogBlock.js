@@ -200,7 +200,11 @@ const BloodGlucoseLogBlock = (props) => {
           ) : (
             <>
               <Text style={logStyles.headerText}>Edit</Text>
-              <DateSelectionBlock date={datetime} setDate={setDate} />
+              <DateSelectionBlock
+                date={datetime}
+                setDate={setDate}
+                initialDate={initialDate}
+              />
               <Text style={[logStyles.fieldName, styles.fieldStyle2]}>
                 Reading
               </Text>

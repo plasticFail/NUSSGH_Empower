@@ -68,6 +68,7 @@ class Login extends Component {
       await storePassword(this.state.password);
       await storeToken(token);
       this.props.login();
+      console.log('login success!')
     } else {
       Alert.alert('Error', 'Invalid username/password combination.', [
         {text: 'Got It'},

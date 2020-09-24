@@ -64,11 +64,11 @@ export default function BarChart(props) {
         <View style={styles.root}>
             <View style={styles.barchartContainer}>
                 <Svg width={width} height={height}>
-                    {
+                    {   // boundaries
                         props.lowerBound && props.upperBound &&
                         <Path key='healthyRange' stroke='none' fill={props.boundaryFill || '#F1F6D7'}
                               d={`M ${paddingLeft - axisMargin - barWidth / 2} ${scaleY(props.lowerBound)} l ${width - paddingLeft - paddingRight + 2 * axisMargin + barWidth} 0
-                              l 0 ${-scaleY(props.upperBound)} l ${-(width - paddingLeft - paddingRight + 2 * axisMargin + barWidth)} 0 Z`}/>
+                              l 0 ${-scaleHeight(props.upperBound - props.lowerBound)} l ${-(width - paddingLeft - paddingRight + 2 * axisMargin + barWidth)} 0 Z`}/>
 
 
                     }

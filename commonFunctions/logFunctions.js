@@ -15,7 +15,7 @@ import {
   getLastMealLog,
 } from '../storage/asyncStorageFunctions';
 
-import {getGreetingFromHour, morningObj, getPeriodFromMealType} from './common';
+import {getGreetingFromHour, checkLast7Day} from './common';
 import {getEntry4Day} from '../netcalls/requestsDiary';
 import {
   filterMorning,
@@ -60,6 +60,8 @@ const isPeriod = (time) => {
 };
 
 const checkLogDone = async (period) => {
+  let weight_data = await getLastWeightLog();
+
   let completed = [];
   let notCompleted = [];
   let bgLogs = [];
@@ -94,12 +96,13 @@ const checkLogDone = async (period) => {
       notCompleted.push(med_key);
     }
 
-    if (inPeriod(weightLogs, period)) {
+    if (checkLast7Day(weight_data)) {
       completed.push(weight_key);
     } else {
       notCompleted.push(weight_key);
     }
   } catch (e) {
+    console.error(e);
     return Alert.alert('Network Error', '', [{text: 'Try again later'}]);
     //for now temporary push food to not done
   }
@@ -241,7 +244,7 @@ const handleSubmitMedication = async (date, selectedMedicationList) => {
 
   if (await medicationAddLogRequest(selectedMedicationList)) {
     let med_data = await getLastMedicationLog();
-    if (
+    if (med_data === null ||
       Moment(date).format('YYYY/MM/DD') > med_data.date ||
       (Moment(date).format('YYYY/MM/DD') === med_data.date &&
         Moment(date).format('HH:mm') > med_data.hour)

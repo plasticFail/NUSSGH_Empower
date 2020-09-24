@@ -17,6 +17,7 @@ import Moment from 'moment';
 import {getActivityLogs, getBloodGlucoseLogs, getMedicationLogs, getWeightLogs} from "../../netcalls/requestsLog";
 import {MedicationTable} from "../../components/dashboard/reports/MedicationTable";
 import {NutritionPie} from "../../components/dashboard/reports/NutritionPie";
+import {getPlan} from "../../netcalls/requestsMedPlan";
 
 const BGL_ICON = require('../../resources/images/icons/2x/icon-navy-bloodglucose-2x.png');
 const FOOD_ICON = require('../../resources/images/icons/2x/icon-navy-food-2x.png');
@@ -60,6 +61,7 @@ const ReportsScreen = (props) => {
   const [bglData, setBglData] = React.useState([]);
   const [foodIntakeData, setFoodIntakeData] = React.useState([]);
   const [medConsumptionData, setMedConsumptionData] = React.useState([]);
+  const [medPlan, setMedPlan] = React.useState([]);
   const [weightData, setWeightData] = React.useState([]);
   const [activityData, setActivityData] = React.useState([]);
 
@@ -83,6 +85,9 @@ const ReportsScreen = (props) => {
       getActivityLogs(startDate.format('YYYY-MM-DD'), endDate.format('YYYY-MM-DD')).then(data => {
         setActivityData(data.logs);
       });
+      getPlan(startDate.format('YYYY-MM-DD'), endDate.format('YYYY-MM-DD')).then(data => {
+        setMedPlan(data);
+      }).catch(err => console.log(err));
     });
   })
 
@@ -132,7 +137,10 @@ const ReportsScreen = (props) => {
                 <BarChart data={foodIntakeData} filterKey={filterKey}
                           xExtractor={d=>d.date}
                           yExtractor={d=>d.nutrients.energy.amount}
+                          boundaryFill='#f0f0f0'
                           defaultMaxY={2500}
+                          lowerBound={1700}
+                          upperBound={2200}
                           width={width}
                           height={300} />
                 <Text style={[globalStyles.pageDetails, {color: 'grey'}]}>Nutrition Distribution</Text>
@@ -143,6 +151,7 @@ const ReportsScreen = (props) => {
               <Text style={globalStyles.pageDetails}>Medication</Text>
               <Text style={[globalStyles.pageDetails, {color: 'grey'}]}>Average Adherence - %</Text>
               <MedicationTable
+                  plan={medPlan}
                   data={medConsumptionData}
                   style={{marginLeft: '4%', marginRight: '4%'}}
                   filterKey={filterKey}
@@ -167,10 +176,10 @@ const ReportsScreen = (props) => {
                 <BarChart data={activityData}
                           filterKey={filterKey}
                           width={width}
-                          lowerBound={1700}
-                          upperBound={2200}
                           boundaryFill='#f0f0f0'
-                          defaultMaxY={500}
+                          defaultMaxY={5000}
+                          lowerBound={100}
+                          upperBound={600}
                           xExtractor={d=>d.record_date}
                           yExtractor={d=>d.steps}
                           height={300} />
@@ -247,7 +256,8 @@ const styles = StyleSheet.create({
     padding: 7
   },
   selectedTimeFilterText: {
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    color: '#000'
   },
   normTimeFilterTabContainer: {
     borderRadius: 5,

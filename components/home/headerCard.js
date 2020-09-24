@@ -24,8 +24,8 @@ const HeaderCard = (props) => {
       {uncompleteLogs.length > 0 ? (
         <>
           <Text style={styles.taskText}>
-            You have <Text style={styles.bold}>{uncompleteLogs.length}</Text>{' '}
-            mandatory task (s) awaiting...
+            <Text style={styles.bold}>{uncompleteLogs.length}</Text> mandatory
+            task (s)
           </Text>
           <TouchableOpacity
             style={styles.logCard}

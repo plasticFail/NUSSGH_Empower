@@ -72,4 +72,17 @@ const postPlan = async (data) => {
   }
 };
 
-export {prepareData, postPlan};
+const getPlan = async (startDateString, endDateString) => {
+  let response = await fetch(medplanAdd + `?start=${startDateString}&end=${endDateString}`, {
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + (await getToken()),
+      Accept: 'application/json',
+      'Content-type': 'application/json',
+    }
+  });
+  let responseJson = await response.json();
+  return responseJson;
+}
+
+export {prepareData, postPlan, getPlan};
