@@ -64,6 +64,14 @@ export default function LineChart(props) {
         <View>
             <Svg width={width} height={height}>
                 {
+                    props.lowerBound && props.upperBound &&
+                    <Path key='healthyRange' stroke='none' fill={props.boundaryFill || '#F1F6D7'}
+                          d={`M ${paddingLeft - axisMargin} ${scaleY(props.lowerBound)} l ${width - paddingLeft - paddingRight + 2 * axisMargin} 0
+                              l 0 ${-scaleY(props.upperBound)} l ${-(width - paddingLeft - paddingRight + 2 * axisMargin)} 0 Z`}/>
+
+
+                }
+                {
                     // x-axis labels
                     showXAxis &&
                     xAxisLabels.map((x, index) => (

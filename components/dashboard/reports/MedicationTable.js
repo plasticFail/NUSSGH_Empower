@@ -6,6 +6,17 @@ import ProgressBar from "../../progressbar";
 import globalStyles from "../../../styles/globalStyles";
 
 function MedicationTable(props) {
+    const [medPlan, setMedPlan] = React.useState(null);
+    const [didMount, setDidMount] = React.useState(false);
+
+    React.useEffect(() => {
+        if (!didMount) {
+
+            setDidMount(true);
+        }
+    })
+
+
     const filteredData = props.filterKey === DAY_FILTER_KEY ? filterToDayData(props.data, new Date(), d=>d.record_date)
         : props.filterKey === WEEK_FILTER_KEY ? filterToWeekData(props.data, new Date(), d=>d.record_date) : props.data;
     const binCount = getBinCount(filteredData, d=>d.medication, d=>d.dosage);

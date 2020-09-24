@@ -119,6 +119,9 @@ const ReportsScreen = (props) => {
                          xExtractor={d=>d.record_date}
                          yExtractor={d=>d.bg_reading}
                          defaultMaxY={14}
+                         lowerBound={4}
+                         upperBound={12}
+                         boundaryFill='#f0f0f0'
                          width={width}
                          height={300} />
             </View>
@@ -164,6 +167,9 @@ const ReportsScreen = (props) => {
                 <BarChart data={activityData}
                           filterKey={filterKey}
                           width={width}
+                          lowerBound={1700}
+                          upperBound={2200}
+                          boundaryFill='#f0f0f0'
                           defaultMaxY={500}
                           xExtractor={d=>d.record_date}
                           yExtractor={d=>d.steps}
