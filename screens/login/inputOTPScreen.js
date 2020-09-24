@@ -21,6 +21,7 @@ import Modal from 'react-native-modal';
 import globalStyles from '../../styles/globalStyles';
 //component
 import LeftArrowBtn from '../../components/logs/leftArrowBtn';
+import EditPhoneModal_2 from '../../components/account/editPhoneModal_2';
 
 const InputOTPScreen = (props) => {
   const {phoneNumber, visible, parent} = props;
@@ -30,12 +31,14 @@ const InputOTPScreen = (props) => {
   const [countdownVisible, setCountdownVisible] = useState(true);
   const [countdownTime, setCountdownTime] = useState(120);
 
+  const [editMobileModal, setEditMobileModal] = useState(false);
+
   const navigation = useNavigation();
 
   const handleTimout = () => {
     setCountdownVisible(true);
     setCountdownTime(0);
-    if (countdownTime === 0) {
+    if (countdownTime === 0 && editMobileModal === false) {
       Alert.alert('OTP Expired', '', [
         {text: 'Resend OTP', onPress: () => resendOTP()},
       ]);
@@ -63,16 +66,21 @@ const InputOTPScreen = (props) => {
       !otp.includes('-') &&
       !otp.includes('.')
     ) {
-      verifyOTPRequest(phoneNumber, otp).then((response) => {
-        if (response.message != null) {
-          Alert.alert('Error', response.message, [{text: 'Got It'}]);
-        } else {
-          close();
-          navigation.navigate('ResetPasswordScreen', {
-            token: response.token,
-          });
-        }
-      });
+      if (parent === 'forgetPassword') {
+        verifyOTPRequest(phoneNumber, otp).then((response) => {
+          if (response.message != null) {
+            Alert.alert('Error', response.message, [{text: 'Got It'}]);
+          } else {
+            close();
+            navigation.navigate('ResetPasswordScreen', {
+              token: response.token,
+            });
+          }
+        });
+      } else {
+        //verify otp when come from edit phone modal
+        setEditMobileModal(true);
+      }
     }
   };
 
@@ -164,6 +172,14 @@ const InputOTPScreen = (props) => {
           </TouchableOpacity>
         )}
       </View>
+      {editMobileModal ? (
+        <EditPhoneModal_2
+          visible={editMobileModal}
+          close={() => setEditMobileModal(false)}
+          closeParent={() => close()}
+          closeLast={() => props.closeParent()}
+        />
+      ) : null}
     </Modal>
   );
 };

@@ -53,6 +53,7 @@ const Clickable = (props) => {
         <EditPhoneModal
           visible={props.phoneModalVisible}
           close={props.closeModal}
+          number={content}
         />
       ) : null}
     </>
