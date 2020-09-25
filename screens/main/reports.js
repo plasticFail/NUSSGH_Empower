@@ -68,10 +68,18 @@ const ReportsScreen = (props) => {
   const [medPlan, setMedPlan] = React.useState([]);
   const [weightData, setWeightData] = React.useState([]);
   const [activityData, setActivityData] = React.useState([]);
-
+  const initialTab =
+      props.route.params?.initialTab === undefined
+          ? 0
+          : props.route.params.initialTab;
   // Load data when focused
   React.useEffect(() => {
     props.navigation.addListener('focus', () => {
+      if (props.route.params?.initialTab != null) {
+        console.log('inside ' + props.route.params?.initialTab);
+        setTabIndex(props.route.params?.initialTab);
+      }
+
       const startDate = Moment(new Date()).subtract(28, "days");
       const endDate = Moment(new Date()).add(1, "day");
       requestNutrientConsumption(startDate.format('DD/MM/YYYY HH:mm:ss'), getLastMinuteFromTodayDate()).then(data => {
@@ -93,7 +101,7 @@ const ReportsScreen = (props) => {
         setMedPlan(data);
       }).catch(err => console.log(err));
     });
-  })
+  }, [props.route.params]);
 
   const handleTabSelectChange = (tabIndex) => {
       setTabIndex(tabIndex);
@@ -102,26 +110,6 @@ const ReportsScreen = (props) => {
 
   const tabName = tabs[tabIndex].name;
   const filterKey = timeFilterTabs[timeTabIndexFilter].name;
-
-  const initialTab =
-    props.route.params?.initialTab === undefined
-      ? 0
-      : props.route.params.initialTab;
-  const [tabIndex, setTabIndex] = useState(initialTab);
-  const [timeFilter, setTimeFilter] = React.useState('Week');
-
-  useEffect(() => {
-    setTabIndex(initialTab);
-    props.navigation.addListener('focus', () => {
-      if (props.route.params?.initialTab != null) {
-        console.log('inside ' + props.route.params?.initialTab);
-        setTabIndex(props.route.params?.initialTab);
-      }
-    });
-  }, [props.route.params]);
-
-  console.log('outside focus' + props.route.params?.initialTab);
-  console.log(initialTab);
 
   return (
     <ScrollView
