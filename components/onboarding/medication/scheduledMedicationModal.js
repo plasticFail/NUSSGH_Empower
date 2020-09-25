@@ -57,7 +57,7 @@ const ScheduledMedicationModal = (props) => {
         <View style={globalStyles.menuBarContainer}>
           <CrossBtn close={closeModal} />
         </View>
-        <View style={styles.body}>
+        <View style={[styles.body, {flex: 11}]}>
           <Text
             style={[
               globalStyles.pageHeader,
@@ -113,7 +113,7 @@ const ScheduledMedicationModal = (props) => {
           </TouchableOpacity>
         </View>
         <View style={{flex: 1}} />
-        <View style={[globalStyles.buttonContainer]}>
+        <View style={[globalStyles.buttonContainer, {flex: 1}]}>
           <TouchableOpacity
             style={globalStyles.nextButtonStyle}
             onPress={closeModal}>
