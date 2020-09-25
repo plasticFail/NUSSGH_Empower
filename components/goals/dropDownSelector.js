@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Text, View, StyleSheet, TouchableOpacity} from 'react-native';
 // styles
 import logStyles from '../../styles/logStyles';
@@ -7,16 +7,25 @@ import {Colors} from '../../styles/colors';
 import Entypo from 'react-native-vector-icons/Entypo';
 import {normalTextFontSize} from '../../styles/variables';
 
-const options = [
+const frequencyOption = [
   {name: 'Daily', value: 'daily'},
   {name: 'Weekly', value: 'weekly'},
   {name: 'Monthly', value: 'monthly'},
   {name: 'One-Off', value: 'one-off'},
 ];
 
-const FrequencySelector = (props) => {
-  const {selected, setSelected} = props;
+const DropDownSelector = (props) => {
+  const {selected, setSelected, fieldName, dropDownType, optionList} = props;
   const [open, setOpen] = useState(false);
+  const [selectedMenu, setSelectedMenu] = useState([]);
+
+  useEffect(() => {
+    if (dropDownType === 'frequency') {
+      setSelectedMenu(frequencyOption);
+    } else {
+      setSelectedMenu(optionList);
+    }
+  });
 
   const formatSelected = (text) => {
     return (
@@ -32,7 +41,7 @@ const FrequencySelector = (props) => {
           logStyles.fieldName,
           {color: Colors.lastLogValueColor, marginStart: '4%'},
         ]}>
-        Frequency
+        {fieldName}
       </Text>
       <TouchableOpacity
         onPress={() => setOpen(!open)}
@@ -54,9 +63,10 @@ const FrequencySelector = (props) => {
       </TouchableOpacity>
       {open && (
         <View style={styles.dropDownItemContainer}>
-          {options.map((item) =>
+          {selectedMenu.map((item) =>
             item.value === selected ? (
               <TouchableOpacity
+                key={item.value}
                 style={{backgroundColor: '#aad326'}}
                 onPress={() => {
                   setSelected(item.value);
@@ -80,7 +90,7 @@ const FrequencySelector = (props) => {
   );
 };
 
-export default FrequencySelector;
+export default DropDownSelector;
 
 const styles = StyleSheet.create({
   selectedText: {

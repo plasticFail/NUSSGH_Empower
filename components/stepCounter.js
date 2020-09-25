@@ -1,21 +1,19 @@
 import React, {useState, Component} from 'react';
-import {View, Text, StyleSheet, TouchableWithoutFeedback} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 //third party lib
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 
 //Props:
 //paramter: eg. 1 unit - parameter is unit
 //count, setCount from parent
 //textStyle: style the text of the count
-Ionicons.loadFont();
 
 export default class StepCounter extends Component {
   constructor(props) {
     super(props);
     this.props = props;
     this.state = {
-      count: 0,
+      count: this.props.count === null ? 0 : this.props.count,
     };
     this.timer = null;
     this.handleAdd = this.handleAdd.bind(this);
@@ -57,7 +55,7 @@ export default class StepCounter extends Component {
           onPressOut={this.stopTimer}>
           <Ionicons name="remove-circle" size={40} color={'#aad326'} />
         </TouchableOpacity>
-        <Text style={[styles.countContent, textStyle]}>
+        <Text style={[styles.countContent, textStyle, {flexBasis: '35%'}]}>
           {count} {parameter}
         </Text>
         <TouchableOpacity

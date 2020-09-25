@@ -20,6 +20,8 @@ import globalStyles from '../../styles/globalStyles';
 //component
 import LeftArrowBtn from '../logs/leftArrowBtn';
 import BgGoal from './bgGoal';
+import FoodGoal from './foodGoal';
+import MedicationGoal from './medicationGoal';
 
 const AddGoalModal = (props) => {
   const {visible} = props;
@@ -33,6 +35,8 @@ const AddGoalModal = (props) => {
     step_key,
   ];
   const [openBg, setOpenBg] = useState(false);
+  const [openFood, setOpenFood] = useState(false);
+  const [openMed, setOpenMed] = useState(false);
 
   const trimPhrase = (phrase) => {
     if (String(phrase).includes('Log')) {
@@ -45,6 +49,12 @@ const AddGoalModal = (props) => {
   const openGoalType = (type) => {
     if (type === bg_key) {
       setOpenBg(true);
+    }
+    if (type === food_key) {
+      setOpenFood(true);
+    }
+    if (type === med_key) {
+      setOpenMed(true);
     }
   };
 
@@ -91,6 +101,12 @@ const AddGoalModal = (props) => {
       {/* Goal Type Modal to open */}
       {openBg ? (
         <BgGoal visible={openBg} close={() => setOpenBg(false)} />
+      ) : null}
+      {openFood ? (
+        <FoodGoal visible={openFood} close={() => setOpenFood(false)} />
+      ) : null}
+      {openMed ? (
+        <MedicationGoal visible={openMed} close={() => setOpenMed(false)} />
       ) : null}
     </Modal>
   );

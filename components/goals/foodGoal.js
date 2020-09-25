@@ -17,15 +17,20 @@ import globalStyles from '../../styles/globalStyles';
 import LeftArrowBtn from '../logs/leftArrowBtn';
 import NameDateSelector from './nameDateSelector';
 import FrequencySelector from './dropDownSelector';
-//styles
+import {
+  maxCarbs,
+  maxFats,
+  maxProtein,
+} from '../../commonFunctions/diaryFunctions';
 import logStyles from '../../styles/logStyles';
-//function
-import {checkBloodGlucoseText} from '../../commonFunctions/logFunctions';
+import Counter from '../onboarding/medication/Counter';
 
-const min_key = 'min';
-const max_key = 'max';
+const initialCal = 1000;
+const initialCarbs = maxCarbs / 2;
+const initialFat = maxFats / 2;
+const initialProtein = maxProtein / 2;
 
-const BgGoal = (props) => {
+const FoodGoal = (props) => {
   const {visible} = props;
   const {close} = props;
 
@@ -35,14 +40,18 @@ const BgGoal = (props) => {
   //change select date to date option *
   const [opened, setOpened] = useState(false);
   const [frequency, setFrequency] = useState('daily');
-  const [minBg, setMinBg] = useState('');
-  const [maxBg, setMaxBg] = useState('');
+
+  const [cal, setCal] = useState(initialCal);
+  const [carbs, setCarbs] = useState(initialCarbs);
+  const [fats, setFats] = useState(initialFat);
+  const [protein, setProtein] = useState(initialProtein);
+
   const [errorMsg, setErrorMsg] = useState('');
 
   useEffect(() => {
     check();
     showSubmitBtn();
-  }, [minBg, maxBg, goalName]);
+  }, [goalName]);
 
   const submit = () => {
     let obj = {
@@ -50,56 +59,21 @@ const BgGoal = (props) => {
       startDate: Moment(startDate).format('DD/MM/YYYY HH:mm:ss'),
       endDate: Moment(endDate).format('DD/MM/YYYY HH:mm:ss'),
       frequency: frequency,
-      minBg: minBg,
-      maxBg: maxBg,
+      cal: cal,
+      carbs: carbs,
+      protein: protein,
+      fats: fats,
     };
   };
 
   const showSubmitBtn = () => {
-    if (
-      maxBg != '' &&
-      minBg != '' &&
-      checkBloodGlucoseText(maxBg) === '' &&
-      checkBloodGlucoseText(minBg) === '' &&
-      opened &&
-      goalName.length != 0 &&
-      errorMsg === ''
-    ) {
+    if (opened && goalName.length > 0) {
       return true;
-    } else {
-      return false;
     }
+    return false;
   };
 
-  const setFunction = (type, value) => {
-    if (type === min_key) {
-      setMinBg(value);
-    }
-    if (type === max_key) {
-      setMaxBg(value);
-    }
-  };
-
-  const check = () => {
-    if (minBg != '' && maxBg != '') {
-      let max = Number(maxBg);
-      let min = Number(minBg);
-      if (max < min) {
-        setErrorMsg(
-          'Min blood glucose should be lesser than max blood glucose and vice versa',
-        );
-        return;
-      }
-      if (max === min) {
-        setErrorMsg(
-          'Min blood glucose should not be equal to maximum blood glucose',
-        );
-        return;
-      }
-    }
-    setErrorMsg('');
-    return;
-  };
+  const check = () => {};
 
   return (
     <Modal
@@ -115,7 +89,7 @@ const BgGoal = (props) => {
         </View>
         <Text style={globalStyles.pageHeader}>Add Goal</Text>
         <Text style={[globalStyles.pageDetails, {marginBottom: '4%'}]}>
-          Blood Glucose Goal
+          Food Intake Goal
         </Text>
         <ScrollView contentContainerStyle={{flexGrow: 1}}>
           <NameDateSelector
@@ -134,21 +108,10 @@ const BgGoal = (props) => {
             fieldName="Frequncy"
             dropDownType="frequency"
           />
-          {BgValue(minBg, setFunction, min_key)}
-          {BgValue(maxBg, setFunction, max_key)}
-          <Text style={[globalStyles.alertText, styles.spacing]}>
-            {errorMsg}
-          </Text>
-          {checkBloodGlucoseText(minBg) != '' && (
-            <Text style={[globalStyles.alertText, styles.spacing]}>
-              Min Reading: {checkBloodGlucoseText(minBg)}
-            </Text>
-          )}
-          {checkBloodGlucoseText(maxBg) != '' && (
-            <Text style={[globalStyles.alertText, styles.spacing]}>
-              Max Reading: {checkBloodGlucoseText(maxBg)}
-            </Text>
-          )}
+          {renderFoodField('Cal', cal, setCal, 'kCal')}
+          {renderFoodField('Carbs', carbs, setCarbs, 'g')}
+          {renderFoodField('Fat', fats, setFats, 'g')}
+          {renderFoodField('Protein', protein, setProtein, 'g')}
         </ScrollView>
         <View style={[globalStyles.buttonContainer]}>
           {showSubmitBtn() === false ? (
@@ -168,37 +131,28 @@ const BgGoal = (props) => {
   );
 };
 
-export default BgGoal;
+export default FoodGoal;
 
-function BgValue(value, setFunction, type) {
+function renderFoodField(fieldName, item, setItem, parameter) {
   return (
-    <View style={{flexDirection: 'row'}}>
-      {type === min_key ? (
-        <Text
-          style={[
-            logStyles.fieldName,
-            {color: Colors.lastLogValueColor, marginStart: '4%', flex: 1},
-          ]}>
-          Min Reading (mmol/L)
-        </Text>
-      ) : (
-        <Text
-          style={[
-            logStyles.fieldName,
-            {color: Colors.lastLogValueColor, marginStart: '4%', flex: 1},
-          ]}>
-          Max Reading (mmol/L)
-        </Text>
-      )}
-
-      <TextInput
-        style={[logStyles.inputField, {marginEnd: '4%', width: '20%'}]}
-        placeholderTextColor="#a1a3a0"
-        keyboardType="decimal-pad"
-        value={value}
-        onChangeText={(input) => setFunction(type, input)}
-      />
-    </View>
+    <>
+      <Text
+        style={[
+          logStyles.fieldName,
+          {color: Colors.lastLogValueColor, marginStart: '4%'},
+        ]}>
+        {fieldName}
+      </Text>
+      <View style={{marginTop: '-9%'}}>
+        <Counter
+          count={item}
+          setCount={setItem}
+          parameter={parameter}
+          fieldName={''}
+          inputable={true}
+        />
+      </View>
+    </>
   );
 }
 
