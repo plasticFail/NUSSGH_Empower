@@ -6,6 +6,7 @@ import {
   StyleSheet,
   ScrollView,
 } from 'react-native';
+import {maxDuration, maxCalBurnt} from '../../commonFunctions/diaryFunctions';
 //third party lib
 import Modal from 'react-native-modal';
 import Moment from 'moment';
@@ -16,8 +17,9 @@ import globalStyles from '../../styles/globalStyles';
 import LeftArrowBtn from '../logs/leftArrowBtn';
 import NameDateSelector from './nameDateSelector';
 import FrequencySelector from './dropDownSelector';
+import RenderCounter from './renderCounter';
 
-const MedicationGoal = (props) => {
+const ActivityGoal = (props) => {
   const {visible} = props;
   const {close} = props;
 
@@ -27,6 +29,9 @@ const MedicationGoal = (props) => {
   //change select date to date option *
   const [opened, setOpened] = useState(false);
   const [frequency, setFrequency] = useState('daily');
+
+  const [minute, setMinute] = useState(maxDuration);
+  const [calBurnt, setCalBurnt] = useState(maxCalBurnt);
 
   useEffect(() => {
     check();
@@ -39,11 +44,17 @@ const MedicationGoal = (props) => {
       startDate: Moment(startDate).format('DD/MM/YYYY HH:mm:ss'),
       endDate: Moment(endDate).format('DD/MM/YYYY HH:mm:ss'),
       frequency: frequency,
+      exercise: minute,
+      calBurnt: calBurnt,
     };
+    console.log(obj);
   };
 
   const showSubmitBtn = () => {
-    return true;
+    if (goalName.length > 0 && opened) {
+      return true;
+    }
+    return false;
   };
 
   const check = () => {};
@@ -62,7 +73,7 @@ const MedicationGoal = (props) => {
         </View>
         <Text style={globalStyles.pageHeader}>Add Goal</Text>
         <Text style={[globalStyles.pageDetails, {marginBottom: '4%'}]}>
-          Medication Goal
+          Activity Goal
         </Text>
         <ScrollView contentContainerStyle={{flexGrow: 1}}>
           <NameDateSelector
@@ -80,6 +91,18 @@ const MedicationGoal = (props) => {
             setSelected={setFrequency}
             fieldName="Frequency"
             dropDownType="frequency"
+          />
+          <RenderCounter
+            fieldName="Excercise"
+            item={minute}
+            setItem={setMinute}
+            parameter={'mins'}
+          />
+          <RenderCounter
+            fieldName="Cal Burnt"
+            item={calBurnt}
+            setItem={setCalBurnt}
+            parameter={'cal'}
           />
         </ScrollView>
         <View style={[globalStyles.buttonContainer]}>
@@ -100,7 +123,7 @@ const MedicationGoal = (props) => {
   );
 };
 
-export default MedicationGoal;
+export default ActivityGoal;
 
 const styles = StyleSheet.create({
   spacing: {

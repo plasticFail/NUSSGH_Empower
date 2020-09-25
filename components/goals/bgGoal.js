@@ -131,7 +131,7 @@ const BgGoal = (props) => {
           <FrequencySelector
             selected={frequency}
             setSelected={setFrequency}
-            fieldName="Frequncy"
+            fieldName="Frequency"
             dropDownType="frequency"
           />
           {BgValue(minBg, setFunction, min_key)}
@@ -153,13 +153,13 @@ const BgGoal = (props) => {
         <View style={[globalStyles.buttonContainer]}>
           {showSubmitBtn() === false ? (
             <TouchableOpacity style={globalStyles.skipButtonStyle}>
-              <Text style={globalStyles.actionButtonText}>Done</Text>
+              <Text style={globalStyles.actionButtonText}>Add Goal</Text>
             </TouchableOpacity>
           ) : (
             <TouchableOpacity
               style={globalStyles.submitButtonStyle}
               onPress={() => submit()}>
-              <Text style={globalStyles.actionButtonText}>Done</Text>
+              <Text style={globalStyles.actionButtonText}>Add Goal</Text>
             </TouchableOpacity>
           )}
         </View>

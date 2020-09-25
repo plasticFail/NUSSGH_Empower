@@ -4,9 +4,13 @@ import {
   TouchableOpacity,
   Text,
   StyleSheet,
-  TextInput,
   ScrollView,
 } from 'react-native';
+import {
+  maxCarbs,
+  maxFats,
+  maxProtein,
+} from '../../commonFunctions/diaryFunctions';
 //third party lib
 import Modal from 'react-native-modal';
 import Moment from 'moment';
@@ -17,13 +21,8 @@ import globalStyles from '../../styles/globalStyles';
 import LeftArrowBtn from '../logs/leftArrowBtn';
 import NameDateSelector from './nameDateSelector';
 import FrequencySelector from './dropDownSelector';
-import {
-  maxCarbs,
-  maxFats,
-  maxProtein,
-} from '../../commonFunctions/diaryFunctions';
-import logStyles from '../../styles/logStyles';
-import Counter from '../onboarding/medication/Counter';
+
+import RenderCounter from './renderCounter';
 
 const initialCal = 1000;
 const initialCarbs = maxCarbs / 2;
@@ -49,7 +48,6 @@ const FoodGoal = (props) => {
   const [errorMsg, setErrorMsg] = useState('');
 
   useEffect(() => {
-    check();
     showSubmitBtn();
   }, [goalName]);
 
@@ -72,8 +70,6 @@ const FoodGoal = (props) => {
     }
     return false;
   };
-
-  const check = () => {};
 
   return (
     <Modal
@@ -105,24 +101,44 @@ const FoodGoal = (props) => {
           <FrequencySelector
             selected={frequency}
             setSelected={setFrequency}
-            fieldName="Frequncy"
+            fieldName="Frequency"
             dropDownType="frequency"
           />
-          {renderFoodField('Cal', cal, setCal, 'kCal')}
-          {renderFoodField('Carbs', carbs, setCarbs, 'g')}
-          {renderFoodField('Fat', fats, setFats, 'g')}
-          {renderFoodField('Protein', protein, setProtein, 'g')}
+          <RenderCounter
+            fieldName="Cal"
+            item={cal}
+            setItem={setCal}
+            parameter={'kCal'}
+          />
+          <RenderCounter
+            fieldName="Carbs"
+            item={carbs}
+            setItem={setCarbs}
+            parameter={'g'}
+          />
+          <RenderCounter
+            fieldName="Fats"
+            item={fats}
+            setItem={setFats}
+            parameter={'g'}
+          />
+          <RenderCounter
+            fieldName="Protein"
+            item={protein}
+            setItem={setProtein}
+            parameter={'g'}
+          />
         </ScrollView>
         <View style={[globalStyles.buttonContainer]}>
           {showSubmitBtn() === false ? (
             <TouchableOpacity style={globalStyles.skipButtonStyle}>
-              <Text style={globalStyles.actionButtonText}>Done</Text>
+              <Text style={globalStyles.actionButtonText}>Add Goal</Text>
             </TouchableOpacity>
           ) : (
             <TouchableOpacity
               style={globalStyles.submitButtonStyle}
               onPress={() => submit()}>
-              <Text style={globalStyles.actionButtonText}>Done</Text>
+              <Text style={globalStyles.actionButtonText}>Add Goal</Text>
             </TouchableOpacity>
           )}
         </View>
@@ -132,29 +148,6 @@ const FoodGoal = (props) => {
 };
 
 export default FoodGoal;
-
-function renderFoodField(fieldName, item, setItem, parameter) {
-  return (
-    <>
-      <Text
-        style={[
-          logStyles.fieldName,
-          {color: Colors.lastLogValueColor, marginStart: '4%'},
-        ]}>
-        {fieldName}
-      </Text>
-      <View style={{marginTop: '-9%'}}>
-        <Counter
-          count={item}
-          setCount={setItem}
-          parameter={parameter}
-          fieldName={''}
-          inputable={true}
-        />
-      </View>
-    </>
-  );
-}
 
 const styles = StyleSheet.create({
   spacing: {

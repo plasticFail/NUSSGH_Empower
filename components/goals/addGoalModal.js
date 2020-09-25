@@ -22,6 +22,8 @@ import LeftArrowBtn from '../logs/leftArrowBtn';
 import BgGoal from './bgGoal';
 import FoodGoal from './foodGoal';
 import MedicationGoal from './medicationGoal';
+import ActivityGoal from './activityGoal';
+import StepsGoal from './stepsGoal';
 
 const AddGoalModal = (props) => {
   const {visible} = props;
@@ -37,6 +39,8 @@ const AddGoalModal = (props) => {
   const [openBg, setOpenBg] = useState(false);
   const [openFood, setOpenFood] = useState(false);
   const [openMed, setOpenMed] = useState(false);
+  const [openActivity, setOpenActivity] = useState(false);
+  const [openSteps, setOpenSteps] = useState(false);
 
   const trimPhrase = (phrase) => {
     if (String(phrase).includes('Log')) {
@@ -55,6 +59,12 @@ const AddGoalModal = (props) => {
     }
     if (type === med_key) {
       setOpenMed(true);
+    }
+    if (type === activity_key) {
+      setOpenActivity(true);
+    }
+    if (type === step_key) {
+      setOpenSteps(true);
     }
   };
 
@@ -107,6 +117,15 @@ const AddGoalModal = (props) => {
       ) : null}
       {openMed ? (
         <MedicationGoal visible={openMed} close={() => setOpenMed(false)} />
+      ) : null}
+      {openActivity ? (
+        <ActivityGoal
+          visible={openActivity}
+          close={() => setOpenActivity(false)}
+        />
+      ) : null}
+      {openSteps ? (
+        <StepsGoal visible={openSteps} close={() => setOpenSteps(false)} />
       ) : null}
     </Modal>
   );
