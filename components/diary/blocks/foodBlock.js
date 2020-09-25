@@ -87,7 +87,7 @@ const FoodBlock = (props) => {
         </View>
         <Text style={globalStyles.pageHeader}>Food Intake</Text>
         <Text style={globalStyles.pageDetails}>{day}</Text>
-        <MissedContent arr={missedArr} type={food_key} />
+        {/*<MissedContent arr={missedArr} type={food_key} />*/}
         {renderProgressBars(carbs, fats, protein)}
         {missedArr.length < 3 && (
           <View

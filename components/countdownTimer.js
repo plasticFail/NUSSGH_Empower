@@ -24,6 +24,6 @@ export default CountdownTimer;
 const styles = StyleSheet.create({
   timerContainer: {
     marginTop: '2%',
-    alignItems: 'center',
+    marginStart: '3%',
   },
 });

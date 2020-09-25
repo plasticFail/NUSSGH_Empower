@@ -5,12 +5,15 @@ import {
   Text,
   Alert,
   Dimensions,
-  SafeAreaView,
-  KeyboardAvoidingView,
+  TouchableOpacity,
+  TextInput,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {resetPassword} from '../../netcalls/requestsPasswordReset';
 import SetPassword from '../../components/account/setPassword';
+import LeftArrowBtn from '../../components/logs/leftArrowBtn';
+import globalStyles from '../../styles/globalStyles';
+import PasswordStrengthMeter from '../../components/passwordStrengthMeter';
 
 const ResetPasswordScreen = (props) => {
   const {token} = props.route.params; //rememberundo
@@ -28,64 +31,79 @@ const ResetPasswordScreen = (props) => {
     }
   };
 
-  const checkPassword = () => {
-    if (strong) {
-      if (pass1 == pass2) {
-        resetPassword(pass1, token).then((response) => {
-          if (response) {
-            Alert.alert(
-              'Success',
-              'Password changed.',
-              [
-                {
-                  text: 'Got It',
-                  onPress: () => props.navigation.navigate('Login'),
-                },
-              ],
-              {cancelable: false},
-            );
-          }
-        });
-      } else {
-        Alert.alert('Error', 'Passwords does not match', [{text: 'Got It'}]);
+  const checkInput = () => {
+    if (pass1.length > 0 && pass2.length > 0) {
+      if (pass1 != pass2) {
+        return 'Passwords does not match';
       }
-    } else {
-      Alert.alert(
-        'Error',
-        'Please input a password that has a strength of at least fair',
-        [{text: 'Got It'}],
-      );
     }
+    if (pass1 && !strong) {
+      return 'Please input a password of at least strength fair';
+    }
+
+    return '';
   };
 
-  console.log(setPass2);
+  const showSubmit = () => {
+    if (checkInput() == '' && strong) {
+      return true;
+    }
+    return false;
+  };
 
-  Icon.loadFont();
+  const submitPassword = () => {
+    resetPassword(pass1, token).then((response) => {
+      if (response) {
+        Alert.alert(
+          'Success',
+          'Password changed.',
+          [
+            {
+              text: 'Got It',
+              onPress: () => props.navigation.navigate('Login'),
+            },
+          ],
+          {cancelable: false},
+        );
+      }
+    });
+  };
+
   return (
-    <KeyboardAvoidingView
-      style={{flex: 1}}
-      behavior={Platform.OS === 'ios' ? 'padding' : null}>
-      <SafeAreaView style={{flex: 1}}>
-        <View style={styles.inner}>
-          <Icon name="account-lock" size={200} style={{alignSelf: 'center'}} />
-          <Text style={styles.headerText}>
-            Set a password that is not easily guessable which can be a mix of :
-          </Text>
-          <Text style={styles.subText}>{'\u2713'} Alphabets</Text>
-          <Text style={styles.subText}>{'\u2713'} Numbers</Text>
-          <Text style={styles.subText}>{'\u2713'} Special Characters</Text>
-          <View
-            style={[styles.formContainer, styles.shadow, {marginTop: '3%'}]}>
-            <SetPassword
-              setPassword={setPassword}
-              setPassword2={setPass2}
-              checkPassword={checkPassword}
-            />
-          </View>
-          <View style={{flex: 1}} />
-        </View>
-      </SafeAreaView>
-    </KeyboardAvoidingView>
+    <View style={globalStyles.editPageContainer}>
+      <View style={globalStyles.menuBarContainer}>
+        <LeftArrowBtn close={() => props.navigation.goBack()} />
+      </View>
+      <Text style={globalStyles.pageHeader}>Reset Password</Text>
+      <Text style={[globalStyles.pageSubDetails, {fontSize: 18}]}>
+        Set a password that is not easily guessable.
+      </Text>
+      <PasswordStrengthMeter setPassword={setPassword} />
+      <TextInput
+        style={globalStyles.editInputBox}
+        placeholder="Confirm New Password"
+        placeholderTextColor="#a1a3a0"
+        secureTextEntry={true}
+        onChangeText={setPass2}
+      />
+      <Text style={[globalStyles.alertText, {marginStart: '3%'}]}>
+        {checkInput()}
+      </Text>
+      <View style={{flex: 1}} />
+      <View style={globalStyles.buttonContainer}>
+        {showSubmit() ? (
+          <TouchableOpacity
+            style={globalStyles.submitButtonStyle}
+            onPress={submitPassword}>
+            <Text style={globalStyles.actionButtonText}>Change Password</Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity style={globalStyles.skipButtonStyle}>
+            <Text style={globalStyles.actionButtonText}>Change Password</Text>
+          </TouchableOpacity>
+        )}
+      </View>
+    </View>
   );
 };
 
@@ -115,7 +133,7 @@ const styles = StyleSheet.create({
   subText: {
     fontSize: 18,
     marginStart: '3%',
-    marginTop: '1%',
+    marginTop: '2%',
   },
   formContainer: {
     width: Dimensions.get('window').width - 20,

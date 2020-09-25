@@ -110,6 +110,20 @@ const globalStyles = StyleSheet.create({
     alignItems: 'flex-end',
     flexDirection: 'row',
   },
+  //edit pages
+  editPageContainer: {
+    flex: 1,
+    backgroundColor: Colors.editBackgroundColor,
+  },
+  editInputBox: {
+    marginBottom: '2%',
+    backgroundColor: 'white',
+    padding: '3%',
+    margin: '4%',
+    borderRadius: 9.5,
+    borderWidth: 0.5,
+    borderColor: Colors.inputBorderColor,
+  },
 });
 
 export default globalStyles;

@@ -74,10 +74,6 @@ const ContactUs = (props) => {
       behavior={Platform.OS === 'ios' ? 'padding' : null}>
       <View style={styles.container}>
         <View style={styles.inner}>
-          <Text style={styles.headingText}>
-            Encountered trouble while using the application? Send in your
-            enquiry here!
-          </Text>
           <SimpleLineIcons
             name="question"
             size={130}

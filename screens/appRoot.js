@@ -13,7 +13,6 @@ import {mapDispatchToProps, mapStateToProps} from '../redux/reduxMapping';
 //other screens
 import Login from './login/login';
 import ForgetPasswordScreen from './login/ForgetPasswordScreen';
-import InputOTPScreen from './login/inputOTPScreen';
 import ResetPasswordScreen from './login/resetPassword';
 //components
 import ContactUs from './contactUs';
@@ -21,7 +20,6 @@ import AskAdd from './onboarding/medicationPlan/askAdd';
 import AddPlan from './onboarding/medicationPlan/addPlan';
 import FitbitSetup from './onboarding/fitbit/FitbitSetup';
 import DrawerNavigator from './drawer';
-
 
 Entypo.loadFont();
 
@@ -125,7 +123,7 @@ class AppRoot extends Component {
                   name="ContactUsScreen"
                   component={ContactUs}
                   options={{
-                    title: 'Contact Us',
+                    title: '',
                     headerRight: () => <View />,
                     headerBackTitle: 'Back',
                   }}
@@ -134,25 +132,14 @@ class AppRoot extends Component {
                   name="ForgetPassword"
                   component={ForgetPasswordScreen}
                   options={{
-                    title: 'Forget Password',
-                    headerRight: () => <View />,
-                  }}
-                />
-                <Stack.Screen
-                  name="InputOTP"
-                  component={InputOTPScreen}
-                  options={{
-                    title: 'Input OTP',
-                    headerRight: () => <View />,
-                    headerBackTitle: 'Back',
+                    headerShown: false,
                   }}
                 />
                 <Stack.Screen
                   name="ResetPasswordScreen"
                   component={ResetPasswordScreen}
                   options={{
-                    title: 'Reset Password',
-                    headerLeft: false,
+                    headerShown: false,
                   }}
                 />
               </>

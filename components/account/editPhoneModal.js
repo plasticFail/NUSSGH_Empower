@@ -1,9 +1,6 @@
-import EditPasswordModal from './editPasswordModal';
-
 import React, {useState} from 'react';
 import {
   View,
-  KeyboardAvoidingView,
   Text,
   StyleSheet,
   Dimensions,
@@ -15,95 +12,51 @@ import {
 //third party library
 import Modal from 'react-native-modal';
 //component
-import Header from '../diary/blocks/header';
+import LeftArrowBtn from '../logs/leftArrowBtn';
+import InputOTPScreen from '../../screens/login/inputOTPScreen';
+//style
+import globalStyles from '../../styles/globalStyles';
 
 const emailRgx = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 const EditPhoneModal = (props) => {
-  const [email, setEmail] = useState('');
+  const [inputOTPShow, setInputOTPShow] = useState(false);
   const [newPhoneNumber, setNewPhoneNumber] = useState('');
+  const {number} = props;
 
-  const checkPhoneNumber = (phoneNum) => {
-    let first = phoneNum.substring(0, 1);
-    if (first === '8' || first === '9') {
-      if (String(phoneNum).length == 8) {
-        return true;
-      } else {
-        return false;
-      }
-    } else {
-      return false;
-    }
-  };
-
-  const submit = () => {
-    if (email === '' || newPhoneNumber == '') {
-      Alert.alert(
-        'Invalid Inputs',
-        'Please make sure all the inputs are filled.',
-        [{text: 'Got It'}],
-      );
-    }
-    if (emailRgx.test(email) && checkPhoneNumber(newPhoneNumber)) {
-      Alert.alert(
-        'Enquiry Sent successfully',
-        'Please give your RC a few working days to get back to you!',
-        [
-          {
-            text: 'Got It',
-            onPress: () => {
-              setEmail('');
-              setNewPhoneNumber('');
-              props.close();
-            },
-          },
-        ],
-      );
-    } else if (!emailRgx.test(email)) {
-      Alert.alert(
-        'Invalid Email Address',
-        'Please input a valid email address',
-        [{text: 'Got It'}],
-      );
-    } else if (!checkPhoneNumber(newPhoneNumber)) {
-      Alert.alert('Invalid Phone Number', 'Please input a valid phone number', [
-        {text: 'Got It'},
-      ]);
-    }
-  };
   return (
     <Modal
       isVisible={props.visible}
       animationIn="slideInUp"
       onBackdropPress={props.close}
       onBackButtonPress={props.close}
-      style={{justifyContent: 'flex-end'}}>
-      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : null}>
-        <View style={{backgroundColor: 'white'}}>
-          <Header title={'Change Phone Number'} closeModal={props.close} />
-          <Text style={styles.header}>
-            Send a phone number change request to your RC!
-          </Text>
-          <TextInput
-            style={styles.inputBox}
-            placeholder="Email Address"
-            placeholderTextColor="#a1a3a0"
-            onChangeText={setEmail}
-          />
-          <TextInput
-            style={styles.inputBox}
-            placeholder="New Phone Number"
-            placeholderTextColor="#a1a3a0"
-            secureTextEntry={true}
-            onChangeText={setNewPhoneNumber}
-            keyboardType="number-pad"
-            maxLength={8}
-          />
-          <TouchableOpacity style={styles.button} onPress={submit}>
-            <Text style={styles.buttonText}>Send Request</Text>
-          </TouchableOpacity>
+      style={{margin: 0}}>
+      <View style={globalStyles.editPageContainer}>
+        <View style={globalStyles.menuBarContainer}>
+          <LeftArrowBtn close={props.close} />
         </View>
-      </KeyboardAvoidingView>
+        <Text style={globalStyles.pageHeader}>Edit Mobile No.</Text>
+        <Text style={globalStyles.pageDetails}>Verficiation Required</Text>
+        <Text style={[globalStyles.pageSubDetails, {fontSize: 18}]}>
+          For security purposes, we will send you a One Time Password (OTP) to:
+        </Text>
+        <Text style={[globalStyles.pageDetails, {marginTop: '2%'}]}>
+          {number}
+        </Text>
+      </View>
+      <View style={globalStyles.buttonContainer}>
+        <TouchableOpacity
+          style={globalStyles.nextButtonStyle}
+          onPress={() => setInputOTPShow(true)}>
+          <Text style={globalStyles.actionButtonText}>Get OTP</Text>
+        </TouchableOpacity>
+      </View>
+      <InputOTPScreen
+        visible={inputOTPShow}
+        close={() => setInputOTPShow(false)}
+        phoneNumber={number}
+        closeParent={() => props.close()}
+      />
     </Modal>
   );
 };

@@ -2,6 +2,9 @@ import React, {Component} from 'react';
 import {View, TextInput, Animated, Text, StyleSheet} from 'react-native';
 //third party lib
 import zxcvbn from 'zxcvbn';
+//styles
+import {Colors} from '../styles/colors';
+import globalStyles from '../styles/globalStyles';
 
 //using score 1 - 4, animate the respective bars to show strength
 export default class PasswordStrengthMeter extends Component {
@@ -134,9 +137,15 @@ export default class PasswordStrengthMeter extends Component {
           placeholder="New password"
           secureTextEntry
           onChangeText={this.setInputPassword}
-          style={styles.inputbox}
+          style={globalStyles.editInputBox}
         />
-        <View style={{flexDirection: 'row', height: 10}}>
+        <View
+          style={{
+            flexDirection: 'row',
+            height: 10,
+            marginStart: '4%',
+            marginEnd: '4%',
+          }}>
           <Animated.View style={[progressStyleA]} />
           <Animated.View style={[progressStyleB]} />
           <Animated.View style={[progressStyleC]} />
@@ -155,16 +164,6 @@ export default class PasswordStrengthMeter extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  inputbox: {
-    marginBottom: '2%',
-    backgroundColor: '#e2e8ee',
-    padding: '3%',
-    margin: '2%',
-    borderRadius: 9.5,
-  },
-});
 
 //first bar
 function getFullColorRange() {

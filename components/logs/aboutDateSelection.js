@@ -16,7 +16,7 @@ const AboutDateSelection = (props) => {
         <Text style={styles.text}>Date Time Selection</Text>
         <Text style={styles.textDetail}>
           You can select a date 1 day before or 10 minutes after the current
-          time displayed.
+          time.
         </Text>
         <TouchableOpacity
           onPress={() => closeModal()}

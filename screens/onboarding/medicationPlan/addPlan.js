@@ -26,6 +26,8 @@ import {
   onboard_marginEnd,
   normalTextFontSize,
 } from '../../../styles/variables';
+import {addMed2Plan} from '../../../commonFunctions/medicationFunction';
+import LoadingModal from '../../../components/loadingModal';
 
 Ionicons.loadFont();
 
@@ -38,6 +40,8 @@ const AddPlan = (props) => {
   const [selectedMedicine, setSelectedMedicine] = useState({});
   const [selectedMedicineName, setSelectedMedicineName] = useState('');
   const [searchVisible, setSearchVisible] = useState(false);
+
+  const [actionLoading, setActionLoading] = useState(false);
 
   useEffect(() => {
     formatSelectionString();
@@ -76,7 +80,7 @@ const AddPlan = (props) => {
   };
 
   //pass selected dates with the medications back
-  const handleAdd = () => {
+  const handleAdd = async () => {
     if (
       dosage === 0 ||
       frequency === 0 ||
@@ -89,10 +93,31 @@ const AddPlan = (props) => {
     } else {
       setParameter();
       setMedicine2Obj();
-      props.navigation.navigate('MedicationPlan', {
-        list: selectedDates41,
-        parent: 'addPlan',
-      });
+      if (props.route.params != null) {
+        if (props.route.params.fromParent === 'fromExistingPlan') {
+          console.log('adding from existing plan ');
+          setActionLoading(true);
+          addMed2Plan(selectedDates41).then((response) => {
+            if (response) {
+              setActionLoading(false);
+              props.navigation.navigate('Medication', {});
+            } else {
+              setTimeout(() => setActionLoading(false), 5000);
+            }
+          });
+        } else {
+          props.navigation.navigate('MedicationPlan', {
+            list: selectedDates41,
+            parent: 'addPlan',
+          });
+        }
+      } else {
+        //needed*
+        props.navigation.navigate('MedicationPlan', {
+          list: selectedDates41,
+          parent: 'addPlan',
+        });
+      }
     }
   };
 
@@ -209,6 +234,7 @@ const AddPlan = (props) => {
         selectedDates41={selectedDates41}
         setSelectedDates41={setSelectedDates41}
         selectedMedicine={selectedMedicine}
+        parent={props.route.params?.fromParent}
       />
       <View style={{flex: 5}} />
       <View style={[globalStyles.buttonContainer]}>
@@ -228,6 +254,10 @@ const AddPlan = (props) => {
           setSelectedMedicine={setSelectedMedicine}
         />
       ) : null}
+      <LoadingModal
+        visible={actionLoading}
+        message={'Updating your medication plan'}
+      />
     </View>
   );
 };

@@ -5,7 +5,7 @@ import {
   medicationList,
   weightAddLog,
   glucoseQuestionaire,
-  medplanAdd,
+  medPlan,
 } from './urls';
 import {getToken} from '../storage/asyncStorageFunctions';
 
@@ -63,7 +63,7 @@ const storeMedications = async () => {
 };
 
 const getMedication4Day = async (dateString) => {
-  const string = medplanAdd + '?start=' + dateString + '&end=' + dateString;
+  const string = medPlan + '?start=' + dateString + '&end=' + dateString;
   try {
     let response = await fetch(string, {
       method: 'GET',

@@ -94,9 +94,6 @@ const HomeScreen = (props) => {
     //Refresh every 1 minutes
     setTimeout(() => {
       setCurrHour(new Date().getHours());
-      checkLogDone(getGreetingFromHour(currHour)).then((response) => {
-        setUncompleteLogs(response.notCompleted);
-      });
     }, 60000);
   });
 
@@ -104,7 +101,7 @@ const HomeScreen = (props) => {
     props.navigation.addListener('focus', () => {
       checkLogDone(getGreetingFromHour(currHour))
         .then((response) => {
-          if (response != undefined) {
+          if (response != null) {
             setUncompleteLogs(response.notCompleted);
           }
         })
@@ -114,6 +111,12 @@ const HomeScreen = (props) => {
   }, []);
 
   const initLogs = () => {
+    checkLogDone(getGreetingFromHour(currHour)).then((response) => {
+      if (response != null) {
+        setUncompleteLogs(response.notCompleted);
+      }
+    });
+
     getEntry4Day(today_date)
       .then((data) => {
         if (data != undefined) {
@@ -159,14 +162,12 @@ const HomeScreen = (props) => {
             setBgMiss(true);
             setBgl(null);
           }
-
           if (weightLogs.length > 0) {
-            averageWeight =
-              Math.round((averageWeight * 100) / weightLogs.length) / 100;
-            setWeight(averageWeight);
+            setWeight(weightLogs[weightLogs.length - 1].weight);
           } else {
-            setWeight(null);
+            setWeight(0);
           }
+
           setStepsTaken(steps);
 
           //for med data log

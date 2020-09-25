@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -8,19 +8,19 @@ import {
   Dimensions,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-//third party libaray
+//third part libr
 import Modal from 'react-native-modal';
 import moment from 'moment';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+//style
+import {Colors} from '../../styles/colors';
+import globalStyles from '../../styles/globalStyles';
 //component
-import DeleteConfirmation from './deleteConfirmation';
-import CrossBtn from '../../crossBtn';
-import MedicationItem from '../../medicationItem';
-//styles
-import {Colors} from '../../../styles/colors';
-import globalStyles from '../../../styles/globalStyles';
+import CrossBtn from '../crossBtn';
+import MedicationItem from '../medicationItem';
+import DeleteConfirmation from '../onboarding/medication/deleteConfirmation';
 
-const ScheduledMedicationModal = (props) => {
+const ViewMed4Day = (props) => {
   const {isVisible, closeModal} = props;
   const {medicationList, date} = props;
   const dateString = moment(date.dateString, 'YYYY-MM-DD').format(
@@ -31,19 +31,19 @@ const ScheduledMedicationModal = (props) => {
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [toDelete, setToDelete] = useState({});
 
-  const handleCloseDeleteModal = () => {
-    setDeleteModalVisible(false);
+  const handleAdd = () => {
+    closeModal();
+    navigation.navigate('AddPlan', {
+      fromAddPlanDate: date.dateString,
+      fromParent: 'fromExistingPlan',
+    });
   };
 
   const handleDelete = (item) => {
-    console.log('show delete confirmation');
-    setDeleteModalVisible(true);
+    console.log('deleting  med');
+    console.log(item);
     setToDelete(item);
-  };
-
-  const handleAdd = () => {
-    closeModal();
-    navigation.navigate('AddPlan', {fromAddPlanDate: date.dateString});
+    setDeleteModalVisible(true);
   };
 
   return (
@@ -88,14 +88,15 @@ const ScheduledMedicationModal = (props) => {
               {deleteModalVisible ? (
                 <Modal
                   isVisible={deleteModalVisible}
-                  onBackdropPress={handleCloseDeleteModal}
-                  onBackButtonPress={handleCloseDeleteModal}>
+                  onBackdropPress={() => setDeleteModalVisible(false)}
+                  onBackButtonPress={() => setDeleteModalVisible(false)}>
                   <View style={styles.deleteContainer}>
                     <DeleteConfirmation
                       medication={toDelete}
                       date={date}
-                      closeSelf={handleCloseDeleteModal}
+                      closeSelf={() => setDeleteModalVisible(false)}
                       closeParent={closeModal}
+                      parent="fromExistingPlan"
                     />
                   </View>
                 </Modal>
@@ -125,7 +126,7 @@ const ScheduledMedicationModal = (props) => {
   );
 };
 
-export default ScheduledMedicationModal;
+export default ViewMed4Day;
 
 const styles = StyleSheet.create({
   scheduledContainer: {

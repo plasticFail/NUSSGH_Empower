@@ -1,34 +1,72 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 //function
 import {useNavigation} from '@react-navigation/native';
+import {
+  removeMedAllFromExisting,
+  removeMed4DateFromExisting,
+} from '../../../commonFunctions/medicationFunction';
+import LoadingModal from '../../loadingModal';
 
 //calling removeObj from askAdd.js
 const DeleteConfirmation = (props) => {
-  const {medication, date} = props;
+  const {medication, date, parent} = props;
   const {closeSelf, closeParent} = props;
   const navigation = useNavigation();
+  const [loading, setLoading] = useState(false);
 
-  const handleRemoveDate = () => {
-    closeSelf();
-    closeParent();
-    navigation.navigate('MedicationPlan', {
-      dateString: date.dateString,
-      type: 'justThis',
-      medication: medication,
-      list: {},
-      parent: 'deleteConfirmation',
-    });
+  const handleRemoveDate = async () => {
+    if (parent === 'fromExistingPlan') {
+      console.log(
+        'From: viewMed4Day: removing med from this date in existing plan',
+      );
+      setLoading(true);
+      removeMed4DateFromExisting(date.dateString, medication).then(
+        (response) => {
+          if (response) {
+            setLoading(false);
+            closeSelf();
+            closeParent();
+            navigation.navigate('Medication', {});
+          }
+        },
+      );
+    } else {
+      closeSelf();
+      closeParent();
+      navigation.navigate('MedicationPlan', {
+        dateString: date.dateString,
+        type: 'justThis',
+        medication: medication,
+        list: {},
+        parent: 'deleteConfirmation',
+      });
+    }
   };
 
-  const handleRemoveFromAll = () => {
-    closeSelf();
-    closeParent();
-    navigation.navigate('MedicationPlan', {
-      type: 'forAll',
-      medication: medication,
-      parent: 'deleteConfirmation',
-    });
+  const handleRemoveFromAll = async () => {
+    if (parent === 'fromExistingPlan') {
+      console.log(
+        'From: viewMed4Day: removing med from all dates in existing plan',
+      );
+      setLoading(true);
+      removeMedAllFromExisting(medication).then((response) => {
+        if (response) {
+          setLoading(false);
+          closeSelf();
+          closeParent();
+          navigation.navigate('Medication', {});
+        }
+      });
+    } else {
+      closeSelf();
+      closeParent();
+      navigation.navigate('MedicationPlan', {
+        type: 'forAll',
+        medication: medication,
+        parent: 'deleteConfirmation',
+      });
+    }
   };
 
   return (
@@ -41,6 +79,10 @@ const DeleteConfirmation = (props) => {
       <TouchableOpacity onPress={handleRemoveFromAll}>
         <Text style={styles.deleteAllText}>Remove from All</Text>
       </TouchableOpacity>
+      <LoadingModal
+        visible={loading}
+        message={'Updating your medication plan'}
+      />
     </>
   );
 };

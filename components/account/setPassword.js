@@ -8,24 +8,27 @@ import {
   Dimensions,
 } from 'react-native';
 import PasswordStrengthMeter from '../passwordStrengthMeter';
+import globalStyles from '../../styles/globalStyles';
 
 const SetPassword = (props) => {
   return (
-    <>
+    <View>
       <PasswordStrengthMeter setPassword={props.setPassword} />
       <TextInput
-        style={styles.inputbox}
+        style={globalStyles.editInputBox}
         placeholder="Confirm New Password"
         placeholderTextColor="#a1a3a0"
         secureTextEntry={true}
         onChangeText={props.setPassword2}
       />
-      <TouchableOpacity
-        style={styles.buttonStyle}
-        onPress={props.checkPassword}>
-        <Text style={styles.buttonText}>Submit</Text>
-      </TouchableOpacity>
-    </>
+      <View style={globalStyles.buttonContainer}>
+        <TouchableOpacity
+          style={globalStyles.submitButtonStyle}
+          onPress={() => submit()}>
+          <Text style={globalStyles.actionButtonText}>Submit</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 };
 
