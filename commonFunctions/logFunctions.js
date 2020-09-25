@@ -29,6 +29,7 @@ const food_key = 'Food Intake Log';
 const med_key = 'Medication Log';
 const weight_key = 'Weight Log';
 const activity_key = 'Activity Log';
+const step_key = 'Steps';
 const min_bg = 4;
 
 const renderLogIcon = (logType) => {
@@ -45,6 +46,9 @@ const renderLogIcon = (logType) => {
     return require('../resources/images/weight_logo.png');
   }
   if (logType === activity_key) {
+    return require('../resources/images/activity_logo.png');
+  }
+  if (logType === step_key) {
     return require('../resources/images/activity_logo.png');
   }
 };
@@ -311,6 +315,7 @@ export {
   med_key,
   weight_key,
   activity_key,
+  step_key,
   min_bg,
   renderLogIcon,
   isToday,
