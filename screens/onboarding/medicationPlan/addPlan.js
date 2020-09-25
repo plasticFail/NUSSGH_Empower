@@ -101,6 +101,8 @@ const AddPlan = (props) => {
             if (response) {
               setActionLoading(false);
               props.navigation.navigate('Medication', {});
+            } else {
+              setTimeout(() => setActionLoading(false), 5000);
             }
           });
         } else {

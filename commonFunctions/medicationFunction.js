@@ -14,9 +14,13 @@ const addMed2Plan = async (toAdd) => {
   try {
     let plan = await getMedication4DateRange(fromDate, toDate);
     let obj = addMedicine(toAdd, prepareDataFromAPI(plan));
-    console.log('sending add req to existing med plan ------');
-    await postPlan(prepareData(obj));
-    return true;
+    if (obj != null) {
+      console.log('sending add req to existing med plan ------');
+      await postPlan(prepareData(obj));
+      return true;
+    } else {
+      return false;
+    }
   } catch (error) {
     console.log(error);
     return false;
