@@ -67,6 +67,9 @@ const isEmpty = (obj) => {
 
 //check against storage made whether data is made in last 7 days
 const checkLast7Day = (data) => {
+  if (data == null) {
+    return false;
+  }
   let arr = getDateRange(7, new Date());
   let lastDate = String(convertDatestring(data.date));
 

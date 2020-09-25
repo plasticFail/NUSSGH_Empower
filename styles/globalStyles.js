@@ -109,6 +109,7 @@ const globalStyles = StyleSheet.create({
     marginBottom: verticalMarginsBetweenComponent,
     alignItems: 'flex-end',
     flexDirection: 'row',
+    justifyContent: 'space-between'
   },
   //edit pages
   editPageContainer: {

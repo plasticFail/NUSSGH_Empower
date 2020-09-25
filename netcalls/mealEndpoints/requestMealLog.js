@@ -64,4 +64,3 @@ const requestNutrientConsumption = async (startDate, endDate) => {
 }
 
 export {requestFavouriteMealList, requestMealLogList, requestUnfavouriteMeal, requestNutrientConsumption};
-//edit flag

@@ -9,6 +9,7 @@ import Animated, {Easing} from 'react-native-reanimated';
 import {TapGestureHandler, State} from "react-native-gesture-handler";
 import {Svg, Circle, G} from 'react-native-svg';
 // Others
+/*
 import f1 from '../../../../resources/images/icons/meal.png';
 import f2 from '../../../../resources/images/icons/parfait.png';
 import f3 from '../../../../resources/images/icons/salad.png';
@@ -150,4 +151,5 @@ const styles = StyleSheet.create({
 })
 
 export default NutritionIntakeCard;
+ */
 //edit flag
