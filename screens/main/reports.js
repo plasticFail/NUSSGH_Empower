@@ -58,38 +58,62 @@ const ReportsScreen = (props) => {
   // Note all data here are the entire month dataset. We'll process it in the front-end before displaying.
   const [tabIndex, setTabIndex] = React.useState(0);
   const [timeTabIndexFilter, setTimeTabIndexFilter] = React.useState(1);
+
+  const [fullDataset, setFullDataset] = React.useState({
+    bglData: [],
+    weightData: [],
+    medPlan: [],
+    activityData: [],
+    medData: [],
+    foodData: []
+  });
+  /*
   const [bglData, setBglData] = React.useState([]);
   const [foodIntakeData, setFoodIntakeData] = React.useState([]);
   const [medConsumptionData, setMedConsumptionData] = React.useState([]);
   const [medPlan, setMedPlan] = React.useState([]);
   const [weightData, setWeightData] = React.useState([]);
   const [activityData, setActivityData] = React.useState([]);
+   */
 
   // Load data when focused
   React.useEffect(() => {
-    props.navigation.addListener('focus', () => {
-      const startDate = Moment(new Date()).subtract(28, "days");
-      const endDate = Moment(new Date()).add(1, "day");
-      requestNutrientConsumption(startDate.format('DD/MM/YYYY HH:mm:ss'), getLastMinuteFromTodayDate()).then(data => {
-          setFoodIntakeData(data.data);
-      }).catch(err => console.log(err));
-      getWeightLogs(startDate.format('YYYY-MM-DD'), endDate.format('YYYY-MM-DD')).then(data => {
-        setWeightData(data.logs);
-      });
-      getMedicationLogs(startDate.format('YYYY-MM-DD'), endDate.format('YYYY-MM-DD')).then(data=> {
-        setMedConsumptionData(data.logs);
-      });
-      getBloodGlucoseLogs(startDate.format('YYYY-MM-DD'), endDate.format('YYYY-MM-DD')).then(data=> {
-        setBglData(data.logs);
-      });
-      getActivityLogs(startDate.format('YYYY-MM-DD'), endDate.format('YYYY-MM-DD')).then(data => {
-        setActivityData(data.logs);
-      });
-      getPlan(startDate.format('YYYY-MM-DD'), endDate.format('YYYY-MM-DD')).then(data => {
-        setMedPlan(data);
-      }).catch(err => console.log(err));
-    });
-  })
+    const subs =[props.navigation.addListener('focus', () => {
+      init().then(d => {
+        setFullDataset(d);
+        /*
+        setBglData(d.bglData);
+        setFoodIntakeData(d.foodData);
+        setWeightData(d.weightData);
+        setMedConsumptionData(d.medData);
+        setActivityData(d.activityData);
+        setMedPlan(d.medPlan);
+         */
+      })
+    })];
+    return function cleanup() {
+      subs.forEach((unSub) => {
+        unSub()
+      })
+    }
+  }, []);
+
+  const init = async () => {
+    const startDate = Moment(new Date()).subtract(28, "days");
+    const endDate = Moment(new Date()).add(1, "day");
+    const foodData = (await requestNutrientConsumption(startDate.format('DD/MM/YYYY HH:mm:ss'),
+        getLastMinuteFromTodayDate())).data;
+    const weightData = (await getWeightLogs(startDate.format('YYYY-MM-DD'),
+        endDate.format('YYYY-MM-DD'))).logs;
+    const medData = (await getMedicationLogs(startDate.format('YYYY-MM-DD'),
+        endDate.format('YYYY-MM-DD'))).logs;
+    const bglData = (await getBloodGlucoseLogs(startDate.format('YYYY-MM-DD'),
+        endDate.format('YYYY-MM-DD'))).logs;
+    const activityData = (await getActivityLogs(startDate.format('YYYY-MM-DD'),
+        endDate.format('YYYY-MM-DD'))).logs;
+    const medPlan = await getPlan(startDate.format('YYYY-MM-DD'), endDate.format('YYYY-MM-DD'));
+    return {foodData, medData, bglData, activityData, weightData, medPlan};
+  }
 
   const handleTabSelectChange = (tabIndex) => {
       setTabIndex(tabIndex);
@@ -119,14 +143,15 @@ const ReportsScreen = (props) => {
             <View style={{marginTop: 20}}>
               <Text style={globalStyles.pageDetails}>Blood Glucose</Text>
               <Text style={[globalStyles.pageDetails, {color: 'grey'}]}>Readings - mmol/L</Text>
-              <LineChart data={bglData}
+              <LineChart data={fullDataset.bglData}
+                         key={'bgl-chart'}
                          filterKey={filterKey}
                          xExtractor={d=>d.record_date}
                          yExtractor={d=>d.bg_reading}
                          defaultMaxY={14}
                          lowerBound={4}
                          upperBound={12}
-                         boundaryFill='#f0f0f0'
+                         boundaryFill='rgba(0,0,0, 0.03)'
                          width={width}
                          height={300} />
             </View>
@@ -134,7 +159,7 @@ const ReportsScreen = (props) => {
               <View style={{marginTop: 20}}>
                 <Text style={globalStyles.pageDetails}>Food Intake</Text>
                 <Text style={[globalStyles.pageDetails, {color: 'grey'}]}>Calories Consumed - kcal</Text>
-                <BarChart data={foodIntakeData} filterKey={filterKey}
+                <BarChart data={fullDataset.foodData} filterKey={filterKey}
                           xExtractor={d=>d.date}
                           yExtractor={d=>d.nutrients.energy.amount}
                           boundaryFill='#f0f0f0'
@@ -144,15 +169,15 @@ const ReportsScreen = (props) => {
                           width={width}
                           height={300} />
                 <Text style={[globalStyles.pageDetails, {color: 'grey'}]}>Nutrition Distribution</Text>
-                <NutritionPie data={foodIntakeData} filterKey={filterKey} pieKeys={['carbohydrate', 'total-fat', 'protein']} />
+                <NutritionPie data={fullDataset.foodData} filterKey={filterKey} pieKeys={['carbohydrate', 'total-fat', 'protein']} />
             </View>
         ) : tabName === MEDICATION_KEY ? (
             <View style={{marginTop: 20}}>
               <Text style={globalStyles.pageDetails}>Medication</Text>
               <Text style={[globalStyles.pageDetails, {color: 'grey'}]}>Average Adherence - %</Text>
               <MedicationTable
-                  plan={medPlan}
-                  data={medConsumptionData}
+                  plan={fullDataset.medPlan}
+                  data={fullDataset.medData}
                   style={{marginLeft: '4%', marginRight: '4%'}}
                   filterKey={filterKey}
                   width={width} height={height} />
@@ -161,7 +186,7 @@ const ReportsScreen = (props) => {
             <View style={{marginTop: 20}}>
                 <Text style={globalStyles.pageDetails}>Weight</Text>
                 <Text style={[globalStyles.pageDetails, {color: 'grey'}]}>Progress - kg</Text>
-                <LineChart data={weightData} filterKey={filterKey} data={weightData}
+                <LineChart data={fullDataset.weightData} filterKey={filterKey}
                            width={width} height={300}
                            xExtractor={d=>d.record_date}
                            yExtractor={d=>d.weight}
@@ -173,7 +198,7 @@ const ReportsScreen = (props) => {
               <View style={{marginTop: 20}}>
                 <Text style={globalStyles.pageDetails}>Activity</Text>
                 <Text style={[globalStyles.pageDetails, {color: 'grey'}]}>Steps Taken</Text>
-                <BarChart data={activityData}
+                <BarChart data={fullDataset.activityData}
                           filterKey={filterKey}
                           width={width}
                           boundaryFill='#f0f0f0'
