@@ -25,6 +25,7 @@ import {patientLoginRequest} from '../../netcalls/requestsAuth';
 import Loading from '../../components/loading';
 import globalStyles from '../../styles/globalStyles';
 import LoadingModal from '../../components/loadingModal';
+import Logo from '../../resources/images/Patient-Icons/SVG/icon-color-empower.svg';
 
 class Login extends Component {
   constructor(props) {
@@ -91,10 +92,7 @@ class Login extends Component {
         style={{flex: 1}}
         behavior={Platform.OS === 'ios' ? 'padding' : null}>
         <View style={styles.container}>
-          <Image
-            source={require('../../resources/images/empower_logo.png')}
-            style={styles.logoStyle}
-          />
+          <Logo height={styles.logoStyle.height} width={styles.logoStyle.width} />
           <Text style={styles.welcomeText}>Welcome</Text>
           <Text style={styles.detailText}>
             To proceed with the app, please log in with your credentials

@@ -270,7 +270,7 @@ export default class CreateMealLogBlock extends React.Component {
                                   <View style={{backgroundColor: Colors.alertColor,
                                       borderRadius: 20, height: 50, paddingLeft: 15, paddingRight: 15,
                                       justifyContent: 'center'}}>
-                                    <Text style={{color: 'fff', fontSize: 24, fontWeight:'bold'}}>Unfavourited!</Text>
+                                    <Text style={{color: '#fff', fontSize: 24, fontWeight:'bold'}}>Unfavourited!</Text>
                                   </View>
                                  }
                               messageComponentHeight={50}

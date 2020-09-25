@@ -8,7 +8,7 @@ import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
 import Home from './main/home';
 import AddLog from './main/log/addlog';
 import ChatScreen from './main/chat';
-import ReportsScreen from './main/reports';
+import {ReportsScreen} from './main/reports';
 //third party lib
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import Ant from 'react-native-vector-icons/AntDesign';
