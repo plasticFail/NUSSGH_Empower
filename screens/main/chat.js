@@ -11,6 +11,7 @@ const ChatScreen = (props) => {
       <View style={globalStyles.menuBarContainer}>
         <LeftArrowBtn close={() => props.navigation.navigate('Home')} />
       </View>
+      <Text style={globalStyles.pageHeader}>Chat</Text>
     </View>
   );
 };

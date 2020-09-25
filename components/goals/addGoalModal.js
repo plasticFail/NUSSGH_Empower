@@ -12,6 +12,7 @@ import {
   activity_key,
   step_key,
   renderLogIcon,
+  renderLogIconNavy,
 } from '../../commonFunctions/logFunctions';
 //styles
 import logStyles from '../../styles/logStyles';
@@ -91,12 +92,9 @@ const AddGoalModal = (props) => {
             <TouchableOpacity
               style={logStyles.logItem}
               onPress={() => openGoalType(item)}>
-              <Image source={renderLogIcon(item)} style={logStyles.loglogo} />
+              {renderLogIconNavy(item)}
               <Text
-                style={[
-                  globalStyles.pageDetails,
-                  {marginStart: '15%', flex: 1},
-                ]}>
+                style={[globalStyles.pageDetails, {flex: 1, color: '#21293a'}]}>
                 {trimPhrase(item)} Goal
               </Text>
               <Icon

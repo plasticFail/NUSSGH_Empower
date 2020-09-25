@@ -13,13 +13,41 @@ export default class StepCounter extends Component {
     super(props);
     this.props = props;
     this.state = {
-      count: this.props.count === null ? 0 : this.props.count,
+      count: this.props.count === undefined ? 0 : this.props.count,
     };
     this.timer = null;
     this.handleAdd = this.handleAdd.bind(this);
     this.handleMinus = this.handleMinus.bind(this);
     this.stopTimer = this.stopTimer.bind(this);
   }
+
+  componentDidMount() {
+    this.setState({
+      count: this.props.count === undefined ? 0 : this.props.count,
+    });
+  }
+
+  componentDidUpdate(prevProp) {
+    if (prevProp.count != this.props.count) {
+      this.setState({
+        count: this.props.count === undefined ? 0 : this.props.count,
+      });
+    }
+  }
+
+  handleClickAdd = () => {
+    let newCount = this.state.count + 1;
+    this.setState({count: newCount});
+  };
+
+  handleClickMinus = () => {
+    if (this.state.count > 0) {
+      let newCount = this.state.count - 1;
+      this.setState({count: newCount});
+    } else {
+      this.setState({count: 0});
+    }
+  };
 
   handleAdd = () => {
     let newCount = this.state.count + 1;
@@ -51,6 +79,7 @@ export default class StepCounter extends Component {
     return (
       <View style={{...styles.container, ...this.props.style}}>
         <TouchableOpacity
+          onPress={this.handleClickMinus}
           onPressIn={this.handleMinus}
           onPressOut={this.stopTimer}>
           <Ionicons name="remove-circle" size={40} color={'#aad326'} />
@@ -59,6 +88,7 @@ export default class StepCounter extends Component {
           {count} {parameter}
         </Text>
         <TouchableOpacity
+          onPress={this.handleClickAdd}
           onPressIn={this.handleAdd}
           onPressOut={this.stopTimer}>
           <Ionicons name="add-circle" size={40} color={'#aad326'} />

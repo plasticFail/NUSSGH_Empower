@@ -20,6 +20,18 @@ import Medication from './more/medications';
 import Logout from './more/logout';
 import GameCenter from './main/gameCenter';
 
+import ACCOUNT from '../resources/images/Patient-Icons//SVG/icon-white-sidemenu-account.svg';
+import DIARY from '../resources/images/Patient-Icons//SVG/icon-white-sidemenu-diary.svg';
+import MED from '../resources/images/Patient-Icons//SVG/icon-white-sidemenu-med.svg';
+import GOALS from '../resources/images/Patient-Icons//SVG/icon-white-sidemenu-goals.svg';
+import APPT from '../resources/images/Patient-Icons//SVG/icon-white-sidemenu-appt.svg';
+import RESOURCES from '../resources/images/Patient-Icons//SVG/icon-white-sidemenu-resources.svg';
+
+const iconStyle = {
+  width: 30,
+  height: 30,
+};
+
 const Drawer = createDrawerNavigator();
 
 const DrawerNavigator = (props) => {
@@ -48,46 +60,42 @@ const DrawerNavigator = (props) => {
         name="Edit Account"
         component={AccountDetailScreen}
         options={{
-          drawerIcon: () => <Ant name="user" size={30} color={'white'} />,
+          drawerIcon: () => <ACCOUNT {...iconStyle} />,
         }}
       />
       <Drawer.Screen
         name="Diary"
         component={DiaryScreen}
         options={{
-          drawerIcon: () => (
-            <Icons name="book-open" size={27} color={'white'} />
-          ),
+          drawerIcon: () => <DIARY {...iconStyle} />,
         }}
       />
       <Drawer.Screen
         name="Medication"
         component={Medication}
         options={{
-          drawerIcon: () => <Entypo name="water" size={30} color={'white'} />,
+          drawerIcon: () => <MED {...iconStyle} />,
         }}
       />
       <Drawer.Screen
         name="Goals"
         component={Goals}
         options={{
-          drawerIcon: () => <Feather name="target" size={30} color={'white'} />,
+          drawerIcon: () => <GOALS {...iconStyle} />,
         }}
       />
       <Drawer.Screen
         name="Appointment"
         component={AppointmentScreen}
         options={{
-          drawerIcon: () => <Ant name="calendar" size={30} color={'white'} />,
+          drawerIcon: () => <APPT {...iconStyle} />,
         }}
       />
       <Drawer.Screen
         name="Resources"
         component={EducationalMaterial}
         options={{
-          drawerIcon: () => (
-            <Icons name="book-open" size={27} color={'white'} />
-          ),
+          drawerIcon: () => <RESOURCES {...iconStyle} />,
         }}
       />
       <Drawer.Screen

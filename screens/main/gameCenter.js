@@ -11,6 +11,7 @@ const GameCenter = (props) => {
       <View style={globalStyles.menuBarContainer}>
         <LeftArrowBtn close={() => props.navigation.navigate('Home')} />
       </View>
+      <Text style={globalStyles.pageHeader}>Game Center</Text>
     </View>
   );
 };
