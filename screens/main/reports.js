@@ -4,12 +4,12 @@ import globalStyles from '../../styles/globalStyles';
 import BarChart from '../../components/dashboard/reports/BarChart';
 import LineChart from '../../components/dashboard/reports/LineChart';
 import LeftArrowBtn from '../../components/logs/leftArrowBtn';
-import HIGHLIGHTED_BGL_ICON from '../../resources/images/icons/SVG/icon-lightgreen-bloodglucose.svg';
-import HIGHLIGHTED_FOOD_ICON from '../../resources/images/icons/SVG/icon-lightgreen-food.svg';
-import HIGHLIGHTED_MED_ICON from '../../resources/images/icons/SVG/icon-lightgreen-med.svg';
-import HIGHLIGHTED_WEIGHT_ICON from '../../resources/images/icons/SVG/icon-lightgreen-weight.svg';
-import HIGHLIGHTED_ACTIVITY_ICON from '../../resources/images/icons/SVG/icon-lightgreen-running-home.svg';
-import ACTIVITY_ICON from '../../resources/images/icons/SVG/icon-navy-running.svg';
+import HIGHLIGHTED_BGL_ICON from '../../resources/images/Patient-Icons/SVG/icon-lightgreen-bloodglucose.svg';
+import HIGHLIGHTED_FOOD_ICON from '../../resources/images/Patient-Icons/SVG/icon-lightgreen-food.svg';
+import HIGHLIGHTED_MED_ICON from '../../resources/images/Patient-Icons/SVG/icon-lightgreen-med.svg';
+import HIGHLIGHTED_WEIGHT_ICON from '../../resources/images/Patient-Icons/SVG/icon-lightgreen-weight.svg';
+import HIGHLIGHTED_ACTIVITY_ICON from '../../resources/images/Patient-Icons/SVG/icon-lightgreen-running-home.svg';
+import ACTIVITY_ICON from '../../resources/images/Patient-Icons/SVG/icon-navy-running.svg';
 import {Colors} from "../../styles/colors";
 import {requestNutrientConsumption} from "../../netcalls/mealEndpoints/requestMealLog";
 import {getLastMinuteFromTodayDate} from "../../commonFunctions/common";
@@ -19,10 +19,10 @@ import {MedicationTable} from "../../components/dashboard/reports/MedicationTabl
 import {NutritionPie} from "../../components/dashboard/reports/NutritionPie";
 import {getPlan} from "../../netcalls/requestsMedPlan";
 
-const BGL_ICON = require('../../resources/images/icons/2x/icon-navy-bloodglucose-2x.png');
-const FOOD_ICON = require('../../resources/images/icons/2x/icon-navy-food-2x.png');
-const MED_ICON = require('../../resources/images/icons/2x/icon-navy-med-2x.png');
-const WEIGHT_ICON = require('../../resources/images/icons/2x/icon-navy-weight-2x.png');
+const BGL_ICON = require('../../resources/images/Patient-Icons/2x/icon-navy-bloodglucose-2x.png');
+const FOOD_ICON = require('../../resources/images/Patient-Icons/2x/icon-navy-food-2x.png');
+const MED_ICON = require('../../resources/images/Patient-Icons/2x/icon-navy-med-2x.png');
+const WEIGHT_ICON = require('../../resources/images/Patient-Icons/2x/icon-navy-weight-2x.png');
 
 const iconProps = {
   width: 30,
@@ -178,8 +178,8 @@ const ReportsScreen = (props) => {
                           width={width}
                           boundaryFill='#f0f0f0'
                           defaultMaxY={5000}
-                          lowerBound={100}
-                          upperBound={600}
+                          lowerBound={1000}
+                          upperBound={1500}
                           xExtractor={d=>d.record_date}
                           yExtractor={d=>d.steps}
                           height={300} />

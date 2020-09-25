@@ -4,7 +4,7 @@ import {StyleSheet, Text, TouchableOpacity} from 'react-native';
 import {Colors} from "../../../../styles/colors";
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import CALENDAR_LOGO from '../../../../resources/images/icons/SVG/icon-green-calendar.svg'
+import CALENDAR_LOGO from '../../../../resources/images/Patient-Icons/SVG/icon-green-calendar.svg'
 
 export default function NotificationsCard(props) {
     return (

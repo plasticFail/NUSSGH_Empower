@@ -25,7 +25,7 @@ import {patientLoginRequest} from '../../netcalls/requestsAuth';
 import Loading from '../../components/loading';
 import globalStyles from '../../styles/globalStyles';
 import LoadingModal from '../../components/loadingModal';
-import Logo from '../../resources/images/icons/SVG/icon-color-empower.svg';
+import Logo from '../../resources/images/Patient-Icons/SVG/icon-color-empower.svg';
 
 class Login extends Component {
   constructor(props) {

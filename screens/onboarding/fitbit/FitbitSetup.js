@@ -24,7 +24,7 @@ import ResponseModal from '../../../components/onboarding/fitbit/ResponseModal';
 import LeftArrowBtn from '../../../components/logs/leftArrowBtn';
 // others
 import {STATUS} from '../../../components/onboarding/fitbit/Status';
-import FitbitLogo from '../../../resources/images/icons/2x/icon-white-fitbit-2x.png';
+import FitbitLogo from '../../../resources/images/Patient-Icons/2x/icon-white-fitbit-2x.png';
 import globalStyles from '../../../styles/globalStyles';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {Colors} from '../../../styles/colors';
