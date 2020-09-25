@@ -44,7 +44,7 @@ const DashboardScreen = (props) => {
           fontSize: 12,
         },
         style: {
-          height: '8%',
+          height: '10%',
         },
       }}>
       <Tab.Screen
