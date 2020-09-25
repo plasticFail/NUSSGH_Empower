@@ -1,6 +1,7 @@
-import {medplanAdd} from './urls';
+import {medPlan} from './urls';
 import {getToken} from '../storage/asyncStorageFunctions';
 import {Alert} from 'react-native';
+import moments from 'moment';
 
 const prepareData = (data) => {
   let objArr = [];
@@ -13,6 +14,7 @@ const prepareData = (data) => {
         dosage: y.dosage,
         medication: y.drugName,
         per_day: y.perDay,
+        _id: y._id,
       };
       objArr.push(obj);
     }
@@ -45,7 +47,7 @@ Array.prototype.unique = function () {
 
 const postPlan = async (data) => {
   try {
-    let response = await fetch(medplanAdd, {
+    let response = await fetch(medPlan, {
       method: 'POST',
       headers: {
         Authorization: 'Bearer ' + (await getToken()),
@@ -56,19 +58,63 @@ const postPlan = async (data) => {
         plans: data,
       }),
     });
-    console.log('body');
-    console.log(
-      JSON.stringify({
-        plans: data,
-      }),
-    );
     let responseJson = await response.json();
     return responseJson;
   } catch (error) {
-    //console.error(error);
-    Alert.alert('Error', 'Account already has existing med plan', [
-      {text: 'Got It'},
-    ]);
+    console.error(error);
+  }
+};
+
+const getMedication4DateRange = async (start, end) => {
+  const string = medPlan + '?start=' + start + '&end=' + end;
+  try {
+    let response = await fetch(string, {
+      method: 'GET',
+      headers: {
+        Authorization: 'Bearer ' + (await getToken()),
+        Accept: 'application/json',
+        'Content-type': 'application/json',
+      },
+    });
+    let responseJson = await response.json();
+    console.log('get medication for date range : ' + responseJson);
+    return responseJson;
+  } catch (error) {
+    Alert.alert('Network Error', 'Try Again Later', [{text: 'Got It'}]);
+  }
+};
+
+const getMed4CurrentMonth = async () => {
+  let today = new Date();
+  let lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+  let start = moments(today).format('YYYY-MM-01');
+  let end = moments(lastDayOfMonth).format('YYYY-MM-DD');
+
+  let data = await getMedication4DateRange(start, end);
+  if (data != null) {
+    return data;
+  } else {
+    return {};
+  }
+};
+
+const deleteMedPlan = async (id) => {
+  try {
+    let response = await fetch(medPlan, {
+      method: 'DELETE',
+      headers: {
+        Authorization: 'Bearer ' + (await getToken()),
+        Accept: 'application/json',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        plans: [id],
+      }),
+    });
+    let responseJson = await response.json();
+    return responseJson;
+  } catch (error) {
+    Alert.alert('Network Error', 'Try Again Later', [{text: 'Got It'}]);
   }
 };
 
@@ -85,4 +131,12 @@ const getPlan = async (startDateString, endDateString) => {
   return responseJson;
 }
 
-export {prepareData, postPlan, getPlan};
+export {
+  prepareData,
+  postPlan,
+  getPlan,
+  getMedication4DateRange,
+  getMed4CurrentMonth,
+  deleteMedPlan,
+};
+

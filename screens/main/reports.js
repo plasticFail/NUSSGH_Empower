@@ -1,9 +1,11 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, StyleSheet, Text, Dimensions, ScrollView, TouchableOpacity, Image} from 'react-native';
+import {useSafeArea} from 'react-native-safe-area-context';
 import globalStyles from '../../styles/globalStyles';
 import BarChart from '../../components/dashboard/reports/BarChart';
 import LineChart from '../../components/dashboard/reports/LineChart';
 import LeftArrowBtn from '../../components/logs/leftArrowBtn';
+
 import HIGHLIGHTED_BGL_ICON from '../../resources/images/Patient-Icons/SVG/icon-lightgreen-bloodglucose.svg';
 import HIGHLIGHTED_FOOD_ICON from '../../resources/images/Patient-Icons/SVG/icon-lightgreen-food.svg';
 import HIGHLIGHTED_MED_ICON from '../../resources/images/Patient-Icons/SVG/icon-lightgreen-med.svg';
@@ -18,6 +20,7 @@ import {getActivityLogs, getBloodGlucoseLogs, getMedicationLogs, getWeightLogs} 
 import {MedicationTable} from "../../components/dashboard/reports/MedicationTable";
 import {NutritionPie} from "../../components/dashboard/reports/NutritionPie";
 import {getPlan} from "../../netcalls/requestsMedPlan";
+
 
 const BGL_ICON = require('../../resources/images/Patient-Icons/2x/icon-navy-bloodglucose-2x.png');
 const FOOD_ICON = require('../../resources/images/Patient-Icons/2x/icon-navy-food-2x.png');
@@ -55,6 +58,7 @@ const {width, height} = Dimensions.get('window');
 const tabWidth = (width - 2 * padding) / tabs.length - tabSpace;
 
 const ReportsScreen = (props) => {
+
   // Note all data here are the entire month dataset. We'll process it in the front-end before displaying.
   const [tabIndex, setTabIndex] = React.useState(0);
   const [timeTabIndexFilter, setTimeTabIndexFilter] = React.useState(1);
@@ -98,6 +102,27 @@ const ReportsScreen = (props) => {
 
   const tabName = tabs[tabIndex].name;
   const filterKey = timeFilterTabs[timeTabIndexFilter].name;
+
+  const initialTab =
+    props.route.params?.initialTab === undefined
+      ? 0
+      : props.route.params.initialTab;
+  const [tabIndex, setTabIndex] = useState(initialTab);
+  const [timeFilter, setTimeFilter] = React.useState('Week');
+
+  useEffect(() => {
+    setTabIndex(initialTab);
+    props.navigation.addListener('focus', () => {
+      if (props.route.params?.initialTab != null) {
+        console.log('inside ' + props.route.params?.initialTab);
+        setTabIndex(props.route.params?.initialTab);
+      }
+    });
+  }, [props.route.params]);
+
+  console.log('outside focus' + props.route.params?.initialTab);
+  console.log(initialTab);
+
   return (
     <ScrollView
       style={{...styles.screen, ...props.style}}
