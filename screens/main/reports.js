@@ -15,10 +15,15 @@ import {requestNutrientConsumption} from "../../netcalls/mealEndpoints/requestMe
 import {getLastMinuteFromTodayDate} from "../../commonFunctions/common";
 import Moment from 'moment';
 import {getActivityLogs, getBloodGlucoseLogs, getMedicationLogs, getWeightLogs} from "../../netcalls/requestsLog";
-import {MedicationTable} from "../../components/dashboard/reports/MedicationTable";
+import {MedicationDateDisplay, MedicationTable} from "../../components/dashboard/reports/MedicationTable";
 import {COLOR_MAP, NutritionPie} from "../../components/dashboard/reports/NutritionPie";
 import {getPlan} from "../../netcalls/requestsMedPlan";
 import {ChartLegend} from "../../components/dashboard/reports/ChartLegend";
+import Modal from 'react-native-modal';
+import Icon from "react-native-vector-icons/FontAwesome5";
+import {ExportReportsModal} from "../../components/dashboard/reports/ExportReportsModal";
+
+const EXPORT_BTN = require('../../resources/images/Patient-Icons/2x/icon-green-export-2x.png');
 
 const BGL_ICON = require('../../resources/images/Patient-Icons/2x/icon-navy-bloodglucose-2x.png');
 const FOOD_ICON = require('../../resources/images/Patient-Icons/2x/icon-navy-food-2x.png');
@@ -52,6 +57,8 @@ const timeFilterTabs = [{name: DAY_FILTER_KEY}, {name: WEEK_FILTER_KEY}, {name: 
 const padding = 20;
 const tabSpace = 15;
 
+const chartLegendSize = 20;
+
 const {width, height} = Dimensions.get('window');
 const tabWidth = (width - 2 * padding) / tabs.length - tabSpace;
 
@@ -59,6 +66,8 @@ const ReportsScreen = (props) => {
   // Note all data here are the entire month dataset. We'll process it in the front-end before displaying.
   const [tabIndex, setTabIndex] = React.useState(0);
   const [timeTabIndexFilter, setTimeTabIndexFilter] = React.useState(1);
+
+  const [openExportModal, setOpenExportModal] = React.useState(false);
 
   const [fullDataset, setFullDataset] = React.useState({
     bglData: [],
@@ -130,6 +139,9 @@ const ReportsScreen = (props) => {
       <View style={{...globalStyles.pageContainer}}>
         <View style={globalStyles.menuBarContainer}>
           <LeftArrowBtn close={() => props.navigation.navigate('Home')} />
+          <TouchableOpacity onPress={()=>setOpenExportModal(true)}>
+            <Image source={EXPORT_BTN} style={{width: 30, height: 30}} />
+          </TouchableOpacity>
         </View>
         <Text style={globalStyles.pageHeader}>Report</Text>
         <ReportsTabs
@@ -144,6 +156,23 @@ const ReportsScreen = (props) => {
             <View style={{marginTop: 20}}>
               <Text style={globalStyles.pageDetails}>Blood Glucose</Text>
               <Text style={[globalStyles.pageDetails, {color: 'grey'}]}>Readings - mmol/L</Text>
+              <View style={[globalStyles.pageDetails, {flexDirection: 'row'}]}>
+                <ChartLegend size={chartLegendSize}
+                             legendName='Safe'
+                             color='#aad326'
+                             textPaddingLeft={5}
+                             textPaddingRight={20}/>
+                <ChartLegend size={chartLegendSize}
+                             legendName='Danger'
+                             color='red'
+                             textPaddingLeft={5}
+                             textPaddingRight={20}/>
+                <ChartLegend size={chartLegendSize}
+                             legendName='Target Range (4.0 - 12.0)'
+                             color='rgba(0,0,0, 0.03)'
+                             textPaddingLeft={5}
+                             textPaddingRight={20}/>
+              </View>
               <LineChart data={fullDataset.bglData}
                          key={'bgl-chart'}
                          filterKey={filterKey}
@@ -152,6 +181,7 @@ const ReportsScreen = (props) => {
                          defaultMaxY={14}
                          lowerBound={4}
                          upperBound={12}
+                         outsideBoundaryColor='red'
                          boundaryFill='rgba(0,0,0, 0.03)'
                          width={width}
                          height={300} />
@@ -173,7 +203,7 @@ const ReportsScreen = (props) => {
                 <View style={[globalStyles.pageDetails, {flexDirection: 'row'}]}>
                   {
                     Object.entries(COLOR_MAP).map((nutr, index) => (
-                        <ChartLegend size={25}
+                        <ChartLegend size={chartLegendSize}
                                      textPaddingLeft={5}
                                      textPaddingRight={20}
                                      color={nutr[1]}
@@ -192,6 +222,7 @@ const ReportsScreen = (props) => {
             <View style={{marginTop: 20}}>
               <Text style={globalStyles.pageDetails}>Medication</Text>
               <Text style={[globalStyles.pageDetails, {color: 'grey'}]}>Average Adherence - %</Text>
+              <MedicationDateDisplay style={globalStyles.pageDetails} filterKey={filterKey} />
               <MedicationTable
                   plan={fullDataset.medPlan}
                   data={fullDataset.medData}
@@ -203,6 +234,18 @@ const ReportsScreen = (props) => {
             <View style={{marginTop: 20}}>
                 <Text style={globalStyles.pageDetails}>Weight</Text>
                 <Text style={[globalStyles.pageDetails, {color: 'grey'}]}>Progress - kg</Text>
+                <View style={[globalStyles.pageDetails, {flexDirection: 'row'}]}>
+                  <ChartLegend size={chartLegendSize}
+                               legendName='Healthy'
+                               color='#aad326'
+                               textPaddingLeft={5}
+                               textPaddingRight={20}/>
+                  <ChartLegend size={chartLegendSize}
+                               legendName='Overweight'
+                               color='#adadad'
+                               textPaddingLeft={5}
+                               textPaddingRight={20}/>
+                </View>
                 <LineChart data={fullDataset.weightData} filterKey={filterKey}
                            width={width} height={300}
                            xExtractor={d=>d.record_date}
@@ -223,7 +266,23 @@ const ReportsScreen = (props) => {
                           xExtractor={d=>d.record_date}
                           yExtractor={d=>d.calories}
                           height={300} />
+                <Text style={[globalStyles.pageDetails, {color: 'grey', marginTop: 5}]}>Duration (minutes)</Text>
+                <BarChart data={fullDataset.activityData}
+                          filterKey={filterKey}
+                          width={width}
+                          boundaryFill='#f0f0f0'
+                          defaultMaxY={500}
+                          xExtractor={d=>d.record_date}
+                          yExtractor={d=>d.duration}
+                          height={300} />
                 <Text style={[globalStyles.pageDetails, {color: 'grey', marginTop: 5}]}>Steps Taken</Text>
+                <View style={[globalStyles.pageDetails, {flexDirection: 'row'}]}>
+                  <ChartLegend size={chartLegendSize}
+                               legendName='Target Range (1K - 1.5K)'
+                               color='rgba(0,0,0, 0.03)'
+                               textPaddingLeft={5}
+                               textPaddingRight={20}/>
+                </View>
                 <BarChart data={fullDataset.activityData}
                           filterKey={filterKey}
                           width={width}
@@ -238,6 +297,7 @@ const ReportsScreen = (props) => {
           ) : null
         }
       </View>
+      <ExportReportsModal visible={openExportModal} setVisible={setOpenExportModal} />
     </ScrollView>
   );
 };

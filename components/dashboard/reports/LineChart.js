@@ -290,7 +290,9 @@ export default class LineChart extends React.Component {
                     {
                         // plot points
                         data.map((d, index) => (
-                            <Circle cx={scaleX(d.x)} cy={scaleY(d.y)} r={pointRadius} fill={pointColor} />
+                            <Circle cx={scaleX(d.x)} cy={scaleY(d.y)} r={pointRadius} fill={this.props.outsideBoundaryColor ?
+                                (d.y < this.props.lowerBound || d.y > this.props.upperBound) ? this.props.outsideBoundaryColor :
+                                pointColor : pointColor} />
                         ))
                     }
 

@@ -6,7 +6,7 @@ function ChartLegend(props) {
     return (
         <View style={{alignItems: 'center', flexDirection: 'row'}}>
             <LegendCircle color={props.color} size={size} />
-            <Text style={{paddingLeft: props.textPaddingLeft || 0, paddingRight: props.textPaddingRight || 0}}>
+            <Text style={{paddingLeft: props.textPaddingLeft || 0, paddingRight: props.textPaddingRight || 0, color: '#3C3C43'}}>
                 {props.legendName}
             </Text>
         </View>
