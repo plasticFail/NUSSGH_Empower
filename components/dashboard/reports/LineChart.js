@@ -221,7 +221,8 @@ export default class LineChart extends React.Component {
                         // x-axis labels
                         showXAxis &&
                         xAxisLabels.map((x, index) => (
-                            <SvgText key={`x-axis-label-${index}`} fill={axisTextLabelColour} y={height - padding + xAxisGapFromText} x={scaleX(x)} textAnchor='middle'>
+                            <SvgText key={`x-axis-label-${index}-${this.props.filterKey}`} fill={axisTextLabelColour}
+                                     y={height - padding + xAxisGapFromText} x={scaleX(x)} textAnchor='middle'>
                                 {Moment(x).format(filterKey === DAY_FILTER_KEY ? "H:mm" : "DD/MM")}
                             </SvgText>
                         ))
@@ -230,7 +231,8 @@ export default class LineChart extends React.Component {
                         // y axis labels
                         showYAxis &&
                         yAxisLabels.map((y, index) => (
-                            <SvgText key={`y-axis-label-${index}`} fill={axisTextLabelColour} x={paddingLeft - axisMargin - yAxisGapFromText}
+                            <SvgText key={`y-axis-label-${index}-${this.props.filterKey}`} fill={axisTextLabelColour}
+                                     x={paddingLeft - axisMargin - yAxisGapFromText}
                                      y={scaleY(y)} textAnchor='middle'>
                                 {y}
                             </SvgText>
@@ -240,23 +242,30 @@ export default class LineChart extends React.Component {
 
                         showXAxisLines &&
                         xAxisLabels.map((x, index) => (
-                            <Path key={`x-axis-label-line-${index}`} stroke={axisLabelColour} d={`M ${scaleX(x)} ${padding} l 0 ${height - 2 * padding}`}/>
+                            <Path key={`x-axis-label-line-${index}`} stroke={axisLabelColour}
+                                  d={`M ${scaleX(x)} ${padding} l 0 ${height - 2 * padding}`}/>
                         ))
                     }
                     {
                         showYAxisLines &&
                         yAxisLabels.map((y, index) => (
-                            <Path key={`y-axis-label-line-${index}`} stroke={axisLabelColour} d={`M ${paddingLeft - axisMargin} ${scaleY(y)} l ${width - paddingLeft - paddingRight + 2 * axisMargin} 0`} />
+                            <Path key={`y-axis-label-line-${index}`} stroke={axisLabelColour}
+                                  d={`M ${paddingLeft - axisMargin} ${scaleY(y)} l ${width - paddingLeft - paddingRight + 2 * axisMargin} 0`} />
                         ))
                     }
                     {
                         // one more for x axis.
                         showXAxis &&
-                        <Path stroke={axisLabelColour} d={`M ${paddingLeft - axisMargin} ${scaleY(yAxisStartsFrom)} l ${width - paddingLeft - paddingRight + 2 * axisMargin} 0`} />
+                        <Path stroke={axisLabelColour}
+                              d={`M ${paddingLeft - axisMargin} ${scaleY(yAxisStartsFrom)} l ${width - paddingLeft - paddingRight + 2 * axisMargin} 0`} />
                     }
                     {
                         // plot lines
-                        <LinePlot data={data} scaleX={scaleX} scaleY={scaleY} lineColor={strokeColor} lineWidth={strokeWidth} />
+                        <LinePlot data={data}
+                                  scaleX={scaleX}
+                                  scaleY={scaleY}
+                                  lineColor={strokeColor}
+                                  lineWidth={strokeWidth} />
                     }
                     {
                         // plot points
