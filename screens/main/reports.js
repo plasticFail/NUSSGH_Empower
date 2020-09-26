@@ -16,8 +16,9 @@ import {getLastMinuteFromTodayDate} from "../../commonFunctions/common";
 import Moment from 'moment';
 import {getActivityLogs, getBloodGlucoseLogs, getMedicationLogs, getWeightLogs} from "../../netcalls/requestsLog";
 import {MedicationTable} from "../../components/dashboard/reports/MedicationTable";
-import {NutritionPie} from "../../components/dashboard/reports/NutritionPie";
+import {COLOR_MAP, NutritionPie} from "../../components/dashboard/reports/NutritionPie";
 import {getPlan} from "../../netcalls/requestsMedPlan";
+import {ChartLegend} from "../../components/dashboard/reports/ChartLegend";
 
 const BGL_ICON = require('../../resources/images/Patient-Icons/2x/icon-navy-bloodglucose-2x.png');
 const FOOD_ICON = require('../../resources/images/Patient-Icons/2x/icon-navy-food-2x.png');
@@ -156,9 +157,9 @@ const ReportsScreen = (props) => {
                          height={300} />
             </View>
         ) : tabName === FOOD_INTAKE_KEY ? (
-              <View style={{marginTop: 20}}>
+              <View style={{marginTop: 20, paddingBottom: 50}}>
                 <Text style={globalStyles.pageDetails}>Food Intake</Text>
-                <Text style={[globalStyles.pageDetails, {color: 'grey'}]}>Calories Consumed - kcal</Text>
+                <Text style={[globalStyles.pageDetails, {color: 'grey'}]}>Total Calories Consumed - kcal</Text>
                 <BarChart data={fullDataset.foodData} filterKey={filterKey}
                           xExtractor={d=>d.date}
                           yExtractor={d=>d.nutrients.energy.amount}
@@ -169,7 +170,23 @@ const ReportsScreen = (props) => {
                           width={width}
                           height={300} />
                 <Text style={[globalStyles.pageDetails, {color: 'grey'}]}>Nutrition Distribution</Text>
-                <NutritionPie data={fullDataset.foodData} filterKey={filterKey} pieKeys={['carbohydrate', 'total-fat', 'protein']} />
+                <View style={[globalStyles.pageDetails, {flexDirection: 'row'}]}>
+                  {
+                    Object.entries(COLOR_MAP).map((nutr, index) => (
+                        <ChartLegend size={25}
+                                     textPaddingLeft={5}
+                                     textPaddingRight={20}
+                                     color={nutr[1]}
+                                     key={`pie-legend-${index}`}
+                                     legendName={nutr[0][0].toUpperCase() + nutr[0].slice(1)}
+                        />))
+                  }
+                </View>
+                <NutritionPie data={fullDataset.foodData}
+                              width={width}
+                              filterKey={filterKey}
+                              pieKeys={['carbohydrate', 'total-fat', 'protein']}
+                />
             </View>
         ) : tabName === MEDICATION_KEY ? (
             <View style={{marginTop: 20}}>
@@ -195,9 +212,18 @@ const ReportsScreen = (props) => {
             </View>
         )
           : tabName === ACTIVITY_KEY ? (
-              <View style={{marginTop: 20}}>
+              <View style={{marginTop: 20, paddingBottom: 50}}>
                 <Text style={globalStyles.pageDetails}>Activity</Text>
-                <Text style={[globalStyles.pageDetails, {color: 'grey'}]}>Steps Taken</Text>
+                <Text style={[globalStyles.pageDetails, {color: 'grey', marginTop: 5}]}>Calories Burnt</Text>
+                <BarChart data={fullDataset.activityData}
+                          filterKey={filterKey}
+                          width={width}
+                          boundaryFill='#f0f0f0'
+                          defaultMaxY={1000}
+                          xExtractor={d=>d.record_date}
+                          yExtractor={d=>d.calories}
+                          height={300} />
+                <Text style={[globalStyles.pageDetails, {color: 'grey', marginTop: 5}]}>Steps Taken</Text>
                 <BarChart data={fullDataset.activityData}
                           filterKey={filterKey}
                           width={width}
