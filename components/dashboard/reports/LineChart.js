@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, Text, Animated} from 'react-native';
+import {View, StyleSheet, TextInput, Animated} from 'react-native';
 //third party lib
 import Moment from 'moment';
 import {Svg, Rect, Text as SvgText, Path, G, Circle} from 'react-native-svg';
@@ -40,10 +40,12 @@ const THRESHOLD = 12.5; // The min distance to switch index.
 
 // bar label properties
 const barLabelHeight = 25;
-const barLabelWidth = 35;
+const barLabelWidth = 50;
 const barLabelYOffset = 10 + cursorRadius;
 const barLabelFontSize = 14;
 const barLabelTextYOffset = barLabelFontSize/2 - cursorRadius;
+const carrotHeight = barLabelHeight / 2;
+const carrotWidth = barLabelWidth / 5;
 
 const pointRadius = 2.5;
 const pointColor = Colors.nextBtnColor;
@@ -54,52 +56,33 @@ export default class LineChart extends React.Component {
     cursor = React.createRef();
     cursorAxis = React.createRef();
 
+    // For cursor label
+    cursorLabel = React.createRef();
+    cursorCarrot = React.createRef();
+
     constructor(props) {
         super(props);
-
-        const {width, height, filterKey, xExtractor, yExtractor, defaultMaxY,
-            defaultMinY, upperBound, lowerBound, boundaryFill} = this.props;
-        const data = processData(filterKey, this.props.data, xExtractor, yExtractor, 'average');
-        // d3 properties
-        const maxY = Math.max(defaultMaxY, 1.25* Math.max(...data.map(d => d.y)));
-        const xAxisLabels = generateXAxisLabels(filterKey);
-        const yAxisStartsFrom = Math.min(defaultMinY ? defaultMinY : 0, Math.round(0.75 * Math.min(...data.map(d => d.y))));
-        const minX = xAxisLabels[0];
-        const maxX = xAxisLabels[xAxisLabels.length - 1];
-        const yAxisLabels = generateYAxisValues(getYStepSize(yAxisStartsFrom, maxY), yAxisStartsFrom, maxY);
-
-        // d3 scale properties
-        const scaleX = scaleTime().domain([minX, maxX]).range([paddingLeft, width - paddingRight]);
-        const scaleY = scaleLinear().domain([yAxisStartsFrom, maxY]).range([height - padding, padding]);
-        const scaleHeight = scaleLinear().domain([yAxisStartsFrom, maxY]).range([0, height - 2 * padding]);
-
-        // new field for tracking cursor
-        const dataCoordinates = data.map(d => ([scaleX(d.x), scaleY(d.y)]));
+        const components = this.getComponent();
 
         this.state = {
             selectedIndex: 0,
             x: new Animated.Value(0),
-
-            scaleX,
-            scaleY,
-            scaleHeight,
-            yAxisLabels,
-            xAxisLabels,
-            minX,
-            maxY,
-            maxX,
-            yAxisStartsFrom,
-            data,
-            dataCoordinates,
-
-            pathLine: null,
-            lineLength: 0,
-            lineProperties: null
+            ...components
         }
     }
 
     componentDidMount() {
         this.state.x.addListener(({ value }) => this.moveCursor(value));
+        this.updateComponent();
+    }
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.filterKey !== this.props.filterKey || prevProps.data !== this.props.data) {
+            this.updateComponent();
+        }
+    }
+
+    getComponent = () => {
         const {width, height, filterKey, xExtractor, yExtractor, defaultMaxY,
             defaultMinY, upperBound, lowerBound, boundaryFill} = this.props;
         const data = processData(filterKey, this.props.data, xExtractor, yExtractor, 'average');
@@ -125,8 +108,7 @@ export default class LineChart extends React.Component {
 
         // new field for tracking cursor
         const dataCoordinates = data.map(d => ([scaleX(d.x), scaleY(d.y)]));
-
-        this.setState({
+        return {
             scaleX,
             scaleY,
             scaleHeight,
@@ -143,60 +125,18 @@ export default class LineChart extends React.Component {
             line,
             lineLength,
             lineProperties
-        }, () => this.moveCursor(0));
+        };
     }
 
-    componentDidUpdate(prevProps) {
-        if (prevProps.filterKey !== this.props.filterKey || prevProps.data !== this.props.data) {
-            const {width, height, filterKey, xExtractor, yExtractor, defaultMaxY,
-                defaultMinY, upperBound, lowerBound, boundaryFill} = this.props;
-            const data = processData(filterKey, this.props.data, xExtractor, yExtractor, 'average');
-            // d3 properties
-            const maxY = Math.max(defaultMaxY, 1.25* Math.max(...data.map(d => d.y)));
-            const xAxisLabels = generateXAxisLabels(filterKey);
-            const yAxisStartsFrom = Math.min(defaultMinY ? defaultMinY : 0, Math.round(0.75 * Math.min(...data.map(d => d.y))));
-            const minX = xAxisLabels[0];
-            const maxX = xAxisLabels[xAxisLabels.length - 1];
-            const yAxisLabels = generateYAxisValues(getYStepSize(yAxisStartsFrom, maxY), yAxisStartsFrom, maxY);
+    updateComponent = () => {
+        this.setState(this.getComponent(), () => {
+            this.moveCursor(0);
+        });
 
-            // d3 scale properties
-            const scaleX = scaleTime().domain([minX, maxX]).range([paddingLeft, width - paddingRight]);
-            const scaleY = scaleLinear().domain([yAxisStartsFrom, maxY]).range([height - padding, padding]);
-            const scaleHeight = scaleLinear().domain([yAxisStartsFrom, maxY]).range([0, height - 2 * padding]);
-
-            const line = data.length > 0 ? d3shape.line()
-                .x(d => scaleX(d.x))
-                .y(d => scaleY(d.y))
-                .curve(d3shape.curveLinear)(data) : null;
-            const lineProperties = line && path.svgPathProperties(line);
-            const lineLength = line ? lineProperties.getTotalLength(line) : 0;
-
-            // new field for tracking cursor
-            const dataCoordinates = data.map(d => ([scaleX(d.x), scaleY(d.y)]));
-
-            this.setState({
-                scaleX,
-                scaleY,
-                scaleHeight,
-                yAxisLabels,
-                xAxisLabels,
-                minX,
-                maxY,
-                maxX,
-                yAxisStartsFrom,
-
-                data,
-                dataCoordinates,
-
-                line,
-                lineLength,
-                lineProperties
-            }, () => this.moveCursor(0));
-        }
     }
 
     moveCursor(value) {
-        const {pathLine, lineLength, lineProperties, selectedIndex, dataCoordinates} = this.state;
+        const {pathLine, lineLength, lineProperties, selectedIndex, dataCoordinates, data} = this.state;
         if (lineLength > 0) {
             const { x, y } = lineProperties.getPointAtLength(value);
             const mapped = dataCoordinates.map(d => Math.round(Math.abs(d[0] - x) + Math.abs(d[1] - y)));
@@ -205,11 +145,36 @@ export default class LineChart extends React.Component {
             if (minDist < THRESHOLD) {
                 index = mapped.indexOf(minDist);
             }
+            // show the label that is within threshold.
+            if (index != -1) {
+                const shownDatapoint = dataCoordinates[index];
+                this.cursorLabel.current.setNativeProps({
+                    top: shownDatapoint[1] - barLabelHeight - barLabelYOffset ,
+                    left: shownDatapoint[0] - barLabelWidth / 2,
+                    opacity: 1,
+                    text: `${formatY(data[index].y)}`
+                });
+                this.cursorCarrot.current.setNativeProps({
+                    top: shownDatapoint[1] - carrotHeight - cursorRadius,
+                    left: shownDatapoint[0] - carrotWidth,
+                    opacity: 1
+                })
+            } else {
+                this.cursorLabel.current.setNativeProps({
+                    opacity: 0
+                });
+                this.cursorCarrot.current.setNativeProps({
+                    opacity: 0
+                });
+            }
             this.cursor.current.setNativeProps({ top: y - cursorRadius, left: x - cursorRadius });
             this.cursorAxis.current.setNativeProps({top: 0, left: x})
-            this.setState({
-                selectedIndex: index
-            })
+            /*
+            if (index != this.state.selectedIndex) {
+                this.setState({
+                    selectedIndex: index
+                })
+            }*/
         }
     }
 
@@ -235,7 +200,13 @@ export default class LineChart extends React.Component {
         return (
             <View>
                 {   // cursor line
-                    this.state.lineLength != 0 && <View ref={this.cursorAxis} style={{width: 1, backgroundColor: axisColour, height: height - padding, position:'absolute'}} />
+                    this.state.lineLength != 0 && <View ref={this.cursorAxis}
+                                                        key={`cursor-line-${this.props.filterKey}`}
+                                                        style={{width: 1,
+                                                            backgroundColor: axisColour,
+                                                            height: height - padding,
+                                                            position:'absolute'}}
+                    />
                 }
                 <Svg width={width} height={height}>
                     {   // boundaries
@@ -250,7 +221,7 @@ export default class LineChart extends React.Component {
                         // x-axis labels
                         showXAxis &&
                         xAxisLabels.map((x, index) => (
-                            <SvgText fill={axisTextLabelColour} y={height - padding + xAxisGapFromText} x={scaleX(x)} textAnchor='middle'>
+                            <SvgText key={`x-axis-label-${index}`} fill={axisTextLabelColour} y={height - padding + xAxisGapFromText} x={scaleX(x)} textAnchor='middle'>
                                 {Moment(x).format(filterKey === DAY_FILTER_KEY ? "H:mm" : "DD/MM")}
                             </SvgText>
                         ))
@@ -259,7 +230,7 @@ export default class LineChart extends React.Component {
                         // y axis labels
                         showYAxis &&
                         yAxisLabels.map((y, index) => (
-                            <SvgText fill={axisTextLabelColour} x={paddingLeft - axisMargin - yAxisGapFromText}
+                            <SvgText key={`y-axis-label-${index}`} fill={axisTextLabelColour} x={paddingLeft - axisMargin - yAxisGapFromText}
                                      y={scaleY(y)} textAnchor='middle'>
                                 {y}
                             </SvgText>
@@ -269,13 +240,13 @@ export default class LineChart extends React.Component {
 
                         showXAxisLines &&
                         xAxisLabels.map((x, index) => (
-                            <Path stroke={axisLabelColour} d={`M ${scaleX(x)} ${padding} l 0 ${height - 2 * padding}`}/>
+                            <Path key={`x-axis-label-line-${index}`} stroke={axisLabelColour} d={`M ${scaleX(x)} ${padding} l 0 ${height - 2 * padding}`}/>
                         ))
                     }
                     {
                         showYAxisLines &&
                         yAxisLabels.map((y, index) => (
-                            <Path stroke={axisLabelColour} d={`M ${paddingLeft - axisMargin} ${scaleY(y)} l ${width - paddingLeft - paddingRight + 2 * axisMargin} 0`} />
+                            <Path key={`y-axis-label-line-${index}`} stroke={axisLabelColour} d={`M ${paddingLeft - axisMargin} ${scaleY(y)} l ${width - paddingLeft - paddingRight + 2 * axisMargin} 0`} />
                         ))
                     }
                     {
@@ -290,7 +261,7 @@ export default class LineChart extends React.Component {
                     {
                         // plot points
                         data.map((d, index) => (
-                            <Circle cx={scaleX(d.x)} cy={scaleY(d.y)} r={pointRadius} fill={this.props.outsideBoundaryColor ?
+                            <Circle key={`point-${index}`} cx={scaleX(d.x)} cy={scaleY(d.y)} r={pointRadius} fill={this.props.outsideBoundaryColor ?
                                 (d.y < this.props.lowerBound || d.y > this.props.upperBound) ? this.props.outsideBoundaryColor :
                                 pointColor : pointColor} />
                         ))
@@ -298,12 +269,13 @@ export default class LineChart extends React.Component {
 
                     {
                         // point labels: rectangle, triangle and text
+                        /*
                         data.map((d, index) => (
                             <G>
                                 <Path opacity={selectedIndex === index ? 1 : 0}
                                       fill='#444C54'
                                       stroke='#444C54'
-                                      d={`M ${scaleX(d.x) - barLabelWidth / 8} 
+                                      d={`M ${scaleX(d.x) - barLabelWidth / 8}
                                       ${scaleY(d.y) - barLabelYOffset} l ${barLabelWidth / 8} ${barLabelHeight / 4}
                                       l ${barLabelWidth / 8} ${-barLabelHeight / 4} Z
                                       `} // triangle size is 1/4 of the height of the bar label, and 1/8 of bar width.
@@ -328,13 +300,23 @@ export default class LineChart extends React.Component {
                                 </SvgText>
                             </G>
                         ))
+                         */
                     }
                     {   // cursor point
                         this.state.lineLength != 0 && <View ref={this.cursor} style={[styles.cursor, {position: 'absolute'}]} />
                     }
+                    {   // cursor label
+                        this.state.lineLength != 0  &&
+                            <React.Fragment>
+                                <TextInput ref={this.cursorLabel} style={[styles.cursorLabel, {position: 'absolute'}]} />
+                                <View ref={this.cursorCarrot} style={[styles.triangle,
+                                    {position: 'absolute', transform: [{rotate: '180deg'}]}]} />
+                            </React.Fragment>
+                    }
                 </Svg>
                 {
                     <Animated.ScrollView
+                        key={`graph-scroller-${this.props.filterKey}`}
                         style={StyleSheet.absoluteFill}
                         contentContainerStyle={{width: this.state.lineLength + width}}
                         showsHorizontalScrollIndicator={false}
@@ -393,5 +375,29 @@ const styles = StyleSheet.create({
         borderColor: '#aad326',
         borderWidth: 3,
         backgroundColor: Colors.leftArrowColor,
+    },
+    cursorLabel: {
+        backgroundColor: '#444C54',
+        borderRadius: 5,
+        padding: 0,
+        margin: 0,
+        width: barLabelWidth,
+        height: barLabelHeight,
+        justifyContent: 'center',
+        textAlign: 'center',
+        color: '#fff',
+        fontWeight: 'bold'
+    },
+    triangle: {
+        width: 0,
+        height: 0,
+        backgroundColor: 'transparent',
+        borderStyle: 'solid',
+        borderLeftWidth: carrotWidth,
+        borderRightWidth:  carrotWidth,
+        borderBottomWidth: carrotHeight,
+        borderLeftColor: 'transparent',
+        borderRightColor: 'transparent',
+        borderBottomColor: '#444C54'
     }
 })
