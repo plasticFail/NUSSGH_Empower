@@ -5,7 +5,11 @@ import {
   getFocusedRouteNameFromRoute,
   NavigationContainer,
 } from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
+import {
+  createStackNavigator,
+  CardStyleInterpolators,
+  TransitionSpecs,
+} from '@react-navigation/stack';
 import Entypo from 'react-native-vector-icons/Entypo';
 //functions
 import {connect} from 'react-redux';
@@ -27,6 +31,7 @@ import GoalsScreen from './more/goals';
 import AppointmentScreen from './more/appointments';
 import EducationMaterialsScreen from './more/educationMaterials';
 import Logout from './more/logout';
+import Animated, {Easing} from 'react-native-reanimated';
 
 Entypo.loadFont();
 
@@ -92,6 +97,7 @@ class AppRoot extends Component {
                 backgroundColor: 'transparent',
               },
               headerTransparent: true,
+              cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
             })}>
             {this.props.isLogin ? (
               <>
@@ -100,6 +106,7 @@ class AppRoot extends Component {
                   component={DrawerNavigator}
                   options={{
                     headerShown: false,
+                    animationEnabled: true,
                   }}
                 />
                 {/* Onboarding */}
@@ -209,3 +216,41 @@ class AppRoot extends Component {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(AppRoot);
+
+const forSlide = ({current, next, inverted, layouts: {screen}}) => {
+  const progress = Animated.add(
+    current.progress.interpolate({
+      inputRange: [0, 1],
+      outputRange: [0, 1],
+      extrapolate: 'clamp',
+    }),
+    next
+      ? next.progress.interpolate({
+          inputRange: [0, 1],
+          outputRange: [0, 1],
+          extrapolate: 'clamp',
+        })
+      : 0,
+  );
+
+  return {
+    cardStyle: {
+      transform: [
+        {
+          translateX: Animated.multiply(
+            progress.interpolate({
+              inputRange: [0, 1, 2],
+              outputRange: [
+                screen.width, // Focused, but offscreen in the beginning
+                0, // Fully focused
+                screen.width * -0.3, // Fully unfocused
+              ],
+              extrapolate: 'clamp',
+            }),
+            inverted,
+          ),
+        },
+      ],
+    },
+  };
+};

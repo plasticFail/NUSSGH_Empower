@@ -166,11 +166,12 @@ const styles = StyleSheet.create({
   welcomeText: {
     fontSize: 30,
     color: 'white',
-    fontWeight: '700',
+    fontFamily: 'SFProDisplay-Bold',
   },
   detailText: {
     fontSize: 20,
     color: 'white',
+    fontFamily: 'SFProDisplay-Regular',
   },
   inputBox: {
     width: '90%',
@@ -186,10 +187,12 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 17,
     marginTop: '3%',
+    fontFamily: 'SFProDisplay-Regular',
   },
   bold: {
     fontWeight: '800',
     color: 'white',
+    fontFamily: 'SFProDisplay-Bold',
   },
   forgetPassword: {
     margin: '4%',

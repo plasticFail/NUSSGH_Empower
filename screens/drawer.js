@@ -40,7 +40,7 @@ const Drawer = createDrawerNavigator();
 
 const DrawerContent = (props) => {
   return (
-    <ScrollView contentContainerStyle={{flex: 1, marginTop: '30%'}}>
+    <ScrollView contentContainerStyle={{flex: 1, marginTop: '20%'}}>
       <Text style={styles.headerTextStyle}>Menu</Text>
       <DrawerItem
         label="Edit Account"

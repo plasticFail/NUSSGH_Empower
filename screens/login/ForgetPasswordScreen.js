@@ -114,14 +114,12 @@ function ForgetPasswordScreen({navigation}) {
           </TouchableOpacity>
         )}
       </View>
-      {showOTP ? (
-        <InputOTPScreen
-          visible={showOTP}
-          close={() => setShowOtp(false)}
-          phoneNumber={phoneNumber}
-          parent={'forgetPassword'}
-        />
-      ) : null}
+      <InputOTPScreen
+        visible={showOTP}
+        close={() => setShowOtp(false)}
+        phoneNumber={phoneNumber}
+        parent={'forgetPassword'}
+      />
     </View>
   );
 }
