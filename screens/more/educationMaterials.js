@@ -1,8 +1,8 @@
 import React from 'react';
 import {View, StyleSheet, Text} from 'react-native';
 import globalStyles from '../../styles/globalStyles';
-import MenuBtn from '../../components/menuBtn';
 import LeftArrowBtn from '../../components/logs/leftArrowBtn';
+import InProgress from '../../components/inProgress';
 
 const EducationMaterialsScreen = (props) => {
   return (
@@ -11,6 +11,7 @@ const EducationMaterialsScreen = (props) => {
         <LeftArrowBtn close={() => props.navigation.navigate('Home')} />
       </View>
       <Text style={globalStyles.pageHeader}>Resources</Text>
+      <InProgress />
     </View>
   );
 };

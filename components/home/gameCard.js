@@ -21,7 +21,11 @@ export default function GameCard(props) {
         style={[{alignSelf: 'flex-start'}, styles.rightBorder]}
         onPress={() => goGameCenter()}>
         <Text style={styles.headerText}>Points</Text>
-        <Text style={[styles.headerText, {color: Colors.backArrowColor}]}>
+        <Text
+          style={[
+            styles.headerText,
+            {color: Colors.backArrowColor, fontSize: 20},
+          ]}>
           {points}
         </Text>
       </TouchableOpacity>
@@ -29,13 +33,21 @@ export default function GameCard(props) {
         style={styles.rightBorder}
         onPress={() => goGameCenter()}>
         <Text style={styles.headerText}>Chances</Text>
-        <Text style={[styles.headerText, {color: Colors.backArrowColor}]}>
+        <Text
+          style={[
+            styles.headerText,
+            {color: Colors.backArrowColor, fontSize: 20},
+          ]}>
           {chances}
         </Text>
       </TouchableOpacity>
-      <TouchableOpacity style={{alignSelf: 'flex-end', margin: '2%'}}>
+      <TouchableOpacity style={{alignSelf: 'flex-end'}}>
         <Text style={styles.headerText}>Redeemable</Text>
-        <Text style={[styles.headerText, {color: Colors.backArrowColor}]}>
+        <Text
+          style={[
+            styles.headerText,
+            {color: Colors.backArrowColor, fontSize: 20},
+          ]}>
           {rewardCount} <Text style={{fontSize: 15}}>Rewards</Text>
         </Text>
       </TouchableOpacity>
@@ -52,9 +64,9 @@ const styles = StyleSheet.create({
     marginTop: '2%',
     marginBottom: '4%',
     padding: '4%',
-    justifyContent: 'space-between',
     alignItems: 'center',
     borderRadius: 10,
+    width: '90%',
   },
   shadow: {
     shadowColor: '#000',
@@ -72,11 +84,11 @@ const styles = StyleSheet.create({
     flex: 1,
     marginLeft: '3%',
     marginEnd: '2%',
-    fontSize: 17,
+    fontSize: 16,
   },
   rightBorder: {
+    marginStart: '2%',
     borderRightWidth: 0.5,
-    margin: '2%',
     borderRightColor: Colors.lastLogValueColor,
   },
 });

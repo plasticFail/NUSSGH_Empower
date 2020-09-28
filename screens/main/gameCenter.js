@@ -4,6 +4,7 @@ import globalStyles from '../../styles/globalStyles';
 import MenuBtn from '../../components/menuBtn';
 import logStyles from '../../styles/logStyles';
 import LeftArrowBtn from '../../components/logs/leftArrowBtn';
+import InProgress from '../../components/inProgress';
 
 const GameCenter = (props) => {
   return (
@@ -12,6 +13,7 @@ const GameCenter = (props) => {
         <LeftArrowBtn close={() => props.navigation.navigate('Home')} />
       </View>
       <Text style={globalStyles.pageHeader}>Game Center</Text>
+      <InProgress />
     </View>
   );
 };

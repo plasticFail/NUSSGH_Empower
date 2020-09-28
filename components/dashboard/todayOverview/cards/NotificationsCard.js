@@ -1,5 +1,6 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 //third party lib
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import EvilIcon from 'react-native-vector-icons/EvilIcons';
@@ -9,13 +10,19 @@ import CALENDAR_LOGO from '../../../../resources/images/Patient-Icons/SVG/icon-g
 import {appointment, howTo} from '../../../../commonFunctions/common';
 //style
 import {Colors} from '../../../../styles/colors';
+import TutorialModal from '../../../home/tutorialModal';
 
 export default function NotificationsCard(props) {
   const {type, count} = props;
+  const [showTutorial, setShowTutorial] = useState(false);
+
+  const navigation = useNavigation();
   return (
     <>
       {type === appointment && (
-        <TouchableOpacity style={[styles.card, styles.shadow]}>
+        <TouchableOpacity
+          style={[styles.card, styles.shadow]}
+          onPress={() => navigation.navigate('Appointment')}>
           <CALENDAR_LOGO width={30} height={30} marginStart={'2%'} />
           <Text
             style={{color: Colors.backArrowColor, flex: 1, marginLeft: '3%'}}>
@@ -29,7 +36,9 @@ export default function NotificationsCard(props) {
         </TouchableOpacity>
       )}
       {type === howTo && (
-        <TouchableOpacity style={[styles.card, styles.shadow]}>
+        <TouchableOpacity
+          style={[styles.card, styles.shadow]}
+          onPress={() => setShowTutorial(true)}>
           <EvilIcon
             name="question"
             color={Colors.lastLogButtonColor}
@@ -43,6 +52,10 @@ export default function NotificationsCard(props) {
           />
         </TouchableOpacity>
       )}
+      <TutorialModal
+        visible={showTutorial}
+        closeModal={() => setShowTutorial(false)}
+      />
     </>
   );
 }
