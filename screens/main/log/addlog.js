@@ -199,7 +199,11 @@ class AddLogScreen extends Component {
     });
     return (
       <View style={globalStyles.pageContainer}>
-        <Animated.View style={{transform: [{translateX: widthInterpolate}]}}>
+        <Animated.View
+          style={{
+            ...globalStyles.pageContainer,
+            transform: [{translateX: widthInterpolate}],
+          }}>
           <View style={globalStyles.menuBarContainer}>
             <LeftArrowBtn
               close={() => this.props.navigation.navigate('Home')}

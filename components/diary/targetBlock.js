@@ -452,7 +452,7 @@ function renderMedContent(medMiss, medCompleted, medLogs) {
 //for logs with criteria : miss/completed
 function renderContent2(miss) {
   if (miss) {
-    return <Text style={styles.buttonDetail}>Missed</Text>;
+    return <Text style={styles.buttonDetail}>Did not log today.</Text>;
   } else {
     return <Text style={styles.buttonDetail}>Completed</Text>;
   }

@@ -30,7 +30,7 @@ export default function DiaryCard(props) {
   const {today_date, bgl, calorie, weight, medResult, dateString} = props;
   const {bgLogs, bgPass, bgMiss} = props;
   const {foodLogs, carbs, protein, fats, foodPass} = props;
-  const {medLogs, weightLogs} = props;
+  const {medLogs, weightLogs, lastWeight} = props;
   const {init} = props;
 
   const [showBg, setShowBg] = useState(false);
@@ -119,9 +119,7 @@ export default function DiaryCard(props) {
           {renderLogIconNavy(weight_key)}
           <View style={styles.content}>
             <Text style={styles.metricText}>Weight</Text>
-            <Text style={styles.measuredText}>
-              {weight ? weight + ' kg' : 'Not taken yet'}
-            </Text>
+            <Text style={styles.measuredText}>{lastWeight}</Text>
           </View>
         </View>
       </TouchableOpacity>

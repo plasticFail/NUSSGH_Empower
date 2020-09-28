@@ -20,7 +20,7 @@ import HeaderCard from '../../components/home/headerCard';
 import globalStyles from '../../styles/globalStyles';
 import {Colors} from '../../styles/colors';
 //function
-import {checkLogDone} from '../../commonFunctions/logFunctions';
+import {checkLogDone, isToday} from '../../commonFunctions/logFunctions';
 import {requestNutrientConsumption} from '../../netcalls/mealEndpoints/requestMealLog';
 import {
   getGreetingFromHour,
@@ -28,6 +28,7 @@ import {
   getTodayDate,
   appointment,
   howTo,
+  checkLast7Day,
 } from '../../commonFunctions/common';
 import {getEntry4Day} from '../../netcalls/requestsDiary';
 import {
@@ -36,6 +37,9 @@ import {
   renderGreetingText,
 } from '../../commonFunctions/diaryFunctions';
 import GameCard from '../../components/home/gameCard';
+import {getLastWeightLog} from '../../storage/asyncStorageFunctions';
+import AsyncStorage from '@react-native-community/async-storage';
+import {key_weightLog} from '../../storage/asyncStorageFunctions';
 
 // properties
 const username = 'Jimmy';
@@ -64,6 +68,7 @@ const HomeScreen = (props) => {
   const [foodPass, setFoodPass] = useState(true);
   const [medLogs, setMedLogs] = useState([]);
   const [weightLogs, setWeightLogs] = useState([]);
+  const [lastWeight, setLastWeight] = useState('');
 
   // activity card
   const [protein, setProtein] = React.useState(null);
@@ -104,7 +109,7 @@ const HomeScreen = (props) => {
     });
   }, []);
 
-  const initLogs = () => {
+  const initLogs = async () => {
     checkLogDone(getGreetingFromHour(currHour)).then((response) => {
       if (response != null) {
         setUncompleteLogs(response.notCompleted);
@@ -120,7 +125,7 @@ const HomeScreen = (props) => {
           const activityLogs = data[today_date].activity.logs;
           const medLogs = data[today_date].medication.logs;
           const bgTarget = data[today_date].glucose.target;
-          //set logs
+          //set logs need to pass to diary card*
           setBgLogs(bglLogs);
           setFoodLogs(foodLogs);
           setMedLogs(medLogs);
@@ -133,10 +138,6 @@ const HomeScreen = (props) => {
           );
           let averageBgl = bglLogs.reduce(
             (acc, curr, index) => acc + curr.bg_reading,
-            0,
-          );
-          let averageWeight = weightLogs.reduce(
-            (acc, curr, index) => acc + curr.weight,
             0,
           );
           if (bglLogs.length > 0) {
@@ -156,12 +157,6 @@ const HomeScreen = (props) => {
             setBgMiss(true);
             setBgl(null);
           }
-          if (weightLogs.length > 0) {
-            setWeight(weightLogs[weightLogs.length - 1].weight);
-          } else {
-            setWeight(0);
-          }
-
           setStepsTaken(steps);
 
           //for med data log
@@ -182,6 +177,27 @@ const HomeScreen = (props) => {
         }
       })
       .catch((err) => console.log(err));
+
+    let weight_data = await getLastWeightLog();
+    if (weight_data != null) {
+      if (!checkLast7Day(weight_data)) {
+        setLastWeight('Not taken yet');
+      } else {
+        if (isToday(weight_data.date)) {
+          setLastWeight('Taken today.');
+        } else {
+          //weight exist in last 7 days
+          let today = Moment(new Date());
+          let takenDate = Moment(weight_data.date);
+          let diff = today.diff(takenDate, 'days');
+          setLastWeight('Logged ' + diff + ' day (s) ago.');
+        }
+      }
+    } else {
+      //if last weight log dont exist,
+      setLastWeight('Not taken yet');
+    }
+
     loadNutritionalData();
   };
 
@@ -280,6 +296,7 @@ const HomeScreen = (props) => {
             protein={protein}
             weightLogs={weightLogs}
             medLogs={medLogs}
+            lastWeight={lastWeight}
             init={() => initLogs()}
           />
         </ScrollView>

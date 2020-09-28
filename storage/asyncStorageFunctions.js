@@ -116,11 +116,11 @@ const getLastMealLog = async () => {
 
 const storeFitbitToken = async (token) => {
   return await storeDataObj(key_fitbit_token, token);
-}
+};
 
 const getFitbitToken = async () => {
   return await getDataObj(key_fitbit_token);
-}
+};
 
 export {
   storeUsername,
@@ -138,5 +138,6 @@ export {
   storeLastMealLog,
   getLastMealLog,
   getFitbitToken,
-  storeFitbitToken
+  storeFitbitToken,
+  key_weightLog,
 };

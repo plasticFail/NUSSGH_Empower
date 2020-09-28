@@ -6,6 +6,7 @@ import {
   Text,
   Platform,
   InteractionManager,
+  Dimensions,
 } from 'react-native';
 import {Colors} from '../../../styles/colors';
 
@@ -153,7 +154,8 @@ export default class PickDrag extends Component {
           snapToInterval={interval_width}
           contentOffset={{x: interval_width}}
           contentContainerStyle={{
-            paddingStart: interval_width * 8,
+            paddingStart:
+              interval_width * Dimensions.get('window').width * 0.0194,
             paddingEnd: interval_width * 6 - 6,
           }}
           style={styles.scrollcontainer}>
