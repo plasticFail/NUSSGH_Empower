@@ -92,6 +92,15 @@ const globalStyles = StyleSheet.create({
     fontFamily: 'SFProDisplay-Bold',
     marginBottom: '2%',
   },
+  greyPageDetails: {
+    fontSize: normalTextFontSize,
+    fontWeight: '800',
+    marginStart: horizontalMargins,
+    marginEnd: horizontalMargins,
+    fontFamily: 'SFProDisplay-Bold',
+    marginBottom: '2%',
+    color: Colors.lastLogValueColor,
+  },
   pageSubDetails: {
     fontSize: normalTextFontSize,
     marginStart: horizontalMargins,

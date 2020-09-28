@@ -12,6 +12,7 @@ import {
   weight_key,
   isToday,
   isPeriod,
+  renderLogIconWhite,
 } from '../../commonFunctions/logFunctions';
 //third part lib
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -74,12 +75,7 @@ const LastLogButton = (props) => {
       <TouchableOpacity
         style={logStyles.lastLogContainer}
         onPress={() => setShow(!show)}>
-        <View style={{marginEnd: '1%'}}>
-          <Image
-            source={renderLogIcon(logType)}
-            style={logStyles.mini_loglogo}
-          />
-        </View>
+        <View style={{marginEnd: '1%'}}>{renderLogIconWhite(logType)}</View>
         <View style={{flex: 1}}>
           <Text style={[globalStyles.pageDetails, {color: 'white'}]}>
             {logType}

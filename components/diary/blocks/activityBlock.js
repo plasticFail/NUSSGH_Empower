@@ -7,10 +7,14 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
+import {
+  maxSteps,
+  maxDuration,
+  maxCalBurnt,
+} from '../../../commonFunctions/diaryFunctions';
 //component
 import LeftArrowBtn from '../../logs/leftArrowBtn';
 import ProgressContent from './progressContent';
-
 //third party library
 import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -19,30 +23,26 @@ import Ionicon from 'react-native-vector-icons/Ionicons';
 import {Colors} from '../../../styles/colors';
 import globalStyles from '../../../styles/globalStyles';
 import diaryStyles from '../../../styles/diaryStyles';
-import {renderLogIcon} from '../../../commonFunctions/logFunctions';
-import {
-  maxSteps,
-  maxDuration,
-  maxCalBurnt,
-} from '../../../commonFunctions/diaryFunctions';
 import logStyles from '../../../styles/logStyles';
+//svg
+import HEARTRATE from '../../../resources/images/Patient-Icons/SVG/icon-navy-heartrate.svg';
+import DISTANCE from '../../../resources/images/Patient-Icons/SVG/icon-navy-distance.svg';
+import CALBURNT from '../../../resources/images/Patient-Icons/SVG/icon-navy-calburnt.svg';
+import STEPS from '../../../resources/images/Patient-Icons/SVG/icon-navy-steps.svg';
+import EXERCISE from '../../../resources/images/Patient-Icons/SVG/icon-navy-activemins.svg';
+import {step_key} from '../../../commonFunctions/logFunctions';
 
-Icon.loadFont();
-
-const images = {
-  run: require('../../../resources/images/activity/type_RUN.png'),
-  walk: require('../../../resources/images/activity/type_WALK.png'),
-  outdoor_bike: require('../../../resources/images/activity/type_OUTDOORBIKE.png'),
-  elliptical: require('../../../resources/images/activity/type_ELLIPTICAL.png'),
-  sports: require('../../../resources/images/activity/type_AEROBICWORKOUT.png'),
-  caloriesBurnt: require('../../../resources/images/activity/calories.png'),
-  distance: require('../../../resources/images/activity/distance.png'),
-  steps_taken: require('../../../resources/images/activity/steps_taken.png'),
-};
-
+const heartRate = 'heartrate';
+const distance_key = 'distance';
+const caloriesBurnt = 'Calories Burnt';
 const steps_taken = 'Steps Taken';
 const excerise = 'Exercise';
-const caloriesBurnt = 'Calories Burnt';
+
+const iconStyle = {
+  width: 35,
+  height: 35,
+  margin: '2%',
+};
 
 const ActivityBlock = (props) => {
   const {visible, activityLogs, pass, summary, miss, day} = props;
@@ -100,16 +100,11 @@ const ActivityBlock = (props) => {
           onContentSizeChange={() =>
             scrollViewRef.current.scrollToEnd({animated: true})
           }>
-          {renderSummaryContent(images.caloriesBurnt, caloriesBurnt, summary)}
-          {renderSummaryContent(images.distance, distance, 'Distance')}
-          {renderSummaryContent(images.walk, steps_taken, summary)}
-          {renderSummaryContent(
-            images.run,
-            excerise,
-            summary,
-            expand,
-            setExpand,
-          )}
+          {renderSummaryContent(distance_key, distance, 'Distance')}
+          {renderSummaryContent(caloriesBurnt, caloriesBurnt, summary)}
+          {renderSummaryContent(step_key, steps_taken, summary)}
+          {renderSummaryContent(excerise, excerise, summary, expand, setExpand)}
+
           {!expand && (
             <View
               style={{
@@ -140,11 +135,14 @@ const ActivityBlock = (props) => {
   );
 };
 
-function renderSummaryContent(icon, content, detail, expand, setExpand) {
+function renderSummaryContent(type, content, detail, expand, setExpand) {
   return (
     <>
       <View style={{margin: '3%', flexDirection: 'row'}}>
-        <Image source={icon} style={styles.iconImg2} />
+        {type === excerise && <EXERCISE {...iconStyle} />}
+        {type === distance_key && <DISTANCE {...iconStyle} />}
+        {type === caloriesBurnt && <CALBURNT {...iconStyle} />}
+        {type === step_key && <STEPS {...iconStyle} />}
         <View style={{marginStart: '2%'}}>
           {content === steps_taken ? (
             <ProgressContent
@@ -159,7 +157,7 @@ function renderSummaryContent(icon, content, detail, expand, setExpand) {
               value={detail.duration}
               target={maxDuration}
               flip={true}
-              details={excerise}
+              details={'Active'}
               targetUnit={'Mins'}
               clickable={expand}
               chevronDownMethod={setExpand}
@@ -183,27 +181,6 @@ function renderSummaryContent(icon, content, detail, expand, setExpand) {
       </View>
       <View style={styles.detailBorder} />
     </>
-  );
-}
-
-function renderIcon(activity) {
-  let activityName = String(activity.name).toUpperCase().replace(/\s/g, '');
-  return (
-    <View style={{marginBottom: '20%'}}>
-      {activityName === 'RUN' ? (
-        <Image source={images.run} style={styles.iconImg2} />
-      ) : activityName === 'WALK' ? (
-        <Image source={images.walk} style={styles.iconImg2} />
-      ) : activityName === 'OUTDOORBIKE' ? (
-        <Image source={images.outdoor_bike} style={styles.iconImg2} />
-      ) : activityName === 'ELLIPTICAL' ? (
-        <Image source={images.elliptical} style={styles.iconImg2} />
-      ) : activityName === 'SPORTS' ? (
-        <Image source={images.sports} style={styles.iconImg2} />
-      ) : (
-        <Icon name="swim" style={styles.iconImg2} size={60} color="#3ec1c1" />
-      )}
-    </View>
   );
 }
 

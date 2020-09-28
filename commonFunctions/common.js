@@ -6,6 +6,9 @@ const afternoon_key = 'Afternoon';
 const evening_key = 'Evening';
 const night_key = 'Night';
 
+const appointment = 'appointment';
+const howTo = 'howto';
+
 const morningObj = {
   name: 'Morning',
   start: 5,
@@ -53,9 +56,8 @@ const getTodayDate = () => {
 };
 
 const getLastMinuteFromTodayDate = () => {
-  return Moment(new Date()).add(1, "day").format("DD/MM/YYYY") + " 00:00:00";
-}
-
+  return Moment(new Date()).add(1, 'day').format('DD/MM/YYYY') + ' 00:00:00';
+};
 
 //check if selected object is empty
 const isEmpty = (obj) => {
@@ -96,6 +98,8 @@ export {
   evening_key,
   afternoon_key,
   morning_key,
+  appointment,
+  howTo,
   getPeriodFromMealType,
   getLastMinuteFromTodayDate,
   getTodayDate,

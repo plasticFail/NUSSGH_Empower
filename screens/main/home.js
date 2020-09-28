@@ -27,6 +27,8 @@ import {
   getGreetingFromHour,
   getLastMinuteFromTodayDate,
   getTodayDate,
+  appointment,
+  howTo,
 } from '../../commonFunctions/common';
 import {getEntry4Day} from '../../netcalls/requestsDiary';
 import {
@@ -34,27 +36,7 @@ import {
   getMedDonePeriods,
   renderGreetingText,
 } from '../../commonFunctions/diaryFunctions';
-
-const buttonList = [
-  {
-    id: '1',
-    name: 'Medications',
-    path: 'Medication',
-    iconName: 'capsules',
-  },
-  {
-    id: '2',
-    name: 'Rewards',
-    path: 'GameCenter',
-    iconName: 'gift',
-  },
-  {
-    id: '3',
-    name: 'Goals',
-    path: 'Goals',
-    iconName: 'empire',
-  },
-];
+import GameCard from '../../components/home/gameCard';
 
 // properties
 const username = 'Jimmy';
@@ -256,7 +238,15 @@ const HomeScreen = (props) => {
           uncompleteLogs={uncompleteLogs}
         />
         {/* Notifications */}
-        <NotificationsCard />
+        <NotificationsCard type={howTo} count={''} />
+        <NotificationsCard type={appointment} count={'2'} />
+        <ActivityCard
+          stepsTaken={stepsTaken}
+          carb={carb}
+          protein={protein}
+          fat={fat}
+        />
+        <GameCard points={'5'} chances={'2'} rewardCount={'2'} />
         {/* Diary overview of weight, blood glucose, food, medication and physical activity */}
         <DiaryCard
           today_date={today_date}
@@ -276,12 +266,6 @@ const HomeScreen = (props) => {
           weightLogs={weightLogs}
           medLogs={medLogs}
           init={() => initLogs()}
-        />
-        <ActivityCard
-          stepsTaken={stepsTaken}
-          carb={carb}
-          protein={protein}
-          fat={fat}
         />
       </ScrollView>
     </View>

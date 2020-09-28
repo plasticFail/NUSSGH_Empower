@@ -18,7 +18,12 @@ export default function ActivityCard(props) {
       style={[
         styles.card,
         styles.shadow,
-        {margin: '5%', flexDirection: 'column', alignItems: 'center'},
+        {
+          margin: '5%',
+          flexDirection: 'column',
+          alignItems: 'center',
+          marginTop: '7%',
+        },
       ]}>
       <TouchableOpacity
         onPress={() => navigation.navigate('Reports', {initialTab: 4})}
