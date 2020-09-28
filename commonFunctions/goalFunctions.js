@@ -92,6 +92,17 @@ const getWeeklyObj = (value) => {
   }
 };
 
+const getGoalObjById = (id, arr) => {
+  for (var x of Object.keys(arr)) {
+    let typeArray = arr[x].goals;
+    for (var y of typeArray) {
+      if (y._id === id) {
+        return y;
+      }
+    }
+  }
+};
+
 export {
   bg,
   bgpost,
@@ -108,4 +119,5 @@ export {
   goalEnded,
   getFrequency,
   getWeeklyObj,
+  getGoalObjById,
 };

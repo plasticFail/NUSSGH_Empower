@@ -28,6 +28,7 @@ import {
   renderGoalTypeName,
   goalEnded,
   isMonday,
+  bgpost,
 } from '../../commonFunctions/goalFunctions';
 import {deleteGoal} from '../../netcalls/requestsGoals';
 //component
@@ -48,10 +49,14 @@ import WeightGoal from './blocks/weightGoal';
 const progress = '50%';
 const GoalDetail = (props) => {
   const {visible, goalItem, type} = props;
-  const {close, init} = props;
+  const {close, init, deleteInit} = props;
   const [showDelete, setShowDelete] = useState(false);
   const [deleteContent, setDeleteContent] = useState('');
   const [showEditModal, setShowEditModal] = useState(false);
+
+  useEffect(() => {
+    init();
+  }, [showEditModal]);
 
   const showDate = (datestring) => {
     return moment(getDateObj(datestring)).format('DD MMM YYYY');
@@ -65,9 +70,11 @@ const GoalDetail = (props) => {
   };
 
   const getWeightOffset = (number) => {
-    let arr = weeklyGoalList.filter((item) => item.value === number);
-    let string = String(arr[0].name).split(' per week');
-    return string[0];
+    if (number != null) {
+      let arr = weeklyGoalList.filter((item) => item.value === number);
+      let string = String(arr[0].name).split(' per week');
+      return string[0];
+    }
   };
 
   const confirmDelete = () => {
@@ -77,10 +84,14 @@ const GoalDetail = (props) => {
   };
 
   const removeGoal = async () => {
-    console.log('removing ' + type + ' ' + goalItem['_id']);
-    if (await deleteGoal(type, goalItem._id)) {
+    let goalType = type;
+    if (goalType === bg) {
+      goalType = bgpost;
+    }
+    console.log('removing ' + goalType + ' ' + goalItem['_id']);
+    if (await deleteGoal(goalType, goalItem._id)) {
+      deleteInit();
       setShowDelete(false);
-      init();
       close();
     } else {
       Alert.alert('Unexpected error occured!', 'Please try again later.', [
@@ -173,7 +184,10 @@ const GoalDetail = (props) => {
       {type === bg && (
         <BgGoal
           visible={showEditModal}
-          close={() => setShowEditModal(false)}
+          close={() => {
+            setShowEditModal(false);
+            init();
+          }}
           parent="edit"
           bg={goalItem}
         />

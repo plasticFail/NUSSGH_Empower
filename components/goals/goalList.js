@@ -37,7 +37,10 @@ import {
   steps,
   renderGoalTypeName,
   getNumofGoals,
+  getGoalObjById,
 } from '../../commonFunctions/goalFunctions';
+import {isEmpty} from '../../commonFunctions/common';
+import {goal} from '../../netcalls/urls';
 
 const height = Dimensions.get('window').height;
 
@@ -49,6 +52,14 @@ const GoalList = (props) => {
   const [selectedGoal, setSelectedGoal] = useState({});
   const [selectedType, setSelectedType] = useState('');
   const [showDetail, setShowDetail] = useState(false);
+
+  useEffect(() => {
+    if (selectedGoal._id != null) {
+      setSelectedGoal(getGoalObjById(selectedGoal._id, goals));
+    } else {
+      setSelectedGoal({});
+    }
+  }, [goals]);
 
   useEffect(() => {
     if (showDown) {
@@ -136,7 +147,13 @@ const GoalList = (props) => {
         close={() => setShowDetail(false)}
         goalItem={selectedGoal}
         type={selectedType}
-        init={() => init()}
+        init={() => {
+          init();
+        }}
+        deleteInit={() => {
+          init();
+          setSelectedGoal({});
+        }}
       />
     </View>
   );

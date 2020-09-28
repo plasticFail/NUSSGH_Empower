@@ -9,9 +9,14 @@ import {
   activity,
   steps,
 } from '../commonFunctions/goalFunctions';
+import {act} from 'react-test-renderer';
 
-const addBgGoalReq = async (bgGoal) => {
+//post and edit
+const addBgGoalReq = async (bgGoal, id) => {
   let link = goal + '/' + bgpost;
+  if (id != null) {
+    bgGoal._id = id;
+  }
   try {
     let response = await fetch(link, {
       method: 'POST',
@@ -20,14 +25,7 @@ const addBgGoalReq = async (bgGoal) => {
         Accept: 'application/json',
         'Content-type': 'application/json',
       },
-      body: JSON.stringify({
-        name: bgGoal.name,
-        start_date: bgGoal.start_date,
-        end_date: bgGoal.end_date,
-        frequency: bgGoal.frequency,
-        min_bg: bgGoal.min_bg,
-        max_bg: bgGoal.max_bg,
-      }),
+      body: JSON.stringify(bgGoal),
     });
     let responseJson = await response.json();
     console.log(responseJson);
@@ -38,8 +36,11 @@ const addBgGoalReq = async (bgGoal) => {
   }
 };
 
-const addFoodGoalReq = async (foodGoal) => {
+const addFoodGoalReq = async (foodGoal, id) => {
   let link = goal + '/' + food;
+  if (id != null) {
+    foodGoal._id = id;
+  }
   try {
     let response = await fetch(link, {
       method: 'POST',
@@ -48,16 +49,7 @@ const addFoodGoalReq = async (foodGoal) => {
         Accept: 'application/json',
         'Content-type': 'application/json',
       },
-      body: JSON.stringify({
-        name: foodGoal.name,
-        start_date: foodGoal.start_date,
-        end_date: foodGoal.end_date,
-        frequency: foodGoal.frequency,
-        calories: foodGoal.calories,
-        carbs: foodGoal.carbs,
-        fats: foodGoal.fats,
-        protein: foodGoal.protein,
-      }),
+      body: JSON.stringify(foodGoal),
     });
     let responseJson = await response.json();
     console.log(responseJson);
@@ -68,8 +60,11 @@ const addFoodGoalReq = async (foodGoal) => {
   }
 };
 
-const addMedGoalReq = async (medGoal) => {
+const addMedGoalReq = async (medGoal, id) => {
   let link = goal + '/' + med;
+  if (id != null) {
+    medGoal._id = id;
+  }
   try {
     let response = await fetch(link, {
       method: 'POST',
@@ -78,14 +73,7 @@ const addMedGoalReq = async (medGoal) => {
         Accept: 'application/json',
         'Content-type': 'application/json',
       },
-      body: JSON.stringify({
-        name: medGoal.name,
-        start_date: medGoal.start_date,
-        end_date: medGoal.end_date,
-        frequency: medGoal.frequency,
-        medication: medGoal.medication,
-        dosage: medGoal.dosage,
-      }),
+      body: JSON.stringify(medGoal),
     });
     let responseJson = await response.json();
     console.log(responseJson);
@@ -96,8 +84,11 @@ const addMedGoalReq = async (medGoal) => {
   }
 };
 
-const addWeightGoalReq = async (weightGoal) => {
+const addWeightGoalReq = async (weightGoal, id) => {
   let link = goal + '/' + weight;
+  if (id != null) {
+    weightGoal._id = id;
+  }
   try {
     let response = await fetch(link, {
       method: 'POST',
@@ -106,13 +97,7 @@ const addWeightGoalReq = async (weightGoal) => {
         Accept: 'application/json',
         'Content-type': 'application/json',
       },
-      body: JSON.stringify({
-        name: weightGoal.name,
-        start_date: weightGoal.start_date,
-        end_date: weightGoal.end_date,
-        weekly_offset: weightGoal.weekly_offset,
-        goal_weight: weightGoal.goal_weight,
-      }),
+      body: JSON.stringify(weightGoal),
     });
     let responseJson = await response.json();
     console.log(responseJson);
@@ -123,8 +108,11 @@ const addWeightGoalReq = async (weightGoal) => {
   }
 };
 
-const addActivityGoalReq = async (activityGoal) => {
+const addActivityGoalReq = async (activityGoal, id) => {
   let link = goal + '/' + activity;
+  if (id != null) {
+    activityGoal._id = id;
+  }
   try {
     let response = await fetch(link, {
       method: 'POST',
@@ -133,14 +121,7 @@ const addActivityGoalReq = async (activityGoal) => {
         Accept: 'application/json',
         'Content-type': 'application/json',
       },
-      body: JSON.stringify({
-        name: activityGoal.name,
-        start_date: activityGoal.start_date,
-        end_date: activityGoal.end_date,
-        frequency: activityGoal.frequency,
-        cal_burnt: activityGoal.cal_burnt,
-        duration: activityGoal.duration,
-      }),
+      body: JSON.stringify(activityGoal),
     });
     let responseJson = await response.json();
     console.log(responseJson);
@@ -151,8 +132,11 @@ const addActivityGoalReq = async (activityGoal) => {
   }
 };
 
-const addStepsGoalReq = async (stepGoal) => {
+const addStepsGoalReq = async (stepGoal, id) => {
   let link = goal + '/' + steps;
+  if (id != null) {
+    stepGoal._id = id;
+  }
   try {
     let response = await fetch(link, {
       method: 'POST',
@@ -161,13 +145,7 @@ const addStepsGoalReq = async (stepGoal) => {
         Accept: 'application/json',
         'Content-type': 'application/json',
       },
-      body: JSON.stringify({
-        name: stepGoal.name,
-        start_date: stepGoal.start_date,
-        end_date: stepGoal.end_date,
-        frequency: stepGoal.frequency,
-        steps: stepGoal.steps,
-      }),
+      body: JSON.stringify(stepGoal),
     });
     let responseJson = await response.json();
     console.log(responseJson);

@@ -70,19 +70,36 @@ const MedicationGoal = (props) => {
       medication: selectedMed.drugName,
       dosage: dosage,
     };
-    if (await addMedGoalReq(obj)) {
-      Alert.alert('Medication goal created successfully', '', [
-        {
-          text: 'Got It',
-          onPress: () => close(),
-        },
-      ]);
+    if (parent != undefined) {
+      if (await addMedGoalReq(obj, med._id)) {
+        Alert.alert('Medication goal edited successfully', '', [
+          {
+            text: 'Got It',
+            onPress: () => close(),
+          },
+        ]);
+      } else {
+        Alert.alert('Unexpected Error Occured', 'Please try again later!', [
+          {
+            text: 'Got It',
+          },
+        ]);
+      }
     } else {
-      Alert.alert('Unexpected Error Occured', 'Please try again later!', [
-        {
-          text: 'Got It',
-        },
-      ]);
+      if (await addMedGoalReq(obj)) {
+        Alert.alert('Medication goal created successfully', '', [
+          {
+            text: 'Got It',
+            onPress: () => close(),
+          },
+        ]);
+      } else {
+        Alert.alert('Unexpected Error Occured', 'Please try again later!', [
+          {
+            text: 'Got It',
+          },
+        ]);
+      }
     }
   };
 

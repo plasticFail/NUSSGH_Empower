@@ -62,19 +62,36 @@ const StepsGoal = (props) => {
       frequency: frequency.value,
       steps: steps,
     };
-    if (addStepsGoalReq(obj)) {
-      Alert.alert('Step goal created successfully', '', [
-        {
-          text: 'Got It',
-          onPress: () => close(),
-        },
-      ]);
+    if (parent != undefined) {
+      if (addStepsGoalReq(obj, step._id)) {
+        Alert.alert('Step goal edited successfully', '', [
+          {
+            text: 'Got It',
+            onPress: () => close(),
+          },
+        ]);
+      } else {
+        Alert.alert('Unexpected Error Occured', 'Please try again later!', [
+          {
+            text: 'Got It',
+          },
+        ]);
+      }
     } else {
-      Alert.alert('Unexpected Error Occured', 'Please try again later!', [
-        {
-          text: 'Got It',
-        },
-      ]);
+      if (addStepsGoalReq(obj)) {
+        Alert.alert('Step goal created successfully', '', [
+          {
+            text: 'Got It',
+            onPress: () => close(),
+          },
+        ]);
+      } else {
+        Alert.alert('Unexpected Error Occured', 'Please try again later!', [
+          {
+            text: 'Got It',
+          },
+        ]);
+      }
     }
   };
 

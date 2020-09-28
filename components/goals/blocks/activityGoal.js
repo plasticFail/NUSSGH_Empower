@@ -68,20 +68,36 @@ const ActivityGoal = (props) => {
       duration: minute,
       cal_burnt: calBurnt,
     };
-    console.log(obj);
-    if (await addActivityGoalReq(obj)) {
-      Alert.alert('Activity goal created successfully', '', [
-        {
-          text: 'Got It',
-          onPress: () => close(),
-        },
-      ]);
+    if (parent != undefined) {
+      if (await addActivityGoalReq(obj, activity._id)) {
+        Alert.alert('Activity goal edited successfully', '', [
+          {
+            text: 'Got It',
+            onPress: () => close(),
+          },
+        ]);
+      } else {
+        Alert.alert('Unexpected Error Occured', 'Please try again later!', [
+          {
+            text: 'Got It',
+          },
+        ]);
+      }
     } else {
-      Alert.alert('Unexpected Error Occured', 'Please try again later!', [
-        {
-          text: 'Got It',
-        },
-      ]);
+      if (await addActivityGoalReq(obj)) {
+        Alert.alert('Activity goal created successfully', '', [
+          {
+            text: 'Got It',
+            onPress: () => close(),
+          },
+        ]);
+      } else {
+        Alert.alert('Unexpected Error Occured', 'Please try again later!', [
+          {
+            text: 'Got It',
+          },
+        ]);
+      }
     }
   };
 

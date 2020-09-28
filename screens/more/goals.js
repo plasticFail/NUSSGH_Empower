@@ -74,7 +74,7 @@ const GoalsScreen = (props) => {
         style={[globalStyles.goalFieldName, {marginTop: 0, marginStart: '3%'}]}>
         Your Goals
       </Text>
-      <GoalList goals={goals} init={() => initGoals()} />
+      <GoalList goals={goals} init={initGoals} />
 
       {isMonday() && (
         <TouchableOpacity
@@ -120,21 +120,6 @@ const GoalsScreen = (props) => {
 };
 
 export default GoalsScreen;
-
-function RenderGoalItems(array, openGoalDetail) {
-  return Object.keys(array).map((item, index) =>
-    array[item].goals.map((goal, index) => {
-      return (
-        <TouchableOpacity
-          key={index}
-          style={[{flex: 1}, styles.border]}
-          onPress={() => openGoalDetail(goal, item)}>
-          {renderGoalType(goal, item, openGoalDetail)}
-        </TouchableOpacity>
-      );
-    }),
-  );
-}
 
 function renderGoalType(goalItem, type) {
   let progress = goalItem.progress + '%';

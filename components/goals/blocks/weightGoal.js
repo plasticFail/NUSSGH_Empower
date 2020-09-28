@@ -67,20 +67,36 @@ const WeightGoal = (props) => {
       weekly_offset: weeklyGoal.value,
       goal_weight: weight,
     };
-    console.log(obj);
-    if (await addWeightGoalReq(obj)) {
-      Alert.alert('Weight goal created successfully', '', [
-        {
-          text: 'Got It',
-          onPress: () => close(),
-        },
-      ]);
+    if (parent != undefined) {
+      if (await addWeightGoalReq(obj, weightObj._id)) {
+        Alert.alert('Weight goal editted successfully', '', [
+          {
+            text: 'Got It',
+            onPress: () => close(),
+          },
+        ]);
+      } else {
+        Alert.alert('Unexpected Error Occured', 'Please try again later!', [
+          {
+            text: 'Got It',
+          },
+        ]);
+      }
     } else {
-      Alert.alert('Unexpected Error Occured', 'Please try again later!', [
-        {
-          text: 'Got It',
-        },
-      ]);
+      if (await addWeightGoalReq(obj)) {
+        Alert.alert('Weight goal created successfully', '', [
+          {
+            text: 'Got It',
+            onPress: () => close(),
+          },
+        ]);
+      } else {
+        Alert.alert('Unexpected Error Occured', 'Please try again later!', [
+          {
+            text: 'Got It',
+          },
+        ]);
+      }
     }
   };
 

@@ -80,19 +80,36 @@ const FoodGoal = (props) => {
       protein: protein,
       fats: fats,
     };
-    if (await addFoodGoalReq(obj)) {
-      Alert.alert('Food goal created successfully', '', [
-        {
-          text: 'Got It',
-          onPress: () => close(),
-        },
-      ]);
+    if (parent != undefined) {
+      if (await addFoodGoalReq(obj, food._id)) {
+        Alert.alert('Food goal edited successfully', '', [
+          {
+            text: 'Got It',
+            onPress: () => close(),
+          },
+        ]);
+      } else {
+        Alert.alert('Unexpected Error Occured', 'Please try again later!', [
+          {
+            text: 'Got It',
+          },
+        ]);
+      }
     } else {
-      Alert.alert('Unexpected Error Occured', 'Please try again later!', [
-        {
-          text: 'Got It',
-        },
-      ]);
+      if (await addFoodGoalReq(obj)) {
+        Alert.alert('Food goal created successfully', '', [
+          {
+            text: 'Got It',
+            onPress: () => close(),
+          },
+        ]);
+      } else {
+        Alert.alert('Unexpected Error Occured', 'Please try again later!', [
+          {
+            text: 'Got It',
+          },
+        ]);
+      }
     }
   };
 

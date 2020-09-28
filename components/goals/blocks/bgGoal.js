@@ -74,20 +74,36 @@ const BgGoal = (props) => {
       min_bg: Number(minBg),
       max_bg: Number(maxBg),
     };
-    console.log(obj);
-    if (await addBgGoalReq(obj)) {
-      Alert.alert('Blood glucose goal created successfully', '', [
-        {
-          text: 'Got It',
-          onPress: () => close(),
-        },
-      ]);
+    if (parent != undefined) {
+      if (await addBgGoalReq(obj, bg._id)) {
+        Alert.alert('Blood glucose goal edited successfully', '', [
+          {
+            text: 'Got It',
+            onPress: () => close(),
+          },
+        ]);
+      } else {
+        Alert.alert('Unexpected Error Occured', 'Please try again later!', [
+          {
+            text: 'Got It',
+          },
+        ]);
+      }
     } else {
-      Alert.alert('Unexpected Error Occured', 'Please try again later!', [
-        {
-          text: 'Got It',
-        },
-      ]);
+      if (await addBgGoalReq(obj)) {
+        Alert.alert('Blood glucose goal created successfully', '', [
+          {
+            text: 'Got It',
+            onPress: () => close(),
+          },
+        ]);
+      } else {
+        Alert.alert('Unexpected Error Occured', 'Please try again later!', [
+          {
+            text: 'Got It',
+          },
+        ]);
+      }
     }
   };
 
