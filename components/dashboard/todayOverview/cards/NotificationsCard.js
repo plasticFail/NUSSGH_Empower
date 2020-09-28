@@ -22,10 +22,9 @@ export default function NotificationsCard(props) {
       {type === appointment && (
         <TouchableOpacity
           style={[styles.card, styles.shadow]}
-          onPress={() => navigation.navigate('Appointment')}>
+          onPress={() => setShowTutorial(true)}>
           <CALENDAR_LOGO width={30} height={30} marginStart={'2%'} />
-          <Text
-            style={{color: Colors.backArrowColor, flex: 1, marginLeft: '3%'}}>
+          <Text style={[{color: Colors.backArrowColor}, styles.text]}>
             {count} <Text style={{color: '#000'}}>Upcoming Appointments</Text>
           </Text>
           <Icon
@@ -44,7 +43,7 @@ export default function NotificationsCard(props) {
             color={Colors.lastLogButtonColor}
             size={40}
           />
-          <Text style={{flex: 1, marginLeft: '3%'}}>How To Use Empower</Text>
+          <Text style={styles.text}>How To Use Empower</Text>
           <Icon
             name="chevron-right"
             size={20}
@@ -81,5 +80,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+  },
+  text: {
+    fontSize: 16,
+    fontFamily: 'SFProDisplay-Regular',
+    flex: 1,
+    marginLeft: '3%',
   },
 });

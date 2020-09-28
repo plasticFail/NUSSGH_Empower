@@ -129,6 +129,7 @@ const MedicationLogBlock = (props) => {
               closeSelectModal={() => setShowSelectModal(false)}
               selectedMedList={selectedMedList}
               getSelectedMedicineFromModal={getSelectedMedicineFromModal}
+              recordDate={recordDate}
             />
           ) : null}
         </View>

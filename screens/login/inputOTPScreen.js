@@ -97,7 +97,8 @@ const InputOTPScreen = (props) => {
   return (
     <Modal
       isVisible={visible}
-      animationIn="slideInUp"
+      animationIn="slideInRight"
+      animationOut="slideOutRight"
       onBackdropPress={() => close()}
       onBackButtonPress={() => close()}
       style={{margin: 0}}>

@@ -5,6 +5,7 @@ import {
   glucoseAddLogRequest,
   medicationAddLogRequest,
   weightAddLogRequest,
+  getWeightLogs,
 } from '../netcalls/requestsLog';
 import {
   storeLastBgLog,
@@ -23,6 +24,8 @@ import {
   filterAfternoon,
   getTime,
   getHour,
+  getDateRange,
+  getDateObj,
 } from './diaryFunctions';
 //svg
 import DARKGREEN_BG from '../resources/images/Patient-Icons/SVG/icon-darkgreen-bloodglucose.svg';
@@ -120,9 +123,33 @@ const isPeriod = (time) => {
   return getGreetingFromHour(hour);
 };
 
+const dateFrom2dayWeightLog = async () => {
+  let arr = getDateRange(7, new Date());
+  let arr1 = await getWeightLogs(
+    arr[0],
+    Moment(new Date()).add(1, 'days').format('YYYY-MM-DD'),
+  );
+  let weightLogs = arr1.logs;
+  if (weightLogs.length === 0) {
+    return 'Not taken yet';
+  } else {
+    //weight exist in last 7 days
+    console.log(weightLogs[weightLogs.length - 1]);
+    let today = Moment(new Date());
+    let takenDate = Moment(
+      getDateObj(weightLogs[weightLogs.length - 1].record_date),
+    );
+    let diff = today.diff(takenDate, 'days');
+    if (diff != 0) {
+      return 'Logged ' + diff + ' day (s) ago.';
+    } else {
+      return 'Logged today.';
+    }
+  }
+};
+
 const checkLogDone = async (period) => {
   let weight_data = await getLastWeightLog();
-
   let completed = [];
   let notCompleted = [];
   let bgLogs = [];
@@ -390,5 +417,6 @@ export {
   handleSubmitBloodGlucose,
   handleSubmitMedication,
   handleSubmitWeight,
+  dateFrom2dayWeightLog,
 };
 //edit flag

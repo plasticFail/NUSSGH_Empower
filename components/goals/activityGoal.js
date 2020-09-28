@@ -44,7 +44,7 @@ const ActivityGoal = (props) => {
       startDate: Moment(startDate).format('DD/MM/YYYY HH:mm:ss'),
       endDate: Moment(endDate).format('DD/MM/YYYY HH:mm:ss'),
       frequency: frequency,
-      exercise: minute,
+      exercise_min: minute,
       calBurnt: calBurnt,
     };
     console.log(obj);

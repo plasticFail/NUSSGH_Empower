@@ -23,11 +23,12 @@ import SearchResult2 from '../../logs/medication/searchResult_2';
 //style
 import {Colors} from '../../../styles/colors';
 import globalStyles from '../../../styles/globalStyles';
+import {getDateObj} from '../../../commonFunctions/diaryFunctions';
 
 Ionicons.loadFont();
 
 const SearchMedication = (props) => {
-  const {visible, closeModal, parent} = props;
+  const {visible, closeModal, parent, recordDate} = props;
   const {selectedMedicine, setSelectedMedicine} = props;
   const [searchTerm, setSearchTerm] = useState('');
   const [searchKeyCache, setSearchKeyCache] = useState('');
@@ -75,9 +76,9 @@ const SearchMedication = (props) => {
     }
   };
 
-  //get the list of medication for today
+  //get the list of medication for today/record date
   const getMedication2day = () => {
-    const today = Moment(new Date()).format('YYYY-MM-DD');
+    const today = Moment(getDateObj(recordDate)).format('YYYY-MM-DD');
     getMedication4Day(today).then((response) => {
       let d = response[today];
       let arr = [];

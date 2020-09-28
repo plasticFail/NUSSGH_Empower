@@ -27,7 +27,7 @@ const EditPhoneModal = (props) => {
   return (
     <Modal
       isVisible={props.visible}
-      animationIn="slideInUp"
+      animationIn="slideInRight"
       onBackdropPress={props.close}
       onBackButtonPress={props.close}
       style={{margin: 0}}>

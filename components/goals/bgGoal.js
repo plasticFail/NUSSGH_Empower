@@ -53,6 +53,7 @@ const BgGoal = (props) => {
       minBg: minBg,
       maxBg: maxBg,
     };
+    console.log(obj);
   };
 
   const showSubmitBtn = () => {

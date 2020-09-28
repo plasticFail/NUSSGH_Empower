@@ -14,6 +14,8 @@ const TutorialModal = (props) => {
       isVisible={visible}
       coverScreen={true}
       backdropOpacity={1}
+      animationIn="slideInRight"
+      animationOut="slideOutRight"
       onBackButtonPress={() => closeModal()}
       backdropColor={Colors.backgroundColor}
       style={{margin: 0}}>
@@ -26,7 +28,7 @@ const TutorialModal = (props) => {
         <View style={globalStyles.menuBarContainer}>
           <LeftArrowBtn close={closeModal} />
         </View>
-        <Text style={globalStyles.pageHeader}>Tutorial</Text>
+        <Text style={globalStyles.pageHeader}></Text>
         <InProgress />
       </View>
     </Modal>

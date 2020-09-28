@@ -55,6 +55,8 @@ const ActivityBlock = (props) => {
     <Modal
       isVisible={visible}
       coverScreen={true}
+      animationIn="slideInRight"
+      animationOut="slideOutRight"
       backdropOpacity={1}
       onBackButtonPress={() => closeModal()}
       backdropColor={Colors.backgroundColor}

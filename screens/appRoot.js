@@ -5,7 +5,11 @@ import {
   getFocusedRouteNameFromRoute,
   NavigationContainer,
 } from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
+import {
+  createStackNavigator,
+  CardStyleInterpolators,
+  TransitionSpecs,
+} from '@react-navigation/stack';
 import Entypo from 'react-native-vector-icons/Entypo';
 //functions
 import {connect} from 'react-redux';
@@ -20,6 +24,14 @@ import AskAdd from './onboarding/medicationPlan/askAdd';
 import AddPlan from './onboarding/medicationPlan/addPlan';
 import FitbitSetup from './onboarding/fitbit/FitbitSetup';
 import DrawerNavigator from './drawer';
+import AccountDetailScreen from './more/accountDetails';
+import DiaryScreen from './main/diary/diary';
+import MedicationScreen from './more/medications';
+import GoalsScreen from './more/goals';
+import AppointmentScreen from './more/appointments';
+import EducationMaterialsScreen from './more/educationMaterials';
+import Logout from './more/logout';
+import Animated, {Easing} from 'react-native-reanimated';
 
 Entypo.loadFont();
 
@@ -85,6 +97,7 @@ class AppRoot extends Component {
                 backgroundColor: 'transparent',
               },
               headerTransparent: true,
+              cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
             })}>
             {this.props.isLogin ? (
               <>
@@ -93,6 +106,7 @@ class AppRoot extends Component {
                   component={DrawerNavigator}
                   options={{
                     headerShown: false,
+                    animationEnabled: true,
                   }}
                 />
                 {/* Onboarding */}
@@ -110,6 +124,56 @@ class AppRoot extends Component {
                   name="FitbitSetup"
                   component={FitbitSetup}
                   options={{headerShown: false}}
+                />
+                {/* Drawer Screen */}
+                <Stack.Screen
+                  name="Edit Account"
+                  component={AccountDetailScreen}
+                  options={{
+                    headerShown: false,
+                  }}
+                />
+                <Stack.Screen
+                  name="Diary"
+                  component={DiaryScreen}
+                  options={{
+                    headerShown: false,
+                  }}
+                />
+                <Stack.Screen
+                  name="Medication"
+                  component={MedicationScreen}
+                  options={{
+                    headerShown: false,
+                  }}
+                />
+                <Stack.Screen
+                  name="Goals"
+                  component={GoalsScreen}
+                  options={{
+                    headerShown: false,
+                  }}
+                />
+                <Stack.Screen
+                  name="Appointment"
+                  component={AppointmentScreen}
+                  options={{
+                    headerShown: false,
+                  }}
+                />
+                <Stack.Screen
+                  name="Resources"
+                  component={EducationMaterialsScreen}
+                  options={{
+                    headerShown: false,
+                  }}
+                />
+                <Stack.Screen
+                  name="Log Out"
+                  component={Logout}
+                  options={{
+                    headerShown: false,
+                  }}
                 />
               </>
             ) : (
@@ -152,4 +216,41 @@ class AppRoot extends Component {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(AppRoot);
-//edit flag
+
+const forSlide = ({current, next, inverted, layouts: {screen}}) => {
+  const progress = Animated.add(
+    current.progress.interpolate({
+      inputRange: [0, 1],
+      outputRange: [0, 1],
+      extrapolate: 'clamp',
+    }),
+    next
+      ? next.progress.interpolate({
+          inputRange: [0, 1],
+          outputRange: [0, 1],
+          extrapolate: 'clamp',
+        })
+      : 0,
+  );
+
+  return {
+    cardStyle: {
+      transform: [
+        {
+          translateX: Animated.multiply(
+            progress.interpolate({
+              inputRange: [0, 1, 2],
+              outputRange: [
+                screen.width, // Focused, but offscreen in the beginning
+                0, // Fully focused
+                screen.width * -0.3, // Fully unfocused
+              ],
+              extrapolate: 'clamp',
+            }),
+            inverted,
+          ),
+        },
+      ],
+    },
+  };
+};
