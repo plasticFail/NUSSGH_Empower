@@ -49,10 +49,22 @@ export default function ActivityCard(props) {
             strokeWidth={5}
             fontSize={15}
           />
-          <Text style={{fontWeight: 'bold', color: '#7d7d7d', fontSize: 16}}>
+          <Text
+            style={{
+              fontWeight: 'bold',
+              color: '#7d7d7d',
+              fontSize: 16,
+              fontFamily: 'SFProDisplay-Regular',
+            }}>
             Steps
           </Text>
-          <Text style={{fontWeight: 'bold', fontSize: 18}}>{stepsTaken}</Text>
+          <Text
+            style={{
+              fontWeight: 'bold',
+              fontSize: 18,
+            }}>
+            {stepsTaken}
+          </Text>
         </View>
         <View style={{width: '45%', alignItems: 'center'}}>
           <CircularProgress
@@ -68,7 +80,13 @@ export default function ActivityCard(props) {
             strokeWidth={5}
             fontSize={15}
           />
-          <Text style={{fontWeight: 'bold', color: '#7d7d7d', fontSize: 16}}>
+          <Text
+            style={{
+              fontWeight: 'bold',
+              color: '#7d7d7d',
+              fontSize: 16,
+              fontFamily: 'SFProDisplay-Regular',
+            }}>
             Calories Burnt
           </Text>
           <Text style={{fontWeight: 'bold', fontSize: 18}}>350 kcal</Text>
