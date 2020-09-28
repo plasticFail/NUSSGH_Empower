@@ -23,6 +23,7 @@ import {
   weight_key,
   renderLogIcon,
   checkLogDone,
+  renderLogIconNavy,
 } from '../../../commonFunctions/logFunctions';
 import {getGreetingFromHour} from '../../../commonFunctions/common';
 //components
@@ -88,7 +89,6 @@ class AddLogScreen extends Component {
         this.setState({notCompletedTypes: response.notCompleted});
       }
     });
-
   }
 
   resetState() {
@@ -189,8 +189,8 @@ class AddLogScreen extends Component {
               style={logStyles.logItem}
               key={item}
               onPress={() => this.openModalType(item)}>
-              <Image source={renderLogIcon(item)} style={logStyles.loglogo} />
-              <Text style={[globalStyles.pageDetails, {marginStart: '15%'}]}>
+              {renderLogIconNavy(item)}
+              <Text style={[globalStyles.pageDetails, {color: '#21293a'}]}>
                 {item}
               </Text>
               <Ionicon
@@ -209,8 +209,8 @@ class AddLogScreen extends Component {
               style={logStyles.logItem}
               onPress={() => this.openModalType(item)}
               key={item}>
-              <Image source={renderLogIcon(item)} style={logStyles.loglogo} />
-              <Text style={[globalStyles.pageDetails, {marginStart: '15%'}]}>
+              {renderLogIconNavy(item)}
+              <Text style={[globalStyles.pageDetails, {color: '#21293a'}]}>
                 {item}
               </Text>
               <Ionicon
@@ -229,7 +229,9 @@ class AddLogScreen extends Component {
             onBackButtonPress={this.closeModal}
             style={{margin: 0}}
             backdropColor={Colors.backgroundColor}>
-            <ScrollView style={logStyles.modalContainer} contentContainerStyle={{paddingBottom: '15%'}}>
+            <ScrollView
+              style={logStyles.modalContainer}
+              contentContainerStyle={{paddingBottom: '15%'}}>
               <View style={globalStyles.menuBarContainer}>
                 <CrossBtn close={this.closeModal} />
               </View>

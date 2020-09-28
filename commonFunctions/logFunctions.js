@@ -1,3 +1,4 @@
+import React from 'react';
 import Moment from 'moment';
 import {Alert} from 'react-native';
 import {
@@ -23,29 +24,89 @@ import {
   getTime,
   getHour,
 } from './diaryFunctions';
+//svg
+import DARKGREEN_BG from '../resources/images/Patient-Icons/SVG/icon-darkgreen-bloodglucose.svg';
+import DARKGREEN_FOOD from '../resources/images/Patient-Icons/SVG/icon-darkgreen-food.svg';
+import DARKGREEN_MED from '../resources/images/Patient-Icons/SVG/icon-darkgreen-med.svg';
+import DARKGREEN_WEIGHT from '../resources/images/Patient-Icons/SVG/icon-darkgreen-weight.svg';
+
+import NAVY_BG from '../resources/images/Patient-Icons/SVG/icon-navy-bloodglucose.svg';
+import NAVY_FOOD from '../resources/images/Patient-Icons/SVG/icon-navy-food.svg';
+import NAVY_MED from '../resources/images/Patient-Icons/SVG/icon-navy-med.svg';
+import NAVY_WEIGHT from '../resources/images/Patient-Icons/SVG/icon-navy-weight.svg';
+import NAVY_ACTIVITY from '../resources/images/Patient-Icons/SVG/icon-navy-running.svg';
+import NAVY_STEPS from '../resources/images/Patient-Icons/SVG/icon-navy-steps.svg';
+
+import WHITE_BG from '../resources/images/Patient-Icons/SVG/icon-white-bloodglucose.svg';
+import WHITE_FOOD from '../resources/images/Patient-Icons/SVG/icon-white-food.svg';
+import WHITE_MED from '../resources/images/Patient-Icons/SVG/icon-white-med.svg';
+import WHITE_WEIGHT from '../resources/images/Patient-Icons/SVG/icon-white-weight.svg';
 
 const bg_key = 'Blood Glucose Log';
 const food_key = 'Food Intake Log';
 const med_key = 'Medication Log';
 const weight_key = 'Weight Log';
 const activity_key = 'Activity Log';
+const step_key = 'Steps';
 const min_bg = 4;
+
+const logoStyle = {
+  width: 35,
+  height: 35,
+  marginEnd: '5%',
+};
 
 const renderLogIcon = (logType) => {
   if (logType === bg_key) {
-    return require('../resources/images/bloodglucose_logo.png');
+    return <DARKGREEN_BG {...logoStyle} />;
   }
   if (logType === food_key) {
-    return require('../resources/images/foodintake_logo.png');
+    return <DARKGREEN_FOOD {...logoStyle} />;
   }
   if (logType === med_key) {
-    return require('../resources/images/medication_logo.png');
+    return <DARKGREEN_MED {...logoStyle} />;
   }
   if (logType === weight_key) {
-    return require('../resources/images/weight_logo.png');
+    return <DARKGREEN_WEIGHT {...logoStyle} />;
   }
   if (logType === activity_key) {
-    return require('../resources/images/activity_logo.png');
+    return <DARKGREEN_ACTIVITY {...logoStyle} />;
+  }
+};
+
+const renderLogIconNavy = (logType) => {
+  if (logType === bg_key) {
+    return <NAVY_BG {...logoStyle} />;
+  }
+  if (logType === food_key) {
+    return <NAVY_FOOD {...logoStyle} />;
+  }
+  if (logType === med_key) {
+    return <NAVY_MED {...logoStyle} />;
+  }
+  if (logType === weight_key) {
+    return <NAVY_WEIGHT {...logoStyle} />;
+  }
+  if (logType === activity_key) {
+    return <NAVY_ACTIVITY {...logoStyle} />;
+  }
+  if (logType === step_key) {
+    return <NAVY_STEPS {...logoStyle} />;
+  }
+};
+
+const renderLogIconWhite = (logType) => {
+  if (logType === bg_key) {
+    return <WHITE_BG {...logoStyle} />;
+  }
+  if (logType === food_key) {
+    return <WHITE_FOOD {...logoStyle} />;
+  }
+  if (logType === med_key) {
+    return <WHITE_MED {...logoStyle} />;
+  }
+  if (logType === weight_key) {
+    return <WHITE_WEIGHT {...logoStyle} />;
   }
 };
 
@@ -244,8 +305,9 @@ const handleSubmitMedication = async (date, selectedMedicationList) => {
 
   if (await medicationAddLogRequest(selectedMedicationList)) {
     let med_data = await getLastMedicationLog();
-    
-    if (med_data === null ||
+
+    if (
+      med_data === null ||
       Moment(date).format('YYYY/MM/DD') > med_data.date ||
       (Moment(date).format('YYYY/MM/DD') === med_data.date &&
         Moment(date).format('HH:mm') > med_data.hour)
@@ -310,8 +372,11 @@ export {
   med_key,
   weight_key,
   activity_key,
+  step_key,
   min_bg,
   renderLogIcon,
+  renderLogIconNavy,
+  renderLogIconWhite,
   isToday,
   isPeriod,
   checkLogDone,

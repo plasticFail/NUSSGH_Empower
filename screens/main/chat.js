@@ -4,6 +4,7 @@ import MenuBtn from '../../components/menuBtn';
 import globalStyles from '../../styles/globalStyles';
 import LeftArrowBtn from '../../components/logs/leftArrowBtn';
 import logStyles from '../../styles/logStyles';
+import InProgress from '../../components/inProgress';
 
 const ChatScreen = (props) => {
   return (
@@ -11,6 +12,8 @@ const ChatScreen = (props) => {
       <View style={globalStyles.menuBarContainer}>
         <LeftArrowBtn close={() => props.navigation.navigate('Home')} />
       </View>
+      <Text style={globalStyles.pageHeader}>Chat</Text>
+      <InProgress />
     </View>
   );
 };

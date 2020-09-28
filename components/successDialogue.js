@@ -23,6 +23,16 @@ import {
   weight_key,
 } from '../commonFunctions/logFunctions';
 
+import GAME from '../resources/images/Patient-Icons/SVG/icon-navy-game.svg';
+import GOAL from '../resources/images/Patient-Icons/SVG/icon-navy-goals.svg';
+
+const iconStyle = {
+  width: 50,
+  height: 50,
+  marginTop: '3%',
+  padding: '3%',
+};
+
 function SuccessDialogue(props) {
   const {visible, type} = props;
   const {closeSuccess} = props;
@@ -103,7 +113,7 @@ function SuccessDialogue(props) {
         <TouchableOpacity
           style={{flexDirection: 'row', marginStart: '6%', marginTop: '3%'}}
           onPress={() => goGameCenter()}>
-          <Icon name="gamepad" size={50} color={'black'} />
+          <GAME {...iconStyle} />
           <View style={{marginStart: '4%', marginTop: '2%'}}>
             <Text
               style={[
@@ -115,14 +125,14 @@ function SuccessDialogue(props) {
             <Text style={globalStyles.pageDetails}>+ {chance} Chance(s)</Text>
           </View>
           <View style={{flex: 1}} />
-          <Icon name="chevron-right" size={20} style={styles.chevron} />
+          <Icon name="chevron-right" size={30} style={styles.chevron} />
         </TouchableOpacity>
         <View style={[styles.border, {marginTop: '7%'}]} />
         {/*Goals */}
         <TouchableOpacity
           style={{flexDirection: 'row', marginStart: '6%', marginTop: '3%'}}
           onPress={() => goGoals()}>
-          <Feather name="target" size={50} color={'black'} />
+          <GOAL {...iconStyle} />
           <View style={{marginStart: '4%', marginTop: '2%'}}>
             <Text
               style={[
@@ -133,7 +143,7 @@ function SuccessDialogue(props) {
             </Text>
           </View>
           <View style={{flex: 1}} />
-          <Icon name="chevron-right" size={20} style={styles.chevron} />
+          <Icon name="chevron-right" size={30} style={styles.chevron} />
         </TouchableOpacity>
       </View>
     </Modal>
