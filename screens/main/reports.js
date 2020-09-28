@@ -62,6 +62,8 @@ const chartLegendSize = 20;
 const {width, height} = Dimensions.get('window');
 const tabWidth = (width - 2 * padding) / tabs.length - tabSpace;
 
+const boundaryFill = 'rgba(0,0,0, 0.042)'; // Fill for the upper and lower bounds of graphs
+
 const ReportsScreen = (props) => {
   // Note all data here are the entire month dataset. We'll process it in the front-end before displaying.
   const [tabIndex, setTabIndex] = React.useState(0);
@@ -169,7 +171,7 @@ const ReportsScreen = (props) => {
                              textPaddingRight={20}/>
                 <ChartLegend size={chartLegendSize}
                              legendName='Target Range (4.0 - 12.0)'
-                             color='rgba(0,0,0, 0.03)'
+                             color={boundaryFill}
                              textPaddingLeft={5}
                              textPaddingRight={20}/>
               </View>
@@ -182,7 +184,7 @@ const ReportsScreen = (props) => {
                          lowerBound={4}
                          upperBound={12}
                          outsideBoundaryColor='red'
-                         boundaryFill='rgba(0,0,0, 0.03)'
+                         boundaryFill={boundaryFill}
                          width={width}
                          height={300} />
             </View>
@@ -193,7 +195,7 @@ const ReportsScreen = (props) => {
                 <BarChart data={fullDataset.foodData} filterKey={filterKey}
                           xExtractor={d=>d.date}
                           yExtractor={d=>d.nutrients.energy.amount}
-                          boundaryFill='#f0f0f0'
+                          boundaryFill={boundaryFill}
                           defaultMaxY={2500}
                           lowerBound={1700}
                           upperBound={2200}
@@ -214,6 +216,7 @@ const ReportsScreen = (props) => {
                 </View>
                 <NutritionPie data={fullDataset.foodData}
                               width={width}
+                              height={260}
                               filterKey={filterKey}
                               pieKeys={['carbohydrate', 'total-fat', 'protein']}
                 />
@@ -261,7 +264,7 @@ const ReportsScreen = (props) => {
                 <BarChart data={fullDataset.activityData}
                           filterKey={filterKey}
                           width={width}
-                          boundaryFill='#f0f0f0'
+                          boundaryFill={boundaryFill}
                           defaultMaxY={1000}
                           xExtractor={d=>d.record_date}
                           yExtractor={d=>d.calories}
@@ -270,7 +273,7 @@ const ReportsScreen = (props) => {
                 <BarChart data={fullDataset.activityData}
                           filterKey={filterKey}
                           width={width}
-                          boundaryFill='#f0f0f0'
+                          boundaryFill={boundaryFill}
                           defaultMaxY={500}
                           xExtractor={d=>d.record_date}
                           yExtractor={d=>d.duration}
@@ -279,14 +282,14 @@ const ReportsScreen = (props) => {
                 <View style={[globalStyles.pageDetails, {flexDirection: 'row'}]}>
                   <ChartLegend size={chartLegendSize}
                                legendName='Target Range (1K - 1.5K)'
-                               color='rgba(0,0,0, 0.03)'
+                               color={boundaryFill}
                                textPaddingLeft={5}
                                textPaddingRight={20}/>
                 </View>
                 <BarChart data={fullDataset.activityData}
                           filterKey={filterKey}
                           width={width}
-                          boundaryFill='#f0f0f0'
+                          boundaryFill={boundaryFill}
                           defaultMaxY={5000}
                           lowerBound={1000}
                           upperBound={1500}
@@ -296,6 +299,10 @@ const ReportsScreen = (props) => {
               </View>
           ) : null
         }
+        <View style={{
+          //bottom padding just so it looks better
+          paddingBottom: 50
+        }} />
       </View>
       <ExportReportsModal visible={openExportModal} setVisible={setOpenExportModal} />
     </ScrollView>

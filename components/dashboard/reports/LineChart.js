@@ -60,6 +60,8 @@ export default class LineChart extends React.Component {
     cursorLabel = React.createRef();
     cursorCarrot = React.createRef();
 
+    xLabel = React.createRef(); // header label with cursor's current x value.
+
     constructor(props) {
         super(props);
         const components = this.getComponent();
@@ -158,7 +160,13 @@ export default class LineChart extends React.Component {
                     top: shownDatapoint[1] - carrotHeight - cursorRadius,
                     left: shownDatapoint[0] - carrotWidth,
                     opacity: 1
-                })
+                });
+                this.xLabel.current.setNativeProps({
+                    text: `${Moment(this.state.scaleX.invert(shownDatapoint[0]))
+                        .format(this.props.filterKey === DAY_FILTER_KEY ? 'h:mm' : 'DD MMM')}`,
+                    opacity: 1
+                }
+                );
             } else {
                 this.cursorLabel.current.setNativeProps({
                     opacity: 0
@@ -166,9 +174,12 @@ export default class LineChart extends React.Component {
                 this.cursorCarrot.current.setNativeProps({
                     opacity: 0
                 });
+                this.xLabel.current.setNativeProps({
+                    opacity: 0
+                });
             }
             this.cursor.current.setNativeProps({ top: y - cursorRadius, left: x - cursorRadius });
-            this.cursorAxis.current.setNativeProps({top: 0, left: x})
+            this.cursorAxis.current.setNativeProps({top: 0, left: x});
             /*
             if (index != this.state.selectedIndex) {
                 this.setState({
@@ -198,6 +209,17 @@ export default class LineChart extends React.Component {
         } = this.state;
 
         return (
+            <View>
+            {
+                // x - label
+                this.state.lineLength != 0 && <TextInput ref={this.xLabel}
+                                                         key={`header-x-label`}
+                                                         style={{fontSize: 20,
+                                                                fontWeight: 'bold',
+                                                                color: '#000',
+                                                                padding: 0,
+                                                                alignSelf: 'center'}} />
+            }
             <View>
                 {   // cursor line
                     this.state.lineLength != 0 && <View ref={this.cursorAxis}
@@ -345,6 +367,7 @@ export default class LineChart extends React.Component {
                     />
 
                 }
+            </View>
             </View>
         )
     }
