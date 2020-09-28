@@ -7,21 +7,27 @@ import DatePicker from "react-native-date-picker";
 import Moment from 'moment';
 import {ACTIVITY_KEY, BGL_TAB_KEY, FOOD_INTAKE_KEY, MEDICATION_KEY, WEIGHT_KEY} from "../../../screens/main/reports";
 
+// fs library
+const RNFS = require('react-native-fs');
+const pathPrefix = RNFS.DocumentDirectoryPath + '/';
+
 const {width, height} = Dimensions.get('window');
 
 const reportTypes = [
-    {name: BGL_TAB_KEY},
-    {name: FOOD_INTAKE_KEY},
-    {name: MEDICATION_KEY},
-    {name: WEIGHT_KEY},
-    {name: ACTIVITY_KEY}
+    {name: 'Blood Glucose'},
+    {name: 'Food Intake'},
+    {name: 'Medication'},
+    {name: 'Weight'},
+    {name: 'Activity'}
 ]
 
 function ExportReportsModal(props) {
     const {visible, setVisible} = props;
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
-    const [selectedReportType, setSelectedReportTypes] = useState(reportTypes.map(type => ({...type, selected: false})));
+    const [selectedReportType, setSelectedReportTypes] = useState(reportTypes.map(type =>  {
+        return {...type, selected: false};
+    }));
 
     // Takes in report name that will be toggled.
     const updateReportSelected = (reportName) => {
@@ -36,6 +42,18 @@ function ExportReportsModal(props) {
            }
         });
         setSelectedReportTypes(newSelectedReports);
+    }
+
+    const handleExport = () => {
+        const filename = 'MyReports.txt';
+        const fp = pathPrefix + filename;
+        const srt = selectedReportType.filter(type => type.selected).map(selectedType => selectedType.name).join(', ');
+        const message = 'Just testing this file system library. Please work.';
+        RNFS.writeFile(fp, message, 'utf8').then(success => {
+            console.log(`Yay it worked, ${srt} file(s) saved at ${fp}`);
+        }).catch(err => {
+            console.log('Oh no it failed due to ' + err.message.toString());
+        })
     }
 
     return (
@@ -60,6 +78,7 @@ function ExportReportsModal(props) {
                 <View style={{flex: 1}} />
                 <View style={globalStyles.buttonContainer}>
                     <TouchableHighlight
+                        onPress={handleExport}
                         style={[globalStyles.submitButtonStyle, {backgroundColor: '#aad326'}]}
                         underlayColor='#fff'>
                         <Text style={[globalStyles.actionButtonText, {color: '#000'}]}>Export</Text>
@@ -136,7 +155,7 @@ function ReportTypeSelector(props) {
                                   backgroundColor: `${item.selected ? '#aad326' : '#d5d5d5'}`,
                                   borderRadius: 5}}/>
                           </TouchableOpacity>
-                          <Text style={[globalStyles.pageDetails, {fontWeight: '0'}]}>{item.name}</Text>
+                          <Text style={[globalStyles.pageDetails, {fontWeight: 'normal'}]}>{item.name}</Text>
                       </View>
                   )}
         />
