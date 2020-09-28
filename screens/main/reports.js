@@ -104,20 +104,25 @@ const ReportsScreen = (props) => {
   const [weightData, setWeightData] = React.useState([]);
   const [activityData, setActivityData] = React.useState([]);
   const initialTab =
-      props.route.params?.initialTab === undefined
-          ? 0
-          : props.route.params.initialTab;
+    props.route.params?.initialTab === undefined
+      ? 0
+      : props.route.params.initialTab;
   // Load data when focused
   React.useEffect(() => {
     props.navigation.addListener('focus', () => {
       if (props.route.params?.initialTab != null) {
         console.log('inside ' + props.route.params?.initialTab);
         setTabIndex(props.route.params?.initialTab);
+        setTimeTabIndexFilter(0);
       }
 
-      const startDate = Moment(new Date()).subtract(28, "days");
-      const endDate = Moment(new Date()).add(1, "day");
-      requestNutrientConsumption(startDate.format('DD/MM/YYYY HH:mm:ss'), getLastMinuteFromTodayDate()).then(data => {
+      const startDate = Moment(new Date()).subtract(28, 'days');
+      const endDate = Moment(new Date()).add(1, 'day');
+      requestNutrientConsumption(
+        startDate.format('DD/MM/YYYY HH:mm:ss'),
+        getLastMinuteFromTodayDate(),
+      )
+        .then((data) => {
           setFoodIntakeData(data.data);
         })
         .catch((err) => console.log(err));
@@ -160,22 +165,6 @@ const ReportsScreen = (props) => {
 
   const tabName = tabs[tabIndex].name;
   const filterKey = timeFilterTabs[timeTabIndexFilter].name;
-
-  const initialTab =
-    props.route.params?.initialTab === undefined
-      ? 0
-      : props.route.params.initialTab;
-  const [timeFilter, setTimeFilter] = React.useState('Week');
-
-  useEffect(() => {
-    setTabIndex(initialTab);
-    props.navigation.addListener('focus', () => {
-      if (props.route.params?.initialTab != null) {
-        console.log('inside ' + props.route.params?.initialTab);
-        setTabIndex(props.route.params?.initialTab);
-      }
-    });
-  }, [props.route.params]);
 
   return (
     <ScrollView
