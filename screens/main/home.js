@@ -20,7 +20,11 @@ import HeaderCard from '../../components/home/headerCard';
 import globalStyles from '../../styles/globalStyles';
 import {Colors} from '../../styles/colors';
 //function
-import {checkLogDone, isToday} from '../../commonFunctions/logFunctions';
+import {
+  checkLogDone,
+  isToday,
+  dateFrom2dayWeightLog,
+} from '../../commonFunctions/logFunctions';
 import {requestNutrientConsumption} from '../../netcalls/mealEndpoints/requestMealLog';
 import {
   getGreetingFromHour,
@@ -40,6 +44,7 @@ import GameCard from '../../components/home/gameCard';
 import {getLastWeightLog} from '../../storage/asyncStorageFunctions';
 import AsyncStorage from '@react-native-community/async-storage';
 import {key_weightLog} from '../../storage/asyncStorageFunctions';
+import {set} from 'react-native-reanimated';
 
 // properties
 const username = 'Jimmy';
@@ -178,25 +183,9 @@ const HomeScreen = (props) => {
       })
       .catch((err) => console.log(err));
 
-    let weight_data = await getLastWeightLog();
-    if (weight_data != null) {
-      if (!checkLast7Day(weight_data)) {
-        setLastWeight('Not taken yet');
-      } else {
-        if (isToday(weight_data.date)) {
-          setLastWeight('Taken today.');
-        } else {
-          //weight exist in last 7 days
-          let today = Moment(new Date());
-          let takenDate = Moment(weight_data.date);
-          let diff = today.diff(takenDate, 'days');
-          setLastWeight('Logged ' + diff + ' day (s) ago.');
-        }
-      }
-    } else {
-      //if last weight log dont exist,
-      setLastWeight('Not taken yet');
-    }
+    dateFrom2dayWeightLog().then((response) => {
+      setLastWeight(response);
+    });
 
     loadNutritionalData();
   };
