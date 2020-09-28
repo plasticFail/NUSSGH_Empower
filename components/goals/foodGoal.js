@@ -62,6 +62,7 @@ const FoodGoal = (props) => {
       protein: protein,
       fats: fats,
     };
+    console.log(obj);
   };
 
   const showSubmitBtn = () => {

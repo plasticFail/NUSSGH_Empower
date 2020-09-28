@@ -44,6 +44,7 @@ const StepsGoal = (props) => {
       frequency: frequency,
       steps: steps,
     };
+    console.log(obj);
   };
 
   const showSubmitBtn = () => {

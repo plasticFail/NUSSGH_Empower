@@ -78,6 +78,8 @@ const FoodBlock = (props) => {
       isVisible={visible}
       coverScreen={true}
       backdropOpacity={1}
+      animationIn="slideInRight"
+      animationOut="slideOutRight"
       onBackButtonPress={() => closeModal()}
       backdropColor={Colors.backgroundColor}
       style={{margin: 0}}>

@@ -20,6 +20,13 @@ import AskAdd from './onboarding/medicationPlan/askAdd';
 import AddPlan from './onboarding/medicationPlan/addPlan';
 import FitbitSetup from './onboarding/fitbit/FitbitSetup';
 import DrawerNavigator from './drawer';
+import AccountDetailScreen from './more/accountDetails';
+import DiaryScreen from './main/diary/diary';
+import MedicationScreen from './more/medications';
+import GoalsScreen from './more/goals';
+import AppointmentScreen from './more/appointments';
+import EducationMaterialsScreen from './more/educationMaterials';
+import Logout from './more/logout';
 
 Entypo.loadFont();
 
@@ -111,6 +118,56 @@ class AppRoot extends Component {
                   component={FitbitSetup}
                   options={{headerShown: false}}
                 />
+                {/* Drawer Screen */}
+                <Stack.Screen
+                  name="Edit Account"
+                  component={AccountDetailScreen}
+                  options={{
+                    headerShown: false,
+                  }}
+                />
+                <Stack.Screen
+                  name="Diary"
+                  component={DiaryScreen}
+                  options={{
+                    headerShown: false,
+                  }}
+                />
+                <Stack.Screen
+                  name="Medication"
+                  component={MedicationScreen}
+                  options={{
+                    headerShown: false,
+                  }}
+                />
+                <Stack.Screen
+                  name="Goals"
+                  component={GoalsScreen}
+                  options={{
+                    headerShown: false,
+                  }}
+                />
+                <Stack.Screen
+                  name="Appointment"
+                  component={AppointmentScreen}
+                  options={{
+                    headerShown: false,
+                  }}
+                />
+                <Stack.Screen
+                  name="Resources"
+                  component={EducationMaterialsScreen}
+                  options={{
+                    headerShown: false,
+                  }}
+                />
+                <Stack.Screen
+                  name="Log Out"
+                  component={Logout}
+                  options={{
+                    headerShown: false,
+                  }}
+                />
               </>
             ) : (
               <>
@@ -152,4 +209,3 @@ class AppRoot extends Component {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(AppRoot);
-//edit flag

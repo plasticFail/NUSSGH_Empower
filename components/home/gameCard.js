@@ -41,7 +41,7 @@ export default function GameCard(props) {
           {chances}
         </Text>
       </TouchableOpacity>
-      <TouchableOpacity style={{alignSelf: 'flex-end'}}>
+      <TouchableOpacity style={{alignSelf: 'flex-end', marginStart: '2%'}}>
         <Text style={styles.headerText}>Redeemable</Text>
         <Text
           style={[

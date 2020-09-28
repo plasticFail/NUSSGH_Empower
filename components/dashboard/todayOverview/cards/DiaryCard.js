@@ -125,57 +125,49 @@ export default function DiaryCard(props) {
           </View>
         </View>
       </TouchableOpacity>
-      {showBg ? (
-        <BgBlock
-          visible={showBg}
-          closeModal={() => closeBg()}
-          morningBgLogs={filterMorning(bgLogs)}
-          afternoonBgLogs={filterAfternoon(bgLogs)}
-          eveningBgLogs={filterEvening(bgLogs)}
-          avgBg={bgl}
-          pass={bgPass}
-          miss={bgMiss}
-          day={dateString}
-          init={() => init()}
-        />
-      ) : null}
-      {showFood ? (
-        <FoodBlock
-          visible={showFood}
-          closeModal={() => closeFood()}
-          morningMealLogs={filterMorning(foodLogs)}
-          afternoonMealLogs={filterAfternoon(foodLogs)}
-          eveningMealLogs={filterEvening(foodLogs)}
-          carbs={carbs}
-          fats={fats}
-          protein={protein}
-          pass={foodPass}
-          day={dateString}
-          init={() => init()}
-        />
-      ) : null}
-      {showMed ? (
-        <MedBlock
-          visible={showMed}
-          closeModal={() => closeMed()}
-          morningMedLogs={filterMorning(medLogs)}
-          afternoonMedLogs={filterAfternoon(medLogs)}
-          eveningMedLogs={filterEvening(medLogs)}
-          day={dateString}
-          init={() => init()}
-        />
-      ) : null}
-      {showWeight ? (
-        <WeightBlock
-          visible={showWeight}
-          closeModal={() => closeWeight()}
-          morningWeightLogs={filterMorning(weightLogs)}
-          afternoonWeightLogs={filterAfternoon(weightLogs)}
-          eveningWeightLogs={filterEvening(weightLogs)}
-          day={dateString}
-          init={() => init()}
-        />
-      ) : null}
+      <BgBlock
+        visible={showBg}
+        closeModal={() => closeBg()}
+        morningBgLogs={filterMorning(bgLogs)}
+        afternoonBgLogs={filterAfternoon(bgLogs)}
+        eveningBgLogs={filterEvening(bgLogs)}
+        avgBg={bgl}
+        pass={bgPass}
+        miss={bgMiss}
+        day={dateString}
+        init={() => init()}
+      />
+      <FoodBlock
+        visible={showFood}
+        closeModal={() => closeFood()}
+        morningMealLogs={filterMorning(foodLogs)}
+        afternoonMealLogs={filterAfternoon(foodLogs)}
+        eveningMealLogs={filterEvening(foodLogs)}
+        carbs={carbs}
+        fats={fats}
+        protein={protein}
+        pass={foodPass}
+        day={dateString}
+        init={() => init()}
+      />
+      <MedBlock
+        visible={showMed}
+        closeModal={() => closeMed()}
+        morningMedLogs={filterMorning(medLogs)}
+        afternoonMedLogs={filterAfternoon(medLogs)}
+        eveningMedLogs={filterEvening(medLogs)}
+        day={dateString}
+        init={() => init()}
+      />
+      <WeightBlock
+        visible={showWeight}
+        closeModal={() => closeWeight()}
+        morningWeightLogs={filterMorning(weightLogs)}
+        afternoonWeightLogs={filterAfternoon(weightLogs)}
+        eveningWeightLogs={filterEvening(weightLogs)}
+        day={dateString}
+        init={() => init()}
+      />
     </View>
   );
 }
