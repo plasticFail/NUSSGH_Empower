@@ -21,7 +21,7 @@ import {
 import logStyles from '../../../styles/logStyles';
 
 const SelectMedicationModalContent = (props) => {
-  const {showSelectModal, selectedMedList} = props;
+  const {showSelectModal, selectedMedList, recordDate} = props;
   const {closeSelectModal, getSelectedMedicineFromModal} = props;
   const [dosage, setDosage] = useState(0);
   const [correctDosage, setCorrectDosage] = useState(0);
@@ -110,6 +110,7 @@ const SelectMedicationModalContent = (props) => {
             closeModal={() => setOpenSearchModal(false)}
             selectedMedicine={selectedMedicine}
             setSelectedMedicine={setSelectedMedicine}
+            recordDate={recordDate}
           />
         ) : null}
       </View>

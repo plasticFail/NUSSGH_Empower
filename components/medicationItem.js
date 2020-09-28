@@ -9,7 +9,7 @@ function MedicationItem({medication, handleDelete}) {
     <View
       style={{
         flexDirection: 'row',
-        borderBottomWidth: 0.2,
+        borderBottomWidth: 0.5,
         paddingBottom: '2%',
       }}>
       <View style={[logStyles.componentMargin, {flex: 4}]}>
