@@ -96,14 +96,7 @@ const DrawerNavigator = (props) => {
       drawerType={'slide'}
       drawerStyle={{backgroundColor: Colors.menuColor}}
       drawerContent={DrawerContent}>
-      <Drawer.Screen
-        name="Home"
-        component={DashboardScreen}
-        options={{
-          title: 'Home',
-          drawerIcon: () => <Icon name="home" size={30} color={'white'} />,
-        }}
-      />
+      <Drawer.Screen name="Home" component={DashboardScreen} />
     </Drawer.Navigator>
   );
 };

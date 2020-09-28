@@ -22,7 +22,7 @@ export default function NotificationsCard(props) {
       {type === appointment && (
         <TouchableOpacity
           style={[styles.card, styles.shadow]}
-          onPress={() => navigation.navigate('Appointment')}>
+          onPress={() => setShowTutorial(true)}>
           <CALENDAR_LOGO width={30} height={30} marginStart={'2%'} />
           <Text
             style={{color: Colors.backArrowColor, flex: 1, marginLeft: '3%'}}>

@@ -37,9 +37,11 @@ const HeaderCard = (props) => {
               style={{
                 flexDirection: 'row',
                 marginTop: '2%',
-                marginStart: '4%',
+                marginStart: '2%',
               }}>
-              {uncompleteLogs.map((item, index) => renderLogIcon(item))}
+              {uncompleteLogs.map((item, index) => (
+                <View key={item}>{renderLogIcon(item)}</View>
+              ))}
               <View style={{flex: 1}} />
               <Icon name="chevron-right" size={20} style={styles.chevron} />
             </View>

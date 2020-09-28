@@ -5,7 +5,12 @@ import {Colors} from '../styles/colors';
 
 const InProgress = () => {
   return (
-    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+    <View
+      style={{
+        marginTop: '30%',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}>
       <Icon
         name="progress-clock"
         size={150}

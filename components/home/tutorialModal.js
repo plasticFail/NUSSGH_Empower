@@ -28,7 +28,7 @@ const TutorialModal = (props) => {
         <View style={globalStyles.menuBarContainer}>
           <LeftArrowBtn close={closeModal} />
         </View>
-        <Text style={globalStyles.pageHeader}>Tutorial</Text>
+        <Text style={globalStyles.pageHeader}></Text>
         <InProgress />
       </View>
     </Modal>

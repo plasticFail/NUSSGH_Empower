@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {
   View,
   StyleSheet,
@@ -7,8 +7,8 @@ import {
   ScrollView,
   TouchableOpacity,
   Image,
+  Animated,
 } from 'react-native';
-import {useSafeArea} from 'react-native-safe-area-context';
 import globalStyles from '../../styles/globalStyles';
 import BarChart from '../../components/dashboard/reports/BarChart';
 import LineChart from '../../components/dashboard/reports/LineChart';
@@ -107,6 +107,15 @@ const ReportsScreen = (props) => {
     props.route.params?.initialTab === undefined
       ? 0
       : props.route.params.initialTab;
+
+  //animation
+  const slideRightAnimation = useRef(new Animated.Value(0)).current;
+  const widthInterpolate = slideRightAnimation.interpolate({
+    inputRange: [0, 1],
+    outputRange: [Dimensions.get('window').width, 0],
+    extrapolate: 'clamp',
+  });
+
   // Load data when focused
   React.useEffect(() => {
     props.navigation.addListener('focus', () => {
@@ -115,6 +124,14 @@ const ReportsScreen = (props) => {
         setTabIndex(props.route.params?.initialTab);
         setTimeTabIndexFilter(0);
       }
+
+      //animate
+      slideRightAnimation.setValue(0);
+      Animated.timing(slideRightAnimation, {
+        toValue: 1,
+        duration: 300,
+        useNativeDriver: true,
+      }).start();
 
       const startDate = Moment(new Date()).subtract(28, 'days');
       const endDate = Moment(new Date()).add(1, 'day');
@@ -156,7 +173,7 @@ const ReportsScreen = (props) => {
         })
         .catch((err) => console.log(err));
     });
-  }, [props.route.params]);
+  }, [props.route.params, props.navigation]);
 
   const handleTabSelectChange = (tabIndex) => {
     setTabIndex(tabIndex);
@@ -171,119 +188,122 @@ const ReportsScreen = (props) => {
       style={{...styles.screen, ...props.style}}
       contentContainerStyle={{flexGrow: 1}}>
       <View style={{...globalStyles.pageContainer}}>
-        <View style={globalStyles.menuBarContainer}>
-          <LeftArrowBtn close={() => props.navigation.navigate('Home')} />
-        </View>
-        <Text style={globalStyles.pageHeader}>Report</Text>
-        <ReportsTabs
-          style={{marginLeft: '4%', marginRight: '4%'}}
-          currentTab={tabIndex}
-          setTabCallback={handleTabSelectChange}
-        />
-        <TimeFilterTab
-          currentTab={timeTabIndexFilter}
-          setTabCallback={setTimeTabIndexFilter}
-          style={{alignSelf: 'center', width: '50%', marginTop: '3.5%'}}
-        />
-        {tabName === BGL_TAB_KEY ? (
-          <View style={{marginTop: 20}}>
-            <Text style={globalStyles.pageDetails}>Blood Glucose</Text>
-            <Text style={[globalStyles.pageDetails, {color: 'grey'}]}>
-              Readings - mmol/L
-            </Text>
-            <LineChart
-              data={bglData}
-              filterKey={filterKey}
-              xExtractor={(d) => d.record_date}
-              yExtractor={(d) => d.bg_reading}
-              defaultMaxY={14}
-              lowerBound={4}
-              upperBound={12}
-              boundaryFill="#f0f0f0"
-              width={width}
-              height={300}
-            />
+        <Animated.View
+          style={{...{transform: [{translateX: widthInterpolate}]}}}>
+          <View style={globalStyles.menuBarContainer}>
+            <LeftArrowBtn close={() => props.navigation.navigate('Home')} />
           </View>
-        ) : tabName === FOOD_INTAKE_KEY ? (
-          <View style={{marginTop: 20}}>
-            <Text style={globalStyles.pageDetails}>Food Intake</Text>
-            <Text style={[globalStyles.pageDetails, {color: 'grey'}]}>
-              Calories Consumed - kcal
-            </Text>
-            <BarChart
-              data={foodIntakeData}
-              filterKey={filterKey}
-              xExtractor={(d) => d.date}
-              yExtractor={(d) => d.nutrients.energy.amount}
-              boundaryFill="#f0f0f0"
-              defaultMaxY={2500}
-              lowerBound={1700}
-              upperBound={2200}
-              width={width}
-              height={300}
-            />
-            <Text style={[globalStyles.pageDetails, {color: 'grey'}]}>
-              Nutrition Distribution
-            </Text>
-            <NutritionPie
-              data={foodIntakeData}
-              filterKey={filterKey}
-              pieKeys={['carbohydrate', 'total-fat', 'protein']}
-            />
-          </View>
-        ) : tabName === MEDICATION_KEY ? (
-          <View style={{marginTop: 20}}>
-            <Text style={globalStyles.pageDetails}>Medication</Text>
-            <Text style={[globalStyles.pageDetails, {color: 'grey'}]}>
-              Average Adherence - %
-            </Text>
-            <MedicationTable
-              plan={medPlan}
-              data={medConsumptionData}
-              style={{marginLeft: '4%', marginRight: '4%'}}
-              filterKey={filterKey}
-              width={width}
-              height={height}
-            />
-          </View>
-        ) : tabName === WEIGHT_KEY ? (
-          <View style={{marginTop: 20}}>
-            <Text style={globalStyles.pageDetails}>Weight</Text>
-            <Text style={[globalStyles.pageDetails, {color: 'grey'}]}>
-              Progress - kg
-            </Text>
-            <LineChart
-              data={weightData}
-              filterKey={filterKey}
-              data={weightData}
-              width={width}
-              height={300}
-              xExtractor={(d) => d.record_date}
-              yExtractor={(d) => d.weight}
-              defaultMinY={30}
-              defaultMaxY={110}
-            />
-          </View>
-        ) : tabName === ACTIVITY_KEY ? (
-          <View style={{marginTop: 20}}>
-            <Text style={globalStyles.pageDetails}>Activity</Text>
-            <Text style={[globalStyles.pageDetails, {color: 'grey'}]}>
-              Steps Taken
-            </Text>
-            <BarChart
-              data={activityData}
-              filterKey={filterKey}
-              width={width}
-              boundaryFill="#f0f0f0"
-              defaultMaxY={5000}
-              lowerBound={1000}
-              upperBound={1500}
-              xExtractor={(d) => d.record_date}
-              yExtractor={(d) => d.steps}
-              height={300}
-            />
-          </View>
-        ) : null}
+          <Text style={globalStyles.pageHeader}>Report</Text>
+          <ReportsTabs
+            style={{marginLeft: '4%', marginRight: '4%'}}
+            currentTab={tabIndex}
+            setTabCallback={handleTabSelectChange}
+          />
+          <TimeFilterTab
+            currentTab={timeTabIndexFilter}
+            setTabCallback={setTimeTabIndexFilter}
+            style={{alignSelf: 'center', width: '50%', marginTop: '3.5%'}}
+          />
+          {tabName === BGL_TAB_KEY ? (
+            <View style={{marginTop: 20}}>
+              <Text style={globalStyles.pageDetails}>Blood Glucose</Text>
+              <Text style={[globalStyles.pageDetails, {color: 'grey'}]}>
+                Readings - mmol/L
+              </Text>
+              <LineChart
+                data={bglData}
+                filterKey={filterKey}
+                xExtractor={(d) => d.record_date}
+                yExtractor={(d) => d.bg_reading}
+                defaultMaxY={14}
+                lowerBound={4}
+                upperBound={12}
+                boundaryFill="#f0f0f0"
+                width={width}
+                height={300}
+              />
+            </View>
+          ) : tabName === FOOD_INTAKE_KEY ? (
+            <View style={{marginTop: 20}}>
+              <Text style={globalStyles.pageDetails}>Food Intake</Text>
+              <Text style={[globalStyles.pageDetails, {color: 'grey'}]}>
+                Calories Consumed - kcal
+              </Text>
+              <BarChart
+                data={foodIntakeData}
+                filterKey={filterKey}
+                xExtractor={(d) => d.date}
+                yExtractor={(d) => d.nutrients.energy.amount}
+                boundaryFill="#f0f0f0"
+                defaultMaxY={2500}
+                lowerBound={1700}
+                upperBound={2200}
+                width={width}
+                height={300}
+              />
+              <Text style={[globalStyles.pageDetails, {color: 'grey'}]}>
+                Nutrition Distribution
+              </Text>
+              <NutritionPie
+                data={foodIntakeData}
+                filterKey={filterKey}
+                pieKeys={['carbohydrate', 'total-fat', 'protein']}
+              />
+            </View>
+          ) : tabName === MEDICATION_KEY ? (
+            <View style={{marginTop: 20}}>
+              <Text style={globalStyles.pageDetails}>Medication</Text>
+              <Text style={[globalStyles.pageDetails, {color: 'grey'}]}>
+                Average Adherence - %
+              </Text>
+              <MedicationTable
+                plan={medPlan}
+                data={medConsumptionData}
+                style={{marginLeft: '4%', marginRight: '4%'}}
+                filterKey={filterKey}
+                width={width}
+                height={height}
+              />
+            </View>
+          ) : tabName === WEIGHT_KEY ? (
+            <View style={{marginTop: 20}}>
+              <Text style={globalStyles.pageDetails}>Weight</Text>
+              <Text style={[globalStyles.pageDetails, {color: 'grey'}]}>
+                Progress - kg
+              </Text>
+              <LineChart
+                data={weightData}
+                filterKey={filterKey}
+                data={weightData}
+                width={width}
+                height={300}
+                xExtractor={(d) => d.record_date}
+                yExtractor={(d) => d.weight}
+                defaultMinY={30}
+                defaultMaxY={110}
+              />
+            </View>
+          ) : tabName === ACTIVITY_KEY ? (
+            <View style={{marginTop: 20}}>
+              <Text style={globalStyles.pageDetails}>Activity</Text>
+              <Text style={[globalStyles.pageDetails, {color: 'grey'}]}>
+                Steps Taken
+              </Text>
+              <BarChart
+                data={activityData}
+                filterKey={filterKey}
+                width={width}
+                boundaryFill="#f0f0f0"
+                defaultMaxY={5000}
+                lowerBound={1000}
+                upperBound={1500}
+                xExtractor={(d) => d.record_date}
+                yExtractor={(d) => d.steps}
+                height={300}
+              />
+            </View>
+          ) : null}
+        </Animated.View>
       </View>
     </ScrollView>
   );
