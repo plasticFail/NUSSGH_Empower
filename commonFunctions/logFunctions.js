@@ -268,7 +268,7 @@ const checkDosageText = (dosage, correctDosage) => {
     return (
       'Invalid Dosage, make sure dosage is same as what you have set in your medication plan which is ' +
       correctDosage +
-      ' Unit (s)'
+      ' Unit(s)'
     );
   }
 };

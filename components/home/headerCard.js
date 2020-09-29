@@ -25,7 +25,7 @@ const HeaderCard = (props) => {
         <>
           <Text style={styles.taskText}>
             <Text style={styles.bold}>{uncompleteLogs.length}</Text> mandatory
-            task (s)
+            task(s)
           </Text>
           <TouchableOpacity
             style={styles.logCard}
