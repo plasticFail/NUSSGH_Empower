@@ -6,20 +6,30 @@ import {
   StyleSheet,
   ScrollView,
 } from 'react-native';
-import {maxDuration, maxCalBurnt} from '../../commonFunctions/diaryFunctions';
+import {
+  maxCarbs,
+  maxFats,
+  maxProtein,
+} from '../../../commonFunctions/diaryFunctions';
 //third party lib
 import Modal from 'react-native-modal';
 import Moment from 'moment';
 //styles
-import {Colors} from '../../styles/colors';
-import globalStyles from '../../styles/globalStyles';
+import {Colors} from '../../../styles/colors';
+import globalStyles from '../../../styles/globalStyles';
 //component
-import LeftArrowBtn from '../logs/leftArrowBtn';
-import NameDateSelector from './nameDateSelector';
-import FrequencySelector from './dropDownSelector';
-import RenderCounter from './renderCounter';
+import LeftArrowBtn from '../../logs/leftArrowBtn';
+import NameDateSelector from '../nameDateSelector';
+import FrequencySelector from '../dropDownSelector';
 
-const ActivityGoal = (props) => {
+import RenderCounter from '../renderCounter';
+
+const initialCal = 1000;
+const initialCarbs = maxCarbs / 2;
+const initialFat = maxFats / 2;
+const initialProtein = maxProtein / 2;
+
+const FoodGoal = (props) => {
   const {visible} = props;
   const {close} = props;
 
@@ -28,13 +38,16 @@ const ActivityGoal = (props) => {
   const [endDate, setEndDate] = useState(new Date());
   //change select date to date option *
   const [opened, setOpened] = useState(false);
-  const [frequency, setFrequency] = useState('daily');
+  const [frequency, setFrequency] = useState({name: 'Daily', value: 'daily'});
 
-  const [minute, setMinute] = useState(maxDuration);
-  const [calBurnt, setCalBurnt] = useState(maxCalBurnt);
+  const [cal, setCal] = useState(initialCal);
+  const [carbs, setCarbs] = useState(initialCarbs);
+  const [fats, setFats] = useState(initialFat);
+  const [protein, setProtein] = useState(initialProtein);
+
+  const [errorMsg, setErrorMsg] = useState('');
 
   useEffect(() => {
-    check();
     showSubmitBtn();
   }, [goalName]);
 
@@ -43,26 +56,25 @@ const ActivityGoal = (props) => {
       goalName: goalName,
       startDate: Moment(startDate).format('DD/MM/YYYY HH:mm:ss'),
       endDate: Moment(endDate).format('DD/MM/YYYY HH:mm:ss'),
-      frequency: frequency,
-      exercise_min: minute,
-      calBurnt: calBurnt,
+      frequency: frequency.value,
+      cal: cal,
+      carbs: carbs,
+      protein: protein,
+      fats: fats,
     };
     console.log(obj);
   };
 
   const showSubmitBtn = () => {
-    if (goalName.length > 0 && opened) {
+    if (opened && goalName.length > 0) {
       return true;
     }
     return false;
   };
 
-  const check = () => {};
-
   return (
     <Modal
       isVisible={visible}
-      onBackButtonPress={() => close()}
       onBackButtonPress={() => close()}
       backdropOpacity={1}
       backdropColor={Colors.backgroundColor}
@@ -73,7 +85,7 @@ const ActivityGoal = (props) => {
         </View>
         <Text style={globalStyles.pageHeader}>Add Goal</Text>
         <Text style={[globalStyles.pageDetails, {marginBottom: '4%'}]}>
-          Activity Goal
+          Food Intake Goal
         </Text>
         <ScrollView contentContainerStyle={{flexGrow: 1}}>
           <NameDateSelector
@@ -93,16 +105,28 @@ const ActivityGoal = (props) => {
             dropDownType="frequency"
           />
           <RenderCounter
-            fieldName="Excercise"
-            item={minute}
-            setItem={setMinute}
-            parameter={'mins'}
+            fieldName="Cal"
+            item={cal}
+            setItem={setCal}
+            parameter={'kCal'}
           />
           <RenderCounter
-            fieldName="Cal Burnt"
-            item={calBurnt}
-            setItem={setCalBurnt}
-            parameter={'cal'}
+            fieldName="Carbs"
+            item={carbs}
+            setItem={setCarbs}
+            parameter={'g'}
+          />
+          <RenderCounter
+            fieldName="Fats"
+            item={fats}
+            setItem={setFats}
+            parameter={'g'}
+          />
+          <RenderCounter
+            fieldName="Protein"
+            item={protein}
+            setItem={setProtein}
+            parameter={'g'}
           />
         </ScrollView>
         <View style={[globalStyles.buttonContainer]}>
@@ -123,7 +147,7 @@ const ActivityGoal = (props) => {
   );
 };
 
-export default ActivityGoal;
+export default FoodGoal;
 
 const styles = StyleSheet.create({
   spacing: {

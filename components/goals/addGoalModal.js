@@ -11,7 +11,6 @@ import {
   weight_key,
   activity_key,
   step_key,
-  renderLogIcon,
   renderLogIconNavy,
 } from '../../commonFunctions/logFunctions';
 //styles
@@ -20,11 +19,12 @@ import {Colors} from '../../styles/colors';
 import globalStyles from '../../styles/globalStyles';
 //component
 import LeftArrowBtn from '../logs/leftArrowBtn';
-import BgGoal from './bgGoal';
-import FoodGoal from './foodGoal';
-import MedicationGoal from './medicationGoal';
-import ActivityGoal from './activityGoal';
-import StepsGoal from './stepsGoal';
+import BgGoal from './blocks/bgGoal';
+import FoodGoal from './blocks/foodGoal';
+import MedicationGoal from './blocks/medicationGoal';
+import ActivityGoal from './blocks/activityGoal';
+import StepsGoal from './blocks/stepsGoal';
+import WeightGoal from './blocks/weightGoal';
 
 const AddGoalModal = (props) => {
   const {visible} = props;
@@ -40,6 +40,7 @@ const AddGoalModal = (props) => {
   const [openBg, setOpenBg] = useState(false);
   const [openFood, setOpenFood] = useState(false);
   const [openMed, setOpenMed] = useState(false);
+  const [openWeight, setOpenWeight] = useState(false);
   const [openActivity, setOpenActivity] = useState(false);
   const [openSteps, setOpenSteps] = useState(false);
 
@@ -60,6 +61,9 @@ const AddGoalModal = (props) => {
     }
     if (type === med_key) {
       setOpenMed(true);
+    }
+    if (type === weight_key) {
+      setOpenWeight(true);
     }
     if (type === activity_key) {
       setOpenActivity(true);
@@ -115,6 +119,9 @@ const AddGoalModal = (props) => {
       ) : null}
       {openMed ? (
         <MedicationGoal visible={openMed} close={() => setOpenMed(false)} />
+      ) : null}
+      {openWeight ? (
+        <WeightGoal visible={openWeight} close={() => setOpenWeight(false)} />
       ) : null}
       {openActivity ? (
         <ActivityGoal

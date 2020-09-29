@@ -207,7 +207,7 @@ const AddPlan = (props) => {
         <Counter
           count={dosage}
           setCount={setDosage}
-          parameter={'Unit (s)'}
+          parameter={'Unit(s)'}
           fieldName={'Default Dosage'}
         />
         <Counter

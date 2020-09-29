@@ -97,7 +97,7 @@ const EditMedicineBlock = (props) => {
           <Counter
             count={dosage}
             setCount={setDosage}
-            parameter={'Unit (s)'}
+            parameter={'Unit(s)'}
             fieldName={'Default Dosage'}
           />
           {dosage === 0 && (

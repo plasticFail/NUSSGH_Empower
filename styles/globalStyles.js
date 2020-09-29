@@ -118,7 +118,7 @@ const globalStyles = StyleSheet.create({
     marginBottom: verticalMarginsBetweenComponent,
     alignItems: 'flex-end',
     flexDirection: 'row',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   //edit pages
   editPageContainer: {
@@ -133,6 +133,14 @@ const globalStyles = StyleSheet.create({
     borderRadius: 9.5,
     borderWidth: 0.5,
     borderColor: Colors.inputBorderColor,
+  },
+  //goal
+  goalFieldName: {
+    color: Colors.lastLogValueColor,
+    marginStart: '4%',
+    fontSize: normalTextFontSize,
+    fontFamily: 'SFProDisplay-Bold',
+    marginTop: '3%',
   },
 });
 

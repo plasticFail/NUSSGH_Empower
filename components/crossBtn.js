@@ -5,6 +5,8 @@ import Entypo from 'react-native-vector-icons/Entypo';
 //styles
 import globalStyles from '../styles/globalStyles';
 
+import CROSS from '../resources/images/Patient-Icons/SVG/icon-green-close.svg';
+
 const {height} = Dimensions.get('window');
 
 const CrossBtn = (props) => {
@@ -12,12 +14,7 @@ const CrossBtn = (props) => {
 
   return (
     <View style={globalStyles.topLeftButtonPosition}>
-      <Entypo
-        name="cross"
-        style={globalStyles.crossIcon}
-        size={50}
-        onPress={() => close()}
-      />
+      <CROSS height={30} width={30} onPress={() => close()} />
     </View>
   );
 };

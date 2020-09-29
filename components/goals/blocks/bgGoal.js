@@ -11,16 +11,19 @@ import {
 import Modal from 'react-native-modal';
 import Moment from 'moment';
 //styles
-import {Colors} from '../../styles/colors';
-import globalStyles from '../../styles/globalStyles';
+import {Colors} from '../../../styles/colors';
+import globalStyles from '../../../styles/globalStyles';
 //component
-import LeftArrowBtn from '../logs/leftArrowBtn';
-import NameDateSelector from './nameDateSelector';
-import FrequencySelector from './dropDownSelector';
+import LeftArrowBtn from '../../logs/leftArrowBtn';
+import NameDateSelector from '../nameDateSelector';
+import FrequencySelector from '../dropDownSelector';
 //styles
-import logStyles from '../../styles/logStyles';
+import logStyles from '../../../styles/logStyles';
 //function
-import {checkBloodGlucoseText} from '../../commonFunctions/logFunctions';
+import {
+  checkBloodGlucoseText,
+  min_bg,
+} from '../../../commonFunctions/logFunctions';
 
 const min_key = 'min';
 const max_key = 'max';
@@ -34,7 +37,7 @@ const BgGoal = (props) => {
   const [endDate, setEndDate] = useState(new Date());
   //change select date to date option *
   const [opened, setOpened] = useState(false);
-  const [frequency, setFrequency] = useState('daily');
+  const [frequency, setFrequency] = useState({name: 'Daily', value: 'daily'});
   const [minBg, setMinBg] = useState('');
   const [maxBg, setMaxBg] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
@@ -49,7 +52,7 @@ const BgGoal = (props) => {
       goalName: goalName,
       startDate: Moment(startDate).format('DD/MM/YYYY HH:mm:ss'),
       endDate: Moment(endDate).format('DD/MM/YYYY HH:mm:ss'),
-      frequency: frequency,
+      frequency: frequency.value,
       minBg: minBg,
       maxBg: maxBg,
     };
@@ -85,6 +88,15 @@ const BgGoal = (props) => {
     if (minBg != '' && maxBg != '') {
       let max = Number(maxBg);
       let min = Number(minBg);
+      if (min <= min_bg || max <= min_bg) {
+        setErrorMsg(
+          'Please set a higher blood glucose level of more than ' +
+            min_bg +
+            ' mmol/L',
+        );
+        return;
+      }
+
       if (max < min) {
         setErrorMsg(
           'Min blood glucose should be lesser than max blood glucose and vice versa',
@@ -105,7 +117,6 @@ const BgGoal = (props) => {
   return (
     <Modal
       isVisible={visible}
-      onBackButtonPress={() => close()}
       onBackButtonPress={() => close()}
       backdropOpacity={1}
       backdropColor={Colors.backgroundColor}

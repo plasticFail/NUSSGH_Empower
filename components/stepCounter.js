@@ -69,7 +69,6 @@ export default class StepCounter extends Component {
   };
 
   stopTimer() {
-    console.log('calling');
     clearTimeout(this.timer);
   }
 

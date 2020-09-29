@@ -72,7 +72,7 @@ const SelectMedicationModalContent = (props) => {
           <Counter
             count={dosage}
             setCount={setDosage}
-            parameter={'Unit (s)'}
+            parameter={'Unit(s)'}
             fieldName={'Default Dosage'}
           />
           {checkDosageText(dosage, correctDosage) !== '' && (

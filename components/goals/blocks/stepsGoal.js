@@ -10,14 +10,16 @@ import {
 import Modal from 'react-native-modal';
 import Moment from 'moment';
 //styles
-import {Colors} from '../../styles/colors';
-import globalStyles from '../../styles/globalStyles';
+import {Colors} from '../../../styles/colors';
+import globalStyles from '../../../styles/globalStyles';
 //component
-import LeftArrowBtn from '../logs/leftArrowBtn';
-import NameDateSelector from './nameDateSelector';
-import FrequencySelector from './dropDownSelector';
+import LeftArrowBtn from '../../logs/leftArrowBtn';
+import NameDateSelector from '../nameDateSelector';
+import FrequencySelector from '../dropDownSelector';
+import RenderCounter from '../renderCounter';
+import {maxSteps} from '../../../commonFunctions/diaryFunctions';
 
-const MedicationGoal = (props) => {
+const StepsGoal = (props) => {
   const {visible} = props;
   const {close} = props;
 
@@ -26,10 +28,11 @@ const MedicationGoal = (props) => {
   const [endDate, setEndDate] = useState(new Date());
   //change select date to date option *
   const [opened, setOpened] = useState(false);
-  const [frequency, setFrequency] = useState('daily');
+  const [frequency, setFrequency] = useState({name: 'Daily', value: 'daily'});
+
+  const [steps, setSteps] = useState(maxSteps);
 
   useEffect(() => {
-    check();
     showSubmitBtn();
   }, [goalName]);
 
@@ -38,15 +41,18 @@ const MedicationGoal = (props) => {
       goalName: goalName,
       startDate: Moment(startDate).format('DD/MM/YYYY HH:mm:ss'),
       endDate: Moment(endDate).format('DD/MM/YYYY HH:mm:ss'),
-      frequency: frequency,
+      frequency: frequency.value,
+      steps: steps,
     };
+    console.log(obj);
   };
 
   const showSubmitBtn = () => {
-    return true;
+    if (opened && goalName.length > 0) {
+      return true;
+    }
+    return false;
   };
-
-  const check = () => {};
 
   return (
     <Modal
@@ -62,7 +68,7 @@ const MedicationGoal = (props) => {
         </View>
         <Text style={globalStyles.pageHeader}>Add Goal</Text>
         <Text style={[globalStyles.pageDetails, {marginBottom: '4%'}]}>
-          Medication Goal
+          Steps Goal
         </Text>
         <ScrollView contentContainerStyle={{flexGrow: 1}}>
           <NameDateSelector
@@ -80,6 +86,12 @@ const MedicationGoal = (props) => {
             setSelected={setFrequency}
             fieldName="Frequency"
             dropDownType="frequency"
+          />
+          <RenderCounter
+            fieldName="Min Steps"
+            item={steps}
+            setItem={setSteps}
+            parameter={''}
           />
         </ScrollView>
         <View style={[globalStyles.buttonContainer]}>
@@ -100,7 +112,7 @@ const MedicationGoal = (props) => {
   );
 };
 
-export default MedicationGoal;
+export default StepsGoal;
 
 const styles = StyleSheet.create({
   spacing: {

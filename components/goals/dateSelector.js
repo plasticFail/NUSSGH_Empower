@@ -14,6 +14,7 @@ import DatePicker from 'react-native-date-picker';
 import logStyles from '../../styles/logStyles';
 import {Colors} from '../../styles/colors';
 import {normalTextFontSize} from '../../styles/variables';
+import globalStyles from '../../styles/globalStyles';
 
 const DateSelector = (props) => {
   const {date, type, opened, checkAgainst} = props;
@@ -58,11 +59,11 @@ const DateSelector = (props) => {
         style={{marginBottom: '2%'}}>
         <View style={{flexDirection: 'row'}}>
           {type === 'start' ? (
-            <Text style={[logStyles.fieldName, styles.dateFieldName]}>
+            <Text style={[globalStyles.goalFieldName, {flex: 1}]}>
               Start Date
             </Text>
           ) : (
-            <Text style={[logStyles.fieldName, styles.dateFieldName]}>
+            <Text style={[globalStyles.goalFieldName, {flex: 1}]}>
               End Date
             </Text>
           )}
