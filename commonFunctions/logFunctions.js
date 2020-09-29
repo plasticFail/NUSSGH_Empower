@@ -131,7 +131,7 @@ const dateFrom2dayWeightLog = async () => {
   );
   let weightLogs = arr1.logs;
   if (weightLogs.length === 0) {
-    return 'Not taken yet';
+    return 'Not logged yet';
   } else {
     //weight exist in last 7 days
     let today = Moment(new Date()).startOf('day');
@@ -140,9 +140,9 @@ const dateFrom2dayWeightLog = async () => {
     ).startOf('day');
     let diff = today.diff(takenDate, 'days');
     if (diff != 0) {
-      return 'Logged ' + diff + ' day (s) ago.';
+      return 'Logged ' + diff + ' day(s) ago';
     } else {
-      return 'Logged today.';
+      return 'Logged today';
     }
   }
 };

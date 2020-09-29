@@ -82,8 +82,9 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   text: {
-    fontSize: 16,
-    fontFamily: 'SFProDisplay-Regular',
+    fontWeight: 'bold',
+    color: '#000',
+    fontSize: 18,
     flex: 1,
     marginLeft: '3%',
   },
