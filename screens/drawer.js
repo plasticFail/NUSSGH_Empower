@@ -21,7 +21,7 @@ import DiaryScreen from './main/diary/diary';
 import Goals from './more/goals';
 import Medication from './more/medications';
 import Logout from './more/logout';
-import GameCenter from './main/gameCenter';
+import GameCenter from './main/gameCenter/gameCenter';
 
 import ACCOUNT from '../resources/images/Patient-Icons//SVG/icon-white-sidemenu-account.svg';
 import DIARY from '../resources/images/Patient-Icons//SVG/icon-white-sidemenu-diary.svg';

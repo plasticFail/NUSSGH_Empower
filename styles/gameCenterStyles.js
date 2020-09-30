@@ -37,6 +37,10 @@ const GameCenterStyles = StyleSheet.create({
     backColor: {
         backgroundColor: Colors.gameColorGrey,
     },
+    iconProps: {
+        width: 30,
+        height: 30,
+    },
 });
 
 export default GameCenterStyles;

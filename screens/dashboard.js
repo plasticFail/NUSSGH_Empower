@@ -12,7 +12,7 @@ import {ReportsScreen} from './main/reports';
 //third party lib
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import Ant from 'react-native-vector-icons/AntDesign';
-import GameCenter from './main/gameCenter';
+import GameCenter from './main/gameCenter/gameCenter';
 
 import HOME from '../resources/images/Patient-Icons/SVG/icon-navy-footer-home.svg';
 import HOME_FOCUSED from '../resources/images/Patient-Icons/SVG/icon-green-footer-home.svg';
