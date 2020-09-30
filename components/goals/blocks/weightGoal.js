@@ -20,16 +20,7 @@ import DropdownSelector from '../dropDownSelector';
 import WeightDragModal from '../weightDragModal';
 import {normalTextFontSize} from '../../../styles/variables';
 import {addWeightGoalReq} from '../../../netcalls/requestsGoals';
-
-const weeklyGoalList = [
-  {name: 'Lose 0.2 kg per week', value: -0.2},
-  {name: 'Lose 0.5 kg per week ', value: -0.5},
-  {name: 'Lose 0.8 kg per week', value: -0.8},
-  {name: 'Lose 1 kg per week', value: -1},
-  {name: 'Maintain Weight', value: 0},
-  {name: 'Gain 0.2 kg per week', value: 0.2},
-  {name: 'Gain 0.5 kg per week', value: 0.5},
-];
+import {weeklyGoalList} from '../../../commonFunctions/goalConstants';
 
 const WeightGoal = (props) => {
   const {visible} = props;
@@ -120,7 +111,11 @@ const WeightGoal = (props) => {
           <TouchableOpacity
             onPress={() => openWeightPicker()}
             style={{marginBottom: '2%'}}>
-            <View style={{flexDirection: 'row'}}>
+            <View
+              style={[
+                {flexDirection: 'row'},
+                globalStyles.goalFieldBottomBorder,
+              ]}>
               <Text style={[globalStyles.goalFieldName, {flex: 1}]}>
                 Goal Weight
               </Text>

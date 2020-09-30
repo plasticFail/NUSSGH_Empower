@@ -56,7 +56,7 @@ const DateSelector = (props) => {
     <>
       <TouchableOpacity
         onPress={() => handleOpenCloseWithAnimation(visible)}
-        style={{marginBottom: '2%'}}>
+        style={[{marginBottom: '2%'}, globalStyles.goalFieldBottomBorder]}>
         <View style={{flexDirection: 'row'}}>
           {type === 'start' ? (
             <Text style={[globalStyles.goalFieldName, {flex: 1}]}>

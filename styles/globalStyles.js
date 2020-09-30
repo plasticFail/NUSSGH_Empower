@@ -142,6 +142,11 @@ const globalStyles = StyleSheet.create({
     fontFamily: 'SFProDisplay-Bold',
     marginTop: '3%',
   },
+  goalFieldBottomBorder: {
+    borderBottomColor: '#e1e7ed',
+    borderBottomWidth: 1,
+    paddingBottom: '2%',
+  },
 });
 
 export default globalStyles;

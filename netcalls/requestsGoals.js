@@ -1,8 +1,17 @@
 import {goal} from './urls';
 import {getToken} from '../storage/asyncStorageFunctions';
+import {Alert} from 'react-native';
+import {
+  bgpost,
+  food,
+  med,
+  weight,
+  activity,
+  steps,
+} from '../commonFunctions/goalConstants';
 
 const addBgGoalReq = async (bgGoal) => {
-  let link = goal + '/' + 'blood-glucose';
+  let link = goal + '/' + bgpost;
   try {
     let response = await fetch(link, {
       method: 'POST',
@@ -30,7 +39,7 @@ const addBgGoalReq = async (bgGoal) => {
 };
 
 const addFoodGoalReq = async (foodGoal) => {
-  let link = goal + '/' + 'food';
+  let link = goal + '/' + food;
   try {
     let response = await fetch(link, {
       method: 'POST',
@@ -60,7 +69,7 @@ const addFoodGoalReq = async (foodGoal) => {
 };
 
 const addMedGoalReq = async (medGoal) => {
-  let link = goal + '/' + 'medication';
+  let link = goal + '/' + med;
   try {
     let response = await fetch(link, {
       method: 'POST',
@@ -88,7 +97,7 @@ const addMedGoalReq = async (medGoal) => {
 };
 
 const addWeightGoalReq = async (weightGoal) => {
-  let link = goal + '/' + 'weight';
+  let link = goal + '/' + weight;
   try {
     let response = await fetch(link, {
       method: 'POST',
@@ -115,7 +124,7 @@ const addWeightGoalReq = async (weightGoal) => {
 };
 
 const addActivityGoalReq = async (activityGoal) => {
-  let link = goal + '/' + 'activity';
+  let link = goal + '/' + activity;
   try {
     let response = await fetch(link, {
       method: 'POST',
@@ -143,7 +152,7 @@ const addActivityGoalReq = async (activityGoal) => {
 };
 
 const addStepsGoalReq = async (stepGoal) => {
-  let link = goal + '/' + 'steps';
+  let link = goal + '/' + steps;
   try {
     let response = await fetch(link, {
       method: 'POST',
@@ -169,6 +178,45 @@ const addStepsGoalReq = async (stepGoal) => {
   }
 };
 
+//get all types of goals
+const getGoals = async () => {
+  try {
+    let response = await fetch(goal, {
+      method: 'GET',
+      headers: {
+        Authorization: 'Bearer ' + (await getToken()),
+        Accept: 'application/json',
+        'Content-type': 'application/json',
+      },
+    });
+    let responseJson = await response.json();
+    return responseJson;
+  } catch (error) {
+    Alert.alert('Unexpected Error Retrieving Goals', 'Please Try Again Later', [
+      {text: 'Got It'},
+    ]);
+  }
+};
+
+const deleteGoal = async (goalType, id) => {
+  let link = goal + '/' + goalType + '/' + id;
+  try {
+    let response = await fetch(link, {
+      method: 'DELETE',
+      headers: {
+        Authorization: 'Bearer ' + (await getToken()),
+        Accept: 'application/json',
+        'Content-type': 'application/json',
+      },
+    });
+    let responseJson = await response.json();
+    console.log(responseJson);
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
+
 export {
   addBgGoalReq,
   addFoodGoalReq,
@@ -176,4 +224,6 @@ export {
   addWeightGoalReq,
   addActivityGoalReq,
   addStepsGoalReq,
+  getGoals,
+  deleteGoal,
 };

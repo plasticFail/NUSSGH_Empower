@@ -25,6 +25,7 @@ import RemoveModal from '../removeModal';
 //function
 import {food_key} from '../../../commonFunctions/logFunctions';
 import {deleteMealLog, editMealLog} from '../../../netcalls/requestsDiary';
+import DeleteBin from '../../deleteBin';
 
 const from_delete = 'delete';
 const from_edit = 'edit';
@@ -155,11 +156,7 @@ const EditFoodBlock = (props) => {
       </View>
       <View style={[globalStyles.buttonContainer]}>
         <View style={{flexDirection: 'row'}}>
-          <TouchableOpacity
-            style={diaryStyles.binIcon}
-            onPress={() => confirmDeleteItem()}>
-            <FontAwesome name="trash-o" size={40} color="#ff0844" />
-          </TouchableOpacity>
+          <DeleteBin style={diaryStyles.binIcon} method={confirmDeleteItem} />
           {changed ? (
             <TouchableOpacity
               style={logStyles.enableEditButton}

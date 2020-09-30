@@ -9,6 +9,7 @@ import {
   Dimensions,
   Easing,
 } from 'react-native';
+import CHEV_RIGHT from '../../resources/images/Patient-Icons/SVG/icon-grey-chevron-right.svg';
 //styles
 import globalStyles from '../../styles/globalStyles';
 import {Colors} from '../../styles/colors';
@@ -20,9 +21,6 @@ import ProgressBar from '../../components/progressbar';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import AddGoalModal from '../../components/goals/addGoalModal';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-
-import dummyData from '../../components/goals/dummyData.json';
-
 import {
   bg_key,
   renderLogIconNavy,
@@ -32,15 +30,17 @@ import {
   activity_key,
   step_key,
 } from '../../commonFunctions/logFunctions';
-import CHEV_RIGHT from '../../resources/images/Patient-Icons/SVG/icon-grey-chevron-right.svg';
-
-//key in goal json
-const bg = 'blood_glucose';
-const food = 'food';
-const med = 'medication';
-const weight = 'weight';
-const activity = 'activity';
-const steps = 'steps';
+import {getGoals} from '../../netcalls/requestsGoals';
+import {
+  bg,
+  food,
+  med,
+  weight,
+  activity,
+  steps,
+  renderGoalTypeName,
+} from '../../commonFunctions/goalConstants';
+import GoalDetail from '../../components/goals/goalDetail';
 
 const height = Dimensions.get('window').height;
 
@@ -49,13 +49,25 @@ const GoalsScreen = (props) => {
   const [goals, setGoals] = useState({});
   const [showDown, setShowDown] = useState(true);
   const moveDownAnimation = useRef(new Animated.Value(0)).current;
+  const [selectedGoal, setSelectedGoal] = useState({});
+  const [selectedType, setSelectedType] = useState('');
+  const [showDetail, setShowDetail] = useState(false);
 
   useEffect(() => {
-    setGoals(dummyData);
+    initGoals();
+  }, []);
+
+  useEffect(() => {
     if (showDown) {
       runAnimation();
     }
   }, [showDown]);
+
+  const initGoals = () => {
+    getGoals().then((data) => {
+      setGoals(data);
+    });
+  };
 
   const runAnimation = () => {
     setShowDown(true);
@@ -75,7 +87,7 @@ const GoalsScreen = (props) => {
 
   const heightInterpolation = moveDownAnimation.interpolate({
     inputRange: [0, 1],
-    outputRange: [height * 0.5, height * 0.6],
+    outputRange: [height * 0.25, height * 0.3],
   });
 
   const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
@@ -88,6 +100,12 @@ const GoalsScreen = (props) => {
     return contentOffset.y == 0;
   };
 
+  const openGoalDetail = (item, type) => {
+    setSelectedGoal(item);
+    setSelectedType(type);
+    setShowDetail(true);
+  };
+
   return (
     <View style={globalStyles.pageContainer}>
       <View style={globalStyles.menuBarContainer}>
@@ -97,7 +115,10 @@ const GoalsScreen = (props) => {
       <Text style={[globalStyles.pageDetails, {marginBottom: '4%'}]}>
         Edit Your Targets
       </Text>
-      <Text style={[globalStyles.goalFieldName]}>Your Goals</Text>
+      <Text
+        style={[globalStyles.goalFieldName, {marginTop: 0, marginStart: '3%'}]}>
+        Your Goals
+      </Text>
       <ScrollView
         style={{height: '1%'}}
         scrollEventThrottle={100}
@@ -108,7 +129,7 @@ const GoalsScreen = (props) => {
             setShowDown(true);
           }
         }}>
-        {RenderGoalItems(goals)}
+        {RenderGoalItems(goals, openGoalDetail)}
       </ScrollView>
       {showDown && (
         <Animated.View
@@ -136,21 +157,49 @@ const GoalsScreen = (props) => {
         />
         <Text style={styles.addbutton}>Add Goal</Text>
       </TouchableOpacity>
+      <Text
+        style={[
+          globalStyles.goalFieldName,
+          {marginTop: '2%', marginStart: '3%'},
+        ]}>
+        Physician-Set Goals
+      </Text>
+      <Text
+        style={[
+          globalStyles.goalFieldName,
+          {marginTop: '2%', marginStart: '3%'},
+        ]}>
+        Suggested Goal
+      </Text>
       <View style={{flex: 1}} />
-      <AddGoalModal visible={openAdd} close={() => setOpenAdd(false)} />
+
+      <AddGoalModal
+        visible={openAdd}
+        close={() => setOpenAdd(false)}
+        init={() => initGoals()}
+      />
+      <GoalDetail
+        visible={showDetail}
+        close={() => setShowDetail(false)}
+        goalItem={selectedGoal}
+        type={selectedType}
+      />
     </View>
   );
 };
 
 export default GoalsScreen;
 
-function RenderGoalItems(array) {
+function RenderGoalItems(array, openGoalDetail) {
   return Object.keys(array).map((item, index) =>
-    array[item].map((goal, index) => {
+    array[item].goals.map((goal, index) => {
       return (
-        <View key={index} style={[{flex: 1}, styles.border]}>
-          {renderGoalType(goal, item)}
-        </View>
+        <TouchableOpacity
+          key={index}
+          style={[{flex: 1}, styles.border]}
+          onPress={() => openGoalDetail(goal, item)}>
+          {renderGoalType(goal, item, openGoalDetail)}
+        </TouchableOpacity>
       );
     }),
   );
@@ -159,7 +208,7 @@ function RenderGoalItems(array) {
 function renderGoalType(goalItem, type) {
   let progress = goalItem.progress + '%';
   return (
-    <TouchableOpacity
+    <View
       style={{
         margin: '3%',
         flexDirection: 'row',
@@ -179,8 +228,8 @@ function renderGoalType(goalItem, type) {
           {goalItem.name}
         </Text>
       </View>
-      <CHEV_RIGHT height={20} width={20} />
-    </TouchableOpacity>
+      <CHEV_RIGHT height={23} width={23} marginTop={'2%'} />
+    </View>
   );
 }
 
@@ -198,23 +247,6 @@ function renderGoalLogo(type) {
       return renderLogIconNavy(activity_key);
     case steps:
       return renderLogIconNavy(step_key);
-  }
-}
-
-function renderGoalTypeName(type) {
-  switch (type) {
-    case bg:
-      return 'Blood Glucose Goal';
-    case food:
-      return 'Food Goal';
-    case med:
-      return 'Medication Goal';
-    case weight:
-      return 'Weight Goal';
-    case activity:
-      return 'Activity Goal';
-    case steps:
-      return 'Step Goal';
   }
 }
 

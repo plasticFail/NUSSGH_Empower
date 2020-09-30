@@ -1,5 +1,12 @@
 import React, {useState} from 'react';
-import {View, TouchableOpacity, Text, Image, FlatList} from 'react-native';
+import {
+  View,
+  TouchableOpacity,
+  Text,
+  Image,
+  FlatList,
+  Settings,
+} from 'react-native';
 //third party lib
 import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
@@ -28,7 +35,7 @@ import WeightGoal from './blocks/weightGoal';
 
 const AddGoalModal = (props) => {
   const {visible} = props;
-  const {close} = props;
+  const {close, init} = props;
   const buttonList = [
     bg_key,
     food_key,
@@ -43,6 +50,7 @@ const AddGoalModal = (props) => {
   const [openWeight, setOpenWeight] = useState(false);
   const [openActivity, setOpenActivity] = useState(false);
   const [openSteps, setOpenSteps] = useState(false);
+  const [type, setType] = useState('');
 
   const trimPhrase = (phrase) => {
     if (String(phrase).includes('Log')) {
@@ -71,6 +79,29 @@ const AddGoalModal = (props) => {
     if (type === step_key) {
       setOpenSteps(true);
     }
+    setType(type);
+  };
+
+  const closeGoalType = (type) => {
+    if (type === bg_key) {
+      setOpenBg(false);
+    }
+    if (type === food_key) {
+      setOpenFood(false);
+    }
+    if (type === med_key) {
+      setOpenMed(false);
+    }
+    if (type === weight_key) {
+      setOpenWeight(false);
+    }
+    if (type === activity_key) {
+      setOpenActivity(false);
+    }
+    if (type === step_key) {
+      setOpenSteps(false);
+    }
+    init();
   };
 
   return (
@@ -112,25 +143,25 @@ const AddGoalModal = (props) => {
       </View>
       {/* Goal Type Modal to open */}
       {openBg ? (
-        <BgGoal visible={openBg} close={() => setOpenBg(false)} />
+        <BgGoal visible={openBg} close={() => closeGoalType(type)} />
       ) : null}
       {openFood ? (
-        <FoodGoal visible={openFood} close={() => setOpenFood(false)} />
+        <FoodGoal visible={openFood} close={() => closeGoalType(type)} />
       ) : null}
       {openMed ? (
-        <MedicationGoal visible={openMed} close={() => setOpenMed(false)} />
+        <MedicationGoal visible={openMed} close={() => closeGoalType(type)} />
       ) : null}
       {openWeight ? (
-        <WeightGoal visible={openWeight} close={() => setOpenWeight(false)} />
+        <WeightGoal visible={openWeight} close={() => closeGoalType(type)} />
       ) : null}
       {openActivity ? (
         <ActivityGoal
           visible={openActivity}
-          close={() => setOpenActivity(false)}
+          close={() => closeGoalType(type)}
         />
       ) : null}
       {openSteps ? (
-        <StepsGoal visible={openSteps} close={() => setOpenSteps(false)} />
+        <StepsGoal visible={openSteps} close={() => closeGoalType(type)} />
       ) : null}
     </Modal>
   );

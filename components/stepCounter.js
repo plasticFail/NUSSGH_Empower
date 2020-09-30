@@ -25,6 +25,7 @@ export default class StepCounter extends Component {
     this.setState({
       count: this.props.count === undefined ? 0 : this.props.count,
     });
+    this.stopTimer();
   }
 
   componentDidUpdate(prevProp) {
@@ -42,11 +43,13 @@ export default class StepCounter extends Component {
   }
 
   handleClickAdd = () => {
+    this.stopTimer();
     let newCount = this.state.count + 1;
     this.setState({count: newCount});
   };
 
   handleClickMinus = () => {
+    this.stopTimer();
     if (this.state.count > 0) {
       let newCount = this.state.count - 1;
       this.setState({count: newCount});

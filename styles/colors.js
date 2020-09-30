@@ -14,4 +14,5 @@ export const Colors = {
   subsubHeaderColor: '#828994',
   grey: '#3c3c43',
   inputBorderColor: '#e1e7ed',
+  removeColor: '#ff0844',
 };
