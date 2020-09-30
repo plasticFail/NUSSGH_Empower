@@ -45,10 +45,10 @@ function ExportReportsModal(props) {
     }
 
     const handleExport = () => {
-        const filename = 'MyReports.txt';
+        const filename = 'MyReports.csv';
         const fp = pathPrefix + filename;
         const srt = selectedReportType.filter(type => type.selected).map(selectedType => selectedType.name).join(', ');
-        const message = 'Just testing this file system library. Please work.';
+        const message = 'col1,col2,col3,col4\nnext1,next2,next3,next4';
         RNFS.writeFile(fp, message, 'utf8').then(success => {
             console.log(`Yay it worked, ${srt} file(s) saved at ${fp}`);
         }).catch(err => {

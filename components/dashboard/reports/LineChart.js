@@ -62,6 +62,8 @@ export default class LineChart extends React.Component {
 
     xLabel = React.createRef(); // header label with cursor's current x value.
 
+    scrollerKey = React.createRef(0);
+
     constructor(props) {
         super(props);
         const components = this.getComponent();
@@ -80,6 +82,7 @@ export default class LineChart extends React.Component {
 
     componentDidUpdate(prevProps) {
         if (prevProps.filterKey !== this.props.filterKey || prevProps.data !== this.props.data) {
+            this.scrollerKey.current += 1;
             this.updateComponent();
         }
     }
@@ -140,7 +143,7 @@ export default class LineChart extends React.Component {
     moveCursor(value) {
         const {pathLine, lineLength, lineProperties, selectedIndex, dataCoordinates, data} = this.state;
         if (lineLength > 0) {
-            const { x, y } = lineProperties.getPointAtLength(value);
+            const { x, y } = lineProperties.getPointAtLength(lineLength - value);
             const mapped = dataCoordinates.map(d => Math.round(Math.abs(d[0] - x) + Math.abs(d[1] - y)));
             const minDist = Math.min(...mapped);
             let index = -1;
@@ -163,7 +166,7 @@ export default class LineChart extends React.Component {
                 });
                 this.xLabel.current.setNativeProps({
                     text: `${Moment(this.state.scaleX.invert(shownDatapoint[0]))
-                        .format(this.props.filterKey === DAY_FILTER_KEY ? 'h:mm' : 'DD MMM')}`,
+                        .format(this.props.filterKey === DAY_FILTER_KEY ? 'h:mm' : 'D MMM')}`,
                     opacity: 1
                 }
                 );
@@ -347,7 +350,7 @@ export default class LineChart extends React.Component {
                 </Svg>
                 {
                     <Animated.ScrollView
-                        key={`graph-scroller-${this.props.filterKey}`}
+                        key={`graph-scroller-${this.props.filterKey}-${this.scrollerKey.current}`}
                         style={StyleSheet.absoluteFill}
                         contentContainerStyle={{width: this.state.lineLength + width}}
                         showsHorizontalScrollIndicator={false}
