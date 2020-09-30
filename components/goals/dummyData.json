@@ -1,0 +1,69 @@
+{
+  "steps": [
+    {
+      "steps": 7000,
+      "start_date": "24/07/2020 00:00:00",
+      "name": "My Goal",
+      "_id": "5f4fca9f1c80676822e56a07",
+      "end_date": "24/07/2020 00:00:00",
+      "frequency": "daily"
+    }
+  ],
+  "weight": [
+    {
+      "weekly_offset": -0.2,
+      "start_date": "24/07/2020 00:00:00",
+      "name": "My Goal",
+      "goal_weight": 0,
+      "_id": "5f4fca9f1c80676822e56a07",
+      "end_date": "24/07/2020 00:00:00",
+      "frequency": "daily"
+    }
+  ],
+  "blood_glucose": [
+    {
+      "max_bg": 0,
+      "start_date": "24/07/2020 00:00:00",
+      "min_bg": 0,
+      "name": "My Goal",
+      "_id": "5f4fca9f1c80676822e56a07",
+      "end_date": "24/07/2020 00:00:00",
+      "frequency": "daily"
+    }
+  ],
+  "food": [
+    {
+      "protein": 0,
+      "fats": 0,
+      "carbs": 0,
+      "start_date": "24/07/2020 00:00:00",
+      "name": "My Goal",
+      "calories": 0,
+      "_id": "5f4fca9f1c80676822e56a07",
+      "end_date": "24/07/2020 00:00:00",
+      "frequency": "daily"
+    }
+  ],
+  "medication": [
+    {
+      "medication": "Acarbose Tablet",
+      "dosage": 0,
+      "start_date": "24/07/2020 00:00:00",
+      "name": "My Goal",
+      "_id": "5f4fca9f1c80676822e56a07",
+      "end_date": "24/07/2020 00:00:00",
+      "frequency": "daily"
+    }
+  ],
+  "activity": [
+    {
+      "cal_burnt": 500,
+      "start_date": "24/07/2020 00:00:00",
+      "duration": 50,
+      "name": "My Goal",
+      "_id": "5f4fca9f1c80676822e56a07",
+      "end_date": "24/07/2020 00:00:00",
+      "frequency": "daily"
+    }
+  ]
+}
