@@ -131,19 +131,18 @@ const dateFrom2dayWeightLog = async () => {
   );
   let weightLogs = arr1.logs;
   if (weightLogs.length === 0) {
-    return 'Not taken yet';
+    return 'Not logged yet';
   } else {
     //weight exist in last 7 days
-    console.log(weightLogs[weightLogs.length - 1]);
-    let today = Moment(new Date());
+    let today = Moment(new Date()).startOf('day');
     let takenDate = Moment(
       getDateObj(weightLogs[weightLogs.length - 1].record_date),
-    );
+    ).startOf('day');
     let diff = today.diff(takenDate, 'days');
     if (diff != 0) {
-      return 'Logged ' + diff + ' day (s) ago.';
+      return 'Logged ' + diff + ' day(s) ago';
     } else {
-      return 'Logged today.';
+      return 'Logged today';
     }
   }
 };
@@ -184,12 +183,11 @@ const checkLogDone = async (period) => {
       notCompleted.push(med_key);
     }
 
-    if (weight_data != null) {
-      if (checkLast7Day(weight_data)) {
-        completed.push(weight_key);
-      }
-    } else {
+    //check last weight
+    if ((await dateFrom2dayWeightLog()) == 'Not taken yet') {
       notCompleted.push(weight_key);
+    } else {
+      completed.push(weight_key);
     }
   } catch (e) {
     console.error(e);
