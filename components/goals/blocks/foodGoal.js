@@ -7,11 +7,6 @@ import {
   ScrollView,
   Alert,
 } from 'react-native';
-import {
-  maxCarbs,
-  maxFats,
-  maxProtein,
-} from '../../../commonFunctions/diaryFunctions';
 //third party lib
 import Modal from 'react-native-modal';
 import Moment from 'moment';
@@ -22,9 +17,16 @@ import globalStyles from '../../../styles/globalStyles';
 import LeftArrowBtn from '../../logs/leftArrowBtn';
 import NameDateSelector from '../nameDateSelector';
 import FrequencySelector from '../dropDownSelector';
-
 import RenderCounter from '../renderCounter';
+//function
+import {
+  maxCarbs,
+  maxFats,
+  maxProtein,
+  getDateObj,
+} from '../../../commonFunctions/diaryFunctions';
 import {addFoodGoalReq} from '../../../netcalls/requestsGoals';
+import {getFrequency} from '../../../commonFunctions/goalFunctions';
 
 const initialCal = 1000;
 const initialCarbs = maxCarbs / 2;
@@ -32,7 +34,7 @@ const initialFat = maxFats / 2;
 const initialProtein = maxProtein / 2;
 
 const FoodGoal = (props) => {
-  const {visible} = props;
+  const {visible, parent, food} = props;
   const {close} = props;
 
   const [goalName, setGoalName] = useState('');
@@ -46,8 +48,22 @@ const FoodGoal = (props) => {
   const [carbs, setCarbs] = useState(initialCarbs);
   const [fats, setFats] = useState(initialFat);
   const [protein, setProtein] = useState(initialProtein);
+  const [pageText, setPageText] = useState('Add Goal');
 
-  const [errorMsg, setErrorMsg] = useState('');
+  useEffect(() => {
+    if (parent != undefined && food != undefined) {
+      setOpened(true);
+      setGoalName(food.name);
+      setStartDate(getDateObj(food.start_date));
+      setEndDate(getDateObj(food.end_date));
+      setFrequency(getFrequency(food.frequency));
+      setCal(food.calories);
+      setCarbs(food.carbs);
+      setProtein(food.protein);
+      setFats(food.fats);
+      setPageText('Edit Goal');
+    }
+  }, []);
 
   useEffect(() => {
     showSubmitBtn();
@@ -98,7 +114,7 @@ const FoodGoal = (props) => {
         <View style={globalStyles.menuBarContainer}>
           <LeftArrowBtn close={() => close()} />
         </View>
-        <Text style={globalStyles.pageHeader}>Add Goal</Text>
+        <Text style={globalStyles.pageHeader}>{pageText}</Text>
         <Text style={[globalStyles.pageDetails, {marginBottom: '4%'}]}>
           Food Intake Goal
         </Text>
@@ -147,13 +163,13 @@ const FoodGoal = (props) => {
         <View style={[globalStyles.buttonContainer]}>
           {showSubmitBtn() === false ? (
             <TouchableOpacity style={globalStyles.skipButtonStyle}>
-              <Text style={globalStyles.actionButtonText}>Add Goal</Text>
+              <Text style={globalStyles.actionButtonText}>{pageText}</Text>
             </TouchableOpacity>
           ) : (
             <TouchableOpacity
               style={globalStyles.submitButtonStyle}
               onPress={() => submit()}>
-              <Text style={globalStyles.actionButtonText}>Add Goal</Text>
+              <Text style={globalStyles.actionButtonText}>{pageText}</Text>
             </TouchableOpacity>
           )}
         </View>

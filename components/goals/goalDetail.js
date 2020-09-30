@@ -10,15 +10,10 @@ import {
 //third party lib
 import Modal from 'react-native-modal';
 import moment from 'moment';
-import {ProgressCircle} from 'react-native-svg-charts';
 //styles
 import {Colors} from '../../styles/colors';
 import globalStyles from '../../styles/globalStyles';
 import logStyles from '../../styles/logStyles';
-//component
-import LeftArrowBtn from '../logs/leftArrowBtn';
-import DeleteBin from '../deleteBin';
-import CircularProgress from '../dashboard/todayOverview/CircularProgress';
 //function
 import {getDateObj} from '../../commonFunctions/diaryFunctions';
 import {normalTextFontSize} from '../../styles/variables';
@@ -35,8 +30,18 @@ import {
   isMonday,
 } from '../../commonFunctions/goalFunctions';
 import {deleteGoal} from '../../netcalls/requestsGoals';
+//component
+import LeftArrowBtn from '../logs/leftArrowBtn';
+import DeleteBin from '../deleteBin';
+import CircularProgress from '../dashboard/todayOverview/CircularProgress';
 import DeleteModal from '../deleteModal';
+import BgGoal from './blocks/bgGoal';
+import FoodGoal from './blocks/foodGoal';
 import {goal} from '../../netcalls/urls';
+import MedicationGoal from './blocks/medicationGoal';
+import StepsGoal from './blocks/stepsGoal';
+import ActivityGoal from './blocks/activityGoal';
+import WeightGoal from './blocks/weightGoal';
 
 //set default progress first
 //havent differentiate who is setting the goal*
@@ -46,8 +51,7 @@ const GoalDetail = (props) => {
   const {close, init} = props;
   const [showDelete, setShowDelete] = useState(false);
   const [deleteContent, setDeleteContent] = useState('');
-
-  console.log(goalEnded(goalItem.end_date));
+  const [showEditModal, setShowEditModal] = useState(false);
 
   const showDate = (datestring) => {
     return moment(getDateObj(datestring)).format('DD MMM YYYY');
@@ -157,13 +161,63 @@ const GoalDetail = (props) => {
               method={confirmDelete}
               style={{marginTop: '6%', marginStart: '2%'}}
             />
-            <TouchableOpacity style={logStyles.enableEditButton}>
+            <TouchableOpacity
+              style={logStyles.enableEditButton}
+              onPress={() => setShowEditModal(true)}>
               <Text style={globalStyles.actionButtonText}>Edit Goal</Text>
             </TouchableOpacity>
           </View>
         </View>
       )}
-
+      {/*Action modal**/}
+      {type === bg && (
+        <BgGoal
+          visible={showEditModal}
+          close={() => setShowEditModal(false)}
+          parent="edit"
+          bg={goalItem}
+        />
+      )}
+      {type === food && (
+        <FoodGoal
+          visible={showEditModal}
+          close={() => setShowEditModal(false)}
+          parent="edit"
+          food={goalItem}
+        />
+      )}
+      {type === med && (
+        <MedicationGoal
+          visible={showEditModal}
+          close={() => setShowEditModal(false)}
+          parent="edit"
+          med={goalItem}
+        />
+      )}
+      {type === steps && (
+        <StepsGoal
+          visible={showEditModal}
+          close={() => setShowEditModal(false)}
+          parent="edit"
+          step={goalItem}
+        />
+      )}
+      {type === activity && (
+        <ActivityGoal
+          visible={showEditModal}
+          close={() => setShowEditModal(false)}
+          parent="edit"
+          activity={goalItem}
+        />
+      )}
+      {type === weight && (
+        <WeightGoal
+          visible={showEditModal}
+          close={() => setShowEditModal(false)}
+          parent="edit"
+          weightObj={goalItem}
+        />
+      )}
       <DeleteModal
         visible={showDelete}
         close={() => setShowDelete(false)}
@@ -177,11 +231,19 @@ const GoalDetail = (props) => {
 export default GoalDetail;
 
 function RenderField(fieldName, fieldData, units) {
+  let string = '';
+  if (fieldData != null) {
+    let stringLength = fieldData.length;
+    string = fieldData;
+    if (stringLength > 20) {
+      string = string.substr(0, 20) + '...';
+    }
+  }
   return (
     <View style={[{flexDirection: 'row'}, globalStyles.goalFieldBottomBorder]}>
       <Text style={[globalStyles.goalFieldName, {flex: 1}]}>{fieldName}</Text>
       <Text style={styles.data}>
-        {fieldData} {units}
+        {string} {units}
       </Text>
     </View>
   );

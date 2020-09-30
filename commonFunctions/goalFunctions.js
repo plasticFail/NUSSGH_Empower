@@ -9,6 +9,13 @@ const activity = 'activity';
 const steps = 'steps';
 const bgpost = 'blood-glucose';
 
+const frequencyOption = [
+  {name: 'Daily', value: 'daily'},
+  {name: 'Weekly', value: 'weekly'},
+  {name: 'Monthly', value: 'monthly'},
+  {name: 'One-Off', value: 'one-off'},
+];
+
 const weeklyGoalList = [
   {name: 'Lose 0.2 kg per week', value: -0.2},
   {name: 'Lose 0.5 kg per week ', value: -0.5},
@@ -68,6 +75,23 @@ const goalEnded = (dateString) => {
   }
 };
 
+//when at edit page, to reinitalise the field
+const getFrequency = (value) => {
+  for (var x of frequencyOption) {
+    if (x.value === value) {
+      return x;
+    }
+  }
+};
+
+const getWeeklyObj = (value) => {
+  for (var x of weeklyGoalList) {
+    if (x.value === value) {
+      return x;
+    }
+  }
+};
+
 export {
   bg,
   bgpost,
@@ -76,9 +100,12 @@ export {
   weight,
   activity,
   steps,
+  frequencyOption,
   weeklyGoalList,
   renderGoalTypeName,
   getNumofGoals,
   isMonday,
   goalEnded,
+  getFrequency,
+  getWeeklyObj,
 };

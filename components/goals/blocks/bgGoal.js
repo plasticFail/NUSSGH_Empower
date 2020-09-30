@@ -26,12 +26,14 @@ import {
   min_bg,
 } from '../../../commonFunctions/logFunctions';
 import {addBgGoalReq} from '../../../netcalls/requestsGoals';
+import {getDateObj} from '../../../commonFunctions/diaryFunctions';
+import {getFrequency} from '../../../commonFunctions/goalFunctions';
 
 const min_key = 'min';
 const max_key = 'max';
 
 const BgGoal = (props) => {
-  const {visible} = props;
+  const {visible, parent, bg} = props;
   const {close} = props;
 
   const [goalName, setGoalName] = useState('');
@@ -43,6 +45,20 @@ const BgGoal = (props) => {
   const [minBg, setMinBg] = useState('');
   const [maxBg, setMaxBg] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
+  const [pageText, setPageText] = useState('Add Goal');
+
+  useEffect(() => {
+    if (parent != undefined && bg != undefined) {
+      setOpened(true);
+      setGoalName(bg.name);
+      setStartDate(getDateObj(bg.start_date));
+      setEndDate(getDateObj(bg.end_date));
+      setFrequency(getFrequency(bg.frequency));
+      setMinBg(String(bg.min_bg));
+      setMaxBg(String(bg.max_bg));
+      setPageText('Edit Goal');
+    }
+  }, []);
 
   useEffect(() => {
     check();
@@ -141,7 +157,9 @@ const BgGoal = (props) => {
         <View style={globalStyles.menuBarContainer}>
           <LeftArrowBtn close={() => close()} />
         </View>
-        <Text style={globalStyles.pageHeader}>Add Goal</Text>
+
+        <Text style={globalStyles.pageHeader}>{pageText}</Text>
+
         <Text style={[globalStyles.pageDetails, {marginBottom: '4%'}]}>
           Blood Glucose Goal
         </Text>
@@ -181,13 +199,13 @@ const BgGoal = (props) => {
         <View style={[globalStyles.buttonContainer]}>
           {showSubmitBtn() === false ? (
             <TouchableOpacity style={globalStyles.skipButtonStyle}>
-              <Text style={globalStyles.actionButtonText}>Add Goal</Text>
+              <Text style={globalStyles.actionButtonText}>{pageText}</Text>
             </TouchableOpacity>
           ) : (
             <TouchableOpacity
               style={globalStyles.submitButtonStyle}
               onPress={() => submit()}>
-              <Text style={globalStyles.actionButtonText}>Add Goal</Text>
+              <Text style={globalStyles.actionButtonText}>{pageText}</Text>
             </TouchableOpacity>
           )}
         </View>

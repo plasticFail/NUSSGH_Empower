@@ -17,7 +17,8 @@ import {horizontalMargins} from '../../styles/variables';
 //component
 import LeftArrowBtn from '../../components/logs/leftArrowBtn';
 import ProgressBar from '../../components/progressbar';
-import GoalDetail from '../../components/goals/goalDetail';
+import GoalList from '../../components/goals/goalList';
+import LoadingModal from '../../components/loadingModal';
 //third party lib
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import AddGoalModal from '../../components/goals/addGoalModal';
@@ -41,22 +42,21 @@ import {
   renderGoalTypeName,
   isMonday,
 } from '../../commonFunctions/goalFunctions';
-import GoalList from '../../components/goals/goalList';
 
 const GoalsScreen = (props) => {
   const [openAdd, setOpenAdd] = useState(false);
   const [goals, setGoals] = useState({});
-  const [selectedGoal, setSelectedGoal] = useState({});
-  const [selectedType, setSelectedType] = useState('');
-  const [showDetail, setShowDetail] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setLoading(true);
     initGoals();
   }, []);
 
   const initGoals = () => {
     console.log('getting latest goals');
     getGoals().then((data) => {
+      setTimeout(() => setLoading(false), 1000);
       setGoals(data);
     });
   };
@@ -70,47 +70,42 @@ const GoalsScreen = (props) => {
       <Text style={[globalStyles.pageDetails, {marginBottom: '4%'}]}>
         Edit Your Targets
       </Text>
-      <View style={{flex: 1}}>
-        <ScrollView contentContainerStyle={{flexGrow: 1}}>
-          <Text
-            style={[
-              globalStyles.goalFieldName,
-              {marginTop: 0, marginStart: '3%'},
-            ]}>
-            Your Goals
-          </Text>
-          <GoalList goals={goals} init={() => initGoals()} />
+      <Text
+        style={[globalStyles.goalFieldName, {marginTop: 0, marginStart: '3%'}]}>
+        Your Goals
+      </Text>
+      <GoalList goals={goals} init={() => initGoals()} />
 
-          {isMonday() && (
-            <TouchableOpacity
-              onPress={() => setOpenAdd(true)}
-              style={{flexDirection: 'row'}}>
-              <AntDesign
-                name="pluscircleo"
-                color={'#aad326'}
-                size={25}
-                style={{margin: '2%'}}
-              />
-              <Text style={styles.addbutton}>Add Goal</Text>
-            </TouchableOpacity>
-          )}
+      {isMonday() && (
+        <TouchableOpacity
+          onPress={() => setOpenAdd(true)}
+          style={{flexDirection: 'row'}}>
+          <AntDesign
+            name="pluscircleo"
+            color={'#aad326'}
+            size={25}
+            style={{margin: '2%'}}
+          />
+          <Text style={styles.addbutton}>Add Goal</Text>
+        </TouchableOpacity>
+      )}
 
-          <Text
-            style={[
-              globalStyles.goalFieldName,
-              {marginTop: '2%', marginStart: '3%'},
-            ]}>
-            Physician-Set Goals
-          </Text>
-          <Text
-            style={[
-              globalStyles.goalFieldName,
-              {marginTop: '2%', marginStart: '3%'},
-            ]}>
-            Suggested Goal
-          </Text>
-        </ScrollView>
-      </View>
+      <Text
+        style={[
+          globalStyles.goalFieldName,
+          {marginTop: '2%', marginStart: '3%'},
+        ]}>
+        Physician-Set Goals
+      </Text>
+
+      <Text
+        style={[
+          globalStyles.goalFieldName,
+          {marginTop: '2%', marginStart: '3%'},
+        ]}>
+        Suggested Goal
+      </Text>
+
       <AddGoalModal
         visible={openAdd}
         close={() => {
@@ -119,6 +114,7 @@ const GoalsScreen = (props) => {
           setOpenAdd(false);
         }}
       />
+      <LoadingModal visible={loading} message={'Retrieving your goals'} />
     </View>
   );
 };

@@ -10,6 +10,7 @@ import {
 import {
   maxDuration,
   maxCalBurnt,
+  getDateObj,
 } from '../../../commonFunctions/diaryFunctions';
 //third party lib
 import Modal from 'react-native-modal';
@@ -23,9 +24,10 @@ import NameDateSelector from '../nameDateSelector';
 import FrequencySelector from '../dropDownSelector';
 import RenderCounter from '../renderCounter';
 import {addActivityGoalReq} from '../../../netcalls/requestsGoals';
+import {getFrequency, activity} from '../../../commonFunctions/goalFunctions';
 
 const ActivityGoal = (props) => {
-  const {visible} = props;
+  const {visible, parent, activity} = props;
   const {close} = props;
 
   const [goalName, setGoalName] = useState('');
@@ -36,6 +38,21 @@ const ActivityGoal = (props) => {
 
   const [minute, setMinute] = useState(maxDuration);
   const [calBurnt, setCalBurnt] = useState(maxCalBurnt);
+
+  const [pageText, setPageText] = useState('Add Goal');
+
+  useEffect(() => {
+    if (parent != undefined && activity != undefined) {
+      setOpened(true);
+      setGoalName(activity.name);
+      setStartDate(getDateObj(activity.start_date));
+      setEndDate(getDateObj(activity.end_date));
+      setFrequency(getFrequency(activity.frequency));
+      setMinute(activity.duration);
+      setCalBurnt(activity.cal_burnt);
+      setPageText('Edit Goal');
+    }
+  }, []);
 
   useEffect(() => {
     check();
@@ -88,7 +105,7 @@ const ActivityGoal = (props) => {
         <View style={globalStyles.menuBarContainer}>
           <LeftArrowBtn close={() => close()} />
         </View>
-        <Text style={globalStyles.pageHeader}>Add Goal</Text>
+        <Text style={globalStyles.pageHeader}>{pageText}</Text>
         <Text style={[globalStyles.pageDetails, {marginBottom: '4%'}]}>
           Activity Goal
         </Text>
@@ -125,13 +142,13 @@ const ActivityGoal = (props) => {
         <View style={[globalStyles.buttonContainer]}>
           {showSubmitBtn() === false ? (
             <TouchableOpacity style={globalStyles.skipButtonStyle}>
-              <Text style={globalStyles.actionButtonText}>Add Goal</Text>
+              <Text style={globalStyles.actionButtonText}>{pageText}</Text>
             </TouchableOpacity>
           ) : (
             <TouchableOpacity
               style={globalStyles.submitButtonStyle}
               onPress={() => submit()}>
-              <Text style={globalStyles.actionButtonText}>Add Goal</Text>
+              <Text style={globalStyles.actionButtonText}>{pageText}</Text>
             </TouchableOpacity>
           )}
         </View>

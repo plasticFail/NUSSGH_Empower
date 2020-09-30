@@ -19,11 +19,16 @@ import NameDateSelector from '../nameDateSelector';
 import DropdownSelector from '../dropDownSelector';
 import WeightDragModal from '../weightDragModal';
 import {normalTextFontSize} from '../../../styles/variables';
+//function
 import {addWeightGoalReq} from '../../../netcalls/requestsGoals';
-import {weeklyGoalList} from '../../../commonFunctions/goalFunctions';
+import {
+  weeklyGoalList,
+  getWeeklyObj,
+} from '../../../commonFunctions/goalFunctions';
+import {getDateObj} from '../../../commonFunctions/diaryFunctions';
 
 const WeightGoal = (props) => {
-  const {visible} = props;
+  const {visible, parent, weightObj} = props;
   const {close} = props;
 
   const [goalName, setGoalName] = useState('');
@@ -34,6 +39,21 @@ const WeightGoal = (props) => {
   const [showPicker, setShowPicker] = useState(false);
   const [weeklyGoal, setWeeklyGoal] = useState(weeklyGoalList[4]);
   const [weight, setWeight] = useState(50);
+
+  const [pageText, setPageText] = useState('Add Goal');
+
+  useEffect(() => {
+    if (parent != undefined && weightObj != undefined) {
+      setOpened(true);
+      setOpenedWeight(true);
+      setGoalName(weightObj.name);
+      setStartDate(getDateObj(weightObj.start_date));
+      setEndDate(getDateObj(weightObj.end_date));
+      setWeight(weightObj.goal_weight);
+      setWeeklyGoal(getWeeklyObj(weightObj.weekly_offset));
+      setPageText('Edit Goal');
+    }
+  }, []);
 
   useEffect(() => {
     showSubmitBtn();
@@ -93,7 +113,7 @@ const WeightGoal = (props) => {
         <View style={globalStyles.menuBarContainer}>
           <LeftArrowBtn close={() => close()} />
         </View>
-        <Text style={globalStyles.pageHeader}>Add Goal</Text>
+        <Text style={globalStyles.pageHeader}>{pageText}</Text>
         <Text style={[globalStyles.pageDetails, {marginBottom: '4%'}]}>
           Weight Goal
         </Text>
@@ -138,13 +158,13 @@ const WeightGoal = (props) => {
         <View style={[globalStyles.buttonContainer]}>
           {showSubmitBtn() === false ? (
             <TouchableOpacity style={globalStyles.skipButtonStyle}>
-              <Text style={globalStyles.actionButtonText}>Add Goal</Text>
+              <Text style={globalStyles.actionButtonText}>{pageText}</Text>
             </TouchableOpacity>
           ) : (
             <TouchableOpacity
               style={globalStyles.submitButtonStyle}
               onPress={() => submit()}>
-              <Text style={globalStyles.actionButtonText}>Add Goal</Text>
+              <Text style={globalStyles.actionButtonText}>{pageText}</Text>
             </TouchableOpacity>
           )}
         </View>

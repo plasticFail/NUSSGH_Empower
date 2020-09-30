@@ -58,6 +58,7 @@ const GoalList = (props) => {
 
   const runAnimation = () => {
     setShowDown(true);
+    moveDownAnimation.setValue(0);
     Animated.loop(
       Animated.timing(moveDownAnimation, {
         toValue: 1,
@@ -94,7 +95,7 @@ const GoalList = (props) => {
   };
 
   return (
-    <View style={{maxHeight: '30%'}}>
+    <View style={{maxHeight: height * 0.27}}>
       {getNumofGoals(goals) != 0 ? (
         <>
           <ScrollView

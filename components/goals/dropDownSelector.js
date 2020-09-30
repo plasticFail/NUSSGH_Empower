@@ -7,13 +7,7 @@ import {Colors} from '../../styles/colors';
 import Entypo from 'react-native-vector-icons/Entypo';
 import {normalTextFontSize} from '../../styles/variables';
 import globalStyles from '../../styles/globalStyles';
-
-const frequencyOption = [
-  {name: 'Daily', value: 'daily'},
-  {name: 'Weekly', value: 'weekly'},
-  {name: 'Monthly', value: 'monthly'},
-  {name: 'One-Off', value: 'one-off'},
-];
+import {frequencyOption} from '../../commonFunctions/goalFunctions';
 
 const DropDownSelector = (props) => {
   const {selected, setSelected, fieldName, dropDownType, optionList} = props;

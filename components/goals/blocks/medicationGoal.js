@@ -24,9 +24,11 @@ import RenderCounter from '../renderCounter';
 //function
 import {isEmpty} from '../../../commonFunctions/common';
 import {addMedGoalReq} from '../../../netcalls/requestsGoals';
+import {getDateObj} from '../../../commonFunctions/diaryFunctions';
+import {getFrequency} from '../../../commonFunctions/goalFunctions';
 
 const MedicationGoal = (props) => {
-  const {visible} = props;
+  const {visible, parent, med} = props;
   const {close} = props;
 
   const [goalName, setGoalName] = useState('');
@@ -37,6 +39,23 @@ const MedicationGoal = (props) => {
   const [selectedMed, setSelectedMed] = useState({});
   const [dosage, setDosage] = useState(0);
   const [openSearchModal, setOpenSearchModal] = useState(false);
+  const [pageText, setPageText] = useState('Add Goal');
+
+  useEffect(() => {
+    if (parent != undefined && med != undefined) {
+      setOpened(true);
+      setGoalName(med.name);
+      setStartDate(getDateObj(med.start_date));
+      setEndDate(getDateObj(med.end_date));
+      setFrequency(getFrequency(med.frequency));
+      let medObj = {
+        drugName: med.medication,
+      };
+      setDosage(med.dosage);
+      setSelectedMed(medObj);
+      setPageText('Edit Goal');
+    }
+  }, []);
 
   useEffect(() => {
     showSubmitBtn();
@@ -85,7 +104,7 @@ const MedicationGoal = (props) => {
         <View style={globalStyles.menuBarContainer}>
           <LeftArrowBtn close={() => close()} />
         </View>
-        <Text style={globalStyles.pageHeader}>Add Goal</Text>
+        <Text style={globalStyles.pageHeader}>{pageText}</Text>
         <Text style={[globalStyles.pageDetails, {marginBottom: '4%'}]}>
           Medication Goal
         </Text>
@@ -143,13 +162,13 @@ const MedicationGoal = (props) => {
         <View style={[globalStyles.buttonContainer]}>
           {showSubmitBtn() === false ? (
             <TouchableOpacity style={globalStyles.skipButtonStyle}>
-              <Text style={globalStyles.actionButtonText}>Add Goal</Text>
+              <Text style={globalStyles.actionButtonText}>{pageText}</Text>
             </TouchableOpacity>
           ) : (
             <TouchableOpacity
               style={globalStyles.submitButtonStyle}
               onPress={() => submit()}>
-              <Text style={globalStyles.actionButtonText}>Add Goal</Text>
+              <Text style={globalStyles.actionButtonText}>{pageText}</Text>
             </TouchableOpacity>
           )}
         </View>
