@@ -1,14 +1,32 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+//third party libs
+import Ionicon from 'react-native-vector-icons/Ionicons';
+//styles
 import globalStyles from '../../../styles/globalStyles';
-import LeftArrowBtn from '../../../components/logs/leftArrowBtn';
 import GameCenterStyles from '../../../styles/gameCenterStyles';
 import {Colors} from '../../../styles/colors';
+//components
+import LeftArrowBtn from '../../../components/logs/leftArrowBtn';
 import ProgressBar from '../../../components/progressbar';
 import DotBoard from '../../../components/gameCenter/dotBoard';
+//functions
+import {getPattern} from '../../../constants/gameCenter/letterPattern';
+import {getRandomBoard} from '../../../constants/gameCenter/randomBingo';
 
+
+const LetterDotColor = (currentLetter, letter) => {
+    if(currentLetter === letter){
+        return Colors.gameColorGreen;
+    }
+    return Colors.gameColorGrey;
+}
 
 const FillTheCard = (props) => {
+
+    const [currentLetter, setCurrentLetter] = useState(0);
+    const letters = ['F','I','T'];
+
     return (
         <View style={{...globalStyles.pageContainer, ...props.style}}>
             <View style={globalStyles.menuBarContainer}>
@@ -35,13 +53,24 @@ const FillTheCard = (props) => {
             </View>
 
             <View style={[GameCenterStyles.cardPadding, GameCenterStyles.subContainer]}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => {currentLetter > 0 && setCurrentLetter(currentLetter - 1)}}>
                     <Image source={require('../../../resources/images/Patient-Icons/2x/icon-grey-chevron-left-2x.png')} style={GameCenterStyles.iconProps} />
                 </TouchableOpacity>
-                <DotBoard/>
-                <TouchableOpacity>
+                <DotBoard bingoPattern={getPattern(letters[currentLetter])} boardNum={getRandomBoard(currentLetter)}/>
+                <TouchableOpacity onPress={() => {currentLetter < letters.length - 1 && setCurrentLetter(currentLetter + 1)}}>
                     <Image source={require('../../../resources/images/Patient-Icons/2x/icon-grey-chevron-right-2x.png')} style={GameCenterStyles.iconProps} />
                 </TouchableOpacity>
+            </View>
+
+            <View style={GameCenterStyles.subContainerNarrow}>
+                {letters.map((item, index) => (
+                    <Ionicon
+                        name="ellipse"
+                        size={20}
+                        style={styles.stepDot}
+                        color={LetterDotColor(currentLetter, index)}
+                    />
+                ))}
             </View>
 
             <TouchableOpacity

@@ -70,6 +70,11 @@ const GameCenterStyles = StyleSheet.create({
         alignItems: 'center',
         flexDirection: 'row'
     },
+    subContainerNarrow: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'row'
+    },
     verticalContainer: {
         flex:1,
         justifyContent: 'space-between',
