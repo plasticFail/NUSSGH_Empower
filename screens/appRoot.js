@@ -11,6 +11,7 @@ import {
   TransitionSpecs,
 } from '@react-navigation/stack';
 import Entypo from 'react-native-vector-icons/Entypo';
+import Animated, {Easing} from 'react-native-reanimated';
 //functions
 import {connect} from 'react-redux';
 import {mapDispatchToProps, mapStateToProps} from '../redux/reduxMapping';
@@ -18,20 +19,21 @@ import {mapDispatchToProps, mapStateToProps} from '../redux/reduxMapping';
 import Login from './login/login';
 import ForgetPasswordScreen from './login/ForgetPasswordScreen';
 import ResetPasswordScreen from './login/resetPassword';
-//components
-import ContactUs from './contactUs';
-import AskAdd from './onboarding/medicationPlan/askAdd';
-import AddPlan from './onboarding/medicationPlan/addPlan';
-import FitbitSetup from './onboarding/fitbit/FitbitSetup';
-import DrawerNavigator from './drawer';
 import AccountDetailScreen from './more/accountDetails';
 import DiaryScreen from './main/diary/diary';
 import MedicationScreen from './more/medications';
 import GoalsScreen from './more/goals';
 import AppointmentScreen from './more/appointments';
 import EducationMaterialsScreen from './more/educationMaterials';
+import MyWord from './main/gameCenter/myWord';
+import FillTheCard from './main/gameCenter/fillTheCard';
 import Logout from './more/logout';
-import Animated, {Easing} from 'react-native-reanimated';
+//components
+import ContactUs from './contactUs';
+import AskAdd from './onboarding/medicationPlan/askAdd';
+import AddPlan from './onboarding/medicationPlan/addPlan';
+import FitbitSetup from './onboarding/fitbit/FitbitSetup';
+import DrawerNavigator from './drawer';
 
 Entypo.loadFont();
 
@@ -171,6 +173,20 @@ class AppRoot extends Component {
                 <Stack.Screen
                   name="Log Out"
                   component={Logout}
+                  options={{
+                    headerShown: false,
+                  }}
+                />
+                <Stack.Screen
+                  name="MyWord"
+                  component={MyWord}
+                  options={{
+                    headerShown: false,
+                  }}
+                />
+                <Stack.Screen
+                  name="FillTheCard"
+                  component={FillTheCard}
                   options={{
                     headerShown: false,
                   }}

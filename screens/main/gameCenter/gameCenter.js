@@ -3,10 +3,6 @@ import {View, Animated, Text, Dimensions, StyleSheet, Image, ScrollView, Touchab
 import globalStyles from '../../../styles/globalStyles';
 import {Colors} from '../../../styles/colors';
 import LeftArrowBtn from '../../../components/logs/leftArrowBtn';
-import InProgress from '../../../components/inProgress';
-import Dot from '../../../components/gameCenter/dot';
-import DotRow from '../../../components/gameCenter/dotRow';
-import DotBoard from '../../../components/gameCenter/dotBoard';
 import TutorialPage from '../../../components/gameCenter/tutorialPage';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import Modal from 'react-native-modal';
@@ -65,7 +61,7 @@ const GameCenter = (props) => {
           <View style={[GameCenterStyles.card, styles.marginTop]}>
             <View style={[GameCenterStyles.cardPadding, styles.subContainer]}>
               <Text style={styles.subText}>My Word</Text>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => {props.navigation.navigate('MyWord')}}>
                 <Text style={[styles.subText, styles.greenText]}>View All</Text>
               </TouchableOpacity>
             </View>
@@ -79,7 +75,7 @@ const GameCenter = (props) => {
                              progressBarColor={Colors.gameColorGreen} />
                 <Text style={styles.wordText}>50%</Text>
               </View>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => {props.navigation.navigate('FillTheCard')}}>
                 <Image source={require('../../../resources/images/Patient-Icons/2x/icon-grey-chevron-right-2x.png')} style={GameCenterStyles.iconProps} />
               </TouchableOpacity>
             </View>
@@ -100,11 +96,7 @@ const GameCenter = (props) => {
             <Text style={globalStyles.actionButtonText}>Redeem</Text>
           </TouchableOpacity>
 
-          {/*<DotBoard/>*/}
-
         </ScrollView>
-
-      {/*  /!*<InProgress />*!/*/}
 
       </Animated.View>
 
