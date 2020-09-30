@@ -5,6 +5,7 @@ import {
   Text,
   StyleSheet,
   ScrollView,
+  Alert,
 } from 'react-native';
 //third party lib
 import Modal from 'react-native-modal';
@@ -18,15 +19,16 @@ import NameDateSelector from '../nameDateSelector';
 import DropdownSelector from '../dropDownSelector';
 import WeightDragModal from '../weightDragModal';
 import {normalTextFontSize} from '../../../styles/variables';
+import {addWeightGoalReq} from '../../../netcalls/requestsGoals';
 
 const weeklyGoalList = [
-  {name: 'Lose 0.2 kg per week', value: '-0.2'},
-  {name: 'Lose 0.5 kg per week ', value: '-0.5'},
-  {name: 'Lose 0.8 kg per week', value: '-0.8'},
-  {name: 'Lose 1 kg per week', value: '-1'},
-  {name: 'Maintain Weight', value: '0'},
-  {name: 'Gain 0.2 kg per week', value: '+0.2'},
-  {name: 'Gain 0.5 kg per week', value: '+0.5'},
+  {name: 'Lose 0.2 kg per week', value: -0.2},
+  {name: 'Lose 0.5 kg per week ', value: -0.5},
+  {name: 'Lose 0.8 kg per week', value: -0.8},
+  {name: 'Lose 1 kg per week', value: -1},
+  {name: 'Maintain Weight', value: 0},
+  {name: 'Gain 0.2 kg per week', value: 0.2},
+  {name: 'Gain 0.5 kg per week', value: 0.5},
 ];
 
 const WeightGoal = (props) => {
@@ -46,15 +48,29 @@ const WeightGoal = (props) => {
     showSubmitBtn();
   }, [goalName, opened]);
 
-  const submit = () => {
+  const submit = async () => {
     let obj = {
-      goalName: goalName,
-      startDate: Moment(startDate).format('DD/MM/YYYY HH:mm:ss'),
-      endDate: Moment(endDate).format('DD/MM/YYYY HH:mm:ss'),
-      weeklyGoal: weeklyGoal.value,
-      goalWeight: weight,
+      name: goalName,
+      start_date: Moment(startDate).format('DD/MM/YYYY HH:mm:ss'),
+      end_date: Moment(endDate).format('DD/MM/YYYY HH:mm:ss'),
+      weekly_offset: weeklyGoal.value,
+      goal_weight: weight,
     };
     console.log(obj);
+    if (await addWeightGoalReq(obj)) {
+      Alert.alert('Weight goal created successfully', '', [
+        {
+          text: 'Got It',
+          onPress: () => close(),
+        },
+      ]);
+    } else {
+      Alert.alert('Unexpected Error Occured', 'Please try again later!', [
+        {
+          text: 'Got It',
+        },
+      ]);
+    }
   };
 
   const openWeightPicker = () => {

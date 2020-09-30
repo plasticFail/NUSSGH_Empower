@@ -5,6 +5,7 @@ import {
   Text,
   StyleSheet,
   ScrollView,
+  Alert,
 } from 'react-native';
 //third party lib
 import Modal from 'react-native-modal';
@@ -18,6 +19,7 @@ import NameDateSelector from '../nameDateSelector';
 import FrequencySelector from '../dropDownSelector';
 import RenderCounter from '../renderCounter';
 import {maxSteps} from '../../../commonFunctions/diaryFunctions';
+import {addStepsGoalReq} from '../../../netcalls/requestsGoals';
 
 const StepsGoal = (props) => {
   const {visible} = props;
@@ -38,13 +40,26 @@ const StepsGoal = (props) => {
 
   const submit = () => {
     let obj = {
-      goalName: goalName,
-      startDate: Moment(startDate).format('DD/MM/YYYY HH:mm:ss'),
-      endDate: Moment(endDate).format('DD/MM/YYYY HH:mm:ss'),
+      name: goalName,
+      start_date: Moment(startDate).format('DD/MM/YYYY HH:mm:ss'),
+      end_date: Moment(endDate).format('DD/MM/YYYY HH:mm:ss'),
       frequency: frequency.value,
       steps: steps,
     };
-    console.log(obj);
+    if (addStepsGoalReq(obj)) {
+      Alert.alert('Activity goal created successfully', '', [
+        {
+          text: 'Got It',
+          onPress: () => close(),
+        },
+      ]);
+    } else {
+      Alert.alert('Unexpected Error Occured', 'Please try again later!', [
+        {
+          text: 'Got It',
+        },
+      ]);
+    }
   };
 
   const showSubmitBtn = () => {

@@ -5,6 +5,7 @@ import {
   Text,
   StyleSheet,
   ScrollView,
+  Alert,
 } from 'react-native';
 import {
   maxCarbs,
@@ -23,6 +24,7 @@ import NameDateSelector from '../nameDateSelector';
 import FrequencySelector from '../dropDownSelector';
 
 import RenderCounter from '../renderCounter';
+import {addFoodGoalReq} from '../../../netcalls/requestsGoals';
 
 const initialCal = 1000;
 const initialCarbs = maxCarbs / 2;
@@ -51,18 +53,31 @@ const FoodGoal = (props) => {
     showSubmitBtn();
   }, [goalName]);
 
-  const submit = () => {
+  const submit = async () => {
     let obj = {
-      goalName: goalName,
-      startDate: Moment(startDate).format('DD/MM/YYYY HH:mm:ss'),
-      endDate: Moment(endDate).format('DD/MM/YYYY HH:mm:ss'),
+      name: goalName,
+      start_date: Moment(startDate).format('DD/MM/YYYY HH:mm:ss'),
+      end_date: Moment(endDate).format('DD/MM/YYYY HH:mm:ss'),
       frequency: frequency.value,
-      cal: cal,
+      calories: cal,
       carbs: carbs,
       protein: protein,
       fats: fats,
     };
-    console.log(obj);
+    if (await addFoodGoalReq(obj)) {
+      Alert.alert('Food goal created successfully', '', [
+        {
+          text: 'Got It',
+          onPress: () => close(),
+        },
+      ]);
+    } else {
+      Alert.alert('Unexpected Error Occured', 'Please try again later!', [
+        {
+          text: 'Got It',
+        },
+      ]);
+    }
   };
 
   const showSubmitBtn = () => {

@@ -6,6 +6,7 @@ import {
   StyleSheet,
   TextInput,
   ScrollView,
+  Alert,
 } from 'react-native';
 //third party lib
 import Modal from 'react-native-modal';
@@ -24,6 +25,7 @@ import {
   checkBloodGlucoseText,
   min_bg,
 } from '../../../commonFunctions/logFunctions';
+import {addBgGoalReq} from '../../../netcalls/requestsGoals';
 
 const min_key = 'min';
 const max_key = 'max';
@@ -47,16 +49,30 @@ const BgGoal = (props) => {
     showSubmitBtn();
   }, [minBg, maxBg, goalName]);
 
-  const submit = () => {
+  const submit = async () => {
     let obj = {
-      goalName: goalName,
-      startDate: Moment(startDate).format('DD/MM/YYYY HH:mm:ss'),
-      endDate: Moment(endDate).format('DD/MM/YYYY HH:mm:ss'),
+      name: goalName,
+      start_date: Moment(startDate).format('DD/MM/YYYY HH:mm:ss'),
+      end_date: Moment(endDate).format('DD/MM/YYYY HH:mm:ss'),
       frequency: frequency.value,
-      minBg: minBg,
-      maxBg: maxBg,
+      min_bg: Number(minBg),
+      max_bg: Number(maxBg),
     };
     console.log(obj);
+    if (await addBgGoalReq(obj)) {
+      Alert.alert('Blood glucose goal created successfully', '', [
+        {
+          text: 'Got It',
+          onPress: () => close(),
+        },
+      ]);
+    } else {
+      Alert.alert('Unexpected Error Occured', 'Please try again later!', [
+        {
+          text: 'Got It',
+        },
+      ]);
+    }
   };
 
   const showSubmitBtn = () => {

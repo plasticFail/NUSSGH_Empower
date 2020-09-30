@@ -5,6 +5,7 @@ import {
   Text,
   StyleSheet,
   ScrollView,
+  Alert,
 } from 'react-native';
 import {
   maxDuration,
@@ -21,6 +22,7 @@ import LeftArrowBtn from '../../logs/leftArrowBtn';
 import NameDateSelector from '../nameDateSelector';
 import FrequencySelector from '../dropDownSelector';
 import RenderCounter from '../renderCounter';
+import {addActivityGoalReq} from '../../../netcalls/requestsGoals';
 
 const ActivityGoal = (props) => {
   const {visible} = props;
@@ -40,16 +42,30 @@ const ActivityGoal = (props) => {
     showSubmitBtn();
   }, [goalName]);
 
-  const submit = () => {
+  const submit = async () => {
     let obj = {
-      goalName: goalName,
-      startDate: Moment(startDate).format('DD/MM/YYYY HH:mm:ss'),
-      endDate: Moment(endDate).format('DD/MM/YYYY HH:mm:ss'),
+      name: goalName,
+      start_date: Moment(startDate).format('DD/MM/YYYY HH:mm:ss'),
+      end_date: Moment(endDate).format('DD/MM/YYYY HH:mm:ss'),
       frequency: frequency.value,
-      exercise_min: minute,
-      calBurnt: calBurnt,
+      duration: minute,
+      cal_burnt: calBurnt,
     };
     console.log(obj);
+    if (await addActivityGoalReq(obj)) {
+      Alert.alert('Activity goal created successfully', '', [
+        {
+          text: 'Got It',
+          onPress: () => close(),
+        },
+      ]);
+    } else {
+      Alert.alert('Unexpected Error Occured', 'Please try again later!', [
+        {
+          text: 'Got It',
+        },
+      ]);
+    }
   };
 
   const showSubmitBtn = () => {

@@ -35,6 +35,12 @@ export default class StepCounter extends Component {
     }
   }
 
+  componentWillUnmount() {
+    console.log('Unmounting timer for step counter');
+    this.stopTimer();
+    this.timer = null;
+  }
+
   handleClickAdd = () => {
     let newCount = this.state.count + 1;
     this.setState({count: newCount});

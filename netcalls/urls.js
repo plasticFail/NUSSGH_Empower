@@ -19,6 +19,7 @@ const postNewPassword = server + 'auth/patient/password-reset/reset';
 const medPlan = server + 'log/medication/plan';
 const fitbitTokenPostEndpoint = server + 'datasync/auth-fitbit';
 const getDiaryEntries = server + 'log/diary';
+const goal = server + '/goal';
 
 export {
   patientLogin,
@@ -39,5 +40,6 @@ export {
   fitbitTokenPostEndpoint,
   nutrientConsumptionEndpoint,
   getDiaryEntries,
-  getActivityLog
+  getActivityLog,
+  goal,
 };
