@@ -184,7 +184,7 @@ const checkLogDone = async (period) => {
     }
 
     //check last weight
-    if ((await dateFrom2dayWeightLog()) == 'Not taken yet') {
+    if ((await dateFrom2dayWeightLog()) == 'Not logged yet') {
       notCompleted.push(weight_key);
     } else {
       completed.push(weight_key);
