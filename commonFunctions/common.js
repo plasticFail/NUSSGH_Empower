@@ -9,6 +9,8 @@ const night_key = 'Night';
 const appointment = 'appointment';
 const howTo = 'howto';
 
+const noLog = 'Not logged yet';
+
 const morningObj = {
   name: 'Morning',
   start: 5,
@@ -100,6 +102,7 @@ export {
   morning_key,
   appointment,
   howTo,
+  noLog,
   getPeriodFromMealType,
   getLastMinuteFromTodayDate,
   getTodayDate,
