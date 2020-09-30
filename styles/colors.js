@@ -1,6 +1,5 @@
 export const Colors = {
   backgroundColor: '#f7f8fb',
-  editBackgroundColor: '#f6f7fa',
   submitBtnColor: '#16A950',
   nextBtnColor: '#aad326',
   skipBtnColor: '#f6f7fa',
@@ -14,4 +13,8 @@ export const Colors = {
   subsubHeaderColor: '#828994',
   grey: '#3c3c43',
   inputBorderColor: '#e1e7ed',
+
+  gameColorGreen: '#aad326',
+  gameColorWhite: '#f6f7fa',
+  gameColorGrey: '#E1E7ED',
 };
