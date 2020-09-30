@@ -6,6 +6,8 @@ import Modal from "react-native-modal";
 import DatePicker from "react-native-date-picker";
 import Moment from 'moment';
 import {ACTIVITY_KEY, BGL_TAB_KEY, FOOD_INTAKE_KEY, MEDICATION_KEY, WEIGHT_KEY} from "../../../screens/main/reports";
+import {getReportsData} from "../../../netcalls/reports/exportReports";
+import {getCsvHeader, toCsv} from "../../../commonFunctions/IOFunctions";
 
 // fs library
 const RNFS = require('react-native-fs');
@@ -44,7 +46,27 @@ function ExportReportsModal(props) {
         setSelectedReportTypes(newSelectedReports);
     }
 
-    const handleExport = () => {
+    const handleExport = async () => {
+        const srt = selectedReportType.filter(type => type.selected).map(type => type.name);
+        const reportData = await getReportsData(srt, startDate, endDate);
+        const startDateString = Moment(startDate).format('DD_MM_YYYY');
+        const endDateString = Moment(endDate).format('DD_MM_YYYY');
+        for (const [reportType, data] of Object.entries(reportData)) {
+            const filename = `${reportType}_From_${startDateString}_To_${endDateString}.csv`;
+            const fp = pathPrefix + filename;
+            const fileContent = toCsv(reportType, data);
+            const fileHeader = getCsvHeader(reportType, data);
+            const csvFile = fileHeader + '\n' + fileContent;
+            //console.log(csvFile);
+            // begin writing
+
+            RNFS.writeFile(fp, csvFile, 'utf8').then(success => {
+                console.log(`Yay it worked, ${srt} file(s) saved at ${fp}`);
+            }).catch(err => {
+                console.log('Oh no it failed due to ' + err.message.toString());
+            });
+        }
+        /*
         const filename = 'MyReports.csv';
         const fp = pathPrefix + filename;
         const srt = selectedReportType.filter(type => type.selected).map(selectedType => selectedType.name).join(', ');
@@ -54,6 +76,7 @@ function ExportReportsModal(props) {
         }).catch(err => {
             console.log('Oh no it failed due to ' + err.message.toString());
         })
+        */
     }
 
     return (
@@ -151,9 +174,21 @@ function ReportTypeSelector(props) {
                   renderItem={({item}) => (
                       <View style={{width: '50%', flexDirection: 'row', alignItems: 'center', paddingTop: 5, paddingBottom: 5}}>
                           <TouchableOpacity onPress={()=>updateSelectionCallback(item.name)}>
-                              <View style={{width: 30, height: 30,
-                                  backgroundColor: `${item.selected ? '#aad326' : '#d5d5d5'}`,
-                                  borderRadius: 5}}/>
+                              {
+                                  item.selected ?
+                                      <Image style={{width: 30, height: 30}}
+                                             source={require('../../../resources/images/Patient-Icons/2x/icon-lightgreen-tick-2x.png')} />
+                                    : <Image style={{width: 30, height: 30}}
+                                             source={require('../../../resources/images/Patient-Icons/2x/icon-lightgrey-tick-2x.png')} />
+                              }
+                              {
+                                  /*
+                                  <View style={{width: 30, height: 30,
+                                      backgroundColor: `${item.selected ? '#aad326' : '#d5d5d5'}`,
+                                      borderRadius: 5}}/>
+
+                                   */
+                              }
                           </TouchableOpacity>
                           <Text style={[globalStyles.pageDetails, {fontWeight: 'normal'}]}>{item.name}</Text>
                       </View>
