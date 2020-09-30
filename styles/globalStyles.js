@@ -5,8 +5,6 @@ import {
   headerHeight,
   horizontalMargins,
   verticalMarginsBetweenComponent,
-  onboard_marginStart,
-  onboard_marginEnd,
   normalTextFontSize,
   headerTextFontSize,
 } from './variables';
@@ -172,6 +170,12 @@ const globalStyles = StyleSheet.create({
     textAlign: 'center',
     color: '#ff0844',
     marginBottom: '3%',
+  },
+  pageIcon: {
+    paddingTop: '2%',
+    marginBottom: '1%',
+    marginStart: horizontalMargins,
+    marginEnd: horizontalMargins,
   },
 });
 
