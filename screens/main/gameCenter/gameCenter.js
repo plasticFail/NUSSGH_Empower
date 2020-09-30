@@ -56,24 +56,24 @@ const GameCenter = (props) => {
         <Text style={[globalStyles.pageDetails]}>Season 1: Word Bingo</Text>
 
         <ScrollView contentContainerStyle={{flexGrow: 1}}>
-          <Image resizeMode="contain" style={styles.logo} source={require('../../../resources/images/gameCenter/img-header.png')}/>
+          <Image resizeMode="contain" style={GameCenterStyles.logo} source={require('../../../resources/images/gameCenter/img-header.png')}/>
 
           <View style={[GameCenterStyles.card, styles.marginTop]}>
-            <View style={[GameCenterStyles.cardPadding, styles.subContainer]}>
-              <Text style={styles.subText}>My Word</Text>
+            <View style={[GameCenterStyles.cardPadding, GameCenterStyles.subContainer]}>
+              <Text style={GameCenterStyles.subText}>My Word</Text>
               <TouchableOpacity onPress={() => {props.navigation.navigate('MyWord')}}>
-                <Text style={[styles.subText, styles.greenText]}>View All</Text>
+                <Text style={[GameCenterStyles.subText, GameCenterStyles.greenText]}>View All</Text>
               </TouchableOpacity>
             </View>
             <View style={styles.divider}/>
-            <View style={[GameCenterStyles.cardPadding, styles.subContainer]}>
+            <View style={[GameCenterStyles.cardPadding, GameCenterStyles.subContainer]}>
               <Image source={require('../../../resources/images/Patient-Icons/2x/icon-navy-muscle-2x.png')} style={GameCenterStyles.iconProps} />
-              <View style={styles.verticalContainer}>
-                <Text style={styles.wordText}>FIT</Text>
+              <View style={[GameCenterStyles.verticalContainer]}>
+                <Text style={GameCenterStyles.wordText}>FIT</Text>
                 <ProgressBar containerStyle={{height: 7.5, width: '50%'}} progress={`50%`}
                              reverse={true}
                              progressBarColor={Colors.gameColorGreen} />
-                <Text style={styles.wordText}>50%</Text>
+                <Text style={GameCenterStyles.wordText}>50%</Text>
               </View>
               <TouchableOpacity onPress={() => {props.navigation.navigate('FillTheCard')}}>
                 <Image source={require('../../../resources/images/Patient-Icons/2x/icon-grey-chevron-right-2x.png')} style={GameCenterStyles.iconProps} />
@@ -81,19 +81,19 @@ const GameCenter = (props) => {
             </View>
           </View>
 
-          <View style={[GameCenterStyles.card, GameCenterStyles.cardPadding, styles.subContainer]}>
-            <Text style={styles.subText}>Chances</Text>
-            <Text style={styles.subText}>2 Left</Text>
+          <View style={[GameCenterStyles.card, GameCenterStyles.cardPadding, GameCenterStyles.subContainer]}>
+            <Text style={GameCenterStyles.subText}>Chances</Text>
+            <Text style={GameCenterStyles.subText}>2 Left</Text>
           </View>
 
-          <View style={[GameCenterStyles.card, GameCenterStyles.cardPadding, styles.subContainer]}>
-            <Text style={styles.subText}>Reward Points</Text>
-            <Text style={styles.subText}>160 Available</Text>
+          <View style={[GameCenterStyles.card, GameCenterStyles.cardPadding, GameCenterStyles.subContainer]}>
+            <Text style={GameCenterStyles.subText}>Reward Points</Text>
+            <Text style={GameCenterStyles.subText}>160 Available</Text>
           </View>
 
           <TouchableOpacity
               style={[GameCenterStyles.buttonStyle, GameCenterStyles.nextColor]}>
-            <Text style={globalStyles.actionButtonText}>Redeem</Text>
+              <Text style={globalStyles.actionButtonText}>Redeem</Text>
           </TouchableOpacity>
 
         </ScrollView>
@@ -122,39 +122,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  logo:{
-    width:'100%',
-    height: undefined,
-    aspectRatio:2.5,
-  },
   scrollContainer:{
     paddingVertical:100
   },
   marginTop:{
     marginTop: 15
   },
-  subContainer: {
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    flexDirection: 'row'
-  },
-  verticalContainer: {
-    flex:1,
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    flexDirection: 'column'
-  },
   divider:{
     height:2,
     backgroundColor: Colors.gameColorGrey,
   },
-  subText:{
-    fontSize:20,
-  },
-  wordText:{
-    fontSize: 18,
-  },
-  greenText:{
-    color: Colors.gameColorGreen,
-  }
 });

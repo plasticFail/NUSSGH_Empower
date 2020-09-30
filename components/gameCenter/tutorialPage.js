@@ -118,7 +118,9 @@ const styles = StyleSheet.create({
         aspectRatio:1.8,
     },
     subContainer: {
-        flexDirection: 'row'
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center'
     },
     stepDot:{
         marginHorizontal: 3

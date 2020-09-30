@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {Image, StyleSheet, View} from 'react-native';
 import DotRow from './dotRow';
 //styles
 import GameCenterStyles from '../../styles/gameCenterStyles';
@@ -32,7 +32,8 @@ const DotBoard = () => {
     };
 
     return (
-        <View style={[styles.board, GameCenterStyles.card, GameCenterStyles.shadow]}>
+        <View style={[styles.board, GameCenterStyles.cardGreen, GameCenterStyles.cardPadding]}>
+            <Image resizeMode="contain" style={GameCenterStyles.subLogo} source={require('../../resources/images/gameCenter/img-header.png')}/>
             {boardNum.map((item, index) => (
                 <DotRow row={item} bingoPattern={bingoPattern[index]} pickState={pickState[index]} />
             ))}
