@@ -35,6 +35,19 @@ const tutorialImage = currentStep => {
     }
 }
 
+const subTutorialImage = currentStep => {
+    switch (currentStep){
+        case 0:
+            return require('../../resources/images/gameCenter/tutorial/sub1.png');
+        case 1:
+            return require('../../resources/images/gameCenter/tutorial/sub2.png');
+        case 2:
+            return require('../../resources/images/gameCenter/tutorial/sub3.png');
+        default:
+            return require('../../resources/images/gameCenter/tutorial/sub4.png');
+    }
+}
+
 const TutorialPage = (props) => {
     const [currentStep, setCurrentStep] = useState(0);
     const steps = [0,0,0,0];
@@ -54,7 +67,8 @@ const TutorialPage = (props) => {
     }
 
     return <View style={[styles.modalView, GameCenterStyles.card, GameCenterStyles.cardPadding]}>
-        <Image resizeMode="center" style={styles.image} source={tutorialImage(currentStep)}/>
+        <Image resizeMode="contain" style={styles.image} source={tutorialImage(currentStep)}/>
+        <Image resizeMode="contain" style={styles.imageSub} source={subTutorialImage(currentStep)}/>
         <View style={styles.subContainer}>
             {steps.map((item, index) => (
                 <Ionicon
@@ -95,7 +109,13 @@ const styles = StyleSheet.create({
     },
     image:{
         width:'100%',
-        height:'70%',
+        height:undefined,
+        aspectRatio:0.85,
+    },
+    imageSub:{
+        width:'100%',
+        height:undefined,
+        aspectRatio:1.8,
     },
     subContainer: {
         flexDirection: 'row'
