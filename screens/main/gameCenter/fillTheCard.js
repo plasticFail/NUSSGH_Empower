@@ -27,7 +27,7 @@ const FillTheCard = (props) => {
 
     const [currentLetter, setCurrentLetter] = useState(0);
     const letters = ['F','I','T'];
-    const [spinNum, setSpinNum] = useState([18,14,19,2,11,3,12,8,20]);
+    const [spinNum, setSpinNum] = useState([]);
 
     const disableSpin = () => {
         let pattern = getPattern(letters[currentLetter]);
