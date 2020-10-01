@@ -27,7 +27,34 @@ const FillTheCard = (props) => {
 
     const [currentLetter, setCurrentLetter] = useState(0);
     const letters = ['F','I','T'];
-    const [spinNum, setSpinNum] = useState([]);
+    const [spinNum, setSpinNum] = useState([18,14,19,2,11,3,12,8,20]);
+
+    const disableSpin = () => {
+        let pattern = getPattern(letters[currentLetter]);
+        let boardNum = getRandomBoard(currentLetter);
+
+        console.log('here');
+
+        for(let i=0; i<boardNum.length; i++){
+            for(let j=0; j<boardNum[i].length; j++){
+                console.log('i : ' + i + ' j : ' + j + ' pattern : ' + pattern[i][j]);
+                if(pattern[i][j] === 1){
+                    if(!spinNum.includes(boardNum[i][j])){
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+
+    const colorOfSpin = disabled =>{
+        if(disabled){
+            return GameCenterStyles.backColor;
+        }
+        return GameCenterStyles.nextColor;
+    }
 
     const addSpinNum = () => {
         let number = generateSpinNum(10);
@@ -38,7 +65,6 @@ const FillTheCard = (props) => {
 
     const generateSpinNum = (count) => {
         let number = Math.ceil(Math.random() * 25) + currentLetter * 25;
-        console.log('generateNum : ' + number);
         if(count > 0) {
             if (spinNum.includes(number)) {
                 return generateSpinNum(count - 1);
@@ -110,7 +136,8 @@ const FillTheCard = (props) => {
             </View>
 
             <TouchableOpacity
-                style={[GameCenterStyles.buttonStyleNarrow, GameCenterStyles.nextColor]}
+                style={[GameCenterStyles.buttonStyleNarrow, colorOfSpin(disableSpin())]}
+                disabled={disableSpin()}
                 onPress={addSpinNum}>
                 <Text style={globalStyles.actionButtonText}>Spin a Number</Text>
             </TouchableOpacity>
