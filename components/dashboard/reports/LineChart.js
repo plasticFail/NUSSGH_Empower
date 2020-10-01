@@ -2,7 +2,7 @@ import React from 'react';
 import {View, StyleSheet, TextInput, Animated} from 'react-native';
 //third party lib
 import Moment from 'moment';
-import {Svg, Rect, Text as SvgText, Path, G, Circle} from 'react-native-svg';
+import {Svg, Rect, Text as SvgText, Path, G, Circle, Defs, LinearGradient, Stop} from 'react-native-svg';
 import {scaleTime, scaleLinear} from "d3-scale";
 import * as path from 'svg-path-properties';
 import * as d3shape from 'd3-shape';
@@ -164,12 +164,12 @@ export default class LineChart extends React.Component {
                     left: shownDatapoint[0] - carrotWidth,
                     opacity: 1
                 });
+
                 this.xLabel.current.setNativeProps({
                     text: `${Moment(this.state.scaleX.invert(shownDatapoint[0]))
-                        .format(this.props.filterKey === DAY_FILTER_KEY ? 'h:mm' : 'D MMM')}`,
+                        .format(this.props.filterKey === DAY_FILTER_KEY ? 'h:mm a' : 'D MMM')}`,
                     opacity: 1
-                }
-                );
+                });
             } else {
                 this.cursorLabel.current.setNativeProps({
                     opacity: 0
@@ -183,6 +183,13 @@ export default class LineChart extends React.Component {
             }
             this.cursor.current.setNativeProps({ top: y - cursorRadius, left: x - cursorRadius });
             this.cursorAxis.current.setNativeProps({top: 0, left: x});
+            /*
+            this.xLabel.current.setNativeProps({
+                text: `${Moment(this.state.scaleX.invert(x))
+                    .format(this.props.filterKey === DAY_FILTER_KEY ? 'h:mm' : 'D MMM')}`,
+                opacity: 1
+            });
+             */
             /*
             if (index != this.state.selectedIndex) {
                 this.setState({
@@ -208,8 +215,14 @@ export default class LineChart extends React.Component {
             maxX,
             yAxisStartsFrom,
             data,
-            lineLength
+            lineLength,
+            line
         } = this.state;
+
+        // linear gradient calculations
+        const firstAndLastPoints = data.length > 0 && [data[0], data[data.length - 1]];
+        const backToStartXDistance = data.length > 0 && scaleX(firstAndLastPoints[0].x) - scaleX(firstAndLastPoints[1].x);
+        const yDistToBase = data.length > 0 && scaleHeight(firstAndLastPoints[1].y);
 
         return (
             <View>
@@ -234,6 +247,13 @@ export default class LineChart extends React.Component {
                     />
                 }
                 <Svg width={width} height={height}>
+                    <Defs>
+                        <LinearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="gradient">
+                            <Stop stopColor={"#aad326"} offset="0%" />
+                            <Stop stopColor={Colors.backgroundColor} stopOpacity={0.01} offset="95%" />
+                            <Stop stopColor={Colors.backgroundColor} stopOpacity={0.01} offset="100%" />
+                        </LinearGradient>
+                    </Defs>
                     {   // boundaries
                         lowerBound && upperBound &&
                         <Path key='healthyRange' stroke='none' fill={boundaryFill || '#F1F6D7'}
@@ -241,6 +261,9 @@ export default class LineChart extends React.Component {
                               l 0 ${-scaleHeight(upperBound - lowerBound)} l ${-(width - paddingLeft - paddingRight + 2 * axisMargin)} 0 Z`}/>
 
 
+                    }
+                    {
+                        //this.state.lineLength !== 0  && <Path d={`${line} l 0 ${yDistToBase} l ${backToStartXDistance} 0`} fill={'url(#gradient)'}/>
                     }
                     {
                         // x-axis labels
@@ -407,7 +430,7 @@ const styles = StyleSheet.create({
         width: cursorRadius * 2,
         height: cursorRadius * 2,
         borderRadius: cursorRadius,
-        borderColor: '#aad326',
+        borderColor: '#4d4d4d',//'#aad326',
         borderWidth: 3,
         backgroundColor: Colors.leftArrowColor,
     },

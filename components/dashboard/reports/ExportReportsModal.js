@@ -5,9 +5,9 @@ import Icon from "react-native-vector-icons/FontAwesome5";
 import Modal from "react-native-modal";
 import DatePicker from "react-native-date-picker";
 import Moment from 'moment';
-import {ACTIVITY_KEY, BGL_TAB_KEY, FOOD_INTAKE_KEY, MEDICATION_KEY, WEIGHT_KEY} from "../../../screens/main/reports";
 import {getReportsData} from "../../../netcalls/reports/exportReports";
 import {getCsvHeader, toCsv} from "../../../commonFunctions/IOFunctions";
+import {getUsername} from "../../../storage/asyncStorageFunctions";
 
 // fs library
 const RNFS = require('react-native-fs');
@@ -51,13 +51,13 @@ function ExportReportsModal(props) {
         const reportData = await getReportsData(srt, startDate, endDate);
         const startDateString = Moment(startDate).format('DD_MM_YYYY');
         const endDateString = Moment(endDate).format('DD_MM_YYYY');
+        const username = await getUsername();
         for (const [reportType, data] of Object.entries(reportData)) {
-            const filename = `${reportType}_From_${startDateString}_To_${endDateString}.csv`;
+            const filename = `${username}_${reportType}_From_${startDateString}_To_${endDateString}.csv`;
             const fp = pathPrefix + filename;
             const fileContent = toCsv(reportType, data);
             const fileHeader = getCsvHeader(reportType, data);
             const csvFile = fileHeader + '\n' + fileContent;
-            //console.log(csvFile);
             // begin writing
 
             RNFS.writeFile(fp, csvFile, 'utf8').then(success => {

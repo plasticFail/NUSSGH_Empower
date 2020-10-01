@@ -270,7 +270,7 @@ const handleSubmitWeight = async (date, weight) => {
     let formatDate = Moment(date).format('DD/MM/YYYY HH:mm:ss');
     if (await weightAddLogRequest(Number(weight), formatDate)) {
       let weight_data = await getLastWeightLog();
-      if (
+      if (weight_data === null ||
         Moment(date).format('YYYY/MM/DD') > weight_data.date ||
         (Moment(date).format('YYYY/MM/DD') === weight_data.date &&
           Moment(date).format('HH:mm') > weight_data.hour)

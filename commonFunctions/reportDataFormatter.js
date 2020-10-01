@@ -123,7 +123,7 @@ function generateXAxisLabels(filterKey) {
             result.push(today.clone().subtract(i, 'weeks').toDate());
         }
     }
-    return result.reverse();
+    return result;
 }
 
 function getBinCount(data, keyExtractor, binQuantityAccessor) {

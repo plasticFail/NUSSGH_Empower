@@ -19,8 +19,6 @@ import {MedicationDateDisplay, MedicationTable} from "../../components/dashboard
 import {COLOR_MAP, NutritionPie} from "../../components/dashboard/reports/NutritionPie";
 import {getPlan} from "../../netcalls/requestsMedPlan";
 import {ChartLegend} from "../../components/dashboard/reports/ChartLegend";
-import Modal from 'react-native-modal';
-import Icon from "react-native-vector-icons/FontAwesome5";
 import {ExportReportsModal} from "../../components/dashboard/reports/ExportReportsModal";
 
 const EXPORT_BTN = require('../../resources/images/Patient-Icons/2x/icon-green-export-2x.png');
@@ -62,7 +60,7 @@ const chartLegendSize = 20;
 const {width, height} = Dimensions.get('window');
 const tabWidth = (width - 2 * padding) / tabs.length - tabSpace;
 
-const boundaryFill = 'rgba(0,0,0, 0.042)'; // Fill for the upper and lower bounds of graphs
+const boundaryFill = 'rgba(0,0,0, 0.1)'; // Fill for the upper and lower bounds of graphs
 
 const ReportsScreen = (props) => {
   // Note all data here are the entire month dataset. We'll process it in the front-end before displaying.
@@ -192,6 +190,13 @@ const ReportsScreen = (props) => {
               <View style={{marginTop: 20, paddingBottom: 50}}>
                 <Text style={globalStyles.pageDetails}>Food Intake</Text>
                 <Text style={[globalStyles.pageDetails, {color: 'grey'}]}>Total Calories Consumed - kcal</Text>
+                <View style={[globalStyles.pageDetails, {flexDirection: 'row'}]}>
+                  <ChartLegend size={chartLegendSize}
+                               legendName='Target Range (1.7 K - 2.2 K)'
+                               color={boundaryFill}
+                               textPaddingLeft={5}
+                               textPaddingRight={20}/>
+                </View>
                 <BarChart data={fullDataset.foodData} filterKey={filterKey}
                           xExtractor={d=>d.date}
                           yExtractor={d=>d.nutrients.energy.amount}
@@ -216,7 +221,7 @@ const ReportsScreen = (props) => {
                 </View>
                 <NutritionPie data={fullDataset.foodData}
                               width={width}
-                              height={260}
+                              height={300}
                               filterKey={filterKey}
                               pieKeys={['carbohydrate', 'total-fat', 'protein']}
                 />
@@ -240,12 +245,7 @@ const ReportsScreen = (props) => {
                 <View style={[globalStyles.pageDetails, {flexDirection: 'row'}]}>
                   <ChartLegend size={chartLegendSize}
                                legendName='Healthy'
-                               color='#aad326'
-                               textPaddingLeft={5}
-                               textPaddingRight={20}/>
-                  <ChartLegend size={chartLegendSize}
-                               legendName='Overweight'
-                               color='#adadad'
+                               color={boundaryFill}
                                textPaddingLeft={5}
                                textPaddingRight={20}/>
                 </View>
