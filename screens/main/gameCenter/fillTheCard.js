@@ -15,6 +15,7 @@ import {getPattern} from '../../../constants/gameCenter/letterPattern';
 import {getRandomBoard} from '../../../constants/gameCenter/randomBingo';
 
 
+
 const LetterDotColor = (currentLetter, letter) => {
     if(currentLetter === letter){
         return Colors.gameColorGreen;
@@ -26,6 +27,41 @@ const FillTheCard = (props) => {
 
     const [currentLetter, setCurrentLetter] = useState(0);
     const letters = ['F','I','T'];
+    const [spinNum, setSpinNum] = useState([]);
+
+    const addSpinNum = () => {
+        let number = generateSpinNum(10);
+        if(number !== null) {
+            setSpinNum([...spinNum, number]);
+        }
+    }
+
+    const generateSpinNum = (count) => {
+        let number = Math.ceil(Math.random() * 25) + currentLetter * 25;
+        console.log('generateNum : ' + number);
+        if(count > 0) {
+            if (spinNum.includes(number)) {
+                return generateSpinNum(count - 1);
+            }
+            return number;
+        }
+        return nextSpinNumber(25, number);
+    }
+
+    const nextSpinNumber = (count, number) => {
+        if(count > 0) {
+            if (number % 25 > 0) {
+                number ++;
+            } else {
+                number -= 24;
+            }
+            if (spinNum.includes(number)) {
+                return nextSpinNumber(count-1, number);
+            }
+            return number;
+        }
+        return null;
+    }
 
     return (
         <View style={{...globalStyles.pageContainer, ...props.style}}>
@@ -56,7 +92,7 @@ const FillTheCard = (props) => {
                 <TouchableOpacity onPress={() => {currentLetter > 0 && setCurrentLetter(currentLetter - 1)}}>
                     <Image source={require('../../../resources/images/Patient-Icons/2x/icon-grey-chevron-left-2x.png')} style={GameCenterStyles.iconProps} />
                 </TouchableOpacity>
-                <DotBoard bingoPattern={getPattern(letters[currentLetter])} boardNum={getRandomBoard(currentLetter)}/>
+                <DotBoard bingoPattern={getPattern(letters[currentLetter])} boardNum={getRandomBoard(currentLetter)} spinNum={spinNum}/>
                 <TouchableOpacity onPress={() => {currentLetter < letters.length - 1 && setCurrentLetter(currentLetter + 1)}}>
                     <Image source={require('../../../resources/images/Patient-Icons/2x/icon-grey-chevron-right-2x.png')} style={GameCenterStyles.iconProps} />
                 </TouchableOpacity>
@@ -74,7 +110,8 @@ const FillTheCard = (props) => {
             </View>
 
             <TouchableOpacity
-                style={[GameCenterStyles.buttonStyleNarrow, GameCenterStyles.nextColor]}>
+                style={[GameCenterStyles.buttonStyleNarrow, GameCenterStyles.nextColor]}
+                onPress={addSpinNum}>
                 <Text style={globalStyles.actionButtonText}>Spin a Number</Text>
             </TouchableOpacity>
 

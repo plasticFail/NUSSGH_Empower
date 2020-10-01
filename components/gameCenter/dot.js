@@ -4,17 +4,21 @@ import {View, Text, StyleSheet} from 'react-native';
 import {Colors} from '../../styles/colors';
 
 const SetDotStyles = (bingoPattern, pickState) => {
-    if(bingoPattern === 1 && pickState === 1){
+    if(bingoPattern === 1 && pickState){
         return styles.dotShouldSpinDone;
     }
-    else if(bingoPattern === 1 && pickState === 0){
+    else if(bingoPattern === 1 && !pickState){
         return styles.dotShouldSpin;
     }
     return styles.dotShouldNotSpin;
 }
 
+const PickState = (number, spinNumber) => {
+    return spinNumber.includes(number);
+}
+
 const SetDotTextStyles = (bingoPattern, pickState) => {
-    if(bingoPattern === 0 && pickState === 1){
+    if(bingoPattern === 0 && pickState){
         return styles.dotTextWasted;
     }
     return styles.dotText;
@@ -22,8 +26,8 @@ const SetDotTextStyles = (bingoPattern, pickState) => {
 
 const Dot = (props) => {
     return (
-        <View style={[styles.container, SetDotStyles(props.bingoPattern, props.pickState)]}>
-            <Text style={[styles.container, SetDotTextStyles(props.bingoPattern, props.pickState)]}>{props.number}</Text>
+        <View style={[styles.container, SetDotStyles(props.bingoPattern, PickState(props.number, props.spinNum))]}>
+            <Text style={[styles.container, SetDotTextStyles(props.bingoPattern, PickState(props.number, props.spinNum))]}>{props.number}</Text>
         </View>
     );
 };
