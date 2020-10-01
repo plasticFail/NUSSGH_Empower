@@ -86,7 +86,7 @@ const GoalList = (props) => {
 
   const heightInterpolation = moveDownAnimation.interpolate({
     inputRange: [0, 1],
-    outputRange: [height * -0.03, height * 0.01],
+    outputRange: [height * -0.02, height * 0.01],
   });
 
   const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {

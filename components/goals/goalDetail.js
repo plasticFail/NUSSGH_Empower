@@ -101,7 +101,7 @@ const GoalDetail = (props) => {
   };
 
   const showActionButton = () => {
-    if (isMonday() && !goalEnded()) {
+    if (isMonday() && !goalEnded(goalItem.end_date)) {
       return true;
     }
     return false;
