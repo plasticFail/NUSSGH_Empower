@@ -87,19 +87,17 @@ const GoalsScreen = (props) => {
       </Text>
       <GoalList goals={goals} init={initGoals} />
 
-      {isMonday() && (
-        <TouchableOpacity
-          onPress={() => setOpenAdd(true)}
-          style={{flexDirection: 'row'}}>
-          <AntDesign
-            name="pluscircleo"
-            color={'#aad326'}
-            size={25}
-            style={{margin: '2%'}}
-          />
-          <Text style={styles.addbutton}>Add Goal</Text>
-        </TouchableOpacity>
-      )}
+      <TouchableOpacity
+        onPress={() => setOpenAdd(true)}
+        style={{flexDirection: 'row'}}>
+        <AntDesign
+          name="pluscircleo"
+          color={'#aad326'}
+          size={25}
+          style={{margin: '2%'}}
+        />
+        <Text style={styles.addbutton}>Add Goal</Text>
+      </TouchableOpacity>
 
       <Text
         style={[

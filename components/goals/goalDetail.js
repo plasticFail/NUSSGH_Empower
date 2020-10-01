@@ -165,21 +165,21 @@ const GoalDetail = (props) => {
         </ScrollView>
       </View>
       {/*Should check if physician/ user set to show this action button**/}
-      {showActionButton() && (
-        <View style={globalStyles.buttonContainer}>
-          <View style={{flexDirection: 'row'}}>
-            <DeleteBin
-              method={confirmDelete}
-              style={{marginTop: '6%', marginStart: '2%'}}
-            />
-            <TouchableOpacity
-              style={logStyles.enableEditButton}
-              onPress={() => setShowEditModal(true)}>
-              <Text style={globalStyles.actionButtonText}>Edit Goal</Text>
-            </TouchableOpacity>
-          </View>
+
+      <View style={globalStyles.buttonContainer}>
+        <View style={{flexDirection: 'row'}}>
+          <DeleteBin
+            method={confirmDelete}
+            style={{marginTop: '6%', marginStart: '2%'}}
+          />
+          <TouchableOpacity
+            style={logStyles.enableEditButton}
+            onPress={() => setShowEditModal(true)}>
+            <Text style={globalStyles.actionButtonText}>Edit Goal</Text>
+          </TouchableOpacity>
         </View>
-      )}
+      </View>
+
       {/*Action modal**/}
       {type === bg && (
         <BgGoal

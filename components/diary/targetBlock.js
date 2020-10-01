@@ -452,7 +452,7 @@ function renderMedContent(medMiss, medCompleted, medLogs) {
 //for logs with criteria : miss/completed
 function renderContent2(miss) {
   if (miss) {
-    return <Text style={styles.buttonDetail}>Did not log today.</Text>;
+    return <Text style={styles.buttonDetail}>Missed</Text>;
   } else {
     return <Text style={styles.buttonDetail}>Completed</Text>;
   }
@@ -478,7 +478,7 @@ function renderContent(type, miss, pass, value) {
           <Text style={styles.buttonDetail}>Average {value} mmol/L</Text>
         )}
         {type === food_key && (
-          <Text style={styles.buttonDetail}>Within Healthy Range</Text>
+          <Text style={styles.buttonDetail}>Healthy Range</Text>
         )}
         {type === activity_key && (
           <Text style={styles.buttonDetail}>{value} Active Minutes</Text>
@@ -493,7 +493,7 @@ function renderContent(type, miss, pass, value) {
           <Text style={styles.buttonDetail}>Average {value} mmol/L</Text>
         )}
         {type === food_key && (
-          <Text style={styles.buttonDetail}>Not Within Healthy Range</Text>
+          <Text style={styles.buttonDetail}>UnHealthy Range</Text>
         )}
         {type === activity_key && (
           <Text style={styles.buttonDetail}>{value} Active Minutes</Text>

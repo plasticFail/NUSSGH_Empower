@@ -96,9 +96,7 @@ const FoodBlock = (props) => {
             style={{flexDirection: 'row', marginTop: '3%', marginBottom: '2%'}}>
             {pass ? (
               <>
-                <Text style={globalStyles.pageDetails}>
-                  Within Healthy Range
-                </Text>
+                <Text style={globalStyles.pageDetails}>Healthy Range</Text>
 
                 <Ionicon
                   name="checkmark"
@@ -108,9 +106,7 @@ const FoodBlock = (props) => {
               </>
             ) : (
               <>
-                <Text style={globalStyles.pageDetails}>
-                  Not Within Healthy Range
-                </Text>
+                <Text style={globalStyles.pageDetails}>Unhealthy Range</Text>
 
                 <Ionicon
                   name="alert-circle-outline"
