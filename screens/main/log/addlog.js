@@ -4,8 +4,9 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  Image,
+  Animated,
   ScrollView,
+  Dimensions,
 } from 'react-native';
 //third party lib
 import Moment from 'moment';
@@ -23,6 +24,7 @@ import {
   weight_key,
   renderLogIcon,
   checkLogDone,
+  renderLogIconNavy,
 } from '../../../commonFunctions/logFunctions';
 import {getGreetingFromHour} from '../../../commonFunctions/common';
 //components
@@ -64,16 +66,35 @@ class AddLogScreen extends Component {
 
       completedTypes: [],
       notCompletedTypes: [],
+
+      slideRightAnimation: new Animated.Value(0),
     };
+
+    this.setAnimation = this.setAnimation.bind(this);
 
     this.props.navigation.addListener('focus', () => {
       //check the period, date and which logs done
+      this.state.slideRightAnimation = new Animated.Value(0); //reset
       this.init();
+      this.setAnimation();
     });
   }
 
   componentDidMount() {
     this.init();
+    this.setAnimation();
+  }
+
+  componentDidUpdate() {
+    this.setAnimation();
+  }
+
+  setAnimation() {
+    Animated.timing(this.state.slideRightAnimation, {
+      toValue: 1,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
   }
 
   init() {
@@ -88,7 +109,6 @@ class AddLogScreen extends Component {
         this.setState({notCompletedTypes: response.notCompleted});
       }
     });
-
   }
 
   resetState() {
@@ -105,6 +125,7 @@ class AddLogScreen extends Component {
       showFood: false,
       showMed: false,
       showWeight: false,
+      slideRightAnimation: new Animated.Value(0),
     });
   }
 
@@ -168,88 +189,106 @@ class AddLogScreen extends Component {
       period,
       notCompletedTypes,
       completedTypes,
+      slideRightAnimation,
     } = this.state;
     const {showBg, showMed, showWeight, showFood} = this.state;
+    const widthInterpolate = slideRightAnimation.interpolate({
+      inputRange: [0, 1],
+      outputRange: [Dimensions.get('window').width, 0],
+      extrapolate: 'clamp',
+    });
     return (
       <View style={globalStyles.pageContainer}>
-        <View style={globalStyles.menuBarContainer}>
-          <LeftArrowBtn close={() => this.props.navigation.navigate('Home')} />
-        </View>
-        <Text style={globalStyles.pageHeader}>Add Log</Text>
-        <Text style={[globalStyles.pageDetails]}>{todayDate}</Text>
-        <Text style={[globalStyles.pageDetails, {marginTop: '4%'}]}>
-          Progress For {period}
-        </Text>
-        <ScrollView contentContainerStyle={{flexGrow: 1}}>
-          {notCompletedTypes.length > 0 && (
-            <Text style={logStyles.complete}>Not Complete</Text>
-          )}
-          {notCompletedTypes.map((item, index) => (
-            <TouchableOpacity
-              style={logStyles.logItem}
-              key={item}
-              onPress={() => this.openModalType(item)}>
-              <Image source={renderLogIcon(item)} style={logStyles.loglogo} />
-              <Text style={[globalStyles.pageDetails, {marginStart: '15%'}]}>
-                {item}
-              </Text>
-              <Ionicon
-                name="alert-circle-outline"
-                size={40}
-                style={logStyles.completeIcon}
-                color="red"
-              />
-            </TouchableOpacity>
-          ))}
-          {completedTypes.length > 0 && (
-            <Text style={logStyles.complete}>Completed</Text>
-          )}
-          {completedTypes.map((item, index) => (
-            <TouchableOpacity
-              style={logStyles.logItem}
-              onPress={() => this.openModalType(item)}
-              key={item}>
-              <Image source={renderLogIcon(item)} style={logStyles.loglogo} />
-              <Text style={[globalStyles.pageDetails, {marginStart: '15%'}]}>
-                {item}
-              </Text>
-              <Ionicon
-                name="checkmark"
-                size={40}
-                style={logStyles.completeIcon}
-                color={Colors.backArrowColor}
-              />
-            </TouchableOpacity>
-          ))}
-          {/* Modal for Add Log*/}
-          <Modal
-            isVisible={showModal}
-            coverScreen={true}
-            backdropOpacity={1}
-            onBackButtonPress={this.closeModal}
-            style={{margin: 0}}
-            backdropColor={Colors.backgroundColor}>
-            <ScrollView style={logStyles.modalContainer} contentContainerStyle={{paddingBottom: '15%'}}>
-              <View style={globalStyles.menuBarContainer}>
-                <CrossBtn close={this.closeModal} />
-              </View>
-              <View style={[logStyles.bodyPadding, {flex: 1}]}>
-                <Text style={[logStyles.headerText]}>Add Log</Text>
-                <Text
-                  style={[logStyles.headersubText, logStyles.componentMargin]}>
-                  {selectedLogType}
+        <Animated.View
+          style={{
+            ...globalStyles.pageContainer,
+            transform: [{translateX: widthInterpolate}],
+          }}>
+          <View style={globalStyles.menuBarContainer}>
+            <LeftArrowBtn
+              close={() => this.props.navigation.navigate('Home')}
+            />
+          </View>
+          <Text style={globalStyles.pageHeader}>Add Log</Text>
+          <Text style={[globalStyles.pageDetails]}>{todayDate}</Text>
+          <Text style={[globalStyles.pageDetails, {marginTop: '4%'}]}>
+            Progress For {period}
+          </Text>
+          <ScrollView contentContainerStyle={{flexGrow: 1}}>
+            {notCompletedTypes.length > 0 && (
+              <Text style={logStyles.complete}>Not Complete</Text>
+            )}
+            {notCompletedTypes.map((item, index) => (
+              <TouchableOpacity
+                style={logStyles.logItem}
+                key={item}
+                onPress={() => this.openModalType(item)}>
+                {renderLogIconNavy(item)}
+                <Text style={[globalStyles.pageDetails, {color: '#21293a'}]}>
+                  {item}
                 </Text>
-                <LastLogButton logType={selectedLogType} />
-                <Text style={[logStyles.greyText, logStyles.componentMargin]}>
-                  Fill in if you wish to add a new record
-                </Text>
-
-                <DateSelectionBlock
-                  date={recordDate}
-                  setDate={this.setDate}
-                  initialDate={fixedDateTime}
+                <Ionicon
+                  name="alert-circle-outline"
+                  size={40}
+                  style={logStyles.completeIcon}
+                  color="red"
                 />
-                {/*selectedLogType === food_key && (
+              </TouchableOpacity>
+            ))}
+            {completedTypes.length > 0 && (
+              <Text style={logStyles.complete}>Completed</Text>
+            )}
+            {completedTypes.map((item, index) => (
+              <TouchableOpacity
+                style={logStyles.logItem}
+                onPress={() => this.openModalType(item)}
+                key={item}>
+                {renderLogIconNavy(item)}
+                <Text style={[globalStyles.pageDetails, {color: '#21293a'}]}>
+                  {item}
+                </Text>
+                <Ionicon
+                  name="checkmark"
+                  size={40}
+                  style={logStyles.completeIcon}
+                  color={Colors.backArrowColor}
+                />
+              </TouchableOpacity>
+            ))}
+            {/* Modal for Add Log*/}
+            <Modal
+              isVisible={showModal}
+              coverScreen={true}
+              backdropOpacity={1}
+              onBackButtonPress={this.closeModal}
+              style={{margin: 0}}
+              backdropColor={Colors.backgroundColor}>
+              <ScrollView
+                style={logStyles.modalContainer}
+                contentContainerStyle={{paddingBottom: '15%'}}>
+                <View style={globalStyles.menuBarContainer}>
+                  <CrossBtn close={this.closeModal} />
+                </View>
+                <View style={[logStyles.bodyPadding, {flex: 1}]}>
+                  <Text style={[logStyles.headerText]}>Add Log</Text>
+                  <Text
+                    style={[
+                      logStyles.headersubText,
+                      logStyles.componentMargin,
+                    ]}>
+                    {selectedLogType}
+                  </Text>
+                  <LastLogButton logType={selectedLogType} />
+                  <Text style={[logStyles.greyText, logStyles.componentMargin]}>
+                    Fill in if you wish to add a new record
+                  </Text>
+
+                  <DateSelectionBlock
+                    date={recordDate}
+                    setDate={this.setDate}
+                    initialDate={fixedDateTime}
+                  />
+                  {/*selectedLogType === food_key && (
                   <MealTypeSelectionBlock
                     onSelectChange={(option) =>
                       this.setState({selectedMealType: option})
@@ -257,52 +296,53 @@ class AddLogScreen extends Component {
                     defaultValue={this.state.selectedMealType}
                   />
                 )*/}
-                <TouchableOpacity
-                  style={styles.addButton}
-                  onPress={() => this.showLogForm(selectedLogType)}>
-                  <Ionicon
-                    name="add-circle"
-                    size={60}
-                    color={Colors.nextBtnColor}
-                  />
-                </TouchableOpacity>
-              </View>
-            </ScrollView>
-            {/*Modal for the different form types */}
-            <BloodGlucoseLogBlock
-              visible={showBg}
-              recordDate={recordDate}
-              closeModal={this.closeBgForm}
-              closeParent={this.closeModal}
-              parent="addLog"
-            />
+                  <TouchableOpacity
+                    style={styles.addButton}
+                    onPress={() => this.showLogForm(selectedLogType)}>
+                    <Ionicon
+                      name="add-circle"
+                      size={60}
+                      color={Colors.nextBtnColor}
+                    />
+                  </TouchableOpacity>
+                </View>
+              </ScrollView>
+              {/*Modal for the different form types */}
+              <BloodGlucoseLogBlock
+                visible={showBg}
+                recordDate={recordDate}
+                closeModal={this.closeBgForm}
+                closeParent={this.closeModal}
+                parent="addLog"
+              />
 
-            <MedicationLogBlock
-              visible={showMed}
-              recordDate={recordDate}
-              closeModal={this.closeMedForm}
-              closeParent={this.closeModal}
-              parent="addLog"
-            />
+              <MedicationLogBlock
+                visible={showMed}
+                recordDate={recordDate}
+                closeModal={this.closeMedForm}
+                closeParent={this.closeModal}
+                parent="addLog"
+              />
 
-            <WeightLogBlock
-              visible={showWeight}
-              recordDate={recordDate}
-              closeModal={this.closeWeightForm}
-              closeParent={this.closeModal}
-              parent="addLog"
-            />
-            <CreateMealLogBlock
-              visible={showFood}
-              parent="addLog"
-              recordDate={recordDate}
-              mealType={this.state.selectedMealType}
-              closeModal={this.closeFoodForm}
-              closeParent={this.closeModal}
-              navigation={this.props.navigation}
-            />
-          </Modal>
-        </ScrollView>
+              <WeightLogBlock
+                visible={showWeight}
+                recordDate={recordDate}
+                closeModal={this.closeWeightForm}
+                closeParent={this.closeModal}
+                parent="addLog"
+              />
+              <CreateMealLogBlock
+                visible={showFood}
+                parent="addLog"
+                recordDate={recordDate}
+                mealType={this.state.selectedMealType}
+                closeModal={this.closeFoodForm}
+                closeParent={this.closeModal}
+                navigation={this.props.navigation}
+              />
+            </Modal>
+          </ScrollView>
+        </Animated.View>
       </View>
     );
   }

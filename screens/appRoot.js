@@ -5,23 +5,35 @@ import {
   getFocusedRouteNameFromRoute,
   NavigationContainer,
 } from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
+import {
+  createStackNavigator,
+  CardStyleInterpolators,
+  TransitionSpecs,
+} from '@react-navigation/stack';
 import Entypo from 'react-native-vector-icons/Entypo';
+import Animated, {Easing} from 'react-native-reanimated';
 //functions
 import {connect} from 'react-redux';
 import {mapDispatchToProps, mapStateToProps} from '../redux/reduxMapping';
 //other screens
 import Login from './login/login';
 import ForgetPasswordScreen from './login/ForgetPasswordScreen';
-import InputOTPScreen from './login/inputOTPScreen';
 import ResetPasswordScreen from './login/resetPassword';
+import AccountDetailScreen from './more/accountDetails';
+import DiaryScreen from './main/diary/diary';
+import MedicationScreen from './more/medications';
+import GoalsScreen from './more/goals';
+import AppointmentScreen from './more/appointments';
+import EducationMaterialsScreen from './more/educationMaterials';
+import MyWord from './main/gameCenter/myWord';
+import FillTheCard from './main/gameCenter/fillTheCard';
+import Logout from './more/logout';
 //components
 import ContactUs from './contactUs';
 import AskAdd from './onboarding/medicationPlan/askAdd';
 import AddPlan from './onboarding/medicationPlan/addPlan';
 import FitbitSetup from './onboarding/fitbit/FitbitSetup';
 import DrawerNavigator from './drawer';
-
 
 Entypo.loadFont();
 
@@ -87,6 +99,7 @@ class AppRoot extends Component {
                 backgroundColor: 'transparent',
               },
               headerTransparent: true,
+              cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
             })}>
             {this.props.isLogin ? (
               <>
@@ -95,6 +108,7 @@ class AppRoot extends Component {
                   component={DrawerNavigator}
                   options={{
                     headerShown: false,
+                    animationEnabled: true,
                   }}
                 />
                 {/* Onboarding */}
@@ -113,6 +127,70 @@ class AppRoot extends Component {
                   component={FitbitSetup}
                   options={{headerShown: false}}
                 />
+                {/* Drawer Screen */}
+                <Stack.Screen
+                  name="Edit Account"
+                  component={AccountDetailScreen}
+                  options={{
+                    headerShown: false,
+                  }}
+                />
+                <Stack.Screen
+                  name="Diary"
+                  component={DiaryScreen}
+                  options={{
+                    headerShown: false,
+                  }}
+                />
+                <Stack.Screen
+                  name="Medication"
+                  component={MedicationScreen}
+                  options={{
+                    headerShown: false,
+                  }}
+                />
+                <Stack.Screen
+                  name="Goals"
+                  component={GoalsScreen}
+                  options={{
+                    headerShown: false,
+                  }}
+                />
+                <Stack.Screen
+                  name="Appointment"
+                  component={AppointmentScreen}
+                  options={{
+                    headerShown: false,
+                  }}
+                />
+                <Stack.Screen
+                  name="Resources"
+                  component={EducationMaterialsScreen}
+                  options={{
+                    headerShown: false,
+                  }}
+                />
+                <Stack.Screen
+                  name="Log Out"
+                  component={Logout}
+                  options={{
+                    headerShown: false,
+                  }}
+                />
+                <Stack.Screen
+                  name="MyWord"
+                  component={MyWord}
+                  options={{
+                    headerShown: false,
+                  }}
+                />
+                <Stack.Screen
+                  name="FillTheCard"
+                  component={FillTheCard}
+                  options={{
+                    headerShown: false,
+                  }}
+                />
               </>
             ) : (
               <>
@@ -125,7 +203,7 @@ class AppRoot extends Component {
                   name="ContactUsScreen"
                   component={ContactUs}
                   options={{
-                    title: 'Contact Us',
+                    title: '',
                     headerRight: () => <View />,
                     headerBackTitle: 'Back',
                   }}
@@ -134,25 +212,14 @@ class AppRoot extends Component {
                   name="ForgetPassword"
                   component={ForgetPasswordScreen}
                   options={{
-                    title: 'Forget Password',
-                    headerRight: () => <View />,
-                  }}
-                />
-                <Stack.Screen
-                  name="InputOTP"
-                  component={InputOTPScreen}
-                  options={{
-                    title: 'Input OTP',
-                    headerRight: () => <View />,
-                    headerBackTitle: 'Back',
+                    headerShown: false,
                   }}
                 />
                 <Stack.Screen
                   name="ResetPasswordScreen"
                   component={ResetPasswordScreen}
                   options={{
-                    title: 'Reset Password',
-                    headerLeft: false,
+                    headerShown: false,
                   }}
                 />
               </>
@@ -165,4 +232,41 @@ class AppRoot extends Component {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(AppRoot);
-//edit flag
+
+const forSlide = ({current, next, inverted, layouts: {screen}}) => {
+  const progress = Animated.add(
+    current.progress.interpolate({
+      inputRange: [0, 1],
+      outputRange: [0, 1],
+      extrapolate: 'clamp',
+    }),
+    next
+      ? next.progress.interpolate({
+          inputRange: [0, 1],
+          outputRange: [0, 1],
+          extrapolate: 'clamp',
+        })
+      : 0,
+  );
+
+  return {
+    cardStyle: {
+      transform: [
+        {
+          translateX: Animated.multiply(
+            progress.interpolate({
+              inputRange: [0, 1, 2],
+              outputRange: [
+                screen.width, // Focused, but offscreen in the beginning
+                0, // Fully focused
+                screen.width * -0.3, // Fully unfocused
+              ],
+              extrapolate: 'clamp',
+            }),
+            inverted,
+          ),
+        },
+      ],
+    },
+  };
+};

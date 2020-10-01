@@ -19,7 +19,7 @@ function MedicationTable(props) {
     const filteredPlans = filterPlans(props.plan, props.filterKey);
     const zipped = zipMedicationData(filteredPlans, filteredData);
     const adherenceData = calculateAdherence(zipped);
-    //const binCount = getBinCount(filteredData, d=>d.medication, d=>d.dosage);
+
     return (
         <View style={props.style}>
             {Object.entries(adherenceData).map((item, index) => {
@@ -115,7 +115,6 @@ function calculateAdherence(zippedData) {
             }
         }
     }
-    console.log(result);
     for (const [medication, values] of Object.entries(result)) {
         if (result[medication].adherence.length === 0) {
             result[medication].adherence = 0;

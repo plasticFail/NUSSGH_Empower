@@ -11,7 +11,7 @@ const maxCarbs = 150; //grams
 const maxProtein = 112; //grams
 const maxFats = 50; //grams
 const maxCalBurnt = 500;
-const maxSteps = 2000;
+const maxSteps = 7000;
 const maxDuration = 150; //min
 
 const getDateObj = (dateString) => {

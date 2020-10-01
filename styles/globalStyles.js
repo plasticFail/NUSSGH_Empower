@@ -5,8 +5,6 @@ import {
   headerHeight,
   horizontalMargins,
   verticalMarginsBetweenComponent,
-  onboard_marginStart,
-  onboard_marginEnd,
   normalTextFontSize,
   headerTextFontSize,
 } from './variables';
@@ -92,6 +90,15 @@ const globalStyles = StyleSheet.create({
     fontFamily: 'SFProDisplay-Bold',
     marginBottom: '2%',
   },
+  greyPageDetails: {
+    fontSize: normalTextFontSize,
+    fontWeight: '800',
+    marginStart: horizontalMargins,
+    marginEnd: horizontalMargins,
+    fontFamily: 'SFProDisplay-Bold',
+    marginBottom: '2%',
+    color: Colors.lastLogValueColor,
+  },
   pageSubDetails: {
     fontSize: normalTextFontSize,
     marginStart: horizontalMargins,
@@ -110,6 +117,26 @@ const globalStyles = StyleSheet.create({
     alignItems: 'flex-end',
     flexDirection: 'row',
     justifyContent: 'space-between'
+  },
+  //edit pages
+  editPageContainer: {
+    flex: 1,
+    backgroundColor: Colors.editBackgroundColor,
+  },
+  editInputBox: {
+    marginBottom: '2%',
+    backgroundColor: 'white',
+    padding: '3%',
+    margin: '4%',
+    borderRadius: 9.5,
+    borderWidth: 0.5,
+    borderColor: Colors.inputBorderColor,
+  },
+  pageIcon: {
+    paddingTop: '2%',
+    marginBottom: '1%',
+    marginStart: horizontalMargins,
+    marginEnd: horizontalMargins,
   },
 });
 

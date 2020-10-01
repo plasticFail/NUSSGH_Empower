@@ -115,18 +115,19 @@ const DiaryScreen = (props) => {
               'stylesheet.calendar.header': {
                 header: {
                   flexDirection: 'row',
-                  justifyContent: 'center',
-                  marginTop: 6,
+                  marginTop: '2%',
                   alignItems: 'center',
+                  alignSelf: 'center',
                 },
                 headerContainer: {
                   width: '80%',
                   flexDirection: 'row',
+                  justifyContent: 'center',
+                  alignSelf: 'center',
                 },
                 monthText: {
                   fontSize: 20,
                   fontFamily: 'SFProDisplay-Bold',
-                  textAlign: 'center',
                 },
               },
               arrowColor: Colors.lastLogValueColor,

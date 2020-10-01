@@ -1,5 +1,14 @@
-import React from 'react';
-import {View, StyleSheet, Text, Dimensions, ScrollView, TouchableOpacity, Image} from 'react-native';
+import React, {useState, useEffect, useRef} from 'react';
+import {
+  View,
+  StyleSheet,
+  Text,
+  Dimensions,
+  ScrollView,
+  TouchableOpacity,
+  Image,
+  Animated,
+} from 'react-native';
 import globalStyles from '../../styles/globalStyles';
 import BarChart from '../../components/dashboard/reports/BarChart';
 import LineChart from '../../components/dashboard/reports/LineChart';
@@ -10,9 +19,9 @@ import HIGHLIGHTED_MED_ICON from '../../resources/images/Patient-Icons/SVG/icon-
 import HIGHLIGHTED_WEIGHT_ICON from '../../resources/images/Patient-Icons/SVG/icon-lightgreen-weight.svg';
 import HIGHLIGHTED_ACTIVITY_ICON from '../../resources/images/Patient-Icons/SVG/icon-lightgreen-running-home.svg';
 import ACTIVITY_ICON from '../../resources/images/Patient-Icons/SVG/icon-navy-running.svg';
-import {Colors} from "../../styles/colors";
-import {requestNutrientConsumption} from "../../netcalls/mealEndpoints/requestMealLog";
-import {getLastMinuteFromTodayDate} from "../../commonFunctions/common";
+import {Colors} from '../../styles/colors';
+import {requestNutrientConsumption} from '../../netcalls/mealEndpoints/requestMealLog';
+import {getLastMinuteFromTodayDate} from '../../commonFunctions/common';
 import Moment from 'moment';
 import {getActivityLogs, getBloodGlucoseLogs, getMedicationLogs, getWeightLogs} from "../../netcalls/requestsLog";
 import {MedicationDateDisplay, MedicationTable} from "../../components/dashboard/reports/MedicationTable";
@@ -30,27 +39,51 @@ const WEIGHT_ICON = require('../../resources/images/Patient-Icons/2x/icon-navy-w
 
 const iconProps = {
   width: 30,
-  height: 30
-}
+  height: 30,
+};
 
 const BGL_TAB_KEY = 'Blood Glucose';
 const FOOD_INTAKE_KEY = 'Food Intake';
 const MEDICATION_KEY = 'Medication';
 const WEIGHT_KEY = 'Weight';
-const ACTIVITY_KEY = "Activity"
+const ACTIVITY_KEY = 'Activity';
 
 const tabs = [
-  {name: BGL_TAB_KEY, norm: () => <Image source={BGL_ICON} style={iconProps} />, highlighted: () => <HIGHLIGHTED_BGL_ICON {...iconProps} />},
-  {name: FOOD_INTAKE_KEY, norm: () => <Image source={FOOD_ICON} style={iconProps} />, highlighted: () => <HIGHLIGHTED_FOOD_ICON {...iconProps} />},
-  {name: MEDICATION_KEY, norm: () => <Image source={MED_ICON} style={iconProps} />, highlighted: () => <HIGHLIGHTED_MED_ICON {...iconProps} />},
-  {name: WEIGHT_KEY, norm: () => <Image source={WEIGHT_ICON} style={iconProps} />, highlighted: () => <HIGHLIGHTED_WEIGHT_ICON {...iconProps} />},
-  {name: ACTIVITY_KEY, norm: () => <ACTIVITY_ICON {...iconProps} />, highlighted: () => <HIGHLIGHTED_ACTIVITY_ICON {...iconProps} />},
+  {
+    name: BGL_TAB_KEY,
+    norm: () => <Image source={BGL_ICON} style={iconProps} />,
+    highlighted: () => <HIGHLIGHTED_BGL_ICON {...iconProps} />,
+  },
+  {
+    name: FOOD_INTAKE_KEY,
+    norm: () => <Image source={FOOD_ICON} style={iconProps} />,
+    highlighted: () => <HIGHLIGHTED_FOOD_ICON {...iconProps} />,
+  },
+  {
+    name: MEDICATION_KEY,
+    norm: () => <Image source={MED_ICON} style={iconProps} />,
+    highlighted: () => <HIGHLIGHTED_MED_ICON {...iconProps} />,
+  },
+  {
+    name: WEIGHT_KEY,
+    norm: () => <Image source={WEIGHT_ICON} style={iconProps} />,
+    highlighted: () => <HIGHLIGHTED_WEIGHT_ICON {...iconProps} />,
+  },
+  {
+    name: ACTIVITY_KEY,
+    norm: () => <ACTIVITY_ICON {...iconProps} />,
+    highlighted: () => <HIGHLIGHTED_ACTIVITY_ICON {...iconProps} />,
+  },
 ];
 
 const DAY_FILTER_KEY = 'Day';
 const WEEK_FILTER_KEY = 'Week';
 const MONTH_FILTER_KEY = 'Month';
-const timeFilterTabs = [{name: DAY_FILTER_KEY}, {name: WEEK_FILTER_KEY}, {name: MONTH_FILTER_KEY}];
+const timeFilterTabs = [
+  {name: DAY_FILTER_KEY},
+  {name: WEEK_FILTER_KEY},
+  {name: MONTH_FILTER_KEY},
+];
 
 const padding = 20;
 const tabSpace = 15;
@@ -85,10 +118,35 @@ const ReportsScreen = (props) => {
   const [weightData, setWeightData] = React.useState([]);
   const [activityData, setActivityData] = React.useState([]);
    */
+  const initialTab =
+    props.route.params?.initialTab === undefined
+      ? 0
+      : props.route.params.initialTab;
+
+  //animation
+  const slideRightAnimation = useRef(new Animated.Value(0)).current;
+  const widthInterpolate = slideRightAnimation.interpolate({
+    inputRange: [0, 1],
+    outputRange: [Dimensions.get('window').width, 0],
+    extrapolate: 'clamp',
+  });
 
   // Load data when focused
   React.useEffect(() => {
     const subs =[props.navigation.addListener('focus', () => {
+        if (props.route.params?.initialTab != null) {
+            setTabIndex(props.route.params?.initialTab);
+            setTimeTabIndexFilter(0);
+        }
+
+        //animate
+        slideRightAnimation.setValue(0);
+        Animated.timing(slideRightAnimation, {
+            toValue: 1,
+            duration: 300,
+            useNativeDriver: true,
+        }).start();
+
       init().then(d => {
         setFullDataset(d);
         /*
@@ -106,9 +164,10 @@ const ReportsScreen = (props) => {
         unSub()
       })
     }
-  }, []);
+  }, [props.route.params, props.navigation]);
 
   const init = async () => {
+    //load data
     const startDate = Moment(new Date()).subtract(28, "days");
     const endDate = Moment(new Date()).add(1, "day");
     const foodData = (await requestNutrientConsumption(startDate.format('DD/MM/YYYY HH:mm:ss'),
@@ -126,17 +185,20 @@ const ReportsScreen = (props) => {
   }
 
   const handleTabSelectChange = (tabIndex) => {
-      setTabIndex(tabIndex);
-      setTimeTabIndexFilter(1); // Revert back to week datum
-  }
+    setTabIndex(tabIndex);
+    setTimeTabIndexFilter(1); // Revert back to week datum
+  };
 
   const tabName = tabs[tabIndex].name;
   const filterKey = timeFilterTabs[timeTabIndexFilter].name;
+
   return (
     <ScrollView
       style={{...styles.screen, ...props.style}}
       contentContainerStyle={{flexGrow: 1}}>
       <View style={{...globalStyles.pageContainer}}>
+      <Animated.View
+          style={{transform: [{translateX: widthInterpolate}]}}>
         <View style={globalStyles.menuBarContainer}>
           <LeftArrowBtn close={() => props.navigation.navigate('Home')} />
           <TouchableOpacity onPress={()=>setOpenExportModal(true)}>
@@ -303,6 +365,7 @@ const ReportsScreen = (props) => {
           //bottom padding just so it looks better
           paddingBottom: 50
         }} />
+      </Animated.View>
       </View>
       <ExportReportsModal visible={openExportModal} setVisible={setOpenExportModal} />
     </ScrollView>
@@ -326,11 +389,9 @@ function ReportsTabs(props) {
             borderBottomWidth: currentTab === index ? 3 : 0,
             borderColor: '#aad326',
           }}
-          onPress={()=>setTabCallback(index)}
+          onPress={() => setTabCallback(index)}
           key={tab.name}>
-          {
-            currentTab === index ? tab.highlighted() : tab.norm()
-          }
+          {currentTab === index ? tab.highlighted() : tab.norm()}
         </TouchableOpacity>
       ))}
     </View>
@@ -341,17 +402,27 @@ function TimeFilterTab(props) {
   const {currentTab, setTabCallback} = props;
 
   return (
-      <View style={[props.style, styles.timeFilterTabContainer]}>
-        {
-          timeFilterTabs.map((tab, index) => (
-             <TouchableOpacity style={index === currentTab ?
-                                        styles.selectedTimeFilterTabContainer: styles.normTimeFilterTabContainer}
-                               onPress={()=>setTabCallback(index)} key={tab.name}>
-               <Text style={index === currentTab ? styles.selectedTimeFilterText : styles.normTimeFilterText}>{tab.name}</Text>
-             </TouchableOpacity>
-          ))
-        }
-      </View>
+    <View style={[props.style, styles.timeFilterTabContainer]}>
+      {timeFilterTabs.map((tab, index) => (
+        <TouchableOpacity
+          style={
+            index === currentTab
+              ? styles.selectedTimeFilterTabContainer
+              : styles.normTimeFilterTabContainer
+          }
+          onPress={() => setTabCallback(index)}
+          key={tab.name}>
+          <Text
+            style={
+              index === currentTab
+                ? styles.selectedTimeFilterText
+                : styles.normTimeFilterText
+            }>
+            {tab.name}
+          </Text>
+        </TouchableOpacity>
+      ))}
+    </View>
   );
 }
 
@@ -364,28 +435,38 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     borderRadius: 7,
     borderWidth: 1,
-    borderColor: Colors.nextBtnColor
+    borderColor: Colors.nextBtnColor,
   },
   selectedTimeFilterTabContainer: {
     backgroundColor: Colors.nextBtnColor,
     borderRadius: 7,
-    width: `${Math.round(100/timeFilterTabs.length)}%`,
+    width: `${Math.round(100 / timeFilterTabs.length)}%`,
     alignItems: 'center',
-    padding: 7
+    padding: 7,
   },
   selectedTimeFilterText: {
     fontWeight: 'bold',
-    color: '#000'
+    color: '#000',
   },
   normTimeFilterTabContainer: {
     borderRadius: 5,
-    width: `${Math.round(100/timeFilterTabs.length)}%`,
+    width: `${Math.round(100 / timeFilterTabs.length)}%`,
     alignItems: 'center',
-    padding: 7
+    padding: 7,
   },
   normTimeFilterText: {
-    color: '#000'
-  }
+    color: '#000',
+  },
 });
 
-export {ReportsScreen, WEEK_FILTER_KEY, DAY_FILTER_KEY, MONTH_FILTER_KEY, ACTIVITY_KEY, WEIGHT_KEY, MEDICATION_KEY, FOOD_INTAKE_KEY, BGL_TAB_KEY};
+export {
+  ReportsScreen,
+  WEEK_FILTER_KEY,
+  DAY_FILTER_KEY,
+  MONTH_FILTER_KEY,
+  ACTIVITY_KEY,
+  WEIGHT_KEY,
+  MEDICATION_KEY,
+  FOOD_INTAKE_KEY,
+  BGL_TAB_KEY,
+};

@@ -21,6 +21,7 @@ import {
   med_key,
   activity_key,
   renderLogIcon,
+  renderLogIconNavy,
 } from '../../commonFunctions/logFunctions';
 //styles
 import logStyles from '../../styles/logStyles';
@@ -335,10 +336,7 @@ class TargetBlock extends Component {
             style={diaryStyles.diaryLogItem}
             onPress={() => this.openModalType(item)}
             key={item}>
-            <Image
-              source={renderLogIcon(item)}
-              style={diaryStyles.diarylogIcon}
-            />
+            {renderLogIconNavy(item)}
             <View style={styles.buttonContentContainer}>
               <Text style={[logStyles.fieldName, {fontSize: 15}]}>{item}s</Text>
               {item === bg_key && renderContent(bg_key, bgMiss, bgPass, avgBg)}
@@ -454,7 +452,7 @@ function renderMedContent(medMiss, medCompleted, medLogs) {
 //for logs with criteria : miss/completed
 function renderContent2(miss) {
   if (miss) {
-    return <Text style={styles.buttonDetail}>Missed</Text>;
+    return <Text style={styles.buttonDetail}>Did not log today.</Text>;
   } else {
     return <Text style={styles.buttonDetail}>Completed</Text>;
   }
@@ -515,7 +513,7 @@ export default TargetBlock;
 const styles = StyleSheet.create({
   buttonContentContainer: {
     marginTop: '-3%',
-    marginStart: '15%',
+    marginStart: '5%',
   },
   buttonDetail: {
     fontFamily: 'SFProDisplay-Bold',

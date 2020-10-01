@@ -33,13 +33,14 @@ const HeaderCard = (props) => {
             <Text style={[styles.greetingText, {color: Colors.menuColor}]}>
               Create a log for the {hour}
             </Text>
-            <View style={{flexDirection: 'row'}}>
+            <View
+              style={{
+                flexDirection: 'row',
+                marginTop: '2%',
+                marginStart: '2%',
+              }}>
               {uncompleteLogs.map((item, index) => (
-                <Image
-                  key={item}
-                  source={renderLogIcon(item)}
-                  style={[logStyles.mini_loglogo, styles.logLogo]}
-                />
+                <View key={item}>{renderLogIcon(item)}</View>
               ))}
               <View style={{flex: 1}} />
               <Icon name="chevron-right" size={20} style={styles.chevron} />

@@ -6,62 +6,85 @@ import {
   Alert,
   TouchableOpacity,
   Dimensions,
-  Platform,
-  KeyboardAvoidingView,
-  SafeAreaView,
+  CheckBox,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {useNavigation} from '@react-navigation/native';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
-import {ScrollView} from 'react-native-gesture-handler';
 import CountdownTimer from '../../components/countdownTimer';
 import {
   verifyOTPRequest,
   sendOTPRequest,
 } from '../../netcalls/requestsPasswordReset';
+//third party lib
+import Modal from 'react-native-modal';
+//styles
+import globalStyles from '../../styles/globalStyles';
+//component
+import LeftArrowBtn from '../../components/logs/leftArrowBtn';
+import EditPhoneModal_2 from '../../components/account/editPhoneModal_2';
 
 const InputOTPScreen = (props) => {
-  const {phoneNumber} = props.route.params;
-  const showPhoneNo = String(phoneNumber).substring(4, 9);
-  console.log(phoneNumber);
-  Icon.loadFont();
+  const {phoneNumber, visible, parent} = props;
+  const {close} = props;
   const [otp, setOtp] = useState('');
-  const [disabled, setDisable] = useState(true);
+  const [showChangePassword, setShowChangePassword] = useState(false);
   const [countdownVisible, setCountdownVisible] = useState(true);
   const [countdownTime, setCountdownTime] = useState(120);
 
-  console.log(showPhoneNo);
+  const [editMobileModal, setEditMobileModal] = useState(false);
+
+  const navigation = useNavigation();
 
   const handleTimout = () => {
     setCountdownVisible(true);
-    setDisable(false);
     setCountdownTime(0);
+    if (countdownTime === 0 && editMobileModal === false) {
+      Alert.alert('OTP Expired', '', [
+        {text: 'Resend OTP', onPress: () => resendOTP()},
+      ]);
+    }
+  };
+
+  const showSubmit = () => {
+    if (otp.length != 6 || checkInput() != '') {
+      return false;
+    }
+    return true;
+  };
+
+  const checkInput = () => {
+    if (otp.includes(',') || otp.includes('-') || otp.includes('.')) {
+      return 'Please make sure you type a valid OTP';
+    }
+    return '';
   };
 
   const handleSubmit = () => {
-    if (otp.length < 6) {
-      Alert.alert('Error', 'OTP not filled completely', [{text: 'Got It'}]);
-    }
     if (
       otp.length == 6 &&
       !otp.includes(',') &&
       !otp.includes('-') &&
       !otp.includes('.')
     ) {
-      verifyOTPRequest(phoneNumber, otp).then((response) => {
-        if (response.message != null) {
-          Alert.alert('Error', response.message, [{text: 'Got It'}]);
-        } else {
-          props.navigation.navigate('ResetPasswordScreen', {
-            token: response.token,
-          });
-        }
-      });
+      if (parent === 'forgetPassword') {
+        verifyOTPRequest(phoneNumber, otp).then((response) => {
+          if (response.message != null) {
+            Alert.alert('Error', response.message, [{text: 'Got It'}]);
+          } else {
+            close();
+            navigation.navigate('ResetPasswordScreen', {
+              token: response.token,
+            });
+          }
+        });
+      } else {
+        //verify otp when come from edit phone modal
+        setEditMobileModal(true);
+      }
     }
   };
 
   const resendOTP = () => {
-    console.log('here');
-    setDisable(true);
     setCountdownVisible(true);
     sendOTPRequest(phoneNumber).then(() => {
       setCountdownTime(120);
@@ -72,65 +95,91 @@ const InputOTPScreen = (props) => {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={{flex: 1}}
-      behavior={Platform.OS === 'ios' ? 'padding' : null}>
-      <SafeAreaView style={{flex: 1}}>
-        <View style={styles.inner}>
-          <Icon name="cellphone-message" size={260} />
-          <Text style={styles.text}>
-            Enter the 6-digit One-Time Password (OTP) sent to your mobile number
-            ( **** {showPhoneNo} ).
-          </Text>
-          <View style={[styles.formContainer, styles.shadow]}>
-            <CountdownTimer
-              handleTimout={handleTimout}
-              countdownTime={countdownTime}
-              key={countdownTime}
-            />
-            <OTPInputView
-              pinCount={6}
-              style={{
-                width: '100%',
-                height: 100,
-                alignSelf: 'center',
-                fontWeight: '1000',
-              }}
-              placeholderTextColor="#000000"
-              autoFocusOnLoad
-              codeInputFieldStyle={styles.underlineStyleBase}
-              codeInputHighlightStyle={styles.underlineStyleHighLighted}
-              onCodeChanged={(value) => {
-                setOtp(value);
-              }}
-            />
-            <View style={{flexDirection: 'row', alignItems: 'space-between'}}>
-              <TouchableOpacity
-                style={styles.buttonStyle}
-                onPress={handleSubmit}>
-                <Text style={styles.buttonText}>Submit</Text>
-              </TouchableOpacity>
-              {disabled ? (
-                <TouchableOpacity
-                  disabled={disabled}
-                  style={[styles.buttonStyle, {backgroundColor: '#cdd4e4'}]}
-                  onPress={resendOTP}>
-                  <Text style={styles.buttonText}>Resend OTP</Text>
-                </TouchableOpacity>
-              ) : (
-                <TouchableOpacity
-                  disabled={disabled}
-                  style={[styles.buttonStyle, {backgroundColor: '#FFB6C1'}]}
-                  onPress={resendOTP}>
-                  <Text style={styles.buttonText}>Resend OTP</Text>
-                </TouchableOpacity>
-              )}
-            </View>
-          </View>
-          <View style={{flex: 1}} />
+    <Modal
+      isVisible={visible}
+      animationIn="slideInRight"
+      animationOut="slideOutRight"
+      onBackdropPress={() => close()}
+      onBackButtonPress={() => close()}
+      style={{margin: 0}}>
+      <View style={globalStyles.editPageContainer}>
+        <View style={globalStyles.menuBarContainer}>
+          <LeftArrowBtn close={() => close()} />
         </View>
-      </SafeAreaView>
-    </KeyboardAvoidingView>
+        {parent === 'forgetPassword' ? (
+          <Text style={globalStyles.pageHeader}>Forget Password</Text>
+        ) : (
+          <Text style={globalStyles.pageHeader}>Edit Mobile No.</Text>
+        )}
+
+        <Text style={globalStyles.pageDetails}>Verficiation Required</Text>
+        <Text style={[globalStyles.pageSubDetails, {fontSize: 18}]}>
+          Please enter the 6-digis OTP sent to
+        </Text>
+        <Text style={[globalStyles.pageDetails, {marginTop: '3%'}]}>
+          {phoneNumber}
+        </Text>
+        <OTPInputView
+          pinCount={6}
+          style={{
+            width: '100%',
+            height: 100,
+            fontWeight: '1000',
+            padding: '5%',
+          }}
+          placeholderTextColor="#000000"
+          autoFocusOnLoad
+          codeInputFieldStyle={styles.underlineStyleBase}
+          codeInputHighlightStyle={styles.underlineStyleHighLighted}
+          onCodeChanged={(value) => {
+            setOtp(value);
+          }}
+        />
+        <Text
+          style={[
+            globalStyles.alertText,
+            {marginStart: '3%', marginBottom: '3%'},
+          ]}>
+          {checkInput()}
+        </Text>
+        <CountdownTimer
+          handleTimout={handleTimout}
+          countdownTime={countdownTime}
+          key={countdownTime}
+        />
+        <TouchableOpacity onPress={() => resendOTP()}>
+          <Text style={[globalStyles.pageSubDetails, {fontSize: 16}]}>
+            Didn't receive it?{' '}
+            <Text
+              style={[
+                globalStyles.pageDetails,
+                {fontSize: 16, color: '#aad326'},
+              ]}>
+              Resend Again
+            </Text>
+          </Text>
+        </TouchableOpacity>
+      </View>
+      <View style={globalStyles.buttonContainer}>
+        {showSubmit() ? (
+          <TouchableOpacity
+            style={globalStyles.submitButtonStyle}
+            onPress={handleSubmit}>
+            <Text style={globalStyles.actionButtonText}>Verify OTP</Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity style={globalStyles.skipButtonStyle}>
+            <Text style={globalStyles.actionButtonText}>Verify OTP</Text>
+          </TouchableOpacity>
+        )}
+      </View>
+      <EditPhoneModal_2
+        visible={editMobileModal}
+        close={() => setEditMobileModal(false)}
+        closeParent={() => close()}
+        closeLast={() => props.closeParent()}
+      />
+    </Modal>
   );
 };
 

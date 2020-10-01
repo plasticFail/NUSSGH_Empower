@@ -12,4 +12,9 @@ export const Colors = {
   menuColor: '#005c30',
   subsubHeaderColor: '#828994',
   grey: '#3c3c43',
+  inputBorderColor: '#e1e7ed',
+
+  gameColorGreen: '#aad326',
+  gameColorWhite: '#f6f7fa',
+  gameColorGrey: '#E1E7ED',
 };

@@ -47,7 +47,7 @@ export default SearchResult;
 
 const styles = StyleSheet.create({
   resultContainer: {
-    borderBottomWidth: 0.2,
+    borderBottomWidth: 0.3,
     borderColor: 'black',
     padding: '3%',
     flexDirection: 'row',

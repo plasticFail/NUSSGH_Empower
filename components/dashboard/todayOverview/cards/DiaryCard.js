@@ -16,6 +16,13 @@ import WeightBlock from '../../../diary/blocks/weightBlock';
 import MedBlock from '../../../diary/blocks/medBlock';
 import BgBlock from '../../../diary/blocks/bgBlock';
 import FoodBlock from '../../../diary/blocks/foodBlock';
+import {
+  renderLogIconNavy,
+  bg_key,
+  food_key,
+  med_key,
+  weight_key,
+} from '../../../../commonFunctions/logFunctions';
 
 const {width} = Dimensions.get('window');
 
@@ -23,7 +30,7 @@ export default function DiaryCard(props) {
   const {today_date, bgl, calorie, weight, medResult, dateString} = props;
   const {bgLogs, bgPass, bgMiss} = props;
   const {foodLogs, carbs, protein, fats, foodPass} = props;
-  const {medLogs, weightLogs} = props;
+  const {medLogs, weightLogs, lastWeight} = props;
   const {init} = props;
 
   const [showBg, setShowBg] = useState(false);
@@ -73,82 +80,92 @@ export default function DiaryCard(props) {
       <TouchableOpacity
         style={styles.overviewRow}
         onPress={() => setShowBg(true)}>
-        <Text style={styles.metricText}>Blood Glucose</Text>
-        <Text style={styles.measuredText}>
-          {bgl ? bgl + ' mmol/L' : 'Not taken yet'}
-        </Text>
+        <View style={{flexDirection: 'row'}}>
+          {renderLogIconNavy(bg_key)}
+          <View style={styles.content}>
+            <Text style={styles.metricText}>Blood Glucose</Text>
+            <Text style={styles.measuredText}>
+              {bgl ? bgl + ' mmol/L' : 'Not taken yet'}
+            </Text>
+          </View>
+        </View>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.overviewRow}
         onPress={() => setShowFood(true)}>
-        <Text style={styles.metricText}>Nutrition</Text>
-        <Text style={styles.measuredText}>{calorie} kcal</Text>
+        <View style={{flexDirection: 'row'}}>
+          {renderLogIconNavy(food_key)}
+          <View style={styles.content}>
+            <Text style={styles.metricText}>Food Intake</Text>
+            <Text style={styles.measuredText}>{calorie} kcal</Text>
+          </View>
+        </View>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.overviewRow}
         onPress={() => setShowMed(true)}>
-        <Text style={styles.metricText}>Medication</Text>
-        <Text style={styles.measuredText}>{medResult}</Text>
+        <View style={{flexDirection: 'row'}}>
+          {renderLogIconNavy(med_key)}
+          <View style={styles.content}>
+            <Text style={styles.metricText}>Medication</Text>
+            <Text style={styles.measuredText}>{medResult}</Text>
+          </View>
+        </View>
       </TouchableOpacity>
       <TouchableOpacity
         style={[styles.overviewRow, {borderBottomWidth: 0}]}
         onPress={() => setShowWeight(true)}>
-        <Text style={styles.metricText}>Weight</Text>
-        <Text style={styles.measuredText}>
-          {weight ? weight + ' kg' : 'Not taken yet'}
-        </Text>
+        <View style={{flexDirection: 'row'}}>
+          {renderLogIconNavy(weight_key)}
+          <View style={styles.content}>
+            <Text style={styles.metricText}>Weight</Text>
+            <Text style={styles.measuredText}>{lastWeight}</Text>
+          </View>
+        </View>
       </TouchableOpacity>
-      {showBg ? (
-        <BgBlock
-          visible={showBg}
-          closeModal={() => closeBg()}
-          morningBgLogs={filterMorning(bgLogs)}
-          afternoonBgLogs={filterAfternoon(bgLogs)}
-          eveningBgLogs={filterEvening(bgLogs)}
-          avgBg={bgl}
-          pass={bgPass}
-          miss={bgMiss}
-          day={dateString}
-          init={() => init()}
-        />
-      ) : null}
-      {showFood ? (
-        <FoodBlock
-          visible={showFood}
-          closeModal={() => closeFood()}
-          morningMealLogs={filterMorning(foodLogs)}
-          afternoonMealLogs={filterAfternoon(foodLogs)}
-          eveningMealLogs={filterEvening(foodLogs)}
-          carbs={carbs}
-          fats={fats}
-          protein={protein}
-          pass={foodPass}
-          day={dateString}
-          init={() => init()}
-        />
-      ) : null}
-      {showMed ? (
-        <MedBlock
-          visible={showMed}
-          closeModal={() => closeMed()}
-          morningMedLogs={filterMorning(medLogs)}
-          afternoonMedLogs={filterAfternoon(medLogs)}
-          eveningMedLogs={filterEvening(medLogs)}
-          day={dateString}
-          init={() => init()}
-        />
-      ) : null}
-      {showWeight ? (
-        <WeightBlock
-          visible={showWeight}
-          closeModal={() => closeWeight()}
-          morningWeightLogs={filterMorning(weightLogs)}
-          afternoonWeightLogs={filterAfternoon(weightLogs)}
-          eveningWeightLogs={filterEvening(weightLogs)}
-          day={dateString}
-          init={() => init()}
-        />
-      ) : null}
+      <BgBlock
+        visible={showBg}
+        closeModal={() => closeBg()}
+        morningBgLogs={filterMorning(bgLogs)}
+        afternoonBgLogs={filterAfternoon(bgLogs)}
+        eveningBgLogs={filterEvening(bgLogs)}
+        avgBg={bgl}
+        pass={bgPass}
+        miss={bgMiss}
+        day={dateString}
+        init={() => init()}
+      />
+      <FoodBlock
+        visible={showFood}
+        closeModal={() => closeFood()}
+        morningMealLogs={filterMorning(foodLogs)}
+        afternoonMealLogs={filterAfternoon(foodLogs)}
+        eveningMealLogs={filterEvening(foodLogs)}
+        carbs={carbs}
+        fats={fats}
+        protein={protein}
+        pass={foodPass}
+        day={dateString}
+        init={() => init()}
+      />
+      <MedBlock
+        visible={showMed}
+        closeModal={() => closeMed()}
+        morningMedLogs={filterMorning(medLogs)}
+        afternoonMedLogs={filterAfternoon(medLogs)}
+        eveningMedLogs={filterEvening(medLogs)}
+        day={dateString}
+        init={() => init()}
+      />
+      <WeightBlock
+        visible={showWeight}
+        closeModal={() => closeWeight()}
+        morningWeightLogs={filterMorning(weightLogs)}
+        afternoonWeightLogs={filterAfternoon(weightLogs)}
+        eveningWeightLogs={filterEvening(weightLogs)}
+        day={dateString}
+        init={() => init()}
+      />
     </View>
   );
 }
@@ -189,5 +206,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#000',
     fontSize: 18,
+  },
+  content: {
+    marginStart: '5%',
   },
 });

@@ -24,7 +24,7 @@ import {patientLoginRequest} from '../../netcalls/requestsAuth';
 //components
 import Loading from '../../components/loading';
 import globalStyles from '../../styles/globalStyles';
-import LoadingModal from '../../components/loadingModal';
+//svg
 import Logo from '../../resources/images/Patient-Icons/SVG/icon-color-empower.svg';
 
 class Login extends Component {
@@ -68,7 +68,7 @@ class Login extends Component {
       await storePassword(this.state.password);
       await storeToken(token);
       this.props.login();
-      console.log('login success!')
+      console.log('login success!');
     } else {
       Alert.alert('Error', 'Invalid username/password combination.', [
         {text: 'Got It'},
@@ -92,7 +92,10 @@ class Login extends Component {
         style={{flex: 1}}
         behavior={Platform.OS === 'ios' ? 'padding' : null}>
         <View style={styles.container}>
-          <Logo height={styles.logoStyle.height} width={styles.logoStyle.width} />
+          <Logo
+            height={styles.logoStyle.height}
+            width={styles.logoStyle.width}
+          />
           <Text style={styles.welcomeText}>Welcome</Text>
           <Text style={styles.detailText}>
             To proceed with the app, please log in with your credentials
@@ -163,11 +166,12 @@ const styles = StyleSheet.create({
   welcomeText: {
     fontSize: 30,
     color: 'white',
-    fontWeight: '700',
+    fontFamily: 'SFProDisplay-Bold',
   },
   detailText: {
     fontSize: 20,
     color: 'white',
+    fontFamily: 'SFProDisplay-Regular',
   },
   inputBox: {
     width: '90%',
@@ -183,10 +187,12 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 17,
     marginTop: '3%',
+    fontFamily: 'SFProDisplay-Regular',
   },
   bold: {
     fontWeight: '800',
     color: 'white',
+    fontFamily: 'SFProDisplay-Bold',
   },
   forgetPassword: {
     margin: '4%',
