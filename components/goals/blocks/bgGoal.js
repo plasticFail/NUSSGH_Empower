@@ -7,6 +7,8 @@ import {
   TextInput,
   ScrollView,
   Alert,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 //third party lib
 import Modal from 'react-native-modal';
@@ -17,7 +19,6 @@ import globalStyles from '../../../styles/globalStyles';
 //component
 import LeftArrowBtn from '../../logs/leftArrowBtn';
 import NameDateSelector from '../nameDateSelector';
-import FrequencySelector from '../dropDownSelector';
 //styles
 import logStyles from '../../../styles/logStyles';
 //function
@@ -26,8 +27,6 @@ import {
   min_bg,
 } from '../../../commonFunctions/logFunctions';
 import {addBgGoalReq} from '../../../netcalls/requestsGoals';
-import {getDateObj} from '../../../commonFunctions/diaryFunctions';
-import {getFrequency} from '../../../commonFunctions/goalFunctions';
 
 const min_key = 'min';
 const max_key = 'max';
@@ -35,13 +34,7 @@ const max_key = 'max';
 const BgGoal = (props) => {
   const {visible, parent, bg} = props;
   const {close} = props;
-
   const [goalName, setGoalName] = useState('');
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
-  //change select date to date option *
-  const [opened, setOpened] = useState(false);
-  const [frequency, setFrequency] = useState({name: 'Daily', value: 'daily'});
   const [minBg, setMinBg] = useState('');
   const [maxBg, setMaxBg] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
@@ -49,11 +42,7 @@ const BgGoal = (props) => {
 
   useEffect(() => {
     if (parent != undefined && bg != undefined) {
-      setOpened(true);
       setGoalName(bg.name);
-      setStartDate(getDateObj(bg.start_date));
-      setEndDate(getDateObj(bg.end_date));
-      setFrequency(getFrequency(bg.frequency));
       setMinBg(String(bg.min_bg));
       setMaxBg(String(bg.max_bg));
       setPageText('Edit Goal');
@@ -68,9 +57,6 @@ const BgGoal = (props) => {
   const submit = async () => {
     let obj = {
       name: goalName,
-      start_date: Moment(startDate).format('DD/MM/YYYY HH:mm:ss'),
-      end_date: Moment(endDate).format('DD/MM/YYYY HH:mm:ss'),
-      frequency: frequency.value,
       min_bg: Number(minBg),
       max_bg: Number(maxBg),
     };
@@ -113,7 +99,6 @@ const BgGoal = (props) => {
       minBg != '' &&
       checkBloodGlucoseText(maxBg) === '' &&
       checkBloodGlucoseText(minBg) === '' &&
-      opened &&
       goalName.length != 0 &&
       errorMsg === ''
     ) {
@@ -179,39 +164,30 @@ const BgGoal = (props) => {
         <Text style={[globalStyles.pageDetails, {marginBottom: '4%'}]}>
           Blood Glucose Goal
         </Text>
-        <ScrollView contentContainerStyle={{flexGrow: 1}}>
-          <NameDateSelector
-            goalName={goalName}
-            setGoalName={setGoalName}
-            startDate={startDate}
-            setStartDate={setStartDate}
-            endDate={endDate}
-            setEndDate={setEndDate}
-            opened={opened}
-            setOpened={setOpened}
-          />
-          <FrequencySelector
-            selected={frequency}
-            setSelected={setFrequency}
-            fieldName="Frequency"
-            dropDownType="frequency"
-          />
-          {BgValue(minBg, setFunction, min_key)}
-          {BgValue(maxBg, setFunction, max_key)}
-          <Text style={[globalStyles.alertText, styles.spacing]}>
-            {errorMsg}
-          </Text>
-          {checkBloodGlucoseText(minBg) != '' && (
-            <Text style={[globalStyles.alertText, styles.spacing]}>
-              Min Reading: {checkBloodGlucoseText(minBg)}
-            </Text>
-          )}
-          {checkBloodGlucoseText(maxBg) != '' && (
-            <Text style={[globalStyles.alertText, styles.spacing]}>
-              Max Reading: {checkBloodGlucoseText(maxBg)}
-            </Text>
-          )}
-        </ScrollView>
+        <KeyboardAvoidingView
+          style={{flex: 1}}
+          behavior={Platform.OS === 'ios' ? 'padding' : null}>
+          <View style={{flex: 1}}>
+            <ScrollView contentContainerStyle={{flexGrow: 1}}>
+              <NameDateSelector goalName={goalName} setGoalName={setGoalName} />
+              {BgValue(minBg, setFunction, min_key)}
+              {BgValue(maxBg, setFunction, max_key)}
+              <Text style={[globalStyles.alertText, styles.spacing]}>
+                {errorMsg}
+              </Text>
+              {checkBloodGlucoseText(minBg) != '' && (
+                <Text style={[globalStyles.alertText, styles.spacing]}>
+                  Min Reading: {checkBloodGlucoseText(minBg)}
+                </Text>
+              )}
+              {checkBloodGlucoseText(maxBg) != '' && (
+                <Text style={[globalStyles.alertText, styles.spacing]}>
+                  Max Reading: {checkBloodGlucoseText(maxBg)}
+                </Text>
+              )}
+            </ScrollView>
+          </View>
+        </KeyboardAvoidingView>
         <View style={[globalStyles.buttonContainer]}>
           {showSubmitBtn() === false ? (
             <TouchableOpacity style={globalStyles.skipButtonStyle}>

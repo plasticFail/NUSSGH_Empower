@@ -6,33 +6,27 @@ import {
   StyleSheet,
   ScrollView,
   Alert,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 //third party lib
 import Modal from 'react-native-modal';
-import Moment from 'moment';
 //styles
 import {Colors} from '../../../styles/colors';
 import globalStyles from '../../../styles/globalStyles';
 //component
 import LeftArrowBtn from '../../logs/leftArrowBtn';
 import NameDateSelector from '../nameDateSelector';
-import FrequencySelector from '../dropDownSelector';
 import RenderCounter from '../renderCounter';
 //function
-import {maxSteps, getDateObj} from '../../../commonFunctions/diaryFunctions';
+import {maxSteps} from '../../../commonFunctions/diaryFunctions';
 import {addStepsGoalReq} from '../../../netcalls/requestsGoals';
-import {getFrequency} from '../../../commonFunctions/goalFunctions';
 
 const StepsGoal = (props) => {
   const {visible, parent, step} = props;
   const {close} = props;
 
   const [goalName, setGoalName] = useState('');
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
-  //change select date to date option *
-  const [opened, setOpened] = useState(false);
-  const [frequency, setFrequency] = useState({name: 'Daily', value: 'daily'});
 
   const [steps, setSteps] = useState(maxSteps);
 
@@ -40,11 +34,7 @@ const StepsGoal = (props) => {
 
   useEffect(() => {
     if (parent != undefined && step != undefined) {
-      setOpened(true);
       setGoalName(step.name);
-      setStartDate(getDateObj(step.start_date));
-      setEndDate(getDateObj(step.end_date));
-      setFrequency(getFrequency(step.frequency));
       setSteps(step.steps);
       setPageText('Edit Goal');
     }
@@ -57,9 +47,6 @@ const StepsGoal = (props) => {
   const submit = () => {
     let obj = {
       name: goalName,
-      start_date: Moment(startDate).format('DD/MM/YYYY HH:mm:ss'),
-      end_date: Moment(endDate).format('DD/MM/YYYY HH:mm:ss'),
-      frequency: frequency.value,
       steps: steps,
     };
     if (parent != undefined) {
@@ -96,7 +83,7 @@ const StepsGoal = (props) => {
   };
 
   const showSubmitBtn = () => {
-    if (opened && goalName.length > 0) {
+    if (goalName.length > 0 && steps > 0) {
       return true;
     }
     return false;
@@ -118,30 +105,21 @@ const StepsGoal = (props) => {
         <Text style={[globalStyles.pageDetails, {marginBottom: '4%'}]}>
           Steps Goal
         </Text>
-        <ScrollView contentContainerStyle={{flexGrow: 1}}>
-          <NameDateSelector
-            goalName={goalName}
-            setGoalName={setGoalName}
-            startDate={startDate}
-            setStartDate={setStartDate}
-            endDate={endDate}
-            setEndDate={setEndDate}
-            opened={opened}
-            setOpened={setOpened}
-          />
-          <FrequencySelector
-            selected={frequency}
-            setSelected={setFrequency}
-            fieldName="Frequency"
-            dropDownType="frequency"
-          />
-          <RenderCounter
-            fieldName="Min Steps"
-            item={steps}
-            setItem={setSteps}
-            parameter={''}
-          />
-        </ScrollView>
+        <KeyboardAvoidingView
+          style={{flex: 1}}
+          behavior={Platform.OS === 'ios' ? 'padding' : null}>
+          <View style={{flex: 1}}>
+            <ScrollView contentContainerStyle={{flexGrow: 1}}>
+              <NameDateSelector goalName={goalName} setGoalName={setGoalName} />
+              <RenderCounter
+                fieldName="Min Steps"
+                item={steps}
+                setItem={setSteps}
+                parameter={''}
+              />
+            </ScrollView>
+          </View>
+        </KeyboardAvoidingView>
         <View style={[globalStyles.buttonContainer]}>
           {showSubmitBtn() === false ? (
             <TouchableOpacity style={globalStyles.skipButtonStyle}>

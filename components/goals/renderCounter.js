@@ -6,11 +6,17 @@ import StepCounter from '../stepCounter';
 const RenderCounter = (props) => {
   const {fieldName, item, parameter} = props;
   const {setItem} = props;
+
+  console.log(parameter);
   return (
     <View style={{marginBottom: '3%'}}>
-      <Text style={[globalStyles.goalFieldName, {flex: 0}]}>
-        {fieldName} ({parameter})
-      </Text>
+      {parameter === '' ? (
+        <Text style={[globalStyles.goalFieldName, {flex: 0}]}>{fieldName}</Text>
+      ) : (
+        <Text style={[globalStyles.goalFieldName, {flex: 0}]}>
+          {fieldName} [{parameter}]
+        </Text>
+      )}
       <View style={{marginTop: '-9%'}}>
         <StepCounter
           count={item}

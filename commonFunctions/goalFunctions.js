@@ -26,6 +26,18 @@ const weeklyGoalList = [
   {name: 'Gain 0.5 kg per week', value: 0.5},
 ];
 
+const checkSpecialChara = (input) => {
+  let toCheck = String(input);
+  if (
+    toCheck.match(/^[0-9]+(\.[0-9]{1,2})?$/g) &&
+    !toCheck.includes(',') &&
+    !toCheck.includes('-')
+  ) {
+    return true;
+  }
+  return false;
+};
+
 const renderGoalTypeName = (type) => {
   switch (type) {
     case bg:
@@ -120,4 +132,5 @@ export {
   getFrequency,
   getWeeklyObj,
   getGoalObjById,
+  checkSpecialChara,
 };

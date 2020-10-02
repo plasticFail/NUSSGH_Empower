@@ -6,27 +6,25 @@ import {
   StyleSheet,
   ScrollView,
   Alert,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 //third party lib
 import Modal from 'react-native-modal';
-import Moment from 'moment';
 //styles
 import {Colors} from '../../../styles/colors';
 import globalStyles from '../../../styles/globalStyles';
 //component
 import LeftArrowBtn from '../../logs/leftArrowBtn';
 import NameDateSelector from '../nameDateSelector';
-import FrequencySelector from '../dropDownSelector';
 import RenderCounter from '../renderCounter';
 //function
 import {
   maxCarbs,
   maxFats,
   maxProtein,
-  getDateObj,
 } from '../../../commonFunctions/diaryFunctions';
 import {addFoodGoalReq} from '../../../netcalls/requestsGoals';
-import {getFrequency} from '../../../commonFunctions/goalFunctions';
 
 const initialCal = 1000;
 const initialCarbs = maxCarbs / 2;
@@ -38,12 +36,6 @@ const FoodGoal = (props) => {
   const {close} = props;
 
   const [goalName, setGoalName] = useState('');
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
-  //change select date to date option *
-  const [opened, setOpened] = useState(false);
-  const [frequency, setFrequency] = useState({name: 'Daily', value: 'daily'});
-
   const [cal, setCal] = useState(initialCal);
   const [carbs, setCarbs] = useState(initialCarbs);
   const [fats, setFats] = useState(initialFat);
@@ -52,11 +44,7 @@ const FoodGoal = (props) => {
 
   useEffect(() => {
     if (parent != undefined && food != undefined) {
-      setOpened(true);
       setGoalName(food.name);
-      setStartDate(getDateObj(food.start_date));
-      setEndDate(getDateObj(food.end_date));
-      setFrequency(getFrequency(food.frequency));
       setCal(food.calories);
       setCarbs(food.carbs);
       setProtein(food.protein);
@@ -72,9 +60,6 @@ const FoodGoal = (props) => {
   const submit = async () => {
     let obj = {
       name: goalName,
-      start_date: Moment(startDate).format('DD/MM/YYYY HH:mm:ss'),
-      end_date: Moment(endDate).format('DD/MM/YYYY HH:mm:ss'),
-      frequency: frequency.value,
       calories: cal,
       carbs: carbs,
       protein: protein,
@@ -114,7 +99,13 @@ const FoodGoal = (props) => {
   };
 
   const showSubmitBtn = () => {
-    if (opened && goalName.length > 0) {
+    if (
+      goalName.length > 0 &&
+      protein != 0 &&
+      carbs != 0 &&
+      cal != 0 &&
+      fats != 0
+    ) {
       return true;
     }
     return false;
@@ -135,48 +126,39 @@ const FoodGoal = (props) => {
         <Text style={[globalStyles.pageDetails, {marginBottom: '4%'}]}>
           Food Intake Goal
         </Text>
-        <ScrollView contentContainerStyle={{flexGrow: 1}}>
-          <NameDateSelector
-            goalName={goalName}
-            setGoalName={setGoalName}
-            startDate={startDate}
-            setStartDate={setStartDate}
-            endDate={endDate}
-            setEndDate={setEndDate}
-            opened={opened}
-            setOpened={setOpened}
-          />
-          <FrequencySelector
-            selected={frequency}
-            setSelected={setFrequency}
-            fieldName="Frequency"
-            dropDownType="frequency"
-          />
-          <RenderCounter
-            fieldName="Cal"
-            item={cal}
-            setItem={setCal}
-            parameter={'kCal'}
-          />
-          <RenderCounter
-            fieldName="Carbs"
-            item={carbs}
-            setItem={setCarbs}
-            parameter={'g'}
-          />
-          <RenderCounter
-            fieldName="Fats"
-            item={fats}
-            setItem={setFats}
-            parameter={'g'}
-          />
-          <RenderCounter
-            fieldName="Protein"
-            item={protein}
-            setItem={setProtein}
-            parameter={'g'}
-          />
-        </ScrollView>
+        <KeyboardAvoidingView
+          style={{flex: 1}}
+          behavior={Platform.OS === 'ios' ? 'padding' : null}>
+          <View style={{flex: 1}}>
+            <ScrollView contentContainerStyle={{flexGrow: 1}}>
+              <NameDateSelector goalName={goalName} setGoalName={setGoalName} />
+              <RenderCounter
+                fieldName="Cal"
+                item={cal}
+                setItem={setCal}
+                parameter={'kCal'}
+              />
+              <RenderCounter
+                fieldName="Carbs"
+                item={carbs}
+                setItem={setCarbs}
+                parameter={'g'}
+              />
+              <RenderCounter
+                fieldName="Fats"
+                item={fats}
+                setItem={setFats}
+                parameter={'g'}
+              />
+              <RenderCounter
+                fieldName="Protein"
+                item={protein}
+                setItem={setProtein}
+                parameter={'g'}
+              />
+            </ScrollView>
+          </View>
+        </KeyboardAvoidingView>
         <View style={[globalStyles.buttonContainer]}>
           {showSubmitBtn() === false ? (
             <TouchableOpacity style={globalStyles.skipButtonStyle}>
