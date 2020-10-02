@@ -45,6 +45,7 @@ import {
   isMonday,
 } from '../../commonFunctions/goalFunctions';
 import AboutGoals from '../../components/goals/aboutGoals';
+import InProgress from '../../components/inProgress';
 
 const GoalsScreen = (props) => {
   const [openAdd, setOpenAdd] = useState(false);
@@ -71,6 +72,7 @@ const GoalsScreen = (props) => {
         <LeftArrowBtn close={() => props.navigation.navigate('Home')} />
       </View>
       <Text style={globalStyles.pageHeader}>Goals</Text>
+      {/*
       <View style={{flexDirection: 'row'}}>
         <Text style={[globalStyles.pageDetails, {flex: 1}]}>
           Edit Your Targets
@@ -92,7 +94,6 @@ const GoalsScreen = (props) => {
         />
         <Text style={styles.addbutton}>Add Goal</Text>
       </TouchableOpacity>
-      {/*Render My Goals */}
       <ScrollView contentContainerStyle={{flexGrow: 1}}>
         <GoalList goals={goals} init={initGoals} />
         <Text
@@ -102,7 +103,6 @@ const GoalsScreen = (props) => {
           ]}>
           Suggestions
         </Text>
-        {/* to use with actual suggested goals*/}
       </ScrollView>
       <AddGoalModal
         visible={openAdd}
@@ -114,6 +114,8 @@ const GoalsScreen = (props) => {
       />
       <LoadingModal visible={loading} message={'Retrieving your goals'} />
       <AboutGoals visible={showInfo} closeModal={() => setShowInfo(false)} />
+      */}
+      <InProgress />
     </View>
   );
 };
