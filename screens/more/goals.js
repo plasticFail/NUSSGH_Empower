@@ -81,12 +81,6 @@ const GoalsScreen = (props) => {
           <Icon name="information-outline" size={30} color={'#aad326'} />
         </TouchableOpacity>
       </View>
-      <Text
-        style={[globalStyles.goalFieldName, {marginTop: 0, marginStart: '3%'}]}>
-        Your Goals
-      </Text>
-      <GoalList goals={goals} init={initGoals} />
-
       <TouchableOpacity
         onPress={() => setOpenAdd(true)}
         style={{flexDirection: 'row'}}>
@@ -98,23 +92,18 @@ const GoalsScreen = (props) => {
         />
         <Text style={styles.addbutton}>Add Goal</Text>
       </TouchableOpacity>
-
-      <Text
-        style={[
-          globalStyles.goalFieldName,
-          {marginTop: '2%', marginStart: '3%'},
-        ]}>
-        Physician-Set Goals
-      </Text>
-
-      <Text
-        style={[
-          globalStyles.goalFieldName,
-          {marginTop: '2%', marginStart: '3%'},
-        ]}>
-        Suggested Goal
-      </Text>
-
+      {/*Render My Goals */}
+      <ScrollView contentContainerStyle={{flexGrow: 1}}>
+        <GoalList goals={goals} init={initGoals} />
+        <Text
+          style={[
+            globalStyles.goalFieldName,
+            {marginTop: '2%', marginStart: '3%'},
+          ]}>
+          Suggestions
+        </Text>
+        {/* to use with actual suggested goals*/}
+      </ScrollView>
       <AddGoalModal
         visible={openAdd}
         close={() => {
@@ -130,34 +119,6 @@ const GoalsScreen = (props) => {
 };
 
 export default GoalsScreen;
-
-function renderGoalType(goalItem, type) {
-  let progress = goalItem.progress + '%';
-  return (
-    <View
-      style={{
-        margin: '3%',
-        flexDirection: 'row',
-      }}>
-      {renderGoalLogo(type)}
-      <View style={{flex: 1}}>
-        <Text style={styles.goalType}>{renderGoalTypeName(type)}</Text>
-        <ProgressBar
-          progress={progress}
-          useIndicatorLevel={false}
-          reverse={true}
-          progressBarColor={'#aad326'}
-          containerStyle={styles.progressContainer}
-        />
-        <Text
-          style={[globalStyles.pageDetails, {marginStart: 0, marginTop: '2%'}]}>
-          {goalItem.name}
-        </Text>
-      </View>
-      <CHEV_RIGHT height={23} width={23} marginTop={'2%'} />
-    </View>
-  );
-}
 
 function renderGoalLogo(type) {
   switch (type) {

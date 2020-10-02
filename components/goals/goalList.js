@@ -39,16 +39,12 @@ import {
   getNumofGoals,
   getGoalObjById,
 } from '../../commonFunctions/goalFunctions';
-import {isEmpty} from '../../commonFunctions/common';
-import {goal} from '../../netcalls/urls';
 
-const height = Dimensions.get('window').height;
+const progress = 0.3;
 
 const GoalList = (props) => {
   const {goals} = props;
   const {init} = props;
-  const [showDown, setShowDown] = useState(true);
-  const moveDownAnimation = useRef(new Animated.Value(0)).current;
   const [selectedGoal, setSelectedGoal] = useState({});
   const [selectedType, setSelectedType] = useState('');
   const [showDetail, setShowDetail] = useState(false);
@@ -61,44 +57,6 @@ const GoalList = (props) => {
     }
   }, [goals]);
 
-  useEffect(() => {
-    if (showDown) {
-      runAnimation();
-    }
-  }, [showDown]);
-
-  const runAnimation = () => {
-    setShowDown(true);
-    moveDownAnimation.setValue(0);
-    Animated.loop(
-      Animated.timing(moveDownAnimation, {
-        toValue: 1,
-        duration: 1500,
-        useNativeDriver: true,
-      }),
-    ).start();
-  };
-
-  const removeAnimation = () => {
-    setShowDown(false);
-    moveDownAnimation.setValue(0);
-  };
-
-  const heightInterpolation = moveDownAnimation.interpolate({
-    inputRange: [0, 1],
-    outputRange: [height * -0.02, height * 0.01],
-  });
-
-  const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
-    return (
-      layoutMeasurement.height + contentOffset.y >= contentSize.height - 30
-    );
-  };
-
-  const isCloseToTop = ({layoutMeasurement, contentOffset, contentSize}) => {
-    return contentOffset.y == 0;
-  };
-
   const openGoalDetail = (item, type) => {
     setSelectedGoal(item);
     setSelectedType(type);
@@ -106,39 +64,9 @@ const GoalList = (props) => {
   };
 
   return (
-    <View style={{maxHeight: height * 0.27}}>
+    <>
       {getNumofGoals(goals) != 0 ? (
-        <>
-          <ScrollView
-            style={{flexGrow: 1}}
-            scrollEventThrottle={100}
-            onScroll={({nativeEvent}) => {
-              if (isCloseToTop(nativeEvent)) {
-                return runAnimation();
-              }
-              if (isCloseToBottom(nativeEvent)) {
-                return removeAnimation();
-              } else {
-                setShowDown(true);
-              }
-            }}>
-            {RenderGoalItems(goals, openGoalDetail)}
-          </ScrollView>
-          {getNumofGoals(goals) >= 3 && showDown && (
-            <Animated.View
-              style={[
-                {transform: [{translateY: heightInterpolation}]},
-                {position: 'absolute', right: '2%'},
-              ]}>
-              <Icon
-                name="arrow-circle-down"
-                size={30}
-                color={Colors.lastLogButtonColor}
-                style={styles.downIcon}
-              />
-            </Animated.View>
-          )}
-        </>
+        RenderGoalItems(goals, openGoalDetail)
       ) : (
         <Text style={styles.noGoalsText}>No goals set yet!</Text>
       )}
@@ -155,7 +83,7 @@ const GoalList = (props) => {
           setSelectedGoal({});
         }}
       />
-    </View>
+    </>
   );
 };
 
@@ -167,28 +95,33 @@ function RenderGoalItems(array, openGoalDetail) {
       return (
         <TouchableOpacity
           key={index}
-          style={[{flex: 1}, styles.border]}
+          style={styles.border}
           onPress={() => openGoalDetail(goal, item)}>
-          {renderGoalType(goal, item, openGoalDetail)}
+          {renderGoalType(goal, item)}
         </TouchableOpacity>
       );
     }),
   );
 }
 
+//later check who set the goal*
 function renderGoalType(goalItem, type) {
-  let progress = goalItem.progress + '%';
+  let percent = progress * 100 + '%';
   return (
     <View
       style={{
-        margin: '3%',
         flexDirection: 'row',
       }}>
       {renderGoalLogo(type)}
       <View style={{flex: 1}}>
-        <Text style={styles.goalType}>{renderGoalTypeName(type)}</Text>
+        <View style={{flexDirection: 'row', marginBottom: '3%'}}>
+          <Text style={styles.goalType}>{renderGoalTypeName(type)}</Text>
+          <View style={[styles.byWhoTag, styles.shadow]}>
+            <Text>Self</Text>
+          </View>
+        </View>
         <ProgressBar
-          progress={progress}
+          progress={percent}
           useIndicatorLevel={false}
           reverse={true}
           progressBarColor={'#aad326'}
@@ -253,5 +186,22 @@ const styles = StyleSheet.create({
     color: Colors.alertColor,
     fontSize: 18,
     margin: '3%',
+  },
+  byWhoTag: {
+    borderRadius: 20,
+    backgroundColor: '#aad326',
+    marginStart: '3%',
+    paddingHorizontal: '3%',
+    paddingVertical: '1%',
+  },
+  shadow: {
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
 });

@@ -43,10 +43,11 @@ import MedicationGoal from './blocks/medicationGoal';
 import StepsGoal from './blocks/stepsGoal';
 import ActivityGoal from './blocks/activityGoal';
 import WeightGoal from './blocks/weightGoal';
+import ProgressBar from '../progressbar';
 
 //set default progress first
 //havent differentiate who is setting the goal*
-const progress = '50%';
+const progress = 0.3;
 const GoalDetail = (props) => {
   const {visible, goalItem, type} = props;
   const {close, init, deleteInit} = props;
@@ -57,10 +58,6 @@ const GoalDetail = (props) => {
   useEffect(() => {
     init();
   }, [showEditModal]);
-
-  const showDate = (datestring) => {
-    return moment(getDateObj(datestring)).format('DD MMM YYYY');
-  };
 
   const formatFrequency = (string) => {
     return (
@@ -121,12 +118,9 @@ const GoalDetail = (props) => {
         <Text style={globalStyles.pageHeader}>View Goal</Text>
         <Text style={globalStyles.pageDetails}>Your Goals</Text>
         <ScrollView contentContainerStyle={{flexGrow: 1}}>
-          {RenderProgressCard(type, goalItem.name, progress)}
-          {RenderField('Start Date', showDate(goalItem.start_date))}
-          {RenderField('End Date', showDate(goalItem.end_date))}
-          {type === weight
-            ? RenderField('Frequency', 'Weekly')
-            : RenderField('Frequency', formatFrequency(goalItem.frequency))}
+          {type != food
+            ? RenderProgressCard(type, goalItem.name, progress)
+            : RenderProgressBarCard(type, goalItem.name, progress)}
 
           {/*Render goal type specific fields*/}
           {type === bg ? (
@@ -263,16 +257,81 @@ function RenderField(fieldName, fieldData, units) {
   );
 }
 
+function RenderProgressBarCard(type, goalName, progress) {
+  let percent = '0%';
+  if (progress != null) {
+    percent = progress * 100 + '%';
+  }
+  return (
+    <View
+      style={[
+        styles.card,
+        styles.shadow,
+        {flexDirection: 'column', alignItems: 'flex-start'},
+      ]}>
+      <Text style={globalStyles.pageDetails}>{renderGoalTypeName(type)}</Text>
+      <Text style={[globalStyles.pageDetails, styles.goalName]}>
+        {goalName}
+      </Text>
+      <View style={{flexDirection: 'row'}}>
+        <ProgressBar
+          containerStyle={{
+            height: 20,
+            marginBottom: 5,
+            borderRadius: 0,
+            flex: 1,
+            marginStart: '3%',
+            marginEnd: '2%',
+          }}
+          progress={percent}
+          reverse={false}
+          useIndicatorLevel={true}
+        />
+        {progress > 0.65 ? (
+          <View
+            style={{
+              flexDirection: 'column',
+              alignSelf: 'flex-end',
+            }}>
+            <Text style={[styles.targetStyle, styles.foodpercent]}>
+              {percent}
+            </Text>
+            <Text style={[styles.targetStyle, {color: '#ff0844'}]}>
+              Not On Target
+            </Text>
+          </View>
+        ) : (
+          <View style={{flexDirection: 'column', alignSelf: 'flex-end'}}>
+            <Text
+              style={[
+                styles.targetStyle,
+                styles.foodpercent,
+                {color: Colors.lastLogButtonColor},
+              ]}>
+              {percent}
+            </Text>
+            <Text
+              style={[styles.targetStyle, {color: Colors.lastLogButtonColor}]}>
+              On Target
+            </Text>
+          </View>
+        )}
+      </View>
+    </View>
+  );
+}
+
 function RenderProgressCard(type, goalName, progress) {
+  let percent = progress * 100 + '%';
   return (
     <View style={[styles.card, styles.shadow]}>
       <CircularProgress
         color="#aad326"
-        percent={0.65}
+        percent={progress}
         centreComponent={{
           width: 40 / 2,
           height: 40 / 2,
-          component: <Text style={styles.percentageText}>{progress}</Text>,
+          component: <Text style={styles.percentageText}>{percent}</Text>,
         }}
         radius={40}
         padding={5}
@@ -324,5 +383,16 @@ const styles = StyleSheet.create({
     color: '#8a8a8e',
     fontSize: 15,
     fontFamily: 'SFProDisplay-Regular',
+  },
+  targetStyle: {
+    fontSize: 18,
+    marginStart: '2%',
+  },
+  foodpercent: {
+    color: '#ff0844',
+    alignSelf: 'flex-end',
+    position: 'absolute',
+    top: '-80%%',
+    fontSize: 20,
   },
 });
