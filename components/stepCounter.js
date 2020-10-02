@@ -116,6 +116,7 @@ export default class StepCounter extends Component {
                 this.setState({count: Number(value)});
                 this.props.setCount(Number(value));
               }}
+              returnKeyType="done"
             />
           </>
         )}

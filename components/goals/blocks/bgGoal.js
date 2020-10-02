@@ -257,6 +257,7 @@ function BgValue(value, setFunction, type) {
         style={[logStyles.inputField, {marginEnd: '4%', width: '20%'}]}
         placeholderTextColor="#a1a3a0"
         keyboardType="decimal-pad"
+        returnKeyType="done"
         value={value}
         onChangeText={(input) => setFunction(type, input)}
       />
