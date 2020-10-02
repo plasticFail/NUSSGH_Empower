@@ -38,6 +38,7 @@ import {getDefaultMealType} from '../../../commonFunctions/mealLogFunctions';
 import MealTypeSelectionBlock from '../../../components/logs/meal/MealTypeSelectionBlock';
 import CreateMealLogBlock from '../../../components/logs/meal/CreateMealLogBlock';
 import LeftArrowBtn from '../../../components/logs/leftArrowBtn';
+import LoadingModal from '../../../components/loadingModal';
 // Functions
 
 const fixedDateTime = new Date();
@@ -63,6 +64,8 @@ class AddLogScreen extends Component {
       showMed: false,
       showWeight: false,
       showSuccess: false,
+
+      loading: true,
 
       completedTypes: [],
       notCompletedTypes: [],
@@ -105,6 +108,7 @@ class AddLogScreen extends Component {
     });
     checkLogDone(period).then((response) => {
       if (response !== undefined) {
+        this.setState({loading: false});
         this.setState({completedTypes: response.completed});
         this.setState({notCompletedTypes: response.notCompleted});
       }
@@ -190,6 +194,7 @@ class AddLogScreen extends Component {
       notCompletedTypes,
       completedTypes,
       slideRightAnimation,
+      loading,
     } = this.state;
     const {showBg, showMed, showWeight, showFood} = this.state;
     const widthInterpolate = slideRightAnimation.interpolate({
@@ -343,6 +348,7 @@ class AddLogScreen extends Component {
             </Modal>
           </ScrollView>
         </Animated.View>
+        <LoadingModal visible={loading} />
       </View>
     );
   }
