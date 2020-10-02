@@ -244,21 +244,20 @@ class TargetBlock extends Component {
     }
   };
 
-  getMedResult = async () => {
-    checkMedTaken4Day(this.state.medLogs, this.props.date).then((response) => {
-      if (response === false) {
-        this.setState({medCompleted: false});
-      }
-      if (response === 0) {
-        //no medication for the day
-        this.setState({medMiss: false});
-        this.setState({noMed4Day: true});
-      } else if (response === true) {
-        this.setState({medCompleted: true});
-      } else if (this.state.medLogs.length === 0) {
-        this.setState({medMiss: true});
-      }
-    });
+  getMedResult = () => {
+    if (this.state.medLogs.length > 0) {
+      checkMedTaken4Day(this.state.medLogs, this.props.date).then(
+        (response) => {
+          if (response === false) {
+            this.setState({medCompleted: false});
+          } else {
+            this.setState({medCompleted: true});
+          }
+        },
+      );
+    } else {
+      this.setState({medMiss: true});
+    }
   };
 
   openModalType = (selectedType) => {
@@ -346,7 +345,7 @@ class TargetBlock extends Component {
               {item === bg_key && renderContent(bg_key, bgMiss, bgPass, avgBg)}
               {item === food_key && renderContent(food_key, foodMiss, foodPass)}
               {item === med_key &&
-                renderMedContent(medMiss, medCompleted, medLogs, noMed4Day)}
+                renderMedContent(medMiss, medCompleted, medLogs)}
               {item === weight_key && renderContent2(weightMiss)}
               {item === activity_key &&
                 renderContent(
@@ -441,18 +440,11 @@ class TargetBlock extends Component {
 }
 
 //for med log
-function renderMedContent(medMiss, medCompleted, medLogs, noMed4Day) {
-  console.log(medMiss);
-  if (noMed4Day) {
-    return <Text style={styles.buttonDetail2}>No medications for the day</Text>;
-  } else if (!medCompleted && !medMiss) {
-    let arr = getMedDonePeriods(medLogs);
-    let greetings = renderGreetingText(arr);
-    return <Text style={styles.buttonDetail2}>Taken in the {greetings}</Text>;
-  } else if (medMiss) {
+function renderMedContent(medMiss, medCompleted, medLogs) {
+  if (medMiss) {
     return (
       <View style={{flexDirection: 'row'}}>
-        <Text style={styles.buttonDetail}>Missed </Text>
+        <Text style={styles.buttonDetail}>Missed</Text>
         <Ionicon
           name="alert-circle-outline"
           style={diaryStyles.failIcon}
@@ -460,6 +452,10 @@ function renderMedContent(medMiss, medCompleted, medLogs, noMed4Day) {
         />
       </View>
     );
+  } else if (!medCompleted) {
+    let arr = getMedDonePeriods(medLogs);
+    let greetings = renderGreetingText(arr);
+    return <Text style={styles.buttonDetail2}>Taken in the {greetings}</Text>;
   } else {
     return (
       <View style={{flexDirection: 'row'}}>
@@ -528,7 +524,7 @@ function renderContent(type, miss, pass, value) {
           <Text style={styles.buttonDetail}>Average {value} mmol/L</Text>
         )}
         {type === food_key && (
-          <Text style={styles.buttonDetail}>UnHealthy Range</Text>
+          <Text style={styles.buttonDetail}>Unhealthy Range</Text>
         )}
         {type === activity_key && (
           <Text style={styles.buttonDetail}>{value} Active Minutes</Text>
