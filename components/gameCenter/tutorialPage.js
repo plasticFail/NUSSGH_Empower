@@ -69,7 +69,7 @@ const TutorialPage = (props) => {
     return <View style={[styles.modalView, GameCenterStyles.card, GameCenterStyles.cardPadding]}>
         <Image resizeMode="contain" style={styles.image} source={tutorialImage(currentStep)}/>
         <Image resizeMode="contain" style={styles.imageSub} source={subTutorialImage(currentStep)}/>
-        <View style={styles.subContainer}>
+        <View style={GameCenterStyles.subContainerNarrow}>
             {steps.map((item, index) => (
                 <Ionicon
                     name="ellipse"
@@ -79,7 +79,7 @@ const TutorialPage = (props) => {
                 />
             ))}
         </View>
-        <View style={styles.subContainer}>
+        <View style={GameCenterStyles.subContainer}>
             {currentStep > 0 &&
                 (<TouchableOpacity
                     style={[GameCenterStyles.buttonStyle, GameCenterStyles.backColor, {width: '50%'}]}
@@ -116,9 +116,6 @@ const styles = StyleSheet.create({
         width:'100%',
         height:undefined,
         aspectRatio:1.8,
-    },
-    subContainer: {
-        flexDirection: 'row'
     },
     stepDot:{
         marginHorizontal: 3

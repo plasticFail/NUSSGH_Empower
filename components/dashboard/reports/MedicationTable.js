@@ -140,4 +140,18 @@ function MedicationRowDisplay({med, quantity}) {
     )
 }
 
-export {MedicationTable};
+function MedicationDateDisplay({filterKey, style}) {
+    const dateFormat = 'DD MMM';
+    const startDate = filterKey === DAY_FILTER_KEY ? Moment(new Date()).format(dateFormat) :
+        filterKey === WEEK_FILTER_KEY ? Moment(new Date()).subtract(7, 'days').format(dateFormat) :
+            Moment(new Date()).subtract(28, "days").format(dateFormat);
+    const endDate = Moment(new Date()).format(dateFormat);
+
+    return (
+        <View style={style}>
+            <Text style={{fontSize: 18, color: '#3C3C43'}}>{`${startDate} - ${endDate}`}</Text>
+        </View>
+    )
+}
+
+export {MedicationTable, MedicationDateDisplay};
