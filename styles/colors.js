@@ -17,4 +17,6 @@ export const Colors = {
   gameColorGreen: '#aad326',
   gameColorWhite: '#f6f7fa',
   gameColorGrey: '#E1E7ED',
+  editBackgroundColor: '#f6f7fa',
+  inputBorderColor: '#e1e7ed',
 };
