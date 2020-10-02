@@ -36,6 +36,7 @@ import WeightBlock from './blocks/weightBlock';
 import ActivityBlock from './blocks/activityBlock';
 import MedBlock from './blocks/medBlock';
 import FoodBlock from './blocks/foodBlock';
+import {getMedication4Day} from '../../netcalls/requestsLog';
 
 const button_list = [bg_key, food_key, med_key, weight_key, activity_key];
 
@@ -148,6 +149,7 @@ class TargetBlock extends Component {
       foodPass: true,
       medCompleted: false,
       activityPass: true,
+      noMed4Day: false,
 
       targetBg: {},
       activityTarget: {},
@@ -242,20 +244,21 @@ class TargetBlock extends Component {
     }
   };
 
-  getMedResult = () => {
-    if (this.state.medLogs.length > 0) {
-      checkMedTaken4Day(this.state.medLogs, this.props.date).then(
-        (response) => {
-          if (response === false) {
-            this.setState({medCompleted: false});
-          } else {
-            this.setState({medCompleted: true});
-          }
-        },
-      );
-    } else {
-      this.setState({medMiss: true});
-    }
+  getMedResult = async () => {
+    checkMedTaken4Day(this.state.medLogs, this.props.date).then((response) => {
+      if (response === false) {
+        this.setState({medCompleted: false});
+      }
+      if (response === 0) {
+        //no medication for the day
+        this.setState({medMiss: false});
+        this.setState({noMed4Day: true});
+      } else if (response === true) {
+        this.setState({medCompleted: true});
+      } else if (this.state.medLogs.length === 0) {
+        this.setState({medMiss: true});
+      }
+    });
   };
 
   openModalType = (selectedType) => {
@@ -309,6 +312,7 @@ class TargetBlock extends Component {
       activityPass,
       activitySummary,
       medCompleted,
+      noMed4Day,
 
       avgBg,
       carbs,
@@ -342,7 +346,7 @@ class TargetBlock extends Component {
               {item === bg_key && renderContent(bg_key, bgMiss, bgPass, avgBg)}
               {item === food_key && renderContent(food_key, foodMiss, foodPass)}
               {item === med_key &&
-                renderMedContent(medMiss, medCompleted, medLogs)}
+                renderMedContent(medMiss, medCompleted, medLogs, noMed4Day)}
               {item === weight_key && renderContent2(weightMiss)}
               {item === activity_key &&
                 renderContent(
@@ -437,24 +441,55 @@ class TargetBlock extends Component {
 }
 
 //for med log
-function renderMedContent(medMiss, medCompleted, medLogs) {
-  if (medMiss) {
-    return <Text style={styles.buttonDetail}>Missed</Text>;
-  } else if (!medCompleted) {
+function renderMedContent(medMiss, medCompleted, medLogs, noMed4Day) {
+  console.log(medMiss);
+  if (noMed4Day) {
+    return <Text style={styles.buttonDetail2}>No medications for the day</Text>;
+  } else if (!medCompleted && !medMiss) {
     let arr = getMedDonePeriods(medLogs);
     let greetings = renderGreetingText(arr);
     return <Text style={styles.buttonDetail2}>Taken in the {greetings}</Text>;
+  } else if (medMiss) {
+    return (
+      <View style={{flexDirection: 'row'}}>
+        <Text style={styles.buttonDetail}>Missed </Text>
+        <Ionicon
+          name="alert-circle-outline"
+          style={diaryStyles.failIcon}
+          size={25}
+        />
+      </View>
+    );
   } else {
-    return <Text style={styles.buttonDetail}>Completed</Text>;
+    return (
+      <View style={{flexDirection: 'row'}}>
+        <Text style={styles.buttonDetail}>Completed</Text>
+        <Ionicon name="checkmark" style={diaryStyles.passIcon} size={25} />
+      </View>
+    );
   }
 }
 
 //for logs with criteria : miss/completed
 function renderContent2(miss) {
   if (miss) {
-    return <Text style={styles.buttonDetail}>Missed</Text>;
+    return (
+      <View style={{flexDirection: 'row'}}>
+        <Text style={styles.buttonDetail}>Missed </Text>
+        <Ionicon
+          name="alert-circle-outline"
+          style={diaryStyles.failIcon}
+          size={25}
+        />
+      </View>
+    );
   } else {
-    return <Text style={styles.buttonDetail}>Completed</Text>;
+    return (
+      <View style={{flexDirection: 'row'}}>
+        <Text style={styles.buttonDetail}>Completed</Text>
+        <Ionicon name="checkmark" style={diaryStyles.passIcon} size={25} />
+      </View>
+    );
   }
 }
 
@@ -463,7 +498,7 @@ function renderContent(type, miss, pass, value) {
   if (miss) {
     return (
       <View style={{flexDirection: 'row'}}>
-        <Text style={styles.buttonDetail}>Missed</Text>
+        <Text style={styles.buttonDetail}>Missed </Text>
         <Ionicon
           name="alert-circle-outline"
           style={diaryStyles.failIcon}
