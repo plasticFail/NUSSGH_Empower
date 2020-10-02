@@ -347,8 +347,8 @@ class AddLogScreen extends Component {
               />
             </Modal>
           </ScrollView>
+          <LoadingModal visible={loading} />
         </Animated.View>
-        <LoadingModal visible={loading} />
       </View>
     );
   }
