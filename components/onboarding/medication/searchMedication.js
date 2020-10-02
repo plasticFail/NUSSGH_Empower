@@ -208,8 +208,7 @@ const SearchMedication = (props) => {
         ) : (
           <>
             <Text style={styles.prompt}>
-              Input the medication you want to add for the day in the search
-              bar!
+              Input the medication you want to add in the search bar!
             </Text>
             <View style={{flex: 1}} />
           </>

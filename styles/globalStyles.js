@@ -116,7 +116,7 @@ const globalStyles = StyleSheet.create({
     marginBottom: verticalMarginsBetweenComponent,
     alignItems: 'flex-end',
     flexDirection: 'row',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   //edit pages
   editPageContainer: {
@@ -131,6 +131,45 @@ const globalStyles = StyleSheet.create({
     borderRadius: 9.5,
     borderWidth: 0.5,
     borderColor: Colors.inputBorderColor,
+  },
+  //goal
+  goalFieldName: {
+    color: Colors.lastLogValueColor,
+    marginStart: '4%',
+    fontSize: normalTextFontSize,
+    fontFamily: 'SFProDisplay-Bold',
+    marginTop: '3%',
+  },
+  goalFieldBottomBorder: {
+    borderBottomColor: '#e1e7ed',
+    borderBottomWidth: 1,
+    paddingBottom: '2%',
+  },
+  //delete modal
+  deleteDetails: {
+    fontSize: 16,
+    margin: '4%',
+  },
+  deleteButton: {
+    backgroundColor: '#ff0844',
+    height: 45,
+    width: '70%',
+    alignSelf: 'center',
+    borderRadius: 15,
+    margin: '4%',
+  },
+  deleteButtonText: {
+    fontSize: 20,
+    textAlign: 'center',
+    marginVertical: '3%',
+    fontWeight: '500',
+    color: 'white',
+  },
+  subOptionText: {
+    fontSize: 20,
+    textAlign: 'center',
+    color: '#ff0844',
+    marginBottom: '3%',
   },
   pageIcon: {
     paddingTop: '2%',

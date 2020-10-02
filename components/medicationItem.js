@@ -3,6 +3,7 @@ import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
 //third party lib
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import logStyles from '../styles/logStyles';
+import DeleteBin from './deleteBin';
 
 function MedicationItem({medication, handleDelete}) {
   return (
@@ -21,11 +22,10 @@ function MedicationItem({medication, handleDelete}) {
           </Text>
         ) : null}
       </View>
-      <TouchableOpacity
+      <DeleteBin
         style={styles.deleteMedication}
-        onPress={() => handleDelete(medication)}>
-        <FontAwesome name="trash-o" size={40} color="#ff0844" />
-      </TouchableOpacity>
+        method={() => handleDelete(medication)}
+      />
     </View>
   );
 }

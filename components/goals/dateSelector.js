@@ -14,6 +14,7 @@ import DatePicker from 'react-native-date-picker';
 import logStyles from '../../styles/logStyles';
 import {Colors} from '../../styles/colors';
 import {normalTextFontSize} from '../../styles/variables';
+import globalStyles from '../../styles/globalStyles';
 
 const DateSelector = (props) => {
   const {date, type, opened, checkAgainst} = props;
@@ -55,14 +56,14 @@ const DateSelector = (props) => {
     <>
       <TouchableOpacity
         onPress={() => handleOpenCloseWithAnimation(visible)}
-        style={{marginBottom: '2%'}}>
+        style={[{marginBottom: '2%'}, globalStyles.goalFieldBottomBorder]}>
         <View style={{flexDirection: 'row'}}>
           {type === 'start' ? (
-            <Text style={[logStyles.fieldName, styles.dateFieldName]}>
+            <Text style={[globalStyles.goalFieldName, {flex: 1}]}>
               Start Date
             </Text>
           ) : (
-            <Text style={[logStyles.fieldName, styles.dateFieldName]}>
+            <Text style={[globalStyles.goalFieldName, {flex: 1}]}>
               End Date
             </Text>
           )}
@@ -84,6 +85,7 @@ const DateSelector = (props) => {
               date={date}
               onDateChange={setDate}
               mode="date"
+              minimumDate={new Date()}
               maximumDate={checkAgainst}
             />
           ) : (

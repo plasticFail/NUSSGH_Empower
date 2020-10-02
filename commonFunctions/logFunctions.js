@@ -17,7 +17,7 @@ import {
   getLastMealLog,
 } from '../storage/asyncStorageFunctions';
 
-import {getGreetingFromHour, checkLast7Day} from './common';
+import {getGreetingFromHour, checkLast7Day, noLog} from './common';
 import {getEntry4Day} from '../netcalls/requestsDiary';
 import {
   filterMorning,
@@ -131,7 +131,7 @@ const dateFrom2dayWeightLog = async () => {
   );
   let weightLogs = arr1.logs;
   if (weightLogs.length === 0) {
-    return 'Not logged yet';
+    return noLog;
   } else {
     //weight exist in last 7 days
     let today = Moment(new Date()).startOf('day');
@@ -184,7 +184,7 @@ const checkLogDone = async (period) => {
     }
 
     //check last weight
-    if ((await dateFrom2dayWeightLog()) == 'Not taken yet') {
+    if ((await dateFrom2dayWeightLog()) == noLog) {
       notCompleted.push(weight_key);
     } else {
       completed.push(weight_key);
@@ -268,7 +268,7 @@ const checkDosageText = (dosage, correctDosage) => {
     return (
       'Invalid Dosage, make sure dosage is same as what you have set in your medication plan which is ' +
       correctDosage +
-      ' Unit (s)'
+      ' Unit(s)'
     );
   }
 };

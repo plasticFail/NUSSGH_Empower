@@ -5,24 +5,28 @@ import {
   Text,
   StyleSheet,
   ScrollView,
+  Alert,
 } from 'react-native';
-import {
-  maxCarbs,
-  maxFats,
-  maxProtein,
-} from '../../commonFunctions/diaryFunctions';
 //third party lib
 import Modal from 'react-native-modal';
 import Moment from 'moment';
 //styles
-import {Colors} from '../../styles/colors';
-import globalStyles from '../../styles/globalStyles';
+import {Colors} from '../../../styles/colors';
+import globalStyles from '../../../styles/globalStyles';
 //component
-import LeftArrowBtn from '../logs/leftArrowBtn';
-import NameDateSelector from './nameDateSelector';
-import FrequencySelector from './dropDownSelector';
-
-import RenderCounter from './renderCounter';
+import LeftArrowBtn from '../../logs/leftArrowBtn';
+import NameDateSelector from '../nameDateSelector';
+import FrequencySelector from '../dropDownSelector';
+import RenderCounter from '../renderCounter';
+//function
+import {
+  maxCarbs,
+  maxFats,
+  maxProtein,
+  getDateObj,
+} from '../../../commonFunctions/diaryFunctions';
+import {addFoodGoalReq} from '../../../netcalls/requestsGoals';
+import {getFrequency} from '../../../commonFunctions/goalFunctions';
 
 const initialCal = 1000;
 const initialCarbs = maxCarbs / 2;
@@ -30,7 +34,7 @@ const initialFat = maxFats / 2;
 const initialProtein = maxProtein / 2;
 
 const FoodGoal = (props) => {
-  const {visible} = props;
+  const {visible, parent, food} = props;
   const {close} = props;
 
   const [goalName, setGoalName] = useState('');
@@ -38,31 +42,75 @@ const FoodGoal = (props) => {
   const [endDate, setEndDate] = useState(new Date());
   //change select date to date option *
   const [opened, setOpened] = useState(false);
-  const [frequency, setFrequency] = useState('daily');
+  const [frequency, setFrequency] = useState({name: 'Daily', value: 'daily'});
 
   const [cal, setCal] = useState(initialCal);
   const [carbs, setCarbs] = useState(initialCarbs);
   const [fats, setFats] = useState(initialFat);
   const [protein, setProtein] = useState(initialProtein);
+  const [pageText, setPageText] = useState('Add Goal');
 
-  const [errorMsg, setErrorMsg] = useState('');
+  useEffect(() => {
+    if (parent != undefined && food != undefined) {
+      setOpened(true);
+      setGoalName(food.name);
+      setStartDate(getDateObj(food.start_date));
+      setEndDate(getDateObj(food.end_date));
+      setFrequency(getFrequency(food.frequency));
+      setCal(food.calories);
+      setCarbs(food.carbs);
+      setProtein(food.protein);
+      setFats(food.fats);
+      setPageText('Edit Goal');
+    }
+  }, []);
 
   useEffect(() => {
     showSubmitBtn();
   }, [goalName]);
 
-  const submit = () => {
+  const submit = async () => {
     let obj = {
-      goalName: goalName,
-      startDate: Moment(startDate).format('DD/MM/YYYY HH:mm:ss'),
-      endDate: Moment(endDate).format('DD/MM/YYYY HH:mm:ss'),
-      frequency: frequency,
-      cal: cal,
+      name: goalName,
+      start_date: Moment(startDate).format('DD/MM/YYYY HH:mm:ss'),
+      end_date: Moment(endDate).format('DD/MM/YYYY HH:mm:ss'),
+      frequency: frequency.value,
+      calories: cal,
       carbs: carbs,
       protein: protein,
       fats: fats,
     };
-    console.log(obj);
+    if (parent != undefined) {
+      if (await addFoodGoalReq(obj, food._id)) {
+        Alert.alert('Food goal edited successfully', '', [
+          {
+            text: 'Got It',
+            onPress: () => close(),
+          },
+        ]);
+      } else {
+        Alert.alert('Unexpected Error Occured', 'Please try again later!', [
+          {
+            text: 'Got It',
+          },
+        ]);
+      }
+    } else {
+      if (await addFoodGoalReq(obj)) {
+        Alert.alert('Food goal created successfully', '', [
+          {
+            text: 'Got It',
+            onPress: () => close(),
+          },
+        ]);
+      } else {
+        Alert.alert('Unexpected Error Occured', 'Please try again later!', [
+          {
+            text: 'Got It',
+          },
+        ]);
+      }
+    }
   };
 
   const showSubmitBtn = () => {
@@ -76,7 +124,6 @@ const FoodGoal = (props) => {
     <Modal
       isVisible={visible}
       onBackButtonPress={() => close()}
-      onBackButtonPress={() => close()}
       backdropOpacity={1}
       backdropColor={Colors.backgroundColor}
       style={{margin: 0}}>
@@ -84,7 +131,7 @@ const FoodGoal = (props) => {
         <View style={globalStyles.menuBarContainer}>
           <LeftArrowBtn close={() => close()} />
         </View>
-        <Text style={globalStyles.pageHeader}>Add Goal</Text>
+        <Text style={globalStyles.pageHeader}>{pageText}</Text>
         <Text style={[globalStyles.pageDetails, {marginBottom: '4%'}]}>
           Food Intake Goal
         </Text>
@@ -133,13 +180,13 @@ const FoodGoal = (props) => {
         <View style={[globalStyles.buttonContainer]}>
           {showSubmitBtn() === false ? (
             <TouchableOpacity style={globalStyles.skipButtonStyle}>
-              <Text style={globalStyles.actionButtonText}>Add Goal</Text>
+              <Text style={globalStyles.actionButtonText}>{pageText}</Text>
             </TouchableOpacity>
           ) : (
             <TouchableOpacity
               style={globalStyles.submitButtonStyle}
               onPress={() => submit()}>
-              <Text style={globalStyles.actionButtonText}>Add Goal</Text>
+              <Text style={globalStyles.actionButtonText}>{pageText}</Text>
             </TouchableOpacity>
           )}
         </View>

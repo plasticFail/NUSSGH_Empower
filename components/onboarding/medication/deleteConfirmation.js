@@ -7,6 +7,7 @@ import {
   removeMed4DateFromExisting,
 } from '../../../commonFunctions/medicationFunction';
 import LoadingModal from '../../loadingModal';
+import globalStyles from '../../../styles/globalStyles';
 
 //calling removeObj from askAdd.js
 const DeleteConfirmation = (props) => {
@@ -72,12 +73,14 @@ const DeleteConfirmation = (props) => {
   return (
     <>
       <Text style={styles.header}>Remove This Medication</Text>
-      <Text style={styles.details}>{medication.drugName}</Text>
-      <TouchableOpacity style={styles.deleteButton} onPress={handleRemoveDate}>
-        <Text style={styles.deleteButtonText}>Remove for this Date</Text>
+      <Text style={globalStyles.deleteDetails}>{medication.drugName}</Text>
+      <TouchableOpacity
+        style={globalStyles.deleteButton}
+        onPress={handleRemoveDate}>
+        <Text style={globalStyles.deleteButtonText}>Remove for this Date</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={handleRemoveFromAll}>
-        <Text style={styles.deleteAllText}>Remove from All</Text>
+        <Text style={globalStyles.subOptionText}>Remove from All</Text>
       </TouchableOpacity>
       <LoadingModal
         visible={loading}
@@ -95,30 +98,5 @@ const styles = StyleSheet.create({
     fontFamily: 'SFProDisplay-Bold',
     marginTop: '4%',
     marginStart: '4%',
-  },
-  details: {
-    fontSize: 16,
-    margin: '4%',
-  },
-  deleteButton: {
-    backgroundColor: '#ff0844',
-    height: 45,
-    width: '70%',
-    alignSelf: 'center',
-    borderRadius: 15,
-    margin: '4%',
-  },
-  deleteButtonText: {
-    fontSize: 20,
-    textAlign: 'center',
-    marginVertical: '3%',
-    fontWeight: '500',
-    color: 'white',
-  },
-  deleteAllText: {
-    fontSize: 20,
-    textAlign: 'center',
-    color: '#ff0844',
-    marginBottom: '3%',
   },
 });

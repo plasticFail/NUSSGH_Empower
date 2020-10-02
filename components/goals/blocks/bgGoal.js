@@ -6,27 +6,34 @@ import {
   StyleSheet,
   TextInput,
   ScrollView,
+  Alert,
 } from 'react-native';
 //third party lib
 import Modal from 'react-native-modal';
 import Moment from 'moment';
 //styles
-import {Colors} from '../../styles/colors';
-import globalStyles from '../../styles/globalStyles';
+import {Colors} from '../../../styles/colors';
+import globalStyles from '../../../styles/globalStyles';
 //component
-import LeftArrowBtn from '../logs/leftArrowBtn';
-import NameDateSelector from './nameDateSelector';
-import FrequencySelector from './dropDownSelector';
+import LeftArrowBtn from '../../logs/leftArrowBtn';
+import NameDateSelector from '../nameDateSelector';
+import FrequencySelector from '../dropDownSelector';
 //styles
-import logStyles from '../../styles/logStyles';
+import logStyles from '../../../styles/logStyles';
 //function
-import {checkBloodGlucoseText} from '../../commonFunctions/logFunctions';
+import {
+  checkBloodGlucoseText,
+  min_bg,
+} from '../../../commonFunctions/logFunctions';
+import {addBgGoalReq} from '../../../netcalls/requestsGoals';
+import {getDateObj} from '../../../commonFunctions/diaryFunctions';
+import {getFrequency} from '../../../commonFunctions/goalFunctions';
 
 const min_key = 'min';
 const max_key = 'max';
 
 const BgGoal = (props) => {
-  const {visible} = props;
+  const {visible, parent, bg} = props;
   const {close} = props;
 
   const [goalName, setGoalName] = useState('');
@@ -34,26 +41,70 @@ const BgGoal = (props) => {
   const [endDate, setEndDate] = useState(new Date());
   //change select date to date option *
   const [opened, setOpened] = useState(false);
-  const [frequency, setFrequency] = useState('daily');
+  const [frequency, setFrequency] = useState({name: 'Daily', value: 'daily'});
   const [minBg, setMinBg] = useState('');
   const [maxBg, setMaxBg] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
+  const [pageText, setPageText] = useState('Add Goal');
+
+  useEffect(() => {
+    if (parent != undefined && bg != undefined) {
+      setOpened(true);
+      setGoalName(bg.name);
+      setStartDate(getDateObj(bg.start_date));
+      setEndDate(getDateObj(bg.end_date));
+      setFrequency(getFrequency(bg.frequency));
+      setMinBg(String(bg.min_bg));
+      setMaxBg(String(bg.max_bg));
+      setPageText('Edit Goal');
+    }
+  }, []);
 
   useEffect(() => {
     check();
     showSubmitBtn();
   }, [minBg, maxBg, goalName]);
 
-  const submit = () => {
+  const submit = async () => {
     let obj = {
-      goalName: goalName,
-      startDate: Moment(startDate).format('DD/MM/YYYY HH:mm:ss'),
-      endDate: Moment(endDate).format('DD/MM/YYYY HH:mm:ss'),
-      frequency: frequency,
-      minBg: minBg,
-      maxBg: maxBg,
+      name: goalName,
+      start_date: Moment(startDate).format('DD/MM/YYYY HH:mm:ss'),
+      end_date: Moment(endDate).format('DD/MM/YYYY HH:mm:ss'),
+      frequency: frequency.value,
+      min_bg: Number(minBg),
+      max_bg: Number(maxBg),
     };
-    console.log(obj);
+    if (parent != undefined) {
+      if (await addBgGoalReq(obj, bg._id)) {
+        Alert.alert('Blood glucose goal edited successfully', '', [
+          {
+            text: 'Got It',
+            onPress: () => close(),
+          },
+        ]);
+      } else {
+        Alert.alert('Unexpected Error Occured', 'Please try again later!', [
+          {
+            text: 'Got It',
+          },
+        ]);
+      }
+    } else {
+      if (await addBgGoalReq(obj)) {
+        Alert.alert('Blood glucose goal created successfully', '', [
+          {
+            text: 'Got It',
+            onPress: () => close(),
+          },
+        ]);
+      } else {
+        Alert.alert('Unexpected Error Occured', 'Please try again later!', [
+          {
+            text: 'Got It',
+          },
+        ]);
+      }
+    }
   };
 
   const showSubmitBtn = () => {
@@ -85,6 +136,15 @@ const BgGoal = (props) => {
     if (minBg != '' && maxBg != '') {
       let max = Number(maxBg);
       let min = Number(minBg);
+      if (min <= min_bg || max <= min_bg) {
+        setErrorMsg(
+          'Please set a higher blood glucose level of more than ' +
+            min_bg +
+            ' mmol/L',
+        );
+        return;
+      }
+
       if (max < min) {
         setErrorMsg(
           'Min blood glucose should be lesser than max blood glucose and vice versa',
@@ -106,7 +166,6 @@ const BgGoal = (props) => {
     <Modal
       isVisible={visible}
       onBackButtonPress={() => close()}
-      onBackButtonPress={() => close()}
       backdropOpacity={1}
       backdropColor={Colors.backgroundColor}
       style={{margin: 0}}>
@@ -114,7 +173,9 @@ const BgGoal = (props) => {
         <View style={globalStyles.menuBarContainer}>
           <LeftArrowBtn close={() => close()} />
         </View>
-        <Text style={globalStyles.pageHeader}>Add Goal</Text>
+
+        <Text style={globalStyles.pageHeader}>{pageText}</Text>
+
         <Text style={[globalStyles.pageDetails, {marginBottom: '4%'}]}>
           Blood Glucose Goal
         </Text>
@@ -154,13 +215,13 @@ const BgGoal = (props) => {
         <View style={[globalStyles.buttonContainer]}>
           {showSubmitBtn() === false ? (
             <TouchableOpacity style={globalStyles.skipButtonStyle}>
-              <Text style={globalStyles.actionButtonText}>Add Goal</Text>
+              <Text style={globalStyles.actionButtonText}>{pageText}</Text>
             </TouchableOpacity>
           ) : (
             <TouchableOpacity
               style={globalStyles.submitButtonStyle}
               onPress={() => submit()}>
-              <Text style={globalStyles.actionButtonText}>Add Goal</Text>
+              <Text style={globalStyles.actionButtonText}>{pageText}</Text>
             </TouchableOpacity>
           )}
         </View>

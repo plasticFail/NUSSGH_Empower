@@ -56,7 +56,6 @@ const LastLogButton = (props) => {
       });
     } else if (logType === food_key) {
       getLastMealLog().then((response) => {
-        console.log(response);
         setStates(response);
       });
     }

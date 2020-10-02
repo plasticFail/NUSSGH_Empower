@@ -6,13 +6,8 @@ import {Colors} from '../../styles/colors';
 //third party lib
 import Entypo from 'react-native-vector-icons/Entypo';
 import {normalTextFontSize} from '../../styles/variables';
-
-const frequencyOption = [
-  {name: 'Daily', value: 'daily'},
-  {name: 'Weekly', value: 'weekly'},
-  {name: 'Monthly', value: 'monthly'},
-  {name: 'One-Off', value: 'one-off'},
-];
+import globalStyles from '../../styles/globalStyles';
+import {frequencyOption} from '../../commonFunctions/goalFunctions';
 
 const DropDownSelector = (props) => {
   const {selected, setSelected, fieldName, dropDownType, optionList} = props;
@@ -30,23 +25,17 @@ const DropDownSelector = (props) => {
   const formatSelected = (text) => {
     return (
       String(text).substr(0, 1).toUpperCase() +
-      String(text).substr(1, String(text.length))
+      String(text).substr(1, String(text).length - 1)
     );
   };
 
   return (
     <>
-      <Text
-        style={[
-          logStyles.fieldName,
-          {color: Colors.lastLogValueColor, marginStart: '4%'},
-        ]}>
-        {fieldName}
-      </Text>
+      <Text style={[globalStyles.goalFieldName, {flex: 0}]}>{fieldName}</Text>
       <TouchableOpacity
         onPress={() => setOpen(!open)}
         style={[logStyles.inputField, styles.dropDownContainer]}>
-        <Text style={styles.selectedText}>{formatSelected(selected)}</Text>
+        <Text style={styles.selectedText}>{formatSelected(selected.name)}</Text>
         {open ? (
           <Entypo
             name="chevron-thin-up"
@@ -64,20 +53,21 @@ const DropDownSelector = (props) => {
       {open && (
         <View style={styles.dropDownItemContainer}>
           {selectedMenu.map((item) =>
-            item.value === selected ? (
+            item.value === selected.value ? (
               <TouchableOpacity
                 key={item.value}
                 style={{backgroundColor: '#aad326'}}
                 onPress={() => {
-                  setSelected(item.value);
+                  setSelected(item);
                   setOpen(false);
                 }}>
                 <Text style={styles.dropdownItemLabel}>{item.name}</Text>
               </TouchableOpacity>
             ) : (
               <TouchableOpacity
+                key={item.value}
                 onPress={() => {
-                  setSelected(item.value);
+                  setSelected(item);
                   setOpen(false);
                 }}>
                 <Text style={styles.dropdownItemLabel}>{item.name}</Text>

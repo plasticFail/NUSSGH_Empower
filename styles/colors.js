@@ -13,8 +13,10 @@ export const Colors = {
   subsubHeaderColor: '#828994',
   grey: '#3c3c43',
   inputBorderColor: '#e1e7ed',
-
+  removeColor: '#ff0844',
   gameColorGreen: '#aad326',
   gameColorWhite: '#f6f7fa',
   gameColorGrey: '#E1E7ED',
+  editBackgroundColor: '#f6f7fa',
+  inputBorderColor: '#e1e7ed',
 };

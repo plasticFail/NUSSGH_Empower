@@ -5,22 +5,26 @@ import {
   Text,
   StyleSheet,
   ScrollView,
+  Alert,
 } from 'react-native';
 //third party lib
 import Modal from 'react-native-modal';
 import Moment from 'moment';
 //styles
-import {Colors} from '../../styles/colors';
-import globalStyles from '../../styles/globalStyles';
+import {Colors} from '../../../styles/colors';
+import globalStyles from '../../../styles/globalStyles';
 //component
-import LeftArrowBtn from '../logs/leftArrowBtn';
-import NameDateSelector from './nameDateSelector';
-import FrequencySelector from './dropDownSelector';
-import RenderCounter from './renderCounter';
-import {maxSteps} from '../../commonFunctions/diaryFunctions';
+import LeftArrowBtn from '../../logs/leftArrowBtn';
+import NameDateSelector from '../nameDateSelector';
+import FrequencySelector from '../dropDownSelector';
+import RenderCounter from '../renderCounter';
+//function
+import {maxSteps, getDateObj} from '../../../commonFunctions/diaryFunctions';
+import {addStepsGoalReq} from '../../../netcalls/requestsGoals';
+import {getFrequency} from '../../../commonFunctions/goalFunctions';
 
 const StepsGoal = (props) => {
-  const {visible} = props;
+  const {visible, parent, step} = props;
   const {close} = props;
 
   const [goalName, setGoalName] = useState('');
@@ -28,9 +32,23 @@ const StepsGoal = (props) => {
   const [endDate, setEndDate] = useState(new Date());
   //change select date to date option *
   const [opened, setOpened] = useState(false);
-  const [frequency, setFrequency] = useState('daily');
+  const [frequency, setFrequency] = useState({name: 'Daily', value: 'daily'});
 
   const [steps, setSteps] = useState(maxSteps);
+
+  const [pageText, setPageText] = useState('Add Goal');
+
+  useEffect(() => {
+    if (parent != undefined && step != undefined) {
+      setOpened(true);
+      setGoalName(step.name);
+      setStartDate(getDateObj(step.start_date));
+      setEndDate(getDateObj(step.end_date));
+      setFrequency(getFrequency(step.frequency));
+      setSteps(step.steps);
+      setPageText('Edit Goal');
+    }
+  }, []);
 
   useEffect(() => {
     showSubmitBtn();
@@ -38,13 +56,43 @@ const StepsGoal = (props) => {
 
   const submit = () => {
     let obj = {
-      goalName: goalName,
-      startDate: Moment(startDate).format('DD/MM/YYYY HH:mm:ss'),
-      endDate: Moment(endDate).format('DD/MM/YYYY HH:mm:ss'),
-      frequency: frequency,
+      name: goalName,
+      start_date: Moment(startDate).format('DD/MM/YYYY HH:mm:ss'),
+      end_date: Moment(endDate).format('DD/MM/YYYY HH:mm:ss'),
+      frequency: frequency.value,
       steps: steps,
     };
-    console.log(obj);
+    if (parent != undefined) {
+      if (addStepsGoalReq(obj, step._id)) {
+        Alert.alert('Step goal edited successfully', '', [
+          {
+            text: 'Got It',
+            onPress: () => close(),
+          },
+        ]);
+      } else {
+        Alert.alert('Unexpected Error Occured', 'Please try again later!', [
+          {
+            text: 'Got It',
+          },
+        ]);
+      }
+    } else {
+      if (addStepsGoalReq(obj)) {
+        Alert.alert('Step goal created successfully', '', [
+          {
+            text: 'Got It',
+            onPress: () => close(),
+          },
+        ]);
+      } else {
+        Alert.alert('Unexpected Error Occured', 'Please try again later!', [
+          {
+            text: 'Got It',
+          },
+        ]);
+      }
+    }
   };
 
   const showSubmitBtn = () => {
@@ -66,7 +114,7 @@ const StepsGoal = (props) => {
         <View style={globalStyles.menuBarContainer}>
           <LeftArrowBtn close={() => close()} />
         </View>
-        <Text style={globalStyles.pageHeader}>Add Goal</Text>
+        <Text style={globalStyles.pageHeader}>{pageText}</Text>
         <Text style={[globalStyles.pageDetails, {marginBottom: '4%'}]}>
           Steps Goal
         </Text>
@@ -97,13 +145,13 @@ const StepsGoal = (props) => {
         <View style={[globalStyles.buttonContainer]}>
           {showSubmitBtn() === false ? (
             <TouchableOpacity style={globalStyles.skipButtonStyle}>
-              <Text style={globalStyles.actionButtonText}>Add Goal</Text>
+              <Text style={globalStyles.actionButtonText}>{pageText}</Text>
             </TouchableOpacity>
           ) : (
             <TouchableOpacity
               style={globalStyles.submitButtonStyle}
               onPress={() => submit()}>
-              <Text style={globalStyles.actionButtonText}>Add Goal</Text>
+              <Text style={globalStyles.actionButtonText}>{pageText}</Text>
             </TouchableOpacity>
           )}
         </View>

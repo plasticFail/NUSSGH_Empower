@@ -17,6 +17,7 @@ import Counter from '../../onboarding/medication/Counter';
 import {deleteMed, editMedicineInLog} from '../../../netcalls/requestsDiary';
 import RemoveModal from '../removeModal';
 import {med_key} from '../../../commonFunctions/logFunctions';
+import DeleteBin from '../../deleteBin';
 
 const EditMedicineBlock = (props) => {
   const {visible, medicineToEdit, initialDate} = props;
@@ -97,7 +98,7 @@ const EditMedicineBlock = (props) => {
           <Counter
             count={dosage}
             setCount={setDosage}
-            parameter={'Unit (s)'}
+            parameter={'Unit(s)'}
             fieldName={'Default Dosage'}
           />
           {dosage === 0 && (
@@ -109,11 +110,7 @@ const EditMedicineBlock = (props) => {
       </View>
       <View style={[globalStyles.buttonContainer]}>
         <View style={{flexDirection: 'row'}}>
-          <TouchableOpacity
-            style={diaryStyles.binIcon}
-            onPress={() => requestDelete()}>
-            <FontAwesome name="trash-o" size={40} color="#ff0844" />
-          </TouchableOpacity>
+          <DeleteBin style={diaryStyles.binIcon} method={requestDelete} />
           {dosage != 0 && changed ? (
             <TouchableOpacity
               style={logStyles.enableEditButton}

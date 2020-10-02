@@ -96,9 +96,7 @@ const FoodBlock = (props) => {
             style={{flexDirection: 'row', marginTop: '3%', marginBottom: '2%'}}>
             {pass ? (
               <>
-                <Text style={globalStyles.pageDetails}>
-                  Within Healthy Range
-                </Text>
+                <Text style={globalStyles.pageDetails}>Healthy Range</Text>
 
                 <Ionicon
                   name="checkmark"
@@ -108,9 +106,7 @@ const FoodBlock = (props) => {
               </>
             ) : (
               <>
-                <Text style={globalStyles.pageDetails}>
-                  Not Within Healthy Range
-                </Text>
+                <Text style={globalStyles.pageDetails}>Unhealthy Range</Text>
 
                 <Ionicon
                   name="alert-circle-outline"
@@ -159,7 +155,7 @@ function renderFoodItems(logs, editLog) {
     return (
       <View style={{marginBottom: '3%'}}>
         {logs.map((item, index) => (
-          <>
+          <View key={index}>
             {item.foodItems.length > 0 &&
               item.foodItems.map(
                 (inner, index) =>
@@ -195,7 +191,7 @@ function renderFoodItems(logs, editLog) {
                     </View>
                   ),
               )}
-          </>
+          </View>
         ))}
       </View>
     );

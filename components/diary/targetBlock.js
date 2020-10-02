@@ -36,6 +36,7 @@ import WeightBlock from './blocks/weightBlock';
 import ActivityBlock from './blocks/activityBlock';
 import MedBlock from './blocks/medBlock';
 import FoodBlock from './blocks/foodBlock';
+import {getMedication4Day} from '../../netcalls/requestsLog';
 
 const button_list = [bg_key, food_key, med_key, weight_key, activity_key];
 
@@ -148,6 +149,7 @@ class TargetBlock extends Component {
       foodPass: true,
       medCompleted: false,
       activityPass: true,
+      noMed4Day: false,
 
       targetBg: {},
       activityTarget: {},
@@ -309,6 +311,7 @@ class TargetBlock extends Component {
       activityPass,
       activitySummary,
       medCompleted,
+      noMed4Day,
 
       avgBg,
       carbs,
@@ -439,22 +442,50 @@ class TargetBlock extends Component {
 //for med log
 function renderMedContent(medMiss, medCompleted, medLogs) {
   if (medMiss) {
-    return <Text style={styles.buttonDetail}>Missed</Text>;
+    return (
+      <View style={{flexDirection: 'row'}}>
+        <Text style={styles.buttonDetail}>Missed</Text>
+        <Ionicon
+          name="alert-circle-outline"
+          style={diaryStyles.failIcon}
+          size={25}
+        />
+      </View>
+    );
   } else if (!medCompleted) {
     let arr = getMedDonePeriods(medLogs);
     let greetings = renderGreetingText(arr);
     return <Text style={styles.buttonDetail2}>Taken in the {greetings}</Text>;
   } else {
-    return <Text style={styles.buttonDetail}>Completed</Text>;
+    return (
+      <View style={{flexDirection: 'row'}}>
+        <Text style={styles.buttonDetail}>Completed</Text>
+        <Ionicon name="checkmark" style={diaryStyles.passIcon} size={25} />
+      </View>
+    );
   }
 }
 
 //for logs with criteria : miss/completed
 function renderContent2(miss) {
   if (miss) {
-    return <Text style={styles.buttonDetail}>Did not log today.</Text>;
+    return (
+      <View style={{flexDirection: 'row'}}>
+        <Text style={styles.buttonDetail}>Missed </Text>
+        <Ionicon
+          name="alert-circle-outline"
+          style={diaryStyles.failIcon}
+          size={25}
+        />
+      </View>
+    );
   } else {
-    return <Text style={styles.buttonDetail}>Completed</Text>;
+    return (
+      <View style={{flexDirection: 'row'}}>
+        <Text style={styles.buttonDetail}>Completed</Text>
+        <Ionicon name="checkmark" style={diaryStyles.passIcon} size={25} />
+      </View>
+    );
   }
 }
 
@@ -463,7 +494,7 @@ function renderContent(type, miss, pass, value) {
   if (miss) {
     return (
       <View style={{flexDirection: 'row'}}>
-        <Text style={styles.buttonDetail}>Missed</Text>
+        <Text style={styles.buttonDetail}>Missed </Text>
         <Ionicon
           name="alert-circle-outline"
           style={diaryStyles.failIcon}
@@ -478,7 +509,7 @@ function renderContent(type, miss, pass, value) {
           <Text style={styles.buttonDetail}>Average {value} mmol/L</Text>
         )}
         {type === food_key && (
-          <Text style={styles.buttonDetail}>Within Healthy Range</Text>
+          <Text style={styles.buttonDetail}>Healthy Range</Text>
         )}
         {type === activity_key && (
           <Text style={styles.buttonDetail}>{value} Active Minutes</Text>
@@ -493,7 +524,7 @@ function renderContent(type, miss, pass, value) {
           <Text style={styles.buttonDetail}>Average {value} mmol/L</Text>
         )}
         {type === food_key && (
-          <Text style={styles.buttonDetail}>Not Within Healthy Range</Text>
+          <Text style={styles.buttonDetail}>Unhealthy Range</Text>
         )}
         {type === activity_key && (
           <Text style={styles.buttonDetail}>{value} Active Minutes</Text>
