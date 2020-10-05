@@ -41,8 +41,6 @@ const ActivityGoal = (props) => {
 
   const [pageText, setPageText] = useState('Add Goal');
 
-  console.log('herer');
-
   useEffect(() => {
     if (parent != undefined && activity != undefined) {
       setGoalName(activity.name);
@@ -53,7 +51,7 @@ const ActivityGoal = (props) => {
         setPageText('Add Goal');
       }
     }
-  }, []);
+  }, [activity]);
 
   useEffect(() => {
     check();
@@ -66,8 +64,9 @@ const ActivityGoal = (props) => {
       duration: minute,
       cal_burnt: calBurnt,
     };
-    if (parent != undefined) {
-      if ((await addActivityGoalReq(obj, activity._id)) && parent != defaultv) {
+    if (parent != undefined && parent != defaultv) {
+      let status = await addActivityGoalReq(obj, activity._id);
+      if (status === 200) {
         Alert.alert('Activity goal edited successfully', '', [
           {
             text: 'Got It',
@@ -82,13 +81,24 @@ const ActivityGoal = (props) => {
         ]);
       }
     } else {
-      if (await addActivityGoalReq(obj)) {
+      let status = await addActivityGoalReq(obj);
+      if (status === 200) {
         Alert.alert('Activity goal created successfully', '', [
           {
             text: 'Got It',
             onPress: () => close(),
           },
         ]);
+      } else if (status === 400) {
+        Alert.alert(
+          'Already Exist',
+          'Please remove your existing activity goal before creating a new one!',
+          [
+            {
+              text: 'Got It',
+            },
+          ],
+        );
       } else {
         Alert.alert('Unexpected Error Occured', 'Please try again later!', [
           {
@@ -100,7 +110,7 @@ const ActivityGoal = (props) => {
   };
 
   const showSubmitBtn = () => {
-    if (goalName.length > 0 && minute > 0 && calBurnt > 0) {
+    if (goalName?.length > 0 && minute > 0 && calBurnt > 0) {
       return true;
     }
     return false;

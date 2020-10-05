@@ -96,9 +96,9 @@ const GoalDetail = (props) => {
           <LeftArrowBtn close={close} />
         </View>
         <Text style={globalStyles.pageHeader}>View Goal</Text>
-        {goalItem.set_by === selfv ? (
+        {goalItem?.set_by === selfv ? (
           <Text style={globalStyles.pageDetails}>Your Goals</Text>
-        ) : goalItem.set_by === phyv ? (
+        ) : goalItem?.set_by === phyv ? (
           <Text style={globalStyles.pageDetails}>Set by physician</Text>
         ) : null}
 

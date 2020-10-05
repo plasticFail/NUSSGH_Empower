@@ -28,6 +28,7 @@ import {
 } from '../../../commonFunctions/logFunctions';
 import {addBgGoalReq} from '../../../netcalls/requestsGoals';
 import {defaultv} from '../../../commonFunctions/goalFunctions';
+import {stat} from 'react-native-fs';
 
 const min_key = 'min';
 const max_key = 'max';
@@ -51,7 +52,7 @@ const BgGoal = (props) => {
         setPageText('Add Goal');
       }
     }
-  }, []);
+  }, [bg]);
 
   useEffect(() => {
     check();
@@ -65,7 +66,8 @@ const BgGoal = (props) => {
       max_bg: Number(maxBg),
     };
     if (parent != undefined && parent != defaultv) {
-      if (await addBgGoalReq(obj, bg._id)) {
+      let status = await addBgGoalReq(obj, bg._id);
+      if (status === 200) {
         Alert.alert('Blood glucose goal edited successfully', '', [
           {
             text: 'Got It',
@@ -80,13 +82,24 @@ const BgGoal = (props) => {
         ]);
       }
     } else {
-      if (await addBgGoalReq(obj)) {
+      let status = await addBgGoalReq(obj);
+      if (status === 200) {
         Alert.alert('Blood glucose goal created successfully', '', [
           {
             text: 'Got It',
             onPress: () => close(),
           },
         ]);
+      } else if (status === 400) {
+        Alert.alert(
+          'Already Exist',
+          'Please remove your existing blood glucose goal before creating a new one!',
+          [
+            {
+              text: 'Got It',
+            },
+          ],
+        );
       } else {
         Alert.alert('Unexpected Error Occured', 'Please try again later!', [
           {
@@ -103,7 +116,7 @@ const BgGoal = (props) => {
       minBg != '' &&
       checkBloodGlucoseText(maxBg) === '' &&
       checkBloodGlucoseText(minBg) === '' &&
-      goalName.length != 0 &&
+      goalName?.length != 0 &&
       errorMsg === ''
     ) {
       return true;

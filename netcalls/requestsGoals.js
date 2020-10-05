@@ -9,7 +9,6 @@ import {
   activity,
   steps,
 } from '../commonFunctions/goalFunctions';
-import {act} from 'react-test-renderer';
 
 //post and edit
 const addBgGoalReq = async (bgGoal, id) => {
@@ -27,12 +26,9 @@ const addBgGoalReq = async (bgGoal, id) => {
       },
       body: JSON.stringify(bgGoal),
     });
-    let responseJson = await response.json();
-    console.log(responseJson);
-    console.log('addBgGoalReq ' + responseJson);
-    return true;
+    return await response.status;
   } catch (error) {
-    return false;
+    return 'Error';
   }
 };
 
@@ -51,10 +47,7 @@ const addFoodGoalReq = async (foodGoal, id) => {
       },
       body: JSON.stringify(foodGoal),
     });
-    let responseJson = await response.json();
-    console.log(responseJson);
-    console.log('addFoodGoal ' + responseJson);
-    return true;
+    return await response.status;
   } catch (error) {
     return false;
   }
@@ -75,10 +68,7 @@ const addMedGoalReq = async (medGoal, id) => {
       },
       body: JSON.stringify(medGoal),
     });
-    let responseJson = await response.json();
-    console.log(responseJson);
-    console.log('addMedGoal ' + responseJson);
-    return true;
+    return await response.status;
   } catch (error) {
     return false;
   }
@@ -99,10 +89,7 @@ const addWeightGoalReq = async (weightGoal, id) => {
       },
       body: JSON.stringify(weightGoal),
     });
-    let responseJson = await response.json();
-    console.log(responseJson);
-    console.log('addWeightGoal ' + responseJson);
-    return true;
+    return await response.status;
   } catch (error) {
     return false;
   }
@@ -123,10 +110,7 @@ const addActivityGoalReq = async (activityGoal, id) => {
       },
       body: JSON.stringify(activityGoal),
     });
-    let responseJson = await response.json();
-    console.log(responseJson);
-    console.log('addActivityGoal ' + responseJson);
-    return true;
+    return await response.status;
   } catch (error) {
     return false;
   }
@@ -147,10 +131,7 @@ const addStepsGoalReq = async (stepGoal, id) => {
       },
       body: JSON.stringify(stepGoal),
     });
-    let responseJson = await response.json();
-    console.log(responseJson);
-    console.log('addStepsGoal ' + responseJson);
-    return true;
+    return await response.status;
   } catch (error) {
     return false;
   }

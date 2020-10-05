@@ -42,19 +42,20 @@ const StepsGoal = (props) => {
         setPageText('Add Goal');
       }
     }
-  }, []);
+  }, [step]);
 
   useEffect(() => {
     showSubmitBtn();
   }, [goalName]);
 
-  const submit = () => {
+  const submit = async () => {
     let obj = {
       name: goalName,
       steps: steps,
     };
     if (parent != undefined && parent != defaultv) {
-      if (addStepsGoalReq(obj, step._id)) {
+      let status = await addStepsGoalReq(obj, step._id);
+      if (status === 200) {
         Alert.alert('Step goal edited successfully', '', [
           {
             text: 'Got It',
@@ -69,13 +70,24 @@ const StepsGoal = (props) => {
         ]);
       }
     } else {
-      if (addStepsGoalReq(obj)) {
+      let status = await addStepsGoalReq(obj);
+      if (status === 200) {
         Alert.alert('Step goal created successfully', '', [
           {
             text: 'Got It',
             onPress: () => close(),
           },
         ]);
+      } else if (status === 400) {
+        Alert.alert(
+          'Already Exist',
+          'Please remove your existing step goal before creating a new one!',
+          [
+            {
+              text: 'Got It',
+            },
+          ],
+        );
       } else {
         Alert.alert('Unexpected Error Occured', 'Please try again later!', [
           {
@@ -87,7 +99,7 @@ const StepsGoal = (props) => {
   };
 
   const showSubmitBtn = () => {
-    if (goalName.length > 0 && steps > 0) {
+    if (goalName?.length > 0 && steps > 0) {
       return true;
     }
     return false;

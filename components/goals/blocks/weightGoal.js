@@ -49,7 +49,7 @@ const WeightGoal = (props) => {
         setPageText('Add Goal');
       }
     }
-  }, []);
+  }, [weight]);
 
   useEffect(() => {
     showSubmitBtn();
@@ -61,7 +61,8 @@ const WeightGoal = (props) => {
       goal_weight: weight,
     };
     if (parent != undefined && parent != defaultv) {
-      if (await addWeightGoalReq(obj, weightObj._id)) {
+      let status = await addWeightGoalReq(obj, weightObj._id);
+      if (status === 200) {
         Alert.alert('Weight goal edited successfully', '', [
           {
             text: 'Got It',
@@ -76,13 +77,24 @@ const WeightGoal = (props) => {
         ]);
       }
     } else {
-      if (await addWeightGoalReq(obj)) {
+      let status = await addWeightGoalReq(obj);
+      if (status === 200) {
         Alert.alert('Weight goal created successfully', '', [
           {
             text: 'Got It',
             onPress: () => close(),
           },
         ]);
+      } else if (status === 400) {
+        Alert.alert(
+          'Already Exist',
+          'Please remove your existing weight goal before creating a new one!',
+          [
+            {
+              text: 'Got It',
+            },
+          ],
+        );
       } else {
         Alert.alert('Unexpected Error Occured', 'Please try again later!', [
           {
@@ -104,7 +116,7 @@ const WeightGoal = (props) => {
   };
 
   const showSubmitBtn = () => {
-    if (goalName.length > 0 && openedWeight) {
+    if (goalName?.length > 0 && openedWeight) {
       return true;
     }
     return false;

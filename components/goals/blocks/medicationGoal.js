@@ -49,7 +49,7 @@ const MedicationGoal = (props) => {
         setPageText('Add Goal');
       }
     }
-  }, []);
+  }, [med]);
 
   useEffect(() => {
     showSubmitBtn();
@@ -61,8 +61,9 @@ const MedicationGoal = (props) => {
       medication: selectedMed.drugName,
       dosage: dosage,
     };
-    if (parent != undefined) {
-      if ((await addMedGoalReq(obj, med._id)) && parent != defaultv) {
+    if (parent != undefined && parent != defaultv) {
+      let status = await addMedGoalReq(obj, med._id);
+      if (status === 200) {
         Alert.alert('Medication goal edited successfully', '', [
           {
             text: 'Got It',
@@ -77,13 +78,24 @@ const MedicationGoal = (props) => {
         ]);
       }
     } else {
-      if (await addMedGoalReq(obj)) {
+      let status = await addMedGoalReq(obj);
+      if (status === 200) {
         Alert.alert('Medication goal created successfully', '', [
           {
             text: 'Got It',
             onPress: () => close(),
           },
         ]);
+      } else if (status === 400) {
+        Alert.alert(
+          'Already Exist',
+          'Please remove your existing medication goal before creating a new one!',
+          [
+            {
+              text: 'Got It',
+            },
+          ],
+        );
       } else {
         Alert.alert('Unexpected Error Occured', 'Please try again later!', [
           {
@@ -95,7 +107,7 @@ const MedicationGoal = (props) => {
   };
 
   const showSubmitBtn = () => {
-    if (goalName.length > 0 && dosage > 0 && !isEmpty(selectedMed)) {
+    if (goalName?.length > 0 && dosage > 0 && !isEmpty(selectedMed)) {
       return true;
     }
     return false;

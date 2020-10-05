@@ -104,7 +104,7 @@ const GoalList = (props) => {
   const closeEdit = () => {
     setShowEditModal(false);
     init();
-    if (selectedGoal.set_by != defaultv) {
+    if (selectedGoal?.set_by != defaultv) {
       setTimeout(() => setShowDetail(true), 500);
     } else {
       setShowDetail(false);
@@ -237,7 +237,7 @@ function renderGoalType(goalItem, type) {
       {renderGoalLogo(type)}
       <View style={{flex: 1}}>
         <Text style={styles.goalType}>{renderGoalTypeName(type)}</Text>
-        {goalItem.set_by != defaultv ? (
+        {goalItem?.set_by != defaultv ? (
           <>
             <ProgressBar
               progress={percent}

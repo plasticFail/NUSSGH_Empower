@@ -55,7 +55,7 @@ const FoodGoal = (props) => {
         setPageText('Add Goal');
       }
     }
-  }, []);
+  }, [food]);
 
   useEffect(() => {
     showSubmitBtn();
@@ -69,8 +69,9 @@ const FoodGoal = (props) => {
       protein: protein,
       fats: fats,
     };
-    if (parent != undefined) {
-      if ((await addFoodGoalReq(obj, food._id)) && parent != defaultv) {
+    if (parent != undefined && parent != defaultv) {
+      let status = await addFoodGoalReq(obj, food._id);
+      if (status === 200) {
         Alert.alert('Food goal edited successfully', '', [
           {
             text: 'Got It',
@@ -85,13 +86,24 @@ const FoodGoal = (props) => {
         ]);
       }
     } else {
-      if (await addFoodGoalReq(obj)) {
+      let status = await addFoodGoalReq(obj);
+      if (status === 200) {
         Alert.alert('Food goal created successfully', '', [
           {
             text: 'Got It',
             onPress: () => close(),
           },
         ]);
+      } else if (status === 400) {
+        Alert.alert(
+          'Already Exist',
+          'Please remove your existing food goal before creating a new one!',
+          [
+            {
+              text: 'Got It',
+            },
+          ],
+        );
       } else {
         Alert.alert('Unexpected Error Occured', 'Please try again later!', [
           {
@@ -104,7 +116,7 @@ const FoodGoal = (props) => {
 
   const showSubmitBtn = () => {
     if (
-      goalName.length > 0 &&
+      goalName?.length > 0 &&
       protein != 0 &&
       carbs != 0 &&
       cal != 0 &&
