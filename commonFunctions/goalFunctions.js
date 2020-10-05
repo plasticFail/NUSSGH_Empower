@@ -26,6 +26,10 @@ const weeklyGoalList = [
   {name: 'Gain 0.5 kg per week', value: 0.5},
 ];
 
+const selfv = 'self';
+const defaultv = 'default';
+const phyv = 'physician';
+
 const checkSpecialChara = (input) => {
   let toCheck = String(input);
   if (
@@ -53,16 +57,6 @@ const renderGoalTypeName = (type) => {
     case steps:
       return 'Step Goal';
   }
-};
-
-const getNumofGoals = (arr) => {
-  let count = 0;
-  for (var x of Object.keys(arr)) {
-    let typeArray = arr[x].goals;
-    count += typeArray.length;
-  }
-  console.log('num of goals retrieved :' + count);
-  return count;
 };
 
 const isMonday = () => {
@@ -115,6 +109,22 @@ const getGoalObjById = (id, arr) => {
   }
 };
 
+//pass in self, default, physician
+const filterForGoalType = (arr, type) => {
+  let returnArr = [];
+  for (var x of Object.keys(arr)) {
+    //get the goal for the type and check set_by
+    if (arr[x]?.goals[0]?.set_by === type) {
+      let obj = {
+        type: x,
+        goal: arr[x].goals[0],
+      };
+      returnArr.push(obj);
+    }
+  }
+  return returnArr;
+};
+
 export {
   bg,
   bgpost,
@@ -125,12 +135,15 @@ export {
   steps,
   frequencyOption,
   weeklyGoalList,
+  selfv,
+  defaultv,
+  phyv,
   renderGoalTypeName,
-  getNumofGoals,
   isMonday,
   goalEnded,
   getFrequency,
   getWeeklyObj,
   getGoalObjById,
   checkSpecialChara,
+  filterForGoalType,
 };

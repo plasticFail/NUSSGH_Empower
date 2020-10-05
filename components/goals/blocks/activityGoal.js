@@ -24,7 +24,11 @@ import NameDateSelector from '../nameDateSelector';
 import FrequencySelector from '../dropDownSelector';
 import RenderCounter from '../renderCounter';
 import {addActivityGoalReq} from '../../../netcalls/requestsGoals';
-import {getFrequency, activity} from '../../../commonFunctions/goalFunctions';
+import {
+  getFrequency,
+  activity,
+  defaultv,
+} from '../../../commonFunctions/goalFunctions';
 
 const ActivityGoal = (props) => {
   const {visible, parent, activity} = props;
@@ -37,12 +41,17 @@ const ActivityGoal = (props) => {
 
   const [pageText, setPageText] = useState('Add Goal');
 
+  console.log('herer');
+
   useEffect(() => {
     if (parent != undefined && activity != undefined) {
       setGoalName(activity.name);
       setMinute(activity.duration);
       setCalBurnt(activity.cal_burnt);
       setPageText('Edit Goal');
+      if (parent === defaultv) {
+        setPageText('Add Goal');
+      }
     }
   }, []);
 
@@ -58,7 +67,7 @@ const ActivityGoal = (props) => {
       cal_burnt: calBurnt,
     };
     if (parent != undefined) {
-      if (await addActivityGoalReq(obj, activity._id)) {
+      if ((await addActivityGoalReq(obj, activity._id)) && parent != defaultv) {
         Alert.alert('Activity goal edited successfully', '', [
           {
             text: 'Got It',
@@ -121,12 +130,14 @@ const ActivityGoal = (props) => {
             item={minute}
             setItem={setMinute}
             parameter={'mins'}
+            maxLength={3}
           />
           <RenderCounter
             fieldName="Cal Burnt"
             item={calBurnt}
             setItem={setCalBurnt}
             parameter={'cal'}
+            maxLength={4}
           />
         </ScrollView>
         <View style={[globalStyles.buttonContainer]}>

@@ -4,6 +4,7 @@ import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {TextInput} from 'react-native-gesture-handler';
 
+//this stepper is only for whole numbers**
 //Props:
 //paramter: eg. 1 unit - parameter is unit
 //count, setCount from parent
@@ -11,6 +12,7 @@ import {TextInput} from 'react-native-gesture-handler';
 //enableInput: boolean
 //valueType: decimal-pad/ number-pad (whole num)
 //style: adjust entire stepper component*
+//maxLength : maximum digit for input
 
 const decimal = 'decimal-pad';
 const wholeNumber = 'number-pad';
@@ -92,7 +94,7 @@ export default class StepCounter extends Component {
   }
 
   render() {
-    const {parameter, textStyle} = this.props;
+    const {parameter, textStyle, maxLength} = this.props;
     const {count, enableInput, valueType} = this.state;
     return (
       <View style={{...styles.container, ...this.props.style}}>
@@ -111,10 +113,12 @@ export default class StepCounter extends Component {
             <TextInput
               value={String(count)}
               keyboardType={valueType}
+              maxLength={maxLength}
               style={[styles.textInput, styles.shadow]}
               onChangeText={(value) => {
-                this.setState({count: Number(value)});
-                this.props.setCount(Number(value));
+                var cleanNumber = value.replace(/[^0-9]/g, '');
+                this.setState({count: Number(cleanNumber)});
+                this.props.setCount(Number(cleanNumber));
               }}
               returnKeyType="done"
             />

@@ -4,10 +4,8 @@ import globalStyles from '../../styles/globalStyles';
 import StepCounter from '../stepCounter';
 
 const RenderCounter = (props) => {
-  const {fieldName, item, parameter} = props;
+  const {fieldName, item, parameter, maxLength} = props;
   const {setItem} = props;
-
-  console.log(parameter);
   return (
     <View style={{marginBottom: '3%'}}>
       {parameter === '' ? (
@@ -25,6 +23,7 @@ const RenderCounter = (props) => {
           fieldName={''}
           inputable={true}
           enableInput={true}
+          maxLength={maxLength}
         />
       </View>
     </View>

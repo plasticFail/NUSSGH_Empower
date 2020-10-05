@@ -25,6 +25,7 @@ import {
   maxProtein,
 } from '../../../commonFunctions/diaryFunctions';
 import {addFoodGoalReq} from '../../../netcalls/requestsGoals';
+import {defaultv} from '../../../commonFunctions/goalFunctions';
 
 const initialCal = 1000;
 const initialCarbs = maxCarbs / 2;
@@ -50,6 +51,9 @@ const FoodGoal = (props) => {
       setProtein(food.protein);
       setFats(food.fats);
       setPageText('Edit Goal');
+      if (parent === defaultv) {
+        setPageText('Add Goal');
+      }
     }
   }, []);
 
@@ -66,7 +70,7 @@ const FoodGoal = (props) => {
       fats: fats,
     };
     if (parent != undefined) {
-      if (await addFoodGoalReq(obj, food._id)) {
+      if ((await addFoodGoalReq(obj, food._id)) && parent != defaultv) {
         Alert.alert('Food goal edited successfully', '', [
           {
             text: 'Got It',
@@ -137,24 +141,28 @@ const FoodGoal = (props) => {
                 item={cal}
                 setItem={setCal}
                 parameter={'kCal'}
+                maxLength={4}
               />
               <RenderCounter
                 fieldName="Carbs"
                 item={carbs}
                 setItem={setCarbs}
                 parameter={'g'}
+                maxLength={3}
               />
               <RenderCounter
                 fieldName="Fats"
                 item={fats}
                 setItem={setFats}
                 parameter={'g'}
+                maxLength={3}
               />
               <RenderCounter
                 fieldName="Protein"
                 item={protein}
                 setItem={setProtein}
                 parameter={'g'}
+                maxLength={3}
               />
             </ScrollView>
           </View>

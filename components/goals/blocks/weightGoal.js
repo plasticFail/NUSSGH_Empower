@@ -24,6 +24,7 @@ import {addWeightGoalReq} from '../../../netcalls/requestsGoals';
 import {
   weeklyGoalList,
   getWeeklyObj,
+  defaultv,
 } from '../../../commonFunctions/goalFunctions';
 import {getDateObj} from '../../../commonFunctions/diaryFunctions';
 
@@ -41,9 +42,12 @@ const WeightGoal = (props) => {
   useEffect(() => {
     if (parent != undefined && weightObj != undefined) {
       setGoalName(weightObj.name);
-
       setWeight(weightObj.goal_weight);
       setPageText('Edit Goal');
+      setOpenedWeight(true);
+      if (parent === defaultv) {
+        setPageText('Add Goal');
+      }
     }
   }, []);
 
@@ -56,7 +60,7 @@ const WeightGoal = (props) => {
       name: goalName,
       goal_weight: weight,
     };
-    if (parent != undefined) {
+    if (parent != undefined && parent != defaultv) {
       if (await addWeightGoalReq(obj, weightObj._id)) {
         Alert.alert('Weight goal editted successfully', '', [
           {

@@ -29,6 +29,9 @@ import {
   goalEnded,
   isMonday,
   bgpost,
+  defaultv,
+  phyv,
+  selfv,
 } from '../../commonFunctions/goalFunctions';
 import {deleteGoal} from '../../netcalls/requestsGoals';
 //component
@@ -38,7 +41,6 @@ import CircularProgress from '../dashboard/todayOverview/CircularProgress';
 import DeleteModal from '../deleteModal';
 import BgGoal from './blocks/bgGoal';
 import FoodGoal from './blocks/foodGoal';
-import {goal} from '../../netcalls/urls';
 import MedicationGoal from './blocks/medicationGoal';
 import StepsGoal from './blocks/stepsGoal';
 import ActivityGoal from './blocks/activityGoal';
@@ -50,29 +52,9 @@ import ProgressBar from '../progressbar';
 const progress = 0.3;
 const GoalDetail = (props) => {
   const {visible, goalItem, type} = props;
-  const {close, init, deleteInit} = props;
+  const {close, init, deleteInit, openEditModal} = props;
   const [showDelete, setShowDelete] = useState(false);
   const [deleteContent, setDeleteContent] = useState('');
-  const [showEditModal, setShowEditModal] = useState(false);
-
-  useEffect(() => {
-    init();
-  }, [showEditModal]);
-
-  const formatFrequency = (string) => {
-    return (
-      String(string).substr(0, 1).toUpperCase() +
-      String(string).substr(1, String(string).length - 1)
-    );
-  };
-
-  const getWeightOffset = (number) => {
-    if (number != null) {
-      let arr = weeklyGoalList.filter((item) => item.value === number);
-      let string = String(arr[0].name).split(' per week');
-      return string[0];
-    }
-  };
 
   const confirmDelete = () => {
     setShowDelete(true);
@@ -98,7 +80,11 @@ const GoalDetail = (props) => {
   };
 
   const showActionButton = () => {
-    if (isMonday() && !goalEnded(goalItem.end_date)) {
+    if (
+      //isMonday() &&
+      // !goalEnded(goalItem.end_date) &&
+      goalItem?.set_by != phyv
+    ) {
       return true;
     }
     return false;
@@ -119,113 +105,57 @@ const GoalDetail = (props) => {
         <Text style={globalStyles.pageDetails}>Your Goals</Text>
         <ScrollView contentContainerStyle={{flexGrow: 1}}>
           {type != food
-            ? RenderProgressCard(type, goalItem.name, progress)
-            : RenderProgressBarCard(type, goalItem.name, progress)}
+            ? RenderProgressCard(type, goalItem?.name, progress)
+            : RenderProgressBarCard(type, goalItem?.name, progress)}
 
           {/*Render goal type specific fields*/}
           {type === bg ? (
             <>
-              {RenderField('Min Reading', goalItem.min_bg, 'mmol/L')}
-              {RenderField('Max Reading', goalItem.max_bg, 'mmol/L')}
+              {RenderField('Min Reading', goalItem?.min_bg, 'mmol/L')}
+              {RenderField('Max Reading', goalItem?.max_bg, 'mmol/L')}
             </>
           ) : type === food ? (
             <>
-              {RenderField('Calories', goalItem.calories, 'cal')}
-              {RenderField('Carbs', goalItem.carbs, 'g')}
-              {RenderField('Fat', goalItem.fats, 'g')}
-              {RenderField('Protein', goalItem.protein, 'g')}
+              {RenderField('Calories', goalItem?.calories, 'cal')}
+              {RenderField('Carbs', goalItem?.carbs, 'g')}
+              {RenderField('Fat', goalItem?.fats, 'g')}
+              {RenderField('Protein', goalItem?.protein, 'g')}
             </>
           ) : type === med ? (
             <>
-              {RenderField('Medication', goalItem.medication)}
-              {RenderField('Dosage', goalItem.dosage, 'Unit(s)')}
+              {RenderField('Medication', goalItem?.medication)}
+              {RenderField('Dosage', goalItem?.dosage, 'Unit(s)')}
             </>
           ) : type === weight ? (
-            <>
-              {RenderField('Goal Weight', goalItem.goal_weight, 'kg')}
-              {RenderField(
-                'Weekly Goal',
-                getWeightOffset(goalItem.weekly_offset),
-              )}
-            </>
+            <>{RenderField('Goal Weight', goalItem?.goal_weight, 'kg')}</>
           ) : type === activity ? (
             <>
-              {RenderField('Exercise', goalItem.duration, 'mins')}
-              {RenderField('Cal Burnt', goalItem.cal_burnt, 'cal')}
+              {RenderField('Exercise', goalItem?.duration, 'mins')}
+              {RenderField('Cal Burnt', goalItem?.cal_burnt, 'cal')}
             </>
           ) : (
-            <>{RenderField('Min Steps', goalItem.steps)}</>
+            <>{RenderField('Min Steps', goalItem?.steps)}</>
           )}
         </ScrollView>
       </View>
       {/*Should check if physician/ user set to show this action button**/}
 
-      <View style={globalStyles.buttonContainer}>
-        <View style={{flexDirection: 'row'}}>
-          <DeleteBin
-            method={confirmDelete}
-            style={{marginTop: '6%', marginStart: '2%'}}
-          />
-          <TouchableOpacity
-            style={logStyles.enableEditButton}
-            onPress={() => setShowEditModal(true)}>
-            <Text style={globalStyles.actionButtonText}>Edit Goal</Text>
-          </TouchableOpacity>
+      {showActionButton() && (
+        <View style={globalStyles.buttonContainer}>
+          <View style={{flexDirection: 'row'}}>
+            <DeleteBin
+              method={confirmDelete}
+              style={{marginTop: '6%', marginStart: '2%'}}
+            />
+            <TouchableOpacity
+              style={logStyles.enableEditButton}
+              onPress={() => openEditModal()}>
+              <Text style={globalStyles.actionButtonText}>Edit Goal</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
+      )}
 
-      {/*Action modal**/}
-      {type === bg && (
-        <BgGoal
-          visible={showEditModal}
-          close={() => {
-            setShowEditModal(false);
-            init();
-          }}
-          parent="edit"
-          bg={goalItem}
-        />
-      )}
-      {type === food && (
-        <FoodGoal
-          visible={showEditModal}
-          close={() => setShowEditModal(false)}
-          parent="edit"
-          food={goalItem}
-        />
-      )}
-      {type === med && (
-        <MedicationGoal
-          visible={showEditModal}
-          close={() => setShowEditModal(false)}
-          parent="edit"
-          med={goalItem}
-        />
-      )}
-      {type === steps && (
-        <StepsGoal
-          visible={showEditModal}
-          close={() => setShowEditModal(false)}
-          parent="edit"
-          step={goalItem}
-        />
-      )}
-      {type === activity && (
-        <ActivityGoal
-          visible={showEditModal}
-          close={() => setShowEditModal(false)}
-          parent="edit"
-          activity={goalItem}
-        />
-      )}
-      {type === weight && (
-        <WeightGoal
-          visible={showEditModal}
-          close={() => setShowEditModal(false)}
-          parent="edit"
-          weightObj={goalItem}
-        />
-      )}
       <DeleteModal
         visible={showDelete}
         close={() => setShowDelete(false)}
@@ -270,7 +200,12 @@ function RenderProgressBarCard(type, goalName, progress) {
         {flexDirection: 'column', alignItems: 'flex-start'},
       ]}>
       <Text style={globalStyles.pageDetails}>{renderGoalTypeName(type)}</Text>
-      <Text style={[globalStyles.pageDetails, styles.goalName]}>
+      <Text
+        style={[
+          globalStyles.pageDetails,
+          styles.goalName,
+          {fontWeight: 'bold'},
+        ]}>
         {goalName}
       </Text>
       <View style={{flexDirection: 'row'}}>
@@ -278,7 +213,6 @@ function RenderProgressBarCard(type, goalName, progress) {
           containerStyle={{
             height: 20,
             marginBottom: 5,
-            borderRadius: 0,
             flex: 1,
             marginStart: '3%',
             marginEnd: '2%',
@@ -301,7 +235,12 @@ function RenderProgressBarCard(type, goalName, progress) {
             </Text>
           </View>
         ) : (
-          <View style={{flexDirection: 'column', alignSelf: 'flex-end'}}>
+          <View
+            style={{
+              flexDirection: 'column',
+              alignSelf: 'flex-end',
+              marginTop: '-10%',
+            }}>
             <Text
               style={[
                 styles.targetStyle,
@@ -386,13 +325,10 @@ const styles = StyleSheet.create({
   },
   targetStyle: {
     fontSize: 18,
-    marginStart: '2%',
   },
   foodpercent: {
     color: '#ff0844',
     alignSelf: 'flex-end',
-    position: 'absolute',
-    top: '-80%%',
     fontSize: 20,
   },
 });

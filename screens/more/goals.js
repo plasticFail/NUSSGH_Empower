@@ -41,7 +41,7 @@ import {
   weight,
   activity,
   steps,
-  renderGoalTypeName,
+  filterForPatientGoal,
   isMonday,
 } from '../../commonFunctions/goalFunctions';
 import AboutGoals from '../../components/goals/aboutGoals';
@@ -57,12 +57,11 @@ const GoalsScreen = (props) => {
     initGoals();
   }, []);
 
-  const initGoals = () => {
+  const initGoals = async () => {
     console.log('getting latest goals');
-    getGoals().then((data) => {
-      setTimeout(() => setLoading(false), 1000);
-      setGoals(data);
-    });
+    let data = await getGoals();
+    setLoading(false);
+    setGoals(data);
   };
 
   return (
@@ -92,17 +91,9 @@ const GoalsScreen = (props) => {
         />
         <Text style={styles.addbutton}>Add Goal</Text>
       </TouchableOpacity>
-      {/*Render My Goals */}
+      {/*Render Goals */}
       <ScrollView contentContainerStyle={{flexGrow: 1}}>
         <GoalList goals={goals} init={initGoals} />
-        <Text
-          style={[
-            globalStyles.goalFieldName,
-            {marginTop: '2%', marginStart: '3%'},
-          ]}>
-          Suggestions
-        </Text>
-        {/* to use with actual suggested goals*/}
       </ScrollView>
       <AddGoalModal
         visible={openAdd}
@@ -119,23 +110,6 @@ const GoalsScreen = (props) => {
 };
 
 export default GoalsScreen;
-
-function renderGoalLogo(type) {
-  switch (type) {
-    case bg:
-      return renderLogIconNavy(bg_key);
-    case food:
-      return renderLogIconNavy(food_key);
-    case med:
-      return renderLogIconNavy(med_key);
-    case weight:
-      return renderLogIconNavy(weight_key);
-    case activity:
-      return renderLogIconNavy(activity_key);
-    case steps:
-      return renderLogIconNavy(step_key);
-  }
-}
 
 const styles = StyleSheet.create({
   addbutton: {

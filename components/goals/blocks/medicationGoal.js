@@ -19,12 +19,12 @@ import logStyles from '../../../styles/logStyles';
 //component
 import LeftArrowBtn from '../../logs/leftArrowBtn';
 import NameDateSelector from '../nameDateSelector';
-import FrequencySelector from '../dropDownSelector';
 import SearchMedication from '../../onboarding/medication/searchMedication';
 import RenderCounter from '../renderCounter';
 //function
 import {isEmpty} from '../../../commonFunctions/common';
 import {addMedGoalReq} from '../../../netcalls/requestsGoals';
+import {defaultv} from '../../../commonFunctions/goalFunctions';
 
 const MedicationGoal = (props) => {
   const {visible, parent, med} = props;
@@ -45,6 +45,9 @@ const MedicationGoal = (props) => {
       setDosage(med.dosage);
       setSelectedMed(medObj);
       setPageText('Edit Goal');
+      if (parent === defaultv) {
+        setPageText('Add Goal');
+      }
     }
   }, []);
 
@@ -55,12 +58,11 @@ const MedicationGoal = (props) => {
   const submit = async () => {
     let obj = {
       name: goalName,
-      frequency: frequency.value,
       medication: selectedMed.drugName,
       dosage: dosage,
     };
     if (parent != undefined) {
-      if (await addMedGoalReq(obj, med._id)) {
+      if ((await addMedGoalReq(obj, med._id)) && parent != defaultv) {
         Alert.alert('Medication goal edited successfully', '', [
           {
             text: 'Got It',
@@ -151,6 +153,7 @@ const MedicationGoal = (props) => {
                 item={dosage}
                 setItem={setDosage}
                 parameter={'Unit(s)'}
+                maxLength={2}
               />
             </ScrollView>
           </View>

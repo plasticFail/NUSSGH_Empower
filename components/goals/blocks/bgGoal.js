@@ -27,6 +27,7 @@ import {
   min_bg,
 } from '../../../commonFunctions/logFunctions';
 import {addBgGoalReq} from '../../../netcalls/requestsGoals';
+import {defaultv} from '../../../commonFunctions/goalFunctions';
 
 const min_key = 'min';
 const max_key = 'max';
@@ -41,11 +42,14 @@ const BgGoal = (props) => {
   const [pageText, setPageText] = useState('Add Goal');
 
   useEffect(() => {
-    if (parent != undefined && bg != undefined) {
+    if (parent != undefined || bg != undefined) {
       setGoalName(bg.name);
       setMinBg(String(bg.min_bg));
       setMaxBg(String(bg.max_bg));
       setPageText('Edit Goal');
+      if (parent === defaultv) {
+        setPageText('Add Goal');
+      }
     }
   }, []);
 
@@ -60,7 +64,7 @@ const BgGoal = (props) => {
       min_bg: Number(minBg),
       max_bg: Number(maxBg),
     };
-    if (parent != undefined) {
+    if (parent != undefined && parent != defaultv) {
       if (await addBgGoalReq(obj, bg._id)) {
         Alert.alert('Blood glucose goal edited successfully', '', [
           {

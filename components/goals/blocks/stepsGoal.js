@@ -21,6 +21,7 @@ import RenderCounter from '../renderCounter';
 //function
 import {maxSteps} from '../../../commonFunctions/diaryFunctions';
 import {addStepsGoalReq} from '../../../netcalls/requestsGoals';
+import {defaultv} from '../../../commonFunctions/goalFunctions';
 
 const StepsGoal = (props) => {
   const {visible, parent, step} = props;
@@ -37,6 +38,9 @@ const StepsGoal = (props) => {
       setGoalName(step.name);
       setSteps(step.steps);
       setPageText('Edit Goal');
+      if (parent === defaultv) {
+        setPageText('Add Goal');
+      }
     }
   }, []);
 
@@ -49,7 +53,7 @@ const StepsGoal = (props) => {
       name: goalName,
       steps: steps,
     };
-    if (parent != undefined) {
+    if (parent != undefined && parent != defaultv) {
       if (addStepsGoalReq(obj, step._id)) {
         Alert.alert('Step goal edited successfully', '', [
           {
@@ -116,6 +120,7 @@ const StepsGoal = (props) => {
                 item={steps}
                 setItem={setSteps}
                 parameter={''}
+                maxLength={5}
               />
             </ScrollView>
           </View>
