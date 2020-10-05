@@ -31,17 +31,23 @@ import {
   steps,
   weeklyGoalList,
   renderGoalTypeName,
-} from '../../commonFunctions/goalConstants';
+  goalEnded,
+  isMonday,
+} from '../../commonFunctions/goalFunctions';
 import {deleteGoal} from '../../netcalls/requestsGoals';
+import DeleteModal from '../deleteModal';
+import {goal} from '../../netcalls/urls';
 
 //set default progress first
 //havent differentiate who is setting the goal*
 const progress = '50%';
 const GoalDetail = (props) => {
   const {visible, goalItem, type} = props;
-  const {close} = props;
+  const {close, init} = props;
+  const [showDelete, setShowDelete] = useState(false);
+  const [deleteContent, setDeleteContent] = useState('');
 
-  console.log(goalItem);
+  console.log(goalEnded(goalItem.end_date));
 
   const showDate = (datestring) => {
     return moment(getDateObj(datestring)).format('DD MMM YYYY');
@@ -60,17 +66,30 @@ const GoalDetail = (props) => {
     return string[0];
   };
 
+  const confirmDelete = () => {
+    setShowDelete(true);
+    let content = goalItem.name + ' Goal';
+    setDeleteContent(content);
+  };
+
   const removeGoal = async () => {
     console.log('removing ' + type + ' ' + goalItem['_id']);
     if (await deleteGoal(type, goalItem._id)) {
-      Alert.alert('Goal deleted successfully!', '', [
-        {text: 'Got It', onPress: () => close()},
-      ]);
+      setShowDelete(false);
+      init();
+      close();
     } else {
       Alert.alert('Unexpected error occured!', 'Please try again later.', [
         {text: 'Got It'},
       ]);
     }
+  };
+
+  const showActionButton = () => {
+    if (isMonday() && !goalEnded()) {
+      return true;
+    }
+    return false;
   };
 
   return (
@@ -131,17 +150,26 @@ const GoalDetail = (props) => {
         </ScrollView>
       </View>
       {/*Should check if physician/ user set to show this action button**/}
-      <View style={globalStyles.buttonContainer}>
-        <View style={{flexDirection: 'row'}}>
-          <DeleteBin
-            method={removeGoal}
-            style={{marginTop: '6%', marginStart: '2%'}}
-          />
-          <TouchableOpacity style={logStyles.enableEditButton}>
-            <Text style={globalStyles.actionButtonText}>Edit Goal</Text>
-          </TouchableOpacity>
+      {showActionButton() && (
+        <View style={globalStyles.buttonContainer}>
+          <View style={{flexDirection: 'row'}}>
+            <DeleteBin
+              method={confirmDelete}
+              style={{marginTop: '6%', marginStart: '2%'}}
+            />
+            <TouchableOpacity style={logStyles.enableEditButton}>
+              <Text style={globalStyles.actionButtonText}>Edit Goal</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
+      )}
+
+      <DeleteModal
+        visible={showDelete}
+        close={() => setShowDelete(false)}
+        item={deleteContent}
+        confirmMethod={removeGoal}
+      />
     </Modal>
   );
 };

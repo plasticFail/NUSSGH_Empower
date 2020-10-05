@@ -147,6 +147,32 @@ const globalStyles = StyleSheet.create({
     borderBottomWidth: 1,
     paddingBottom: '2%',
   },
+  //delete modal
+  deleteDetails: {
+    fontSize: 16,
+    margin: '4%',
+  },
+  deleteButton: {
+    backgroundColor: '#ff0844',
+    height: 45,
+    width: '70%',
+    alignSelf: 'center',
+    borderRadius: 15,
+    margin: '4%',
+  },
+  deleteButtonText: {
+    fontSize: 20,
+    textAlign: 'center',
+    marginVertical: '3%',
+    fontWeight: '500',
+    color: 'white',
+  },
+  subOptionText: {
+    fontSize: 20,
+    textAlign: 'center',
+    color: '#ff0844',
+    marginBottom: '3%',
+  },
 });
 
 export default globalStyles;

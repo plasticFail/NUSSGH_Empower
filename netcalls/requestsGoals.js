@@ -8,7 +8,7 @@ import {
   weight,
   activity,
   steps,
-} from '../commonFunctions/goalConstants';
+} from '../commonFunctions/goalFunctions';
 
 const addBgGoalReq = async (bgGoal) => {
   let link = goal + '/' + bgpost;

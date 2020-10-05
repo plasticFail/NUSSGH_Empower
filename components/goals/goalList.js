@@ -15,12 +15,10 @@ import globalStyles from '../../styles/globalStyles';
 import {Colors} from '../../styles/colors';
 import {horizontalMargins} from '../../styles/variables';
 //component
-import LeftArrowBtn from '../../components/logs/leftArrowBtn';
 import ProgressBar from '../../components/progressbar';
 import GoalDetail from '../../components/goals/goalDetail';
 //third party lib
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import AddGoalModal from '../../components/goals/addGoalModal';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 import {
   bg_key,
   renderLogIconNavy,
@@ -30,7 +28,6 @@ import {
   activity_key,
   step_key,
 } from '../../commonFunctions/logFunctions';
-import {getGoals} from '../../netcalls/requestsGoals';
 import {
   bg,
   food,
@@ -39,91 +36,112 @@ import {
   activity,
   steps,
   renderGoalTypeName,
-  isMonday,
+  getNumofGoals,
 } from '../../commonFunctions/goalFunctions';
-import GoalList from '../../components/goals/goalList';
 
-const GoalsScreen = (props) => {
-  const [openAdd, setOpenAdd] = useState(false);
-  const [goals, setGoals] = useState({});
+const height = Dimensions.get('window').height;
+
+const GoalList = (props) => {
+  const {goals} = props;
+  const {init} = props;
+  const [showDown, setShowDown] = useState(true);
+  const moveDownAnimation = useRef(new Animated.Value(0)).current;
   const [selectedGoal, setSelectedGoal] = useState({});
   const [selectedType, setSelectedType] = useState('');
   const [showDetail, setShowDetail] = useState(false);
 
   useEffect(() => {
-    initGoals();
-  }, []);
+    if (showDown) {
+      runAnimation();
+    }
+  }, [showDown]);
 
-  const initGoals = () => {
-    console.log('getting latest goals');
-    getGoals().then((data) => {
-      setGoals(data);
-    });
+  const runAnimation = () => {
+    setShowDown(true);
+    Animated.loop(
+      Animated.timing(moveDownAnimation, {
+        toValue: 1,
+        duration: 1500,
+        useNativeDriver: true,
+      }),
+    ).start();
+  };
+
+  const removeAnimation = () => {
+    setShowDown(false);
+    moveDownAnimation.setValue(0);
+  };
+
+  const heightInterpolation = moveDownAnimation.interpolate({
+    inputRange: [0, 1],
+    outputRange: [height * -0.03, height * 0.01],
+  });
+
+  const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
+    return (
+      layoutMeasurement.height + contentOffset.y >= contentSize.height - 30
+    );
+  };
+
+  const isCloseToTop = ({layoutMeasurement, contentOffset, contentSize}) => {
+    return contentOffset.y == 0;
+  };
+
+  const openGoalDetail = (item, type) => {
+    setSelectedGoal(item);
+    setSelectedType(type);
+    setShowDetail(true);
   };
 
   return (
-    <View style={globalStyles.pageContainer}>
-      <View style={globalStyles.menuBarContainer}>
-        <LeftArrowBtn close={() => props.navigation.navigate('Home')} />
-      </View>
-      <Text style={globalStyles.pageHeader}>Goals</Text>
-      <Text style={[globalStyles.pageDetails, {marginBottom: '4%'}]}>
-        Edit Your Targets
-      </Text>
-      <View style={{flex: 1}}>
-        <ScrollView contentContainerStyle={{flexGrow: 1}}>
-          <Text
-            style={[
-              globalStyles.goalFieldName,
-              {marginTop: 0, marginStart: '3%'},
-            ]}>
-            Your Goals
-          </Text>
-          <GoalList goals={goals} init={() => initGoals()} />
-
-          {isMonday() && (
-            <TouchableOpacity
-              onPress={() => setOpenAdd(true)}
-              style={{flexDirection: 'row'}}>
-              <AntDesign
-                name="pluscircleo"
-                color={'#aad326'}
-                size={25}
-                style={{margin: '2%'}}
+    <View style={{maxHeight: '30%'}}>
+      {getNumofGoals(goals) != 0 ? (
+        <>
+          <ScrollView
+            style={{flexGrow: 1}}
+            scrollEventThrottle={100}
+            onScroll={({nativeEvent}) => {
+              if (isCloseToTop(nativeEvent)) {
+                return runAnimation();
+              }
+              if (isCloseToBottom(nativeEvent)) {
+                return removeAnimation();
+              } else {
+                setShowDown(true);
+              }
+            }}>
+            {RenderGoalItems(goals, openGoalDetail)}
+          </ScrollView>
+          {getNumofGoals(goals) >= 3 && showDown && (
+            <Animated.View
+              style={[
+                {transform: [{translateY: heightInterpolation}]},
+                {position: 'absolute', right: '2%'},
+              ]}>
+              <Icon
+                name="arrow-circle-down"
+                size={30}
+                color={Colors.lastLogButtonColor}
+                style={styles.downIcon}
               />
-              <Text style={styles.addbutton}>Add Goal</Text>
-            </TouchableOpacity>
+            </Animated.View>
           )}
-
-          <Text
-            style={[
-              globalStyles.goalFieldName,
-              {marginTop: '2%', marginStart: '3%'},
-            ]}>
-            Physician-Set Goals
-          </Text>
-          <Text
-            style={[
-              globalStyles.goalFieldName,
-              {marginTop: '2%', marginStart: '3%'},
-            ]}>
-            Suggested Goal
-          </Text>
-        </ScrollView>
-      </View>
-      <AddGoalModal
-        visible={openAdd}
-        close={() => {
-          console.log('closing add goal');
-          initGoals();
-          setOpenAdd(false);
-        }}
+        </>
+      ) : (
+        <Text style={styles.noGoalsText}>No goals set yet!</Text>
+      )}
+      <GoalDetail
+        visible={showDetail}
+        close={() => setShowDetail(false)}
+        goalItem={selectedGoal}
+        type={selectedType}
+        init={() => init()}
       />
     </View>
   );
 };
 
-export default GoalsScreen;
+export default GoalList;
 
 function RenderGoalItems(array, openGoalDetail) {
   return Object.keys(array).map((item, index) =>

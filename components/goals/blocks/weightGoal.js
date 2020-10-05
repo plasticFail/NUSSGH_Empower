@@ -20,7 +20,7 @@ import DropdownSelector from '../dropDownSelector';
 import WeightDragModal from '../weightDragModal';
 import {normalTextFontSize} from '../../../styles/variables';
 import {addWeightGoalReq} from '../../../netcalls/requestsGoals';
-import {weeklyGoalList} from '../../../commonFunctions/goalConstants';
+import {weeklyGoalList} from '../../../commonFunctions/goalFunctions';
 
 const WeightGoal = (props) => {
   const {visible} = props;

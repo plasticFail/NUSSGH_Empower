@@ -85,6 +85,7 @@ const DateSelector = (props) => {
               date={date}
               onDateChange={setDate}
               mode="date"
+              minimumDate={new Date()}
               maximumDate={checkAgainst}
             />
           ) : (

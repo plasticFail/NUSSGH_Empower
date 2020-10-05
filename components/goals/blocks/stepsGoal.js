@@ -47,7 +47,7 @@ const StepsGoal = (props) => {
       steps: steps,
     };
     if (addStepsGoalReq(obj)) {
-      Alert.alert('Activity goal created successfully', '', [
+      Alert.alert('Step goal created successfully', '', [
         {
           text: 'Got It',
           onPress: () => close(),

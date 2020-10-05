@@ -35,7 +35,7 @@ import WeightGoal from './blocks/weightGoal';
 
 const AddGoalModal = (props) => {
   const {visible} = props;
-  const {close, init} = props;
+  const {close} = props;
   const buttonList = [
     bg_key,
     food_key,
@@ -79,29 +79,6 @@ const AddGoalModal = (props) => {
     if (type === step_key) {
       setOpenSteps(true);
     }
-    setType(type);
-  };
-
-  const closeGoalType = (type) => {
-    if (type === bg_key) {
-      setOpenBg(false);
-    }
-    if (type === food_key) {
-      setOpenFood(false);
-    }
-    if (type === med_key) {
-      setOpenMed(false);
-    }
-    if (type === weight_key) {
-      setOpenWeight(false);
-    }
-    if (type === activity_key) {
-      setOpenActivity(false);
-    }
-    if (type === step_key) {
-      setOpenSteps(false);
-    }
-    init();
   };
 
   return (
@@ -143,25 +120,25 @@ const AddGoalModal = (props) => {
       </View>
       {/* Goal Type Modal to open */}
       {openBg ? (
-        <BgGoal visible={openBg} close={() => closeGoalType(type)} />
+        <BgGoal visible={openBg} close={() => setOpenBg(false)} />
       ) : null}
       {openFood ? (
-        <FoodGoal visible={openFood} close={() => closeGoalType(type)} />
+        <FoodGoal visible={openFood} close={() => setOpenFood(false)} />
       ) : null}
       {openMed ? (
-        <MedicationGoal visible={openMed} close={() => closeGoalType(type)} />
+        <MedicationGoal visible={openMed} close={() => setOpenMed(false)} />
       ) : null}
       {openWeight ? (
-        <WeightGoal visible={openWeight} close={() => closeGoalType(type)} />
+        <WeightGoal visible={openWeight} close={() => setOpenWeight(false)} />
       ) : null}
       {openActivity ? (
         <ActivityGoal
           visible={openActivity}
-          close={() => closeGoalType(type)}
+          close={() => setOpenActivity(false)}
         />
       ) : null}
       {openSteps ? (
-        <StepsGoal visible={openSteps} close={() => closeGoalType(type)} />
+        <StepsGoal visible={openSteps} close={() => setOpenSteps(false)} />
       ) : null}
     </Modal>
   );
