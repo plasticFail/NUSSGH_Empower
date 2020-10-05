@@ -39,12 +39,6 @@ import LeftArrowBtn from '../logs/leftArrowBtn';
 import DeleteBin from '../deleteBin';
 import CircularProgress from '../dashboard/todayOverview/CircularProgress';
 import DeleteModal from '../deleteModal';
-import BgGoal from './blocks/bgGoal';
-import FoodGoal from './blocks/foodGoal';
-import MedicationGoal from './blocks/medicationGoal';
-import StepsGoal from './blocks/stepsGoal';
-import ActivityGoal from './blocks/activityGoal';
-import WeightGoal from './blocks/weightGoal';
 import ProgressBar from '../progressbar';
 
 //set default progress first
@@ -102,7 +96,12 @@ const GoalDetail = (props) => {
           <LeftArrowBtn close={close} />
         </View>
         <Text style={globalStyles.pageHeader}>View Goal</Text>
-        <Text style={globalStyles.pageDetails}>Your Goals</Text>
+        {goalItem.set_by === selfv ? (
+          <Text style={globalStyles.pageDetails}>Your Goals</Text>
+        ) : goalItem.set_by === phyv ? (
+          <Text style={globalStyles.pageDetails}>Set by physician</Text>
+        ) : null}
+
         <ScrollView contentContainerStyle={{flexGrow: 1}}>
           {type != food
             ? RenderProgressCard(type, goalItem?.name, progress)

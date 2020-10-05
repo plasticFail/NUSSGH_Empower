@@ -62,7 +62,7 @@ const WeightGoal = (props) => {
     };
     if (parent != undefined && parent != defaultv) {
       if (await addWeightGoalReq(obj, weightObj._id)) {
-        Alert.alert('Weight goal editted successfully', '', [
+        Alert.alert('Weight goal edited successfully', '', [
           {
             text: 'Got It',
             onPress: () => close(),
@@ -100,7 +100,6 @@ const WeightGoal = (props) => {
 
   //no selected weight*
   const closeWeightPicker = () => {
-    setOpenedWeight(false);
     setShowPicker(false);
   };
 

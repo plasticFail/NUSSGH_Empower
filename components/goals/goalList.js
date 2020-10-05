@@ -84,6 +84,7 @@ const GoalList = (props) => {
     //if is own set type -> show the detail page*
     if (item.set_by === selfv) {
       setShowDetail(true);
+      setParent('edit');
     } else if (item.set_by === defaultv) {
       //if suggested, show edit type page
       setShowEditModal(true);
