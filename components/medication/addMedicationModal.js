@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {View, TouchableOpacity, Text, StyleSheet} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {View, TouchableOpacity, Text, StyleSheet, Alert} from 'react-native';
 //third party lib
 import Modal from 'react-native-modal';
 //styles
@@ -11,23 +11,60 @@ import {horizontalMargins, normalTextFontSize} from '../../styles/variables';
 import LeftArrowBtn from '../logs/leftArrowBtn';
 import SearchBarMed from './searchBarMed';
 import RenderCounter from '../renderCounter';
-import {isEmpty} from '../../commonFunctions/common';
-import PeriodModal from './periodModal';
+import SelectPeriod from './period/selectPeriod';
+import MedicationDeleteBin from './medicationDeleteBin';
+//function
+import {
+  dayList,
+  onboardAdd,
+  checkMedExistInArr,
+  onboardEdit,
+  resetDayList,
+} from '../../commonFunctions/medicationFunction';
 
 //returns selected medication, dosage and period
 const AddMedicationModal = (props) => {
-  const {visible, closeModal, currentMedList} = props;
+  const {visible, closeModal, currentMedList, parent, med2Edit} = props;
+  const {onAddMed, onEditMed, onDeleteMed} = props;
   const [selectedMed, setSelectedMed] = useState({});
   const [dosage, setDosage] = useState(0);
   const [frequency, setFrequency] = useState(0);
-  const [selectedString, setSelectedString] = useState('');
 
   const [openPeriodModal, setOpenPeriodModal] = useState(false);
-  const [days, setDays] = useState([]);
+  const [daysArr, setDaysArr] = useState(dayList);
 
-  //check if medication being added already exist or not*
-  //currentMedList vs selectedMedicine
-  console.log(days);
+  useEffect(() => {
+    if (parent === onboardEdit && med2Edit != undefined) {
+      setSelectedMed(med2Edit);
+      setDosage(med2Edit.dosage);
+      setFrequency(med2Edit.per_day);
+      setDaysArr(med2Edit.days);
+    }
+  }, [parent]);
+
+  const add2Plan = () => {
+    let obj = {
+      dosage: dosage,
+      per_day: frequency,
+      days: daysArr,
+      medication: selectedMed.medication,
+      dosage_unit: 'unit',
+    };
+    if (parent === onboardAdd) {
+      //check if medication being added already exist or not*
+      if (checkMedExistInArr(currentMedList, selectedMed)) {
+        Alert.alert('You have already added this medication.', '', [
+          {text: 'Got It'},
+        ]);
+      } else {
+        onAddMed(obj);
+        closeModal();
+      }
+    } else {
+      onEditMed(obj);
+      closeModal();
+    }
+  };
 
   return (
     <Modal
@@ -42,10 +79,18 @@ const AddMedicationModal = (props) => {
           <LeftArrowBtn close={closeModal} />
           <View style={{flex: 1}} />
         </View>
-        <Text
-          style={[globalStyles.pageHeader, {marginStart: horizontalMargins}]}>
-          Add Mediciation
-        </Text>
+        {parent === onboardAdd ? (
+          <Text
+            style={[globalStyles.pageHeader, {marginStart: horizontalMargins}]}>
+            Add Mediciation
+          </Text>
+        ) : (
+          <Text
+            style={[globalStyles.pageHeader, {marginStart: horizontalMargins}]}>
+            Edit
+          </Text>
+        )}
+
         <SearchBarMed
           selectedMed={selectedMed}
           setSelectedMed={setSelectedMed}
@@ -75,51 +120,36 @@ const AddMedicationModal = (props) => {
           ]}>
           Recurring Period
         </Text>
-        <TouchableOpacity
-          style={styles.selectPeriodButton}
-          onPress={() => setOpenPeriodModal(true)}>
-          {days.length === 0 ? (
-            <Text style={styles.selectPeriodText}>Select Period</Text>
-          ) : days.length === 7 ? (
-            <Text style={styles.chosenPeriodText}>Daily</Text>
-          ) : (
-            <Text style={styles.chosenPeriodText}>{selectedString}</Text>
-          )}
-        </TouchableOpacity>
-        <PeriodModal
-          visible={openPeriodModal}
-          closeModal={() => setOpenPeriodModal(false)}
-          days={days}
-          setDays={setDays}
+        <SelectPeriod
+          openPeriodModal={openPeriodModal}
+          daysArr={daysArr}
+          setDaysArr={setDaysArr}
+          setOpenPeriodModal={setOpenPeriodModal}
         />
+      </View>
+      <View style={[globalStyles.buttonContainer]}>
+        {parent === onboardAdd ? (
+          <TouchableOpacity
+            style={globalStyles.nextButtonStyle}
+            onPress={() => add2Plan()}>
+            <Text style={globalStyles.actionButtonText}>Add</Text>
+          </TouchableOpacity>
+        ) : (
+          <View style={{flexDirection: 'row'}}>
+            <MedicationDeleteBin
+              medication={selectedMed}
+              deleteMethod={onDeleteMed}
+            />
+            <TouchableOpacity
+              style={logStyles.enableEditButton}
+              onPress={() => add2Plan()}>
+              <Text style={globalStyles.actionButtonText}>Done</Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
     </Modal>
   );
 };
 
 export default AddMedicationModal;
-
-const styles = StyleSheet.create({
-  selectPeriodButton: {
-    backgroundColor: 'white',
-    height: 45,
-    width: '90%',
-    borderRadius: 15,
-    borderWidth: 2,
-    borderColor: '#e2e8ee',
-    alignSelf: 'center',
-    marginStart: '5%',
-    marginEnd: '5%',
-  },
-  selectPeriodText: {
-    fontSize: normalTextFontSize,
-    textAlign: 'center',
-    marginVertical: '2%',
-  },
-  chosenPeriodText: {
-    fontSize: normalTextFontSize,
-    textAlign: 'center',
-    marginVertical: '2%',
-    fontWeight: 'bold',
-  },
-});

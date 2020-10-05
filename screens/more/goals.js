@@ -16,7 +16,7 @@ import {Colors} from '../../styles/colors';
 import {horizontalMargins} from '../../styles/variables';
 //component
 import LeftArrowBtn from '../../components/logs/leftArrowBtn';
-import ProgressBar from '../../components/progressbar';
+import AboutGoals from '../../components/goals/aboutGoals';
 import GoalList from '../../components/goals/goalList';
 import LoadingModal from '../../components/loadingModal';
 import AddGoalModal from '../../components/goals/addGoalModal';
@@ -24,27 +24,7 @@ import AddGoalModal from '../../components/goals/addGoalModal';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 //function
-import {
-  bg_key,
-  renderLogIconNavy,
-  food_key,
-  med_key,
-  weight_key,
-  activity_key,
-  step_key,
-} from '../../commonFunctions/logFunctions';
 import {getGoals} from '../../netcalls/requestsGoals';
-import {
-  bg,
-  food,
-  med,
-  weight,
-  activity,
-  steps,
-  filterForPatientGoal,
-  isMonday,
-} from '../../commonFunctions/goalFunctions';
-import AboutGoals from '../../components/goals/aboutGoals';
 
 const GoalsScreen = (props) => {
   const [openAdd, setOpenAdd] = useState(false);

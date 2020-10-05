@@ -17,7 +17,7 @@ const SearchBarMed = (props) => {
       <TouchableOpacity
         style={[logStyles.inputField, {margin: '3%'}]}
         onPress={() => setOpenSearchModal(true)}>
-        {isEmpty(selectedMed) === true ? (
+        {selectedMed.medication === undefined ? (
           <Text style={{fontSize: 17, color: '#b5b5b5'}}>
             <Ionicons name="search" size={20} /> Name (eg. Metformin)
           </Text>

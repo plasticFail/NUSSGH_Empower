@@ -8,6 +8,8 @@ import {
 
 const daily = 'Daily';
 const dow = 'Days of the Week';
+const onboardAdd = 'onboard_add';
+const onboardEdit = 'onboard_edit';
 
 const periodList = [daily, dow];
 
@@ -49,4 +51,57 @@ const dayList = [
   },
 ];
 
-export {periodList, dayList, daily, dow};
+//see which date is selected
+const getSelectedCount = (arr) => {
+  let count = 0;
+  if (arr != undefined) {
+    for (var x of arr) {
+      if (x?.selected) {
+        count++;
+      }
+    }
+  }
+
+  return count;
+};
+
+const resetDayList = () => {
+  let arr = [];
+  for (var x of dayList) {
+    x.selected = false;
+    arr.push(x);
+  }
+  return arr;
+};
+
+const checkMedExistInArr = (arr, med2Check) => {
+  for (var x of arr) {
+    if (x.medication === med2Check.medication) {
+      return true;
+    }
+  }
+  return false;
+};
+
+//edit the med in existing med list
+const editMed = (med2Edit, newMed, existingList) => {
+  let index = existingList.findIndex(
+    (element) => element.medication === med2Edit.medication,
+  );
+  let newArr = [...existingList];
+  newArr[index] = newMed;
+  return newArr;
+};
+
+export {
+  periodList,
+  dayList,
+  daily,
+  dow,
+  onboardAdd,
+  onboardEdit,
+  getSelectedCount,
+  resetDayList,
+  checkMedExistInArr,
+  editMed,
+};

@@ -18,7 +18,7 @@ import globalStyles from '../../styles/globalStyles';
 //component
 import CrossBtn from '../crossBtn';
 import MedicationItem from '../medicationItem';
-import DeleteConfirmation from '../onboarding/medication/deleteConfirmation';
+import DeleteConfirmation from '../medication/deleteConfirmation';
 
 const ViewMed4Day = (props) => {
   const {isVisible, closeModal} = props;

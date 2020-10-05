@@ -444,7 +444,7 @@ function renderMedContent(medMiss, medCompleted, medLogs) {
   if (medMiss) {
     return (
       <View style={{flexDirection: 'row'}}>
-        <Text style={styles.buttonDetail}>Missed</Text>
+        <Text style={styles.buttonDetail}>Missed </Text>
         <Ionicon
           name="alert-circle-outline"
           style={diaryStyles.failIcon}
