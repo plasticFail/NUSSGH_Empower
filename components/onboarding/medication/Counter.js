@@ -8,7 +8,7 @@ import {Colors} from '../../../styles/colors';
 const Counter = (props) => {
   const {count, setCount, parameter, fieldName, countStyle} = props;
   return (
-    <View style={styles.counterContainer}>
+    <View style={{...styles.counterContainer, ...props.style}}>
       <Text style={[logStyles.fieldName, {marginEnd: '2%'}]}>{fieldName}</Text>
       <StepCounter
         count={count}

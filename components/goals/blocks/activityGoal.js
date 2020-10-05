@@ -21,8 +21,7 @@ import globalStyles from '../../../styles/globalStyles';
 //component
 import LeftArrowBtn from '../../logs/leftArrowBtn';
 import NameDateSelector from '../nameDateSelector';
-import FrequencySelector from '../dropDownSelector';
-import RenderCounter from '../renderCounter';
+import RenderCounter from '../../renderCounter';
 import {addActivityGoalReq} from '../../../netcalls/requestsGoals';
 import {
   getFrequency,

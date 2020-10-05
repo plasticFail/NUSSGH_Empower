@@ -73,7 +73,7 @@ const DeleteConfirmation = (props) => {
   return (
     <>
       <Text style={styles.header}>Remove This Medication</Text>
-      <Text style={globalStyles.deleteDetails}>{medication.drugName}</Text>
+      <Text style={globalStyles.deleteDetails}>{medication.medication}</Text>
       <TouchableOpacity
         style={globalStyles.deleteButton}
         onPress={handleRemoveDate}>

@@ -105,7 +105,7 @@ export default class StepCounter extends Component {
           <Ionicons name="remove-circle" size={40} color={'#aad326'} />
         </TouchableOpacity>
         {enableInput === false ? (
-          <Text style={[styles.countContent, textStyle, {flexBasis: '35%'}]}>
+          <Text style={[styles.countContent, textStyle]}>
             {count} {parameter}
           </Text>
         ) : (
@@ -144,10 +144,11 @@ const styles = StyleSheet.create({
     marginEnd: '3%',
   },
   countContent: {
-    marginVertical: '4%',
+    marginVertical: '5%',
     marginHorizontal: '5%',
-    fontSize: 20,
+    fontSize: 17,
     textAlign: 'center',
+    width: '50%',
   },
   textInput: {
     backgroundColor: 'white',

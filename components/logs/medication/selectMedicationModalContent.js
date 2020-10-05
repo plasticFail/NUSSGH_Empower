@@ -11,7 +11,7 @@ import LeftArrowBtn from '../leftArrowBtn';
 import Counter from '../../onboarding/medication/Counter';
 //functions
 import {isEmpty} from '../../../commonFunctions/common';
-import SearchMedication from '../../onboarding/medication/searchMedication';
+import SearchMedication from '../../medication/searchMedication';
 import {
   med_key,
   checkDosage,

@@ -11,20 +11,18 @@ import {
 } from 'react-native';
 //third party lib
 import Modal from 'react-native-modal';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 //styles
 import {Colors} from '../../../styles/colors';
 import globalStyles from '../../../styles/globalStyles';
-import logStyles from '../../../styles/logStyles';
 //component
 import LeftArrowBtn from '../../logs/leftArrowBtn';
 import NameDateSelector from '../nameDateSelector';
-import SearchMedication from '../../onboarding/medication/searchMedication';
-import RenderCounter from '../renderCounter';
+import RenderCounter from '../../renderCounter';
 //function
 import {isEmpty} from '../../../commonFunctions/common';
 import {addMedGoalReq} from '../../../netcalls/requestsGoals';
 import {defaultv} from '../../../commonFunctions/goalFunctions';
+import SearchBarMed from '../../medication/searchBarMed';
 
 const MedicationGoal = (props) => {
   const {visible, parent, med} = props;
@@ -40,7 +38,7 @@ const MedicationGoal = (props) => {
     if (parent != undefined && med != undefined) {
       setGoalName(med.name);
       let medObj = {
-        drugName: med.medication,
+        medication: med.medication,
       };
       setDosage(med.dosage);
       setSelectedMed(medObj);
@@ -58,7 +56,7 @@ const MedicationGoal = (props) => {
   const submit = async () => {
     let obj = {
       name: goalName,
-      medication: selectedMed.drugName,
+      medication: selectedMed.medication,
       dosage: dosage,
     };
     if (parent != undefined && parent != defaultv) {
@@ -135,31 +133,10 @@ const MedicationGoal = (props) => {
             <ScrollView contentContainerStyle={{flexGrow: 1}}>
               <NameDateSelector goalName={goalName} setGoalName={setGoalName} />
               <Text style={globalStyles.goalFieldName}>Medication</Text>
-              <TouchableOpacity
-                style={[logStyles.inputField, {margin: '4%'}]}
-                onPress={() => setOpenSearchModal(true)}>
-                {isEmpty(selectedMed) === true ? (
-                  <Text style={{fontSize: 17, color: '#b5b5b5'}}>
-                    <Ionicons name="search" size={20} /> Name (eg. Metformin)
-                  </Text>
-                ) : (
-                  <Text style={{fontSize: 17, color: 'black'}}>
-                    {selectedMed.drugName}
-                  </Text>
-                )}
-              </TouchableOpacity>
-
-              {/*Search Modal */}
-              {openSearchModal ? (
-                <SearchMedication
-                  parent={'plan'}
-                  visible={openSearchModal}
-                  closeModal={() => setOpenSearchModal(false)}
-                  selectedMedicine={selectedMed}
-                  setSelectedMedicine={setSelectedMed}
-                />
-              ) : null}
-
+              <SearchBarMed
+                selectedMed={selectedMed}
+                setSelectedMed={setSelectedMed}
+              />
               <RenderCounter
                 fieldName={'Dosage'}
                 item={dosage}

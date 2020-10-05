@@ -17,7 +17,7 @@ import globalStyles from '../../../styles/globalStyles';
 //component
 import LeftArrowBtn from '../../logs/leftArrowBtn';
 import NameDateSelector from '../nameDateSelector';
-import RenderCounter from '../renderCounter';
+import RenderCounter from '../../renderCounter';
 //function
 import {
   maxCarbs,
