@@ -44,9 +44,9 @@ const BgGoal = (props) => {
 
   useEffect(() => {
     if (parent != undefined || bg != undefined) {
-      setGoalName(bg.name);
-      setMinBg(String(bg.min_bg));
-      setMaxBg(String(bg.max_bg));
+      setGoalName(bg?.name);
+      setMinBg(String(bg?.min_bg));
+      setMaxBg(String(bg?.max_bg));
       setPageText('Edit Goal');
       if (parent === defaultv) {
         setPageText('Add Goal');

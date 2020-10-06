@@ -136,6 +136,7 @@ const MedicationGoal = (props) => {
               <SearchBarMed
                 selectedMed={selectedMed}
                 setSelectedMed={setSelectedMed}
+                clickable={true}
               />
               <RenderCounter
                 fieldName={'Dosage'}

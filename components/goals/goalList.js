@@ -89,6 +89,9 @@ const GoalList = (props) => {
       //if suggested, show edit type page
       setShowEditModal(true);
       setParent(defaultv);
+    } else if (item.set_by === phyv) {
+      setParent(phyv);
+      setShowDetail(true);
     }
   };
 
