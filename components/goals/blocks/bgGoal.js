@@ -183,14 +183,26 @@ const BgGoal = (props) => {
                 item={maxBg}
                 setItem={setMaxBg}
                 parameter={'mmol/L'}
-                maxLength={3}
+                maxLength={5}
                 valueType={decimal}
                 incrementValue={0.5}
                 showUnitInParam={false}
               />
-              <Text style={[globalStyles.alertText, styles.spacing]}>
-                {errorMsg}
-              </Text>
+              {errorMsg.length > 0 && (
+                <Text style={[globalStyles.alertText, styles.spacing]}>
+                  {errorMsg}
+                </Text>
+              )}
+              {checkBloodGlucoseText(String(minBg)) != '' && (
+                <Text style={[globalStyles.alertText, styles.spacing]}>
+                  Min Reading: {checkBloodGlucoseText(minBg)}
+                </Text>
+              )}
+              {checkBloodGlucoseText(String(maxBg)) != '' && (
+                <Text style={[globalStyles.alertText, styles.spacing]}>
+                  Max Reading: {checkBloodGlucoseText(maxBg)}
+                </Text>
+              )}
             </ScrollView>
           </View>
         </KeyboardAvoidingView>
