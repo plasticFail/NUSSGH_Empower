@@ -28,25 +28,23 @@ import {
 } from '../../../commonFunctions/logFunctions';
 import {addBgGoalReq} from '../../../netcalls/requestsGoals';
 import {defaultv} from '../../../commonFunctions/goalFunctions';
-import {stat} from 'react-native-fs';
-
-const min_key = 'min';
-const max_key = 'max';
+import RenderCounter from '../../renderCounter';
+import {decimal} from '../../../commonFunctions/common';
 
 const BgGoal = (props) => {
   const {visible, parent, bg} = props;
   const {close} = props;
   const [goalName, setGoalName] = useState('');
-  const [minBg, setMinBg] = useState('');
-  const [maxBg, setMaxBg] = useState('');
+  const [minBg, setMinBg] = useState(5);
+  const [maxBg, setMaxBg] = useState(12);
   const [errorMsg, setErrorMsg] = useState('');
   const [pageText, setPageText] = useState('Add Goal');
 
   useEffect(() => {
     if (parent != undefined || bg != undefined) {
       setGoalName(bg?.name);
-      setMinBg(String(bg?.min_bg));
-      setMaxBg(String(bg?.max_bg));
+      setMinBg(bg?.min_bg);
+      setMaxBg(bg?.max_bg);
       setPageText('Edit Goal');
       if (parent === defaultv) {
         setPageText('Add Goal');
@@ -111,26 +109,10 @@ const BgGoal = (props) => {
   };
 
   const showSubmitBtn = () => {
-    if (
-      maxBg != '' &&
-      minBg != '' &&
-      checkBloodGlucoseText(maxBg) === '' &&
-      checkBloodGlucoseText(minBg) === '' &&
-      goalName?.length != 0 &&
-      errorMsg === ''
-    ) {
+    if (goalName?.length != 0 && errorMsg === '') {
       return true;
     } else {
       return false;
-    }
-  };
-
-  const setFunction = (type, value) => {
-    if (type === min_key) {
-      setMinBg(value);
-    }
-    if (type === max_key) {
-      setMaxBg(value);
     }
   };
 
@@ -146,7 +128,6 @@ const BgGoal = (props) => {
         );
         return;
       }
-
       if (max < min) {
         setErrorMsg(
           'Min blood glucose should be lesser than max blood glucose and vice versa',
@@ -187,21 +168,29 @@ const BgGoal = (props) => {
           <View style={{flex: 1}}>
             <ScrollView contentContainerStyle={{flexGrow: 1}}>
               <NameDateSelector goalName={goalName} setGoalName={setGoalName} />
-              {BgValue(minBg, setFunction, min_key)}
-              {BgValue(maxBg, setFunction, max_key)}
+              <RenderCounter
+                fieldName="Min Reading"
+                item={minBg}
+                setItem={setMinBg}
+                parameter={'mmol/L'}
+                maxLength={5}
+                valueType={decimal}
+                incrementValue={0.5}
+                showUnitInParam={false}
+              />
+              <RenderCounter
+                fieldName="Max Reading"
+                item={maxBg}
+                setItem={setMaxBg}
+                parameter={'mmol/L'}
+                maxLength={3}
+                valueType={decimal}
+                incrementValue={0.5}
+                showUnitInParam={false}
+              />
               <Text style={[globalStyles.alertText, styles.spacing]}>
                 {errorMsg}
               </Text>
-              {checkBloodGlucoseText(minBg) != '' && (
-                <Text style={[globalStyles.alertText, styles.spacing]}>
-                  Min Reading: {checkBloodGlucoseText(minBg)}
-                </Text>
-              )}
-              {checkBloodGlucoseText(maxBg) != '' && (
-                <Text style={[globalStyles.alertText, styles.spacing]}>
-                  Max Reading: {checkBloodGlucoseText(maxBg)}
-                </Text>
-              )}
             </ScrollView>
           </View>
         </KeyboardAvoidingView>
@@ -224,39 +213,6 @@ const BgGoal = (props) => {
 };
 
 export default BgGoal;
-
-function BgValue(value, setFunction, type) {
-  return (
-    <View style={{flexDirection: 'row'}}>
-      {type === min_key ? (
-        <Text
-          style={[
-            logStyles.fieldName,
-            {color: Colors.lastLogValueColor, marginStart: '4%', flex: 1},
-          ]}>
-          Min Reading (mmol/L)
-        </Text>
-      ) : (
-        <Text
-          style={[
-            logStyles.fieldName,
-            {color: Colors.lastLogValueColor, marginStart: '4%', flex: 1},
-          ]}>
-          Max Reading (mmol/L)
-        </Text>
-      )}
-
-      <TextInput
-        style={[logStyles.inputField, {marginEnd: '4%', width: '20%'}]}
-        placeholderTextColor="#a1a3a0"
-        keyboardType="decimal-pad"
-        returnKeyType="done"
-        value={value}
-        onChangeText={(input) => setFunction(type, input)}
-      />
-    </View>
-  );
-}
 
 const styles = StyleSheet.create({
   spacing: {

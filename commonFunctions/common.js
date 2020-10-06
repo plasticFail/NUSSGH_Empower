@@ -90,6 +90,10 @@ const convertDatestring = (date) => {
   return newDate;
 };
 
+//for stepcounter and renderstepcounter
+const decimal = 'decimal-pad';
+const wholeNumber = 'number-pad';
+
 export {
   getGreetingFromHour,
   isEmpty,
@@ -107,4 +111,6 @@ export {
   getLastMinuteFromTodayDate,
   getTodayDate,
   checkLast7Day,
+  decimal,
+  wholeNumber,
 };

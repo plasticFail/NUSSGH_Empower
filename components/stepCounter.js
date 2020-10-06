@@ -3,6 +3,7 @@ import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 //third party lib
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {TextInput} from 'react-native-gesture-handler';
+import {decimal, wholeNumber} from '../commonFunctions/common';
 
 //this stepper is only for whole numbers**
 //Props:
@@ -13,9 +14,7 @@ import {TextInput} from 'react-native-gesture-handler';
 //valueType: decimal-pad/ number-pad (whole num)
 //style: adjust entire stepper component*
 //maxLength : maximum digit for input
-
-const decimal = 'decimal-pad';
-const wholeNumber = 'number-pad';
+//incrementValue:
 
 export default class StepCounter extends Component {
   constructor(props) {
@@ -26,6 +25,8 @@ export default class StepCounter extends Component {
       enableInput:
         this.props.enableInput === undefined ? false : this.props.enableInput,
       valueType: this.props.valueType === decimal ? decimal : wholeNumber,
+      incrementValue:
+        this.props.incrementValue === undefined ? 1 : this.props.incrementValue,
     };
     this.timer = null;
     this.handleAdd = this.handleAdd.bind(this);
@@ -56,14 +57,14 @@ export default class StepCounter extends Component {
 
   handleClickAdd = () => {
     this.stopTimer();
-    let newCount = this.state.count + 1;
+    let newCount = this.state.count + this.state.incrementValue;
     this.setState({count: newCount});
   };
 
   handleClickMinus = () => {
     this.stopTimer();
     if (this.state.count > 0) {
-      let newCount = this.state.count - 1;
+      let newCount = this.state.count - this.state.incrementValue;
       this.setState({count: newCount});
     } else {
       this.setState({count: 0});
@@ -71,7 +72,7 @@ export default class StepCounter extends Component {
   };
 
   handleAdd = () => {
-    let newCount = this.state.count + 1;
+    let newCount = this.state.count + this.state.incrementValue;
     this.setState({count: newCount});
     this.timer = setTimeout(this.handleAdd, 200);
     this.props.setCount(newCount);
@@ -80,7 +81,7 @@ export default class StepCounter extends Component {
   handleMinus = () => {
     clearTimeout();
     if (this.state.count > 0) {
-      let newCount = this.state.count - 1;
+      let newCount = this.state.count - this.state.incrementValue;
       this.setState({count: newCount});
       this.timer = setTimeout(this.handleMinus, 200);
       this.props.setCount(newCount);
@@ -116,9 +117,14 @@ export default class StepCounter extends Component {
               maxLength={maxLength}
               style={[styles.textInput, styles.shadow]}
               onChangeText={(value) => {
-                var cleanNumber = value.replace(/[^0-9]/g, '');
-                this.setState({count: Number(cleanNumber)});
-                this.props.setCount(Number(cleanNumber));
+                if (valueType === wholeNumber) {
+                  var cleanNumber = value.replace(/[^0-9]/g, '');
+                  this.setState({count: Number(cleanNumber)});
+                  this.props.setCount(Number(cleanNumber));
+                } else if (valueType === decimal) {
+                  this.setState({count: Number(value)});
+                  this.props.setCount(value);
+                }
               }}
               returnKeyType="done"
             />

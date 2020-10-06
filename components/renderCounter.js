@@ -11,6 +11,8 @@ const RenderCounter = (props) => {
     maxLength,
     allowInput,
     showUnitInParam,
+    incrementValue,
+    valueType,
   } = props;
   const {setItem} = props;
   return (
@@ -37,6 +39,8 @@ const RenderCounter = (props) => {
         fieldName={''}
         enableInput={allowInput === undefined ? true : allowInput}
         maxLength={maxLength}
+        valueType={valueType}
+        incrementValue={incrementValue === undefined ? 1 : incrementValue}
       />
     </View>
   );
