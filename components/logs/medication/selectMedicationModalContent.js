@@ -8,7 +8,8 @@ import {Colors} from '../../../styles/colors';
 import globalStyles from '../../../styles/globalStyles';
 //component
 import LeftArrowBtn from '../leftArrowBtn';
-import Counter from '../../onboarding/medication/Counter';
+import SearchBarMed from '../../medication/searchBarMed';
+import RenderCounter from '../../renderCounter';
 //functions
 import {isEmpty} from '../../../commonFunctions/common';
 import SearchMedication from '../../medication/searchMedication';
@@ -18,8 +19,6 @@ import {
   checkDosageText,
 } from '../../../commonFunctions/logFunctions';
 import logStyles from '../../../styles/logStyles';
-import SearchBarMed from '../../medication/searchBarMed';
-import RenderCounter from '../../renderCounter';
 
 const SelectMedicationModalContent = (props) => {
   const {showSelectModal, selectedMedList, recordDate} = props;

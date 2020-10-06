@@ -144,6 +144,7 @@ const MedicationGoal = (props) => {
                 setItem={setDosage}
                 parameter={'Unit(s)'}
                 maxLength={2}
+                allowInput={false}
               />
             </ScrollView>
           </View>

@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
     marginEnd: '3%',
   },
   countContent: {
-    marginVertical: '5%',
+    marginVertical: '8%',
     marginHorizontal: '5%',
     fontSize: 17,
     textAlign: 'center',

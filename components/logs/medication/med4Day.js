@@ -48,7 +48,7 @@ const Med4Day = (props) => {
             parameter={'Unit(s)'}
             fieldName={''}
             enableInput={false}
-            style={{width: '70%'}}
+            style={{width: '60%'}}
           />
         )}
       </View>
