@@ -16,11 +16,11 @@ const MedicationPlanItem = (props) => {
         <Text style={globalStyles.pageSubDetails}>{item.medication}</Text>
         {getSelectedCount(item.days) === 7 ? (
           <Text style={[globalStyles.pageSubDetails, {color: '#8a8a8e'}]}>
-            {item.dosage} Unit(s), {item.per_day} times per day, Daily
+            {item.dosage} Unit(s), Daily
           </Text>
         ) : (
           <Text style={[globalStyles.pageSubDetails, {color: '#8a8a8e'}]}>
-            {item.dosage} Unit(s), {item.per_day} times per day, Weekly
+            {item.dosage} Unit(s), Weekly
           </Text>
         )}
       </View>

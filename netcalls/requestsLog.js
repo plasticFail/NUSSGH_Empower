@@ -5,7 +5,7 @@ import {
   medicationList,
   weightAddLog,
   glucoseQuestionaire,
-  medplanAdd, 
+  medplanAdd,
   getActivityLog,
   medPlan,
 } from './urls';
@@ -56,7 +56,7 @@ const storeMedications = async () => {
       },
     });
     let responseJson = await response.json();
-    console.log('storeMedications : ' + responseJson);
+    console.log('get medications : ' + responseJson);
     return responseJson;
   } catch (error) {
     console.error(error);
@@ -152,56 +152,68 @@ const mealAddLogRequest = async (mealData) => {
 };
 
 const getBloodGlucoseLogs = async (startDateString, endDateString) => {
-  let response = await fetch(glucoseAddLog + `?start=${startDateString}&end=${endDateString}`, {
-    method: 'GET',
-    headers: {
-      Authorization: 'Bearer ' + (await getToken()),
-      Accept: 'application/json',
-      'Content-type': 'application/json',
-    }
-  });
+  let response = await fetch(
+    glucoseAddLog + `?start=${startDateString}&end=${endDateString}`,
+    {
+      method: 'GET',
+      headers: {
+        Authorization: 'Bearer ' + (await getToken()),
+        Accept: 'application/json',
+        'Content-type': 'application/json',
+      },
+    },
+  );
   let responseJson = await response.json();
   return responseJson;
-}
+};
 
 const getWeightLogs = async (startDateString, endDateString) => {
-  let response = await fetch(weightAddLog + `?start=${startDateString}&end=${endDateString}`, {
-    method: 'GET',
-    headers: {
-      Authorization: 'Bearer ' + (await getToken()),
-      Accept: 'application/json',
-      'Content-type': 'application/json',
-    }
-  });
+  let response = await fetch(
+    weightAddLog + `?start=${startDateString}&end=${endDateString}`,
+    {
+      method: 'GET',
+      headers: {
+        Authorization: 'Bearer ' + (await getToken()),
+        Accept: 'application/json',
+        'Content-type': 'application/json',
+      },
+    },
+  );
   let responseJson = await response.json();
   return responseJson;
-}
+};
 
 const getMedicationLogs = async (startDateString, endDateString) => {
-  let response = await fetch(medicationAddLog + `?start=${startDateString}&end=${endDateString}`, {
-    method: 'GET',
-    headers: {
-      Authorization: 'Bearer ' + (await getToken()),
-      Accept: 'application/json',
-      'Content-type': 'application/json',
-    }
-  });
+  let response = await fetch(
+    medicationAddLog + `?start=${startDateString}&end=${endDateString}`,
+    {
+      method: 'GET',
+      headers: {
+        Authorization: 'Bearer ' + (await getToken()),
+        Accept: 'application/json',
+        'Content-type': 'application/json',
+      },
+    },
+  );
   let responseJson = await response.json();
   return responseJson;
-}
+};
 
 const getActivityLogs = async (startDateString, endDateString) => {
-  let response = await fetch(getActivityLog + `?start=${startDateString}&end=${endDateString}`, {
-    method: 'GET',
-    headers: {
-      Authorization: 'Bearer ' + (await getToken()),
-      Accept: 'application/json',
-      'Content-type': 'application/json',
-    }
-  });
+  let response = await fetch(
+    getActivityLog + `?start=${startDateString}&end=${endDateString}`,
+    {
+      method: 'GET',
+      headers: {
+        Authorization: 'Bearer ' + (await getToken()),
+        Accept: 'application/json',
+        'Content-type': 'application/json',
+      },
+    },
+  );
   let responseJson = await response.json();
   return responseJson;
-}
+};
 
 export {
   glucoseAddLogRequest,
@@ -213,5 +225,5 @@ export {
   getBloodGlucoseLogs,
   getMedicationLogs,
   getWeightLogs,
-  getActivityLogs
+  getActivityLogs,
 };

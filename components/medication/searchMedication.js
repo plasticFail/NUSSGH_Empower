@@ -30,11 +30,9 @@ const SearchMedication = (props) => {
 
   //time lag when call api*
   useEffect(() => {
-    console.log('search key ' + searchTerm + ' cache ' + searchKeyCache);
     let mounted = true;
     if (searchKeyCache == searchTerm) {
       if (mounted) {
-        console.log('searching from med database');
         setTimeout(() => searchMedication(), 800);
       }
       return function cleanUp() {

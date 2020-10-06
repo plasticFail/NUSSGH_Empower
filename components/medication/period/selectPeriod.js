@@ -17,13 +17,15 @@ const SelectPeriod = (props) => {
         {getSelectedCount(daysArr) === 0 ? (
           <Text style={styles.selectPeriodText}>Select Period</Text>
         ) : getSelectedCount(daysArr) === 7 ? (
-          <Text style={styles.chosenPeriodText}>Daily</Text>
+          <Text style={[styles.chosenPeriodText, {marginVertical: '2%'}]}>
+            Daily
+          </Text>
         ) : (
           <Text
             editable={false}
             style={[
               styles.chosenPeriodText,
-              {height: '100%', marginVertical: 0},
+              {height: '120%', marginVertical: 0},
             ]}>
             Weekly{'\n'}
             {daysArr.map(
@@ -69,7 +71,6 @@ const styles = StyleSheet.create({
   chosenPeriodText: {
     fontSize: normalTextFontSize,
     textAlign: 'center',
-    marginVertical: '2%',
     fontWeight: 'bold',
   },
   weeklyDayText: {

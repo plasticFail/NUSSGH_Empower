@@ -19,8 +19,9 @@ import {
   onboardAdd,
   checkMedExistInArr,
   onboardEdit,
-  resetDayList,
+  getSelectedCount,
 } from '../../commonFunctions/medicationFunction';
+import {isEmpty} from '../../commonFunctions/common';
 
 //returns selected medication, dosage and period
 const AddMedicationModal = (props) => {
@@ -31,7 +32,13 @@ const AddMedicationModal = (props) => {
   const [frequency, setFrequency] = useState(0);
 
   const [openPeriodModal, setOpenPeriodModal] = useState(false);
-  const [daysArr, setDaysArr] = useState(dayList);
+  const [daysArr, setDaysArr] = useState();
+  const [enableSearchBar, setEnableSearchBar] = useState(true);
+
+  useEffect(() => {
+    let arr = JSON.parse(JSON.stringify(dayList));
+    setDaysArr(arr);
+  }, []);
 
   useEffect(() => {
     if (parent === onboardEdit && med2Edit != undefined) {
@@ -39,14 +46,27 @@ const AddMedicationModal = (props) => {
       setDosage(med2Edit.dosage);
       setFrequency(med2Edit.per_day);
       setDaysArr(med2Edit.days);
+      setEnableSearchBar(false);
     }
   }, [parent]);
+
+  const enableBtn = () => {
+    if (
+      isEmpty(selectedMed) ||
+      dosage === 0 ||
+      frequency === 0 ||
+      getSelectedCount(daysArr) === 0
+    ) {
+      return false;
+    }
+    return true;
+  };
 
   const add2Plan = () => {
     let obj = {
       dosage: dosage,
       per_day: frequency,
-      days: daysArr,
+      days: [...daysArr],
       medication: selectedMed.medication,
       dosage_unit: 'unit',
     };
@@ -94,6 +114,7 @@ const AddMedicationModal = (props) => {
         <SearchBarMed
           selectedMed={selectedMed}
           setSelectedMed={setSelectedMed}
+          clickable={enableSearchBar}
         />
         <RenderCounter
           fieldName="Default Dosage"
@@ -129,22 +150,40 @@ const AddMedicationModal = (props) => {
       </View>
       <View style={[globalStyles.buttonContainer]}>
         {parent === onboardAdd ? (
-          <TouchableOpacity
-            style={globalStyles.nextButtonStyle}
-            onPress={() => add2Plan()}>
-            <Text style={globalStyles.actionButtonText}>Add</Text>
-          </TouchableOpacity>
+          enableBtn() ? (
+            <TouchableOpacity
+              style={globalStyles.nextButtonStyle}
+              onPress={() => add2Plan()}>
+              <Text style={globalStyles.actionButtonText}>Add</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              style={globalStyles.skipButtonStyle}
+              onPress={() => add2Plan()}>
+              <Text style={globalStyles.actionButtonText}>Add</Text>
+            </TouchableOpacity>
+          )
         ) : (
           <View style={{flexDirection: 'row'}}>
             <MedicationDeleteBin
               medication={selectedMed}
               deleteMethod={onDeleteMed}
             />
-            <TouchableOpacity
-              style={logStyles.enableEditButton}
-              onPress={() => add2Plan()}>
-              <Text style={globalStyles.actionButtonText}>Done</Text>
-            </TouchableOpacity>
+            {enableBtn() ? (
+              <TouchableOpacity
+                style={logStyles.enableEditButton}
+                onPress={() => add2Plan()}>
+                <Text style={globalStyles.actionButtonText}>Done</Text>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                style={[
+                  logStyles.enableEditButton,
+                  {backgroundColor: '#e4e4e4'},
+                ]}>
+                <Text style={globalStyles.actionButtonText}>Done</Text>
+              </TouchableOpacity>
+            )}
           </View>
         )}
       </View>

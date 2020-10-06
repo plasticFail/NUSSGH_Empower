@@ -50,7 +50,7 @@ const PeriodModal = (props) => {
   const choosePeriod = (item) => {
     if (item === daily) {
       let arr = [];
-      for (var x of daysArr) {
+      for (var x of [...daysArr]) {
         x.selected = true;
         arr.push(x);
       }
@@ -73,7 +73,7 @@ const PeriodModal = (props) => {
   const addDay = (addDay) => {
     //see if added day exist alr
     let arr = [];
-    for (var x of daysArr) {
+    for (var x of [...daysArr]) {
       if (x?.name === addDay.name) {
         if (x?.selected) {
           x.selected = false;

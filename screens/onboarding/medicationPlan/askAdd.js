@@ -1,5 +1,12 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, FlatList} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  FlatList,
+  Alert,
+} from 'react-native';
 //third party library
 import Ionicons from 'react-native-vector-icons/Ionicons';
 //styles
@@ -15,6 +22,7 @@ import {
   onboardEdit,
   editMed,
 } from '../../../commonFunctions/medicationFunction';
+import {prepareData, postPlan} from '../../../netcalls/requestsMedPlan';
 
 class AskAdd extends Component {
   constructor(props) {
@@ -26,29 +34,15 @@ class AskAdd extends Component {
       showAddModal: false,
       parent: '',
       med2Edit: {},
-      selectedMedList: [
-        {
-          days: [
-            {name: 'Monday', selected: true, value: 0},
-            {name: 'Tuesday', selected: true, value: 1},
-            {name: 'Wednesday', selected: false, value: 2},
-            {name: 'Thursday', selected: false, value: 3},
-            {name: 'Friday', selected: false, value: 4},
-            {name: 'Saturday', selected: false, value: 5},
-            {name: 'Sunday', selected: false, value: 6},
-          ],
-          dosage: 1,
-          dosage_unit: 'unit',
-          medication: '*Actrapid HM Penfill',
-          per_day: 2,
-        },
-      ],
+      selectedMedList: [],
     };
   }
 
   componentDidMount() {
     this.setState({parent: onboardAdd});
   }
+
+  componentDidUpdate() {}
 
   handleAddMedication = () => {
     this.setState({showAddModal: true});
@@ -60,10 +54,23 @@ class AskAdd extends Component {
   };
 
   onAddMed = (item) => {
+    //original arr
+    for (var x of this.state.selectedMedList) {
+      console.log(x.medication);
+      console.log(x.days);
+    }
+
+    console.log('adding medication ');
+    console.log(item.medication);
+    console.log(item.days);
+
     let arr = this.state.selectedMedList;
-    arr.push(item);
+    let obj = {
+      ...item,
+      days: [...item.days],
+    };
+    arr.push(obj);
     this.setState({selectedMedList: arr});
-    console.log(item);
   };
 
   editMed = (item) => {
@@ -96,6 +103,17 @@ class AskAdd extends Component {
       this.setState({loading: false});
       this.props.navigation.navigate('Home');
     }, 1500);
+  };
+
+  handleSubmit = async () => {
+    let status = await postPlan(prepareData(this.state.selectedMedList));
+    if (status === 200) {
+      this.handleSkip();
+    } else {
+      Alert.alert('Unexpected Error Occured', 'Please try again later', [
+        {text: 'Got It'},
+      ]);
+    }
   };
 
   render() {
@@ -133,7 +151,7 @@ class AskAdd extends Component {
           {selectedMedList.length > 0 ? (
             <TouchableOpacity
               style={globalStyles.nextButtonStyle}
-              onPress={this.handleSkip}>
+              onPress={this.handleSubmit}>
               <Text style={globalStyles.actionButtonText}>Next</Text>
             </TouchableOpacity>
           ) : (

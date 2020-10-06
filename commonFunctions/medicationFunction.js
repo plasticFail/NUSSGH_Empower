@@ -1,11 +1,3 @@
-import {Alert} from 'react-native';
-import {
-  getMedication4DateRange,
-  postPlan,
-  prepareData,
-  deleteMedPlan,
-} from '../netcalls/requestsMedPlan';
-
 const daily = 'Daily';
 const dow = 'Days of the Week';
 const onboardAdd = 'onboard_add';
@@ -66,12 +58,7 @@ const getSelectedCount = (arr) => {
 };
 
 const resetDayList = () => {
-  let arr = [];
-  for (var x of dayList) {
-    x.selected = false;
-    arr.push(x);
-  }
-  return arr;
+  return dayList.slice();
 };
 
 const checkMedExistInArr = (arr, med2Check) => {
@@ -85,11 +72,18 @@ const checkMedExistInArr = (arr, med2Check) => {
 
 //edit the med in existing med list
 const editMed = (med2Edit, newMed, existingList) => {
+  console.log('Editing ' + med2Edit.medication);
+  console.log(med2Edit.days);
   let index = existingList.findIndex(
     (element) => element.medication === med2Edit.medication,
   );
   let newArr = [...existingList];
-  newArr[index] = newMed;
+  newArr[index] = {
+    ...newArr[index],
+    dosage: newMed.dosage,
+    days: newMed.days,
+    per_day: newMed.per_day,
+  };
   return newArr;
 };
 
