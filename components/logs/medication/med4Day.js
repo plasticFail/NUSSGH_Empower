@@ -4,10 +4,11 @@ import globalStyles from '../../../styles/globalStyles';
 import Tick from '../../tick';
 import StepCounter from '../../stepCounter';
 import {deleteMed} from '../../../netcalls/requestsDiary';
+import {add} from 'react-native-reanimated';
 
 const Med4Day = (props) => {
   const {medication} = props;
-  const {addMed} = props;
+  const {addMed, deleteMed} = props;
   const [dosage, setDosage] = useState(medication.dosage);
   const [selected, setSelected] = useState(false);
 
@@ -20,6 +21,8 @@ const Med4Day = (props) => {
     if (selected) {
       //add medicine
       addMed(obj);
+    } else {
+      deleteMed(obj);
     }
   }, [selected, dosage]);
 

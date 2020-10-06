@@ -18,7 +18,12 @@ const ScheduledMedicationList = (props) => {
   return (
     <>
       {medList4Day.map((item, index) => (
-        <Med4Day medication={item} key={index} addMed={addMed} />
+        <Med4Day
+          medication={item}
+          key={index}
+          addMed={addMed}
+          deleteMed={deleteMed}
+        />
       ))}
     </>
   );

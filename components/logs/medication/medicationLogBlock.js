@@ -31,9 +31,15 @@ const MedicationLogBlock = (props) => {
   } = props;
   const {closeModal, closeParent} = props;
   const [showSelectModal, setShowSelectModal] = useState(false);
-  const [selectedMedList, setSelectedMedList] = useState([]); //to submit for log
-  const [extraAddedList, setExtraAddedList] = useState([]);
+  const [selectedMedList, setSelectedMedList] = useState([]); //from planned
+  const [extraAddedList, setExtraAddedList] = useState([]); //from newly added
+  const [arr2Submit, setArr2Submit] = useState([]);
   const [success, setSuccess] = useState(false);
+
+  useEffect(() => {
+    setSelectedMedList([]);
+    setExtraAddedList([]);
+  }, []);
 
   useEffect(() => {
     combineArr();
@@ -41,49 +47,53 @@ const MedicationLogBlock = (props) => {
 
   const getSelectedMedicineFromModal = (medicineObj, type) => {
     console.log('Setting selected medication: ' + medicineObj.medication);
-    console.log(medicineObj.dosage);
     //format object before adding
     let obj = {
       dosage: medicineObj.dosage,
       unit: medicineObj.dosage_unit,
       drugName: medicineObj.medication,
     };
-
     if (type === extra) {
       let list = extraAddedList;
       list.push(obj);
       setExtraAddedList(list);
     } else {
-      add2List(medicineObj);
+      add2List(obj);
     }
     //set new states
     setShowSelectModal(false);
   };
 
   const handleDelete = (item, type) => {
+    console.log('removing');
     if (type === extra) {
       setExtraAddedList(
         extraAddedList.filter((medication) => medication != item),
       );
+      return;
     } else {
       setSelectedMedList(
-        selectedMedList.filter((medication) => medication != item),
+        selectedMedList.filter(
+          (medication) => medication.drugName != item.medication,
+        ),
       );
+      return;
     }
   };
 
   //for planned medicine - update dosage / add med
   const add2List = (item) => {
-    let arr = selectedMedList;
+    let arr = [];
     let found = false;
-    for (var x of arr) {
+    for (var x of selectedMedList) {
       //if item exist, update dosage if change
-      if (item.medication === x.medication) {
+      if (item.drugName === x.drugName) {
         if (item.dosage != x.dosage) {
           x.dosage = item.dosage;
           found = true;
         }
       }
+      arr.push(x);
     }
     //item does not exist
     if (found === false) {
@@ -95,18 +105,17 @@ const MedicationLogBlock = (props) => {
 
   const combineArr = () => {
     let newArr = selectedMedList.concat(extraAddedList);
-    console.log(newArr);
     return newArr;
   };
 
   const submit = () => {
     if (parent === 'addLog') {
-      //postMed();
+      postMed();
     }
   };
 
   const postMed = async () => {
-    if (await handleSubmitMedication(recordDate, selectedMedList)) {
+    if (await handleSubmitMedication(recordDate, combineArr())) {
       setSuccess(true);
     }
   };
@@ -139,7 +148,10 @@ const MedicationLogBlock = (props) => {
               Scheduled Medication
             </Text>
             {/* List of medication from plan */}
-            <ScheduledMedicationList addMed={getSelectedMedicineFromModal} />
+            <ScheduledMedicationList
+              addMed={getSelectedMedicineFromModal}
+              deleteMed={handleDelete}
+            />
             <Text style={[logStyles.fieldName, logStyles.componentMargin]}>
               Other Medications Taken
             </Text>
@@ -178,7 +190,7 @@ const MedicationLogBlock = (props) => {
           ) : null}
         </View>
         <View style={[globalStyles.buttonContainer]}>
-          {selectedMedList.length > 0 ? (
+          {combineArr().length > 0 ? (
             <TouchableOpacity
               style={globalStyles.submitButtonStyle}
               onPress={() => submit()}>
