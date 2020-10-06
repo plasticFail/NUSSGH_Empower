@@ -32,6 +32,7 @@ const postPlan = async (data) => {
         plans: data,
       }),
     });
+    console.log(response.status);
     return response.status;
   } catch (error) {
     console.error(error);

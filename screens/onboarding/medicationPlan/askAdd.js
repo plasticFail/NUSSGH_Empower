@@ -23,6 +23,7 @@ import {
   editMed,
 } from '../../../commonFunctions/medicationFunction';
 import {prepareData, postPlan} from '../../../netcalls/requestsMedPlan';
+import {stat} from 'react-native-fs';
 
 class AskAdd extends Component {
   constructor(props) {
@@ -109,6 +110,13 @@ class AskAdd extends Component {
     let status = await postPlan(prepareData(this.state.selectedMedList));
     if (status === 200) {
       this.handleSkip();
+    }
+    if (status === 500) {
+      Alert.alert(
+        'You already have an existing plan',
+        'Head over to the Medication Page to edit your plan if you wish to make changes',
+        [{text: 'Got It'}],
+      );
     } else {
       Alert.alert('Unexpected Error Occured', 'Please try again later', [
         {text: 'Got It'},

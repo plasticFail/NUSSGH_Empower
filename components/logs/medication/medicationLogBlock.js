@@ -1,19 +1,9 @@
 import React, {useState} from 'react';
-import {
-  View,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  Image,
-  Dimensions,
-  Alert,
-} from 'react-native';
-import {FlatList} from 'react-native-gesture-handler';
+import {View, StyleSheet, Text, TouchableOpacity, FlatList} from 'react-native';
 //third party lib
 import Modal from 'react-native-modal';
 import Entypo from 'react-native-vector-icons/Entypo';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-
 // component
 import LeftArrowBtn from '../leftArrowBtn';
 import SelectMedicationModalContent from './selectMedicationModalContent';
@@ -21,7 +11,6 @@ import MedicationItem from '../../medicationItem';
 import SuccessDialogue from '../../successDialogue';
 // functions
 import {
-  checkDosage,
   handleSubmitMedication,
   med_key,
 } from '../../../commonFunctions/logFunctions';
@@ -29,6 +18,7 @@ import {
 import {Colors} from '../../../styles/colors';
 import globalStyles from '../../../styles/globalStyles';
 import logStyles from '../../../styles/logStyles';
+import ScheduledMedicationList from './scheduledMedicationList';
 
 Entypo.loadFont();
 
@@ -40,7 +30,7 @@ const MedicationLogBlock = (props) => {
   } = props;
   const {closeModal, closeParent} = props;
   const [showSelectModal, setShowSelectModal] = useState(false);
-  const [selectedMedList, setSelectedMedList] = useState([]);
+  const [selectedMedList, setSelectedMedList] = useState([]); //to submit for log
   const [success, setSuccess] = useState(false);
 
   const getSelectedMedicineFromModal = (medicineObj) => {
@@ -92,10 +82,14 @@ const MedicationLogBlock = (props) => {
         </View>
         <View style={logStyles.bodyPadding}>
           <Text style={[logStyles.headerText, logStyles.componentMargin]}>
-            Add Medication
+            Medication Taken
           </Text>
           <Text style={[logStyles.fieldName, logStyles.componentMargin]}>
-            Medication Taken
+            Scheduled Medication
+          </Text>
+          <ScheduledMedicationList />
+          <Text style={[logStyles.fieldName, logStyles.componentMargin]}>
+            Other Medications Taken
           </Text>
           {/*List of medication added*/}
           <FlatList
@@ -115,13 +109,14 @@ const MedicationLogBlock = (props) => {
             <AntDesign
               name="pluscircleo"
               color={'#aad326'}
-              size={30}
+              size={25}
               style={{margin: '2%'}}
             />
             <Text style={[logStyles.fieldName, {color: '#aad326'}]}>
               Add Medication
             </Text>
           </TouchableOpacity>
+
           {/*Select medication modal */}
           {showSelectModal === true ? (
             <SelectMedicationModalContent
