@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, StyleSheet, Text, TouchableOpacity, FlatList} from 'react-native';
 //third party lib
 import Modal from 'react-native-modal';
@@ -7,7 +7,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 // component
 import LeftArrowBtn from '../leftArrowBtn';
 import SelectMedicationModalContent from './selectMedicationModalContent';
-import MedicationItem from '../../medicationItem';
+import ExtraMedItem from './extraMedItem';
 import SuccessDialogue from '../../successDialogue';
 // functions
 import {
@@ -19,8 +19,9 @@ import {Colors} from '../../../styles/colors';
 import globalStyles from '../../../styles/globalStyles';
 import logStyles from '../../../styles/logStyles';
 import ScheduledMedicationList from './scheduledMedicationList';
+import {ScrollView} from 'react-native-gesture-handler';
 
-Entypo.loadFont();
+const extra = 'extra';
 
 const MedicationLogBlock = (props) => {
   const {
@@ -31,27 +32,76 @@ const MedicationLogBlock = (props) => {
   const {closeModal, closeParent} = props;
   const [showSelectModal, setShowSelectModal] = useState(false);
   const [selectedMedList, setSelectedMedList] = useState([]); //to submit for log
+  const [extraAddedList, setExtraAddedList] = useState([]);
   const [success, setSuccess] = useState(false);
 
-  const getSelectedMedicineFromModal = (medicineObj) => {
-    console.log('Setting selected medication: ' + medicineObj);
-    let list = selectedMedList;
-    list.push(medicineObj);
+  useEffect(() => {
+    combineArr();
+  }, [selectedMedList, extraAddedList]);
+
+  const getSelectedMedicineFromModal = (medicineObj, type) => {
+    console.log('Setting selected medication: ' + medicineObj.medication);
+    console.log(medicineObj.dosage);
+    //format object before adding
+    let obj = {
+      dosage: medicineObj.dosage,
+      unit: medicineObj.dosage_unit,
+      drugName: medicineObj.medication,
+    };
+
+    if (type === extra) {
+      let list = extraAddedList;
+      list.push(obj);
+      setExtraAddedList(list);
+    } else {
+      add2List(medicineObj);
+    }
     //set new states
     setShowSelectModal(false);
-    setSelectedMedList(list);
   };
 
-  const handleDelete = (item) => {
-    setSelectedMedList(
-      selectedMedList.filter((medication) => medication != item),
-    );
+  const handleDelete = (item, type) => {
+    if (type === extra) {
+      setExtraAddedList(
+        extraAddedList.filter((medication) => medication != item),
+      );
+    } else {
+      setSelectedMedList(
+        selectedMedList.filter((medication) => medication != item),
+      );
+    }
+  };
+
+  //for planned medicine - update dosage / add med
+  const add2List = (item) => {
+    let arr = selectedMedList;
+    let found = false;
+    for (var x of arr) {
+      //if item exist, update dosage if change
+      if (item.medication === x.medication) {
+        if (item.dosage != x.dosage) {
+          x.dosage = item.dosage;
+          found = true;
+        }
+      }
+    }
+    //item does not exist
+    if (found === false) {
+      arr.push(item);
+    }
+
+    setSelectedMedList(arr);
+  };
+
+  const combineArr = () => {
+    let newArr = selectedMedList.concat(extraAddedList);
+    console.log(newArr);
+    return newArr;
   };
 
   const submit = () => {
     if (parent === 'addLog') {
-      postMed();
-    } else {
+      //postMed();
     }
   };
 
@@ -80,56 +130,54 @@ const MedicationLogBlock = (props) => {
           <LeftArrowBtn close={closeModal} />
           <View style={{flex: 1}} />
         </View>
-        <View style={logStyles.bodyPadding}>
+        <View style={[logStyles.bodyPadding, {flex: 1}]}>
           <Text style={[logStyles.headerText, logStyles.componentMargin]}>
             Medication Taken
           </Text>
-          <Text style={[logStyles.fieldName, logStyles.componentMargin]}>
-            Scheduled Medication
-          </Text>
-          <ScheduledMedicationList />
-          <Text style={[logStyles.fieldName, logStyles.componentMargin]}>
-            Other Medications Taken
-          </Text>
-          {/*List of medication added*/}
-          <FlatList
-            keyExtractor={(item) => item.drugName}
-            data={selectedMedList}
-            style={{flexGrow: 0}}
-            renderItem={({item}) => (
-              <MedicationItem
-                medication={item}
-                handleDelete={() => handleDelete(item)}
-              />
-            )}
-          />
-          <TouchableOpacity
-            onPress={() => setShowSelectModal(true)}
-            style={{flexDirection: 'row'}}>
-            <AntDesign
-              name="pluscircleo"
-              color={'#aad326'}
-              size={25}
-              style={{margin: '2%'}}
-            />
-            <Text style={[logStyles.fieldName, {color: '#aad326'}]}>
-              Add Medication
+          <ScrollView contentContainerStyle={{flexGrow: 0}}>
+            <Text style={[logStyles.fieldName, logStyles.componentMargin]}>
+              Scheduled Medication
             </Text>
-          </TouchableOpacity>
+            {/* List of medication from plan */}
+            <ScheduledMedicationList addMed={getSelectedMedicineFromModal} />
+            <Text style={[logStyles.fieldName, logStyles.componentMargin]}>
+              Other Medications Taken
+            </Text>
+            {/*List of extra medication added*/}
+            {extraAddedList.map((item, index) => (
+              <ExtraMedItem
+                medication={item}
+                handleDelete={() => handleDelete(item, extra)}
+                key={index}
+              />
+            ))}
+            <TouchableOpacity
+              onPress={() => setShowSelectModal(true)}
+              style={{flexDirection: 'row'}}>
+              <AntDesign
+                name="pluscircleo"
+                color={'#aad326'}
+                size={25}
+                style={{margin: '2%'}}
+              />
+              <Text style={[logStyles.fieldName, {color: '#aad326'}]}>
+                Add Medication
+              </Text>
+            </TouchableOpacity>
+          </ScrollView>
 
           {/*Select medication modal */}
           {showSelectModal === true ? (
             <SelectMedicationModalContent
               showSelectModal={showSelectModal}
               closeSelectModal={() => setShowSelectModal(false)}
-              selectedMedList={selectedMedList}
+              selectedMedList={extraAddedList}
               getSelectedMedicineFromModal={getSelectedMedicineFromModal}
               recordDate={recordDate}
             />
           ) : null}
         </View>
-        <View style={{flex: 1}} />
-        <View style={globalStyles.buttonContainer}>
+        <View style={[globalStyles.buttonContainer]}>
           {selectedMedList.length > 0 ? (
             <TouchableOpacity
               style={globalStyles.submitButtonStyle}

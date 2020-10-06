@@ -14,31 +14,35 @@ import {isEmpty} from '../../../commonFunctions/common';
 import SearchMedication from '../../medication/searchMedication';
 import {
   med_key,
-  checkDosage,
-  checkDosageText,
   checkRepeatMedicine,
+  checkDosageText,
 } from '../../../commonFunctions/logFunctions';
 import logStyles from '../../../styles/logStyles';
+import SearchBarMed from '../../medication/searchBarMed';
+import RenderCounter from '../../renderCounter';
 
 const SelectMedicationModalContent = (props) => {
   const {showSelectModal, selectedMedList, recordDate} = props;
   const {closeSelectModal, getSelectedMedicineFromModal} = props;
   const [dosage, setDosage] = useState(0);
-  const [correctDosage, setCorrectDosage] = useState(0);
   const [selectedMedicine, setSelectedMedicine] = useState({});
   const [openSearchModal, setOpenSearchModal] = useState(false);
 
-  useEffect(() => {
-    //whenever selected medicine change, update dosage from selected
-    if (!isEmpty(selectedMedicine)) {
-      setDosage(selectedMedicine.dosage);
-      setCorrectDosage(selectedMedicine.dosage);
-    }
-  }, [selectedMedicine]);
-
   const addMed = () => {
-    getSelectedMedicineFromModal(selectedMedicine);
+    selectedMedicine.dosage = dosage;
+    getSelectedMedicineFromModal(selectedMedicine, 'extra');
     closeSelectModal();
+  };
+
+  const enableButton = () => {
+    if (
+      checkDosageText(dosage).length == 0 &&
+      !checkRepeatMedicine(selectedMedicine, selectedMedList) &&
+      !isEmpty(selectedMedicine)
+    ) {
+      return true;
+    }
+    return false;
   };
 
   return (
@@ -55,31 +59,20 @@ const SelectMedicationModalContent = (props) => {
           <View style={{flex: 1}} />
         </View>
         <Text style={globalStyles.pageHeader}>Select Medication</Text>
-        <TouchableOpacity
-          style={styles.searchInput}
-          onPress={() => setOpenSearchModal(true)}>
-          {isEmpty(selectedMedicine) === true ? (
-            <Text style={{fontSize: 17, color: '#b5b5b5'}}>
-              <Ionicons name="search" size={20} /> Name (eg. Metformin)
-            </Text>
-          ) : (
-            <Text style={{fontSize: 17, color: 'black'}}>
-              {selectedMedicine.drugName}
-            </Text>
-          )}
-        </TouchableOpacity>
+        <SearchBarMed
+          selectedMed={selectedMedicine}
+          setSelectedMed={setSelectedMedicine}
+          clickable={true}
+        />
         <View style={{paddingStart: '3%', paddingEnd: '3%'}}>
-          <Counter
-            count={dosage}
-            setCount={setDosage}
+          <RenderCounter
+            fieldName="Default Dosage"
+            item={dosage}
+            setItem={setDosage}
             parameter={'Unit(s)'}
-            fieldName={'Default Dosage'}
+            allowInput={false}
+            showUnitInParam={false}
           />
-          {checkDosageText(dosage, correctDosage) !== '' && (
-            <Text style={[globalStyles.alertText, {marginStart: '5%'}]}>
-              {checkDosageText(dosage, correctDosage)}
-            </Text>
-          )}
           {checkRepeatMedicine(selectedMedicine, selectedMedList) && (
             <Text style={[globalStyles.alertText, {marginStart: '5%'}]}>
               You have added this medicine already.
@@ -88,8 +81,7 @@ const SelectMedicationModalContent = (props) => {
         </View>
         <View style={{flex: 1}} />
         <View style={[globalStyles.buttonContainer]}>
-          {checkDosage(dosage, correctDosage) &&
-          !checkRepeatMedicine(selectedMedicine, selectedMedList) ? (
+          {enableButton() ? (
             <TouchableOpacity
               style={globalStyles.nextButtonStyle}
               onPress={() => addMed()}>

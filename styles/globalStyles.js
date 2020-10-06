@@ -177,6 +177,16 @@ const globalStyles = StyleSheet.create({
     marginStart: horizontalMargins,
     marginEnd: horizontalMargins,
   },
+  //medicationItem
+  medContainer: {
+    backgroundColor: 'white',
+    borderRadius: 20,
+    borderColor: '#e1e7ed',
+    borderWidth: 1,
+    padding: '3%',
+    marginTop: '3%',
+    flexDirection: 'row',
+  },
 });
 
 export default globalStyles;

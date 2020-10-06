@@ -52,6 +52,7 @@ const getMedication4DateRange = async (start, end) => {
     });
     let responseJson = await response.json();
     console.log('get medication for date range : ' + responseJson);
+
     return responseJson;
   } catch (error) {
     Alert.alert('Network Error', 'Try Again Later', [{text: 'Got It'}]);

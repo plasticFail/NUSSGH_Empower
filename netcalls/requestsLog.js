@@ -78,6 +78,7 @@ const getMedication4Day = async (dateString) => {
     });
     let responseJson = await response.json();
     console.log('get medication for 2day : ' + responseJson);
+    console.log(responseJson);
     return responseJson;
   } catch (error) {
     Alert.alert('Network Error', 'Try Again Later', [{text: 'Got It'}]);

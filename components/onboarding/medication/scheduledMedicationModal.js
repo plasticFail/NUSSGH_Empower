@@ -15,7 +15,6 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 //component
 import DeleteConfirmation from './deleteConfirmation';
 import CrossBtn from '../../crossBtn';
-import MedicationItem from '../../medicationItem';
 //styles
 import {Colors} from '../../../styles/colors';
 import globalStyles from '../../../styles/globalStyles';

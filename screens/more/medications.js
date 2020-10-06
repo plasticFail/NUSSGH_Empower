@@ -9,7 +9,6 @@ import Modal from 'react-native-modal';
 import {Calendar} from 'react-native-calendars';
 //components
 import LeftArrowBtn from '../../components/logs/leftArrowBtn';
-import Medication4Day from '../../components/medication/medication4Day';
 //style
 import {Colors} from '../../styles/colors';
 import {getMedication4DateRange} from '../../netcalls/requestsMedPlan';

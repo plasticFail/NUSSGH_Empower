@@ -10,7 +10,7 @@ const MedicationPlanItem = (props) => {
   const {editItem} = props;
   return (
     <TouchableOpacity
-      style={styles.medContainer}
+      style={[globalStyles.medContainer, {margin: '3%'}]}
       onPress={() => editItem(item)}>
       <View style={{flex: 1}}>
         <Text style={globalStyles.pageSubDetails}>{item.medication}</Text>
@@ -32,17 +32,6 @@ const MedicationPlanItem = (props) => {
 export default MedicationPlanItem;
 
 const styles = StyleSheet.create({
-  medContainer: {
-    backgroundColor: 'white',
-    borderRadius: 20,
-    borderColor: '#e1e7ed',
-    borderWidth: 1,
-    padding: '3%',
-    marginStart: '5%',
-    marginEnd: '5%',
-    marginTop: '3%',
-    flexDirection: 'row',
-  },
   perDay: {
     marginStart: '5%',
   },
