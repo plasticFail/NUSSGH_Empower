@@ -160,10 +160,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 10,
     textAlign: 'center',
-    width: '30%',
-    height: '90%',
+    width: '60%',
+    height: '100%',
     marginBottom: '3%',
     flexDirection: 'row',
+    fontSize: 19,
   },
   shadow: {
     shadowColor: '#000',

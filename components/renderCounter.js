@@ -17,7 +17,7 @@ const RenderCounter = (props) => {
   const {setItem} = props;
   return (
     <View style={{marginBottom: '3%', flexDirection: 'row', ...props.style}}>
-      <View style={{flex: 1}}>
+      <View style={{flex: 2}}>
         {parameter === '' ? (
           <Text style={[globalStyles.goalFieldName, {flex: 0}]}>
             {fieldName}
@@ -28,7 +28,7 @@ const RenderCounter = (props) => {
           </Text>
         ) : (
           <Text style={[globalStyles.goalFieldName, {flex: 0}]}>
-            {fieldName} [{parameter}]
+            {fieldName} ({parameter})
           </Text>
         )}
       </View>

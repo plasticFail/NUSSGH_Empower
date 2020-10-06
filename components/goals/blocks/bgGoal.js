@@ -176,7 +176,6 @@ const BgGoal = (props) => {
                 maxLength={5}
                 valueType={decimal}
                 incrementValue={0.5}
-                showUnitInParam={false}
               />
               <RenderCounter
                 fieldName="Max Reading"
@@ -186,7 +185,6 @@ const BgGoal = (props) => {
                 maxLength={5}
                 valueType={decimal}
                 incrementValue={0.5}
-                showUnitInParam={false}
               />
               {errorMsg.length > 0 && (
                 <Text style={[globalStyles.alertText, styles.spacing]}>
