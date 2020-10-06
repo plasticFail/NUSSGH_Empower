@@ -318,9 +318,10 @@ const styles = StyleSheet.create({
     color: '#a8d126',
   },
   goalName: {
-    color: '#8a8a8e',
+    color: Colors.textGrey,
     fontSize: 15,
     fontFamily: 'SFProDisplay-Regular',
+    fontWeight: 'bold',
   },
   targetStyle: {
     fontSize: 18,

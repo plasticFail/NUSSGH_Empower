@@ -4,6 +4,7 @@ import {getSelectedCount} from '../../../commonFunctions/medicationFunction';
 import globalStyles from '../../../styles/globalStyles';
 
 import CHEVRON_RIGHT from '../../../resources/images/Patient-Icons/SVG/icon-grey-chevron-right.svg';
+import {Colors} from '../../../styles/colors';
 
 const MedicationPlanItem = (props) => {
   const {item} = props;
@@ -16,20 +17,24 @@ const MedicationPlanItem = (props) => {
         <Text style={globalStyles.pageSubDetails}>{item.medication}</Text>
         {getSelectedCount(item.days) === 7 ? (
           <>
-            <Text style={[globalStyles.pageSubDetails, {color: '#8a8a8e'}]}>
-              {item.dosage} Unit(s), Daily
+            <Text
+              style={[globalStyles.pageSubDetails, {color: Colors.textGrey}]}>
+              {item.dosage} Unit(s) Daily
             </Text>
-            <Text style={[globalStyles.pageSubDetails, {color: '#8a8a8e'}]}>
-              {item.per_day} Time(s) per day
+            <Text
+              style={[globalStyles.pageSubDetails, {color: Colors.textGrey}]}>
+              {item.per_day} Time(s) Per Day
             </Text>
           </>
         ) : (
           <>
-            <Text style={[globalStyles.pageSubDetails, {color: '#8a8a8e'}]}>
-              {item.dosage} Unit(s), Weekly
+            <Text
+              style={[globalStyles.pageSubDetails, {color: Colors.textGrey}]}>
+              {item.dosage} Unit(s) Weekly
             </Text>
-            <Text style={[globalStyles.pageSubDetails, {color: '#8a8a8e'}]}>
-              {item.per_day} Time(s) per day
+            <Text
+              style={[globalStyles.pageSubDetails, {color: Colors.textGrey}]}>
+              {item.per_day} Time(s) Per Day
             </Text>
           </>
         )}

@@ -4,6 +4,7 @@ import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import DeleteBin from '../../deleteBin';
 //styles
 import globalStyles from '../../../styles/globalStyles';
+import {Colors} from '../../../styles/colors';
 
 //for the extra medication addded to log (not in med plan)
 function ExtraMedItem({medication, handleDelete}) {
@@ -11,7 +12,7 @@ function ExtraMedItem({medication, handleDelete}) {
     <View style={globalStyles.medContainer}>
       <View style={{flex: 1}}>
         <Text style={globalStyles.pageSubDetails}>{medication.drugName}</Text>
-        <Text style={[globalStyles.pageSubDetails, {color: '#8a8a8e'}]}>
+        <Text style={[globalStyles.pageSubDetails, {color: Colors.textGrey}]}>
           {medication.dosage} Unit(s)
         </Text>
       </View>

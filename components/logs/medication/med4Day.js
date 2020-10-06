@@ -5,6 +5,7 @@ import Tick from '../../tick';
 import StepCounter from '../../stepCounter';
 import {deleteMed} from '../../../netcalls/requestsDiary';
 import {add} from 'react-native-reanimated';
+import {Colors} from '../../../styles/colors';
 
 const Med4Day = (props) => {
   const {medication} = props;
@@ -37,7 +38,7 @@ const Med4Day = (props) => {
       <View style={{flex: 1}}>
         <Text style={globalStyles.pageSubDetails}>{medication.medication}</Text>
         {!selected ? (
-          <Text style={[globalStyles.pageSubDetails, {color: '#8a8a8e'}]}>
+          <Text style={[globalStyles.pageSubDetails, {color: Colors.textGrey}]}>
             {medication.dosage} Unit(s)
           </Text>
         ) : (
@@ -47,7 +48,7 @@ const Med4Day = (props) => {
             parameter={'Unit(s)'}
             fieldName={''}
             enableInput={false}
-            style={{width: '70%', marginStart: '3%'}}
+            style={{width: '70%'}}
           />
         )}
       </View>

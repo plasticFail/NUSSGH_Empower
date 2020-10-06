@@ -154,7 +154,6 @@ const styles = StyleSheet.create({
     marginHorizontal: '5%',
     fontSize: 17,
     textAlign: 'center',
-    width: '50%',
   },
   textInput: {
     backgroundColor: 'white',
