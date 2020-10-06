@@ -55,22 +55,9 @@ class AskAdd extends Component {
   };
 
   onAddMed = (item) => {
-    //original arr
-    for (var x of this.state.selectedMedList) {
-      console.log(x.medication);
-      console.log(x.days);
-    }
-
     console.log('adding medication ');
-    console.log(item.medication);
-    console.log(item.days);
-
     let arr = this.state.selectedMedList;
-    let obj = {
-      ...item,
-      days: [...item.days],
-    };
-    arr.push(obj);
+    arr.push(item);
     this.setState({selectedMedList: arr});
   };
 

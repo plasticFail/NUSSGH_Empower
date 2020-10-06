@@ -14,7 +14,9 @@ const DeleteConfirmation = (props) => {
       <Text style={globalStyles.deleteDetails}>{medication.medication}</Text>
       <TouchableOpacity
         style={globalStyles.deleteButton}
-        onPress={() => deleteMethod()}>
+        onPress={() => {
+          deleteMethod();
+        }}>
         <Text style={globalStyles.deleteButtonText}>Remove</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={() => closeModal()}>

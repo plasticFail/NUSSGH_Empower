@@ -47,7 +47,6 @@ const styles = StyleSheet.create({
     color: '#aad326',
     fontSize: 20,
   },
-
   addButtonWText: {
     flexDirection: 'row',
     marginTop: '3%',

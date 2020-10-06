@@ -2,6 +2,7 @@ import {medPlan} from './urls';
 import {getToken} from '../storage/asyncStorageFunctions';
 import {Alert} from 'react-native';
 import moments from 'moment';
+import {dayList} from '../commonFunctions/medicationFunction';
 
 //re-format the days attribute in the obj, only add when selected==true
 const prepareData = (data) => {
@@ -17,6 +18,24 @@ const prepareData = (data) => {
   console.log('----preparing data for api call to post medication plan');
 
   return data;
+};
+
+//re-format the days attribute when retrieve from api
+const prepareDataFromAPI = (data) => {
+  let arr = [];
+  for (var x of data) {
+    let dayArr = JSON.parse(JSON.stringify(dayList));
+    for (var y of x?.days) {
+      for (var z of dayArr) {
+        if (z.value === y) {
+          z.selected = true;
+        }
+      }
+    }
+    x.days = dayArr;
+    arr.push(x);
+  }
+  return arr;
 };
 
 const postPlan = async (data) => {
@@ -86,8 +105,7 @@ const deleteMedPlan = async (id) => {
         plans: [id],
       }),
     });
-    let responseJson = await response.json();
-    return responseJson;
+    return response.status;
   } catch (error) {
     Alert.alert('Network Error', 'Try Again Later', [{text: 'Got It'}]);
   }
@@ -109,6 +127,23 @@ const getPlan = async (startDateString, endDateString) => {
   return responseJson;
 };
 
+const getCompletePlan = async () => {
+  try {
+    let response = await fetch(medPlan, {
+      method: 'GET',
+      headers: {
+        Authorization: 'Bearer ' + (await getToken()),
+        Accept: 'application/json',
+        'Content-type': 'application/json',
+      },
+    });
+    let responseJson = await response.json();
+    return responseJson;
+  } catch (error) {
+    Alert.alert('Network Error', 'Try Again Later', [{text: 'Got It'}]);
+  }
+};
+
 export {
   prepareData,
   postPlan,
@@ -116,4 +151,6 @@ export {
   getMedication4DateRange,
   getMed4CurrentMonth,
   deleteMedPlan,
+  getCompletePlan,
+  prepareDataFromAPI,
 };

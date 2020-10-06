@@ -24,7 +24,10 @@ const MedicationDeleteBin = (props) => {
         <View style={styles.deleteContainer}>
           <DeleteConfirmation
             medication={medication}
-            deleteMethod={() => deleteMethod(medication)}
+            deleteMethod={() => {
+              deleteMethod(medication);
+              setShowConfirm(false);
+            }}
             closeModal={() => setShowConfirm(false)}
           />
         </View>

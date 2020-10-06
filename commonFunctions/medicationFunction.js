@@ -2,7 +2,8 @@ const daily = 'Daily';
 const dow = 'Days of the Week';
 const onboardAdd = 'onboard_add';
 const onboardEdit = 'onboard_edit';
-
+const med_planAdd = 'medicationPlanAdd'; //used in medication.js
+const med_planEdit = 'medicationPlanEdit';
 const periodList = [daily, dow];
 
 const dayList = [
@@ -98,4 +99,6 @@ export {
   resetDayList,
   checkMedExistInArr,
   editMed,
+  med_planAdd,
+  med_planEdit,
 };

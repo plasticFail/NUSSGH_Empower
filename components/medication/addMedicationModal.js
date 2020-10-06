@@ -20,8 +20,15 @@ import {
   checkMedExistInArr,
   onboardEdit,
   getSelectedCount,
+  med_plan,
+  med_planAdd,
+  med_planEdit,
 } from '../../commonFunctions/medicationFunction';
 import {isEmpty} from '../../commonFunctions/common';
+
+//onAddMed = callback function to get selected added medication
+//onEditMed = callback function to get the edited medication
+//onDeleteMed = callback function to get the item to delete
 
 //returns selected medication, dosage and period
 const AddMedicationModal = (props) => {
@@ -41,12 +48,14 @@ const AddMedicationModal = (props) => {
   }, []);
 
   useEffect(() => {
-    if (parent === onboardEdit && med2Edit != undefined) {
-      setSelectedMed(med2Edit);
-      setDosage(med2Edit.dosage);
-      setFrequency(med2Edit.per_day);
-      setDaysArr(med2Edit.days);
-      setEnableSearchBar(false);
+    if (parent === onboardEdit || parent === med_planEdit) {
+      if (med2Edit != undefined) {
+        setSelectedMed(med2Edit);
+        setDosage(med2Edit.dosage);
+        setFrequency(med2Edit.per_day);
+        setDaysArr(med2Edit.days);
+        setEnableSearchBar(false);
+      }
     }
   }, [parent]);
 
@@ -70,7 +79,8 @@ const AddMedicationModal = (props) => {
       medication: selectedMed.medication,
       dosage_unit: 'unit',
     };
-    if (parent === onboardAdd) {
+
+    if (parent === onboardAdd || parent === med_planAdd) {
       //check if medication being added already exist or not*
       if (checkMedExistInArr(currentMedList, selectedMed)) {
         Alert.alert('You have already added this medication.', '', [
@@ -99,7 +109,7 @@ const AddMedicationModal = (props) => {
           <LeftArrowBtn close={closeModal} />
           <View style={{flex: 1}} />
         </View>
-        {parent === onboardAdd ? (
+        {parent === onboardAdd || parent === med_planAdd ? (
           <Text
             style={[globalStyles.pageHeader, {marginStart: horizontalMargins}]}>
             Add Mediciation
@@ -149,7 +159,7 @@ const AddMedicationModal = (props) => {
         />
       </View>
       <View style={[globalStyles.buttonContainer]}>
-        {parent === onboardAdd ? (
+        {parent === onboardAdd || parent === med_planAdd ? (
           enableBtn() ? (
             <TouchableOpacity
               style={globalStyles.nextButtonStyle}
