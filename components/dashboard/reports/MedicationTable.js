@@ -75,6 +75,8 @@ function zipMedicationData(medPlan, medData) {
 }
 
 function filterPlans(medPlan, filterKey) {
+    console.log(medPlan.plans);
+    const meds = medPlan.plans;
     let result = {};
     const endDate = Moment(new Date());
     if (filterKey === DAY_FILTER_KEY) {

@@ -29,6 +29,12 @@ import {COLOR_MAP, NutritionPie} from "../../components/dashboard/reports/Nutrit
 import {getPlan} from "../../netcalls/requestsMedPlan";
 import {ChartLegend} from "../../components/dashboard/reports/ChartLegend";
 import {ExportReportsModal} from "../../components/dashboard/reports/ExportReportsModal";
+import EvilIcon from "react-native-vector-icons/EvilIcons";
+import {
+  barChartToolTipMessage,
+  lineChartToolTipMessage,
+  ReportHelpInfo
+} from "../../components/dashboard/reports/ReportHelpInfo";
 
 const EXPORT_BTN = require('../../resources/images/Patient-Icons/2x/icon-green-export-2x.png');
 
@@ -235,6 +241,9 @@ const ReportsScreen = (props) => {
                              textPaddingLeft={5}
                              textPaddingRight={20}/>
               </View>
+              <View style={{position: 'absolute', alignSelf: 'flex-end'}}>
+                <ReportHelpInfo message={lineChartToolTipMessage} />
+              </View>
               <LineChart data={fullDataset.bglData}
                          key={'bgl-chart'}
                          filterKey={filterKey}
@@ -258,6 +267,9 @@ const ReportsScreen = (props) => {
                                color={boundaryFill}
                                textPaddingLeft={5}
                                textPaddingRight={20}/>
+                </View>
+                <View style={{position: 'absolute', alignSelf: 'flex-end'}}>
+                  <ReportHelpInfo message={barChartToolTipMessage} />
                 </View>
                 <BarChart data={fullDataset.foodData} filterKey={filterKey}
                           xExtractor={d=>d.date}
@@ -311,6 +323,9 @@ const ReportsScreen = (props) => {
                                textPaddingLeft={5}
                                textPaddingRight={20}/>
                 </View>
+                <View style={{position: 'absolute', alignSelf: 'flex-end'}}>
+                  <ReportHelpInfo message={lineChartToolTipMessage} />
+                </View>
                 <LineChart data={fullDataset.weightData} filterKey={filterKey}
                            width={width} height={300}
                            xExtractor={d=>d.record_date}
@@ -347,6 +362,9 @@ const ReportsScreen = (props) => {
                                color={boundaryFill}
                                textPaddingLeft={5}
                                textPaddingRight={20}/>
+                </View>
+                <View style={{position: 'absolute', alignSelf: 'flex-end'}}>
+                  <ReportHelpInfo message={barChartToolTipMessage} />
                 </View>
                 <BarChart data={fullDataset.activityData}
                           filterKey={filterKey}
