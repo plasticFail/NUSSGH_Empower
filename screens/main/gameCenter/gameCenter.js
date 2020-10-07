@@ -1,5 +1,14 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {View, Animated, Text, Dimensions, StyleSheet, Image, ScrollView, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Animated,
+  Text,
+  Dimensions,
+  StyleSheet,
+  Image,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native';
 import globalStyles from '../../../styles/globalStyles';
 import {Colors} from '../../../styles/colors';
 import LeftArrowBtn from '../../../components/logs/leftArrowBtn';
@@ -8,7 +17,7 @@ import Ionicon from 'react-native-vector-icons/Ionicons';
 import Modal from 'react-native-modal';
 import GameCenterStyles from '../../../styles/gameCenterStyles';
 import ProgressBar from '../../../components/progressbar';
-
+import InProgress from '../../../components/inProgress';
 
 const GameCenter = (props) => {
   const slideRightAnimation = useRef(new Animated.Value(0)).current;
@@ -40,10 +49,11 @@ const GameCenter = (props) => {
           ...globalStyles.pageContainer,
           ...{transform: [{translateX: widthInterpolate}]},
         }}>
-
         <View style={globalStyles.menuBarContainer}>
           <LeftArrowBtn close={() => props.navigation.navigate('Home')} />
         </View>
+        <Text style={globalStyles.pageHeader}>Game Center</Text>
+        {/*
         <View style={styles.titleWithHintContainer}>
           <Text style={globalStyles.pageHeader}>Game Center</Text>
           <Ionicon
@@ -54,10 +64,8 @@ const GameCenter = (props) => {
               onPress={() => setShowTutorial(true)}/>
         </View>
         <Text style={[globalStyles.pageDetails]}>Season 1: Word Bingo</Text>
-
         <ScrollView contentContainerStyle={{flexGrow: 1}}>
           <Image resizeMode="contain" style={GameCenterStyles.logo} source={require('../../../resources/images/gameCenter/img-header.png')}/>
-
           <View style={[GameCenterStyles.card, styles.marginTop]}>
             <View style={[GameCenterStyles.cardPadding, GameCenterStyles.subContainer]}>
               <Text style={GameCenterStyles.subText}>My Word</Text>
@@ -80,36 +88,30 @@ const GameCenter = (props) => {
               </TouchableOpacity>
             </View>
           </View>
-
           <View style={[GameCenterStyles.card, GameCenterStyles.cardPadding, GameCenterStyles.subContainer]}>
             <Text style={GameCenterStyles.subText}>Chances</Text>
             <Text style={GameCenterStyles.subText}>2 Left</Text>
           </View>
-
           <View style={[GameCenterStyles.card, GameCenterStyles.cardPadding, GameCenterStyles.subContainer]}>
             <Text style={GameCenterStyles.subText}>Reward Points</Text>
             <Text style={GameCenterStyles.subText}>160 Available</Text>
           </View>
-
           <TouchableOpacity
               style={[GameCenterStyles.buttonStyle, GameCenterStyles.nextColor]}>
               <Text style={globalStyles.actionButtonText}>Redeem</Text>
           </TouchableOpacity>
-
         </ScrollView>
-
       </Animated.View>
-
       <Modal
           isVisible={showTutorial}
           transparent={true}
           animationType='fade'
           onRequestClose={() => setShowTutorial(false)}>
-
         <TutorialPage closeModal={() => setShowTutorial(false)}/>
-
       </Modal>
-
+*/}
+        <InProgress />
+      </Animated.View>
     </View>
   );
 };
@@ -118,18 +120,18 @@ export default GameCenter;
 
 const styles = StyleSheet.create({
   titleWithHintContainer: {
-    flexDirection:'row',
+    flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  scrollContainer:{
-    paddingVertical:100
+  scrollContainer: {
+    paddingVertical: 100,
   },
-  marginTop:{
-    marginTop: 15
+  marginTop: {
+    marginTop: 15,
   },
-  divider:{
-    height:2,
+  divider: {
+    height: 2,
     backgroundColor: Colors.gameColorGrey,
   },
 });
