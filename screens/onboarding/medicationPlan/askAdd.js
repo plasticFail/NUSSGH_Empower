@@ -100,8 +100,8 @@ class AskAdd extends Component {
     }
     if (status === 500) {
       Alert.alert(
-        'You already have an existing plan',
-        'Head over to the Medication Page to edit your plan if you wish to make changes',
+        'Existing Plan',
+        'Head over to the Medication Page to edit your plan if you wish to make changes.',
         [{text: 'Got It'}],
       );
     } else {
