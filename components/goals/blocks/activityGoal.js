@@ -140,6 +140,7 @@ const ActivityGoal = (props) => {
             setItem={setMinute}
             parameter={'mins'}
             maxLength={3}
+            incrementValue={5}
           />
           <RenderCounter
             fieldName="Cal Burnt"
@@ -147,6 +148,7 @@ const ActivityGoal = (props) => {
             setItem={setCalBurnt}
             parameter={'cal'}
             maxLength={4}
+            incrementValue={100}
           />
         </ScrollView>
         <View style={[globalStyles.buttonContainer]}>

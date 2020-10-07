@@ -29,7 +29,7 @@ const StepsGoal = (props) => {
 
   const [goalName, setGoalName] = useState('');
 
-  const [steps, setSteps] = useState(maxSteps);
+  const [steps, setSteps] = useState(100);
 
   const [pageText, setPageText] = useState('Add Goal');
 
