@@ -19,10 +19,7 @@ const AboutGoals = (props) => {
           {'\u2713'} Create and make edits to your goals every monday!
         </Text>
         <Text style={[styles.textDetail, {color: Colors.alertColor}]}>
-          {'\u2713'} You may only set a goal for one type at a time.
-        </Text>
-        <Text style={[styles.textDetail, {color: Colors.alertColor}]}>
-          {'\u2713'} Physician's goals cannot be overwritten or edited.
+          {'\u2713'} Physician-set goals cannot be overwritten or edited.
         </Text>
         <TouchableOpacity
           onPress={() => closeModal()}

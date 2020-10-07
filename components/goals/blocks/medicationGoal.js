@@ -145,6 +145,8 @@ const MedicationGoal = (props) => {
                 parameter={'Unit(s)'}
                 maxLength={2}
                 allowInput={false}
+                showUnitInParam={false}
+                style={{marginStart: '1%'}}
               />
             </ScrollView>
           </View>
