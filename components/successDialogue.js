@@ -25,6 +25,10 @@ import {
 
 import GAME from '../resources/images/Patient-Icons/SVG/icon-navy-game.svg';
 import GOAL from '../resources/images/Patient-Icons/SVG/icon-navy-goals.svg';
+import {getGoal4Type} from '../netcalls/requestsGoals';
+import {food, defaultv} from '../commonFunctions/goalFunctions';
+import ProgressBar from './progressbar';
+import {isEmpty} from '../commonFunctions/common';
 
 const iconStyle = {
   width: 50,
@@ -33,14 +37,22 @@ const iconStyle = {
   padding: '3%',
 };
 
+const progress = '30%';
+
 function SuccessDialogue(props) {
   const {visible, type} = props;
   const {closeSuccess} = props;
   const navigation = useNavigation();
   const [chance, setChance] = useState(0);
+  const [goalObj, setGoalObj] = useState([]);
   const springAnim = useRef(new Animated.Value(0)).current;
 
+  console.log('in success dialogue');
+  console.log(isEmpty(goalObj));
+  console.log(goalObj);
+
   useEffect(() => {
+    setGoalObj({});
     let isMounted = true;
     if (isMounted) {
       if (type === bg_key) {
@@ -55,6 +67,9 @@ function SuccessDialogue(props) {
       if (type === weight_key) {
         setChance(0.5);
       }
+      //set goal
+      setGoal(type).then(() => {});
+
       setTimeout(() => {
         Animated.spring(springAnim, {
           toValue: 1,
@@ -66,7 +81,12 @@ function SuccessDialogue(props) {
     return () => {
       isMounted = false;
     };
-  }, [type]);
+  }, [visible, type]);
+
+  const setGoal = async (type) => {
+    let response = await getGoal4Type(type);
+    setGoalObj(response?.goals[0]);
+  };
 
   const goGameCenter = () => {
     closeSuccess();
@@ -128,12 +148,13 @@ function SuccessDialogue(props) {
           <Icon name="chevron-right" size={30} style={styles.chevron} />
         </TouchableOpacity>
         <View style={[styles.border, {marginTop: '7%'}]} />
+
         {/*Goals */}
         <TouchableOpacity
           style={{flexDirection: 'row', marginStart: '6%', marginTop: '3%'}}
           onPress={() => goGoals()}>
           <GOAL {...iconStyle} />
-          <View style={{marginStart: '4%', marginTop: '2%'}}>
+          <View style={{marginStart: '4%', marginTop: '2%', flex: 3}}>
             <Text
               style={[
                 globalStyles.pageDetails,
@@ -141,6 +162,26 @@ function SuccessDialogue(props) {
               ]}>
               Goal
             </Text>
+            {!isEmpty(goalObj) && goalObj?.set_by != defaultv ? (
+              <>
+                <ProgressBar
+                  progress={progress}
+                  useIndicatorLevel={false}
+                  reverse={true}
+                  progressBarColor={'#aad326'}
+                  containerStyle={{
+                    borderRadius: 9.5,
+                    height: 10,
+                    marginStart: '5%',
+                  }}
+                />
+                <Text style={[globalStyles.pageDetails]}>{goalObj?.name}</Text>
+              </>
+            ) : (
+              <Text style={[globalStyles.pageDetails, {flex: 1}]}>
+                Add a goal now
+              </Text>
+            )}
           </View>
           <View style={{flex: 1}} />
           <Icon name="chevron-right" size={30} style={styles.chevron} />

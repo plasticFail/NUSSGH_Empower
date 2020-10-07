@@ -26,7 +26,13 @@ import {
   checkLogDone,
   renderLogIconNavy,
 } from '../../../commonFunctions/logFunctions';
-import {getGreetingFromHour} from '../../../commonFunctions/common';
+import {
+  getGreetingFromHour,
+  morningObj,
+  afternoonObj,
+  navy_color,
+  eveningObj,
+} from '../../../commonFunctions/common';
 //components
 import LastLogButton from '../../../components/logs/lastLogBtn';
 import DateSelectionBlock from '../../../components/logs/dateSelectionBlock';
@@ -38,6 +44,8 @@ import {getDefaultMealType} from '../../../commonFunctions/mealLogFunctions';
 import MealTypeSelectionBlock from '../../../components/logs/meal/MealTypeSelectionBlock';
 import CreateMealLogBlock from '../../../components/logs/meal/CreateMealLogBlock';
 import LeftArrowBtn from '../../../components/logs/leftArrowBtn';
+import LoadingModal from '../../../components/loadingModal';
+import UncompleteLogCard from '../../../components/uncompleteLogCard';
 // Functions
 
 const fixedDateTime = new Date();
@@ -64,8 +72,13 @@ class AddLogScreen extends Component {
       showWeight: false,
       showSuccess: false,
 
-      completedTypes: [],
-      notCompletedTypes: [],
+      loading: true,
+
+      completedTypes: [], //for current period
+      notCompletedTypes: [], //for current period
+
+      uncompletedMorningType: [],
+      uncompletedAfternoonType: [],
 
       slideRightAnimation: new Animated.Value(0),
     };
@@ -105,10 +118,26 @@ class AddLogScreen extends Component {
     });
     checkLogDone(period).then((response) => {
       if (response !== undefined) {
+        this.setState({loading: false});
         this.setState({completedTypes: response.completed});
         this.setState({notCompletedTypes: response.notCompleted});
       }
     });
+
+    //get logs not done for morning and afternoon
+    if (period != morningObj.name) {
+      checkLogDone(morningObj.name).then((response) => {
+        if (response != undefined) {
+          this.setState({uncompletedMorningType: response.notCompleted});
+        }
+      });
+
+      checkLogDone(afternoonObj.name).then((response) => {
+        if (response != undefined) {
+          this.setState({uncompletedAfternoonType: response.notCompleted});
+        }
+      });
+    }
   }
 
   resetState() {
@@ -190,6 +219,9 @@ class AddLogScreen extends Component {
       notCompletedTypes,
       completedTypes,
       slideRightAnimation,
+      loading,
+      uncompletedMorningType,
+      uncompletedAfternoonType,
     } = this.state;
     const {showBg, showMed, showWeight, showFood} = this.state;
     const widthInterpolate = slideRightAnimation.interpolate({
@@ -211,10 +243,24 @@ class AddLogScreen extends Component {
           </View>
           <Text style={globalStyles.pageHeader}>Add Log</Text>
           <Text style={[globalStyles.pageDetails]}>{todayDate}</Text>
-          <Text style={[globalStyles.pageDetails, {marginTop: '4%'}]}>
-            Progress For {period}
-          </Text>
           <ScrollView contentContainerStyle={{flexGrow: 1}}>
+            {/*Uncomplete log type for period of the day */}
+            {period === afternoonObj.name &&
+              RenderUncompleteLog(uncompletedMorningType, morningObj.name)}
+            {period === eveningObj.name && (
+              <>
+                {RenderUncompleteLog(uncompletedMorningType, morningObj.name)}
+                {RenderUncompleteLog(
+                  uncompletedAfternoonType,
+                  afternoonObj.name,
+                )}
+              </>
+            )}
+
+            <Text style={[globalStyles.pageDetails, {marginTop: '4%'}]}>
+              Progress For {period}
+            </Text>
+
             {notCompletedTypes.length > 0 && (
               <Text style={logStyles.complete}>Not Complete</Text>
             )}
@@ -343,14 +389,38 @@ class AddLogScreen extends Component {
             </Modal>
           </ScrollView>
         </Animated.View>
+        <LoadingModal visible={loading} />
       </View>
     );
   }
 }
 
+function RenderUncompleteLog(uncompleteLog, periodName) {
+  return (
+    <View style={[logStyles.logItem, styles.uncompleteContainer]}>
+      <Text style={[globalStyles.pageDetails, styles.uncompleteText]}>
+        Incomplete Logs for {periodName}:
+      </Text>
+      <UncompleteLogCard
+        uncompleteLogs={uncompleteLog}
+        color={navy_color}
+        hideChevron={true}
+      />
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
   addButton: {
     alignSelf: 'center',
+  },
+  uncompleteContainer: {
+    borderColor: '#ff0844',
+    flexDirection: 'column',
+    padding: '3%',
+  },
+  uncompleteText: {
+    color: '#ff0844',
   },
 });
 

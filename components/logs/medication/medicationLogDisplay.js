@@ -47,7 +47,7 @@ const MedicationLogDisplay = (props) => {
                     logStyles.lastLogContent,
                     {color: Colors.lastLogValueColor},
                   ]}>
-                  {item.dosage} Unit (s)
+                  {item.dosage} Unit(s)
                 </Text>
               </View>
             )}

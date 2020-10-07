@@ -1,24 +1,29 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, Alert} from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  FlatList,
+  Alert,
+} from 'react-native';
 //third party library
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {Calendar} from 'react-native-calendars';
-//component
-import CalendarMedicationDay from '../../../components/onboarding/medication/calendarMedicationDay';
-import LoadingModal from '../../../components/loadingModal';
-//function
-import {prepareData, postPlan} from '../../../netcalls/requestsMedPlan';
 //styles
 import {Colors} from '../../../styles/colors';
 import globalStyles from '../../../styles/globalStyles';
+//component
+import LoadingModal from '../../../components/loadingModal';
+import AddMedicationModal from '../../../components/medication/addMedicationModal';
+import PlannedMedList from '../../../components/medication/displayMedList/plannedMedList';
+//function
 import {
-  addMedicine,
-  removeMed4Date,
-  removeMed4All,
+  onboardAdd,
+  onboardEdit,
+  editMed,
 } from '../../../commonFunctions/medicationFunction';
-
-Ionicons.loadFont();
+import {prepareData, postPlan} from '../../../netcalls/requestsMedPlan';
+import {stat} from 'react-native-fs';
 
 class AskAdd extends Component {
   constructor(props) {
@@ -26,138 +31,94 @@ class AskAdd extends Component {
     this.props = props;
 
     this.state = {
-      selectedDates4All: {},
-      selectedDate: '',
-      showCalendar: false,
       loading: false,
+      showAddModal: false,
+      parent: '',
+      med2Edit: {},
+      selectedMedList: [],
     };
   }
 
-  componentDidUpdate(prevProp) {
-    if (prevProp.route.params != this.props.route.params) {
-      const {parent} = this.props.route.params;
-      if (parent === 'addPlan') {
-        //if return from AddPlan
-        console.log('setting new state for marked dates in calendar');
-        const {list} = this.props.route.params;
-        this.onReturn(list);
-        //
-      } else if (parent === 'deleteConfirmation') {
-        //if return from delete dialogue
-        const {dateString, type, medication} = this.props.route.params;
-        if (!this.isEmpty(medication)) {
-          if (type === 'justThis') {
-            console.log(
-              dateString + ': removing ' + type + ' for ' + medication.drugName,
-            );
-            this.removeObj4Date(dateString, medication);
-          } else if (type === 'forAll') {
-            this.removeForAllDates(medication);
-          }
-        }
-      }
-    }
+  componentDidMount() {
+    this.setState({parent: onboardAdd});
   }
 
-  //get the selected dates for a particular medication from ask plan
-  //loop through the current selectDatesForAll to see if medicine exist for day
-  //if not, add the medication*
-  onReturn = (data) => {
-    //since calendar's markedDates property is an object , enforce new object creation**
-    let obj = addMedicine(data, this.state.selectedDates4All);
-    if (obj != null) {
-      this.setState({
-        selectedDates4All: JSON.parse(JSON.stringify(obj)),
-      });
-    }
+  componentDidUpdate() {}
 
-    this.checkCalendar();
+  handleAddMedication = () => {
+    this.setState({showAddModal: true});
+    this.setState({parent: onboardAdd});
   };
 
-  //check if in medicationList array medicine name exist*
-  containsObject = (obj, list) => {
-    var i;
-    for (i = 0; i < list.length; i++) {
-      if (list[i].drugName === obj.drugName) {
-        return true;
-      }
-    }
-    return false;
+  closeAddMedicationModal = () => {
+    this.setState({showAddModal: false});
+  };
+
+  onAddMed = (item) => {
+    console.log('adding medication ');
+    let arr = this.state.selectedMedList;
+    arr.push(item);
+    this.setState({selectedMedList: arr});
+  };
+
+  editMed = (item) => {
+    console.log('edting');
+    this.setState({parent: onboardEdit});
+    this.setState({med2Edit: item});
+    this.setState({showAddModal: true});
+  };
+
+  handleEdit = (editedItem) => {
+    let arr = editMed(
+      this.state.med2Edit,
+      editedItem,
+      this.state.selectedMedList,
+    );
+    this.setState({selectedMedList: arr});
+  };
+
+  handleDelete = (toDelete) => {
+    let arr = this.state.selectedMedList.filter(
+      (item) => item.medication != toDelete.medication,
+    );
+    this.setState({selectedMedList: arr});
+    this.setState({showAddModal: false});
   };
 
   handleSkip = () => {
     this.setState({loading: true});
     setTimeout(() => {
       this.setState({loading: false});
-      this.props.navigation.navigate('DashBoard');
+      this.props.navigation.navigate('Home');
     }, 1500);
   };
 
-  handleNext = () => {
-    let data = prepareData(this.state.selectedDates4All);
-    postPlan(data).then((response) => {
-      if (response != null) {
-        this.handleSkip();
-      }
-    });
-  };
-
-  handleAddMedication = () => {
-    this.props.navigation.navigate('AddPlan');
-  };
-
-  //check if selected dates object is empty
-  isEmpty = (obj) => {
-    for (var key in obj) {
-      if (obj.hasOwnProperty(key)) return false;
+  handleSubmit = async () => {
+    let status = await postPlan(prepareData(this.state.selectedMedList));
+    if (status === 200) {
+      this.handleSkip();
     }
-    return true;
-  };
-
-  //remove medication obj just for this date
-  removeObj4Date = (dateString, selectedItem) => {
-    this.setState({
-      selectedDates4All: JSON.parse(
-        JSON.stringify(
-          removeMed4Date(
-            dateString,
-            selectedItem,
-            this.state.selectedDates4All,
-          ),
-        ),
-      ),
-    });
-    this.checkCalendar();
-  };
-
-  removeForAllDates = (selectedItem) => {
-    console.log('removing ' + selectedItem.drugName + ' for all dates');
-
-    this.setState({
-      selectedDates4All: JSON.parse(
-        JSON.stringify(
-          removeMed4All(selectedItem, this.state.selectedDates4All),
-        ),
-      ),
-    });
-    this.checkCalendar();
-  };
-
-  checkCalendar = () => {
-    let original = this.state.selectedDates4All;
-    for (var x of Object.keys(original)) {
-      let medList = original[x].medicationList;
-      if (medList != undefined && medList.length > 0) {
-        this.setState({showCalendar: true});
-        return;
-      }
+    if (status === 500) {
+      Alert.alert(
+        'Existing Plan',
+        'Head over to the Medication Page to edit your plan if you wish to make changes',
+        [{text: 'Got It'}],
+      );
+    } else {
+      Alert.alert('Unexpected Error Occured', 'Please try again later', [
+        {text: 'Got It'},
+      ]);
     }
-    this.setState({showCalendar: false});
-    return;
   };
 
   render() {
-    const {selectedDates4All, showCalendar, loading} = this.state;
+    const {
+      showAddModal,
+      loading,
+      selectedMedList,
+      parent,
+      med2Edit,
+    } = this.state;
     return (
       <View style={styles.onboardingContainer}>
         <Text style={[globalStyles.pageHeader, styles.stepText]}>Step 3</Text>
@@ -166,89 +127,50 @@ class AskAdd extends Component {
           Would you like to add your scheduled medications for this month? We
           will help to track them.
         </Text>
-        {this.isEmpty(selectedDates4All) === true ? (
-          <>
-            <TouchableOpacity
-              style={styles.addButton}
-              onPress={this.handleAddMedication}>
-              <Ionicons
-                name="add-circle"
-                size={80}
-                color={Colors.nextBtnColor}
-              />
-            </TouchableOpacity>
-            <View style={{flex: 1}} />
-            <View style={globalStyles.buttonContainer}>
-              <TouchableOpacity
-                style={globalStyles.skipButtonStyle}
-                onPress={this.handleSkip}>
-                <Text style={globalStyles.actionButtonText}>Skip</Text>
-              </TouchableOpacity>
-            </View>
-          </>
-        ) : showCalendar === true ? (
-          <>
-            <Calendar
-              dayComponent={CalendarMedicationDay}
-              current={new Date()}
-              hideArrows={true}
-              disableMonthChange={true}
-              markedDates={selectedDates4All}
-              markingType={'custom'}
-              selectAll={false}
-              theme={{
-                calendarBackground: Colors.backgroundColor,
-                'stylesheet.calendar.header': {
-                  header: {
-                    flexDirection: 'row',
-                    marginTop: '2%',
-                    alignItems: 'center',
-                    marginStart: '2%',
-                    marginBottom: '2%',
-                  },
-                  headerContainer: {
-                    width: '80%',
-                    flexDirection: 'row',
-                  },
-                  monthText: {
-                    fontSize: 20,
-                    fontFamily: 'SFProDisplay-Bold',
-                    textAlign: 'center',
-                  },
-                },
-                arrowColor: Colors.lastLogValueColor,
-              }}
-            />
-            <View style={{flex: 1, paddingBottom: '3%'}} />
-            <View style={globalStyles.buttonContainer}>
-              <TouchableOpacity
-                style={[globalStyles.nextButtonStyle]}
-                onPress={this.handleNext}>
-                <Text style={globalStyles.actionButtonText}>Next</Text>
-              </TouchableOpacity>
-            </View>
-          </>
+
+        {selectedMedList.length === 0 ? (
+          <TouchableOpacity
+            style={styles.addButton}
+            onPress={this.handleAddMedication}>
+            <Ionicons name="add-circle" size={80} color={Colors.nextBtnColor} />
+          </TouchableOpacity>
         ) : (
-          <>
-            <TouchableOpacity
-              style={styles.addButton}
-              onPress={this.handleAddMedication}>
-              <Ionicons
-                name="add-circle"
-                size={80}
-                color={Colors.nextBtnColor}
-              />
-            </TouchableOpacity>
-            <View style={{flex: 1}} />
-            <View style={globalStyles.buttonContainer}>
-              <TouchableOpacity
-                style={globalStyles.skipButtonStyle}
-                onPress={this.handleSkip}>
-                <Text style={globalStyles.actionButtonText}>Skip</Text>
-              </TouchableOpacity>
-            </View>
-          </>
+          <PlannedMedList
+            medList={selectedMedList}
+            openAddModal={this.handleAddMedication}
+            editMed={this.editMed}
+          />
         )}
+        <View style={{flex: 1}} />
+        <View style={globalStyles.buttonContainer}>
+          {selectedMedList.length > 0 ? (
+            <TouchableOpacity
+              style={globalStyles.nextButtonStyle}
+              onPress={this.handleSubmit}>
+              <Text style={globalStyles.actionButtonText}>Next</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              style={globalStyles.skipButtonStyle}
+              onPress={this.handleSkip}>
+              <Text style={globalStyles.actionButtonText}>Skip</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+
+        {showAddModal ? (
+          <AddMedicationModal
+            visible={showAddModal}
+            closeModal={() => this.closeAddMedicationModal()}
+            onAddMed={this.onAddMed}
+            parent={parent}
+            currentMedList={selectedMedList}
+            med2Edit={med2Edit}
+            onEditMed={this.handleEdit}
+            onDeleteMed={this.handleDelete}
+          />
+        ) : null}
+
         <LoadingModal visible={loading} message={'Setting up your account'} />
       </View>
     );
@@ -272,6 +194,5 @@ const styles = StyleSheet.create({
   },
   addButton: {
     alignSelf: 'center',
-    marginTop: '15%',
   },
 });

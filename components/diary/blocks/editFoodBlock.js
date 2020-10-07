@@ -5,13 +5,10 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
-  ScrollView,
-  Dimensions,
   Alert,
 } from 'react-native';
 //third party libr
 import Modal from 'react-native-modal';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import moment from 'moment';
 //styles
 import {Colors} from '../../../styles/colors';
@@ -20,11 +17,12 @@ import logStyles from '../../../styles/logStyles';
 import diaryStyles from '../../../styles/diaryStyles';
 //component
 import LeftArrowBtn from '../../logs/leftArrowBtn';
-import Counter from '../../onboarding/medication/Counter';
 import RemoveModal from '../removeModal';
+import StepCounter from '../../stepCounter';
 //function
 import {food_key} from '../../../commonFunctions/logFunctions';
 import {deleteMealLog, editMealLog} from '../../../netcalls/requestsDiary';
+import DeleteBin from '../../deleteBin';
 
 const from_delete = 'delete';
 const from_edit = 'edit';
@@ -155,11 +153,7 @@ const EditFoodBlock = (props) => {
       </View>
       <View style={[globalStyles.buttonContainer]}>
         <View style={{flexDirection: 'row'}}>
-          <TouchableOpacity
-            style={diaryStyles.binIcon}
-            onPress={() => confirmDeleteItem()}>
-            <FontAwesome name="trash-o" size={40} color="#ff0844" />
-          </TouchableOpacity>
+          <DeleteBin style={diaryStyles.binIcon} method={confirmDeleteItem} />
           {changed ? (
             <TouchableOpacity
               style={logStyles.enableEditButton}
@@ -199,12 +193,13 @@ function foodItem(item, editQuantity, quantity) {
         <Text style={[diaryStyles.recordedText, styles.foodName]}>
           {itemName}
         </Text>
-        <Counter
+        <StepCounter
           count={quantity}
           setCount={(value) => editQuantity(value)}
           parameter={''}
           fieldName={''}
-          countStyle={styles.counterStyle}
+          enableInput={false}
+          style={{width: '45%'}}
         />
       </View>
     </View>

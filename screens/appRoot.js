@@ -31,7 +31,6 @@ import Logout from './more/logout';
 //components
 import ContactUs from './contactUs';
 import AskAdd from './onboarding/medicationPlan/askAdd';
-import AddPlan from './onboarding/medicationPlan/addPlan';
 import FitbitSetup from './onboarding/fitbit/FitbitSetup';
 import DrawerNavigator from './drawer';
 
@@ -116,11 +115,6 @@ class AppRoot extends Component {
                   name="MedicationPlan"
                   component={AskAdd}
                   options={{header: () => <View />}}
-                />
-                <Stack.Screen
-                  name="AddPlan"
-                  component={AddPlan}
-                  options={{headerShown: false}}
                 />
                 <Stack.Screen
                   name="FitbitSetup"

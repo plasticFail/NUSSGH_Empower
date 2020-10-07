@@ -10,20 +10,13 @@ import {
 //third party library
 import Modal from 'react-native-modal';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import Moment from 'moment';
 //function
-import {
-  storeMedications,
-  getMedication4Day,
-} from '../../../netcalls/requestsLog';
-import {med_key} from '../../../commonFunctions/logFunctions';
+import {storeMedications} from '../../netcalls/requestsLog';
 //component
 import SearchResult from './searchResult';
-import SearchResult2 from '../../logs/medication/searchResult_2';
 //style
-import {Colors} from '../../../styles/colors';
-import globalStyles from '../../../styles/globalStyles';
-import {getDateObj} from '../../../commonFunctions/diaryFunctions';
+import {Colors} from '../../styles/colors';
+import globalStyles from '../../styles/globalStyles';
 
 Ionicons.loadFont();
 
@@ -35,29 +28,18 @@ const SearchMedication = (props) => {
   const [searchResults, setSearchResult] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    if (parent === med_key) {
-      getMedication2day();
-    }
-  }, []);
-
   //time lag when call api*
   useEffect(() => {
-    console.log('search key ' + searchTerm + ' cache ' + searchKeyCache);
     let mounted = true;
     if (searchKeyCache == searchTerm) {
-      if (mounted && parent === 'plan') {
-        console.log('searching from med database');
+      if (mounted) {
         setTimeout(() => searchMedication(), 800);
-      } else if (mounted && parent === med_key) {
-        console.log('searching from medication plan');
-        setTimeout(() => getMedication2day(), 800);
       }
+      return function cleanUp() {
+        mounted = false;
+        clearTimeout();
+      };
     }
-    return function cleanUp() {
-      mounted = false;
-      clearTimeout();
-    };
   }, [searchTerm, searchKeyCache]);
 
   //update states
@@ -74,40 +56,6 @@ const SearchMedication = (props) => {
         setSearchKeyCache(query);
       }, 1000);
     }
-  };
-
-  //get the list of medication for today/record date
-  const getMedication2day = () => {
-    const today = Moment(getDateObj(recordDate)).format('YYYY-MM-DD');
-    getMedication4Day(today).then((response) => {
-      let d = response[today];
-      let arr = [];
-      for (var x of d) {
-        arr.push(x);
-      }
-      if (searchTerm != '') {
-        let result = arr.filter((medication) => {
-          let medicine = medication.medication
-            .replace(/\s{1,2}\[|\]/g, ' ')
-            .toLowerCase();
-          let searchArr = String(searchTerm).split(' ');
-          let count = 0;
-          for (let x of searchArr) {
-            if (medicine.includes(x.toLowerCase())) {
-              count += 1;
-            }
-          }
-          if (count === searchArr.length) {
-            return medication;
-          }
-        });
-        setSearchResult(result);
-        setIsLoading(false);
-      } else {
-        setSearchResult(arr);
-        setIsLoading(false);
-      }
-    });
   };
 
   //make api call
@@ -180,40 +128,20 @@ const SearchMedication = (props) => {
         </>
       ) : searchResults.length > 0 ? (
         <View style={{flex: 1, marginTop: '2%'}}>
-          {parent === med_key ? (
-            <SearchResult2
-              medicationList={searchResults}
-              selectedMedicine={selectedMedicine}
-              setSelectedMedicine={setSelectedMedicine}
-              closeModal={closeModal}
-            />
-          ) : (
-            <SearchResult
-              medicationList={searchResults}
-              selectedMedicine={selectedMedicine}
-              setSelectedMedicine={setSelectedMedicine}
-              closeModal={closeModal}
-            />
-          )}
+          <SearchResult
+            medicationList={searchResults}
+            selectedMedicine={selectedMedicine}
+            setSelectedMedicine={setSelectedMedicine}
+            closeModal={closeModal}
+          />
         </View>
       ) : searchTerm === '' ? (
-        parent === med_key ? (
-          <>
-            <Text style={styles.prompt}>
-              You have no set medications. Please add to your medication plan
-              before making a medication log.
-            </Text>
-            <View style={{flex: 1}} />
-          </>
-        ) : (
-          <>
-            <Text style={styles.prompt}>
-              Input the medication you want to add for the day in the search
-              bar!
-            </Text>
-            <View style={{flex: 1}} />
-          </>
-        )
+        <>
+          <Text style={styles.prompt}>
+            Input the medication you want to add in the search bar!
+          </Text>
+          <View style={{flex: 1}} />
+        </>
       ) : (
         <>
           <Text style={styles.prompt}>No results for {searchTerm}</Text>
@@ -243,18 +171,21 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#e6ebed',
+    backgroundColor: 'white',
     borderRadius: 20,
+    fontSize: 20,
+    borderRadius: 9.5,
+    borderWidth: 1,
+    borderColor: '#e2e8ee',
   },
   searchInput: {
     flex: 1,
     paddingTop: 10,
     paddingBottom: 10,
-    backgroundColor: '#e2e8ee',
+    backgroundColor: 'white',
     color: '#424242',
-    backgroundColor: '#e6ebed',
     fontSize: 20,
-    borderRadius: 20,
+    borderRadius: 9.5,
   },
   prompt: {
     alignSelf: 'center',

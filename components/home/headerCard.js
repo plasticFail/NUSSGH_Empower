@@ -1,13 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
 //function
-import {renderLogIcon} from '../../commonFunctions/logFunctions';
 import {useNavigation} from '@react-navigation/native';
-//third party lib
-import Icon from 'react-native-vector-icons/FontAwesome5';
 //styles
-import logStyles from '../../styles/logStyles';
 import {Colors} from '../../styles/colors';
+//component
+import UncompleteLogCard from '../uncompleteLogCard';
+import {green_color} from '../../commonFunctions/common';
 
 const HeaderCard = (props) => {
   const {username, hour, uncompleteLogs} = props;
@@ -25,7 +24,7 @@ const HeaderCard = (props) => {
         <>
           <Text style={styles.taskText}>
             <Text style={styles.bold}>{uncompleteLogs.length}</Text> mandatory
-            task (s)
+            task(s)
           </Text>
           <TouchableOpacity
             style={styles.logCard}
@@ -33,18 +32,11 @@ const HeaderCard = (props) => {
             <Text style={[styles.greetingText, {color: Colors.menuColor}]}>
               Create a log for the {hour}
             </Text>
-            <View
-              style={{
-                flexDirection: 'row',
-                marginTop: '2%',
-                marginStart: '2%',
-              }}>
-              {uncompleteLogs.map((item, index) => (
-                <View key={item}>{renderLogIcon(item)}</View>
-              ))}
-              <View style={{flex: 1}} />
-              <Icon name="chevron-right" size={20} style={styles.chevron} />
-            </View>
+            <UncompleteLogCard
+              uncompleteLogs={uncompleteLogs}
+              color={green_color}
+              hideChevron={false}
+            />
           </TouchableOpacity>
         </>
       ) : (
