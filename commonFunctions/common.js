@@ -11,6 +11,9 @@ const howTo = 'howto';
 
 const noLog = 'Not logged yet';
 
+const green_color = 'green';
+const navy_color = 'navy';
+
 const morningObj = {
   name: 'Morning',
   start: 5,
@@ -113,4 +116,6 @@ export {
   checkLast7Day,
   decimal,
   wholeNumber,
+  green_color,
+  navy_color,
 };
