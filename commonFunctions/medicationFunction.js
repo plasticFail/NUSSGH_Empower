@@ -73,16 +73,15 @@ const checkMedExistInArr = (arr, med2Check) => {
 
 //edit the med in existing med list
 const editMed = (med2Edit, newMed, existingList) => {
-  console.log('Editing ' + med2Edit.medication);
-  console.log(med2Edit.days);
+  console.log(newMed);
   let index = existingList.findIndex(
     (element) => element.medication === med2Edit.medication,
   );
   let newArr = [...existingList];
   newArr[index] = {
     ...newArr[index],
-    dosage: newMed.dosage,
     days: newMed.days,
+    dosage: newMed.dosage,
     per_day: newMed.per_day,
   };
   return newArr;

@@ -8,7 +8,14 @@ import {
   weight,
   activity,
   steps,
+  bg,
 } from '../commonFunctions/goalFunctions';
+import {
+  bg_key,
+  food_key,
+  med_key,
+  weight_key,
+} from '../commonFunctions/logFunctions';
 
 //post and edit
 const addBgGoalReq = async (bgGoal, id) => {
@@ -176,6 +183,40 @@ const deleteGoal = async (goalType, id) => {
   }
 };
 
+//get a particular type of goal
+const getGoal4Type = async (logType) => {
+  let goalType = '';
+  switch (logType) {
+    case bg_key:
+      goalType = bgpost;
+      break;
+    case food_key:
+      goalType = food;
+      break;
+    case med_key:
+      goalType = med;
+      break;
+    case weight_key:
+      goalType = weight;
+      break;
+  }
+  let link = goal + '/' + goalType;
+  try {
+    let response = await fetch(link, {
+      method: 'GET',
+      headers: {
+        Authorization: 'Bearer ' + (await getToken()),
+        Accept: 'application/json',
+        'Content-type': 'application/json',
+      },
+    });
+    let responseJson = await response.json();
+    return responseJson;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 export {
   addBgGoalReq,
   addFoodGoalReq,
@@ -185,4 +226,5 @@ export {
   addStepsGoalReq,
   getGoals,
   deleteGoal,
+  getGoal4Type,
 };

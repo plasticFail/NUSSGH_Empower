@@ -49,7 +49,7 @@ const WeightGoal = (props) => {
         setPageText('Add Goal');
       }
     }
-  }, [weight]);
+  }, []);
 
   useEffect(() => {
     showSubmitBtn();

@@ -21,7 +21,7 @@ import {
 import logStyles from '../../../styles/logStyles';
 
 const SelectMedicationModalContent = (props) => {
-  const {showSelectModal, selectedMedList, recordDate} = props;
+  const {showSelectModal, selectedMedList, recordDate, medplanlist} = props;
   const {closeSelectModal, getSelectedMedicineFromModal} = props;
   const [dosage, setDosage] = useState(0);
   const [selectedMedicine, setSelectedMedicine] = useState({});
@@ -37,6 +37,7 @@ const SelectMedicationModalContent = (props) => {
     if (
       checkDosageText(dosage).length == 0 &&
       !checkRepeatMedicine(selectedMedicine, selectedMedList) &&
+      !checkRepeatMedicine(selectedMedicine, medplanlist) &&
       !isEmpty(selectedMedicine)
     ) {
       return true;
@@ -72,11 +73,12 @@ const SelectMedicationModalContent = (props) => {
             allowInput={false}
             showUnitInParam={false}
           />
-          {checkRepeatMedicine(selectedMedicine, selectedMedList) && (
-            <Text style={[globalStyles.alertText, {marginStart: '5%'}]}>
-              You have added this medicine already.
-            </Text>
-          )}
+          {checkRepeatMedicine(selectedMedicine, selectedMedList) ||
+            (checkRepeatMedicine(selectedMedicine, medplanlist) && (
+              <Text style={[globalStyles.alertText, {marginStart: '5%'}]}>
+                You have added this medicine already.
+              </Text>
+            ))}
         </View>
         <View style={{flex: 1}} />
         <View style={[globalStyles.buttonContainer]}>

@@ -94,7 +94,7 @@ export default class MedicationScreen extends Component {
     console.log('editing item ' + item.medication);
     let arr = editMed(this.state.selectedMed, item, this.state.plan);
     this.setState({plan: arr});
-    this.callUpdateAPI().then((data) => {});
+    setTimeout(() => this.callUpdateAPI().then((data) => {}), 200);
     this.setState({showAddMed: false});
   };
 

@@ -186,6 +186,7 @@ const MedicationLogBlock = (props) => {
               selectedMedList={extraAddedList}
               getSelectedMedicineFromModal={getSelectedMedicineFromModal}
               recordDate={recordDate}
+              medplanlist={selectedMedList}
             />
           ) : null}
         </View>
