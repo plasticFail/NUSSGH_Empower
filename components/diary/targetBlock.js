@@ -340,7 +340,7 @@ class TargetBlock extends Component {
             onPress={() => this.openModalType(item)}
             key={item}>
             {renderLogIconNavy(item)}
-            <View style={styles.buttonContentContainer}>
+            <View style={[styles.buttonContentContainer, {flex: 1}]}>
               <Text style={[logStyles.fieldName, {fontSize: 15}]}>{item}s</Text>
               {item === bg_key && renderContent(bg_key, bgMiss, bgPass, avgBg)}
               {item === food_key && renderContent(food_key, foodMiss, foodPass)}
@@ -355,7 +355,6 @@ class TargetBlock extends Component {
                   activitySummary.duration,
                 )}
             </View>
-            <View style={{flex: 1}} />
             <Ionicon
               name="chevron-forward"
               style={styles.chevronForward}
@@ -444,7 +443,7 @@ function renderMedContent(medMiss, medCompleted, medLogs) {
   if (medMiss) {
     return (
       <View style={{flexDirection: 'row'}}>
-        <Text style={styles.buttonDetail}>Missed</Text>
+        <Text style={styles.buttonDetail}>Missed </Text>
         <Ionicon
           name="alert-circle-outline"
           style={diaryStyles.failIcon}
@@ -544,7 +543,6 @@ export default TargetBlock;
 const styles = StyleSheet.create({
   buttonContentContainer: {
     marginTop: '-3%',
-    marginStart: '5%',
   },
   buttonDetail: {
     fontFamily: 'SFProDisplay-Bold',

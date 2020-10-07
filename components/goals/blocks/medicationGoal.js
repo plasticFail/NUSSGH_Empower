@@ -6,36 +6,29 @@ import {
   StyleSheet,
   ScrollView,
   Alert,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 //third party lib
 import Modal from 'react-native-modal';
-import Moment from 'moment';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 //styles
 import {Colors} from '../../../styles/colors';
 import globalStyles from '../../../styles/globalStyles';
-import logStyles from '../../../styles/logStyles';
 //component
 import LeftArrowBtn from '../../logs/leftArrowBtn';
 import NameDateSelector from '../nameDateSelector';
-import FrequencySelector from '../dropDownSelector';
-import SearchMedication from '../../onboarding/medication/searchMedication';
-import RenderCounter from '../renderCounter';
+import RenderCounter from '../../renderCounter';
 //function
 import {isEmpty} from '../../../commonFunctions/common';
 import {addMedGoalReq} from '../../../netcalls/requestsGoals';
-import {getDateObj} from '../../../commonFunctions/diaryFunctions';
-import {getFrequency} from '../../../commonFunctions/goalFunctions';
+import {defaultv} from '../../../commonFunctions/goalFunctions';
+import SearchBarMed from '../../medication/searchBarMed';
 
 const MedicationGoal = (props) => {
   const {visible, parent, med} = props;
   const {close} = props;
 
   const [goalName, setGoalName] = useState('');
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
-  const [opened, setOpened] = useState(false);
-  const [frequency, setFrequency] = useState({name: 'Daily', value: 'daily'});
   const [selectedMed, setSelectedMed] = useState({});
   const [dosage, setDosage] = useState(0);
   const [openSearchModal, setOpenSearchModal] = useState(false);
@@ -43,35 +36,32 @@ const MedicationGoal = (props) => {
 
   useEffect(() => {
     if (parent != undefined && med != undefined) {
-      setOpened(true);
       setGoalName(med.name);
-      setStartDate(getDateObj(med.start_date));
-      setEndDate(getDateObj(med.end_date));
-      setFrequency(getFrequency(med.frequency));
       let medObj = {
-        drugName: med.medication,
+        medication: med.medication,
       };
       setDosage(med.dosage);
       setSelectedMed(medObj);
       setPageText('Edit Goal');
+      if (parent === defaultv) {
+        setPageText('Add Goal');
+      }
     }
-  }, []);
+  }, [med]);
 
   useEffect(() => {
     showSubmitBtn();
-  }, [goalName, selectedMed, dosage, opened]);
+  }, [goalName, selectedMed, dosage]);
 
   const submit = async () => {
     let obj = {
       name: goalName,
-      start_date: Moment(startDate).format('DD/MM/YYYY HH:mm:ss'),
-      end_date: Moment(endDate).format('DD/MM/YYYY HH:mm:ss'),
-      frequency: frequency.value,
-      medication: selectedMed.drugName,
+      medication: selectedMed.medication,
       dosage: dosage,
     };
-    if (parent != undefined) {
-      if (await addMedGoalReq(obj, med._id)) {
+    if (parent != undefined && parent != defaultv) {
+      let status = await addMedGoalReq(obj, med._id);
+      if (status === 200) {
         Alert.alert('Medication goal edited successfully', '', [
           {
             text: 'Got It',
@@ -86,13 +76,24 @@ const MedicationGoal = (props) => {
         ]);
       }
     } else {
-      if (await addMedGoalReq(obj)) {
+      let status = await addMedGoalReq(obj);
+      if (status === 200) {
         Alert.alert('Medication goal created successfully', '', [
           {
             text: 'Got It',
             onPress: () => close(),
           },
         ]);
+      } else if (status === 400) {
+        Alert.alert(
+          'Already Exist',
+          'Please remove your existing medication goal before creating a new one!',
+          [
+            {
+              text: 'Got It',
+            },
+          ],
+        );
       } else {
         Alert.alert('Unexpected Error Occured', 'Please try again later!', [
           {
@@ -104,7 +105,7 @@ const MedicationGoal = (props) => {
   };
 
   const showSubmitBtn = () => {
-    if (opened && goalName.length > 0 && dosage > 0 && !isEmpty(selectedMed)) {
+    if (goalName?.length > 0 && dosage > 0 && !isEmpty(selectedMed)) {
       return true;
     }
     return false;
@@ -125,57 +126,31 @@ const MedicationGoal = (props) => {
         <Text style={[globalStyles.pageDetails, {marginBottom: '4%'}]}>
           Medication Goal
         </Text>
-        <ScrollView contentContainerStyle={{flexGrow: 1}}>
-          <NameDateSelector
-            goalName={goalName}
-            setGoalName={setGoalName}
-            startDate={startDate}
-            setStartDate={setStartDate}
-            endDate={endDate}
-            setEndDate={setEndDate}
-            opened={opened}
-            setOpened={setOpened}
-          />
-          <FrequencySelector
-            selected={frequency}
-            setSelected={setFrequency}
-            fieldName="Frequency"
-            dropDownType="frequency"
-          />
-
-          <Text style={globalStyles.goalFieldName}>Medication</Text>
-          <TouchableOpacity
-            style={[logStyles.inputField, {margin: '4%'}]}
-            onPress={() => setOpenSearchModal(true)}>
-            {isEmpty(selectedMed) === true ? (
-              <Text style={{fontSize: 17, color: '#b5b5b5'}}>
-                <Ionicons name="search" size={20} /> Name (eg. Metformin)
-              </Text>
-            ) : (
-              <Text style={{fontSize: 17, color: 'black'}}>
-                {selectedMed.drugName}
-              </Text>
-            )}
-          </TouchableOpacity>
-
-          {/*Search Modal */}
-          {openSearchModal ? (
-            <SearchMedication
-              parent={'plan'}
-              visible={openSearchModal}
-              closeModal={() => setOpenSearchModal(false)}
-              selectedMedicine={selectedMed}
-              setSelectedMedicine={setSelectedMed}
-            />
-          ) : null}
-
-          <RenderCounter
-            fieldName={'Dosage'}
-            item={dosage}
-            setItem={setDosage}
-            parameter={'Unit(s)'}
-          />
-        </ScrollView>
+        <KeyboardAvoidingView
+          style={{flex: 1}}
+          behavior={Platform.OS === 'ios' ? 'padding' : null}>
+          <View style={{flex: 1}}>
+            <ScrollView contentContainerStyle={{flexGrow: 1}}>
+              <NameDateSelector goalName={goalName} setGoalName={setGoalName} />
+              <Text style={globalStyles.goalFieldName}>Medication</Text>
+              <SearchBarMed
+                selectedMed={selectedMed}
+                setSelectedMed={setSelectedMed}
+                clickable={true}
+              />
+              <RenderCounter
+                fieldName={'Dosage'}
+                item={dosage}
+                setItem={setDosage}
+                parameter={'Unit(s)'}
+                maxLength={2}
+                allowInput={false}
+                showUnitInParam={false}
+                style={{marginStart: '1%'}}
+              />
+            </ScrollView>
+          </View>
+        </KeyboardAvoidingView>
         <View style={[globalStyles.buttonContainer]}>
           {showSubmitBtn() === false ? (
             <TouchableOpacity style={globalStyles.skipButtonStyle}>

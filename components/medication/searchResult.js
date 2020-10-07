@@ -4,6 +4,8 @@ import {View, Text, StyleSheet, TouchableOpacity, FlatList} from 'react-native';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import Moment from 'moment';
 
+import CHEVRON_RIGHT from '../../resources/images/Patient-Icons/SVG/icon-grey-chevron-right.svg';
+
 Ionicon.loadFont();
 
 //clean the medicine item passed back*
@@ -13,12 +15,10 @@ const SearchResult = (props) => {
 
   const handleSelect = (item) => {
     let medicineObj = {
-      drugName: item.drug_name,
-      imageUrl: item.image_url,
+      medication: item.drug_name,
       dosage: 0,
-      recordDate: Moment(new Date()).format('DD/MM/YYYY HH:mm:ss'),
-      unit: 'unit',
-      perDay: 0,
+      dosage_unit: 'unit',
+      per_day: 0,
     };
     setSelectedMedicine(medicineObj);
     closeModal();
@@ -35,7 +35,7 @@ const SearchResult = (props) => {
             key={index}
             onPress={() => handleSelect(item)}>
             <Text style={styles.medicineName}>{item.drug_name}</Text>
-            <Ionicon name="chevron-forward" size={20} color="#aad326" />
+            <CHEVRON_RIGHT height={20} width={20} marginStart={'2%'} />
           </TouchableOpacity>
         )}
       />
@@ -47,13 +47,13 @@ export default SearchResult;
 
 const styles = StyleSheet.create({
   resultContainer: {
-    borderBottomWidth: 0.3,
-    borderColor: 'black',
+    borderBottomWidth: 1,
+    borderColor: '#e2e8ee',
     padding: '3%',
     flexDirection: 'row',
   },
   medicineName: {
-    fontSize: 20,
+    fontSize: 18,
     flex: 1,
   },
 });

@@ -12,12 +12,12 @@ import diaryStyles from '../../../styles/diaryStyles';
 //component
 import LeftArrowBtn from '../../logs/leftArrowBtn';
 import DateSelectionBlock from '../../logs/dateSelectionBlock';
-import Counter from '../../onboarding/medication/Counter';
+import DeleteBin from '../../deleteBin';
+import RenderCounter from '../../renderCounter';
 //function
 import {deleteMed, editMedicineInLog} from '../../../netcalls/requestsDiary';
 import RemoveModal from '../removeModal';
 import {med_key} from '../../../commonFunctions/logFunctions';
-import DeleteBin from '../../deleteBin';
 
 const EditMedicineBlock = (props) => {
   const {visible, medicineToEdit, initialDate} = props;
@@ -95,11 +95,13 @@ const EditMedicineBlock = (props) => {
           />
           <Text style={logStyles.fieldName}>Medication Taken:</Text>
           <Text style={logStyles.inputField}>{medicineToEdit.medication}</Text>
-          <Counter
-            count={dosage}
-            setCount={setDosage}
+          <RenderCounter
+            fieldName={'Dosage'}
+            item={dosage}
+            setItem={setDosage}
             parameter={'Unit(s)'}
-            fieldName={'Default Dosage'}
+            maxLength={2}
+            allowInput={false}
           />
           {dosage === 0 && (
             <Text style={[globalStyles.alertText, {marginStart: '4%'}]}>

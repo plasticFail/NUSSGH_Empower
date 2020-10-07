@@ -261,15 +261,11 @@ const checkWeightText = (weight) => {
   return '';
 };
 
-const checkDosageText = (dosage, correctDosage) => {
-  if (dosage === correctDosage) {
+const checkDosageText = (dosage) => {
+  if (dosage > 0) {
     return '';
   } else {
-    return (
-      'Invalid Dosage, make sure dosage is same as what you have set in your medication plan which is ' +
-      correctDosage +
-      ' Unit(s)'
-    );
+    return 'Dosage cannot be 0';
   }
 };
 
@@ -282,7 +278,7 @@ const checkDosage = (dosage, correctDosage) => {
 
 const checkRepeatMedicine = (medicine, list) => {
   for (let x of list) {
-    if (x.drugName === medicine.drugName) {
+    if (x.drugName === medicine.medication) {
       return true;
     }
   }

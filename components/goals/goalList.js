@@ -17,8 +17,12 @@ import {horizontalMargins} from '../../styles/variables';
 //component
 import ProgressBar from '../../components/progressbar';
 import GoalDetail from '../../components/goals/goalDetail';
-//third party lib
-import Icon from 'react-native-vector-icons/FontAwesome5';
+import BgGoal from './blocks/bgGoal';
+import FoodGoal from './blocks/foodGoal';
+import MedicationGoal from './blocks/medicationGoal';
+import StepsGoal from './blocks/stepsGoal';
+import ActivityGoal from './blocks/activityGoal';
+import WeightGoal from './blocks/weightGoal';
 import {
   bg_key,
   renderLogIconNavy,
@@ -38,6 +42,10 @@ import {
   renderGoalTypeName,
   getNumofGoals,
   getGoalObjById,
+  filterForGoalType,
+  selfv,
+  defaultv,
+  phyv,
 } from '../../commonFunctions/goalFunctions';
 
 const progress = 0.3;
@@ -49,40 +57,159 @@ const GoalList = (props) => {
   const [selectedType, setSelectedType] = useState('');
   const [showDetail, setShowDetail] = useState(false);
 
+  const [ownGoals, setOwnGoals] = useState([]);
+  const [physicianGoals, setPhysicianGoals] = useState([]);
+  const [suggestedGoal, setSuggestedGoals] = useState([]);
+
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [parent, setParent] = useState('');
+
   useEffect(() => {
-    if (selectedGoal._id != null) {
+    if (selectedGoal?._id != null) {
       setSelectedGoal(getGoalObjById(selectedGoal._id, goals));
     } else {
       setSelectedGoal({});
+    }
+    //division of goal type
+    if (goals != undefined) {
+      setOwnGoals(filterForGoalType(goals, selfv));
+      setPhysicianGoals(filterForGoalType(goals, phyv));
+      setSuggestedGoals(filterForGoalType(goals, defaultv));
     }
   }, [goals]);
 
   const openGoalDetail = (item, type) => {
     setSelectedGoal(item);
     setSelectedType(type);
-    setShowDetail(true);
+    //if is own set type -> show the detail page*
+    if (item.set_by === selfv) {
+      setShowDetail(true);
+      setParent('edit');
+    } else if (item.set_by === defaultv) {
+      //if suggested, show edit type page
+      setShowEditModal(true);
+      setParent(defaultv);
+    } else if (item.set_by === phyv) {
+      setParent(phyv);
+      setShowDetail(true);
+    }
+  };
+
+  const openModal4Edit = () => {
+    setShowDetail(false);
+    setTimeout(() => {
+      setShowEditModal(true);
+    }, 500);
+
+    setParent('edit');
+  };
+
+  const closeEdit = () => {
+    setShowEditModal(false);
+    init();
+    if (selectedGoal?.set_by != defaultv) {
+      setTimeout(() => setShowDetail(true), 500);
+    } else {
+      setShowDetail(false);
+    }
   };
 
   return (
     <>
-      {getNumofGoals(goals) != 0 ? (
-        RenderGoalItems(goals, openGoalDetail)
+      {/*Render Physician Goal*/}
+      <Text style={globalStyles.goalFieldName}>Physician-Set Goals</Text>
+      {physicianGoals.length === 0 ? (
+        <Text style={styles.noGoalsText}>
+          Your physician has not set a goal for you yet.
+        </Text>
       ) : (
-        <Text style={styles.noGoalsText}>No goals set yet!</Text>
+        RenderGoalItems(physicianGoals, openGoalDetail)
       )}
-      <GoalDetail
-        visible={showDetail}
-        close={() => setShowDetail(false)}
-        goalItem={selectedGoal}
-        type={selectedType}
-        init={() => {
-          init();
-        }}
-        deleteInit={() => {
-          init();
-          setSelectedGoal({});
-        }}
-      />
+      {/*Render Patient Goal*/}
+      <Text style={[globalStyles.goalFieldName, {marginBottom: '3%'}]}>
+        Your Goals
+      </Text>
+      {ownGoals.length === 0 ? (
+        <Text style={styles.noGoalsText}>Your have not set a goal yet.</Text>
+      ) : (
+        RenderGoalItems(ownGoals, openGoalDetail)
+      )}
+
+      {/*Render Suggested Goal*/}
+      {suggestedGoal.length != 0 && (
+        <>
+          <Text style={[globalStyles.goalFieldName, {marginBottom: '3%'}]}>
+            Suggested Goals
+          </Text>
+          {RenderGoalItems(suggestedGoal, openGoalDetail)}
+        </>
+      )}
+      {selectedGoal?.set_by != defaultv && (
+        <GoalDetail
+          visible={showDetail}
+          close={() => setShowDetail(false)}
+          goalItem={selectedGoal}
+          type={selectedType}
+          openEditModal={openModal4Edit}
+          init={() => {
+            init();
+          }}
+          deleteInit={() => {
+            init();
+            setSelectedGoal({});
+          }}
+        />
+      )}
+
+      {/*Action modal - for suggested and editing goal**/}
+      {selectedType === bg ? (
+        <BgGoal
+          visible={showEditModal}
+          close={closeEdit}
+          parent={parent}
+          bg={selectedGoal}
+        />
+      ) : null}
+      {selectedType === food ? (
+        <FoodGoal
+          visible={showEditModal}
+          close={closeEdit}
+          parent={parent}
+          food={selectedGoal}
+        />
+      ) : null}
+      {selectedType === med && (
+        <MedicationGoal
+          visible={showEditModal}
+          close={closeEdit}
+          parent={parent}
+          med={selectedGoal}
+        />
+      )}
+      {selectedType === steps && (
+        <StepsGoal
+          visible={showEditModal}
+          close={closeEdit}
+          parent={parent}
+          step={selectedGoal}
+        />
+      )}
+      {selectedType === activity && (
+        <ActivityGoal
+          visible={showEditModal}
+          close={closeEdit}
+          parent={parent}
+          activity={selectedGoal}
+        />
+      )}
+      {selectedType === weight && (
+        <WeightGoal
+          visible={showEditModal}
+          close={closeEdit}
+          parent={parent}
+          weightObj={selectedGoal}
+        />
+      )}
     </>
   );
 };
@@ -90,18 +217,16 @@ const GoalList = (props) => {
 export default GoalList;
 
 function RenderGoalItems(array, openGoalDetail) {
-  return Object.keys(array).map((item, index) =>
-    array[item].goals.map((goal, index) => {
-      return (
-        <TouchableOpacity
-          key={index}
-          style={styles.border}
-          onPress={() => openGoalDetail(goal, item)}>
-          {renderGoalType(goal, item)}
-        </TouchableOpacity>
-      );
-    }),
-  );
+  return array.map((item, index) => {
+    return (
+      <TouchableOpacity
+        key={index}
+        style={styles.border}
+        onPress={() => openGoalDetail(item.goal, item.type)}>
+        {renderGoalType(item.goal, item.type)}
+      </TouchableOpacity>
+    );
+  });
 }
 
 //later check who set the goal*
@@ -114,23 +239,30 @@ function renderGoalType(goalItem, type) {
       }}>
       {renderGoalLogo(type)}
       <View style={{flex: 1}}>
-        <View style={{flexDirection: 'row', marginBottom: '3%'}}>
-          <Text style={styles.goalType}>{renderGoalTypeName(type)}</Text>
-          <View style={[styles.byWhoTag, styles.shadow]}>
-            <Text>Self</Text>
-          </View>
-        </View>
-        <ProgressBar
-          progress={percent}
-          useIndicatorLevel={false}
-          reverse={true}
-          progressBarColor={'#aad326'}
-          containerStyle={styles.progressContainer}
-        />
-        <Text
-          style={[globalStyles.pageDetails, {marginStart: 0, marginTop: '2%'}]}>
-          {goalItem.name}
-        </Text>
+        <Text style={styles.goalType}>{renderGoalTypeName(type)}</Text>
+        {goalItem?.set_by != defaultv ? (
+          <>
+            <ProgressBar
+              progress={percent}
+              useIndicatorLevel={false}
+              reverse={true}
+              progressBarColor={'#aad326'}
+              containerStyle={styles.progressContainer}
+            />
+            <Text
+              style={[
+                globalStyles.pageDetails,
+                {marginStart: 0, marginTop: '2%'},
+              ]}>
+              {goalItem.name}
+            </Text>
+          </>
+        ) : (
+          <Text
+            style={[globalStyles.pageDetails, {marginStart: 0, marginTop: 0}]}>
+            {goalItem.name}
+          </Text>
+        )}
       </View>
       <CHEV_RIGHT height={23} width={23} marginTop={'2%'} />
     </View>
@@ -174,7 +306,7 @@ const styles = StyleSheet.create({
   border: {
     borderBottomWidth: 0.5,
     borderColor: Colors.lastLogValueColor,
-    margin: '2%',
+    margin: '3%',
   },
   partyGoal: {
     marginStart: horizontalMargins,

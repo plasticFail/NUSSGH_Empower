@@ -24,6 +24,7 @@ import {addWeightGoalReq} from '../../../netcalls/requestsGoals';
 import {
   weeklyGoalList,
   getWeeklyObj,
+  defaultv,
 } from '../../../commonFunctions/goalFunctions';
 import {getDateObj} from '../../../commonFunctions/diaryFunctions';
 
@@ -32,44 +33,37 @@ const WeightGoal = (props) => {
   const {close} = props;
 
   const [goalName, setGoalName] = useState('');
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
-  const [opened, setOpened] = useState(false); //opened date
   const [openedWeight, setOpenedWeight] = useState(false);
   const [showPicker, setShowPicker] = useState(false);
-  const [weeklyGoal, setWeeklyGoal] = useState(weeklyGoalList[4]);
   const [weight, setWeight] = useState(50);
 
   const [pageText, setPageText] = useState('Add Goal');
 
   useEffect(() => {
     if (parent != undefined && weightObj != undefined) {
-      setOpened(true);
-      setOpenedWeight(true);
       setGoalName(weightObj.name);
-      setStartDate(getDateObj(weightObj.start_date));
-      setEndDate(getDateObj(weightObj.end_date));
       setWeight(weightObj.goal_weight);
-      setWeeklyGoal(getWeeklyObj(weightObj.weekly_offset));
       setPageText('Edit Goal');
+      setOpenedWeight(true);
+      if (parent === defaultv) {
+        setPageText('Add Goal');
+      }
     }
   }, []);
 
   useEffect(() => {
     showSubmitBtn();
-  }, [goalName, opened]);
+  }, [goalName, openedWeight]);
 
   const submit = async () => {
     let obj = {
       name: goalName,
-      start_date: Moment(startDate).format('DD/MM/YYYY HH:mm:ss'),
-      end_date: Moment(endDate).format('DD/MM/YYYY HH:mm:ss'),
-      weekly_offset: weeklyGoal.value,
       goal_weight: weight,
     };
-    if (parent != undefined) {
-      if (await addWeightGoalReq(obj, weightObj._id)) {
-        Alert.alert('Weight goal editted successfully', '', [
+    if (parent != undefined && parent != defaultv) {
+      let status = await addWeightGoalReq(obj, weightObj._id);
+      if (status === 200) {
+        Alert.alert('Weight goal edited successfully', '', [
           {
             text: 'Got It',
             onPress: () => close(),
@@ -83,13 +77,24 @@ const WeightGoal = (props) => {
         ]);
       }
     } else {
-      if (await addWeightGoalReq(obj)) {
+      let status = await addWeightGoalReq(obj);
+      if (status === 200) {
         Alert.alert('Weight goal created successfully', '', [
           {
             text: 'Got It',
             onPress: () => close(),
           },
         ]);
+      } else if (status === 400) {
+        Alert.alert(
+          'Already Exist',
+          'Please remove your existing weight goal before creating a new one!',
+          [
+            {
+              text: 'Got It',
+            },
+          ],
+        );
       } else {
         Alert.alert('Unexpected Error Occured', 'Please try again later!', [
           {
@@ -107,12 +112,11 @@ const WeightGoal = (props) => {
 
   //no selected weight*
   const closeWeightPicker = () => {
-    setOpenedWeight(false);
     setShowPicker(false);
   };
 
   const showSubmitBtn = () => {
-    if (opened && goalName.length > 0 && openedWeight) {
+    if (goalName?.length > 0 && openedWeight) {
       return true;
     }
     return false;
@@ -134,16 +138,7 @@ const WeightGoal = (props) => {
           Weight Goal
         </Text>
         <ScrollView contentContainerStyle={{flexGrow: 1}}>
-          <NameDateSelector
-            goalName={goalName}
-            setGoalName={setGoalName}
-            startDate={startDate}
-            setStartDate={setStartDate}
-            endDate={endDate}
-            setEndDate={setEndDate}
-            opened={opened}
-            setOpened={setOpened}
-          />
+          <NameDateSelector goalName={goalName} setGoalName={setGoalName} />
           <TouchableOpacity
             onPress={() => openWeightPicker()}
             style={{marginBottom: '2%'}}>
@@ -164,12 +159,6 @@ const WeightGoal = (props) => {
               )}
             </View>
           </TouchableOpacity>
-          <DropdownSelector
-            selected={weeklyGoal}
-            setSelected={setWeeklyGoal}
-            fieldName="Weekly Goal"
-            optionList={weeklyGoalList}
-          />
         </ScrollView>
         <View style={[globalStyles.buttonContainer]}>
           {showSubmitBtn() === false ? (

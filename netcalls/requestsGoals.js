@@ -8,8 +8,14 @@ import {
   weight,
   activity,
   steps,
+  bg,
 } from '../commonFunctions/goalFunctions';
-import {act} from 'react-test-renderer';
+import {
+  bg_key,
+  food_key,
+  med_key,
+  weight_key,
+} from '../commonFunctions/logFunctions';
 
 //post and edit
 const addBgGoalReq = async (bgGoal, id) => {
@@ -27,12 +33,9 @@ const addBgGoalReq = async (bgGoal, id) => {
       },
       body: JSON.stringify(bgGoal),
     });
-    let responseJson = await response.json();
-    console.log(responseJson);
-    console.log('addBgGoalReq ' + responseJson);
-    return true;
+    return await response.status;
   } catch (error) {
-    return false;
+    return 'Error';
   }
 };
 
@@ -51,10 +54,7 @@ const addFoodGoalReq = async (foodGoal, id) => {
       },
       body: JSON.stringify(foodGoal),
     });
-    let responseJson = await response.json();
-    console.log(responseJson);
-    console.log('addFoodGoal ' + responseJson);
-    return true;
+    return await response.status;
   } catch (error) {
     return false;
   }
@@ -75,10 +75,7 @@ const addMedGoalReq = async (medGoal, id) => {
       },
       body: JSON.stringify(medGoal),
     });
-    let responseJson = await response.json();
-    console.log(responseJson);
-    console.log('addMedGoal ' + responseJson);
-    return true;
+    return await response.status;
   } catch (error) {
     return false;
   }
@@ -99,10 +96,7 @@ const addWeightGoalReq = async (weightGoal, id) => {
       },
       body: JSON.stringify(weightGoal),
     });
-    let responseJson = await response.json();
-    console.log(responseJson);
-    console.log('addWeightGoal ' + responseJson);
-    return true;
+    return await response.status;
   } catch (error) {
     return false;
   }
@@ -123,10 +117,7 @@ const addActivityGoalReq = async (activityGoal, id) => {
       },
       body: JSON.stringify(activityGoal),
     });
-    let responseJson = await response.json();
-    console.log(responseJson);
-    console.log('addActivityGoal ' + responseJson);
-    return true;
+    return await response.status;
   } catch (error) {
     return false;
   }
@@ -147,10 +138,7 @@ const addStepsGoalReq = async (stepGoal, id) => {
       },
       body: JSON.stringify(stepGoal),
     });
-    let responseJson = await response.json();
-    console.log(responseJson);
-    console.log('addStepsGoal ' + responseJson);
-    return true;
+    return await response.status;
   } catch (error) {
     return false;
   }
@@ -195,6 +183,40 @@ const deleteGoal = async (goalType, id) => {
   }
 };
 
+//get a particular type of goal
+const getGoal4Type = async (logType) => {
+  let goalType = '';
+  switch (logType) {
+    case bg_key:
+      goalType = bgpost;
+      break;
+    case food_key:
+      goalType = food;
+      break;
+    case med_key:
+      goalType = med;
+      break;
+    case weight_key:
+      goalType = weight;
+      break;
+  }
+  let link = goal + '/' + goalType;
+  try {
+    let response = await fetch(link, {
+      method: 'GET',
+      headers: {
+        Authorization: 'Bearer ' + (await getToken()),
+        Accept: 'application/json',
+        'Content-type': 'application/json',
+      },
+    });
+    let responseJson = await response.json();
+    return responseJson;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 export {
   addBgGoalReq,
   addFoodGoalReq,
@@ -204,4 +226,5 @@ export {
   addStepsGoalReq,
   getGoals,
   deleteGoal,
+  getGoal4Type,
 };

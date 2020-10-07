@@ -64,10 +64,8 @@ const GameCenter = (props) => {
               onPress={() => setShowTutorial(true)}/>
         </View>
         <Text style={[globalStyles.pageDetails]}>Season 1: Word Bingo</Text>
-
         <ScrollView contentContainerStyle={{flexGrow: 1}}>
           <Image resizeMode="contain" style={GameCenterStyles.logo} source={require('../../../resources/images/gameCenter/img-header.png')}/>
-
           <View style={[GameCenterStyles.card, styles.marginTop]}>
             <View style={[GameCenterStyles.cardPadding, GameCenterStyles.subContainer]}>
               <Text style={GameCenterStyles.subText}>My Word</Text>
@@ -90,34 +88,26 @@ const GameCenter = (props) => {
               </TouchableOpacity>
             </View>
           </View>
-
           <View style={[GameCenterStyles.card, GameCenterStyles.cardPadding, GameCenterStyles.subContainer]}>
             <Text style={GameCenterStyles.subText}>Chances</Text>
             <Text style={GameCenterStyles.subText}>2 Left</Text>
           </View>
-
           <View style={[GameCenterStyles.card, GameCenterStyles.cardPadding, GameCenterStyles.subContainer]}>
             <Text style={GameCenterStyles.subText}>Reward Points</Text>
             <Text style={GameCenterStyles.subText}>160 Available</Text>
           </View>
-
           <TouchableOpacity
               style={[GameCenterStyles.buttonStyle, GameCenterStyles.nextColor]}>
               <Text style={globalStyles.actionButtonText}>Redeem</Text>
           </TouchableOpacity>
-
         </ScrollView>
-
       </Animated.View>
-
       <Modal
           isVisible={showTutorial}
           transparent={true}
           animationType='fade'
           onRequestClose={() => setShowTutorial(false)}>
-
         <TutorialPage closeModal={() => setShowTutorial(false)}/>
-
       </Modal>
 */}
         <InProgress />

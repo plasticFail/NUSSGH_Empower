@@ -67,6 +67,7 @@ const EditPhoneModal_2 = (props) => {
             setNumber(cleanNumber);
           }}
           keyboardType="number-pad"
+          returnKeyType="done"
           maxLength={8}
         />
         <Text style={[globalStyles.alertText, {marginStart: '4%'}]}>

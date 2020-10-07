@@ -3,6 +3,7 @@ import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
 //third party lib
 import Modal from 'react-native-modal';
 import globalStyles from '../../styles/globalStyles';
+import {Colors} from '../../styles/colors';
 
 const AboutGoals = (props) => {
   const {visible, closeModal} = props;
@@ -15,7 +16,10 @@ const AboutGoals = (props) => {
       <View style={styles.container}>
         <Text style={styles.text}>About Goal Setting</Text>
         <Text style={styles.textDetail}>
-          Create and make edits to your goals every monday!
+          {'\u2713'} Create and make edits to your goals every monday!
+        </Text>
+        <Text style={[styles.textDetail, {color: Colors.alertColor}]}>
+          {'\u2713'} Physician-set goals cannot be overwritten or edited.
         </Text>
         <TouchableOpacity
           onPress={() => closeModal()}
@@ -31,11 +35,11 @@ export default AboutGoals;
 
 const styles = StyleSheet.create({
   container: {
-    width: '90%',
+    width: '100%',
     backgroundColor: 'white',
     borderRadius: 9.5,
     alignSelf: 'center',
-    padding: '3%',
+    padding: '4%',
   },
   text: {
     fontFamily: 'SFProDisplay-Bold',
@@ -46,6 +50,5 @@ const styles = StyleSheet.create({
     marginTop: '2%',
     fontFamily: 'SFProDisplay-Regular',
     fontSize: 18,
-    textAlign: 'center',
   },
 });

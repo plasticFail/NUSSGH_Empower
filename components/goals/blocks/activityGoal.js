@@ -14,27 +14,26 @@ import {
 } from '../../../commonFunctions/diaryFunctions';
 //third party lib
 import Modal from 'react-native-modal';
-import Moment from 'moment';
+import Moment, {duration} from 'moment';
 //styles
 import {Colors} from '../../../styles/colors';
 import globalStyles from '../../../styles/globalStyles';
 //component
 import LeftArrowBtn from '../../logs/leftArrowBtn';
 import NameDateSelector from '../nameDateSelector';
-import FrequencySelector from '../dropDownSelector';
-import RenderCounter from '../renderCounter';
+import RenderCounter from '../../renderCounter';
 import {addActivityGoalReq} from '../../../netcalls/requestsGoals';
-import {getFrequency, activity} from '../../../commonFunctions/goalFunctions';
+import {
+  getFrequency,
+  activity,
+  defaultv,
+} from '../../../commonFunctions/goalFunctions';
 
 const ActivityGoal = (props) => {
   const {visible, parent, activity} = props;
   const {close} = props;
 
   const [goalName, setGoalName] = useState('');
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
-  const [opened, setOpened] = useState(false);
-  const [frequency, setFrequency] = useState({name: 'Daily', value: 'daily'});
 
   const [minute, setMinute] = useState(maxDuration);
   const [calBurnt, setCalBurnt] = useState(maxCalBurnt);
@@ -43,16 +42,15 @@ const ActivityGoal = (props) => {
 
   useEffect(() => {
     if (parent != undefined && activity != undefined) {
-      setOpened(true);
       setGoalName(activity.name);
-      setStartDate(getDateObj(activity.start_date));
-      setEndDate(getDateObj(activity.end_date));
-      setFrequency(getFrequency(activity.frequency));
       setMinute(activity.duration);
       setCalBurnt(activity.cal_burnt);
       setPageText('Edit Goal');
+      if (parent === defaultv) {
+        setPageText('Add Goal');
+      }
     }
-  }, []);
+  }, [activity]);
 
   useEffect(() => {
     check();
@@ -62,14 +60,12 @@ const ActivityGoal = (props) => {
   const submit = async () => {
     let obj = {
       name: goalName,
-      start_date: Moment(startDate).format('DD/MM/YYYY HH:mm:ss'),
-      end_date: Moment(endDate).format('DD/MM/YYYY HH:mm:ss'),
-      frequency: frequency.value,
       duration: minute,
       cal_burnt: calBurnt,
     };
-    if (parent != undefined) {
-      if (await addActivityGoalReq(obj, activity._id)) {
+    if (parent != undefined && parent != defaultv) {
+      let status = await addActivityGoalReq(obj, activity._id);
+      if (status === 200) {
         Alert.alert('Activity goal edited successfully', '', [
           {
             text: 'Got It',
@@ -84,13 +80,24 @@ const ActivityGoal = (props) => {
         ]);
       }
     } else {
-      if (await addActivityGoalReq(obj)) {
+      let status = await addActivityGoalReq(obj);
+      if (status === 200) {
         Alert.alert('Activity goal created successfully', '', [
           {
             text: 'Got It',
             onPress: () => close(),
           },
         ]);
+      } else if (status === 400) {
+        Alert.alert(
+          'Already Exist',
+          'Please remove your existing activity goal before creating a new one!',
+          [
+            {
+              text: 'Got It',
+            },
+          ],
+        );
       } else {
         Alert.alert('Unexpected Error Occured', 'Please try again later!', [
           {
@@ -102,7 +109,7 @@ const ActivityGoal = (props) => {
   };
 
   const showSubmitBtn = () => {
-    if (goalName.length > 0 && opened) {
+    if (goalName?.length > 0 && minute > 0 && calBurnt > 0) {
       return true;
     }
     return false;
@@ -126,33 +133,22 @@ const ActivityGoal = (props) => {
           Activity Goal
         </Text>
         <ScrollView contentContainerStyle={{flexGrow: 1}}>
-          <NameDateSelector
-            goalName={goalName}
-            setGoalName={setGoalName}
-            startDate={startDate}
-            setStartDate={setStartDate}
-            endDate={endDate}
-            setEndDate={setEndDate}
-            opened={opened}
-            setOpened={setOpened}
-          />
-          <FrequencySelector
-            selected={frequency}
-            setSelected={setFrequency}
-            fieldName="Frequency"
-            dropDownType="frequency"
-          />
+          <NameDateSelector goalName={goalName} setGoalName={setGoalName} />
           <RenderCounter
             fieldName="Excercise"
             item={minute}
             setItem={setMinute}
             parameter={'mins'}
+            maxLength={3}
+            incrementValue={5}
           />
           <RenderCounter
             fieldName="Cal Burnt"
             item={calBurnt}
             setItem={setCalBurnt}
             parameter={'cal'}
+            maxLength={4}
+            incrementValue={100}
           />
         </ScrollView>
         <View style={[globalStyles.buttonContainer]}>

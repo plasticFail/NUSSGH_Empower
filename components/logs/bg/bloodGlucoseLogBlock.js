@@ -221,6 +221,7 @@ const BloodGlucoseLogBlock = (props) => {
               onChangeText={(value) => {
                 setBloodGlucose(value);
               }}
+              returnKeyType="done"
             />
             <Text style={styles.unitText}>mmol/L</Text>
           </View>
