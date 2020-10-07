@@ -154,6 +154,7 @@ const FoodGoal = (props) => {
                 setItem={setCal}
                 parameter={'kCal'}
                 maxLength={4}
+                incrementValue={100}
               />
               <RenderCounter
                 fieldName="Carbs"
@@ -161,6 +162,7 @@ const FoodGoal = (props) => {
                 setItem={setCarbs}
                 parameter={'g'}
                 maxLength={3}
+                incrementValue={10}
               />
               <RenderCounter
                 fieldName="Fats"
@@ -168,6 +170,7 @@ const FoodGoal = (props) => {
                 setItem={setFats}
                 parameter={'g'}
                 maxLength={3}
+                incrementValue={10}
               />
               <RenderCounter
                 fieldName="Protein"
@@ -175,6 +178,7 @@ const FoodGoal = (props) => {
                 setItem={setProtein}
                 parameter={'g'}
                 maxLength={3}
+                incrementValue={10}
               />
             </ScrollView>
           </View>
