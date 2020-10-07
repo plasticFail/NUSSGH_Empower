@@ -1,5 +1,11 @@
 import {requestNutrientConsumption} from "../mealEndpoints/requestMealLog";
-import {getActivityLogs, getBloodGlucoseLogs, getMedicationLogs, getWeightLogs} from "../requestsLog";
+import {
+    getActivityLogs,
+    getActivitySummaries,
+    getBloodGlucoseLogs,
+    getMedicationLogs,
+    getWeightLogs
+} from "../requestsLog";
 import Moment from 'moment';
 
 async function getReportsData(reportTypes, startDate, endDate) {
@@ -22,8 +28,8 @@ async function getReportsData(reportTypes, startDate, endDate) {
             data = (await getWeightLogs(Moment(startDate).format(datestringFormatForLogs),
                 Moment(endDate).format(datestringFormatForLogs))).logs;
         } else if (reportType === 'Activity') {
-            data = (await getActivityLogs(Moment(startDate).format(datestringFormatForLogs),
-                Moment(endDate).format(datestringFormatForLogs))).logs;
+            data = (await getActivitySummaries(Moment(startDate).format(datestringFormatForLogs),
+                Moment(endDate).format(datestringFormatForLogs))).summaries;
         }
         reportsList[reportType] = data;
     }

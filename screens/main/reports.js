@@ -241,7 +241,7 @@ const ReportsScreen = (props) => {
                              textPaddingLeft={5}
                              textPaddingRight={20}/>
               </View>
-              <View style={{position: 'absolute', alignSelf: 'flex-end'}}>
+              <View key='bgl-help-info' style={{position: 'absolute', alignSelf: 'flex-end'}}>
                 <ReportHelpInfo message={lineChartToolTipMessage} />
               </View>
               <LineChart data={fullDataset.bglData}
@@ -268,7 +268,7 @@ const ReportsScreen = (props) => {
                                textPaddingLeft={5}
                                textPaddingRight={20}/>
                 </View>
-                <View style={{position: 'absolute', alignSelf: 'flex-end'}}>
+                <View key='food-help-info' style={{position: 'absolute', alignSelf: 'flex-end'}}>
                   <ReportHelpInfo message={barChartToolTipMessage} />
                 </View>
                 <BarChart data={fullDataset.foodData} filterKey={filterKey}
@@ -323,7 +323,7 @@ const ReportsScreen = (props) => {
                                textPaddingLeft={5}
                                textPaddingRight={20}/>
                 </View>
-                <View style={{position: 'absolute', alignSelf: 'flex-end'}}>
+                <View key='weight-help-info' style={{position: 'absolute', alignSelf: 'flex-end'}}>
                   <ReportHelpInfo message={lineChartToolTipMessage} />
                 </View>
                 <LineChart data={fullDataset.weightData} filterKey={filterKey}
@@ -363,7 +363,7 @@ const ReportsScreen = (props) => {
                                textPaddingLeft={5}
                                textPaddingRight={20}/>
                 </View>
-                <View style={{position: 'absolute', alignSelf: 'flex-end'}}>
+                <View key='activity-help-info' style={{position: 'absolute', alignSelf: 'flex-end'}}>
                   <ReportHelpInfo message={barChartToolTipMessage} />
                 </View>
                 <BarChart data={fullDataset.activityData}

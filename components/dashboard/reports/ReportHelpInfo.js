@@ -22,7 +22,7 @@ function ReportHelpInfo(props) {
             style={{paddingRight: 15}}
         />
         { showInfo &&
-        <View style={[styles.tooltip, {transform: [{translateX: -145}, {translateY: 20}]}]}>
+        <View style={[styles.tooltip, {transform: [{translateX: -170}, {translateY: 20}]}]}>
             <Text>{props.message}</Text>
         </View>
         }
@@ -32,7 +32,7 @@ function ReportHelpInfo(props) {
 const styles = StyleSheet.create({
     tooltip: {
         position: 'absolute',
-        width: 150,
+        width: 180,
         padding: 10,
         borderRadius: 10,
         backgroundColor: 'white',
