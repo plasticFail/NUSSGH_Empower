@@ -419,7 +419,9 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     padding: '3%',
   },
-  uncompleteText: {},
+  uncompleteText: {
+    color: '#ff0844',
+  },
 });
 
 export default AddLogScreen;
