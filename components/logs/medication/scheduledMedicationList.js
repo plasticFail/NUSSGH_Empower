@@ -12,19 +12,7 @@ const ScheduledMedicationList = (props) => {
   const {addMed, deleteMed} = props;
 
   useEffect(() => {
-    let todayValue = moment(new Date()).day();
-    let arr = [];
-    getMedication4Day(today).then((data) => {
-      for (var x of data[today]) {
-        for (y of x.days) {
-          if (y === todayValue) {
-            arr.push(x);
-          }
-        }
-      }
-      setMedList4Day(arr);
-    });
-    //filter out medications for date.
+    getMedication4Day(today).then((data) => setMedList4Day(data[today]));
   }, []);
 
   return (
