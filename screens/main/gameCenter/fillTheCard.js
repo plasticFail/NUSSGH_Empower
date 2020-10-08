@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 //third party libs
 import Ionicon from 'react-native-vector-icons/Ionicons';
+import Modal from 'react-native-modal';
 //styles
 import globalStyles from '../../../styles/globalStyles';
 import GameCenterStyles from '../../../styles/gameCenterStyles';
@@ -10,10 +11,11 @@ import {Colors} from '../../../styles/colors';
 import LeftArrowBtn from '../../../components/logs/leftArrowBtn';
 import ProgressBar from '../../../components/progressbar';
 import DotBoard from '../../../components/gameCenter/dotBoard';
+import SpinSlider from '../../../components/gameCenter/spinSlider';
+import SpinFinish from '../../../components/gameCenter/spinFinish';
 //functions
 import {getPattern} from '../../../constants/gameCenter/letterPattern';
 import {getRandomBoard} from '../../../constants/gameCenter/randomBingo';
-
 
 
 const LetterDotColor = (currentLetter, letter) => {
@@ -24,6 +26,10 @@ const LetterDotColor = (currentLetter, letter) => {
 }
 
 const FillTheCard = (props) => {
+
+    const [showSpin, setShowSpin] = useState(false);
+    const [showFinish, setShowFinish] = useState(false);
+    const [currentNumber, setCurrentNumber] = useState(0);
 
     const [currentLetter, setCurrentLetter] = useState(0);
     const letters = ['F','I','T'];
@@ -59,6 +65,16 @@ const FillTheCard = (props) => {
     const addSpinNum = () => {
         let number = generateSpinNum(10);
         if(number !== null) {
+            setSpinNum([...spinNum, number]);
+        }
+    }
+
+    const processSpin = () => {
+        let number = generateSpinNum(10);
+        if(number !== null) {
+            setCurrentNumber(number);
+            setShowSpin(false);
+            setShowFinish(true);
             setSpinNum([...spinNum, number]);
         }
     }
@@ -138,9 +154,29 @@ const FillTheCard = (props) => {
             <TouchableOpacity
                 style={[GameCenterStyles.buttonStyleNarrow, colorOfSpin(disableSpin())]}
                 disabled={disableSpin()}
-                onPress={addSpinNum}>
+                onPress={() => {setShowSpin(true)}}>
                 <Text style={globalStyles.actionButtonText}>Spin a Number</Text>
             </TouchableOpacity>
+
+            <Modal
+                isVisible={showSpin}
+                transparent={true}
+                animationType='fade'
+                onRequestClose={() => setShowSpin(false)}>
+
+                <SpinSlider processSpin={() => processSpin()} closeModal={() => setShowSpin(false)} />
+
+            </Modal>
+
+            <Modal
+                isVisible={showFinish}
+                transparent={true}
+                animationType='fade'
+                onRequestClose={() => setShowFinish(false)}>
+
+                <SpinFinish number={currentNumber} closeModal={() => setShowFinish(false)} />
+
+            </Modal>
 
         </View>
     )
