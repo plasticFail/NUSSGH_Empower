@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Image,
   Animated,
+  TouchableWithoutFeedback
 } from 'react-native';
 import globalStyles from '../../styles/globalStyles';
 import BarChart from '../../components/dashboard/reports/BarChart';
@@ -29,6 +30,12 @@ import {COLOR_MAP, NutritionPie} from "../../components/dashboard/reports/Nutrit
 import {getPlan} from "../../netcalls/requestsMedPlan";
 import {ChartLegend} from "../../components/dashboard/reports/ChartLegend";
 import {ExportReportsModal} from "../../components/dashboard/reports/ExportReportsModal";
+import EvilIcon from "react-native-vector-icons/EvilIcons";
+import {
+  barChartToolTipMessage,
+  lineChartToolTipMessage,
+  ReportHelpInfo
+} from "../../components/dashboard/reports/ReportHelpInfo";
 
 const EXPORT_BTN = require('../../resources/images/Patient-Icons/2x/icon-green-export-2x.png');
 
@@ -99,7 +106,7 @@ const ReportsScreen = (props) => {
   // Note all data here are the entire month dataset. We'll process it in the front-end before displaying.
   const [tabIndex, setTabIndex] = React.useState(0);
   const [timeTabIndexFilter, setTimeTabIndexFilter] = React.useState(1);
-
+  const [showInfo, setShowInfo] = React.useState(false);
   const [openExportModal, setOpenExportModal] = React.useState(false);
 
   const [fullDataset, setFullDataset] = React.useState({
@@ -189,6 +196,10 @@ const ReportsScreen = (props) => {
     setTimeTabIndexFilter(1); // Revert back to week datum
   };
 
+  const toggleInfoCallback = () => {
+    setShowInfo(!showInfo);
+  }
+
   const tabName = tabs[tabIndex].name;
   const filterKey = timeFilterTabs[timeTabIndexFilter].name;
 
@@ -196,7 +207,7 @@ const ReportsScreen = (props) => {
     <ScrollView
       style={{...styles.screen, ...props.style}}
       contentContainerStyle={{flexGrow: 1}}>
-      <View style={{...globalStyles.pageContainer}}>
+      <View style={[{...globalStyles.pageContainer}]}>
       <Animated.View
           style={{transform: [{translateX: widthInterpolate}]}}>
         <View style={globalStyles.menuBarContainer}>
@@ -235,6 +246,9 @@ const ReportsScreen = (props) => {
                              textPaddingLeft={5}
                              textPaddingRight={20}/>
               </View>
+              <View key='bgl-help-info' style={{position: 'absolute', alignSelf: 'flex-end'}}>
+                <ReportHelpInfo message={lineChartToolTipMessage} showInfo={showInfo} toggleInfoCallback={toggleInfoCallback} />
+              </View>
               <LineChart data={fullDataset.bglData}
                          key={'bgl-chart'}
                          filterKey={filterKey}
@@ -258,6 +272,9 @@ const ReportsScreen = (props) => {
                                color={boundaryFill}
                                textPaddingLeft={5}
                                textPaddingRight={20}/>
+                </View>
+                <View key='food-help-info' style={{position: 'absolute', alignSelf: 'flex-end'}}>
+                  <ReportHelpInfo message={barChartToolTipMessage} showInfo={showInfo} toggleInfoCallback={toggleInfoCallback} />
                 </View>
                 <BarChart data={fullDataset.foodData} filterKey={filterKey}
                           xExtractor={d=>d.date}
@@ -311,6 +328,9 @@ const ReportsScreen = (props) => {
                                textPaddingLeft={5}
                                textPaddingRight={20}/>
                 </View>
+                <View key='weight-help-info' style={{position: 'absolute', alignSelf: 'flex-end'}}>
+                  <ReportHelpInfo message={lineChartToolTipMessage} showInfo={showInfo} toggleInfoCallback={toggleInfoCallback} />
+                </View>
                 <LineChart data={fullDataset.weightData} filterKey={filterKey}
                            width={width} height={300}
                            xExtractor={d=>d.record_date}
@@ -348,6 +368,9 @@ const ReportsScreen = (props) => {
                                textPaddingLeft={5}
                                textPaddingRight={20}/>
                 </View>
+                <View key='activity-help-info' style={{position: 'absolute', alignSelf: 'flex-end'}}>
+                  <ReportHelpInfo message={barChartToolTipMessage} />
+                </View>
                 <BarChart data={fullDataset.activityData}
                           filterKey={filterKey}
                           width={width}
@@ -367,6 +390,11 @@ const ReportsScreen = (props) => {
         }} />
       </Animated.View>
       </View>
+      { showInfo && // listen to taps outside
+      (<TouchableWithoutFeedback style={{position: 'absolute'}} onPress={toggleInfoCallback}>
+        <View style={{width: '100%', height: '100%', position: 'absolute'}}/>
+      </TouchableWithoutFeedback>)
+      }
       <ExportReportsModal visible={openExportModal} setVisible={setOpenExportModal} />
     </ScrollView>
   );

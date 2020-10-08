@@ -53,65 +53,118 @@ const GameCenter = (props) => {
           <LeftArrowBtn close={() => props.navigation.navigate('Home')} />
         </View>
         <Text style={globalStyles.pageHeader}>Game Center</Text>
+        <InProgress />
         {/*
         <View style={styles.titleWithHintContainer}>
           <Text style={globalStyles.pageHeader}>Game Center</Text>
           <Ionicon
-              style={globalStyles.pageIcon}
-              name="help-circle-outline"
-              size={40}
-              color={Colors.gameColorGreen}
-              onPress={() => setShowTutorial(true)}/>
+            style={globalStyles.pageIcon}
+            name="help-circle-outline"
+            size={40}
+            color={Colors.gameColorGreen}
+            onPress={() => setShowTutorial(true)}
+          />
         </View>
         <Text style={[globalStyles.pageDetails]}>Season 1: Word Bingo</Text>
+
         <ScrollView contentContainerStyle={{flexGrow: 1}}>
-          <Image resizeMode="contain" style={GameCenterStyles.logo} source={require('../../../resources/images/gameCenter/img-header.png')}/>
+          <Image
+            resizeMode="contain"
+            style={GameCenterStyles.logo}
+            source={require('../../../resources/images/gameCenter/img-header.png')}
+          />
+
           <View style={[GameCenterStyles.card, styles.marginTop]}>
-            <View style={[GameCenterStyles.cardPadding, GameCenterStyles.subContainer]}>
+            <View
+              style={[
+                GameCenterStyles.cardPadding,
+                GameCenterStyles.subContainer,
+              ]}>
               <Text style={GameCenterStyles.subText}>My Word</Text>
-              <TouchableOpacity onPress={() => {props.navigation.navigate('MyWord')}}>
-                <Text style={[GameCenterStyles.subText, GameCenterStyles.greenText]}>View All</Text>
+              <TouchableOpacity
+                onPress={() => {
+                  props.navigation.navigate('MyWord');
+                }}>
+                <Text
+                  style={[
+                    GameCenterStyles.subText,
+                    GameCenterStyles.greenText,
+                  ]}>
+                  View All
+                </Text>
               </TouchableOpacity>
             </View>
-            <View style={styles.divider}/>
-            <View style={[GameCenterStyles.cardPadding, GameCenterStyles.subContainer]}>
-              <Image source={require('../../../resources/images/Patient-Icons/2x/icon-navy-muscle-2x.png')} style={GameCenterStyles.iconProps} />
+            <View style={styles.divider} />
+            <View
+              style={[
+                GameCenterStyles.cardPadding,
+                GameCenterStyles.subContainer,
+              ]}>
+              <Image
+                source={require('../../../resources/images/Patient-Icons/2x/icon-navy-muscle-2x.png')}
+                style={GameCenterStyles.iconProps}
+              />
               <View style={[GameCenterStyles.verticalContainer]}>
                 <Text style={GameCenterStyles.wordText}>FIT</Text>
-                <ProgressBar containerStyle={{height: 7.5, width: '50%'}} progress={`50%`}
-                             reverse={true}
-                             progressBarColor={Colors.gameColorGreen} />
+                <ProgressBar
+                  containerStyle={{height: 7.5, width: '50%'}}
+                  progress={`50%`}
+                  reverse={true}
+                  progressBarColor={Colors.gameColorGreen}
+                />
                 <Text style={GameCenterStyles.wordText}>50%</Text>
               </View>
-              <TouchableOpacity onPress={() => {props.navigation.navigate('FillTheCard')}}>
-                <Image source={require('../../../resources/images/Patient-Icons/2x/icon-grey-chevron-right-2x.png')} style={GameCenterStyles.iconProps} />
+              <TouchableOpacity
+                onPress={() => {
+                  props.navigation.navigate('FillTheCard');
+                }}>
+                <Image
+                  source={require('../../../resources/images/Patient-Icons/2x/icon-grey-chevron-right-2x.png')}
+                  style={GameCenterStyles.iconProps}
+                />
               </TouchableOpacity>
             </View>
           </View>
-          <View style={[GameCenterStyles.card, GameCenterStyles.cardPadding, GameCenterStyles.subContainer]}>
+
+          <View
+            style={[
+              GameCenterStyles.card,
+              GameCenterStyles.cardPadding,
+              GameCenterStyles.subContainer,
+            ]}>
             <Text style={GameCenterStyles.subText}>Chances</Text>
             <Text style={GameCenterStyles.subText}>2 Left</Text>
           </View>
-          <View style={[GameCenterStyles.card, GameCenterStyles.cardPadding, GameCenterStyles.subContainer]}>
+
+          <View
+            style={[
+              GameCenterStyles.card,
+              GameCenterStyles.cardPadding,
+              GameCenterStyles.subContainer,
+            ]}>
             <Text style={GameCenterStyles.subText}>Reward Points</Text>
             <Text style={GameCenterStyles.subText}>160 Available</Text>
           </View>
+
           <TouchableOpacity
-              style={[GameCenterStyles.buttonStyle, GameCenterStyles.nextColor]}>
-              <Text style={globalStyles.actionButtonText}>Redeem</Text>
+            style={[
+              GameCenterStyles.buttonStyle,
+              GameCenterStyles.nextColor,
+              GameCenterStyles.marginBottom,
+            ]}>
+            <Text style={globalStyles.actionButtonText}>Redeem</Text>
           </TouchableOpacity>
         </ScrollView>
+        */}
       </Animated.View>
+
       <Modal
-          isVisible={showTutorial}
-          transparent={true}
-          animationType='fade'
-          onRequestClose={() => setShowTutorial(false)}>
-        <TutorialPage closeModal={() => setShowTutorial(false)}/>
+        isVisible={showTutorial}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setShowTutorial(false)}>
+        <TutorialPage closeModal={() => setShowTutorial(false)} />
       </Modal>
-*/}
-        <InProgress />
-      </Animated.View>
     </View>
   );
 };

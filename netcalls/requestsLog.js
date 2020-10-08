@@ -8,6 +8,7 @@ import {
   medplanAdd,
   getActivityLog,
   medPlan,
+  getActivitySummary,
 } from './urls';
 import {getToken} from '../storage/asyncStorageFunctions';
 
@@ -216,6 +217,19 @@ const getActivityLogs = async (startDateString, endDateString) => {
   return responseJson;
 };
 
+const getActivitySummaries = async (startDateString, endDateString) => {
+  let response = await fetch(getActivitySummary + `?start=${startDateString}&end=${endDateString}`, {
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + (await getToken()),
+      Accept: 'application/json',
+      'Content-type': 'application/json',
+    }
+  });
+  let responseJson = await response.json();
+  return responseJson;
+}
+
 export {
   glucoseAddLogRequest,
   storeMedications,
@@ -227,4 +241,5 @@ export {
   getMedicationLogs,
   getWeightLogs,
   getActivityLogs,
+  getActivitySummaries
 };

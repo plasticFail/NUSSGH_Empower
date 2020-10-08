@@ -113,7 +113,7 @@ const deleteMedPlan = async (id) => {
 
 const getPlan = async (startDateString, endDateString) => {
   let response = await fetch(
-    medPlan + `?start=${startDateString}&end=${endDateString}`,
+    medPlan + '/by-date' + `?start=${startDateString}&end=${endDateString}`,
     {
       method: 'GET',
       headers: {

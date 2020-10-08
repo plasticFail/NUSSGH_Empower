@@ -7,6 +7,7 @@ const medicationAddLog = server + 'log/medication';
 const medicationList = server + 'log/medication/list';
 const weightAddLog = server + 'log/weight';
 const getActivityLog = server + '/log/activity';
+const getActivitySummary = server + '/log/activity/summary';
 const mealAddLogEndpoint = server + 'log/meal';
 const unfavouriteMealEndpoint = server + 'log/meal/unfavourite-meal';
 const mealListEndpoint = server + 'log/meal';
@@ -42,4 +43,5 @@ export {
   getDiaryEntries,
   getActivityLog,
   goal,
+  getActivitySummary
 };
