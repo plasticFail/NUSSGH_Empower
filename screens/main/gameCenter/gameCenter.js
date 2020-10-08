@@ -17,6 +17,7 @@ import Ionicon from 'react-native-vector-icons/Ionicons';
 import Modal from 'react-native-modal';
 import GameCenterStyles from '../../../styles/gameCenterStyles';
 import ProgressBar from '../../../components/progressbar';
+import InProgress from '../../../components/inProgress';
 
 const GameCenter = (props) => {
   const slideRightAnimation = useRef(new Animated.Value(0)).current;
@@ -51,6 +52,9 @@ const GameCenter = (props) => {
         <View style={globalStyles.menuBarContainer}>
           <LeftArrowBtn close={() => props.navigation.navigate('Home')} />
         </View>
+        <Text style={globalStyles.pageHeader}>Game Center</Text>
+        <InProgress />
+        {/*
         <View style={styles.titleWithHintContainer}>
           <Text style={globalStyles.pageHeader}>Game Center</Text>
           <Ionicon
@@ -151,6 +155,7 @@ const GameCenter = (props) => {
             <Text style={globalStyles.actionButtonText}>Redeem</Text>
           </TouchableOpacity>
         </ScrollView>
+        */}
       </Animated.View>
 
       <Modal
