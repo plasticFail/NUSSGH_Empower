@@ -46,7 +46,7 @@ const EducationMaterialsScreen = (props) => {
                 </View>) :
                     (
                         <FlatList data={currentTabIndex === 0 ? educationalContent : hypocorrectionFoodContent}
-                                  keyExtractor={content => content.title}
+                                  keyExtractor={(content, index) => `${content.title}-${index}`}
                                   style={{flexGrow: 1}}
                                   contentContainerStyle={{flexGrow: 1, paddingTop: '4%'}} renderItem={({item}) =>
                                         currentTabIndex === 0 ?
@@ -54,6 +54,7 @@ const EducationMaterialsScreen = (props) => {
                                                             organization={item.organization}
                                                             mediaDisplayUri={item.mediaDisplayUri}
                                                             uriType={item.uriType}
+                                                            uri={item.uri}
                                         />) :
                                             (<HypoCorrectionFoodRow item={item} />)
                                   }

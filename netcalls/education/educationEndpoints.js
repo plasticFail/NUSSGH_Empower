@@ -13,27 +13,93 @@ async function getArticles() {
             title: "Management of hypoglycemia",
             organization: "Healthhub",
             mediaDisplayUri: "https://q6j7k6h3.rocketcdn.me/wp-content/uploads/2019/10/Better-Technology-Means-Better-Care-for-Diabetes-Management.jpg",
-            uriType: "image"
+            uriType: "image",
+            uri: "https://care.diabetesjournals.org/articles/most-read"
         },
         {
             title: "Diabetes best food to eat",
             organization: "SingHealth",
             mediaDisplayUri: `<iframe src=\"https://www.youtube.com/embed/AM5MgWN5C8c\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe>`,
-            uriType: "html"
+            uriType: "html",
+            uri: "https://www.youtube.com/watch?v=AM5MgWN5C8c"
         },
         {
-            title: "Another diabetes video kekw",
-            organization: "Kek",
+            title: "Another diabetes video",
+            organization: "Youtube",
             mediaDisplayUri: `<iframe src="https://www.youtube.com/embed/QmyXdUqdCNE" frameBorder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowFullScreen></iframe>`,
-            uriType: "html"
+            uriType: "html",
+            uri: "https://www.youtube.com/watch?v=QmyXdUqdCNE"
         }
     ]
 }
 
 async function getHypoCorrectionFoodArticles() {
     return [
+        {
+            'food-name': "Instant Coffee Zero Sugar",
+            serving: 1,
+            imgUrl: {
+                url: "https://greenmartsg.com/wp-content/uploads/2019/01/Nescafe-Instant-Coffee-2-in-1-Zero-Sugar-Added-35sticks.jpg"
+            }
+        },
+        {
+            'food-name': "Instant Coffee Zero Sugar",
+            serving: 1,
+            imgUrl: {
+                url: "https://greenmartsg.com/wp-content/uploads/2019/01/Nescafe-Instant-Coffee-2-in-1-Zero-Sugar-Added-35sticks.jpg"
+            }
+        },
+        {
+            'food-name': "Instant Coffee Zero Sugar",
+            serving: 1,
+            imgUrl: {
+                url: "https://greenmartsg.com/wp-content/uploads/2019/01/Nescafe-Instant-Coffee-2-in-1-Zero-Sugar-Added-35sticks.jpg"
+            }
+        },
+        {
+            'food-name': "Instant Coffee Zero Sugar",
+            serving: 1,
+            imgUrl: {
+                url: "https://greenmartsg.com/wp-content/uploads/2019/01/Nescafe-Instant-Coffee-2-in-1-Zero-Sugar-Added-35sticks.jpg"
+            }
+        },
+        {
+            'food-name': "Instant Coffee Zero Sugar",
+            serving: 1,
+            imgUrl: {
+                url: "https://greenmartsg.com/wp-content/uploads/2019/01/Nescafe-Instant-Coffee-2-in-1-Zero-Sugar-Added-35sticks.jpg"
+            }
+        },
+        {
+            'food-name': "Instant Coffee Zero Sugar",
+            serving: 1,
+            imgUrl: {
+                url: "https://greenmartsg.com/wp-content/uploads/2019/01/Nescafe-Instant-Coffee-2-in-1-Zero-Sugar-Added-35sticks.jpg"
+            }
+        },
+        {
+            'food-name': "Instant Coffee Zero Sugar",
+            serving: 1,
+            imgUrl: {
+                url: "https://greenmartsg.com/wp-content/uploads/2019/01/Nescafe-Instant-Coffee-2-in-1-Zero-Sugar-Added-35sticks.jpg"
+            }
+        },
+        {
+            'food-name': "Instant Coffee Zero Sugar",
+            serving: 1,
+            imgUrl: {
+                url: "https://greenmartsg.com/wp-content/uploads/2019/01/Nescafe-Instant-Coffee-2-in-1-Zero-Sugar-Added-35sticks.jpg"
+            }
+        },
+        {
+            'food-name': "Instant Coffee Zero Sugar",
+            serving: 1,
+            imgUrl: {
+                url: "https://greenmartsg.com/wp-content/uploads/2019/01/Nescafe-Instant-Coffee-2-in-1-Zero-Sugar-Added-35sticks.jpg"
+            }
+        },
         {
             'food-name': "Instant Coffee Zero Sugar",
             serving: 1,

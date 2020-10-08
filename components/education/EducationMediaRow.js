@@ -3,6 +3,7 @@ import {View, Text, Image, StyleSheet, Dimensions, Platform, TouchableOpacity} f
 import globalStyles from "../../styles/globalStyles";
 import {horizontalMargins} from "../../styles/variables";
 import {WebView} from "react-native-webview";
+import InAppBrowser from 'react-native-inappbrowser-reborn';
 
 const {width, height} = Dimensions.get('window');
 
@@ -13,17 +14,28 @@ const mediaWidth = mediaWidthRatio * (width - horizontalMargins);
 const mediaHeight = mediaHeightRatio * height;
 
 function EducationMediaRow(props) {
-    const {title, mediaDisplayUri, organization, uriType} = props;
+    const {title, mediaDisplayUri, organization, uriType, uri} = props;
+
+    const openUrl = async (url) => {
+        if (uri && await InAppBrowser.isAvailable) {
+            InAppBrowser.open(url).then(resp => {
+                if (resp.type === 'success') {
+                    // Opened link successfully
+                }
+            });
+        }
+    }
 
     return (
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => openUrl(uri)}>
             <View style={{flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                borderBottomWidth: 1,
-                borderColor: 'rgba(0, 0, 0, 0.15)',
-                paddingTop: topBottomPadding,
-                paddingBottom: topBottomPadding}}>
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  borderBottomWidth: 1,
+                  borderColor: 'rgba(0, 0, 0, 0.15)',
+                  paddingTop: topBottomPadding,
+                  paddingBottom: topBottomPadding}}
+            >
                 <View style={{width: width - horizontalMargins - mediaWidth}}>
                     <Text style={[globalStyles.pageDetails, {marginStart: 0}]}>{title}</Text>
                     <Text style={[globalStyles.pageDetails, {marginStart: 0, fontWeight: 'normal', color: 'rgba(0,0,0,0.6)'}]}>
