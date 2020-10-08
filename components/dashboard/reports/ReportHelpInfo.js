@@ -1,20 +1,16 @@
 import React from 'react';
 import EvilIcon from "react-native-vector-icons/EvilIcons";
 import {Colors} from "../../../styles/colors";
-import {TouchableOpacity, View, Text, StyleSheet} from "react-native";
+import {TouchableOpacity, View, Text, StyleSheet, TouchableWithoutFeedback, Dimensions} from "react-native";
 
 const lineChartToolTipMessage = "Swipe on the graph to look at various timestamps!";
 const barChartToolTipMessage = "Tap on the bars for more details!";
 
+const {width, height} = Dimensions.get('window');
+
 function ReportHelpInfo(props) {
-    const [showInfo, setShowInfo] = React.useState(false);
-
-    const handleOpenClose = () => {
-        // do animation if needed.
-        setShowInfo(!showInfo);
-    }
-
-    return (<TouchableOpacity onPress={handleOpenClose}>
+    const {showInfo, toggleInfoCallback} = props;
+    return (<TouchableOpacity onPress={toggleInfoCallback}>
         <EvilIcon
             name="question"
             color={Colors.lastLogButtonColor}

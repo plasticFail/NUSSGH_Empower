@@ -68,6 +68,7 @@ function EducationMediaRow(props) {
                                 allowsFullscreenVideo
                                 scrollEnabled={false}
                                 useWebKit
+                                /*
                                 injectedJavaScript={`
                                      const iOS = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
                                      if (!iOS) {
@@ -82,10 +83,12 @@ function EducationMediaRow(props) {
                                        document.getElementsByTagName('head')[0].appendChild(meta);
                                      }
                                    `}
+
+                                 */
                                 //allowsInlineMediaPlayback
                                 mediaPlaybackRequiresUserAction
                                 javaScriptEnabled
-                                scalesPageToFit={Platform.OS === 'ios'}
+                                scalesPageToFit={true}
                        />
                         </View>:
                     null
