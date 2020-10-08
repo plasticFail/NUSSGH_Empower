@@ -12,6 +12,7 @@ const DataField = (props) => {
         keyboardType="decimal-pad"
         placeholder={String(value)}
         editable={false}
+        returnKeyType="done"
       />
     </>
   );

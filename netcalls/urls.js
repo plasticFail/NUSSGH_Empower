@@ -17,9 +17,10 @@ const foodSearchEndpoint = server + 'food/search';
 const requestOTP = server + 'auth/patient/password-reset/request-otp';
 const verifyOTP = server + 'auth/patient/password-reset/verify-otp';
 const postNewPassword = server + 'auth/patient/password-reset/reset';
-const medPlan = server + 'log/medication/plan/by-date';
+const medPlan = server + 'log/medication/plan';
 const fitbitTokenPostEndpoint = server + 'datasync/auth-fitbit';
 const getDiaryEntries = server + 'log/diary';
+const goal = server + '/goal';
 
 export {
   patientLogin,
@@ -41,5 +42,6 @@ export {
   nutrientConsumptionEndpoint,
   getDiaryEntries,
   getActivityLog,
+  goal,
   getActivitySummary
 };

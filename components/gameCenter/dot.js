@@ -14,7 +14,10 @@ const SetDotStyles = (bingoPattern, pickState) => {
 }
 
 const PickState = (number, spinNumber) => {
-    return spinNumber.includes(number);
+    if(spinNumber){
+        return spinNumber.includes(number);
+    }
+    return false;
 }
 
 const SetDotTextStyles = (bingoPattern, pickState) => {

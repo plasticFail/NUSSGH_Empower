@@ -35,7 +35,6 @@ const GameCenterStyles = StyleSheet.create({
         borderRadius: 9.5,
         margin: '2%',
         alignSelf: 'stretch',
-        marginBottom: '15%',
         padding: '3%',
     },
     buttonStyleNarrow: {
@@ -48,6 +47,9 @@ const GameCenterStyles = StyleSheet.create({
     },
     nextColor:{
         backgroundColor: Colors.gameColorGreen,
+    },
+    marginBottom:{
+        marginBottom: '10%',
     },
     backColor: {
         backgroundColor: Colors.gameColorGrey,
@@ -65,6 +67,15 @@ const GameCenterStyles = StyleSheet.create({
     greenText:{
         color: Colors.gameColorGreen,
     },
+    whiteText:{
+        color: Colors.gameColorWhite,
+    },
+    greyText:{
+        color: Colors.textGrey,
+    },
+    darkGreen:{
+        color: Colors.gameColorDarkGreen,
+    },
     subContainer: {
         justifyContent: 'space-between',
         alignItems: 'center',
@@ -81,6 +92,12 @@ const GameCenterStyles = StyleSheet.create({
         alignItems: 'center',
         flexDirection: 'column'
     },
+    verticalContainerLeft: {
+        flex:1,
+        justifyContent: 'space-between',
+        flexDirection: 'column',
+        paddingHorizontal: 10,
+    },
     logo:{
         width:'100%',
         height: undefined,
@@ -90,6 +107,15 @@ const GameCenterStyles = StyleSheet.create({
         width:'80%',
         height: undefined,
         aspectRatio:2.5,
+    },
+    spinLogo:{
+        width:'100%',
+        height: undefined,
+        aspectRatio:1.5,
+    },
+    ballImage: {
+        width: 80,
+        height: 80,
     },
 });
 

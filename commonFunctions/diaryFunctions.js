@@ -118,6 +118,9 @@ const checkMedTaken4Day = async (medLog, date) => {
       }
     }
   }
+  if (today_medList.length === 0) {
+    return 0;
+  }
 
   if (getMedNames(medLog).length != today_medList.length) {
     return false;

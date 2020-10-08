@@ -31,6 +31,7 @@ import diaryStyles from '../../../styles/diaryStyles';
 //third party lib
 import Modal from 'react-native-modal';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import DeleteBin from '../../deleteBin';
 
 const BloodGlucoseLogBlock = (props) => {
   const {
@@ -220,6 +221,7 @@ const BloodGlucoseLogBlock = (props) => {
               onChangeText={(value) => {
                 setBloodGlucose(value);
               }}
+              returnKeyType="done"
             />
             <Text style={styles.unitText}>mmol/L</Text>
           </View>
@@ -257,11 +259,7 @@ const BloodGlucoseLogBlock = (props) => {
       ) : (
         <View style={[globalStyles.buttonContainer]}>
           <View style={{flexDirection: 'row'}}>
-            <TouchableOpacity
-              style={diaryStyles.binIcon}
-              onPress={() => deleteLog()}>
-              <FontAwesome name="trash-o" size={40} color="#ff0844" />
-            </TouchableOpacity>
+            <DeleteBin style={diaryStyles.binIcon} method={deleteLog} />
             {checkBloodGlucose(bloodGlucose) && changed === true ? (
               <TouchableOpacity
                 style={logStyles.enableEditButton}

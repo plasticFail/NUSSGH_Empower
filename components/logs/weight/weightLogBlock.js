@@ -30,6 +30,7 @@ import {
 } from '../../../commonFunctions/logFunctions';
 import {getDateObj} from '../../../commonFunctions/diaryFunctions';
 import {deleteWeightLog, editWeightLog} from '../../../netcalls/requestsDiary';
+import DeleteBin from '../../deleteBin';
 
 const WeightLogBlock = (props) => {
   const {
@@ -183,11 +184,7 @@ const WeightLogBlock = (props) => {
         ) : (
           <View style={[globalStyles.buttonContainer]}>
             <View style={{flexDirection: 'row'}}>
-              <TouchableOpacity
-                style={diaryStyles.binIcon}
-                onPress={() => deleteLog()}>
-                <FontAwesome name="trash-o" size={40} color="#ff0844" />
-              </TouchableOpacity>
+              <DeleteBin style={diaryStyles.binIcon} method={deleteLog} />
               {checkWeight(weight) && changed ? (
                 <TouchableOpacity
                   style={logStyles.enableEditButton}

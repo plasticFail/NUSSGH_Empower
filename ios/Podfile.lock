@@ -240,6 +240,8 @@ PODS:
     - React
   - react-native-safe-area-context (3.1.1):
     - React
+  - react-native-slider (3.0.3):
+    - React
   - react-native-webview (10.7.0):
     - React
   - React-RCTActionSheet (0.63.1):
@@ -365,6 +367,7 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - react-native-date-picker (from `../node_modules/react-native-date-picker`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
+  - "react-native-slider (from `../node_modules/@react-native-community/slider`)"
   - react-native-webview (from `../node_modules/react-native-webview`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
@@ -438,6 +441,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-date-picker"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
+  react-native-slider:
+    :path: "../node_modules/@react-native-community/slider"
   react-native-webview:
     :path: "../node_modules/react-native-webview"
   React-RCTActionSheet:
@@ -512,6 +517,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 2e28bb487e42dda6c94dbfa0c648d1343767a0fb
   react-native-date-picker: e3793bde600b937ea6bcf66266278a8a0b0cb4d5
   react-native-safe-area-context: 4c3249e4840225c61fcd215b136af0a737bccb79
+  react-native-slider: b733e17fdd31186707146debf1f04b5d94aa1a93
   react-native-webview: 67b9024de02e7c0af9400283b0e3ca6eec55dc26
   React-RCTActionSheet: 1702a1a85e550b5c36e2e03cb2bd3adea053de95
   React-RCTAnimation: ddda576010a878865a4eab83a78acd92176ef6a1

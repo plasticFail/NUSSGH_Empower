@@ -27,7 +27,7 @@ function EducationMediaRow(props) {
     }
 
     return (
-        <TouchableOpacity onPress={() => openUrl(uri)}>
+
             <View style={{flexDirection: 'row',
                   justifyContent: 'space-between',
                   alignItems: 'center',
@@ -36,12 +36,14 @@ function EducationMediaRow(props) {
                   paddingTop: topBottomPadding,
                   paddingBottom: topBottomPadding}}
             >
-                <View style={{width: width - horizontalMargins - mediaWidth}}>
-                    <Text style={[globalStyles.pageDetails, {marginStart: 0}]}>{title}</Text>
-                    <Text style={[globalStyles.pageDetails, {marginStart: 0, fontWeight: 'normal', color: 'rgba(0,0,0,0.6)'}]}>
-                        {organization}
-                    </Text>
-                </View>
+                <TouchableOpacity onPress={() => openUrl(uri)}>
+                    <View style={{width: width - horizontalMargins - mediaWidth}}>
+                        <Text style={[globalStyles.pageDetails, {marginStart: 0}]}>{title}</Text>
+                        <Text style={[globalStyles.pageDetails, {marginStart: 0, fontWeight: 'normal', color: 'rgba(0,0,0,0.6)'}]}>
+                            {organization}
+                        </Text>
+                    </View>
+                </TouchableOpacity>
                 {
                     uriType === 'image' ?
                         <Image source={{uri: mediaDisplayUri}} style={styles.mediaStyle} /> :
@@ -94,7 +96,6 @@ function EducationMediaRow(props) {
                     null
                 }
             </View>
-        </TouchableOpacity>
     )
 }
 

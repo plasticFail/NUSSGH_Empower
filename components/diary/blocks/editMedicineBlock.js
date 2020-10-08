@@ -12,7 +12,8 @@ import diaryStyles from '../../../styles/diaryStyles';
 //component
 import LeftArrowBtn from '../../logs/leftArrowBtn';
 import DateSelectionBlock from '../../logs/dateSelectionBlock';
-import Counter from '../../onboarding/medication/Counter';
+import DeleteBin from '../../deleteBin';
+import RenderCounter from '../../renderCounter';
 //function
 import {deleteMed, editMedicineInLog} from '../../../netcalls/requestsDiary';
 import RemoveModal from '../removeModal';
@@ -94,11 +95,13 @@ const EditMedicineBlock = (props) => {
           />
           <Text style={logStyles.fieldName}>Medication Taken:</Text>
           <Text style={logStyles.inputField}>{medicineToEdit.medication}</Text>
-          <Counter
-            count={dosage}
-            setCount={setDosage}
-            parameter={'Unit (s)'}
-            fieldName={'Default Dosage'}
+          <RenderCounter
+            fieldName={'Dosage'}
+            item={dosage}
+            setItem={setDosage}
+            parameter={'Unit(s)'}
+            maxLength={2}
+            allowInput={false}
           />
           {dosage === 0 && (
             <Text style={[globalStyles.alertText, {marginStart: '4%'}]}>
@@ -109,11 +112,7 @@ const EditMedicineBlock = (props) => {
       </View>
       <View style={[globalStyles.buttonContainer]}>
         <View style={{flexDirection: 'row'}}>
-          <TouchableOpacity
-            style={diaryStyles.binIcon}
-            onPress={() => requestDelete()}>
-            <FontAwesome name="trash-o" size={40} color="#ff0844" />
-          </TouchableOpacity>
+          <DeleteBin style={diaryStyles.binIcon} method={requestDelete} />
           {dosage != 0 && changed ? (
             <TouchableOpacity
               style={logStyles.enableEditButton}

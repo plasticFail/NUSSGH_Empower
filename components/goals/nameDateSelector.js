@@ -21,6 +21,7 @@ const NameDateSelector = (props) => {
         value={goalName}
         onChangeText={setGoalName}
       />
+      {/*
       <DateSelector
         date={startDate}
         setDate={setStartDate}
@@ -36,6 +37,7 @@ const NameDateSelector = (props) => {
         opened={opened}
         setOpened={setOpened}
       />
+      */}
     </>
   );
 };

@@ -9,6 +9,11 @@ const night_key = 'Night';
 const appointment = 'appointment';
 const howTo = 'howto';
 
+const noLog = 'Not logged yet';
+
+const green_color = 'green';
+const navy_color = 'navy';
+
 const morningObj = {
   name: 'Morning',
   start: 5,
@@ -88,6 +93,10 @@ const convertDatestring = (date) => {
   return newDate;
 };
 
+//for stepcounter and renderstepcounter
+const decimal = 'decimal-pad';
+const wholeNumber = 'number-pad';
+
 export {
   getGreetingFromHour,
   isEmpty,
@@ -100,8 +109,13 @@ export {
   morning_key,
   appointment,
   howTo,
+  noLog,
   getPeriodFromMealType,
   getLastMinuteFromTodayDate,
   getTodayDate,
   checkLast7Day,
+  decimal,
+  wholeNumber,
+  green_color,
+  navy_color,
 };

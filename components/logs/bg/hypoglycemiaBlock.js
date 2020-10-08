@@ -5,6 +5,7 @@ import globalStyles from '../../../styles/globalStyles';
 //component
 import FormBlock from './formBlock';
 import logStyles from '../../../styles/logStyles';
+import {min_bg} from '../../../commonFunctions/logFunctions';
 
 const formQn1 = 'Did you eat lesser than usual today?';
 const formQn2 = 'Did you exercise today';
@@ -23,7 +24,7 @@ const HypoglycemiaBlock = (props) => {
   const {setEatSelection, setExerciseSelection, setAlcoholSelection} = props;
 
   useEffect(() => {
-    if (Number(bloodGlucose) <= 5 && bloodGlucose !== '') {
+    if (Number(bloodGlucose) <= min_bg && bloodGlucose !== '') {
       setVisible(true);
       //fade in animation
       Animated.timing(fadeAnim, {

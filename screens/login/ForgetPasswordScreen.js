@@ -94,6 +94,7 @@ function ForgetPasswordScreen({navigation}) {
           console.log('Cleaning phone number:' + phoneNumber);
         }}
         keyboardType="number-pad"
+        returnKeyType="done"
         maxLength={8}
       />
       <Text style={[globalStyles.alertText, {marginStart: '4%'}]}>
