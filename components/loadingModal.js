@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {View, Text, StyleSheet, ActivityIndicator} from 'react-native';
 import Modal from 'react-native-modal';
 

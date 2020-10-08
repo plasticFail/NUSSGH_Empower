@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 //third party libs
 import Ionicon from 'react-native-vector-icons/Ionicons';
@@ -34,25 +34,75 @@ const FillTheCard = (props) => {
     const [currentLetter, setCurrentLetter] = useState(0);
     const letters = ['F','I','T'];
     const [spinNum, setSpinNum] = useState([]);
+    const [pendingSpinNum, setPendingSpinNum] = useState([]);
+    const [bingoNum, setBingoNum] = useState([]);
+    const [pendingBingoNum, setPendingBingoNum] = useState([]);
 
-    const disableSpin = () => {
-        let pattern = getPattern(letters[currentLetter]);
-        let boardNum = getRandomBoard(currentLetter);
 
-        console.log('here');
+    useEffect(() => {
+        for(let i=0; i<letters.length ;i++){
+            let list = [];
+            for(let j=1+25*i; j<=25+25*i; j++){
+                list = [...list, j];
+            }
+            pendingSpinNum[i] = list;
+            setPendingSpinNum([...pendingSpinNum]);
 
-        for(let i=0; i<boardNum.length; i++){
-            for(let j=0; j<boardNum[i].length; j++){
-                console.log('i : ' + i + ' j : ' + j + ' pattern : ' + pattern[i][j]);
-                if(pattern[i][j] === 1){
-                    if(!spinNum.includes(boardNum[i][j])){
-                        return false;
+            spinNum[i] = [];
+            setSpinNum([...spinNum]);
+
+            bingoNum[i] = [];
+            setBingoNum([...bingoNum]);
+
+            pendingBingoNum[i] = [];
+            setPendingBingoNum([...pendingBingoNum]);
+        }
+
+        initBingo();
+
+    }, []);
+
+    const initBingo = () => {
+        for(let currentLetter=0; currentLetter<letters.length; currentLetter++) {
+            let pattern = getPattern(letters[currentLetter]);
+            let boardNum = getRandomBoard(currentLetter);
+
+            for (let i = 0; i < boardNum.length; i++) {
+                for (let j = 0; j < boardNum[i].length; j++) {
+                    console.log('i : ' + i + ' j : ' + j + ' pattern : ' + pattern[i][j]);
+                    if (pattern[i][j] === 1) {
+                        pendingBingoNum[currentLetter] = [...pendingBingoNum[currentLetter], boardNum[i][j]];
+                        setPendingBingoNum([...pendingBingoNum]);
                     }
                 }
             }
         }
+    }
 
-        return true;
+    const completePercentage = () => {
+        let total = 0;
+        let completed = 0;
+        console.log('completePercentage');
+        for(let i=0; i<letters.length; i++){
+            if(pendingBingoNum && pendingBingoNum[i]){
+                total += pendingBingoNum[i].length;
+            }
+            if(bingoNum && bingoNum[i]){
+                total += bingoNum[i].length;
+                completed += bingoNum[i].length;
+            }
+        }
+        if(total > 0){
+            return Math.floor(completed * 100/ total) + '%';
+        }
+        return '0%';
+    }
+
+    const disableSpin = () => {
+        if(pendingBingoNum && pendingBingoNum[currentLetter] && pendingBingoNum[currentLetter].length === 0) {
+            return true;
+        }
+        return false;
     }
 
     const colorOfSpin = disabled =>{
@@ -62,45 +112,46 @@ const FillTheCard = (props) => {
         return GameCenterStyles.nextColor;
     }
 
-    const addSpinNum = () => {
-        let number = generateSpinNum(10);
-        if(number !== null) {
-            setSpinNum([...spinNum, number]);
-        }
-    }
-
     const processSpin = () => {
-        let number = generateSpinNum(10);
+        let number = generateSpinNum();
         if(number !== null) {
             setCurrentNumber(number);
             setShowSpin(false);
             setShowFinish(true);
-            setSpinNum([...spinNum, number]);
+
+            processSpinLogic(number);
         }
     }
 
-    const generateSpinNum = (count) => {
-        let number = Math.ceil(Math.random() * 25) + currentLetter * 25;
-        if(count > 0) {
-            if (spinNum.includes(number)) {
-                return generateSpinNum(count - 1);
-            }
-            return number;
+    const processSpinLogic = number => {
+        spinNum[currentLetter] = [...spinNum[currentLetter], number];
+        setSpinNum([...spinNum]);
+
+        if(pendingBingoNum[currentLetter].includes(number)){
+            let index = pendingBingoNum[currentLetter].indexOf(number);
+            pendingBingoNum[currentLetter] = pendingBingoNum[currentLetter].slice(0, index).concat(pendingBingoNum[currentLetter].slice(index + 1, pendingBingoNum[currentLetter].length))
+            setPendingBingoNum([...pendingBingoNum]);
+
+            console.log('pendingBingoNum : ' + pendingBingoNum[0]);
+
+            bingoNum[currentLetter] = [...bingoNum[currentLetter], number];
+            setBingoNum([...bingoNum]);
         }
-        return nextSpinNumber(25, number);
+
+        console.log('spinNum : ' + spinNum[0]);
     }
 
-    const nextSpinNumber = (count, number) => {
-        if(count > 0) {
-            if (number % 25 > 0) {
-                number ++;
-            } else {
-                number -= 24;
-            }
-            if (spinNum.includes(number)) {
-                return nextSpinNumber(count-1, number);
-            }
-            return number;
+    const generateSpinNum = () => {
+        if(pendingSpinNum[currentLetter].length > 0) {
+            let randomIndex = Math.floor(Math.random() * pendingSpinNum[currentLetter].length);
+            let numberPick = pendingSpinNum[currentLetter][randomIndex];
+
+            console.log('number pick : ' + numberPick);
+            pendingSpinNum[currentLetter] = pendingSpinNum[currentLetter].slice(0, randomIndex).concat(pendingSpinNum[currentLetter].slice(randomIndex + 1, pendingSpinNum[currentLetter].length))
+            setPendingSpinNum([...pendingSpinNum]);
+            console.log('pendingSpinNum : ' + pendingSpinNum[0]);
+
+            return numberPick;
         }
         return null;
     }
@@ -117,10 +168,10 @@ const FillTheCard = (props) => {
                     <Image source={require('../../../resources/images/Patient-Icons/2x/icon-navy-muscle-2x.png')} style={GameCenterStyles.iconProps} />
                     <View style={[GameCenterStyles.verticalContainer]}>
                         <Text style={GameCenterStyles.wordText}>FIT</Text>
-                        <ProgressBar containerStyle={{height: 7.5, width: '50%'}} progress={`50%`}
+                        <ProgressBar containerStyle={{height: 7.5, width: '50%'}} progress={completePercentage()}
                                      reverse={true}
                                      progressBarColor={Colors.gameColorGreen} />
-                        <Text style={GameCenterStyles.wordText}>50%</Text>
+                        <Text style={GameCenterStyles.wordText}>{completePercentage()}</Text>
                     </View>
                 </View>
                 <View style={styles.divider}/>
@@ -134,7 +185,7 @@ const FillTheCard = (props) => {
                 <TouchableOpacity onPress={() => {currentLetter > 0 && setCurrentLetter(currentLetter - 1)}}>
                     <Image source={require('../../../resources/images/Patient-Icons/2x/icon-grey-chevron-left-2x.png')} style={GameCenterStyles.iconProps} />
                 </TouchableOpacity>
-                <DotBoard bingoPattern={getPattern(letters[currentLetter])} boardNum={getRandomBoard(currentLetter)} spinNum={spinNum}/>
+                <DotBoard bingoPattern={getPattern(letters[currentLetter])} boardNum={getRandomBoard(currentLetter)} spinNum={spinNum[currentLetter]}/>
                 <TouchableOpacity onPress={() => {currentLetter < letters.length - 1 && setCurrentLetter(currentLetter + 1)}}>
                     <Image source={require('../../../resources/images/Patient-Icons/2x/icon-grey-chevron-right-2x.png')} style={GameCenterStyles.iconProps} />
                 </TouchableOpacity>
@@ -154,6 +205,7 @@ const FillTheCard = (props) => {
             <TouchableOpacity
                 style={[GameCenterStyles.buttonStyleNarrow, colorOfSpin(disableSpin())]}
                 disabled={disableSpin()}
+                // onPress={() => {processSpin()}}>
                 onPress={() => {setShowSpin(true)}}>
                 <Text style={globalStyles.actionButtonText}>Spin a Number</Text>
             </TouchableOpacity>

@@ -9,7 +9,7 @@ const DotRow = (props) => {
     return (
         <View style={styles.row}>
             {props.row.map((item, index) => (
-                <Dot number={item} bingoPattern={props.bingoPattern[index]} spinNum={props.spinNum}/>
+                <Dot key={index} number={item} bingoPattern={props.bingoPattern[index]} spinNum={props.spinNum}/>
             ))}
         </View>
     );
