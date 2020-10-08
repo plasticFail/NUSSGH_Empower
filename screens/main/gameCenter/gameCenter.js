@@ -143,7 +143,11 @@ const GameCenter = (props) => {
           </View>
 
           <TouchableOpacity
-            style={[GameCenterStyles.buttonStyle, GameCenterStyles.nextColor]}>
+            style={[
+              GameCenterStyles.buttonStyle,
+              GameCenterStyles.nextColor,
+              GameCenterStyles.marginBottom,
+            ]}>
             <Text style={globalStyles.actionButtonText}>Redeem</Text>
           </TouchableOpacity>
         </ScrollView>

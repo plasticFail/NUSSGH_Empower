@@ -11,7 +11,7 @@ const DotBoard = props => {
         <View style={[styles.board, GameCenterStyles.cardGreen, GameCenterStyles.cardPadding]}>
             <Image resizeMode="contain" style={GameCenterStyles.subLogo} source={require('../../resources/images/gameCenter/img-header.png')}/>
             {props.boardNum.map((item, index) => (
-                <DotRow row={item} bingoPattern={props.bingoPattern[index]} spinNum={props.spinNum} />
+                <DotRow key={index} row={item} bingoPattern={props.bingoPattern[index]} spinNum={props.spinNum} />
             ))}
         </View>
     );
