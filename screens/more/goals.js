@@ -25,6 +25,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 //function
 import {getGoals} from '../../netcalls/requestsGoals';
+import {isMonday} from '../../commonFunctions/goalFunctions';
 
 const GoalsScreen = (props) => {
   const [openAdd, setOpenAdd] = useState(false);
@@ -35,6 +36,7 @@ const GoalsScreen = (props) => {
   useEffect(() => {
     setLoading(true);
     initGoals();
+    console.log(isMonday());
   }, []);
 
   const initGoals = async () => {
@@ -60,17 +62,20 @@ const GoalsScreen = (props) => {
           <Icon name="information-outline" size={30} color={'#aad326'} />
         </TouchableOpacity>
       </View>
-      <TouchableOpacity
-        onPress={() => setOpenAdd(true)}
-        style={{flexDirection: 'row'}}>
-        <AntDesign
-          name="pluscircleo"
-          color={'#aad326'}
-          size={25}
-          style={{margin: '2%'}}
-        />
-        <Text style={styles.addbutton}>Add Goal</Text>
-      </TouchableOpacity>
+      {isMonday() && (
+        <TouchableOpacity
+          onPress={() => setOpenAdd(true)}
+          style={{flexDirection: 'row'}}>
+          <AntDesign
+            name="pluscircleo"
+            color={'#aad326'}
+            size={25}
+            style={{margin: '2%'}}
+          />
+          <Text style={styles.addbutton}>Add Goal</Text>
+        </TouchableOpacity>
+      )}
+
       {/*Render Goals */}
       <ScrollView contentContainerStyle={{flexGrow: 1}}>
         <GoalList goals={goals} init={initGoals} />

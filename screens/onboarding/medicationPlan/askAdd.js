@@ -95,10 +95,11 @@ class AskAdd extends Component {
 
   handleSubmit = async () => {
     let status = await postPlan(prepareData(this.state.selectedMedList));
+    console.log('status---');
+    console.log(status);
     if (status === 200) {
       this.handleSkip();
-    }
-    if (status === 500) {
+    } else if (status === 500) {
       Alert.alert(
         'Existing Plan',
         'Head over to the Medication Page to edit your plan if you wish to make changes',
