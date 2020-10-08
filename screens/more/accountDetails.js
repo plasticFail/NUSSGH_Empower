@@ -67,7 +67,6 @@ const AccountDetailScreen = (props) => {
           closeModal={() => setPasswordModalVisible(false)}
         />
 
-        {/*
         <Clickable
           heading="Medication Plan"
           content=""
@@ -76,7 +75,6 @@ const AccountDetailScreen = (props) => {
           closeModal={() => {}}
           modalVisible={false}
         />
-        */}
 
         <View style={{flexDirection: 'row', margin: '2%'}}>
           <Entypo name="link" size={30} color={Colors.lastLogValueColor} />
