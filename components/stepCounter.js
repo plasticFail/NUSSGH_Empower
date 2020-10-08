@@ -121,6 +121,7 @@ export default class StepCounter extends Component {
               maxLength={maxLength}
               style={[styles.textInput, styles.shadow]}
               onChangeText={(value) => {
+                console.log(value);
                 if (valueType === wholeNumber) {
                   var cleanNumber = value.replace(/[^0-9]/g, '');
                   this.setState({count: Number(cleanNumber)});

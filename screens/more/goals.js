@@ -25,6 +25,8 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 //function
 import {getGoals} from '../../netcalls/requestsGoals';
+import {isMonday} from '../../commonFunctions/goalFunctions';
+import InProgress from '../../components/inProgress';
 
 const GoalsScreen = (props) => {
   const [openAdd, setOpenAdd] = useState(false);
@@ -35,6 +37,7 @@ const GoalsScreen = (props) => {
   useEffect(() => {
     setLoading(true);
     initGoals();
+    console.log(isMonday());
   }, []);
 
   const initGoals = async () => {
@@ -45,46 +48,12 @@ const GoalsScreen = (props) => {
   };
 
   return (
-    <View style={globalStyles.pageContainer}>
+    <View style={{...globalStyles.pageContainer, ...props.style}}>
       <View style={globalStyles.menuBarContainer}>
         <LeftArrowBtn close={() => props.navigation.navigate('Home')} />
       </View>
       <Text style={globalStyles.pageHeader}>Goals</Text>
-      <View style={{flexDirection: 'row'}}>
-        <Text style={[globalStyles.pageDetails, {flex: 1}]}>
-          Edit Your Targets
-        </Text>
-        <TouchableOpacity
-          style={{alignSelf: 'flex-end', marginEnd: '3%'}}
-          onPress={() => setShowInfo(true)}>
-          <Icon name="information-outline" size={30} color={'#aad326'} />
-        </TouchableOpacity>
-      </View>
-      <TouchableOpacity
-        onPress={() => setOpenAdd(true)}
-        style={{flexDirection: 'row'}}>
-        <AntDesign
-          name="pluscircleo"
-          color={'#aad326'}
-          size={25}
-          style={{margin: '2%'}}
-        />
-        <Text style={styles.addbutton}>Add Goal</Text>
-      </TouchableOpacity>
-      {/*Render Goals */}
-      <ScrollView contentContainerStyle={{flexGrow: 1}}>
-        <GoalList goals={goals} init={initGoals} />
-      </ScrollView>
-      <AddGoalModal
-        visible={openAdd}
-        close={() => {
-          console.log('closing add goal');
-          initGoals();
-          setOpenAdd(false);
-        }}
-      />
-      <LoadingModal visible={loading} message={'Retrieving your goals'} />
-      <AboutGoals visible={showInfo} closeModal={() => setShowInfo(false)} />
+      <InProgress />
     </View>
   );
 };
