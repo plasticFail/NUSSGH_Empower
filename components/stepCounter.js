@@ -74,8 +74,10 @@ export default class StepCounter extends Component {
   handleAdd = () => {
     let newCount = this.state.count + this.state.incrementValue;
     this.setState({count: newCount});
-    this.timer = setTimeout(this.handleAdd, 200);
-    this.props.setCount(newCount);
+    this.timer = setTimeout(this.handleAdd, 100);
+    setTimeout(() => {
+      this.props.setCount(newCount);
+    }, 100);
   };
 
   handleMinus = () => {
@@ -83,8 +85,10 @@ export default class StepCounter extends Component {
     if (this.state.count > 0) {
       let newCount = this.state.count - this.state.incrementValue;
       this.setState({count: newCount});
-      this.timer = setTimeout(this.handleMinus, 200);
-      this.props.setCount(newCount);
+      this.timer = setTimeout(this.handleMinus, 100);
+      setTimeout(() => {
+        this.props.setCount(newCount);
+      }, 100);
     } else {
       this.setState({count: 0});
     }
