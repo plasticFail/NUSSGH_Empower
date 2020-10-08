@@ -57,14 +57,14 @@ export default class StepCounter extends Component {
 
   handleClickAdd = () => {
     this.stopTimer();
-    let newCount = this.state.count + this.state.incrementValue;
+    let newCount = Number(this.state.count) + this.state.incrementValue;
     this.setState({count: newCount});
   };
 
   handleClickMinus = () => {
     this.stopTimer();
     if (this.state.count > 0) {
-      let newCount = this.state.count - this.state.incrementValue;
+      let newCount = Number(this.state.count) - this.state.incrementValue;
       this.setState({count: newCount});
     } else {
       this.setState({count: 0});
@@ -72,7 +72,7 @@ export default class StepCounter extends Component {
   };
 
   handleAdd = () => {
-    let newCount = this.state.count + this.state.incrementValue;
+    let newCount = Number(this.state.count) + this.state.incrementValue;
     this.setState({count: newCount});
     this.timer = setTimeout(this.handleAdd, 100);
     setTimeout(() => {
@@ -83,7 +83,7 @@ export default class StepCounter extends Component {
   handleMinus = () => {
     clearTimeout();
     if (this.state.count > 0) {
-      let newCount = this.state.count - this.state.incrementValue;
+      let newCount = Number(this.state.count) - this.state.incrementValue;
       this.setState({count: newCount});
       this.timer = setTimeout(this.handleMinus, 100);
       setTimeout(() => {
@@ -121,6 +121,7 @@ export default class StepCounter extends Component {
               maxLength={maxLength}
               style={[styles.textInput, styles.shadow]}
               onChangeText={(value) => {
+                console.log(value);
                 if (valueType === wholeNumber) {
                   var cleanNumber = value.replace(/[^0-9]/g, '');
                   this.setState({count: Number(cleanNumber)});
