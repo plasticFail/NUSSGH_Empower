@@ -52,9 +52,9 @@ const EducationMaterialsScreen = (props) => {
                                         currentTabIndex === 0 ?
                                         (<EducationMediaRow title={item.title}
                                                             organization={item.organization}
-                                                            mediaDisplayUri={item.mediaDisplayUri}
-                                                            uriType={item.uriType}
-                                                            uri={item.uri}
+                                                            videoUrl={item.video_url}
+                                                            pictureUrl={item.picture_url}
+                                                            url={item.url}
                                         />) :
                                             (<HypoCorrectionFoodRow item={item} />)
                                   }
