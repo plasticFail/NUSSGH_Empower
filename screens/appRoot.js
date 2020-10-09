@@ -197,9 +197,7 @@ class AppRoot extends Component {
                   name="ContactUsScreen"
                   component={ContactUs}
                   options={{
-                    title: '',
-                    headerRight: () => <View />,
-                    headerBackTitle: 'Back',
+                    headerShown: false,
                   }}
                 />
                 <Stack.Screen
