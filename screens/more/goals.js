@@ -78,7 +78,12 @@ const GoalsScreen = (props) => {
 
       {/*Render Goals */}
       <ScrollView contentContainerStyle={{flexGrow: 1}}>
-        <GoalList goals={goals} init={initGoals} />
+        <GoalList
+          goals={goals}
+          init={initGoals}
+          fromAddLog={props.route.params?.type}
+          toOpen={props.route.params?.item}
+        />
       </ScrollView>
       <AddGoalModal
         visible={openAdd}

@@ -7,23 +7,17 @@ import GameCenterStyles from '../../../styles/gameCenterStyles';
 import SpinFinish from '../../../components/gameCenter/spinFinish';
 import InProgress from '../../../components/inProgress';
 
-
 const MyWord = (props) => {
-
-
-    return (
-        <View style={{...globalStyles.pageContainer, ...props.style}}>
-            <View style={globalStyles.menuBarContainer}>
-                <LeftArrowBtn close={() => props.navigation.goBack()} />
-            </View>
-            <Text style={globalStyles.pageHeader}>My Word</Text>
-            <InProgress />
-
-            <SpinSlider />
-            {/*<SpinFinish/>*/}
-
-        </View>
-    )
+  return (
+    <View style={{...globalStyles.pageContainer, ...props.style}}>
+      <View style={globalStyles.menuBarContainer}>
+        <LeftArrowBtn close={() => props.navigation.goBack()} />
+      </View>
+      <Text style={globalStyles.pageHeader}>My Word</Text>
+      <SpinSlider />
+      {/*<SpinFinish/>*/}
+    </View>
+  );
 };
 
 export default MyWord;
