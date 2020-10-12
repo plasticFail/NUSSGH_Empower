@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {StyleSheet, Text, TouchableOpacity} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 //third party lib
 import Icon from 'react-native-vector-icons/FontAwesome5';
@@ -51,10 +51,12 @@ export default function NotificationsCard(props) {
           />
         </TouchableOpacity>
       )}
-      <TutorialModal
-        visible={showTutorial}
-        closeModal={() => setShowTutorial(false)}
-      />
+        <TutorialModal
+            fullScreen={type === appointment}
+            wip={type === appointment}
+            visible={showTutorial}
+            closeModal={() => setShowTutorial(false)}
+        />
     </>
   );
 }
