@@ -16,7 +16,8 @@ import TutorialPage from '../../../components/gameCenter/tutorialPage';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import Modal from 'react-native-modal';
 import GameCenterStyles from '../../../styles/gameCenterStyles';
-import ProgressBar from '../../../components/progressbar';
+import WordItem from '../../../components/gameCenter/wordItem';
+
 
 const GameCenter = (props) => {
   const slideRightAnimation = useRef(new Animated.Value(0)).current;
@@ -89,37 +90,18 @@ const GameCenter = (props) => {
                   View All
                 </Text>
               </TouchableOpacity>
+              <Ionicon
+                  name="add-circle-outline"
+                  size={30}
+                  color={Colors.gameColorGreen}
+                  onPress={() => props.navigation.navigate('StartNewWord')}/>
             </View>
             <View style={styles.divider} />
-            <View
-              style={[
-                GameCenterStyles.cardPadding,
-                GameCenterStyles.subContainer,
-              ]}>
-              <Image
-                source={require('../../../resources/images/Patient-Icons/2x/icon-navy-muscle-2x.png')}
-                style={GameCenterStyles.iconProps}
-              />
-              <View style={[GameCenterStyles.verticalContainer]}>
-                <Text style={GameCenterStyles.wordText}>FIT</Text>
-                <ProgressBar
-                  containerStyle={{height: 7.5, width: '50%'}}
-                  progress={`50%`}
-                  reverse={true}
-                  progressBarColor={Colors.gameColorGreen}
-                />
-                <Text style={GameCenterStyles.wordText}>50%</Text>
-              </View>
-              <TouchableOpacity
-                onPress={() => {
-                  props.navigation.navigate('FillTheCard');
-                }}>
-                <Image
-                  source={require('../../../resources/images/Patient-Icons/2x/icon-grey-chevron-right-2x.png')}
-                  style={GameCenterStyles.iconProps}
-                />
-              </TouchableOpacity>
-            </View>
+            <WordItem imageSource={require('../../../resources/images/Patient-Icons/2x/icon-navy-muscle-2x.png')}
+                      wordText={'FIT'}
+                      percentage={'50%'}
+                      showArrow={true}
+                      clickFunc={() => {props.navigation.navigate('FillTheCard')}}/>
           </View>
 
           <View

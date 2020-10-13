@@ -16,6 +16,7 @@ import SpinFinish from '../../../components/gameCenter/spinFinish';
 //functions
 import {getPattern} from '../../../constants/gameCenter/letterPattern';
 import {getRandomBoard} from '../../../constants/gameCenter/randomBingo';
+import WordItem from '../../../components/gameCenter/wordItem';
 
 
 const LetterDotColor = (currentLetter, letter) => {
@@ -164,15 +165,11 @@ const FillTheCard = (props) => {
             <Text style={globalStyles.pageHeader}>Fill The Card</Text>
 
             <View style={[GameCenterStyles.card, GameCenterStyles.subContainer]}>
-                <View style={[GameCenterStyles.cardPadding, GameCenterStyles.subContainer, {width:'70%'}]}>
-                    <Image source={require('../../../resources/images/Patient-Icons/2x/icon-navy-muscle-2x.png')} style={GameCenterStyles.iconProps} />
-                    <View style={[GameCenterStyles.verticalContainer]}>
-                        <Text style={GameCenterStyles.wordText}>FIT</Text>
-                        <ProgressBar containerStyle={{height: 7.5, width: '50%'}} progress={completePercentage()}
-                                     reverse={true}
-                                     progressBarColor={Colors.gameColorGreen} />
-                        <Text style={GameCenterStyles.wordText}>{completePercentage()}</Text>
-                    </View>
+                <View style={[GameCenterStyles.subContainer, {width:'70%'}]}>
+                    <WordItem imageSource={require('../../../resources/images/Patient-Icons/2x/icon-navy-muscle-2x.png')}
+                              wordText={'FIT'}
+                              percentage={'50%'}
+                              showArrow={false}/>
                 </View>
                 <View style={styles.divider}/>
                 <View style={[GameCenterStyles.cardPadding, GameCenterStyles.verticalContainer]}>
@@ -194,6 +191,7 @@ const FillTheCard = (props) => {
             <View style={GameCenterStyles.subContainerNarrow}>
                 {letters.map((item, index) => (
                     <Ionicon
+                        key={index}
                         name="ellipse"
                         size={20}
                         style={styles.stepDot}

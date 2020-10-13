@@ -22,6 +22,11 @@ const fitbitTokenPostEndpoint = server + 'datasync/auth-fitbit';
 const getDiaryEntries = server + 'log/diary';
 const goal = server + '/goal';
 
+const gameCenterGetOverview = server + 'game/bingo/overview';
+const gameCenterSelectGame = server + 'game/bingo/select';
+const gameCenterPerformSpin = server + 'game/bingo/spin';
+
+
 export {
   patientLogin,
   isTokenValid,
@@ -43,5 +48,8 @@ export {
   getDiaryEntries,
   getActivityLog,
   goal,
-  getActivitySummary
+  getActivitySummary,
+  gameCenterGetOverview,
+  gameCenterSelectGame,
+  gameCenterPerformSpin,
 };

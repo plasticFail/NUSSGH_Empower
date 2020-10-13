@@ -1,15 +1,13 @@
 import React, {useState} from 'react';
-import {Image, Text, View} from 'react-native';
+import {Text, View} from 'react-native';
 import globalStyles from '../../../styles/globalStyles';
 import LeftArrowBtn from '../../../components/logs/leftArrowBtn';
-import SpinSlider from '../../../components/gameCenter/spinSlider';
+import WordTab from '../../../components/gameCenter/wordTabs';
 import GameCenterStyles from '../../../styles/gameCenterStyles';
-import SpinFinish from '../../../components/gameCenter/spinFinish';
-import InProgress from '../../../components/inProgress';
 
 
 const MyWord = (props) => {
-
+    const [currentTabIndex, setCurrentTabIndex] = useState(0);
 
     return (
         <View style={{...globalStyles.pageContainer, ...props.style}}>
@@ -17,10 +15,14 @@ const MyWord = (props) => {
                 <LeftArrowBtn close={() => props.navigation.goBack()} />
             </View>
             <Text style={globalStyles.pageHeader}>My Word</Text>
-            <InProgress />
 
-            <SpinSlider />
-            {/*<SpinFinish/>*/}
+            <WordTab currentTab={currentTabIndex} setTabCallback={setCurrentTabIndex}/>
+
+            <View style={GameCenterStyles.cardPadding}>
+                <Text style={[globalStyles.pageDetails]}>Season 1</Text>
+
+
+            </View>
 
         </View>
     )
