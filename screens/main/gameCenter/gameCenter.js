@@ -37,10 +37,11 @@ class GameCenter extends Component {
       outputRange: [Dimensions.get('window').width, 0],
       extrapolate: 'clamp',
     });
-    this.availableWords = [];
-    this.games = [];
     this.state = {
       activeWord : '',
+      availableWords : [],
+      percentage : '0%',
+      games: [],
       chances : 0,
       rewardPoints: 0,
       showTutorial: false,
@@ -48,27 +49,45 @@ class GameCenter extends Component {
 
     this.props.navigation.addListener('focus', () => {
       this.slideRightAnimation.setValue(0);
-      Animated.timing(this.slideRightAnimation, {
-        toValue: 1,
-        duration: 300,
-        useNativeDriver: true,
-      }).start();
+      this.setAnimation();
 
-      this.refresh();
+      this.init();
     });
   }
 
-  refresh = async() => {
+  componentDidMount() {
+    this.setAnimation();
+    this.init();
+
+    console.log('log mount');
+  }
+
+  setAnimation() {
+    Animated.timing(this.slideRightAnimation, {
+      toValue: 1,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
+  }
+
+  init = async() => {
     console.log('refresh game center');
     let responseObj = await requestGetOverview();
     this.setState({chances: responseObj.chances});
     this.setState({rewardPoints: responseObj.points});
 
-    this.availableWords = responseObj.available_words;
-    this.games = responseObj.games;
+    this.setState({availableWords : responseObj.available_words});
+    this.setState({games: responseObj.games});
 
-    console.log('availableWords : ' + this.availableWords);
-    console.log('chances : ' + this.state.chances);
+    if(this.state.games && this.state.games.length > 0){
+        for(let i=0;i<this.state.games.length;i++){
+            console.log(this.state.games[i].active);
+            if(this.state.games[i].active){
+                this.setState({activeWord : this.state.games[i].word});
+                this.setState({percentage : this.state.games[i].word_progress + '%'})
+            }
+        }
+    }
   }
 
   render() {
@@ -108,32 +127,36 @@ class GameCenter extends Component {
                       GameCenterStyles.subContainer,
                     ]}>
                   <Text style={GameCenterStyles.subText}>My Word</Text>
-                  <TouchableOpacity
-                      onPress={() => {
-                        this.props.navigation.navigate('MyWord');
-                      }}>
-                    <Text
-                        style={[
-                          GameCenterStyles.subText,
-                          GameCenterStyles.greenText,
-                        ]}>
-                      View All
-                    </Text>
-                  </TouchableOpacity>
-                  {this.availableWords.length > 0 &&
+                  {this.state.games.length > 0 &&
+                    <TouchableOpacity
+                        onPress={() => {
+                            this.props.navigation.navigate('MyWord', {
+                                games: this.state.games
+                            });
+                        }}>
+                        <Text
+                            style={[
+                                GameCenterStyles.subText,
+                                GameCenterStyles.greenText,
+                            ]}>
+                            View All
+                        </Text>
+                    </TouchableOpacity>
+                  }
+                  {this.state.availableWords.length > 0 &&
                     <Ionicon
                         name="add-circle-outline"
                         size={30}
                         color={Colors.gameColorGreen}
                         onPress={() => this.props.navigation.navigate('StartNewWord', {
-                          availableWords: this.availableWords
+                          availableWords: this.state.availableWords
                         })}/>
                   }
                 </View>
                 <View style={styles.divider}/>
                 {this.state.activeWord !== '' ? <WordItem imageSource={GetIconByWord(this.state.activeWord)}
                                                wordText={this.state.activeWord}
-                                               percentage={'50%'}
+                                               percentage={this.state.percentage}
                                                showArrow={true}
                                                clickFunc={() => {
                                                  this.props.navigation.navigate('FillTheCard')
@@ -185,7 +208,7 @@ class GameCenter extends Component {
         </View>
     );
   }
-};
+}
 
 export default GameCenter;
 
