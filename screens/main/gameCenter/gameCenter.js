@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useLayoutEffect, useRef, useState} from 'react';
 import {
   View,
   Animated,
@@ -17,22 +17,29 @@ import Ionicon from 'react-native-vector-icons/Ionicons';
 import Modal from 'react-native-modal';
 import GameCenterStyles from '../../../styles/gameCenterStyles';
 import WordItem from '../../../components/gameCenter/wordItem';
+import {requestGetOverview} from '../../../netcalls/gameCenterEndPoints/requestGameCenter';
 
 
 const GameCenter = (props) => {
   const slideRightAnimation = useRef(new Animated.Value(0)).current;
 
-  useEffect(() => {
-    //slide right when enter screen
-    props.navigation.addListener('focus', () => {
-      slideRightAnimation.setValue(0);
-      Animated.timing(slideRightAnimation, {
-        toValue: 1,
-        duration: 300,
-        useNativeDriver: true,
-      }).start();
-    });
-  }, [props.navigation]);
+  useLayoutEffect(() => {
+      props.navigation.addListener('focus', () => {
+        slideRightAnimation.setValue(0);
+        Animated.timing(slideRightAnimation, {
+          toValue: 1,
+          duration: 300,
+          useNativeDriver: true,
+        }).start();
+
+        refresh();
+      });
+  });
+
+  const refresh = () => {
+    console.log('refresh game center');
+    let responseObj = requestGetOverview();
+  }
 
   const widthInterpolate = slideRightAnimation.interpolate({
     inputRange: [0, 1],

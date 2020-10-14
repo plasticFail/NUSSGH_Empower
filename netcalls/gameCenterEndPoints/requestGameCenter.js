@@ -13,7 +13,7 @@ const requestGetOverview = async () => {
             },
         });
         let responseJson = await response.json();
-        console.log('requestGetOverview : ' + responseJson);
+        console.log('requestGetOverview : ' + JSON.stringify(responseJson));
         return responseJson;
     }catch (error) {
         console.error(error);
@@ -34,7 +34,7 @@ const requestSelectGame = async (word) => {
             }),
         });
         let responseJson = await response.json();
-        console.log('requestSelectGame : ' + responseJson);
+        console.log('requestSelectGame : ' + JSON.stringify(responseJson));
         return true;
     } catch (error) {
         console.error(error);
@@ -57,7 +57,7 @@ const requestPerformSpin = async (word, index) => {
             }),
         });
         let responseJson = await response.json();
-        console.log('requestPerformSpin : ' + responseJson);
+        console.log('requestPerformSpin : ' + JSON.stringify(responseJson));
         return true;
     } catch (error) {
         console.error(error);
