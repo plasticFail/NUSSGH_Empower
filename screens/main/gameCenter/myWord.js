@@ -4,7 +4,6 @@ import globalStyles from '../../../styles/globalStyles';
 import LeftArrowBtn from '../../../components/logs/leftArrowBtn';
 import WordTab from '../../../components/gameCenter/wordTabs';
 import GameCenterStyles from '../../../styles/gameCenterStyles';
-import SelectWordItem from '../../../components/gameCenter/selectWordItem';
 import {GetIconByWord} from '../../../commonFunctions/gameCenterFunctions';
 import WordItem from '../../../components/gameCenter/wordItem';
 import {requestSelectGame} from '../../../netcalls/gameCenterEndPoints/requestGameCenter';

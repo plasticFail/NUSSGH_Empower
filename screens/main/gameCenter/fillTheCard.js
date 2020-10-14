@@ -9,7 +9,6 @@ import GameCenterStyles from '../../../styles/gameCenterStyles';
 import {Colors} from '../../../styles/colors';
 //components
 import LeftArrowBtn from '../../../components/logs/leftArrowBtn';
-import ProgressBar from '../../../components/progressbar';
 import DotBoard from '../../../components/gameCenter/dotBoard';
 import SpinSlider from '../../../components/gameCenter/spinSlider';
 import SpinFinish from '../../../components/gameCenter/spinFinish';
