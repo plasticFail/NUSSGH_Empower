@@ -38,10 +38,9 @@ class GameCenter extends Component {
       extrapolate: 'clamp',
     });
     this.state = {
-      activeWord : '',
       availableWords : [],
-      percentage : '0%',
       games: [],
+      activeGame: null,
       chances : 0,
       rewardPoints: 0,
       showTutorial: false,
@@ -83,8 +82,7 @@ class GameCenter extends Component {
         for(let i=0;i<this.state.games.length;i++){
             console.log(this.state.games[i].active);
             if(this.state.games[i].active){
-                this.setState({activeWord : this.state.games[i].word});
-                this.setState({percentage : this.state.games[i].word_progress + '%'})
+                this.setState({activeGame: this.state.games[i]});
             }
         }
     }
@@ -154,12 +152,15 @@ class GameCenter extends Component {
                   }
                 </View>
                 <View style={styles.divider}/>
-                {this.state.activeWord !== '' ? <WordItem imageSource={GetIconByWord(this.state.activeWord)}
-                                               wordText={this.state.activeWord}
-                                               percentage={this.state.percentage}
+                {this.state.activeGame && this.state.activeGame.word !== '' ? <WordItem imageSource={GetIconByWord(this.state.activeGame.word)}
+                                               wordText={this.state.activeGame.word}
+                                               percentage={this.state.activeGame.word_progress + '%'}
                                                showArrow={true}
                                                clickFunc={() => {
-                                                 this.props.navigation.navigate('FillTheCard')
+                                                 this.props.navigation.navigate('FillTheCard', {
+                                                     activeGame : this.state.activeGame,
+                                                     chances : this.state.chances,
+                                                 })
                                                }}/>
                     :
                     <View style={[GameCenterStyles.center, GameCenterStyles.cardPadding]}>
