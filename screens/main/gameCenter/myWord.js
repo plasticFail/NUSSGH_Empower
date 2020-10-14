@@ -31,14 +31,24 @@ const MyWord = (props) => {
             <View style={GameCenterStyles.cardPadding}>
                 <Text style={[globalStyles.pageDetails]}>Season 1</Text>
 
+                {currentTabIndex === 0 && props.route.params.games.map((item, index) => (
+                    item.word_progress === 100 && (<WordItem key={index}
+                                                           imageSource={GetIconByWord(item.word)}
+                                                           wordText={item.word}
+                                                           percentage={item.word_progress + '%'}
+                                                           showArrow={true}
+                                                           clickFunc={() => {startWord(item.word)}}
+                    />)
+                ))}
+
                 {currentTabIndex === 1 && props.route.params.games.map((item, index) => (
-                    <WordItem key={index}
+                    item.word_progress < 100 && (<WordItem key={index}
                               imageSource={GetIconByWord(item.word)}
                               wordText={item.word}
                               percentage={item.word_progress + '%'}
                               showArrow={true}
                               clickFunc={() => {startWord(item.word)}}
-                    />
+                    />)
                 ))}
 
             </View>
