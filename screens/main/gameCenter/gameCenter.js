@@ -1,4 +1,4 @@
-import React, {useLayoutEffect, useRef, useState} from 'react';
+import React, {Component} from 'react';
 import {
   View,
   Animated,
@@ -26,158 +26,165 @@ import WordItem from '../../../components/gameCenter/wordItem';
 
 
 
-const GameCenter = (props) => {
-  const [activeWord, setActiveWord] = useState('');
-  const [chances, setChances] = useState(0);
-  const [rewardPoints, setRewardPoints] = useState(0);
-  let availableWords = [];
-  let games = [];
+class GameCenter extends Component {
 
-  const slideRightAnimation = useRef(new Animated.Value(0)).current;
+  constructor(props) {
+    super(props);
+    this.props = props;
+    this.slideRightAnimation = new Animated.Value(0),
+    this.widthInterpolate = this.slideRightAnimation.interpolate({
+      inputRange: [0, 1],
+      outputRange: [Dimensions.get('window').width, 0],
+      extrapolate: 'clamp',
+    });
+    this.availableWords = [];
+    this.games = [];
+    this.state = {
+      activeWord : '',
+      chances : 0,
+      rewardPoints: 0,
+      showTutorial: false,
+    }
 
-  useLayoutEffect(() => {
-      props.navigation.addListener('focus', () => {
-        slideRightAnimation.setValue(0);
-        Animated.timing(slideRightAnimation, {
-          toValue: 1,
-          duration: 300,
-          useNativeDriver: true,
-        }).start();
+    this.props.navigation.addListener('focus', () => {
+      this.slideRightAnimation.setValue(0);
+      Animated.timing(this.slideRightAnimation, {
+        toValue: 1,
+        duration: 300,
+        useNativeDriver: true,
+      }).start();
 
-        refresh();
-      });
-  });
-
-  const refresh = async() => {
-    console.log('refresh game center');
-    let responseObj = await requestGetOverview();
-    setChances(responseObj.chances);
-    setRewardPoints(responseObj.points);
-
-    // availableWords = responseObj.available_words;
-    availableWords = ['FIT', 'ACE'];
-    games = responseObj.games;
-
-    console.log('availableWords : ' + availableWords);
-    console.log('chances : ' + chances);
+      this.refresh();
+    });
   }
 
-  const widthInterpolate = slideRightAnimation.interpolate({
-    inputRange: [0, 1],
-    outputRange: [Dimensions.get('window').width, 0],
-    extrapolate: 'clamp',
-  });
+  refresh = async() => {
+    console.log('refresh game center');
+    let responseObj = await requestGetOverview();
+    this.setState({chances: responseObj.chances});
+    this.setState({rewardPoints: responseObj.points});
 
-  const [showTutorial, setShowTutorial] = useState(false);
+    this.availableWords = responseObj.available_words;
+    this.games = responseObj.games;
 
-  return (
-    <View style={globalStyles.pageContainer}>
-      <Animated.View
-        style={{
-          ...globalStyles.pageContainer,
-          ...{transform: [{translateX: widthInterpolate}]},
-        }}>
-        <View style={globalStyles.menuBarContainer}>
-          <LeftArrowBtn close={() => props.navigation.navigate('Home')} />
-        </View>
-        <View style={styles.titleWithHintContainer}>
-          <Text style={globalStyles.pageHeader}>Game Center</Text>
-          <Ionicon
-            style={globalStyles.pageIcon}
-            name="help-circle-outline"
-            size={40}
-            color={Colors.gameColorGreen}
-            onPress={() => setShowTutorial(true)}
-          />
-        </View>
-        <Text style={[globalStyles.pageDetails]}>Season 1: Word Bingo</Text>
+    console.log('availableWords : ' + this.availableWords);
+    console.log('chances : ' + this.state.chances);
+  }
 
-        <ScrollView contentContainerStyle={{flexGrow: 1}}>
-          <Image
-            resizeMode="contain"
-            style={GameCenterStyles.logo}
-            source={require('../../../resources/images/gameCenter/img-header.png')}
-          />
-
-          <View style={[GameCenterStyles.card, styles.marginTop]}>
-            <View
-              style={[
-                GameCenterStyles.cardPadding,
-                GameCenterStyles.subContainer,
-              ]}>
-              <Text style={GameCenterStyles.subText}>My Word</Text>
-              <TouchableOpacity
-                onPress={() => {
-                  props.navigation.navigate('MyWord');
-                }}>
-                <Text
-                  style={[
-                    GameCenterStyles.subText,
-                    GameCenterStyles.greenText,
-                  ]}>
-                  View All
-                </Text>
-              </TouchableOpacity>
-              <Ionicon
-                  name="add-circle-outline"
-                  size={30}
-                  color={Colors.gameColorGreen}
-                  onPress={() => props.navigation.navigate('StartNewWord', {
-                    availableWords: availableWords
-                  })}/>
+  render() {
+    return (
+        <View style={globalStyles.pageContainer}>
+          <Animated.View
+              style={{
+                ...globalStyles.pageContainer,
+                ...{transform: [{translateX: this.widthInterpolate}]},
+              }}>
+            <View style={globalStyles.menuBarContainer}>
+              <LeftArrowBtn close={() => this.props.navigation.navigate('Home')}/>
             </View>
-            <View style={styles.divider} />
-            {activeWord !== '' ? <WordItem imageSource={GetIconByWord(activeWord)}
-                      wordText={activeWord}
-                      percentage={'50%'}
-                      showArrow={true}
-                      clickFunc={() => {props.navigation.navigate('FillTheCard')}}/>
-            :
-                <View style={[GameCenterStyles.center, GameCenterStyles.cardPadding]}>
-                  <Text style={[GameCenterStyles.subText]}>No Word Selected</Text>
-                </View>}
-          </View>
+            <View style={styles.titleWithHintContainer}>
+              <Text style={globalStyles.pageHeader}>Game Center</Text>
+              <Ionicon
+                  style={globalStyles.pageIcon}
+                  name="help-circle-outline"
+                  size={40}
+                  color={Colors.gameColorGreen}
+                  onPress={() => this.setState({showTutorial:true})}
+              />
+            </View>
+            <Text style={[globalStyles.pageDetails]}>Season 1: Word Bingo</Text>
 
-          <View
-            style={[
-              GameCenterStyles.card,
-              GameCenterStyles.cardPadding,
-              GameCenterStyles.subContainer,
-            ]}>
-            <Text style={GameCenterStyles.subText}>Chances</Text>
-            <Text style={GameCenterStyles.subText}>{chances} Left</Text>
-          </View>
+            <ScrollView contentContainerStyle={{flexGrow: 1}}>
+              <Image
+                  resizeMode="contain"
+                  style={GameCenterStyles.logo}
+                  source={require('../../../resources/images/gameCenter/img-header.png')}
+              />
 
-          <View
-            style={[
-              GameCenterStyles.card,
-              GameCenterStyles.cardPadding,
-              GameCenterStyles.subContainer,
-            ]}>
-            <Text style={GameCenterStyles.subText}>Reward Points</Text>
-            <Text style={GameCenterStyles.subText}>{rewardPoints} Available</Text>
-          </View>
+              <View style={[GameCenterStyles.card, styles.marginTop]}>
+                <View
+                    style={[
+                      GameCenterStyles.cardPadding,
+                      GameCenterStyles.subContainer,
+                    ]}>
+                  <Text style={GameCenterStyles.subText}>My Word</Text>
+                  <TouchableOpacity
+                      onPress={() => {
+                        this.props.navigation.navigate('MyWord');
+                      }}>
+                    <Text
+                        style={[
+                          GameCenterStyles.subText,
+                          GameCenterStyles.greenText,
+                        ]}>
+                      View All
+                    </Text>
+                  </TouchableOpacity>
+                  {this.availableWords.length > 0 &&
+                    <Ionicon
+                        name="add-circle-outline"
+                        size={30}
+                        color={Colors.gameColorGreen}
+                        onPress={() => this.props.navigation.navigate('StartNewWord', {
+                          availableWords: this.availableWords
+                        })}/>
+                  }
+                </View>
+                <View style={styles.divider}/>
+                {this.state.activeWord !== '' ? <WordItem imageSource={GetIconByWord(this.state.activeWord)}
+                                               wordText={this.state.activeWord}
+                                               percentage={'50%'}
+                                               showArrow={true}
+                                               clickFunc={() => {
+                                                 this.props.navigation.navigate('FillTheCard')
+                                               }}/>
+                    :
+                    <View style={[GameCenterStyles.center, GameCenterStyles.cardPadding]}>
+                      <Text style={[GameCenterStyles.subText]}>No Word Selected</Text>
+                    </View>}
+              </View>
 
-          <TouchableOpacity
-            style={[
-              GameCenterStyles.buttonStyle,
-              GameCenterStyles.nextColor,
-              GameCenterStyles.marginBottom,
-            ]}>
-            <Text style={globalStyles.actionButtonText}>Redeem</Text>
-          </TouchableOpacity>
-        </ScrollView>
-      </Animated.View>
+              <View
+                  style={[
+                    GameCenterStyles.card,
+                    GameCenterStyles.cardPadding,
+                    GameCenterStyles.subContainer,
+                  ]}>
+                <Text style={GameCenterStyles.subText}>Chances</Text>
+                <Text style={GameCenterStyles.subText}>{this.state.chances} Left</Text>
+              </View>
 
-      <Modal
-        isVisible={showTutorial}
-        transparent={true}
-        animationType="fade"
-        onRequestClose={() => setShowTutorial(false)}>
-        <TutorialPage closeModal={() => setShowTutorial(false)} />
-      </Modal>
-    </View>
-  );
+              <View
+                  style={[
+                    GameCenterStyles.card,
+                    GameCenterStyles.cardPadding,
+                    GameCenterStyles.subContainer,
+                  ]}>
+                <Text style={GameCenterStyles.subText}>Reward Points</Text>
+                <Text style={GameCenterStyles.subText}>{this.state.rewardPoints} Available</Text>
+              </View>
+
+              <TouchableOpacity
+                  style={[
+                    GameCenterStyles.buttonStyle,
+                    GameCenterStyles.nextColor,
+                    GameCenterStyles.marginBottom,
+                  ]}>
+                <Text style={globalStyles.actionButtonText}>Redeem</Text>
+              </TouchableOpacity>
+            </ScrollView>
+          </Animated.View>
+
+          <Modal
+              isVisible={this.state.showTutorial}
+              transparent={true}
+              animationType="fade"
+              onRequestClose={() => this.setState({showTutorial:false})}>
+            <TutorialPage closeModal={() => this.setState({showTutorial:false})}/>
+          </Modal>
+        </View>
+    );
+  }
 };
 
 export default GameCenter;

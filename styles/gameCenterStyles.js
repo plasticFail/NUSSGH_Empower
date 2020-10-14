@@ -3,6 +3,20 @@ import {Colors} from './colors';
 
 
 const GameCenterStyles = StyleSheet.create({
+    modalView: {
+        flex:1,
+        backgroundColor: 'white',
+        marginHorizontal: '5%',
+        marginVertical: '15%',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    modalViewSmall: {
+        backgroundColor: 'white',
+        marginVertical: '15%',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
     card: {
         backgroundColor: '#fff',
         margin: '2%',
@@ -44,6 +58,9 @@ const GameCenterStyles = StyleSheet.create({
         alignSelf: 'stretch',
         marginBottom: '15%',
         padding: '3%',
+    },
+    darkGreenColor:{
+        backgroundColor: Colors.gameColorDarkGreen,
     },
     nextColor:{
         backgroundColor: Colors.gameColorGreen,

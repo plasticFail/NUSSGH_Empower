@@ -13,16 +13,19 @@ import {requestSelectGame} from '../../../netcalls/gameCenterEndPoints/requestGa
 
 
 const StartNewWord = (props) => {
+    const [selectWord, setSelectWord] = useState('');
     const [showConfirmWordSelection, setShowConfirmWordSelection] = useState(false);
 
     const confirmStartWord = (word) => {
+        setSelectWord(word);
         setShowConfirmWordSelection(true);
     }
 
     const startWord = async(word) => {
         let responseObj = await requestSelectGame(word);
         if(responseObj != null){
-
+            setShowConfirmWordSelection(false);
+            props.navigation.goBack();
         }
     }
 
@@ -40,8 +43,8 @@ const StartNewWord = (props) => {
             <Modal isVisible={showConfirmWordSelection}
                             transparent={true}
                             animationType="fade"
-                            onRequestClose={() => setShowConfirmWordSelection(false)}>>
-                <SelectWordConfirmPage/>
+                            onRequestClose={() => setShowConfirmWordSelection(false)}>
+                <SelectWordConfirmPage word={selectWord} startWord={startWord} closeModal={() => setShowConfirmWordSelection(false)}/>
             </Modal>
         </View>
     );

@@ -66,12 +66,13 @@ const TutorialPage = (props) => {
         }
     }
 
-    return <View style={[styles.modalView, GameCenterStyles.card, GameCenterStyles.cardPadding]}>
+    return <View style={[GameCenterStyles.modalView, GameCenterStyles.card, GameCenterStyles.cardPadding]}>
         <Image resizeMode="contain" style={styles.image} source={tutorialImage(currentStep)}/>
         <Image resizeMode="contain" style={styles.imageSub} source={subTutorialImage(currentStep)}/>
         <View style={GameCenterStyles.subContainerNarrow}>
             {steps.map((item, index) => (
                 <Ionicon
+                    key={index}
                     name="ellipse"
                     size={20}
                     style={styles.stepDot}
@@ -99,14 +100,6 @@ const TutorialPage = (props) => {
 export default TutorialPage;
 
 const styles = StyleSheet.create({
-    modalView: {
-        flex:1,
-        backgroundColor: 'white',
-        marginHorizontal: '5%',
-        marginVertical: '15%',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-    },
     image:{
         width:'100%',
         height:undefined,
