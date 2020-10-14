@@ -19,7 +19,7 @@ const SelectWordItem = props => {
             <Text style={GameCenterStyles.wordText}>{wordText}</Text>
             <TouchableOpacity
                 onPress={() => {
-                    clickFunc();
+                    clickFunc(wordText);
                 }}>
                 <Image
                     source={require('../../resources/images/Patient-Icons/2x/icon-grey-chevron-right-2x.png')}

@@ -1,4 +1,4 @@
-import React, {useEffect, useLayoutEffect, useRef, useState} from 'react';
+import React, {useLayoutEffect, useRef, useState} from 'react';
 import {
   View,
   Animated,
@@ -9,18 +9,30 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import globalStyles from '../../../styles/globalStyles';
-import {Colors} from '../../../styles/colors';
-import LeftArrowBtn from '../../../components/logs/leftArrowBtn';
-import TutorialPage from '../../../components/gameCenter/tutorialPage';
+//third party libs
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import Modal from 'react-native-modal';
+//styles
+import globalStyles from '../../../styles/globalStyles';
+import {Colors} from '../../../styles/colors';
 import GameCenterStyles from '../../../styles/gameCenterStyles';
-import WordItem from '../../../components/gameCenter/wordItem';
+//functions
 import {requestGetOverview} from '../../../netcalls/gameCenterEndPoints/requestGameCenter';
+import {GetIconByWord} from '../../../commonFunctions/gameCenterFunctions';
+//components
+import LeftArrowBtn from '../../../components/logs/leftArrowBtn';
+import TutorialPage from '../../../components/gameCenter/tutorialPage';
+import WordItem from '../../../components/gameCenter/wordItem';
+
 
 
 const GameCenter = (props) => {
+  const [activeWord, setActiveWord] = useState('');
+  const [chances, setChances] = useState(0);
+  const [rewardPoints, setRewardPoints] = useState(0);
+  let availableWords = [];
+  let games = [];
+
   const slideRightAnimation = useRef(new Animated.Value(0)).current;
 
   useLayoutEffect(() => {
@@ -36,9 +48,18 @@ const GameCenter = (props) => {
       });
   });
 
-  const refresh = () => {
+  const refresh = async() => {
     console.log('refresh game center');
-    let responseObj = requestGetOverview();
+    let responseObj = await requestGetOverview();
+    setChances(responseObj.chances);
+    setRewardPoints(responseObj.points);
+
+    // availableWords = responseObj.available_words;
+    availableWords = ['FIT', 'ACE'];
+    games = responseObj.games;
+
+    console.log('availableWords : ' + availableWords);
+    console.log('chances : ' + chances);
   }
 
   const widthInterpolate = slideRightAnimation.interpolate({
@@ -101,14 +122,20 @@ const GameCenter = (props) => {
                   name="add-circle-outline"
                   size={30}
                   color={Colors.gameColorGreen}
-                  onPress={() => props.navigation.navigate('StartNewWord')}/>
+                  onPress={() => props.navigation.navigate('StartNewWord', {
+                    availableWords: availableWords
+                  })}/>
             </View>
             <View style={styles.divider} />
-            <WordItem imageSource={require('../../../resources/images/Patient-Icons/2x/icon-navy-muscle-2x.png')}
-                      wordText={'FIT'}
+            {activeWord !== '' ? <WordItem imageSource={GetIconByWord(activeWord)}
+                      wordText={activeWord}
                       percentage={'50%'}
                       showArrow={true}
                       clickFunc={() => {props.navigation.navigate('FillTheCard')}}/>
+            :
+                <View style={[GameCenterStyles.center, GameCenterStyles.cardPadding]}>
+                  <Text style={[GameCenterStyles.subText]}>No Word Selected</Text>
+                </View>}
           </View>
 
           <View
@@ -118,7 +145,7 @@ const GameCenter = (props) => {
               GameCenterStyles.subContainer,
             ]}>
             <Text style={GameCenterStyles.subText}>Chances</Text>
-            <Text style={GameCenterStyles.subText}>2 Left</Text>
+            <Text style={GameCenterStyles.subText}>{chances} Left</Text>
           </View>
 
           <View
@@ -128,7 +155,7 @@ const GameCenter = (props) => {
               GameCenterStyles.subContainer,
             ]}>
             <Text style={GameCenterStyles.subText}>Reward Points</Text>
-            <Text style={GameCenterStyles.subText}>160 Available</Text>
+            <Text style={GameCenterStyles.subText}>{rewardPoints} Available</Text>
           </View>
 
           <TouchableOpacity

@@ -61,6 +61,11 @@ const GameCenterStyles = StyleSheet.create({
     subText:{
         fontSize: 20,
     },
+    center:{
+        justifyContent:'center',
+        alignItems:'center',
+        width: '100%'
+    },
     wordText:{
         fontSize: 18,
     },

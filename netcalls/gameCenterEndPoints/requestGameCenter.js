@@ -17,6 +17,7 @@ const requestGetOverview = async () => {
         return responseJson;
     }catch (error) {
         console.error(error);
+        return null;
     }
 }
 
@@ -35,10 +36,10 @@ const requestSelectGame = async (word) => {
         });
         let responseJson = await response.json();
         console.log('requestSelectGame : ' + JSON.stringify(responseJson));
-        return true;
+        return responseJson;
     } catch (error) {
         console.error(error);
-        return false;
+        return null;
     }
 };
 
@@ -58,10 +59,10 @@ const requestPerformSpin = async (word, index) => {
         });
         let responseJson = await response.json();
         console.log('requestPerformSpin : ' + JSON.stringify(responseJson));
-        return true;
+        return responseJson;
     } catch (error) {
         console.error(error);
-        return false;
+        return null;
     }
 };
 
