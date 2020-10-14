@@ -8,12 +8,16 @@ import {getArticles, getHypoCorrectionFoodArticles} from "../../netcalls/educati
 import {EducationMediaRow} from "../../components/education/EducationMediaRow";
 import HypocorrectionFood from "./hypocorrectionFood";
 import {HypoCorrectionFoodRow} from "../../components/education/HypoCorrectionFoodRow";
+import Modal from 'react-native-modal';
+import FoodModalContent from "../../components/logs/meal/FoodModalContent";
 
 const EducationMaterialsScreen = (props) => {
   const [currentTabIndex, setCurrentTabIndex] = React.useState(0);
   const [isLoading, setIsLoading] = React.useState(true);
   const [educationalContent, setEducationalContent] = React.useState([]);
   const [hypocorrectionFoodContent, setHypocorrectionFoodContent] = React.useState([]);
+
+  const [selectedFood, setSelectedFood] = React.useState(null);
 
   React.useEffect(() => {
       if (isLoading) {
@@ -27,6 +31,10 @@ const EducationMaterialsScreen = (props) => {
           setIsLoading(false);
       }
   });
+
+  const handleClose = () => {
+      setSelectedFood(null);
+  }
 
   return (
     <View style={{...globalStyles.pageContainer, ...props.style}}>
@@ -56,12 +64,26 @@ const EducationMaterialsScreen = (props) => {
                                                             pictureUrl={item.picture_url}
                                                             url={item.url}
                                         />) :
-                                            (<HypoCorrectionFoodRow item={item} />)
+                                            (<HypoCorrectionFoodRow onPress={()=>setSelectedFood(item)} item={item} />)
                                   }
                         />
                     )
             }
         </View>
+        {
+            selectedFood && (
+                <Modal
+                    onBackdropPress={handleClose}
+                    backdropOpacity={0.5}
+                    onBackButtonPress={handleClose}
+                    style={{marginTop: '20%', marginBottom: '20%'}}
+                    isVisible={selectedFood !== null}>
+                    <FoodModalContent style={{borderRadius: 10, overflow: 'hidden'}} onClose={handleClose} selected={selectedFood}>
+                        <View style={{paddingBottom: 40}}/>
+                    </FoodModalContent>
+                </Modal>
+            )
+        }
     </View>
   );
 };

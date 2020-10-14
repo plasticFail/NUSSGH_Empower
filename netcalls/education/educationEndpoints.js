@@ -1,5 +1,6 @@
 import {Dimensions} from 'react-native';
 import {mediaHeight, mediaWidth} from "../../components/education/EducationMediaRow";
+import {requestFoodSearchByName} from "../foodEndpoints/requestFoodSearch";
 
 const {width, height} = Dimensions.get('window');
 
@@ -34,78 +35,8 @@ async function getArticles() {
 }
 
 async function getHypoCorrectionFoodArticles() {
-    return [
-        {
-            'food-name': "Instant Coffee Zero Sugar",
-            serving: 1,
-            imgUrl: {
-                url: "https://greenmartsg.com/wp-content/uploads/2019/01/Nescafe-Instant-Coffee-2-in-1-Zero-Sugar-Added-35sticks.jpg"
-            }
-        },
-        {
-            'food-name': "Instant Coffee Zero Sugar",
-            serving: 1,
-            imgUrl: {
-                url: "https://greenmartsg.com/wp-content/uploads/2019/01/Nescafe-Instant-Coffee-2-in-1-Zero-Sugar-Added-35sticks.jpg"
-            }
-        },
-        {
-            'food-name': "Instant Coffee Zero Sugar",
-            serving: 1,
-            imgUrl: {
-                url: "https://greenmartsg.com/wp-content/uploads/2019/01/Nescafe-Instant-Coffee-2-in-1-Zero-Sugar-Added-35sticks.jpg"
-            }
-        },
-        {
-            'food-name': "Instant Coffee Zero Sugar",
-            serving: 1,
-            imgUrl: {
-                url: "https://greenmartsg.com/wp-content/uploads/2019/01/Nescafe-Instant-Coffee-2-in-1-Zero-Sugar-Added-35sticks.jpg"
-            }
-        },
-        {
-            'food-name': "Instant Coffee Zero Sugar",
-            serving: 1,
-            imgUrl: {
-                url: "https://greenmartsg.com/wp-content/uploads/2019/01/Nescafe-Instant-Coffee-2-in-1-Zero-Sugar-Added-35sticks.jpg"
-            }
-        },
-        {
-            'food-name': "Instant Coffee Zero Sugar",
-            serving: 1,
-            imgUrl: {
-                url: "https://greenmartsg.com/wp-content/uploads/2019/01/Nescafe-Instant-Coffee-2-in-1-Zero-Sugar-Added-35sticks.jpg"
-            }
-        },
-        {
-            'food-name': "Instant Coffee Zero Sugar",
-            serving: 1,
-            imgUrl: {
-                url: "https://greenmartsg.com/wp-content/uploads/2019/01/Nescafe-Instant-Coffee-2-in-1-Zero-Sugar-Added-35sticks.jpg"
-            }
-        },
-        {
-            'food-name': "Instant Coffee Zero Sugar",
-            serving: 1,
-            imgUrl: {
-                url: "https://greenmartsg.com/wp-content/uploads/2019/01/Nescafe-Instant-Coffee-2-in-1-Zero-Sugar-Added-35sticks.jpg"
-            }
-        },
-        {
-            'food-name': "Instant Coffee Zero Sugar",
-            serving: 1,
-            imgUrl: {
-                url: "https://greenmartsg.com/wp-content/uploads/2019/01/Nescafe-Instant-Coffee-2-in-1-Zero-Sugar-Added-35sticks.jpg"
-            }
-        },
-        {
-            'food-name': "Instant Coffee Zero Sugar",
-            serving: 1,
-            imgUrl: {
-                url: "https://greenmartsg.com/wp-content/uploads/2019/01/Nescafe-Instant-Coffee-2-in-1-Zero-Sugar-Added-35sticks.jpg"
-            }
-        }
-    ]
+    const results = await requestFoodSearchByName(['sliced fish bee hoon with milk', 'raw bee hoon']);
+    return results.data;
 }
 
 export {getArticles, getHypoCorrectionFoodArticles};
