@@ -20,7 +20,6 @@ async function getArticles() {
         },
     });
     let responseJson = await response.json();
-    console.log(responseJson);
 
     return responseJson;
     /*
