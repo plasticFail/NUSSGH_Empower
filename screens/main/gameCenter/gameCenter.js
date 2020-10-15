@@ -78,6 +78,7 @@ class GameCenter extends Component {
     this.setState({availableWords : responseObj.available_words});
     this.setState({games: responseObj.games});
 
+    this.setState({activeGame: null});
     if(this.state.games && this.state.games.length > 0){
         for(let i=0;i<this.state.games.length;i++){
             console.log(this.state.games[i].active);
