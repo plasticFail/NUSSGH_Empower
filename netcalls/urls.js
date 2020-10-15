@@ -23,7 +23,7 @@ const medPlan = server + 'log/medication/plan';
 const fitbitTokenPostEndpoint = server + 'datasync/auth-fitbit';
 const getDiaryEntries = server + 'log/diary';
 const goal = server + '/goal';
-const educationArticlesEndpoint = server + 'education/articles'; // This endpoint will be deployed soon.
+const educationArticlesEndpoint = server + 'education/articles';
 
 export {
   patientLogin,

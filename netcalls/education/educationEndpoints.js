@@ -1,6 +1,8 @@
 import {Dimensions} from 'react-native';
 import {mediaHeight, mediaWidth} from "../../components/education/EducationMediaRow";
 import {requestFoodSearchByName} from "../foodEndpoints/requestFoodSearch";
+import {educationArticlesEndpoint} from "../urls";
+import {getToken} from "../../storage/asyncStorageFunctions";
 
 const {width, height} = Dimensions.get('window');
 
@@ -9,6 +11,19 @@ const defaultAspectRatio =  9 / 16;
 const widthFrac = mediaWidth / width;
 
 async function getArticles() {
+    let response = await fetch(educationArticlesEndpoint, {
+        method: 'GET',
+        headers: {
+            Authorization: 'Bearer ' + (await getToken()),
+            Accept: 'application/json',
+            'Content-type': 'application/json',
+        },
+    });
+    let responseJson = await response.json();
+    console.log(responseJson);
+
+    return responseJson;
+    /*
     return [
         {
             title: "Management of hypoglycemia",
@@ -32,6 +47,7 @@ async function getArticles() {
             url: "https://www.youtube.com/watch?v=QmyXdUqdCNE"
         }
     ]
+    */
 }
 
 async function getHypoCorrectionFoodArticles() {

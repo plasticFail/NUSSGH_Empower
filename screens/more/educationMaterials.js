@@ -23,10 +23,10 @@ const EducationMaterialsScreen = (props) => {
       if (isLoading) {
           // Load data
           getArticles().then(articles => {
-             setEducationalContent(articles);
+             setEducationalContent(articles.articles);
           });
-          getHypoCorrectionFoodArticles().then(articles => {
-             setHypocorrectionFoodContent(articles);
+          getHypoCorrectionFoodArticles().then(food => {
+             setHypocorrectionFoodContent(food);
           });
           setIsLoading(false);
       }
@@ -54,7 +54,7 @@ const EducationMaterialsScreen = (props) => {
                 </View>) :
                     (
                         <FlatList data={currentTabIndex === 0 ? educationalContent : hypocorrectionFoodContent}
-                                  keyExtractor={(content, index) => `${content.title}-${index}`}
+                                  keyExtractor={content => `${content.title}`}
                                   style={{flexGrow: 1}}
                                   contentContainerStyle={{flexGrow: 1, paddingTop: '4%'}} renderItem={({item}) =>
                                         currentTabIndex === 0 ?
