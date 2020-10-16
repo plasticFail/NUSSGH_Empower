@@ -25,6 +25,7 @@ import MedicationScreen from './more/medications';
 import GoalsScreen from './more/goals';
 import AppointmentScreen from './more/appointments';
 import EducationMaterialsScreen from './more/educationMaterials';
+import StartNewWord from './main/gameCenter/startNewWord';
 import MyWord from './main/gameCenter/myWord';
 import FillTheCard from './main/gameCenter/fillTheCard';
 import Logout from './more/logout';
@@ -171,6 +172,13 @@ class AppRoot extends Component {
                     headerShown: false,
                   }}
                 />
+                  <Stack.Screen
+                      name="StartNewWord"
+                      component={StartNewWord}
+                      options={{
+                          headerShown: false,
+                      }}
+                  />
                 <Stack.Screen
                   name="MyWord"
                   component={MyWord}

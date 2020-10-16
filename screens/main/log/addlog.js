@@ -91,15 +91,18 @@ class AddLogScreen extends Component {
       this.init();
       this.setAnimation();
     });
+    console.log('log contruct');
   }
 
   componentDidMount() {
     this.init();
     this.setAnimation();
+    console.log('log mount');
   }
 
   componentDidUpdate() {
     this.setAnimation();
+    console.log('log update');
   }
 
   setAnimation() {
@@ -388,6 +391,7 @@ class AddLogScreen extends Component {
               />
             </Modal>
           </ScrollView>
+          <LoadingModal visible={loading} />
         </Animated.View>
         <LoadingModal visible={loading} />
       </View>

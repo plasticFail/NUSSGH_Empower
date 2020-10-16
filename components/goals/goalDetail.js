@@ -74,11 +74,7 @@ const GoalDetail = (props) => {
   };
 
   const showActionButton = () => {
-    if (
-      //isMonday() &&
-      // !goalEnded(goalItem.end_date) &&
-      goalItem?.set_by != phyv
-    ) {
+    if (isMonday() && goalItem?.set_by != phyv) {
       return true;
     }
     return false;
@@ -137,8 +133,7 @@ const GoalDetail = (props) => {
           )}
         </ScrollView>
       </View>
-      {/*Should check if physician/ user set to show this action button**/}
-
+      {/*Should check if physician/monday user set to show this action button**/}
       {showActionButton() && (
         <View style={globalStyles.buttonContainer}>
           <View style={{flexDirection: 'row'}}>

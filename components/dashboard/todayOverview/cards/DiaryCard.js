@@ -209,5 +209,6 @@ const styles = StyleSheet.create({
   },
   content: {
     marginStart: '5%',
+    flex: 1,
   },
 });

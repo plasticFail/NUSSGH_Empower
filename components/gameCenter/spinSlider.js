@@ -25,6 +25,13 @@ const SpinSlider = (props) => {
         return require('../../resources/images/gameCenter/spin_arrow.png')
     }
 
+    const spinImageDisplay = () => {
+        if(spinProgress === 1){
+            return require('../../resources/images/gameCenter/2x/img-spinner-animate-2x.gif')
+        }
+        return require('../../resources/images/gameCenter/img-spinner-static.png');
+    }
+
     const textDisplay = () => {
         if(spinProgress === 1){
             return 'Number Rolling'
@@ -63,7 +70,7 @@ const SpinSlider = (props) => {
 
     return (
         <View style={[GameCenterStyles.card, GameCenterStyles.cardPadding]}>
-            <Image resizeMode="contain" style={GameCenterStyles.spinLogo} source={require('../../resources/images/gameCenter/img-spinner-static.png')}/>
+            <Image resizeMode="contain" style={GameCenterStyles.spinLogo} source={spinImageDisplay()}/>
 
             <View style={styles.sliderContainer}>
                 <View style={backgroundStyle()}>

@@ -25,6 +25,11 @@ const getDiaryEntries = server + 'log/diary';
 const goal = server + '/goal';
 const educationArticlesEndpoint = server + 'education/articles';
 
+const gameCenterGetOverview = server + 'game/bingo/overview';
+const gameCenterSelectGame = server + 'game/bingo/select';
+const gameCenterPerformSpin = server + 'game/bingo/spin';
+
+
 export {
   patientLogin,
   isTokenValid,
@@ -50,4 +55,7 @@ export {
   goal,
   getActivitySummary,
   educationArticlesEndpoint,
+  gameCenterGetOverview,
+  gameCenterSelectGame,
+  gameCenterPerformSpin,
 };

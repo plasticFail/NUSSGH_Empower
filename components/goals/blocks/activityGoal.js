@@ -135,7 +135,7 @@ const ActivityGoal = (props) => {
         <ScrollView contentContainerStyle={{flexGrow: 1}}>
           <NameDateSelector goalName={goalName} setGoalName={setGoalName} />
           <RenderCounter
-            fieldName="Excercise"
+            fieldName="Exercise"
             item={minute}
             setItem={setMinute}
             parameter={'mins'}
