@@ -90,6 +90,10 @@ class AddLogScreen extends Component {
       this.state.slideRightAnimation = new Animated.Value(0); //reset
       this.init();
       this.setAnimation();
+
+      if (this.props.route.params?.type != undefined) {
+        this.openModalType(this.props.route.params?.type);
+      }
     });
   }
 

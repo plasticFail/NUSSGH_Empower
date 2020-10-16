@@ -45,6 +45,8 @@ import {getLastWeightLog} from '../../storage/asyncStorageFunctions';
 import AsyncStorage from '@react-native-community/async-storage';
 import {key_weightLog} from '../../storage/asyncStorageFunctions';
 import {set} from 'react-native-reanimated';
+import NotifCollapse from '../../components/home/collapsible/notifCollapse';
+import DailyCollapse from '../../components/home/collapsible/dailyCollapse';
 
 // properties
 const username = 'Jimmy';
@@ -237,13 +239,12 @@ const HomeScreen = (props) => {
         style={[
           globalStyles.pageContainer,
           {
-            backgroundColor: Colors.lastLogButtonColor,
+            backgroundColor: '#F5F6F9',
             transform: [{translateX: widthInterpolate}],
           },
         ]}>
         <View style={globalStyles.menuBarContainer}>
-          <MenuBtn green={true} />
-          <View style={{flex: 1}} />
+          <MenuBtn green={false} />
         </View>
         <ScrollView
           bounces={false}
@@ -255,11 +256,13 @@ const HomeScreen = (props) => {
           <HeaderCard
             username={username}
             hour={getGreetingFromHour(currHour)}
+          />
+          <NotifCollapse />
+          <DailyCollapse
             uncompleteLogs={uncompleteLogs}
+            hour={getGreetingFromHour(currHour)}
           />
           {/* Notifications */}
-          <NotificationsCard type={howTo} count={''} />
-          <NotificationsCard type={appointment} count={'2'} />
           <ActivityCard
             stepsTaken={stepsTaken}
             carb={carb}

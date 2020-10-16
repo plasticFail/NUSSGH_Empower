@@ -1,49 +1,21 @@
-import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
-//function
-import {useNavigation} from '@react-navigation/native';
+import React from 'react';
+import {View, Text, StyleSheet} from 'react-native';
 //styles
 import {Colors} from '../../styles/colors';
-//component
-import UncompleteLogCard from '../uncompleteLogCard';
-import {green_color} from '../../commonFunctions/common';
 
 const HeaderCard = (props) => {
-  const {username, hour, uncompleteLogs} = props;
-  const navigation = useNavigation();
+  const {username, hour} = props;
+
   return (
     <View
       style={{
         justifyContent: 'center',
-        backgroundColor: Colors.lastLogButtonColor,
+        backgroundColor: '#F5F6F9',
         paddingBottom: '3%',
+        marginTop: '5%',
       }}>
       <Text style={styles.greetingText}>Good {hour},</Text>
       <Text style={styles.usernameText}>{username}</Text>
-      {uncompleteLogs.length > 0 ? (
-        <>
-          <Text style={styles.taskText}>
-            <Text style={styles.bold}>{uncompleteLogs.length}</Text> mandatory
-            task(s)
-          </Text>
-          <TouchableOpacity
-            style={styles.logCard}
-            onPress={() => navigation.navigate('AddLog')}>
-            <Text style={[styles.greetingText, {color: Colors.menuColor}]}>
-              Create a log for the {hour}
-            </Text>
-            <UncompleteLogCard
-              uncompleteLogs={uncompleteLogs}
-              color={green_color}
-              hideChevron={false}
-            />
-          </TouchableOpacity>
-        </>
-      ) : (
-        <Text style={styles.taskText}>
-          You have completed your logs for the {hour}!
-        </Text>
-      )}
     </View>
   );
 };
@@ -81,7 +53,7 @@ const styles = StyleSheet.create({
     marginTop: '3%',
   },
   usernameText: {
-    color: 'white',
+    color: '#16A750',
     fontSize: 40,
     fontFamily: 'SFProDisplay-Bold',
     marginStart: '5%',
