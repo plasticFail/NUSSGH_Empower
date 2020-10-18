@@ -12,7 +12,7 @@ const {height, width} = Dimensions.get('window');
 
 const addButtonPadding = 0.18;
 // Children prop is any react component passed to serve as a button at the bottom of the modal paper.
-export default function FoodModalContent({onClose, selected, children}) {
+export default function FoodModalContent({onClose, selected, children, style}) {
     const [showImage, setShowImage] = React.useState(false);
     const [showFacts, setShowFacts] = React.useState(false);
 
@@ -26,7 +26,7 @@ export default function FoodModalContent({onClose, selected, children}) {
     }
 
     return (
-        <View style={logStyles.modalContainer}>
+        <View style={[logStyles.modalContainer, style]}>
         <ScrollView contentContainerStyle={{flexGrow: 1}}>
             <View style={[logStyles.menuBarContainer]}>
                 <Ionicon name="arrow-back-outline" color={'#4DAA50'} size={40} onPress={onClose} style={{marginLeft: '2%'}}/>

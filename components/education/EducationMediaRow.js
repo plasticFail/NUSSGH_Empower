@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, Image, StyleSheet, Dimensions, Platform, TouchableOpacity} from 'react-native';
+import {View, Text, Image, StyleSheet, Dimensions, Platform, TouchableOpacity, TouchableWithoutFeedback} from 'react-native';
 import globalStyles from "../../styles/globalStyles";
 import {horizontalMargins} from "../../styles/variables";
 import {WebView} from "react-native-webview";
@@ -13,11 +13,13 @@ const mediaHeightRatio = 0.11;
 const mediaWidth = mediaWidthRatio * (width - horizontalMargins);
 const mediaHeight = mediaHeightRatio * height;
 
+const playButtonSize = 40;
+
 function EducationMediaRow(props) {
-    const {title, mediaDisplayUri, organization, uriType, uri} = props;
+    const {title, videoUrl, organization, pictureUrl, url} = props;
 
     const openUrl = async (url) => {
-        if (uri && await InAppBrowser.isAvailable) {
+        if (url && await InAppBrowser.isAvailable) {
             InAppBrowser.open(url).then(resp => {
                 if (resp.type === 'success') {
                     // Opened link successfully
@@ -27,75 +29,40 @@ function EducationMediaRow(props) {
     }
 
     return (
-
-            <View style={{flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  borderBottomWidth: 1,
-                  borderColor: 'rgba(0, 0, 0, 0.15)',
-                  paddingTop: topBottomPadding,
-                  paddingBottom: topBottomPadding}}
+        <TouchableWithoutFeedback onPress={() => videoUrl ? null : openUrl(url)}>
+            <View style={{  flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            borderBottomWidth: 1,
+                            borderColor: 'rgba(0, 0, 0, 0.15)',
+                            paddingTop: topBottomPadding,
+                            paddingBottom: topBottomPadding}}
             >
-                <TouchableOpacity onPress={() => openUrl(uri)}>
-                    <View style={{width: width - horizontalMargins - mediaWidth}}>
-                        <Text style={[globalStyles.pageDetails, {marginStart: 0}]}>{title}</Text>
-                        <Text style={[globalStyles.pageDetails, {marginStart: 0, fontWeight: 'normal', color: 'rgba(0,0,0,0.6)'}]}>
-                            {organization}
-                        </Text>
-                    </View>
-                </TouchableOpacity>
-                {
-                    uriType === 'image' ?
-                        <Image source={{uri: mediaDisplayUri}} style={styles.mediaStyle} /> :
-                    uriType === 'html' ?
-                        <View style={styles.mediaStyle}>
-                       <WebView source={{
-                           html: `<!DOCTYPE html>
-                                  <html>
-                                    <head>
-                                        <style>
-                                            iframe {
-                                              height: 380px;
-                                              width: 676px;
-                                              resize: both;
-                                              overflow: auto;
-                                            }
-                                        </style>
-                                    </head>
-                                    <body>
-                                      <div id="baseDiv">${mediaDisplayUri}</div>
-                                    </body>
-                                  </html>`,
-                       }}
-                                allowsFullscreenVideo
-                                scrollEnabled={false}
-                                useWebKit
-                                /*
-                                injectedJavaScript={`
-                                     const iOS = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
-                                     if (!iOS) {
-                                       const meta = document.createElement('meta');
-                                       let initialScale = 1;
-                                       if(screen.width <= 800) {
-                                        initialScale = ((screen.width / window.innerWidth) + 0.1).toFixed(2);
-                                       }
-                                       const content = 'width=device-width, initial-scale=' + initialScale ;
-                                       meta.setAttribute('name', 'viewport');
-                                       meta.setAttribute('content', content);
-                                       document.getElementsByTagName('head')[0].appendChild(meta);
-                                     }
-                                   `}
-
-                                 */
-                                //allowsInlineMediaPlayback
-                                mediaPlaybackRequiresUserAction
-                                javaScriptEnabled
-                                scalesPageToFit={true}
-                       />
-                        </View>:
-                    null
+                <View style={{width: width - horizontalMargins - mediaWidth}}>
+                    <Text style={[globalStyles.pageDetails, {marginStart: 0}]}>{title}</Text>
+                    <Text style={[globalStyles.pageDetails, {marginStart: 0, fontWeight: 'normal', color: 'rgba(0,0,0,0.6)'}]}>
+                        {organization}
+                    </Text>
+                </View>
+                <Image source={{uri: pictureUrl}} style={{width: mediaWidth, height: mediaHeight}}/>
+                {   videoUrl &&
+                    <TouchableOpacity
+                    onPress={() => openUrl(url)}
+                    style={{
+                        position: 'absolute',
+                        backgroundColor: 'rgba(0,0,0, 0.4)',
+                        width: playButtonSize,
+                        height: playButtonSize,
+                        borderRadius: playButtonSize / 2,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        transform: [{translateX: width - horizontalMargins - mediaWidth + mediaWidth / 2 - playButtonSize / 2}]
+                    }}>
+                        <View style={[styles.triangle, {transform: [{rotate: '90deg'}]}]}/>
+                    </TouchableOpacity>
                 }
             </View>
+        </TouchableWithoutFeedback>
     )
 }
 
@@ -105,6 +72,18 @@ const styles = StyleSheet.create({
         height: mediaHeight,
         resizeMode: 'cover',
         flex: 1
+    },
+    triangle: {
+        width: 0,
+        height: 0,
+        backgroundColor: 'transparent',
+        borderStyle: 'solid',
+        borderLeftWidth: 8,
+        borderRightWidth:  8,
+        borderBottomWidth: 8,
+        borderLeftColor: 'transparent',
+        borderRightColor: 'transparent',
+        borderBottomColor: 'white'
     }
 });
 
