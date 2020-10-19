@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, StyleSheet, Text, Image, ScrollView} from 'react-native';
 //component
 import Clickable from '../../components/account/clickable';
@@ -9,18 +9,31 @@ import LeftArrowBtn from '../../components/logs/leftArrowBtn';
 import Ant from 'react-native-vector-icons/AntDesign';
 import Entypo from 'react-native-vector-icons/Entypo';
 import {Colors} from '../../styles/colors';
+import {getPatientProfile} from '../../netcalls/requestsAccount';
 
 const profilePic = require('../../resources/images/userPic.png');
-
-const username = 'Jimmy';
-const name = 'Jimmy Tan';
-const phoneNumber = '89898989';
 
 const AccountDetailScreen = (props) => {
   const [usernameModalVisible, setUsernameModalVisible] = useState(false);
   const [nameModalVisible, setNameModalVisible] = useState(false);
   const [passwordModalVisible, setPasswordModalVisible] = useState(false);
   const [phoneModalVisible, setPhoneModalVisible] = useState(false);
+
+  const [username, setUsername] = useState('');
+  const [name, setName] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+
+  useEffect(() => {
+    getPatientProfile().then((response) => {
+      if (response != null) {
+        let data = response.patient;
+        setUsername(data.username);
+        let nameString = data.first_name + ' ' + data.last_name;
+        setName(nameString);
+        setPhoneNumber(data.contact_number);
+      }
+    });
+  }, []);
 
   return (
     <View style={[globalStyles.pageContainer]}>
@@ -67,7 +80,7 @@ const AccountDetailScreen = (props) => {
           closeModal={() => setPasswordModalVisible(false)}
         />
 
-        {/*}
+        {/*
         <Clickable
           heading="Medication Plan"
           content=""
@@ -76,7 +89,7 @@ const AccountDetailScreen = (props) => {
           closeModal={() => {}}
           modalVisible={false}
         />
-  */}
+        */}
 
         <View style={{flexDirection: 'row', margin: '2%'}}>
           <Entypo name="link" size={30} color={Colors.lastLogValueColor} />

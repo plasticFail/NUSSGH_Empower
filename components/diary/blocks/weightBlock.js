@@ -29,6 +29,7 @@ import {
   getTime,
   showEdit,
   getMissedArr,
+  getTime12hr,
 } from '../../../commonFunctions/diaryFunctions';
 import {weight_key} from '../../../commonFunctions/logFunctions';
 
@@ -107,10 +108,7 @@ function renderWeightLogs(logs, editLog) {
         {logs.map((item, index) => (
           <View style={styles.logContent} key={index.toString()}>
             <Text style={diaryStyles.recordContent}>
-              {getTime(item.record_date)}
-            </Text>
-            <Text style={diaryStyles.recordContent}>
-              {item.weight} {item.unit}
+              {item.weight} {item.unit} at {getTime12hr(item.record_date)}
             </Text>
             {showEdit(item.record_date) ? (
               <>

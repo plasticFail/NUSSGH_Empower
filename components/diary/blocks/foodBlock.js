@@ -15,12 +15,17 @@ import {
   maxProtein,
   showEdit,
   getDateObj,
+  checkFoodLogQuantity,
+  getTime12hr,
 } from '../../../commonFunctions/diaryFunctions';
 import {food_key} from '../../../commonFunctions/logFunctions';
 import {
   morningObj,
   afternoonObj,
   eveningObj,
+  carbs,
+  fats,
+  protein,
 } from '../../../commonFunctions/common';
 //third party library
 import Modal from 'react-native-modal';
@@ -73,6 +78,14 @@ const FoodBlock = (props) => {
     setEditModal(true);
   };
 
+  const showRange = () => {
+    let total = carbs + protein + fats;
+    if (missedArr.length < 3 && miss != true && total > 0) {
+      return true;
+    }
+    return false;
+  };
+
   return (
     <Modal
       isVisible={visible}
@@ -91,13 +104,12 @@ const FoodBlock = (props) => {
         <Text style={globalStyles.pageDetails}>{day}</Text>
         {/*<MissedContent arr={missedArr} type={food_key} />*/}
         {renderProgressBars(carbs, fats, protein)}
-        {missedArr.length < 3 && (
+        {showRange() && (
           <View
             style={{flexDirection: 'row', marginTop: '3%', marginBottom: '2%'}}>
             {pass ? (
               <>
                 <Text style={globalStyles.pageDetails}>Healthy Range</Text>
-
                 <Ionicon
                   name="checkmark"
                   style={diaryStyles.passIcon}
@@ -142,7 +154,7 @@ const FoodBlock = (props) => {
 export default FoodBlock;
 
 function renderFoodItems(logs, editLog) {
-  if (checkLogQuantity(logs)) {
+  if (checkFoodLogQuantity(logs)) {
     return (
       <View style={styles.noRecordContainer}>
         <Text style={diaryStyles.noRecordText}>No Record Found </Text>
@@ -171,7 +183,8 @@ function renderFoodItems(logs, editLog) {
                             {inner['food-name']}
                           </Text>
                           <Text style={diaryStyles.recordContent}>
-                            {inner['quantity']} Servings(s)
+                            {inner['quantity']} Servings(s) at{' '}
+                            {getTime12hr(item.record_date)}
                           </Text>
                         </View>
                         {showEdit(item.record_date) ? (
@@ -205,19 +218,7 @@ function renderFoodItems(logs, editLog) {
   }
 }
 
-//since backend dont delete the actual log, check if all food items in logs is 0
-function checkLogQuantity(logs) {
-  for (var x of logs) {
-    for (var y of x.foodItems) {
-      if (y.quantity != 0) {
-        return false;
-      }
-    }
-  }
-  return true;
-}
-
-function renderProgressBars(carbs, fats, protein) {
+function renderProgressBars(carbsAmt, fatsAmt, proteinAmt) {
   return (
     <View
       style={{
@@ -228,20 +229,20 @@ function renderProgressBars(carbs, fats, protein) {
       }}>
       <ProgressContent
         header={'Carbs'}
-        value={carbs}
-        target={maxCarbs}
+        value={carbsAmt}
+        type={carbs}
         targetUnit={'g'}
       />
       <ProgressContent
         header={'Fat'}
-        value={fats}
-        target={maxFats}
+        value={fatsAmt}
+        type={fats}
         targetUnit={'g'}
       />
       <ProgressContent
         header={'Protein'}
-        value={protein}
-        target={maxProtein}
+        value={proteinAmt}
+        type={protein}
         targetUnit={'g'}
       />
     </View>

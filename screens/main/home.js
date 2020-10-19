@@ -41,13 +41,8 @@ import {
   renderGreetingText,
 } from '../../commonFunctions/diaryFunctions';
 import GameCard from '../../components/home/gameCard';
-import {getLastWeightLog} from '../../storage/asyncStorageFunctions';
-import AsyncStorage from '@react-native-community/async-storage';
-import {key_weightLog} from '../../storage/asyncStorageFunctions';
-import {set} from 'react-native-reanimated';
+import {getPatientProfile} from '../../netcalls/requestsAccount';
 
-// properties
-const username = 'Jimmy';
 const {width, height} = Dimensions.get('window');
 const today_date = Moment(new Date()).format('YYYY-MM-DD');
 const dateString = Moment(new Date()).format('DD MMM YYYY');
@@ -59,6 +54,7 @@ const maxFats = 50; //grams
 const HomeScreen = (props) => {
   const [currHour, setCurrHour] = useState(new Date().getHours());
   const [uncompleteLogs, setUncompleteLogs] = useState([]);
+  const [firstName, setFirstName] = useState('');
 
   // diary card
   const [bgl, setBgl] = React.useState(null);
@@ -86,6 +82,11 @@ const HomeScreen = (props) => {
   useEffect(() => {
     //slide right when enter screen
     props.navigation.addListener('focus', () => {
+      getPatientProfile().then((response) => {
+        if (response != null) {
+          setFirstName(response?.patient?.first_name);
+        }
+      });
       slideRightAnimation.setValue(0);
       Animated.timing(slideRightAnimation, {
         toValue: 1,
@@ -253,7 +254,7 @@ const HomeScreen = (props) => {
           }}>
           {/* Greetings and log to do*/}
           <HeaderCard
-            username={username}
+            username={firstName}
             hour={getGreetingFromHour(currHour)}
             uncompleteLogs={uncompleteLogs}
           />
