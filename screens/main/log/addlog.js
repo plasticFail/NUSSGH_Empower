@@ -244,19 +244,6 @@ class AddLogScreen extends Component {
           <Text style={globalStyles.pageHeader}>Add Log</Text>
           <Text style={[globalStyles.pageDetails]}>{todayDate}</Text>
           <ScrollView contentContainerStyle={{flexGrow: 1}}>
-            {/*Uncomplete log type for period of the day */}
-            {period === afternoonObj.name &&
-              RenderUncompleteLog(uncompletedMorningType, morningObj.name)}
-            {period === eveningObj.name && (
-              <>
-                {RenderUncompleteLog(uncompletedMorningType, morningObj.name)}
-                {RenderUncompleteLog(
-                  uncompletedAfternoonType,
-                  afternoonObj.name,
-                )}
-              </>
-            )}
-
             <Text style={[globalStyles.pageDetails, {marginTop: '4%'}]}>
               Progress For {period}
             </Text>
