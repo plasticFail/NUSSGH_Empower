@@ -21,8 +21,6 @@ const NotifCollapse = (props) => {
 
   const [logNotDoneText, setLogNotDoneText] = useState('');
 
-  console.log(afternoonNotDone);
-
   useEffect(() => {
     setOpen(true);
     setLogNotDone();
@@ -30,7 +28,17 @@ const NotifCollapse = (props) => {
 
   useEffect(() => {
     setLogNotDone();
+    countNotif();
   }, [morningNotDone, afternoonNotDone]);
+
+  const countNotif = () => {
+    let total = 0;
+    //add log notif
+    if (afternoonNotDone.length > 0 || morningNotDone.length > 0) {
+      total += total + 1;
+    }
+    setCount(total);
+  };
 
   const setLogNotDone = () => {
     //get logs not done for morning and afternoon
@@ -49,17 +57,12 @@ const NotifCollapse = (props) => {
     } else {
       if (morningLength === 0 && afternoonLength > 0) {
         string = afternoonLength + ' in Afternoon.';
-      } else {
+      } else if (afternoonLength == 0 && morningLength > 0) {
         string = morningLength + ' in Morning';
       }
     }
     setLogNotDoneText(string);
   };
-
-  const countNotif = () => {
-    //add log notif
-  };
-
   const toggle = (visible) => {
     if (visible) {
       Animated.timing(dropDownAnimation, {
@@ -103,7 +106,13 @@ const NotifCollapse = (props) => {
             maxHeight: heightInterpolation,
             backgroundColor: Colors.notifTab,
           }}>
-          <NotificationRow type={notif_log} hour={hour} text={logNotDoneText} />
+          {logNotDoneText.length != 0 && (
+            <NotificationRow
+              type={notif_log}
+              hour={hour}
+              text={logNotDoneText}
+            />
+          )}
         </Animated.View>
       )}
     </View>
