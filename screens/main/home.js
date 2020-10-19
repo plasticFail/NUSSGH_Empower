@@ -29,6 +29,8 @@ import {
   getGreetingFromHour,
   getLastMinuteFromTodayDate,
   getTodayDate,
+  morningObj,
+  afternoonObj,
 } from '../../commonFunctions/common';
 import {getEntry4Day} from '../../netcalls/requestsDiary';
 import {
@@ -96,6 +98,10 @@ const HomeScreen = (props) => {
     extrapolate: 'clamp',
   });
 
+  //notification
+  const [morningNotDone, setMorningNotDone] = useState([]);
+  const [afternoonNotDone, setAfternoonNotDone] = useState([]);
+
   useEffect(() => {
     props.navigation.addListener('focus', () => {
       getPatientProfile().then((response) => {
@@ -114,6 +120,22 @@ const HomeScreen = (props) => {
       initLogs();
     });
   }, []);
+
+  const initUncompleteLog = () => {
+    if (currHour != morningObj.name) {
+      checkLogDone(morningObj.name).then((response) => {
+        if (response != null) {
+          setMorningNotDone(response.notCompleted);
+        }
+      });
+
+      checkLogDone(afternoonObj.name).then((response) => {
+        if (response != null) {
+          setAfternoonNotDone(response.notCompleted);
+        }
+      });
+    }
+  };
 
   const initLogs = async () => {
     checkLogDone(getGreetingFromHour(currHour)).then((response) => {
@@ -189,6 +211,7 @@ const HomeScreen = (props) => {
     });
 
     loadNutritionalData();
+    initUncompleteLog();
   };
 
   const loadNutritionalData = () => {
@@ -256,7 +279,11 @@ const HomeScreen = (props) => {
             username={firstName}
             hour={getGreetingFromHour(currHour)}
           />
-          <NotifCollapse />
+          <NotifCollapse
+            hour={getGreetingFromHour(currHour)}
+            morningNotDone={morningNotDone}
+            afternoonNotDone={afternoonNotDone}
+          />
           <DailyCollapse
             uncompleteLogs={uncompleteLogs}
             hour={getGreetingFromHour(currHour)}

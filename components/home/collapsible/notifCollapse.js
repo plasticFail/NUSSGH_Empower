@@ -2,19 +2,63 @@ import React, {useEffect, useState, useRef} from 'react';
 import {View, StyleSheet, TouchableOpacity, Text, Animated} from 'react-native';
 import NotificationRow from '../notificationRow';
 
-import {bg_key} from '../../../commonFunctions/logFunctions';
+import {bg_key, checkLogDone} from '../../../commonFunctions/logFunctions';
 import {Colors} from '../../../styles/colors';
+import {
+  notif_log,
+  morningObj,
+  afternoonObj,
+  eveningObj,
+} from '../../../commonFunctions/common';
 
 const NotifCollapse = (props) => {
+  const {hour, morningNotDone, afternoonNotDone} = props;
   const [open, setOpen] = useState(true);
   const [count, setCount] = useState(0);
   const [minHeight, setMinHeight] = useState(0);
   const [maxHeight, setMaxHeight] = useState(0);
   const dropDownAnimation = useRef(new Animated.Value(1)).current;
 
+  const [logNotDoneText, setLogNotDoneText] = useState('');
+
+  console.log(afternoonNotDone);
+
   useEffect(() => {
     setOpen(true);
+    setLogNotDone();
   }, []);
+
+  useEffect(() => {
+    setLogNotDone();
+  }, [morningNotDone, afternoonNotDone]);
+
+  const setLogNotDone = () => {
+    //get logs not done for morning and afternoon
+    let string = '';
+    let morningLength =
+      morningNotDone?.length === null ? 0 : morningNotDone?.length;
+    let afternoonLength =
+      afternoonNotDone?.length === null ? 0 : afternoonNotDone?.length;
+    //prepare message
+    if (hour === afternoonObj.name && morningNotDone > 0) {
+      string = morningLength + ' in Morning';
+    }
+    if (hour === eveningObj.name && afternoonLength > 0 && morningLength > 0) {
+      string =
+        morningLength + ' in Morning & ' + afternoonLength + ' in Afternoon';
+    } else {
+      if (morningLength === 0 && afternoonLength > 0) {
+        string = afternoonLength + ' in Afternoon.';
+      } else {
+        string = morningLength + ' in Morning';
+      }
+    }
+    setLogNotDoneText(string);
+  };
+
+  const countNotif = () => {
+    //add log notif
+  };
 
   const toggle = (visible) => {
     if (visible) {
@@ -59,7 +103,7 @@ const NotifCollapse = (props) => {
             maxHeight: heightInterpolation,
             backgroundColor: Colors.notifTab,
           }}>
-          <NotificationRow type={bg_key} text={'hi'} />
+          <NotificationRow type={notif_log} hour={hour} text={logNotDoneText} />
         </Animated.View>
       )}
     </View>

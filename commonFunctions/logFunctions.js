@@ -26,6 +26,7 @@ import {
   getHour,
   getDateRange,
   getDateObj,
+  checkFoodLogQuantity,
 } from './diaryFunctions';
 //svg
 import DARKGREEN_BG from '../resources/images/Patient-Icons/SVG/icon-darkgreen-bloodglucose.svg';
@@ -148,7 +149,6 @@ const dateFrom2dayWeightLog = async () => {
 };
 
 const checkLogDone = async (period) => {
-  let weight_data = await getLastWeightLog();
   let completed = [];
   let notCompleted = [];
   let bgLogs = [];

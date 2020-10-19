@@ -38,6 +38,9 @@ const maxCarb_M_60abv = 315;
 const maxCal_M_60under = 2590;
 const maxCal_M_60above = 2234;
 
+//notification type
+const notif_log = 'log';
+
 const morningObj = {
   name: 'Morning',
   start: 5,
@@ -237,4 +240,5 @@ export {
   maxCal_M_60above,
   getMax4Type,
   getAge,
+  notif_log,
 };
