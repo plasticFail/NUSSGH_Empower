@@ -22,6 +22,9 @@ import {
   morningObj,
   afternoonObj,
   eveningObj,
+  carbs,
+  fats,
+  protein,
 } from '../../../commonFunctions/common';
 //third party library
 import Modal from 'react-native-modal';
@@ -92,7 +95,7 @@ const FoodBlock = (props) => {
         <Text style={globalStyles.pageDetails}>{day}</Text>
         {/*<MissedContent arr={missedArr} type={food_key} />*/}
         {renderProgressBars(carbs, fats, protein)}
-        {missedArr.length < 3 && (
+        {missedArr.length < 3 && miss != true && (
           <View
             style={{flexDirection: 'row', marginTop: '3%', marginBottom: '2%'}}>
             {pass ? (
@@ -205,7 +208,7 @@ function renderFoodItems(logs, editLog) {
   }
 }
 
-function renderProgressBars(carbs, fats, protein) {
+function renderProgressBars(carbsAmt, fatsAmt, proteinAmt) {
   return (
     <View
       style={{
@@ -216,20 +219,20 @@ function renderProgressBars(carbs, fats, protein) {
       }}>
       <ProgressContent
         header={'Carbs'}
-        value={carbs}
-        target={maxCarbs}
+        value={carbsAmt}
+        type={carbs}
         targetUnit={'g'}
       />
       <ProgressContent
         header={'Fat'}
-        value={fats}
-        target={maxFats}
+        value={fatsAmt}
+        type={fats}
         targetUnit={'g'}
       />
       <ProgressContent
         header={'Protein'}
-        value={protein}
-        target={maxProtein}
+        value={proteinAmt}
+        type={protein}
         targetUnit={'g'}
       />
     </View>
