@@ -3,7 +3,10 @@ import {StyleSheet} from 'react-native';
 //third party libs
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 //functions
-import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
+import {
+  getFocusedRouteNameFromRoute,
+  TabActions,
+} from '@react-navigation/native';
 //other screens
 import Home from './main/home';
 import AddLog from './main/log/addlog';

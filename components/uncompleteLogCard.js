@@ -21,7 +21,7 @@ const UncompleteLogCard = (props) => {
     <View
       style={{
         flexDirection: 'row',
-        padding: '2%',
+        margin: '4%',
       }}>
       {color === navy_color
         ? uncompleteLogs.map((item, index) => (
@@ -32,8 +32,9 @@ const UncompleteLogCard = (props) => {
         : uncompleteLogs.map((item, index) => (
             <TouchableOpacity
               style={styles.container}
+              key={item}
               onPress={() => navigation.navigate('AddLog', {type: item})}>
-              <View key={item}>{renderLogIcon(item)}</View>
+              <View style={{alignSelf: 'center'}}>{renderLogIcon(item)}</View>
             </TouchableOpacity>
           ))}
 
@@ -56,7 +57,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     paddingTop: '5%',
     paddingBottom: '5%',
-    borderRadius: 10,
-    marginEnd: '2%',
+    borderRadius: 9,
+    marginEnd: '6%',
   },
 });
