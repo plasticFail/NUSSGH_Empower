@@ -10,7 +10,7 @@ import {initPusherNotif} from "../../commonFunctions/AuthorisePusherNotif";
 const init = async(props, finishHandler) => {
     const token = await getToken();
     if (token !== null && token !== '') {
-        console.log('token : ' + token);
+        //console.log('token : ' + token);
         let tokenIsValid = await isTokenValidRequest(token);
         if (tokenIsValid) {
             const pusherToken = await getPusherToken(token);
