@@ -232,6 +232,18 @@ const renderGreetingText = (arr) => {
   return string;
 };
 
+//since backend dont delete the actual food log, check if all food items in logs is 0
+function checkFoodLogQuantity(logs) {
+  for (var x of logs) {
+    for (var y of x.foodItems) {
+      if (y.quantity != 0) {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
 export {
   maxCarbs,
   maxProtein,
@@ -252,4 +264,5 @@ export {
   showEdit,
   getMissedArr,
   renderGreetingText,
+  checkFoodLogQuantity,
 };

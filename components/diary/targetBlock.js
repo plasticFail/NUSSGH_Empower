@@ -13,6 +13,7 @@ import {
   maxCarbs,
   maxProtein,
   maxFats,
+  checkFoodLogQuantity,
 } from '../../commonFunctions/diaryFunctions';
 import {
   bg_key,
@@ -226,6 +227,9 @@ class TargetBlock extends Component {
       this.setState({foodPassCount: passCount});
       this.setState({foodFailCount: length - passCount});
     } else if (length === 0) {
+      this.setState({foodMiss: true});
+    }
+    if (checkFoodLogQuantity(this.state.foodLogs)) {
       this.setState({foodMiss: true});
     }
   };

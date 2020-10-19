@@ -14,6 +14,10 @@ const noLog = 'Not logged yet';
 const green_color = 'green';
 const navy_color = 'navy';
 
+const protein = 'protein';
+const fats = 'fats';
+const carbs = 'carbs';
+
 const morningObj = {
   name: 'Morning',
   start: 5,
@@ -97,6 +101,12 @@ const convertDatestring = (date) => {
 const decimal = 'decimal-pad';
 const wholeNumber = 'number-pad';
 
+//for rendering % for nutrient type based on gender.
+const renderNutrientPercent = (amount, type) => {
+  //check gender, set the max
+  //if more than 100% round up to 100%
+};
+
 export {
   getGreetingFromHour,
   isEmpty,
@@ -118,4 +128,7 @@ export {
   wholeNumber,
   green_color,
   navy_color,
+  protein,
+  fats,
+  carbs,
 };
