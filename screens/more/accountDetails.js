@@ -50,7 +50,7 @@ const AccountDetailScreen = (props) => {
         <Clickable
           heading={'Username'}
           content={username}
-          click={true}
+          click={false}
           usernameModalVisible={usernameModalVisible}
           openModal={() => setUsernameModalVisible(true)}
           closeModal={() => setUsernameModalVisible(false)}
