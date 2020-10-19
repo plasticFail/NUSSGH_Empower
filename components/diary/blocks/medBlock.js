@@ -24,6 +24,7 @@ import {
   showEdit,
   getTime,
   getDateObj,
+  getTime12hr,
 } from '../../../commonFunctions/diaryFunctions';
 import {med_key} from '../../../commonFunctions/logFunctions';
 import {
@@ -107,16 +108,13 @@ function renderMedLogs(logs, editLog) {
       <View style={{marginBottom: '3%'}}>
         {logs.map((item, index) => (
           <View style={styles.logContent} key={index.toString()}>
-            <Text style={diaryStyles.recordContent}>
-              {getTime(item.record_date)}
-            </Text>
             <View style={{width: '70%'}}>
               <Text style={diaryStyles.recordContent}>{item.medication}</Text>
               <Text style={diaryStyles.recordContent}>
                 {item.dosage}{' '}
                 {String(item.unit).substring(0, 1).toUpperCase() +
                   String(item.unit).substr(1, item.length)}{' '}
-                (s)
+                (s) at {getTime12hr(item.record_date)}
               </Text>
             </View>
             {showEdit(item.record_date) ? (

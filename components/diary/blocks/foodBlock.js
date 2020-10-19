@@ -16,6 +16,7 @@ import {
   showEdit,
   getDateObj,
   checkFoodLogQuantity,
+  getTime12hr,
 } from '../../../commonFunctions/diaryFunctions';
 import {food_key} from '../../../commonFunctions/logFunctions';
 import {
@@ -174,7 +175,8 @@ function renderFoodItems(logs, editLog) {
                             {inner['food-name']}
                           </Text>
                           <Text style={diaryStyles.recordContent}>
-                            {inner['quantity']} Servings(s)
+                            {inner['quantity']} Servings(s) at{' '}
+                            {getTime12hr(item.record_date)}
                           </Text>
                         </View>
                         {showEdit(item.record_date) ? (

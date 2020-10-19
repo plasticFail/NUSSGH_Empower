@@ -12,6 +12,7 @@ import {
   showEdit,
   getMissedArr,
   getDateObj,
+  getTime12hr,
 } from '../../../commonFunctions/diaryFunctions';
 import {bg_key} from '../../../commonFunctions/logFunctions';
 //third party library
@@ -135,10 +136,7 @@ function renderLogs(logs, editLog) {
         {logs.map((item, index) => (
           <View style={styles.logContent} key={index.toString()}>
             <Text style={diaryStyles.recordContent}>
-              {getTime(item.record_date)}
-            </Text>
-            <Text style={diaryStyles.recordContent}>
-              {item.bg_reading} mmol/L
+              {item.bg_reading} mmol/L at {getTime12hr(item.record_date)}
             </Text>
             {showEdit(item.record_date) ? (
               <>

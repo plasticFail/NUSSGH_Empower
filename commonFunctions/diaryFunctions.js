@@ -21,6 +21,7 @@ const getDateObj = (dateString) => {
   return dateObject;
 };
 
+//24hr
 const getTime = (dateString) => {
   if (dateString != null) {
     let time = dateString.substring(
@@ -29,6 +30,11 @@ const getTime = (dateString) => {
     );
     return time;
   }
+};
+
+const getTime12hr = (dateString) => {
+  let date = moment(getDateObj(dateString));
+  return date.format('h:mm a');
 };
 
 const getHour = (dateString) => {
@@ -265,4 +271,5 @@ export {
   getMissedArr,
   renderGreetingText,
   checkFoodLogQuantity,
+  getTime12hr,
 };
