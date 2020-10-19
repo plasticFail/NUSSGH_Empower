@@ -24,6 +24,7 @@ const fitbitTokenPostEndpoint = server + 'datasync/auth-fitbit';
 const getDiaryEntries = server + 'log/diary';
 const goal = server + '/goal';
 const educationArticlesEndpoint = server + 'education/articles';
+const pusherTokenEndpoint = server + 'auth/notification-token';
 
 const gameCenterGetOverview = server + 'game/bingo/overview';
 const gameCenterSelectGame = server + 'game/bingo/select';
@@ -58,4 +59,5 @@ export {
   gameCenterGetOverview,
   gameCenterSelectGame,
   gameCenterPerformSpin,
+  pusherTokenEndpoint,
 };
