@@ -8,6 +8,8 @@ import {getArticles, getHypoCorrectionFoodArticles} from "../../netcalls/educati
 import {EducationMediaRow} from "../../components/education/EducationMediaRow";
 import HypocorrectionFood from "./hypocorrectionFood";
 import {HypoCorrectionFoodRow} from "../../components/education/HypoCorrectionFoodRow";
+import Modal from 'react-native-modal';
+import FoodModalContent from "../../components/logs/meal/FoodModalContent";
 
 const EducationMaterialsScreen = (props) => {
   const [currentTabIndex, setCurrentTabIndex] = React.useState(0);
@@ -15,18 +17,24 @@ const EducationMaterialsScreen = (props) => {
   const [educationalContent, setEducationalContent] = React.useState([]);
   const [hypocorrectionFoodContent, setHypocorrectionFoodContent] = React.useState([]);
 
+  const [selectedFood, setSelectedFood] = React.useState(null);
+
   React.useEffect(() => {
       if (isLoading) {
           // Load data
           getArticles().then(articles => {
-             setEducationalContent(articles);
+             setEducationalContent(articles.articles);
           });
-          getHypoCorrectionFoodArticles().then(articles => {
-             setHypocorrectionFoodContent(articles);
+          getHypoCorrectionFoodArticles().then(food => {
+             setHypocorrectionFoodContent(food);
           });
           setIsLoading(false);
       }
   });
+
+  const handleClose = () => {
+      setSelectedFood(null);
+  }
 
   return (
     <View style={{...globalStyles.pageContainer, ...props.style}}>
@@ -46,22 +54,36 @@ const EducationMaterialsScreen = (props) => {
                 </View>) :
                     (
                         <FlatList data={currentTabIndex === 0 ? educationalContent : hypocorrectionFoodContent}
-                                  keyExtractor={(content, index) => `${content.title}-${index}`}
+                                  keyExtractor={content => `${content.title}`}
                                   style={{flexGrow: 1}}
                                   contentContainerStyle={{flexGrow: 1, paddingTop: '4%'}} renderItem={({item}) =>
                                         currentTabIndex === 0 ?
                                         (<EducationMediaRow title={item.title}
                                                             organization={item.organization}
-                                                            mediaDisplayUri={item.mediaDisplayUri}
-                                                            uriType={item.uriType}
-                                                            uri={item.uri}
+                                                            videoUrl={item.video_url}
+                                                            pictureUrl={item.picture_url}
+                                                            url={item.url}
                                         />) :
-                                            (<HypoCorrectionFoodRow item={item} />)
+                                            (<HypoCorrectionFoodRow onPress={()=>setSelectedFood(item)} item={item} />)
                                   }
                         />
                     )
             }
         </View>
+        {
+            selectedFood && (
+                <Modal
+                    onBackdropPress={handleClose}
+                    backdropOpacity={0.5}
+                    onBackButtonPress={handleClose}
+                    style={{marginTop: '20%', marginBottom: '20%'}}
+                    isVisible={selectedFood !== null}>
+                    <FoodModalContent style={{borderRadius: 10, overflow: 'hidden'}} onClose={handleClose} selected={selectedFood}>
+                        <View style={{paddingBottom: 40}}/>
+                    </FoodModalContent>
+                </Modal>
+            )
+        }
     </View>
   );
 };

@@ -95,15 +95,18 @@ class AddLogScreen extends Component {
         delete this.props.route.params; //prevent opening again from tab press
       }
     });
+    console.log('log contruct');
   }
 
   componentDidMount() {
     this.init();
     this.setAnimation();
+    console.log('log mount');
   }
 
   componentDidUpdate() {
     this.setAnimation();
+    console.log('log update');
   }
 
   setAnimation() {

@@ -9,13 +9,13 @@ import GameCenterStyles from '../../../styles/gameCenterStyles';
 import {Colors} from '../../../styles/colors';
 //components
 import LeftArrowBtn from '../../../components/logs/leftArrowBtn';
-import ProgressBar from '../../../components/progressbar';
 import DotBoard from '../../../components/gameCenter/dotBoard';
 import SpinSlider from '../../../components/gameCenter/spinSlider';
 import SpinFinish from '../../../components/gameCenter/spinFinish';
 //functions
-import {getPattern} from '../../../constants/gameCenter/letterPattern';
-import {getRandomBoard} from '../../../constants/gameCenter/randomBingo';
+import WordItem from '../../../components/gameCenter/wordItem';
+import {GetIconByWord} from '../../../commonFunctions/gameCenterFunctions';
+import {requestPerformSpin} from '../../../netcalls/gameCenterEndPoints/requestGameCenter';
 
 
 const LetterDotColor = (currentLetter, letter) => {
@@ -29,80 +29,53 @@ const FillTheCard = (props) => {
 
     const [showSpin, setShowSpin] = useState(false);
     const [showFinish, setShowFinish] = useState(false);
-    const [currentNumber, setCurrentNumber] = useState(0);
 
+    const [activeGame, setActiveGame] = useState(props.route.params.activeGame);
+    const [chances, setChances] = useState(props.route.params.chances);
     const [currentLetter, setCurrentLetter] = useState(0);
-    const letters = ['F','I','T'];
-    const [spinNum, setSpinNum] = useState([]);
-    const [pendingSpinNum, setPendingSpinNum] = useState([]);
-    const [bingoNum, setBingoNum] = useState([]);
-    const [pendingBingoNum, setPendingBingoNum] = useState([]);
+    const [spinResponse, setSpinResponse] = useState('');
 
-
-    useEffect(() => {
-        for(let i=0; i<letters.length ;i++){
-            let list = [];
-            for(let j=1+25*i; j<=25+25*i; j++){
-                list = [...list, j];
-            }
-            pendingSpinNum[i] = list;
-            setPendingSpinNum([...pendingSpinNum]);
-
-            spinNum[i] = [];
-            setSpinNum([...spinNum]);
-
-            bingoNum[i] = [];
-            setBingoNum([...bingoNum]);
-
-            pendingBingoNum[i] = [];
-            setPendingBingoNum([...pendingBingoNum]);
+    const getBoardNum = currentLetter => {
+        let currentBoardNum = activeGame.layouts[currentLetter];
+        let boardNum = [];
+        for(let i=0; i<5; i++){
+            boardNum[i] = currentBoardNum.slice(i*5, i*5+5);
         }
+        return boardNum;
+    }
 
-        initBingo();
+    const getBingoPattern = currentLetter => {
+        let currentBingoPattern = activeGame.states[currentLetter];
+        let bingoPattern = []
+        for(let i=0; i<5; i++){
+            bingoPattern[i] = currentBingoPattern.slice(i*5, i*5+5);
+        }
+        return bingoPattern;
+    }
 
-    }, []);
-
-    const initBingo = () => {
-        for(let currentLetter=0; currentLetter<letters.length; currentLetter++) {
-            let pattern = getPattern(letters[currentLetter]);
-            let boardNum = getRandomBoard(currentLetter);
-
-            for (let i = 0; i < boardNum.length; i++) {
-                for (let j = 0; j < boardNum[i].length; j++) {
-                    console.log('i : ' + i + ' j : ' + j + ' pattern : ' + pattern[i][j]);
-                    if (pattern[i][j] === 1) {
-                        pendingBingoNum[currentLetter] = [...pendingBingoNum[currentLetter], boardNum[i][j]];
-                        setPendingBingoNum([...pendingBingoNum]);
-                    }
-                }
-            }
+    const prevPageHandler = () => {
+        if(currentLetter > 0){
+            setCurrentLetter(currentLetter - 1);
         }
     }
 
-    const completePercentage = () => {
-        let total = 0;
-        let completed = 0;
-        console.log('completePercentage');
-        for(let i=0; i<letters.length; i++){
-            if(pendingBingoNum && pendingBingoNum[i]){
-                total += pendingBingoNum[i].length;
-            }
-            if(bingoNum && bingoNum[i]){
-                total += bingoNum[i].length;
-                completed += bingoNum[i].length;
-            }
+    const nextPageHandler = () => {
+        if(currentLetter < activeGame.layouts.length - 1){
+            setCurrentLetter(currentLetter + 1);
         }
-        if(total > 0){
-            return Math.floor(completed * 100/ total) + '%';
-        }
-        return '0%';
     }
 
     const disableSpin = () => {
-        if(pendingBingoNum && pendingBingoNum[currentLetter] && pendingBingoNum[currentLetter].length === 0) {
+        if(chances === 0){
             return true;
         }
-        return false;
+        let bingoPattern = activeGame.states[currentLetter];
+        for(let i=0; i<bingoPattern.length; i++){
+            if(bingoPattern[i] === 2){
+                return false;
+            }
+        }
+        return true;
     }
 
     const colorOfSpin = disabled =>{
@@ -112,48 +85,15 @@ const FillTheCard = (props) => {
         return GameCenterStyles.nextColor;
     }
 
-    const processSpin = () => {
-        let number = generateSpinNum();
-        if(number !== null) {
-            setCurrentNumber(number);
+    const processSpin = async () => {
+        let responseObj = await requestPerformSpin(activeGame.word, currentLetter);
+        if(responseObj){
+            setSpinResponse(responseObj);
+            setActiveGame(responseObj.game_state);
+            setChances(chances - responseObj.chance_used);
             setShowSpin(false);
             setShowFinish(true);
-
-            processSpinLogic(number);
         }
-    }
-
-    const processSpinLogic = number => {
-        spinNum[currentLetter] = [...spinNum[currentLetter], number];
-        setSpinNum([...spinNum]);
-
-        if(pendingBingoNum[currentLetter].includes(number)){
-            let index = pendingBingoNum[currentLetter].indexOf(number);
-            pendingBingoNum[currentLetter] = pendingBingoNum[currentLetter].slice(0, index).concat(pendingBingoNum[currentLetter].slice(index + 1, pendingBingoNum[currentLetter].length))
-            setPendingBingoNum([...pendingBingoNum]);
-
-            console.log('pendingBingoNum : ' + pendingBingoNum[0]);
-
-            bingoNum[currentLetter] = [...bingoNum[currentLetter], number];
-            setBingoNum([...bingoNum]);
-        }
-
-        console.log('spinNum : ' + spinNum[0]);
-    }
-
-    const generateSpinNum = () => {
-        if(pendingSpinNum[currentLetter].length > 0) {
-            let randomIndex = Math.floor(Math.random() * pendingSpinNum[currentLetter].length);
-            let numberPick = pendingSpinNum[currentLetter][randomIndex];
-
-            console.log('number pick : ' + numberPick);
-            pendingSpinNum[currentLetter] = pendingSpinNum[currentLetter].slice(0, randomIndex).concat(pendingSpinNum[currentLetter].slice(randomIndex + 1, pendingSpinNum[currentLetter].length))
-            setPendingSpinNum([...pendingSpinNum]);
-            console.log('pendingSpinNum : ' + pendingSpinNum[0]);
-
-            return numberPick;
-        }
-        return null;
     }
 
     return (
@@ -164,36 +104,33 @@ const FillTheCard = (props) => {
             <Text style={globalStyles.pageHeader}>Fill The Card</Text>
 
             <View style={[GameCenterStyles.card, GameCenterStyles.subContainer]}>
-                <View style={[GameCenterStyles.cardPadding, GameCenterStyles.subContainer, {width:'70%'}]}>
-                    <Image source={require('../../../resources/images/Patient-Icons/2x/icon-navy-muscle-2x.png')} style={GameCenterStyles.iconProps} />
-                    <View style={[GameCenterStyles.verticalContainer]}>
-                        <Text style={GameCenterStyles.wordText}>FIT</Text>
-                        <ProgressBar containerStyle={{height: 7.5, width: '50%'}} progress={completePercentage()}
-                                     reverse={true}
-                                     progressBarColor={Colors.gameColorGreen} />
-                        <Text style={GameCenterStyles.wordText}>{completePercentage()}</Text>
-                    </View>
+                <View style={[GameCenterStyles.subContainer, {width:'70%'}]}>
+                    <WordItem imageSource={GetIconByWord(activeGame.word)}
+                              wordText={activeGame.word}
+                              percentage={activeGame.word_progress + '%'}
+                              showArrow={false}/>
                 </View>
                 <View style={styles.divider}/>
                 <View style={[GameCenterStyles.cardPadding, GameCenterStyles.verticalContainer]}>
                     <Text style={GameCenterStyles.subText}>Chances</Text>
-                    <Text style={[GameCenterStyles.subText, GameCenterStyles.greenText]}>2 Left</Text>
+                    <Text style={[GameCenterStyles.subText, GameCenterStyles.greenText]}>{chances} Left</Text>
                 </View>
             </View>
 
             <View style={[GameCenterStyles.cardPadding, GameCenterStyles.subContainer]}>
-                <TouchableOpacity onPress={() => {currentLetter > 0 && setCurrentLetter(currentLetter - 1)}}>
+                <TouchableOpacity onPress={prevPageHandler}>
                     <Image source={require('../../../resources/images/Patient-Icons/2x/icon-grey-chevron-left-2x.png')} style={GameCenterStyles.iconProps} />
                 </TouchableOpacity>
-                <DotBoard bingoPattern={getPattern(letters[currentLetter])} boardNum={getRandomBoard(currentLetter)} spinNum={spinNum[currentLetter]}/>
-                <TouchableOpacity onPress={() => {currentLetter < letters.length - 1 && setCurrentLetter(currentLetter + 1)}}>
+                <DotBoard bingoPattern={getBingoPattern(currentLetter)} boardNum={getBoardNum(currentLetter)} />
+                <TouchableOpacity onPress={nextPageHandler}>
                     <Image source={require('../../../resources/images/Patient-Icons/2x/icon-grey-chevron-right-2x.png')} style={GameCenterStyles.iconProps} />
                 </TouchableOpacity>
             </View>
 
             <View style={GameCenterStyles.subContainerNarrow}>
-                {letters.map((item, index) => (
+                {activeGame.layouts.map((item, index) => (
                     <Ionicon
+                        key={index}
                         name="ellipse"
                         size={20}
                         style={styles.stepDot}
@@ -205,7 +142,6 @@ const FillTheCard = (props) => {
             <TouchableOpacity
                 style={[GameCenterStyles.buttonStyleNarrow, colorOfSpin(disableSpin())]}
                 disabled={disableSpin()}
-                // onPress={() => {processSpin()}}>
                 onPress={() => {setShowSpin(true)}}>
                 <Text style={globalStyles.actionButtonText}>Spin a Number</Text>
             </TouchableOpacity>
@@ -226,7 +162,7 @@ const FillTheCard = (props) => {
                 animationType='fade'
                 onRequestClose={() => setShowFinish(false)}>
 
-                <SpinFinish number={currentNumber} closeModal={() => setShowFinish(false)} />
+                <SpinFinish spinResponse={spinResponse} closeModal={() => setShowFinish(false)} />
 
             </Modal>
 

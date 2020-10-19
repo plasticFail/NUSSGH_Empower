@@ -21,7 +21,7 @@ import FavouriteMealComponent from "./FavouriteMeals";
 // Functions
 // Others
 import Ionicon from 'react-native-vector-icons/Ionicons';
-import requestFoodSearch from '../../../netcalls/foodEndpoints/requestFoodSearch';
+import {requestFoodSearch} from '../../../netcalls/foodEndpoints/requestFoodSearch';
 import {requestMealLogList, requestNutrientConsumption} from "../../../netcalls/mealEndpoints/requestMealLog";
 import globalStyles from "../../../styles/globalStyles";
 import logStyles from "../../../styles/logStyles";

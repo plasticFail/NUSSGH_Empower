@@ -36,6 +36,7 @@ import {
   lineChartToolTipMessage,
   ReportHelpInfo
 } from "../../components/dashboard/reports/ReportHelpInfo";
+import {headerHeight, statusBarHeight} from "../../styles/variables";
 
 const EXPORT_BTN = require('../../resources/images/Patient-Icons/2x/icon-green-export-2x.png');
 
@@ -155,6 +156,7 @@ const ReportsScreen = (props) => {
         }).start();
 
       init().then(d => {
+        setShowInfo(false);
         setFullDataset(d);
         /*
         setBglData(d.bglData);
@@ -392,7 +394,7 @@ const ReportsScreen = (props) => {
       </View>
       { showInfo && // listen to taps outside
       (<TouchableWithoutFeedback style={{position: 'absolute'}} onPress={toggleInfoCallback}>
-        <View style={{width: '100%', height: '100%', position: 'absolute'}}/>
+        <View style={{width: '100%', height: '100%', position: 'absolute', transform: [{translateY: statusBarHeight + headerHeight}]}}/>
       </TouchableWithoutFeedback>)
       }
       <ExportReportsModal visible={openExportModal} setVisible={setOpenExportModal} />
