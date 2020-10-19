@@ -29,20 +29,23 @@ const ProgressContent = (props) => {
   const [percentage, setPercentage] = useState('');
   const [target, setTarget] = useState(0);
   const [patient, setPatient] = useState({});
+  const [age, setAge] = useState(0);
+  const [gender, setGender] = useState('');
 
   useEffect(() => {
     async function getProfile() {
       let response = await getPatientProfile();
-      if (response != null) {
-        setPatient(response.patient);
-      }
+
+      setPatient(response?.patient);
+      setGender(response?.patient?.gender);
+      setAge(getAge(response?.patient?.birth_date));
     }
     getProfile();
-    let max = getMax4Type(getAge(patient?.birth_date), type, patient.gender);
+    let max = getMax4Type(age, type, gender);
     setTarget(max);
     let percent = Math.floor((Number(value) / Number(max)) * 100) + '%';
     setPercentage(percent);
-  }, [value]);
+  }, [value, patient]);
 
   return !flip ? (
     <View style={{flex: 1, marginEnd: '1.5%', alignSelf: 'flex-start'}}>

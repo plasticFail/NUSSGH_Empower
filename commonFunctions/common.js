@@ -135,7 +135,7 @@ const renderNutrientPercent = async (amount, type) => {
 
 //get the maximum value based on nutrient type
 const getMax4Type = (age, type, gender) => {
-  if (gender === 'female') {
+  if (String(gender) === 'female') {
     if (type === protein) {
       return maxProtein_F;
     }

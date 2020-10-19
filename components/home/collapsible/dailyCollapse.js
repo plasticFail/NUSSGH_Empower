@@ -64,6 +64,7 @@ const DailyCollapse = (props) => {
           style={{
             maxHeight: heightInterpolation,
             backgroundColor: Colors.dailyTab,
+            paddingBottom: '2%',
           }}>
           {uncompleteLogs.length > 0 ? (
             <>
