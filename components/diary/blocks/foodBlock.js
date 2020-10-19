@@ -78,6 +78,14 @@ const FoodBlock = (props) => {
     setEditModal(true);
   };
 
+  const showRange = () => {
+    let total = carbs + protein + fats;
+    if (missedArr.length < 3 && miss != true && total > 0) {
+      return true;
+    }
+    return false;
+  };
+
   return (
     <Modal
       isVisible={visible}
@@ -96,7 +104,7 @@ const FoodBlock = (props) => {
         <Text style={globalStyles.pageDetails}>{day}</Text>
         {/*<MissedContent arr={missedArr} type={food_key} />*/}
         {renderProgressBars(carbs, fats, protein)}
-        {missedArr.length < 3 && miss != true && (
+        {showRange() && (
           <View
             style={{flexDirection: 'row', marginTop: '3%', marginBottom: '2%'}}>
             {pass ? (

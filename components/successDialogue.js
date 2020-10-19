@@ -185,7 +185,8 @@ function SuccessDialogue(props) {
                 <Text style={[globalStyles.pageDetails]}>{goalObj?.name}</Text>
               </>
             ) : (
-              <Text style={[globalStyles.pageDetails, {flex: 1}]}>
+              <Text
+                style={[globalStyles.pageDetails, {flex: 1, marginBottom: 0}]}>
                 Add a goal now
               </Text>
             )}
