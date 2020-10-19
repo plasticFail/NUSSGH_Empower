@@ -73,34 +73,36 @@ const BgBlock = (props) => {
         <Text style={globalStyles.pageHeader}>Blood Glucose</Text>
         <Text style={globalStyles.pageDetails}>{day}</Text>
         <MissedContent arr={missedArr} type={bg_key} />
-        <View
-          style={{flexDirection: 'row', marginTop: '3%', marginBottom: '2%'}}>
-          {pass ? (
-            <>
-              <Text style={[globalStyles.pageDetails]}>
-                Average {avgBg} mmol/L
-              </Text>
+        {missedArr.length != 3 && (
+          <View
+            style={{flexDirection: 'row', marginTop: '3%', marginBottom: '2%'}}>
+            {pass ? (
+              <>
+                <Text style={[globalStyles.pageDetails]}>
+                  Average {avgBg} mmol/L
+                </Text>
 
-              <Ionicon
-                name="checkmark"
-                style={diaryStyles.passIcon}
-                size={25}
-              />
-            </>
-          ) : (
-            <>
-              <Text style={globalStyles.pageDetails}>
-                Average {avgBg} mmol/L
-              </Text>
+                <Ionicon
+                  name="checkmark"
+                  style={diaryStyles.passIcon}
+                  size={25}
+                />
+              </>
+            ) : (
+              <>
+                <Text style={globalStyles.pageDetails}>
+                  Average {avgBg} mmol/L
+                </Text>
 
-              <Ionicon
-                name="alert-circle-outline"
-                style={diaryStyles.failIcon}
-                size={25}
-              />
-            </>
-          )}
-        </View>
+                <Ionicon
+                  name="alert-circle-outline"
+                  style={diaryStyles.failIcon}
+                  size={25}
+                />
+              </>
+            )}
+          </View>
+        )}
         <ScrollView style={{flex: 1}}>
           {/*Show time section and data for log*/}
           <TimeSection name={morningObj.name} />
