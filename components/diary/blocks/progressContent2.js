@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {Animated, Text, StyleSheet, TouchableOpacity, View} from 'react-native';
 //component
 import ProgressBar from '../../progressbar';
@@ -6,19 +6,12 @@ import ProgressBar from '../../progressbar';
 import {Colors} from '../../../styles/colors';
 //third party lib
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
-import {
-  getAge,
-  getMax4Type,
-  fats,
-  protein,
-} from '../../../commonFunctions/common';
-import {getPatientProfile} from '../../../netcalls/requestsAccount';
 
-const ProgressContent = (props) => {
+const ProgressContent2 = (props) => {
   const {
     header,
     value,
-    type,
+    target,
     flip,
     details,
     targetUnit,
@@ -26,27 +19,7 @@ const ProgressContent = (props) => {
     small,
   } = props;
   const {chevronDownMethod} = props;
-  const [percentage, setPercentage] = useState('');
-  const [target, setTarget] = useState(props.target);
-  const [patient, setPatient] = useState({});
-  const [age, setAge] = useState();
-  const [gender, setGender] = useState('');
-
-  useEffect(() => {
-    async function getProfile() {
-      let response = await getPatientProfile();
-
-      setPatient(response?.patient);
-      setGender(response?.patient?.gender);
-      setAge(getAge(response?.patient?.birth_date));
-    }
-    getProfile();
-    let max = getMax4Type(age, type, gender);
-    setTarget(max);
-    let percent = Math.floor((Number(value) / Number(max)) * 100) + '%';
-    setPercentage(percent);
-  }, [value, patient]);
-
+  const percentage = Math.floor((Number(value) / Number(target)) * 100) + '%';
   return !flip ? (
     <View style={{flex: 1, marginEnd: '1.5%', alignSelf: 'flex-start'}}>
       <Text style={styles.header}>{header}</Text>
@@ -112,7 +85,7 @@ const ProgressContent = (props) => {
   );
 };
 
-export default ProgressContent;
+export default ProgressContent2;
 
 const styles = StyleSheet.create({
   progressContainer: {
