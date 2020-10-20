@@ -10,9 +10,6 @@ import {
   checkMedTaken4Day,
   getMedDonePeriods,
   renderGreetingText,
-  maxCarbs,
-  maxProtein,
-  maxFats,
   checkFoodLogQuantity,
 } from '../../commonFunctions/diaryFunctions';
 import {
@@ -318,6 +315,7 @@ class TargetBlock extends Component {
       activitySummary,
       medCompleted,
       noMed4Day,
+      activityTarget,
 
       avgBg,
       carbs,
@@ -437,6 +435,7 @@ class TargetBlock extends Component {
             miss={activityMiss}
             day={dateString}
             init={() => this.init()}
+            activityTarget={activityTarget}
           />
         ) : null}
       </>
