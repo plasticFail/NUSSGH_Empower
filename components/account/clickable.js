@@ -12,7 +12,7 @@ import EditNameModal from './editNameModal';
 Entypo.loadFont();
 
 const Clickable = (props) => {
-  const {heading, content, click} = props;
+  const {heading, content, click, patient} = props;
   const {openModal} = props;
 
   return (
@@ -49,6 +49,7 @@ const Clickable = (props) => {
         <EditNameModal
           visible={props.nameModalVisible}
           close={props.closeModal}
+          patient={patient}
         />
       ) : null}
       {props.phoneModalVisible ? (
@@ -56,6 +57,7 @@ const Clickable = (props) => {
           visible={props.phoneModalVisible}
           close={props.closeModal}
           number={content}
+          patient={patient}
         />
       ) : null}
     </>

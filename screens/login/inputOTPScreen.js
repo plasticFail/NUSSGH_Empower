@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   StyleSheet,
@@ -28,12 +28,19 @@ const InputOTPScreen = (props) => {
   const {close} = props;
   const [otp, setOtp] = useState('');
   const [showChangePassword, setShowChangePassword] = useState(false);
-  const [countdownVisible, setCountdownVisible] = useState(true);
+  const [countdownVisible, setCountdownVisible] = useState(false);
   const [countdownTime, setCountdownTime] = useState(120);
 
   const [editMobileModal, setEditMobileModal] = useState(false);
+  const [token, setToken] = useState('');
 
   const navigation = useNavigation();
+
+  useEffect(() => {
+    if (!countdownVisible) {
+      setCountdownTime(120);
+    }
+  }, [countdownVisible]);
 
   const handleTimout = () => {
     setCountdownVisible(true);
@@ -79,7 +86,14 @@ const InputOTPScreen = (props) => {
         });
       } else {
         //verify otp when come from edit phone modal
-        setEditMobileModal(true);
+        verifyOTPRequest(phoneNumber, otp).then((response) => {
+          if (response.message != null) {
+            Alert.alert('Error', response.message, [{text: 'Got It'}]);
+          } else {
+            setTimeout(() => setEditMobileModal(true), 500);
+            setToken(response.token);
+          }
+        });
       }
     }
   };
@@ -88,6 +102,7 @@ const InputOTPScreen = (props) => {
     setCountdownVisible(true);
     sendOTPRequest(phoneNumber).then(() => {
       setCountdownTime(120);
+      setCountdownVisible(false);
       Alert.alert('Success', 'Please check your SMS for new OTP', [
         {text: 'Got It'},
       ]);
@@ -142,11 +157,14 @@ const InputOTPScreen = (props) => {
           ]}>
           {checkInput()}
         </Text>
-        <CountdownTimer
-          handleTimout={handleTimout}
-          countdownTime={countdownTime}
-          key={countdownTime}
-        />
+        {!countdownVisible ? (
+          <CountdownTimer
+            handleTimout={handleTimout}
+            countdownTime={countdownTime}
+            key={countdownTime}
+          />
+        ) : null}
+
         <TouchableOpacity onPress={() => resendOTP()}>
           <Text style={[globalStyles.pageSubDetails, {fontSize: 16}]}>
             Didn't receive it?{' '}
@@ -178,6 +196,7 @@ const InputOTPScreen = (props) => {
         close={() => setEditMobileModal(false)}
         closeParent={() => close()}
         closeLast={() => props.closeParent()}
+        token={token}
       />
     </Modal>
   );
