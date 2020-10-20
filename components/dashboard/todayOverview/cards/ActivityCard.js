@@ -33,6 +33,7 @@ export default function ActivityCard(props) {
   const navigation = useNavigation();
 
   console.log('in activity card');
+  console.log(activitySummary);
 
   return (
     <View style={[styles.card, styles.shadow]}>
@@ -47,7 +48,11 @@ export default function ActivityCard(props) {
         <View style={styles.activityCircular}>
           <CircularProgress
             color="#aad326"
-            percent={activitySummary?.steps / maxSteps}
+            percent={
+              activitySummary?.steps / maxSteps > 1
+                ? 1
+                : activitySummary?.steps / maxSteps
+            }
             centreComponent={{
               width: 50 / 2,
               height: 50 / 1.5,
@@ -65,7 +70,11 @@ export default function ActivityCard(props) {
         <View style={styles.activityCircular}>
           <CircularProgress
             color="#aad326"
-            percent={activitySummary?.duration / activityTarget}
+            percent={
+              activitySummary?.duration / activityTarget > 1
+                ? 1
+                : activitySummary?.duration / activityTarget
+            }
             centreComponent={{
               width: 50 / 2,
               height: 50 / 1.5,
@@ -83,7 +92,11 @@ export default function ActivityCard(props) {
         <View style={styles.activityCircular}>
           <CircularProgress
             color="#aad326"
-            percent={activitySummary?.calories / maxCalBurnt}
+            percent={
+              activitySummary?.calories / maxCalBurnt > 1
+                ? 1
+                : activitySummary?.calories / maxCalBurnt
+            }
             centreComponent={{
               width: 50 / 2,
               height: 50 / 1.5,
