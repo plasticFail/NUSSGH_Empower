@@ -27,9 +27,9 @@ const ProgressContent = (props) => {
   } = props;
   const {chevronDownMethod} = props;
   const [percentage, setPercentage] = useState('');
-  const [target, setTarget] = useState(props.target);
+  const [target, setTarget] = useState(0);
   const [patient, setPatient] = useState({});
-  const [age, setAge] = useState();
+  const [age, setAge] = useState(0);
   const [gender, setGender] = useState('');
 
   useEffect(() => {
