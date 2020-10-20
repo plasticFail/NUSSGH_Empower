@@ -87,6 +87,11 @@ const HomeScreen = (props) => {
   useEffect(() => {
     //slide right when enter screen
     props.navigation.addListener('focus', () => {
+      getPatientProfile().then((response) => {
+        if (response != null) {
+          setFirstName(response?.patient?.first_name);
+        }
+      });
       slideRightAnimation.setValue(0);
       Animated.timing(slideRightAnimation, {
         toValue: 1,
