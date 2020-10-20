@@ -9,7 +9,7 @@ import RUN from '../../../resources/images/Patient-Icons/SVG/icon-darkgreen-runn
 import CALBURNT from '../../../resources/images/Patient-Icons/SVG/icon-darkgreen-calburnt-home.svg';
 
 import {carbs, fats, protein} from '../../../commonFunctions/common';
-import NutritionCol from './nutritionCol';
+import NutritionCol from '../nutritionCol';
 import {useNavigation} from '@react-navigation/native';
 
 const logoStyle = {
