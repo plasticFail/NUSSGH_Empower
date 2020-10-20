@@ -42,6 +42,7 @@ import GameCard from '../../components/home/gameCard';
 import NotifCollapse from '../../components/home/collapsible/notifCollapse';
 import DailyCollapse from '../../components/home/collapsible/dailyCollapse';
 import {getPatientProfile} from '../../netcalls/requestsAccount';
+import ActivityCollapse from '../../components/home/collapsible/activityCollapse';
 
 // properties
 const {width, height} = Dimensions.get('window');
@@ -58,10 +59,10 @@ const HomeScreen = (props) => {
   const [firstName, setFirstName] = useState('');
 
   // diary card
-  const [bgl, setBgl] = React.useState(null);
-  const [calorie, setCalorie] = React.useState(null);
-  const [weight, setWeight] = React.useState(null);
-  const [med, setMed] = React.useState('');
+  const [bgl, setBgl] = useState(null);
+  const [calorie, setCalorie] = useState(null);
+  const [weight, setWeight] = useState(null);
+  const [med, setMed] = useState('');
 
   const [bgLogs, setBgLogs] = useState([]);
   const [bgPass, setBgPass] = useState(false);
@@ -73,10 +74,11 @@ const HomeScreen = (props) => {
   const [lastWeight, setLastWeight] = useState('');
 
   // activity card
-  const [protein, setProtein] = React.useState(null);
-  const [carb, setCarb] = React.useState(null);
-  const [fat, setFat] = React.useState(null);
-  const [stepsTaken, setStepsTaken] = React.useState(null);
+  const [protein, setProtein] = useState(null);
+  const [carb, setCarb] = useState(null);
+  const [fat, setFat] = useState(null);
+  const [activitySummary, setActivitySummary] = useState(null);
+  const [activityTarget, setActivityTarget] = useState(null);
 
   //animation
   const slideRightAnimation = useRef(new Animated.Value(0)).current;
@@ -117,6 +119,7 @@ const HomeScreen = (props) => {
           }
         })
         .catch((err) => console.log(err));
+
       initLogs();
     });
   }, []);
@@ -150,7 +153,8 @@ const HomeScreen = (props) => {
           const bglLogs = data[today_date].glucose.logs;
           const weightLogs = data[today_date].weight.logs;
           const foodLogs = data[today_date].food.logs;
-          const activityLogs = data[today_date].activity.logs;
+          const activitySummary = data[today_date].activity.summary;
+          const activityTarget = data[today_date].activity.summary_target.value;
           const medLogs = data[today_date].medication.logs;
           const bgTarget = data[today_date].glucose.target;
           //set logs need to pass to diary card*
@@ -158,12 +162,10 @@ const HomeScreen = (props) => {
           setFoodLogs(foodLogs);
           setMedLogs(medLogs);
           setWeightLogs(weightLogs);
+          setActivitySummary(activitySummary);
+          setActivityTarget(activityTarget);
 
           //evalulate logs
-          const steps = activityLogs.reduce(
-            (acc, curr, index) => acc + curr.steps,
-            0,
-          );
           let averageBgl = bglLogs.reduce(
             (acc, curr, index) => acc + curr.bg_reading,
             0,
@@ -185,7 +187,6 @@ const HomeScreen = (props) => {
             setBgMiss(true);
             setBgl(null);
           }
-          setStepsTaken(steps);
 
           //for med data log
           if (medLogs.length === 0) {
@@ -288,13 +289,14 @@ const HomeScreen = (props) => {
             uncompleteLogs={uncompleteLogs}
             hour={getGreetingFromHour(currHour)}
           />
-          {/* Notifications */}
-          <ActivityCard
-            stepsTaken={stepsTaken}
-            carb={carb}
-            protein={protein}
-            fat={fat}
+          <ActivityCollapse
+            carbAmt={carb}
+            proteinAmt={protein}
+            fatAmt={fat}
+            activitySummary={activitySummary}
+            activityTarget={activityTarget}
           />
+
           <GameCard points={'5'} chances={'2'} rewardCount={'2'} />
           {/* Diary overview of weight, blood glucose, food, medication and physical activity */}
           <DiaryCard

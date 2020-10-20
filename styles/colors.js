@@ -22,4 +22,5 @@ export const Colors = {
   textGrey: '#8a8a8e',
   notifTab: '#005C30',
   dailyTab: '#16A750',
+  activityTab: '#73ca93',
 };

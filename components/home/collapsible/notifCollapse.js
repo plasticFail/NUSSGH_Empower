@@ -21,48 +21,20 @@ const NotifCollapse = (props) => {
 
   const [logNotDoneText, setLogNotDoneText] = useState('');
 
-  useEffect(() => {
-    setOpen(true);
-    setLogNotDone();
-  }, []);
-
-  useEffect(() => {
-    setLogNotDone();
-    countNotif();
-  }, [morningNotDone, afternoonNotDone]);
-
   const countNotif = () => {
     let total = 0;
     //add log notif
-    if (afternoonNotDone.length > 0 || morningNotDone.length > 0) {
-      total += total + 1;
+    if (hour === morningObj.name) {
+      total -= 1;
+      if (total < 0) {
+        total = 0;
+      }
+    } else if (afternoonNotDone.length > 0 || morningNotDone.length > 0) {
+      total++;
     }
     setCount(total);
   };
 
-  const setLogNotDone = () => {
-    //get logs not done for morning and afternoon
-    let string = '';
-    let morningLength =
-      morningNotDone?.length === null ? 0 : morningNotDone?.length;
-    let afternoonLength =
-      afternoonNotDone?.length === null ? 0 : afternoonNotDone?.length;
-    //prepare message
-    if (hour === afternoonObj.name && morningNotDone > 0) {
-      string = morningLength + ' in Morning';
-    }
-    if (hour === eveningObj.name && afternoonLength > 0 && morningLength > 0) {
-      string =
-        morningLength + ' in Morning & ' + afternoonLength + ' in Afternoon';
-    } else {
-      if (morningLength === 0 && afternoonLength > 0) {
-        string = afternoonLength + ' in Afternoon.';
-      } else if (afternoonLength == 0 && morningLength > 0) {
-        string = morningLength + ' in Morning';
-      }
-    }
-    setLogNotDoneText(string);
-  };
   const toggle = (visible) => {
     if (visible) {
       Animated.timing(dropDownAnimation, {
@@ -78,6 +50,40 @@ const NotifCollapse = (props) => {
         useNativeDriver: false,
       }).start();
     }
+  };
+
+  //notification - add log * -----
+  useEffect(() => {
+    setOpen(true);
+  }, []);
+
+  useEffect(() => {
+    setLogNotDone();
+    countNotif();
+  }, [morningNotDone, afternoonNotDone]);
+
+  const setLogNotDone = () => {
+    //get logs not done for morning and afternoon
+    let string = '';
+    let morningLength =
+      morningNotDone?.length === null ? 0 : morningNotDone?.length;
+    let afternoonLength =
+      afternoonNotDone?.length === null ? 0 : afternoonNotDone?.length;
+    //prepare message
+    if (hour === afternoonObj.name && morningLength > 0) {
+      string = morningLength + ' in Morning';
+    }
+    if (hour === eveningObj.name && afternoonLength > 0 && morningLength > 0) {
+      string =
+        morningLength + ' in Morning & ' + afternoonLength + ' in Afternoon';
+    } else {
+      if (morningLength === 0 && afternoonLength > 0) {
+        string = afternoonLength + ' in Afternoon.';
+      } else if (afternoonLength == 0 && morningLength > 0) {
+        string = morningLength + ' in Morning';
+      }
+    }
+    setLogNotDoneText(string);
   };
 
   const heightInterpolation = dropDownAnimation.interpolate({

@@ -206,7 +206,6 @@ const showEdit = (dateToCompare) => {
 
 const getMissedArr = (morningLog, afternoonLog, eveningLog) => {
   let list = [];
-  console.log(morningLog);
   if (morningLog.length === 0) {
     list.push(morningObj.name);
   }
