@@ -166,7 +166,7 @@ class AddLogScreen extends Component {
   closeModal = () => {
     this.setState({showModal: false});
     this.resetState();
-    this.init(); //update log done check*
+    setTimeout(() => this.init(), 500);
   };
 
   setDate = (date) => {
