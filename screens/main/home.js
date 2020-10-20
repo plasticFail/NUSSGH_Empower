@@ -43,15 +43,17 @@ import NotifCollapse from '../../components/home/collapsible/notifCollapse';
 import DailyCollapse from '../../components/home/collapsible/dailyCollapse';
 import {getPatientProfile} from '../../netcalls/requestsAccount';
 import ActivityCollapse from '../../components/home/collapsible/activityCollapse';
+import OverviewCollapse from '../../components/home/collapsible/overviewCollapse';
+import GameCollapse from '../../components/home/collapsible/gameCollapse';
 
 // properties
 const {width, height} = Dimensions.get('window');
 const today_date = Moment(new Date()).format('YYYY-MM-DD');
 const dateString = Moment(new Date()).format('DD MMM YYYY');
 
-const maxCarbs = 150; //grams
-const maxProtein = 112; //grams
-const maxFats = 50; //grams
+const point = 1600;
+const chances = 35;
+const rewards = 1;
 
 const HomeScreen = (props) => {
   const [currHour, setCurrHour] = useState(new Date().getHours());
@@ -296,29 +298,26 @@ const HomeScreen = (props) => {
             activitySummary={activitySummary}
             activityTarget={activityTarget}
           />
-
-          <GameCard points={'5'} chances={'2'} rewardCount={'2'} />
-          {/* Diary overview of weight, blood glucose, food, medication and physical activity */}
-          <DiaryCard
-            today_date={today_date}
+          <OverviewCollapse
             bgl={bgl}
             calorie={calorie}
-            weight={weight}
             medResult={med}
-            bgLogs={bgLogs}
+            lastWeight={lastWeight}
+            dateString={dateString}
             bgPass={bgPass}
             bgMiss={bgMiss}
-            dateString={dateString}
+            bgLogs={bgLogs}
             foodLogs={foodLogs}
             carbs={carb}
             fats={fat}
-            foodPass={foodPass}
             protein={protein}
+            foodPass={foodPass}
             weightLogs={weightLogs}
             medLogs={medLogs}
-            lastWeight={lastWeight}
             init={() => initLogs()}
           />
+          <GameCollapse points={point} chances={chances} rewards={rewards} />
+          {/* Diary overview of weight, blood glucose, food, medication and physical activity */}
         </ScrollView>
       </Animated.View>
     </View>

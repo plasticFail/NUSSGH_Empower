@@ -24,7 +24,7 @@ const NutritionCol = (props) => {
     <View>
       <Text style={styles.foodHeader}>{header}</Text>
       <ProgressBar
-        containerStyle={{height: 7.5, marginBottom: 5, width: 70}}
+        containerStyle={{height: 5, marginBottom: 5, width: 70}}
         progress={'22%'}
         progressBarColor={'#005c30'}
         backgroundBarColor={'white'}

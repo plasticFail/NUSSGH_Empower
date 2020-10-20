@@ -23,4 +23,6 @@ export const Colors = {
   notifTab: '#005C30',
   dailyTab: '#16A750',
   activityTab: '#73ca93',
+  overviewTab: 'white',
+  gameTab: '#e1e7ed',
 };

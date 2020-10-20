@@ -10,9 +10,6 @@ import {
   checkMedTaken4Day,
   getMedDonePeriods,
   renderGreetingText,
-  maxCarbs,
-  maxProtein,
-  maxFats,
   checkFoodLogQuantity,
 } from '../../commonFunctions/diaryFunctions';
 import {
@@ -226,9 +223,9 @@ class TargetBlock extends Component {
           this.setState({foodPass: false});
         }
       }
-      this.setState({carbs: totalCarbs.toFixed(2)});
-      this.setState({protein: totalProtein.toFixed(2)});
-      this.setState({fats: totalFats.toFixed(2)});
+      this.setState({carbs: Math.round(totalCarbs)});
+      this.setState({protein: Math.round(totalProtein)});
+      this.setState({fats: Math.round(totalFats)});
       this.setState({foodFailCount: length - passCount});
     }
     if (checkFoodLogQuantity(this.state.foodLogs)) {

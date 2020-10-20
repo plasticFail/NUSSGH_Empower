@@ -7,14 +7,10 @@ import CircularProgress from '../../dashboard/todayOverview/CircularProgress';
 import STEP from '../../../resources/images/Patient-Icons/SVG/icon-darkgreen-steps-home.svg';
 import RUN from '../../../resources/images/Patient-Icons/SVG/icon-darkgreen-running-home.svg';
 import CALBURNT from '../../../resources/images/Patient-Icons/SVG/icon-darkgreen-calburnt-home.svg';
-import ProgressBar from '../../progressbar';
-import {
-  carbs,
-  renderNutrientPercent,
-  fats,
-  protein,
-} from '../../../commonFunctions/common';
+
+import {carbs, fats, protein} from '../../../commonFunctions/common';
 import NutritionCol from './nutritionCol';
+import {useNavigation} from '@react-navigation/native';
 
 const logoStyle = {
   width: 50,
@@ -27,6 +23,7 @@ const ActivityCollapse = (props) => {
   const [minHeight, setMinHeight] = useState(0);
   const [maxHeight, setMaxHeight] = useState(0);
   const dropDownAnimation = useRef(new Animated.Value(1)).current;
+  const navigation = useNavigation();
 
   useEffect(() => {
     setOpen(true);
@@ -77,10 +74,11 @@ const ActivityCollapse = (props) => {
           style={{
             maxHeight: heightInterpolation,
             backgroundColor: Colors.activityTab,
-            paddingBottom: '2%',
+            paddingBottom: '4%',
           }}>
           <>
-            <View
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Reports', {initialTab: 4})}
               style={{flexDirection: 'row', justifyContent: 'space-around'}}>
               <View style={styles.activityCircular}>
                 <CircularProgress
@@ -139,9 +137,10 @@ const ActivityCollapse = (props) => {
                 </Text>
                 <Text style={styles.activityParam}>Cal Burnt</Text>
               </View>
-            </View>
+            </TouchableOpacity>
             <View style={styles.whiteborder} />
-            <View
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Reports', {initialTab: 1})}
               style={{justifyContent: 'space-around', flexDirection: 'row'}}>
               <NutritionCol
                 amount={carbAmt}
@@ -154,7 +153,7 @@ const ActivityCollapse = (props) => {
                 nutrientType={protein}
                 header="Protein"
               />
-            </View>
+            </TouchableOpacity>
           </>
         </Animated.View>
       )}
@@ -208,6 +207,6 @@ const styles = StyleSheet.create({
   whiteborder: {
     borderBottomColor: 'white',
     borderBottomWidth: 2,
-    margin: '3%',
+    margin: '4%',
   },
 });
