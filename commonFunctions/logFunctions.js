@@ -419,6 +419,7 @@ const renderUncompleteLogText = (
       return 'Incomplete for Afternoon';
     }
   }
+  return '';
 };
 
 export {

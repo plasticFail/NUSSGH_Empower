@@ -12,7 +12,6 @@ const HeaderCard = (props) => {
         justifyContent: 'center',
         backgroundColor: '#F5F6F9',
         paddingBottom: '3%',
-        marginTop: '5%',
       }}>
       <Text style={styles.greetingText}>Good {hour},</Text>
       <Text style={styles.usernameText}>{username}</Text>

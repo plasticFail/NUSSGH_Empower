@@ -274,17 +274,27 @@ class AddLogScreen extends Component {
                 key={item}
                 onPress={() => this.openModalType(item)}>
                 {renderLogIconNavy(item)}
-                <View style={{flex: 1}}>
+                {renderUncompleteLogText(
+                  uncompletedMorningType,
+                  uncompletedAfternoonType,
+                  period,
+                  item,
+                ).length > 0 ? (
+                  <View style={{flex: 1}}>
+                    <Text style={styles.logHeader}>{item}</Text>
+                    <Text style={styles.uncompleteDetail}>
+                      {renderUncompleteLogText(
+                        uncompletedMorningType,
+                        uncompletedAfternoonType,
+                        period,
+                        item,
+                      )}
+                    </Text>
+                  </View>
+                ) : (
                   <Text style={styles.logHeader}>{item}</Text>
-                  <Text style={styles.uncompleteDetail}>
-                    {renderUncompleteLogText(
-                      uncompletedMorningType,
-                      uncompletedAfternoonType,
-                      period,
-                      item,
-                    )}
-                  </Text>
-                </View>
+                )}
+
                 <Ionicon
                   name="alert-circle-outline"
                   size={40}
@@ -302,17 +312,26 @@ class AddLogScreen extends Component {
                 onPress={() => this.openModalType(item)}
                 key={item}>
                 {renderLogIconNavy(item)}
-                <View style={{flex: 1}}>
+                {renderUncompleteLogText(
+                  uncompletedMorningType,
+                  uncompletedAfternoonType,
+                  period,
+                  item,
+                ).length > 0 ? (
+                  <View style={{flex: 1}}>
+                    <Text style={styles.logHeader}>{item}</Text>
+                    <Text style={styles.uncompleteDetail}>
+                      {renderUncompleteLogText(
+                        uncompletedMorningType,
+                        uncompletedAfternoonType,
+                        period,
+                        item,
+                      )}
+                    </Text>
+                  </View>
+                ) : (
                   <Text style={styles.logHeader}>{item}</Text>
-                  <Text style={styles.uncompleteDetail}>
-                    {renderUncompleteLogText(
-                      uncompletedMorningType,
-                      uncompletedAfternoonType,
-                      period,
-                      item,
-                    )}
-                  </Text>
-                </View>
+                )}
                 <Ionicon
                   name="checkmark"
                   size={40}
