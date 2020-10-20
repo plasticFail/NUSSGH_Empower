@@ -1,7 +1,7 @@
 import React, {useEffect, useState, useRef} from 'react';
 import {View, StyleSheet, TouchableOpacity, Text, Animated} from 'react-native';
 import {Colors} from '../../../styles/colors';
-import {maxSteps} from '../../../commonFunctions/diaryFunctions';
+import {maxSteps, maxCalBurnt} from '../../../commonFunctions/diaryFunctions';
 import CircularProgress from '../../dashboard/todayOverview/CircularProgress';
 
 import STEP from '../../../resources/images/Patient-Icons/SVG/icon-darkgreen-steps-home.svg';
@@ -83,7 +83,11 @@ const ActivityCollapse = (props) => {
               <View style={styles.activityCircular}>
                 <CircularProgress
                   color="#005c30"
-                  percent={activitySummary?.steps / maxSteps}
+                  percent={
+                    activitySummary?.steps / maxSteps > 1
+                      ? 1
+                      : activitySummary?.steps / maxSteps
+                  }
                   centreComponent={{
                     width: 50 / 2,
                     height: 50 / 1.5,
@@ -102,7 +106,11 @@ const ActivityCollapse = (props) => {
               <View style={styles.activityCircular}>
                 <CircularProgress
                   color="#005c30"
-                  percent={activitySummary?.duration / activityTarget}
+                  percent={
+                    activitySummary?.duration / activityTarget > 1
+                      ? 1
+                      : activitySummary?.duration / activityTarget
+                  }
                   centreComponent={{
                     width: 50 / 2,
                     height: 50 / 1.5,
@@ -121,7 +129,11 @@ const ActivityCollapse = (props) => {
               <View style={styles.activityCircular}>
                 <CircularProgress
                   color="#005c30"
-                  percent={activitySummary?.duration / activityTarget}
+                  percent={
+                    activitySummary?.calories / maxCalBurnt > 1
+                      ? 1
+                      : activitySummary?.calories / maxCalBurnt
+                  }
                   centreComponent={{
                     width: 50 / 2,
                     height: 50 / 1.5,

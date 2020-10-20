@@ -16,6 +16,7 @@ import LeftArrowBtn from '../logs/leftArrowBtn';
 import InputOTPScreen from '../../screens/login/inputOTPScreen';
 //style
 import globalStyles from '../../styles/globalStyles';
+import {sendOTPRequest} from '../../netcalls/requestsPasswordReset';
 
 const emailRgx = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
@@ -24,6 +25,34 @@ const EditPhoneModal = (props) => {
   const [newPhoneNumber, setNewPhoneNumber] = useState('');
   const {number} = props;
 
+  const getOTP = () => {
+    sendOTPRequest(number).then((response) => {
+      if (response.message === 'OTP sent.') {
+        Alert.alert(
+          'Success',
+          'OTP has been sent to you via SMS',
+          [
+            {
+              text: 'Got It',
+              onPress: () => setInputOTPShow(true),
+            },
+          ],
+          {cancelable: false},
+        );
+      } else {
+        Alert.alert(
+          'Unexpected Error',
+          'Please try again later',
+          [
+            {
+              text: 'Got It',
+            },
+          ],
+          {cancelable: false},
+        );
+      }
+    });
+  };
   return (
     <Modal
       isVisible={props.visible}
@@ -47,7 +76,7 @@ const EditPhoneModal = (props) => {
       <View style={globalStyles.buttonContainer}>
         <TouchableOpacity
           style={globalStyles.nextButtonStyle}
-          onPress={() => setInputOTPShow(true)}>
+          onPress={() => getOTP()}>
           <Text style={globalStyles.actionButtonText}>Get OTP</Text>
         </TouchableOpacity>
       </View>

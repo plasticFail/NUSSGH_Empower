@@ -22,18 +22,24 @@ const AccountDetailScreen = (props) => {
   const [username, setUsername] = useState('');
   const [name, setName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [patient, setPatient] = useState({});
 
   useEffect(() => {
+    init();
+  }, []);
+
+  const init = () => {
     getPatientProfile().then((response) => {
       if (response != null) {
         let data = response.patient;
+        setPatient(data);
         setUsername(data.username);
         let nameString = data.first_name + ' ' + data.last_name;
         setName(nameString);
         setPhoneNumber(data.contact_number);
       }
     });
-  }, []);
+  };
 
   return (
     <View style={[globalStyles.pageContainer]}>
@@ -53,15 +59,21 @@ const AccountDetailScreen = (props) => {
           click={false}
           usernameModalVisible={usernameModalVisible}
           openModal={() => setUsernameModalVisible(true)}
-          closeModal={() => setUsernameModalVisible(false)}
+          closeModal={() => {
+            setUsernameModalVisible(false);
+          }}
         />
         <Clickable
           heading={'Name'}
           content={name}
-          click={false}
+          click={true}
           nameModalVisible={nameModalVisible}
           openModal={() => setNameModalVisible(true)}
-          closeModal={() => setNameModalVisible(false)}
+          closeModal={() => {
+            setNameModalVisible(false);
+            init();
+          }}
+          patient={patient}
         />
         <Clickable
           heading={'Phone Number'}
@@ -69,7 +81,11 @@ const AccountDetailScreen = (props) => {
           click={true}
           phoneModalVisible={phoneModalVisible}
           openModal={() => setPhoneModalVisible(true)}
-          closeModal={() => setPhoneModalVisible(false)}
+          closeModal={() => {
+            setPhoneModalVisible(false);
+            init();
+          }}
+          patient={patient}
         />
         <Clickable
           heading={'Change Password'}

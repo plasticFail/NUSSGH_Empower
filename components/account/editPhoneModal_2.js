@@ -6,8 +6,10 @@ import Modal from 'react-native-modal';
 import globalStyles from '../../styles/globalStyles';
 //component
 import LeftArrowBtn from '../logs/leftArrowBtn';
+import {editPhonNum} from '../../netcalls/requestsAccount';
 
 const EditPhoneModal_2 = (props) => {
+  const {token} = props;
   const [number, setNumber] = useState('');
 
   const checkPhoneNo = () => {
@@ -26,21 +28,36 @@ const EditPhoneModal_2 = (props) => {
   };
 
   const handleSubmit = () => {
-    Alert.alert(
-      'Mobile No. Changed Successfully',
-      '',
-      [
-        {
-          text: 'Got It',
-          onPress: () => {
-            props.close();
-            props.closeParent();
-            props.closeLast();
-          },
-        },
-      ],
-      {cancelable: false},
-    );
+    editPhonNum(number, token).then((response) => {
+      if (response) {
+        Alert.alert(
+          'Mobile No. Changed Successfully',
+          '',
+          [
+            {
+              text: 'Got It',
+              onPress: () => {
+                props.close();
+                props.closeParent();
+                props.closeLast();
+              },
+            },
+          ],
+          {cancelable: false},
+        );
+      } else {
+        Alert.alert(
+          'Unexpected Error',
+          'Please try again alter',
+          [
+            {
+              text: 'Got It',
+            },
+          ],
+          {cancelable: false},
+        );
+      }
+    });
   };
 
   return (
