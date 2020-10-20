@@ -7,9 +7,6 @@ const NutritionCol = (props) => {
   const {amount, nutrientType, header} = props;
   const [percent, setPercent] = useState('0%');
 
-  console.log('in nutri col ' + percent);
-  console.log(amount);
-
   useEffect(() => {
     renderNutrientPercent(amount, nutrientType).then((value) => {
       if (value > 0) {

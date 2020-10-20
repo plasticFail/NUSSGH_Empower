@@ -44,7 +44,9 @@ const GameCollapse = (props) => {
   });
 
   return (
-    <View onLayout={(event) => setMaxHeight(event.nativeEvent.layout.height)}>
+    <View
+      onLayout={(event) => setMaxHeight(event.nativeEvent.layout.height)}
+      style={{backgroundColor: 'white'}}>
       <View
         style={styles.cardTab}
         onLayout={(event) => setMinHeight(event.nativeEvent.layout.height)}>
