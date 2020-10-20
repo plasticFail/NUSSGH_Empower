@@ -274,7 +274,7 @@ class AddLogScreen extends Component {
                 key={item}
                 onPress={() => this.openModalType(item)}>
                 {renderLogIconNavy(item)}
-                <View>
+                <View style={{flex: 1}}>
                   <Text style={styles.logHeader}>{item}</Text>
                   <Text style={styles.uncompleteDetail}>
                     {renderUncompleteLogText(
@@ -302,7 +302,7 @@ class AddLogScreen extends Component {
                 onPress={() => this.openModalType(item)}
                 key={item}>
                 {renderLogIconNavy(item)}
-                <View>
+                <View style={{flex: 1}}>
                   <Text style={styles.logHeader}>{item}</Text>
                   <Text style={styles.uncompleteDetail}>
                     {renderUncompleteLogText(
@@ -430,7 +430,8 @@ const styles = StyleSheet.create({
   },
   uncompleteDetail: {
     color: '#ff0844',
-    fontFamily: 'SFProDisplay-Bold',
+    fontFamily: 'SFProDisplay-Regular',
+    fontSize: 20,
   },
   logHeader: {
     fontSize: normalTextFontSize,
