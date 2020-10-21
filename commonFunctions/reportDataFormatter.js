@@ -176,7 +176,6 @@ function partitionActivityForDay(activitySummary, keys) {
     const now = Moment(new Date());
     const currentHour = now.get('hours');
     const day = now.format("DD/MM/YYYY");
-    const date = Moment(activitySummary.date, "DD/MM/YYYY HH:mm:ss").format("");
     const intervalLength = 2; // 2 hourly
     let result = [];
 
@@ -206,7 +205,7 @@ function partitionActivityForDay(activitySummary, keys) {
 function replaceActivitySummary(activitySummaries) {
     const keysToReplace = ['steps', 'duration', 'calories'];
     const todayDate = getTodayDate();
-    const indexOfSummaryWithTodayDate = activitySummaries.indexOf((sum) => sum.date === todayDate);
+    const indexOfSummaryWithTodayDate = activitySummaries.findIndex((sum) => sum.date === todayDate);
     let copy = activitySummaries.map(x => x);
     if (indexOfSummaryWithTodayDate != -1) {
         const activitySummaryToday = activitySummaries[indexOfSummaryWithTodayDate];
