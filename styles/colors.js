@@ -20,4 +20,9 @@ export const Colors = {
   gameColorGrey: '#E1E7ED',
   editBackgroundColor: '#f6f7fa',
   textGrey: '#8a8a8e',
+  notifTab: '#005C30',
+  dailyTab: '#16A750',
+  activityTab: '#73ca93',
+  overviewTab: 'white',
+  gameTab: '#e1e7ed',
 };

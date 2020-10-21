@@ -46,12 +46,13 @@ import {
   selfv,
   defaultv,
   phyv,
+  bgpost,
 } from '../../commonFunctions/goalFunctions';
 
 const progress = 0.3;
 
 const GoalList = (props) => {
-  const {goals} = props;
+  const {goals, fromAddLog, toOpen} = props;
   const {init} = props;
   const [selectedGoal, setSelectedGoal] = useState({});
   const [selectedType, setSelectedType] = useState('');
@@ -77,6 +78,22 @@ const GoalList = (props) => {
       setSuggestedGoals(filterForGoalType(goals, defaultv));
     }
   }, [goals]);
+
+  //open goal from add log page
+  useEffect(() => {
+    if (fromAddLog != null && toOpen != null) {
+      console.log('opening goal detail from add log success');
+      let type = fromAddLog;
+      if (fromAddLog === bgpost) {
+        type = bg;
+      }
+      if (toOpen.set_by != defaultv) {
+        setTimeout(() => {
+          openGoalDetail(toOpen, type);
+        }, 500);
+      }
+    }
+  }, [fromAddLog]);
 
   const openGoalDetail = (item, type) => {
     setSelectedGoal(item);

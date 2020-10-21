@@ -26,6 +26,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 //function
 import {getGoals} from '../../netcalls/requestsGoals';
 import {isMonday} from '../../commonFunctions/goalFunctions';
+import InProgress from '../../components/inProgress';
 
 const GoalsScreen = (props) => {
   const [openAdd, setOpenAdd] = useState(false);
@@ -47,7 +48,7 @@ const GoalsScreen = (props) => {
   };
 
   return (
-    <View style={globalStyles.pageContainer}>
+    <View style={{...globalStyles.pageContainer, ...props.style}}>
       <View style={globalStyles.menuBarContainer}>
         <LeftArrowBtn close={() => props.navigation.navigate('Home')} />
       </View>
@@ -78,7 +79,12 @@ const GoalsScreen = (props) => {
 
       {/*Render Goals */}
       <ScrollView contentContainerStyle={{flexGrow: 1}}>
-        <GoalList goals={goals} init={initGoals} />
+        <GoalList
+          goals={goals}
+          init={initGoals}
+          fromAddLog={props.route.params?.type}
+          toOpen={props.route.params?.item}
+        />
       </ScrollView>
       <AddGoalModal
         visible={openAdd}

@@ -25,6 +25,7 @@ import {
   renderLogIcon,
   checkLogDone,
   renderLogIconNavy,
+  renderUncompleteLogText,
 } from '../../../commonFunctions/logFunctions';
 import {
   getGreetingFromHour,
@@ -46,6 +47,7 @@ import CreateMealLogBlock from '../../../components/logs/meal/CreateMealLogBlock
 import LeftArrowBtn from '../../../components/logs/leftArrowBtn';
 import LoadingModal from '../../../components/loadingModal';
 import UncompleteLogCard from '../../../components/uncompleteLogCard';
+import {normalTextFontSize} from '../../../styles/variables';
 // Functions
 
 const fixedDateTime = new Date();
@@ -90,6 +92,10 @@ class AddLogScreen extends Component {
       this.state.slideRightAnimation = new Animated.Value(0); //reset
       this.init();
       this.setAnimation();
+      if (this.props.route.params?.type != undefined) {
+        this.openModalType(this.props.route.params?.type);
+        delete this.props.route.params; //prevent opening again from tab press
+      }
     });
     console.log('log contruct');
   }
@@ -100,7 +106,7 @@ class AddLogScreen extends Component {
     console.log('log mount');
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProp, prevState) {
     this.setAnimation();
     console.log('log update');
   }
@@ -117,7 +123,7 @@ class AddLogScreen extends Component {
     let period = getGreetingFromHour(this.state.recordDate.getHours());
     this.setState({
       period: period,
-      todayDate: Moment(this.state.recordDate).format('Do MMMM YYYY'),
+      todayDate: Moment(new Date()).format('Do MMMM YYYY'),
     });
     checkLogDone(period).then((response) => {
       if (response !== undefined) {
@@ -126,7 +132,11 @@ class AddLogScreen extends Component {
         this.setState({notCompletedTypes: response.notCompleted});
       }
     });
+    this.initUncomplete();
+  }
 
+  initUncomplete() {
+    let period = getGreetingFromHour(this.state.recordDate.getHours());
     //get logs not done for morning and afternoon
     if (period != morningObj.name) {
       checkLogDone(morningObj.name).then((response) => {
@@ -146,6 +156,7 @@ class AddLogScreen extends Component {
   resetState() {
     this.setState({
       recordDate: new Date(),
+      period: '',
 
       showModal: false,
       selectedLogType: '',
@@ -158,6 +169,9 @@ class AddLogScreen extends Component {
       showMed: false,
       showWeight: false,
       slideRightAnimation: new Animated.Value(0),
+
+      uncompletedMorningType: [],
+      uncompletedAfternoonType: [],
     });
   }
 
@@ -169,7 +183,7 @@ class AddLogScreen extends Component {
   closeModal = () => {
     this.setState({showModal: false});
     this.resetState();
-    this.init(); //update log done check*
+    setTimeout(() => this.init(), 500);
   };
 
   setDate = (date) => {
@@ -247,19 +261,6 @@ class AddLogScreen extends Component {
           <Text style={globalStyles.pageHeader}>Add Log</Text>
           <Text style={[globalStyles.pageDetails]}>{todayDate}</Text>
           <ScrollView contentContainerStyle={{flexGrow: 1}}>
-            {/*Uncomplete log type for period of the day */}
-            {period === afternoonObj.name &&
-              RenderUncompleteLog(uncompletedMorningType, morningObj.name)}
-            {period === eveningObj.name && (
-              <>
-                {RenderUncompleteLog(uncompletedMorningType, morningObj.name)}
-                {RenderUncompleteLog(
-                  uncompletedAfternoonType,
-                  afternoonObj.name,
-                )}
-              </>
-            )}
-
             <Text style={[globalStyles.pageDetails, {marginTop: '4%'}]}>
               Progress For {period}
             </Text>
@@ -273,9 +274,27 @@ class AddLogScreen extends Component {
                 key={item}
                 onPress={() => this.openModalType(item)}>
                 {renderLogIconNavy(item)}
-                <Text style={[globalStyles.pageDetails, {color: '#21293a'}]}>
-                  {item}
-                </Text>
+                {renderUncompleteLogText(
+                  uncompletedMorningType,
+                  uncompletedAfternoonType,
+                  period,
+                  item,
+                ).length > 0 ? (
+                  <View style={{flex: 1}}>
+                    <Text style={styles.logHeader}>{item}</Text>
+                    <Text style={styles.uncompleteDetail}>
+                      {renderUncompleteLogText(
+                        uncompletedMorningType,
+                        uncompletedAfternoonType,
+                        period,
+                        item,
+                      )}
+                    </Text>
+                  </View>
+                ) : (
+                  <Text style={styles.logHeader}>{item}</Text>
+                )}
+
                 <Ionicon
                   name="alert-circle-outline"
                   size={40}
@@ -293,9 +312,26 @@ class AddLogScreen extends Component {
                 onPress={() => this.openModalType(item)}
                 key={item}>
                 {renderLogIconNavy(item)}
-                <Text style={[globalStyles.pageDetails, {color: '#21293a'}]}>
-                  {item}
-                </Text>
+                {renderUncompleteLogText(
+                  uncompletedMorningType,
+                  uncompletedAfternoonType,
+                  period,
+                  item,
+                ).length > 0 ? (
+                  <View style={{flex: 1}}>
+                    <Text style={styles.logHeader}>{item}</Text>
+                    <Text style={styles.uncompleteDetail}>
+                      {renderUncompleteLogText(
+                        uncompletedMorningType,
+                        uncompletedAfternoonType,
+                        period,
+                        item,
+                      )}
+                    </Text>
+                  </View>
+                ) : (
+                  <Text style={styles.logHeader}>{item}</Text>
+                )}
                 <Ionicon
                   name="checkmark"
                   size={40}
@@ -399,21 +435,6 @@ class AddLogScreen extends Component {
   }
 }
 
-function RenderUncompleteLog(uncompleteLog, periodName) {
-  return (
-    <View style={[logStyles.logItem, styles.uncompleteContainer]}>
-      <Text style={[globalStyles.pageDetails, styles.uncompleteText]}>
-        Incomplete Logs for {periodName}:
-      </Text>
-      <UncompleteLogCard
-        uncompleteLogs={uncompleteLog}
-        color={navy_color}
-        hideChevron={true}
-      />
-    </View>
-  );
-}
-
 const styles = StyleSheet.create({
   addButton: {
     alignSelf: 'center',
@@ -425,6 +446,18 @@ const styles = StyleSheet.create({
   },
   uncompleteText: {
     color: '#ff0844',
+  },
+  uncompleteDetail: {
+    color: '#ff0844',
+    fontFamily: 'SFProDisplay-Regular',
+    fontSize: 20,
+  },
+  logHeader: {
+    fontSize: normalTextFontSize,
+    fontWeight: '800',
+    fontFamily: 'SFProDisplay-Regular',
+    marginBottom: '2%',
+    color: '#21293a',
   },
 });
 

@@ -24,27 +24,24 @@ import LeftArrowBtn from '../../../components/logs/leftArrowBtn';
 import TutorialPage from '../../../components/gameCenter/tutorialPage';
 import WordItem from '../../../components/gameCenter/wordItem';
 
-
-
 class GameCenter extends Component {
-
   constructor(props) {
     super(props);
     this.props = props;
-    this.slideRightAnimation = new Animated.Value(0),
-    this.widthInterpolate = this.slideRightAnimation.interpolate({
-      inputRange: [0, 1],
-      outputRange: [Dimensions.get('window').width, 0],
-      extrapolate: 'clamp',
-    });
+    (this.slideRightAnimation = new Animated.Value(0)),
+      (this.widthInterpolate = this.slideRightAnimation.interpolate({
+        inputRange: [0, 1],
+        outputRange: [Dimensions.get('window').width, 0],
+        extrapolate: 'clamp',
+      }));
     this.state = {
-      availableWords : [],
+      availableWords: [],
       games: [],
       activeGame: null,
-      chances : 0,
+      chances: 0,
       rewardPoints: 0,
       showTutorial: false,
-    }
+    };
 
     this.props.navigation.addListener('focus', () => {
       this.slideRightAnimation.setValue(0);
@@ -69,145 +66,166 @@ class GameCenter extends Component {
     }).start();
   }
 
-  init = async() => {
+  init = async () => {
     console.log('refresh game center');
     let responseObj = await requestGetOverview();
     this.setState({chances: responseObj.chances});
     this.setState({rewardPoints: responseObj.points});
 
-    this.setState({availableWords : responseObj.available_words});
+    this.setState({availableWords: responseObj.available_words});
     this.setState({games: responseObj.games});
 
     this.setState({activeGame: null});
-    if(this.state.games && this.state.games.length > 0){
-        for(let i=0;i<this.state.games.length;i++){
-            console.log(this.state.games[i].active);
-            if(this.state.games[i].active){
-                this.setState({activeGame: this.state.games[i]});
-            }
+    if (this.state.games && this.state.games.length > 0) {
+      for (let i = 0; i < this.state.games.length; i++) {
+        console.log(this.state.games[i].active);
+        if (this.state.games[i].active) {
+          this.setState({activeGame: this.state.games[i]});
         }
+      }
     }
-  }
+  };
 
   render() {
     return (
-        <View style={globalStyles.pageContainer}>
-          <Animated.View
-              style={{
-                ...globalStyles.pageContainer,
-                ...{transform: [{translateX: this.widthInterpolate}]},
-              }}>
-            <View style={globalStyles.menuBarContainer}>
-              <LeftArrowBtn close={() => this.props.navigation.navigate('Home')}/>
-            </View>
-            <View style={styles.titleWithHintContainer}>
-              <Text style={globalStyles.pageHeader}>Game Center</Text>
-              <Ionicon
-                  style={globalStyles.pageIcon}
-                  name="help-circle-outline"
-                  size={40}
-                  color={Colors.gameColorGreen}
-                  onPress={() => this.setState({showTutorial:true})}
-              />
-            </View>
-            <Text style={[globalStyles.pageDetails]}>Season 1: Word Bingo</Text>
+      <View style={globalStyles.pageContainer}>
+        <Animated.View
+          style={{
+            ...globalStyles.pageContainer,
+            ...{transform: [{translateX: this.widthInterpolate}]},
+          }}>
+          <View style={globalStyles.menuBarContainer}>
+            <LeftArrowBtn
+              close={() => this.props.navigation.navigate('Home')}
+            />
+          </View>
+          <View style={styles.titleWithHintContainer}>
+            <Text style={globalStyles.pageHeader}>Game Center</Text>
+            <Ionicon
+              style={globalStyles.pageIcon}
+              name="help-circle-outline"
+              size={40}
+              color={Colors.gameColorGreen}
+              onPress={() => this.setState({showTutorial: true})}
+            />
+          </View>
+          <Text style={[globalStyles.pageDetails]}>Season 1: Word Bingo</Text>
 
-            <ScrollView contentContainerStyle={{flexGrow: 1}}>
-              <Image
-                  resizeMode="contain"
-                  style={GameCenterStyles.logo}
-                  source={require('../../../resources/images/gameCenter/img-header.png')}
-              />
+          <ScrollView contentContainerStyle={{flexGrow: 1}}>
+            <Image
+              resizeMode="contain"
+              style={GameCenterStyles.logo}
+              source={require('../../../resources/images/gameCenter/img-header.png')}
+            />
 
-              <View style={[GameCenterStyles.card, styles.marginTop]}>
+            <View style={[GameCenterStyles.card, styles.marginTop]}>
+              <View
+                style={[
+                  GameCenterStyles.cardPadding,
+                  GameCenterStyles.subContainer,
+                ]}>
+                <Text style={GameCenterStyles.subText}>My Word</Text>
+                {this.state.games.length > 0 && (
+                  <TouchableOpacity
+                    onPress={() => {
+                      this.props.navigation.navigate('MyWord', {
+                        games: this.state.games,
+                      });
+                    }}>
+                    <Text
+                      style={[
+                        GameCenterStyles.subText,
+                        GameCenterStyles.greenText,
+                      ]}>
+                      View All
+                    </Text>
+                  </TouchableOpacity>
+                )}
+                {this.state.availableWords.length > 0 && (
+                  <Ionicon
+                    name="add-circle-outline"
+                    size={30}
+                    color={Colors.gameColorGreen}
+                    onPress={() =>
+                      this.props.navigation.navigate('StartNewWord', {
+                        availableWords: this.state.availableWords,
+                      })
+                    }
+                  />
+                )}
+              </View>
+              <View style={styles.divider} />
+              {this.state.activeGame && this.state.activeGame.word !== '' ? (
+                <WordItem
+                  imageSource={GetIconByWord(this.state.activeGame.word)}
+                  wordText={this.state.activeGame.word}
+                  percentage={this.state.activeGame.word_progress + '%'}
+                  showArrow={true}
+                  clickFunc={() => {
+                    this.props.navigation.navigate('FillTheCard', {
+                      activeGame: this.state.activeGame,
+                      chances: this.state.chances,
+                    });
+                  }}
+                />
+              ) : (
                 <View
-                    style={[
-                      GameCenterStyles.cardPadding,
-                      GameCenterStyles.subContainer,
-                    ]}>
-                  <Text style={GameCenterStyles.subText}>My Word</Text>
-                  {this.state.games.length > 0 &&
-                    <TouchableOpacity
-                        onPress={() => {
-                            this.props.navigation.navigate('MyWord', {
-                                games: this.state.games
-                            });
-                        }}>
-                        <Text
-                            style={[
-                                GameCenterStyles.subText,
-                                GameCenterStyles.greenText,
-                            ]}>
-                            View All
-                        </Text>
-                    </TouchableOpacity>
-                  }
-                  {this.state.availableWords.length > 0 &&
-                    <Ionicon
-                        name="add-circle-outline"
-                        size={30}
-                        color={Colors.gameColorGreen}
-                        onPress={() => this.props.navigation.navigate('StartNewWord', {
-                          availableWords: this.state.availableWords
-                        })}/>
-                  }
+                  style={[
+                    GameCenterStyles.center,
+                    GameCenterStyles.cardPadding,
+                  ]}>
+                  <Text style={[GameCenterStyles.subText]}>
+                    No Word Selected
+                  </Text>
                 </View>
-                <View style={styles.divider}/>
-                {this.state.activeGame && this.state.activeGame.word !== '' ? <WordItem imageSource={GetIconByWord(this.state.activeGame.word)}
-                                               wordText={this.state.activeGame.word}
-                                               percentage={this.state.activeGame.word_progress + '%'}
-                                               showArrow={true}
-                                               clickFunc={() => {
-                                                 this.props.navigation.navigate('FillTheCard', {
-                                                     activeGame : this.state.activeGame,
-                                                     chances : this.state.chances,
-                                                 })
-                                               }}/>
-                    :
-                    <View style={[GameCenterStyles.center, GameCenterStyles.cardPadding]}>
-                      <Text style={[GameCenterStyles.subText]}>No Word Selected</Text>
-                    </View>}
-              </View>
+              )}
+            </View>
 
-              <View
-                  style={[
-                    GameCenterStyles.card,
-                    GameCenterStyles.cardPadding,
-                    GameCenterStyles.subContainer,
-                  ]}>
-                <Text style={GameCenterStyles.subText}>Chances</Text>
-                <Text style={GameCenterStyles.subText}>{this.state.chances} Left</Text>
-              </View>
+            <View
+              style={[
+                GameCenterStyles.card,
+                GameCenterStyles.cardPadding,
+                GameCenterStyles.subContainer,
+              ]}>
+              <Text style={GameCenterStyles.subText}>Chances</Text>
+              <Text style={GameCenterStyles.subText}>
+                {this.state.chances} Left
+              </Text>
+            </View>
 
-              <View
-                  style={[
-                    GameCenterStyles.card,
-                    GameCenterStyles.cardPadding,
-                    GameCenterStyles.subContainer,
-                  ]}>
-                <Text style={GameCenterStyles.subText}>Reward Points</Text>
-                <Text style={GameCenterStyles.subText}>{this.state.rewardPoints} Available</Text>
-              </View>
+            <View
+              style={[
+                GameCenterStyles.card,
+                GameCenterStyles.cardPadding,
+                GameCenterStyles.subContainer,
+              ]}>
+              <Text style={GameCenterStyles.subText}>Reward Points</Text>
+              <Text style={GameCenterStyles.subText}>
+                {this.state.rewardPoints} Available
+              </Text>
+            </View>
 
-              <TouchableOpacity
-                  style={[
-                    GameCenterStyles.buttonStyle,
-                    GameCenterStyles.nextColor,
-                    GameCenterStyles.marginBottom,
-                  ]}>
-                <Text style={globalStyles.actionButtonText}>Redeem</Text>
-              </TouchableOpacity>
-            </ScrollView>
-          </Animated.View>
+            <TouchableOpacity
+              style={[
+                GameCenterStyles.buttonStyle,
+                GameCenterStyles.nextColor,
+                GameCenterStyles.marginBottom,
+              ]}>
+              <Text style={globalStyles.actionButtonText}>Redeem</Text>
+            </TouchableOpacity>
+          </ScrollView>
+        </Animated.View>
 
-          <Modal
-              isVisible={this.state.showTutorial}
-              transparent={true}
-              animationType="fade"
-              onRequestClose={() => this.setState({showTutorial:false})}>
-            <TutorialPage closeModal={() => this.setState({showTutorial:false})}/>
-          </Modal>
-        </View>
+        <Modal
+          isVisible={this.state.showTutorial}
+          transparent={true}
+          animationType="fade"
+          onRequestClose={() => this.setState({showTutorial: false})}>
+          <TutorialPage
+            closeModal={() => this.setState({showTutorial: false})}
+          />
+        </Modal>
+      </View>
     );
   }
 }

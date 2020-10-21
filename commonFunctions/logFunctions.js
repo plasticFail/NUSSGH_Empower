@@ -17,7 +17,13 @@ import {
   getLastMealLog,
 } from '../storage/asyncStorageFunctions';
 
-import {getGreetingFromHour, checkLast7Day, noLog} from './common';
+import {
+  getGreetingFromHour,
+  checkLast7Day,
+  noLog,
+  eveningObj,
+  afternoonObj,
+} from './common';
 import {getEntry4Day} from '../netcalls/requestsDiary';
 import {
   filterMorning,
@@ -26,6 +32,7 @@ import {
   getHour,
   getDateRange,
   getDateObj,
+  checkFoodLogQuantity,
 } from './diaryFunctions';
 //svg
 import DARKGREEN_BG from '../resources/images/Patient-Icons/SVG/icon-darkgreen-bloodglucose.svg';
@@ -148,7 +155,6 @@ const dateFrom2dayWeightLog = async () => {
 };
 
 const checkLogDone = async (period) => {
-  let weight_data = await getLastWeightLog();
   let completed = [];
   let notCompleted = [];
   let bgLogs = [];
@@ -387,6 +393,35 @@ const handleSubmitWeight = async (date, weight) => {
   }
 };
 
+const renderUncompleteLogText = (
+  uncompleteMorningLog,
+  uncompleteAfternoonLog,
+  periodName,
+  type,
+) => {
+  if (periodName === afternoonObj.name) {
+    if (uncompleteMorningLog.includes(type)) {
+      return 'Incomplete for Morning';
+    }
+  }
+
+  if (periodName === eveningObj.name) {
+    let noMorning = uncompleteMorningLog.includes(type);
+    let noAfternoon = uncompleteAfternoonLog.includes(type);
+    let both =
+      uncompleteMorningLog.includes(type) &&
+      uncompleteAfternoonLog.includes(type);
+    if (both) {
+      return 'Incomplete for Morning & Afternoon';
+    } else if (noMorning) {
+      return 'Incomplete for Morning';
+    } else if (noAfternoon) {
+      return 'Incomplete for Afternoon';
+    }
+  }
+  return '';
+};
+
 export {
   bg_key,
   food_key,
@@ -412,5 +447,6 @@ export {
   handleSubmitMedication,
   handleSubmitWeight,
   dateFrom2dayWeightLog,
+  renderUncompleteLogText,
 };
 //edit flag

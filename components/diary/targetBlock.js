@@ -10,9 +10,7 @@ import {
   checkMedTaken4Day,
   getMedDonePeriods,
   renderGreetingText,
-  maxCarbs,
-  maxProtein,
-  maxFats,
+  checkFoodLogQuantity,
 } from '../../commonFunctions/diaryFunctions';
 import {
   bg_key,
@@ -37,6 +35,12 @@ import ActivityBlock from './blocks/activityBlock';
 import MedBlock from './blocks/medBlock';
 import FoodBlock from './blocks/foodBlock';
 import {getMedication4Day} from '../../netcalls/requestsLog';
+import {
+  renderNutrientPercent,
+  carbs,
+  protein,
+  fats,
+} from '../../commonFunctions/common';
 
 const button_list = [bg_key, food_key, med_key, weight_key, activity_key];
 
@@ -123,7 +127,7 @@ class TargetBlock extends Component {
     this.getBGResult();
     this.getWeightResult();
     this.getActivityResult();
-    this.getFoodResult();
+    this.getFoodResult().then(() => {});
     this.getMedResult();
   };
 
@@ -198,7 +202,7 @@ class TargetBlock extends Component {
     }
   };
 
-  getFoodResult = () => {
+  getFoodResult = async () => {
     let totalCarbs = 0; //grams
     let totalProtein = 0; //grams
     let totalFats = 0;
@@ -211,21 +215,20 @@ class TargetBlock extends Component {
         totalProtein += Number(arr[1]);
         totalFats += Number(arr[2]);
 
-        if (
-          totalCarbs > maxCarbs &&
-          totalProtein > maxProtein &&
-          totalFats &&
-          maxFats
-        ) {
+        let carbpercent = await renderNutrientPercent(totalCarbs, carbs);
+        let proteinpercent = await renderNutrientPercent(totalProtein, protein);
+        let fatpercent = await renderNutrientPercent(totalFats, fats);
+
+        if (carbpercent >= 100 || proteinpercent >= 100 || fatpercent >= 100) {
           this.setState({foodPass: false});
         }
       }
-      this.setState({carbs: totalCarbs.toFixed(2)});
-      this.setState({protein: totalProtein.toFixed(2)});
-      this.setState({fats: totalFats.toFixed(2)});
-      this.setState({foodPassCount: passCount});
+      this.setState({carbs: Math.round(totalCarbs)});
+      this.setState({protein: Math.round(totalProtein)});
+      this.setState({fats: Math.round(totalFats)});
       this.setState({foodFailCount: length - passCount});
-    } else if (length === 0) {
+    }
+    if (checkFoodLogQuantity(this.state.foodLogs)) {
       this.setState({foodMiss: true});
     }
   };
@@ -312,6 +315,7 @@ class TargetBlock extends Component {
       activitySummary,
       medCompleted,
       noMed4Day,
+      activityTarget,
 
       avgBg,
       carbs,
@@ -431,6 +435,7 @@ class TargetBlock extends Component {
             miss={activityMiss}
             day={dateString}
             init={() => this.init()}
+            activityTarget={activityTarget}
           />
         ) : null}
       </>
