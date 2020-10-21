@@ -1,16 +1,23 @@
 import {Platform} from 'react-native';
 import RNPusherPushNotifications from 'react-native-pusher-push-notifications';
+import {getToken} from "../storage/asyncStorageFunctions";
 
 const donutsInterest = 'debug-donuts';
 
-async function initPusherNotif(username, pusherToken) {
+function initPusherNotif(username, pusherToken) {
     // Init interests after registration
-    RNPusherPushNotifications.setInstanceId("c7a6e2ea-9db6-4035-ad44-cbf8e6f23bd8");
+    const id1 = "c18294e5-57a2-4a24-a0d4-ae51f312f7a4";
+    const id2 = "c7a6e2ea-9db6-4035-ad44-cbf8e6f23bd8";
+    RNPusherPushNotifications.setInstanceId(id1);
+
+    //RNPusherPushNotifications.setUserId(username, pusherToken, (statusCode, resp) => console.log('Error oh boy'), () => console.log('Registration success!'));
+
     RNPusherPushNotifications.on('registered', () => {
         subscribe(donutsInterest);
+        subscribe("hello");
     });
-    RNPusherPushNotifications.setUserId(username, pusherToken, (statusCode, resp) => console.log('Error oh boy'), () => console.log('Registration success!'));
     RNPusherPushNotifications.on("notification", handleNotification);
+    RNPusherPushNotifications.getSubscriptions((sub)=> console.log('Get sub', sub), (e)=>console.log(e));
 }
 
 // Handle notifications received
@@ -37,6 +44,22 @@ const handleNotification = notification => {
     }
 };
 
+const testreg = async () => {
+    let res = await fetch("https://c18294e5-57a2-4a24-a0d4-ae51f312f7a4.pushnotifications.pusher.com/device_api/v1/instances/c18294e5-57a2-4a24-a0d4-ae51f312f7a4/devices/fcm", {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Content-type': 'application/json',
+        },
+        body: {
+            token:  "AIzaSyATDIz_EuQF6NX0kjjbJZjFq40-lryL8-Q"
+        }
+    });
+    let respJson = await res.json();
+    console.log(respJson);
+    return respJson;
+}
+
 // Subscribe to an interest
 const subscribe = interest => {
     // Note that only Android devices will respond to success/error callbacks
@@ -46,7 +69,7 @@ const subscribe = interest => {
             console.error(statusCode, response);
         },
         () => {
-            console.log('Success');
+            console.log('Success subscribing interest');
         }
     );
 };

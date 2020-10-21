@@ -37,6 +37,7 @@ function filterToWeekData(monthDataset, endDateOfInterest, xExtractor) {
     return result;
 }
 
+// filters only the relevant points of interests to plot on x-y grid.
 function squashToXY(dataset, xExtractor, yExtractor) {
     let result = [];
     for (const d of dataset) {
@@ -49,7 +50,9 @@ function squashToXY(dataset, xExtractor, yExtractor) {
     return result;
 }
 
-// partition datapoints
+// partition datapoints: separates logs by putting each log from the same day into the same list.
+// example: [{date: "19/01/2020 16:00:00"}, {date: "19/01/2020 18:00:00}, {date: 20/01/2020 00:00:00}]
+// => [[{date: "19/01/2020 16:00:00"}, {date: "19/01/2020 18:00:00"}], [{date: "20/01/2020 00:00:00"}]]
 function partitionDataPoints(dataset) {
     const len = dataset.length;
     if (len === 0) return [];
@@ -168,4 +171,50 @@ function getYStepSize(minY, maxY) {
     return stepSize;
 }
 
-export {filterToDayData, filterToWeekData, partitionDataPoints, getBinCount, squashToXY, processData, generateYAxisValues, generateXAxisLabels, formatY, getYStepSize};
+// temporary function to partition data to show intraday activity. should be removed once a intraday fitbit api works.
+function partitionActivityForDay(activitySummary, keys) {
+    const now = Moment(new Date());
+    const currentHour = now.get('hours');
+    const day = now.format("DD/MM/YYYY");
+    const date = Moment(activitySummary.date, "DD/MM/YYYY HH:mm:ss").format("");
+    const intervalLength = 2; // 2 hourly
+    let result = [];
+
+    for (let i = 10; i < currentHour; i = i + intervalLength) {
+        const partitionedActivity = {date: day + ` ${i}:00:00`};
+        result.push(partitionedActivity);
+    }
+
+    const size = result.length;
+
+    if (size === 0) {
+        return [];
+    }
+
+    for (let i = 0; i < size; i++) {
+        for (const key of keys) {
+            result[i][key] = activitySummary[key] / size;
+        }
+    }
+
+    return result;
+
+}
+
+// replace activity summary with the partitioned one if there is one summary with today's date.
+// to be removed once fitbit provides intraday activity data.
+function replaceActivitySummary(activitySummaries) {
+    const keysToReplace = ['steps', 'duration', 'calories'];
+    const todayDate = getTodayDate();
+    const indexOfSummaryWithTodayDate = activitySummaries.indexOf((sum) => sum.date === todayDate);
+    let copy = activitySummaries.map(x => x);
+    if (indexOfSummaryWithTodayDate != -1) {
+        const activitySummaryToday = activitySummaries[indexOfSummaryWithTodayDate];
+        copy.splice(indexOfSummaryWithTodayDate, 1);
+        const partitionedSummary = partitionActivityForDay(activitySummaryToday, keysToReplace);
+        copy = copy.concat(partitionedSummary);
+    }
+    return copy;
+}
+
+export {filterToDayData, filterToWeekData, partitionDataPoints, getBinCount, squashToXY, processData, generateYAxisValues, generateXAxisLabels, formatY, getYStepSize, partitionActivityForDay, replaceActivitySummary};
