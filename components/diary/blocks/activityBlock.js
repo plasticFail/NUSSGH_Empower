@@ -31,6 +31,7 @@ import CALBURNT from '../../../resources/images/Patient-Icons/SVG/icon-navy-calb
 import STEPS from '../../../resources/images/Patient-Icons/SVG/icon-navy-steps.svg';
 import EXERCISE from '../../../resources/images/Patient-Icons/SVG/icon-navy-activemins.svg';
 import {step_key} from '../../../commonFunctions/logFunctions';
+import ProgressContent2 from './progressContent2';
 
 const heartRate = 'heartrate';
 const distance_key = 'distance';
@@ -45,11 +46,24 @@ const iconStyle = {
 };
 
 const ActivityBlock = (props) => {
-  const {visible, activityLogs, pass, summary, miss, day} = props;
+  const {
+    visible,
+    activityLogs,
+    pass,
+    summary,
+    miss,
+    day,
+    activityTarget,
+  } = props;
   const {closeModal} = props;
   const distance = summary.distance + ' KM';
   const [expand, setExpand] = useState(true);
   const scrollViewRef = useRef();
+  const [duration, setDuration] = useState(0);
+
+  useEffect(() => {
+    setDuration(activityTarget.value);
+  }, []);
 
   return (
     <Modal
@@ -105,7 +119,14 @@ const ActivityBlock = (props) => {
           {renderSummaryContent(distance_key, distance, 'Distance')}
           {renderSummaryContent(caloriesBurnt, caloriesBurnt, summary)}
           {renderSummaryContent(step_key, steps_taken, summary)}
-          {renderSummaryContent(excerise, excerise, summary, expand, setExpand)}
+          {renderSummaryContent(
+            excerise,
+            excerise,
+            summary,
+            expand,
+            setExpand,
+            duration,
+          )}
 
           {!expand && (
             <View
@@ -137,7 +158,14 @@ const ActivityBlock = (props) => {
   );
 };
 
-function renderSummaryContent(type, content, detail, expand, setExpand) {
+function renderSummaryContent(
+  type,
+  content,
+  detail,
+  expand,
+  setExpand,
+  duration,
+) {
   return (
     <>
       <View style={{margin: '3%', flexDirection: 'row'}}>
@@ -147,7 +175,7 @@ function renderSummaryContent(type, content, detail, expand, setExpand) {
         {type === step_key && <STEPS {...iconStyle} />}
         <View style={{marginStart: '2%'}}>
           {content === steps_taken ? (
-            <ProgressContent
+            <ProgressContent2
               value={detail.steps}
               target={maxSteps}
               flip={true}
@@ -155,9 +183,9 @@ function renderSummaryContent(type, content, detail, expand, setExpand) {
               small={false}
             />
           ) : content === excerise ? (
-            <ProgressContent
+            <ProgressContent2
               value={detail.duration}
-              target={maxDuration}
+              target={duration}
               flip={true}
               details={'Active'}
               targetUnit={'Mins'}
@@ -166,7 +194,7 @@ function renderSummaryContent(type, content, detail, expand, setExpand) {
               small={false}
             />
           ) : content === caloriesBurnt ? (
-            <ProgressContent
+            <ProgressContent2
               value={detail.calories}
               target={maxCalBurnt}
               flip={true}

@@ -21,6 +21,7 @@ const medPlan = server + 'log/medication/plan';
 const fitbitTokenPostEndpoint = server + 'datasync/auth-fitbit';
 const getDiaryEntries = server + 'log/diary';
 const goal = server + '/goal';
+const profile = server + 'patient/profile';
 
 export {
   patientLogin,
@@ -43,5 +44,6 @@ export {
   getDiaryEntries,
   getActivityLog,
   goal,
-  getActivitySummary
+  getActivitySummary,
+  profile,
 };

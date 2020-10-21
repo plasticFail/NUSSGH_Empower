@@ -41,13 +41,8 @@ import {
   renderGreetingText,
 } from '../../commonFunctions/diaryFunctions';
 import GameCard from '../../components/home/gameCard';
-import {getLastWeightLog} from '../../storage/asyncStorageFunctions';
-import AsyncStorage from '@react-native-community/async-storage';
-import {key_weightLog} from '../../storage/asyncStorageFunctions';
-import {set} from 'react-native-reanimated';
+import {getPatientProfile} from '../../netcalls/requestsAccount';
 
-// properties
-const username = 'Jimmy';
 const {width, height} = Dimensions.get('window');
 const today_date = Moment(new Date()).format('YYYY-MM-DD');
 const dateString = Moment(new Date()).format('DD MMM YYYY');
@@ -59,6 +54,7 @@ const maxFats = 50; //grams
 const HomeScreen = (props) => {
   const [currHour, setCurrHour] = useState(new Date().getHours());
   const [uncompleteLogs, setUncompleteLogs] = useState([]);
+  const [firstName, setFirstName] = useState('');
 
   // diary card
   const [bgl, setBgl] = React.useState(null);
@@ -80,12 +76,19 @@ const HomeScreen = (props) => {
   const [carb, setCarb] = React.useState(null);
   const [fat, setFat] = React.useState(null);
   const [stepsTaken, setStepsTaken] = React.useState(null);
+  const [activitySummary, setActivitySummary] = useState(null);
+  const [activityTarget, setActivityTarget] = useState(null);
 
   //animation
   const slideRightAnimation = useRef(new Animated.Value(0)).current;
   useEffect(() => {
     //slide right when enter screen
     props.navigation.addListener('focus', () => {
+      getPatientProfile().then((response) => {
+        if (response != null) {
+          setFirstName(response?.patient?.first_name);
+        }
+      });
       slideRightAnimation.setValue(0);
       Animated.timing(slideRightAnimation, {
         toValue: 1,
@@ -128,6 +131,8 @@ const HomeScreen = (props) => {
           const weightLogs = data[today_date].weight.logs;
           const foodLogs = data[today_date].food.logs;
           const activityLogs = data[today_date].activity.logs;
+          const activitySummary = data[today_date].activity.summary;
+          const activityTarget = data[today_date].activity.summary_target.value;
           const medLogs = data[today_date].medication.logs;
           const bgTarget = data[today_date].glucose.target;
           //set logs need to pass to diary card*
@@ -135,6 +140,8 @@ const HomeScreen = (props) => {
           setFoodLogs(foodLogs);
           setMedLogs(medLogs);
           setWeightLogs(weightLogs);
+          setActivitySummary(activitySummary);
+          setActivityTarget(activityTarget);
 
           //evalulate logs
           const steps = activityLogs.reduce(
@@ -253,7 +260,7 @@ const HomeScreen = (props) => {
           }}>
           {/* Greetings and log to do*/}
           <HeaderCard
-            username={username}
+            username={firstName}
             hour={getGreetingFromHour(currHour)}
             uncompleteLogs={uncompleteLogs}
           />
@@ -262,9 +269,11 @@ const HomeScreen = (props) => {
           <NotificationsCard type={appointment} count={'2'} />
           <ActivityCard
             stepsTaken={stepsTaken}
-            carb={carb}
-            protein={protein}
-            fat={fat}
+            carbAmt={carb}
+            proteinAmt={protein}
+            fatAmt={fat}
+            activitySummary={activitySummary}
+            activityTarget={activityTarget}
           />
           <GameCard points={'5'} chances={'2'} rewardCount={'2'} />
           {/* Diary overview of weight, blood glucose, food, medication and physical activity */}

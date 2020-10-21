@@ -1,141 +1,128 @@
 import React from 'react';
 import {View, StyleSheet, TouchableOpacity, Text} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import {
+  maxSteps,
+  maxCalBurnt,
+} from '../../../../commonFunctions/diaryFunctions';
 //component
 import CircularProgress from '../CircularProgress';
-import ProgressBar from '../../../progressbar';
 //third party lib
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
-const TARGET_STEPS = 5000;
+import STEP_lg from '../../../../resources/images/Patient-Icons/SVG/icon-lightgreen-steps-home.svg';
+import RUN_lg from '../../../../resources/images/Patient-Icons/SVG/icon-lightgreen-running-home.svg';
+import CALBURNT_lg from '../../../../resources/images/Patient-Icons/SVG/icon-lightgreen-calburnt-home.svg';
+import NutritionCol from '../../../home/nutritionCol';
+import {protein, carbs, fats} from '../../../../commonFunctions/common';
+
+const logoStyle = {
+  width: 50,
+  height: 50,
+};
 
 export default function ActivityCard(props) {
-  const {stepsTaken, carb, protein, fat} = props;
+  const {
+    stepsTaken,
+    carbAmt,
+    proteinAmt,
+    fatAmt,
+    activitySummary,
+    activityTarget,
+  } = props;
   const navigation = useNavigation();
 
+  console.log('in activity card');
+  console.log(activitySummary);
+
   return (
-    <View
-      style={[
-        styles.card,
-        styles.shadow,
-        {
-          margin: '5%',
-          flexDirection: 'column',
-          alignItems: 'center',
-          marginTop: '7%',
-        },
-      ]}>
+    <View style={[styles.card, styles.shadow]}>
       <TouchableOpacity
-        onPress={() => navigation.navigate('Reports', {initialTab: 4})}
         style={{
-          flexDirection: 'row',
           justifyContent: 'space-around',
-          borderBottomWidth: 0.5,
-          borderColor: '#7d7d7d',
-          padding: 20,
-          width: '100%',
-        }}>
-        <View style={{width: '45%', alignItems: 'center'}}>
+          flexDirection: 'row',
+          paddingStart: '2%',
+          paddingEnd: '2%',
+        }}
+        onPress={() => navigation.navigate('Reports', {initialTab: 4})}>
+        <View style={styles.activityCircular}>
           <CircularProgress
             color="#aad326"
-            percent={stepsTaken / TARGET_STEPS}
+            percent={
+              activitySummary?.steps / maxSteps > 1
+                ? 1
+                : activitySummary?.steps / maxSteps
+            }
             centreComponent={{
-              width: 40 / 2,
-              height: 40 / 1.5,
-              component: <Icon name="walking" color="#aad326" size={40} />,
+              width: 50 / 2,
+              height: 50 / 1.5,
+              component: <STEP_lg {...logoStyle} />,
             }}
             radius={50}
-            padding={5}
+            padding={10}
             strokeWidth={5}
             fontSize={15}
+            remainingStrokeColor={'#e2e8ee'}
           />
-          <Text
-            style={{
-              fontWeight: 'bold',
-              color: '#7d7d7d',
-              fontSize: 16,
-              fontFamily: 'SFProDisplay-Regular',
-            }}>
-            Steps
-          </Text>
-          <Text
-            style={{
-              fontWeight: 'bold',
-              fontSize: 18,
-            }}>
-            {stepsTaken}
-          </Text>
+          <Text style={styles.activityCount}>{activitySummary?.steps}</Text>
+          <Text style={styles.activityParam}>Steps</Text>
         </View>
-        <View style={{width: '45%', alignItems: 'center'}}>
+        <View style={styles.activityCircular}>
           <CircularProgress
             color="#aad326"
-            percent={0.65}
+            percent={
+              activitySummary?.duration / activityTarget > 1
+                ? 1
+                : activitySummary?.duration / activityTarget
+            }
             centreComponent={{
-              width: 40 / 2,
-              height: 40 / 1.5,
-              component: <Icon name="fire" color="#aad326" size={40} />,
+              width: 50 / 2,
+              height: 50 / 1.5,
+              component: <RUN_lg {...logoStyle} />,
             }}
             radius={50}
-            padding={5}
+            padding={10}
             strokeWidth={5}
             fontSize={15}
+            remainingStrokeColor={'#e2e8ee'}
           />
-          <Text
-            style={{
-              fontWeight: 'bold',
-              color: '#7d7d7d',
-              fontSize: 16,
-              fontFamily: 'SFProDisplay-Regular',
-            }}>
-            Calories Burnt
-          </Text>
-          <Text style={{fontWeight: 'bold', fontSize: 18}}>350 kcal</Text>
+          <Text style={styles.activityCount}>{activitySummary?.duration}</Text>
+          <Text style={styles.activityParam}>Mins</Text>
+        </View>
+        <View style={styles.activityCircular}>
+          <CircularProgress
+            color="#aad326"
+            percent={
+              activitySummary?.calories / maxCalBurnt > 1
+                ? 1
+                : activitySummary?.calories / maxCalBurnt
+            }
+            centreComponent={{
+              width: 50 / 2,
+              height: 50 / 1.5,
+              component: <CALBURNT_lg {...logoStyle} />,
+            }}
+            radius={50}
+            padding={10}
+            strokeWidth={5}
+            fontSize={15}
+            remainingStrokeColor={'#e2e8ee'}
+          />
+          <Text style={styles.activityCount}>{activitySummary?.calories}</Text>
+          <Text style={styles.activityParam}>Cal Burnt</Text>
         </View>
       </TouchableOpacity>
+      <View style={styles.whiteborder} />
       <TouchableOpacity
-        onPress={() => navigation.navigate('Reports', {initialTab: 1})}
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-around',
-          width: '100%',
-          padding: 20,
-        }}>
-        <View style={{width: '25%'}}>
-          <Text
-            style={{fontWeight: 'bold', color: '#7d7d7d', paddingBottom: 5}}>
-            Carbs
-          </Text>
-          <ProgressBar
-            containerStyle={{height: 7.5, width: '90%', marginBottom: 5}}
-            progress={'33%'}
-            useIndicatorLevel
-          />
-          <Text style={{fontWeight: 'bold'}}>{carb} g</Text>
-        </View>
-        <View style={{width: '25%'}}>
-          <Text
-            style={{fontWeight: 'bold', color: '#7d7d7d', paddingBottom: 5}}>
-            Protein
-          </Text>
-          <ProgressBar
-            containerStyle={{height: 7.5, width: '90%', marginBottom: 5}}
-            progress={'33%'}
-            useIndicatorLevel
-          />
-          <Text style={{fontWeight: 'bold'}}>{protein} g</Text>
-        </View>
-        <View style={{width: '25%'}}>
-          <Text
-            style={{fontWeight: 'bold', color: '#7d7d7d', paddingBottom: 5}}>
-            Fat
-          </Text>
-          <ProgressBar
-            containerStyle={{height: 7.5, width: '90%', marginBottom: 5}}
-            progress={'33%'}
-            useIndicatorLevel
-          />
-          <Text style={{fontWeight: 'bold'}}>{fat} g</Text>
-        </View>
+        style={{justifyContent: 'space-around', flexDirection: 'row'}}
+        onPress={() => navigation.navigate('Reports', {initialTab: 1})}>
+        <NutritionCol amount={carbAmt} nutrientType={carbs} header="Carbs" />
+        <NutritionCol amount={fatAmt} nutrientType={fats} header="Fat" />
+        <NutritionCol
+          amount={proteinAmt}
+          nutrientType={protein}
+          header="Protein"
+        />
       </TouchableOpacity>
     </View>
   );
@@ -143,12 +130,12 @@ export default function ActivityCard(props) {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#fff',
+    backgroundColor: 'white',
     borderRadius: 10,
-    marginTop: '2%',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    marginTop: '7%',
+    margin: '4%',
+    paddingBottom: '2%',
+    paddingTop: '3%',
   },
   shadow: {
     shadowColor: '#000',
@@ -159,5 +146,24 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+  },
+  activityCircular: {
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  activityCount: {
+    fontFamily: 'SFProDisplay-Bold',
+    color: '#aad326',
+    fontSize: 20,
+  },
+  activityParam: {
+    fontFamily: 'SFProDisplay-Regular',
+    fontSize: 17,
+    color: '#3c3c43',
+  },
+  whiteborder: {
+    borderBottomColor: '#e1e7ed',
+    borderBottomWidth: 2,
+    margin: '4%',
   },
 });
