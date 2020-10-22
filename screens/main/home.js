@@ -33,6 +33,10 @@ import {
   appointment,
   howTo,
   checkLast7Day,
+  renderNutrientPercent,
+  carbs,
+  protein,
+  fats,
 } from '../../commonFunctions/common';
 import {getEntry4Day} from '../../netcalls/requestsDiary';
 import {
@@ -72,7 +76,7 @@ const HomeScreen = (props) => {
   const [lastWeight, setLastWeight] = useState('');
 
   // activity card
-  const [protein, setProtein] = React.useState(null);
+  const [proteinAmt, setProteinAmt] = React.useState(null);
   const [carb, setCarb] = React.useState(null);
   const [fat, setFat] = React.useState(null);
   const [stepsTaken, setStepsTaken] = React.useState(null);
@@ -193,49 +197,57 @@ const HomeScreen = (props) => {
     dateFrom2dayWeightLog().then((response) => {
       setLastWeight(response);
     });
-
+    loadNutritionalData().then(() => {});
     loadNutritionalData();
   };
 
-  const loadNutritionalData = () => {
+  const loadNutritionalData = async () => {
     // reload nutrition data
-    requestNutrientConsumption(getTodayDate(), getLastMinuteFromTodayDate())
-      .then((data) => {
-        const nutrientData = data.data;
-        const calorieAmount = Math.round(
-          nutrientData.reduce(
-            (acc, curr, index) => acc + curr.nutrients.energy.amount,
-            0,
-          ),
-        );
-        const proteinAmount = Math.round(
-          nutrientData.reduce(
-            (acc, curr, index) => acc + curr.nutrients.protein.amount,
-            0,
-          ),
-        );
-        const carbAmount = Math.round(
-          nutrientData.reduce(
-            (acc, curr, index) => acc + curr.nutrients.carbohydrate.amount,
-            0,
-          ),
-        );
-        const fatAmount = Math.round(
-          nutrientData.reduce(
-            (acc, curr, index) => acc + curr.nutrients['total-fat'].amount,
-            0,
-          ),
-        );
-        setCalorie(calorieAmount);
-        setProtein(proteinAmount);
-        setCarb(carbAmount);
-        setFat(fatAmount);
+    let data = await requestNutrientConsumption(
+      getTodayDate(),
+      getLastMinuteFromTodayDate(),
+    );
+    const nutrientData = data.data;
+    const calorieAmount = Math.round(
+      nutrientData.reduce(
+        (acc, curr, index) => acc + curr.nutrients.energy.amount,
+        0,
+      ),
+    );
+    const proteinAmount = Math.round(
+      nutrientData.reduce(
+        (acc, curr, index) => acc + curr.nutrients.protein.amount,
+        0,
+      ),
+    );
+    const carbAmount = Math.round(
+      nutrientData.reduce(
+        (acc, curr, index) => acc + curr.nutrients.carbohydrate.amount,
+        0,
+      ),
+    );
+    const fatAmount = Math.round(
+      nutrientData.reduce(
+        (acc, curr, index) => acc + curr.nutrients['total-fat'].amount,
+        0,
+      ),
+    );
+    setCalorie(calorieAmount);
+    setProteinAmt(proteinAmount);
+    setCarb(carbAmount);
+    setFat(fatAmount);
 
-        if (fat > maxFats && carb > maxCarbs && protein > maxProtein) {
-          setFoodPass(false);
-        }
-      })
-      .catch((err) => console.log(err));
+    let carbpercent = await renderNutrientPercent(carbAmount, carbs);
+    let proteinpercent = await renderNutrientPercent(proteinAmount, protein);
+    let fatpercent = await renderNutrientPercent(fatAmount, fats);
+
+    setTimeout(() => {
+      if (carbpercent >= 100 && proteinpercent >= 100 && fatpercent >= 100) {
+        setFoodPass(false);
+      } else {
+        setFoodPass(true);
+      }
+    }, 500);
   };
 
   return (
@@ -270,7 +282,7 @@ const HomeScreen = (props) => {
           <ActivityCard
             stepsTaken={stepsTaken}
             carbAmt={carb}
-            proteinAmt={protein}
+            proteinAmt={proteinAmt}
             fatAmt={fat}
             activitySummary={activitySummary}
             activityTarget={activityTarget}
@@ -291,7 +303,7 @@ const HomeScreen = (props) => {
             carbs={carb}
             fats={fat}
             foodPass={foodPass}
-            protein={protein}
+            protein={proteinAmt}
             weightLogs={weightLogs}
             medLogs={medLogs}
             lastWeight={lastWeight}
