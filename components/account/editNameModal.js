@@ -4,10 +4,12 @@ import {View, TouchableOpacity, TextInput, Text, Alert} from 'react-native';
 import Modal from 'react-native-modal';
 import globalStyles from '../../styles/globalStyles';
 import LeftArrowBtn from '../logs/leftArrowBtn';
+import {editName} from '../../netcalls/requestsAccount';
 
 const EditNameModal = (props) => {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+  const {patient} = props;
+  const [firstName, setFirstName] = useState(patient.first_name);
+  const [lastName, setLastName] = useState(patient.last_name);
 
   const checkInput = () => {
     if (firstName && lastName) {
@@ -17,19 +19,37 @@ const EditNameModal = (props) => {
   };
 
   const handleSubmit = () => {
-    Alert.alert(
-      'Name Changed Successfully',
-      '',
-      [
-        {
-          text: 'Got It',
-          onPress: () => {
-            props.close();
-          },
-        },
-      ],
-      {cancelable: false},
-    );
+    editName(firstName, lastName).then((response) => {
+      if (response) {
+        Alert.alert(
+          'Name Changed Successfully',
+          '',
+          [
+            {
+              text: 'Got It',
+              onPress: () => {
+                props.close();
+              },
+            },
+          ],
+          {cancelable: false},
+        );
+      } else {
+        Alert.alert(
+          'Unexpected Error',
+          'Please try again later',
+          [
+            {
+              text: 'Got It',
+              onPress: () => {
+                props.close();
+              },
+            },
+          ],
+          {cancelable: false},
+        );
+      }
+    });
   };
 
   return (
@@ -52,12 +72,14 @@ const EditNameModal = (props) => {
           placeholder="First Name"
           placeholderTextColor="#a1a3a0"
           onChangeText={setFirstName}
+          value={firstName}
         />
         <TextInput
           style={globalStyles.editInputBox}
           placeholder="Last Name"
           placeholderTextColor="#a1a3a0"
           onChangeText={setLastName}
+          value={lastName}
         />
       </View>
       <View style={globalStyles.buttonContainer}>

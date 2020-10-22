@@ -1,5 +1,11 @@
 import moment from 'moment';
 import {getDateObj} from './diaryFunctions';
+import {
+  bg_key,
+  food_key,
+  med_key,
+  weight_key,
+} from '../commonFunctions/logFunctions';
 
 const bg = 'blood_glucose';
 const food = 'food';
@@ -124,6 +130,24 @@ const filterForGoalType = (arr, type) => {
   }
   return returnArr;
 };
+const getGoalTypeFromLog = (logType) => {
+  let goalType = '';
+  switch (logType) {
+    case bg_key:
+      goalType = bgpost;
+      break;
+    case food_key:
+      goalType = food;
+      break;
+    case med_key:
+      goalType = med;
+      break;
+    case weight_key:
+      goalType = weight;
+      break;
+  }
+  return goalType;
+};
 
 export {
   bg,
@@ -146,4 +170,5 @@ export {
   getGoalObjById,
   checkSpecialChara,
   filterForGoalType,
+  getGoalTypeFromLog,
 };

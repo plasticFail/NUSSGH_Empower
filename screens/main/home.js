@@ -22,7 +22,6 @@ import {Colors} from '../../styles/colors';
 //function
 import {
   checkLogDone,
-  isToday,
   dateFrom2dayWeightLog,
 } from '../../commonFunctions/logFunctions';
 import {requestNutrientConsumption} from '../../netcalls/mealEndpoints/requestMealLog';
@@ -30,9 +29,8 @@ import {
   getGreetingFromHour,
   getLastMinuteFromTodayDate,
   getTodayDate,
-  appointment,
-  howTo,
-  checkLast7Day,
+  morningObj,
+  afternoonObj,
 } from '../../commonFunctions/common';
 import {getEntry4Day} from '../../netcalls/requestsDiary';
 import {
@@ -41,30 +39,32 @@ import {
   renderGreetingText,
 } from '../../commonFunctions/diaryFunctions';
 import GameCard from '../../components/home/gameCard';
-import {getLastWeightLog} from '../../storage/asyncStorageFunctions';
-import AsyncStorage from '@react-native-community/async-storage';
-import {key_weightLog} from '../../storage/asyncStorageFunctions';
-import {set} from 'react-native-reanimated';
+import NotifCollapse from '../../components/home/collapsible/notifCollapse';
+import DailyCollapse from '../../components/home/collapsible/dailyCollapse';
+import {getPatientProfile} from '../../netcalls/requestsAccount';
+import ActivityCollapse from '../../components/home/collapsible/activityCollapse';
+import OverviewCollapse from '../../components/home/collapsible/overviewCollapse';
+import GameCollapse from '../../components/home/collapsible/gameCollapse';
 
 // properties
-const username = 'Jimmy';
 const {width, height} = Dimensions.get('window');
 const today_date = Moment(new Date()).format('YYYY-MM-DD');
 const dateString = Moment(new Date()).format('DD MMM YYYY');
 
-const maxCarbs = 150; //grams
-const maxProtein = 112; //grams
-const maxFats = 50; //grams
+const point = 1600;
+const chances = 35;
+const rewards = 1;
 
 const HomeScreen = (props) => {
   const [currHour, setCurrHour] = useState(new Date().getHours());
   const [uncompleteLogs, setUncompleteLogs] = useState([]);
+  const [firstName, setFirstName] = useState('');
 
   // diary card
-  const [bgl, setBgl] = React.useState(null);
-  const [calorie, setCalorie] = React.useState(null);
-  const [weight, setWeight] = React.useState(null);
-  const [med, setMed] = React.useState('');
+  const [bgl, setBgl] = useState(null);
+  const [calorie, setCalorie] = useState(null);
+  const [weight, setWeight] = useState(null);
+  const [med, setMed] = useState('');
 
   const [bgLogs, setBgLogs] = useState([]);
   const [bgPass, setBgPass] = useState(false);
@@ -76,16 +76,22 @@ const HomeScreen = (props) => {
   const [lastWeight, setLastWeight] = useState('');
 
   // activity card
-  const [protein, setProtein] = React.useState(null);
-  const [carb, setCarb] = React.useState(null);
-  const [fat, setFat] = React.useState(null);
-  const [stepsTaken, setStepsTaken] = React.useState(null);
+  const [protein, setProtein] = useState(null);
+  const [carb, setCarb] = useState(null);
+  const [fat, setFat] = useState(null);
+  const [activitySummary, setActivitySummary] = useState(null);
+  const [activityTarget, setActivityTarget] = useState(null);
 
   //animation
   const slideRightAnimation = useRef(new Animated.Value(0)).current;
   useEffect(() => {
     //slide right when enter screen
     props.navigation.addListener('focus', () => {
+      getPatientProfile().then((response) => {
+        if (response != null) {
+          setFirstName(response?.patient?.first_name);
+        }
+      });
       slideRightAnimation.setValue(0);
       Animated.timing(slideRightAnimation, {
         toValue: 1,
@@ -101,8 +107,18 @@ const HomeScreen = (props) => {
     extrapolate: 'clamp',
   });
 
+  //notification
+  const [morningNotDone, setMorningNotDone] = useState([]);
+  const [afternoonNotDone, setAfternoonNotDone] = useState([]);
+
   useEffect(() => {
     props.navigation.addListener('focus', () => {
+      getPatientProfile().then((response) => {
+        if (response != null) {
+          setFirstName(response?.patient?.first_name);
+        }
+      });
+
       checkLogDone(getGreetingFromHour(currHour))
         .then((response) => {
           if (response != null) {
@@ -110,9 +126,26 @@ const HomeScreen = (props) => {
           }
         })
         .catch((err) => console.log(err));
+
       initLogs();
     });
   }, []);
+
+  const initUncompleteLog = () => {
+    if (currHour != morningObj.name) {
+      checkLogDone(morningObj.name).then((response) => {
+        if (response != null) {
+          setMorningNotDone(response.notCompleted);
+        }
+      });
+
+      checkLogDone(afternoonObj.name).then((response) => {
+        if (response != null) {
+          setAfternoonNotDone(response.notCompleted);
+        }
+      });
+    }
+  };
 
   const initLogs = async () => {
     checkLogDone(getGreetingFromHour(currHour)).then((response) => {
@@ -127,7 +160,8 @@ const HomeScreen = (props) => {
           const bglLogs = data[today_date].glucose.logs;
           const weightLogs = data[today_date].weight.logs;
           const foodLogs = data[today_date].food.logs;
-          const activityLogs = data[today_date].activity.logs;
+          const activitySummary = data[today_date].activity.summary;
+          const activityTarget = data[today_date].activity.summary_target.value;
           const medLogs = data[today_date].medication.logs;
           const bgTarget = data[today_date].glucose.target;
           //set logs need to pass to diary card*
@@ -135,12 +169,10 @@ const HomeScreen = (props) => {
           setFoodLogs(foodLogs);
           setMedLogs(medLogs);
           setWeightLogs(weightLogs);
+          setActivitySummary(activitySummary);
+          setActivityTarget(activityTarget);
 
           //evalulate logs
-          const steps = activityLogs.reduce(
-            (acc, curr, index) => acc + curr.steps,
-            0,
-          );
           let averageBgl = bglLogs.reduce(
             (acc, curr, index) => acc + curr.bg_reading,
             0,
@@ -162,7 +194,6 @@ const HomeScreen = (props) => {
             setBgMiss(true);
             setBgl(null);
           }
-          setStepsTaken(steps);
 
           //for med data log
           if (medLogs.length === 0) {
@@ -188,6 +219,7 @@ const HomeScreen = (props) => {
     });
 
     loadNutritionalData();
+    initUncompleteLog();
   };
 
   const loadNutritionalData = () => {
@@ -237,13 +269,12 @@ const HomeScreen = (props) => {
         style={[
           globalStyles.pageContainer,
           {
-            backgroundColor: Colors.lastLogButtonColor,
+            backgroundColor: '#F5F6F9',
             transform: [{translateX: widthInterpolate}],
           },
         ]}>
         <View style={globalStyles.menuBarContainer}>
-          <MenuBtn green={true} />
-          <View style={{flex: 1}} />
+          <MenuBtn green={false} />
         </View>
         <ScrollView
           bounces={false}
@@ -253,41 +284,45 @@ const HomeScreen = (props) => {
           }}>
           {/* Greetings and log to do*/}
           <HeaderCard
-            username={username}
+            username={firstName}
             hour={getGreetingFromHour(currHour)}
+          />
+          <NotifCollapse
+            hour={getGreetingFromHour(currHour)}
+            morningNotDone={morningNotDone}
+            afternoonNotDone={afternoonNotDone}
+          />
+          <DailyCollapse
             uncompleteLogs={uncompleteLogs}
+            hour={getGreetingFromHour(currHour)}
           />
-          {/* Notifications */}
-          <NotificationsCard type={howTo} count={''} />
-          <NotificationsCard type={appointment} count={'2'} />
-          <ActivityCard
-            stepsTaken={stepsTaken}
-            carb={carb}
-            protein={protein}
-            fat={fat}
+          <ActivityCollapse
+            carbAmt={carb}
+            proteinAmt={protein}
+            fatAmt={fat}
+            activitySummary={activitySummary}
+            activityTarget={activityTarget}
           />
-          <GameCard points={'5'} chances={'2'} rewardCount={'2'} />
-          {/* Diary overview of weight, blood glucose, food, medication and physical activity */}
-          <DiaryCard
-            today_date={today_date}
+          <OverviewCollapse
             bgl={bgl}
             calorie={calorie}
-            weight={weight}
             medResult={med}
-            bgLogs={bgLogs}
+            lastWeight={lastWeight}
+            dateString={dateString}
             bgPass={bgPass}
             bgMiss={bgMiss}
-            dateString={dateString}
+            bgLogs={bgLogs}
             foodLogs={foodLogs}
             carbs={carb}
             fats={fat}
-            foodPass={foodPass}
             protein={protein}
+            foodPass={foodPass}
             weightLogs={weightLogs}
             medLogs={medLogs}
-            lastWeight={lastWeight}
             init={() => initLogs()}
           />
+          <GameCollapse points={point} chances={chances} rewards={rewards} />
+          {/* Diary overview of weight, blood glucose, food, medication and physical activity */}
         </ScrollView>
       </Animated.View>
     </View>

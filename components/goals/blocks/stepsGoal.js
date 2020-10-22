@@ -128,11 +128,12 @@ const StepsGoal = (props) => {
             <ScrollView contentContainerStyle={{flexGrow: 1}}>
               <NameDateSelector goalName={goalName} setGoalName={setGoalName} />
               <RenderCounter
-                fieldName="Min Steps"
+                fieldName="Min Steps Per Day"
                 item={steps}
                 setItem={setSteps}
                 parameter={''}
                 maxLength={5}
+                incrementValue={100}
               />
             </ScrollView>
           </View>

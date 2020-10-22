@@ -23,13 +23,13 @@ const medPlan = server + 'log/medication/plan';
 const fitbitTokenPostEndpoint = server + 'datasync/auth-fitbit';
 const getDiaryEntries = server + 'log/diary';
 const goal = server + '/goal';
+const profile = server + 'patient/profile';
 const educationArticlesEndpoint = server + 'education/articles';
 const pusherTokenEndpoint = server + 'auth/notification-token';
 
 const gameCenterGetOverview = server + 'game/bingo/overview';
 const gameCenterSelectGame = server + 'game/bingo/select';
 const gameCenterPerformSpin = server + 'game/bingo/spin';
-
 
 export {
   patientLogin,
@@ -55,6 +55,7 @@ export {
   getActivityLog,
   goal,
   getActivitySummary,
+  profile,
   educationArticlesEndpoint,
   gameCenterGetOverview,
   gameCenterSelectGame,

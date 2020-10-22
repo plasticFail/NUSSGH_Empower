@@ -26,7 +26,11 @@ import {
 import GAME from '../resources/images/Patient-Icons/SVG/icon-navy-game.svg';
 import GOAL from '../resources/images/Patient-Icons/SVG/icon-navy-goals.svg';
 import {getGoal4Type} from '../netcalls/requestsGoals';
-import {food, defaultv} from '../commonFunctions/goalFunctions';
+import {
+  food,
+  defaultv,
+  getGoalTypeFromLog,
+} from '../commonFunctions/goalFunctions';
 import ProgressBar from './progressbar';
 import {isEmpty} from '../commonFunctions/common';
 
@@ -95,7 +99,10 @@ function SuccessDialogue(props) {
 
   const goGoals = () => {
     closeSuccess();
-    navigation.navigate('Goals');
+    navigation.navigate('Goals', {
+      type: getGoalTypeFromLog(type),
+      item: goalObj,
+    });
   };
 
   return (
@@ -178,7 +185,8 @@ function SuccessDialogue(props) {
                 <Text style={[globalStyles.pageDetails]}>{goalObj?.name}</Text>
               </>
             ) : (
-              <Text style={[globalStyles.pageDetails, {flex: 1}]}>
+              <Text
+                style={[globalStyles.pageDetails, {flex: 1, marginBottom: 0}]}>
                 Add a goal now
               </Text>
             )}

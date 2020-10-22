@@ -106,7 +106,7 @@ export default function DiaryCard(props) {
         onPress={() => setShowMed(true)}>
         <View style={{flexDirection: 'row'}}>
           {renderLogIconNavy(med_key)}
-          <View style={styles.content}>
+          <View style={[styles.content]}>
             <Text style={styles.metricText}>Medication</Text>
             <Text style={styles.measuredText}>{medResult}</Text>
           </View>

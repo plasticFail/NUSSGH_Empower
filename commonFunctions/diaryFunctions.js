@@ -21,6 +21,7 @@ const getDateObj = (dateString) => {
   return dateObject;
 };
 
+//24hr
 const getTime = (dateString) => {
   if (dateString != null) {
     let time = dateString.substring(
@@ -29,6 +30,11 @@ const getTime = (dateString) => {
     );
     return time;
   }
+};
+
+const getTime12hr = (dateString) => {
+  let date = moment(getDateObj(dateString));
+  return date.format('h:mm a');
 };
 
 const getHour = (dateString) => {
@@ -200,7 +206,6 @@ const showEdit = (dateToCompare) => {
 
 const getMissedArr = (morningLog, afternoonLog, eveningLog) => {
   let list = [];
-  console.log(morningLog);
   if (morningLog.length === 0) {
     list.push(morningObj.name);
   }
@@ -232,6 +237,18 @@ const renderGreetingText = (arr) => {
   return string;
 };
 
+//since backend dont delete the actual food log, check if all food items in logs is 0
+function checkFoodLogQuantity(logs) {
+  for (var x of logs) {
+    for (var y of x.foodItems) {
+      if (y.quantity != 0) {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
 export {
   maxCarbs,
   maxProtein,
@@ -252,4 +269,6 @@ export {
   showEdit,
   getMissedArr,
   renderGreetingText,
+  checkFoodLogQuantity,
+  getTime12hr,
 };
