@@ -24,7 +24,13 @@ import {Colors} from '../../styles/colors';
 import {requestNutrientConsumption} from '../../netcalls/mealEndpoints/requestMealLog';
 import {getLastMinuteFromTodayDate} from '../../commonFunctions/common';
 import Moment from 'moment';
-import {getActivityLogs, getBloodGlucoseLogs, getMedicationLogs, getWeightLogs} from "../../netcalls/requestsLog";
+import {
+  getActivityLogs,
+  getActivitySummaries,
+  getBloodGlucoseLogs,
+  getMedicationLogs,
+  getWeightLogs
+} from "../../netcalls/requestsLog";
 import {MedicationDateDisplay, MedicationTable} from "../../components/dashboard/reports/MedicationTable";
 import {COLOR_MAP, NutritionPie} from "../../components/dashboard/reports/NutritionPie";
 import {getPlan} from "../../netcalls/requestsMedPlan";
@@ -36,6 +42,7 @@ import {
   lineChartToolTipMessage,
   ReportHelpInfo
 } from "../../components/dashboard/reports/ReportHelpInfo";
+import {replaceActivitySummary} from "../../commonFunctions/reportDataFormatter";
 
 const EXPORT_BTN = require('../../resources/images/Patient-Icons/2x/icon-green-export-2x.png');
 
@@ -185,8 +192,8 @@ const ReportsScreen = (props) => {
         endDate.format('YYYY-MM-DD'))).logs;
     const bglData = (await getBloodGlucoseLogs(startDate.format('YYYY-MM-DD'),
         endDate.format('YYYY-MM-DD'))).logs;
-    const activityData = (await getActivityLogs(startDate.format('YYYY-MM-DD'),
-        endDate.format('YYYY-MM-DD'))).logs;
+    const activityData = replaceActivitySummary((await getActivitySummaries(startDate.format('YYYY-MM-DD'),
+        endDate.format('YYYY-MM-DD'))).summaries);
     const medPlan = await getPlan(startDate.format('YYYY-MM-DD'), endDate.format('YYYY-MM-DD'));
     return {foodData, medData, bglData, activityData, weightData, medPlan};
   }
@@ -348,7 +355,7 @@ const ReportsScreen = (props) => {
                           width={width}
                           boundaryFill={boundaryFill}
                           defaultMaxY={1000}
-                          xExtractor={d=>d.record_date}
+                          xExtractor={d=>d.date}
                           yExtractor={d=>d.calories}
                           height={300} />
                 <Text style={[globalStyles.pageDetails, {color: 'grey', marginTop: 5}]}>Duration (minutes)</Text>
@@ -357,7 +364,7 @@ const ReportsScreen = (props) => {
                           width={width}
                           boundaryFill={boundaryFill}
                           defaultMaxY={500}
-                          xExtractor={d=>d.record_date}
+                          xExtractor={d=>d.date}
                           yExtractor={d=>d.duration}
                           height={300} />
                 <Text style={[globalStyles.pageDetails, {color: 'grey', marginTop: 5}]}>Steps Taken</Text>
@@ -378,7 +385,7 @@ const ReportsScreen = (props) => {
                           defaultMaxY={5000}
                           lowerBound={1000}
                           upperBound={1500}
-                          xExtractor={d=>d.record_date}
+                          xExtractor={d=>d.date}
                           yExtractor={d=>d.steps}
                           height={300} />
               </View>
