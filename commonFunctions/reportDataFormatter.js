@@ -24,10 +24,10 @@ function filterToDayData(dataset, dateOfInterest, xExtractor) {
 // Description: filters the entry to only show the dateOfInterest
 function filterToWeekData(monthDataset, endDateOfInterest, xExtractor) {
     let result = [];
-    const startDate = Moment(endDateOfInterest).subtract(7, 'days');
-    const endDate = Moment(endDateOfInterest).add(1, 'day');
+    const startDate = Moment(endDateOfInterest).subtract(6, 'days').startOf('day');
+    const endDate = Moment(endDateOfInterest).add(1, 'day').startOf('day');
     const isBetweenDateRange = (cmpDate) => {
-        return Moment(cmpDate, 'DD/MM/YYYY HH:mm:ss').isBetween(startDate, endDate);
+        return Moment(cmpDate, 'DD/MM/YYYY HH:mm:ss').isBetween(startDate, endDate, null, "[]");
     }
     for (const data of monthDataset) {
         if (isBetweenDateRange(xExtractor(data))) {
