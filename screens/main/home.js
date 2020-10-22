@@ -153,6 +153,7 @@ const HomeScreen = (props) => {
   };
 
   const initLogs = async () => {
+    console.log('calling init');
     checkLogDone(getGreetingFromHour(currHour)).then((response) => {
       if (response != null) {
         setUncompleteLogs(response.notCompleted);
@@ -222,54 +223,60 @@ const HomeScreen = (props) => {
     dateFrom2dayWeightLog().then((response) => {
       setLastWeight(response);
     });
-
     loadNutritionalData().then(() => {});
     initUncompleteLog();
   };
 
   const loadNutritionalData = async () => {
     // reload nutrition data
-    requestNutrientConsumption(getTodayDate(), getLastMinuteFromTodayDate())
-      .then((data) => {
-        const nutrientData = data.data;
-        const calorieAmount = Math.round(
-          nutrientData.reduce(
-            (acc, curr, index) => acc + curr.nutrients.energy.amount,
-            0,
-          ),
-        );
-        const proteinAmount = Math.round(
-          nutrientData.reduce(
-            (acc, curr, index) => acc + curr.nutrients.protein.amount,
-            0,
-          ),
-        );
-        const carbAmount = Math.round(
-          nutrientData.reduce(
-            (acc, curr, index) => acc + curr.nutrients.carbohydrate.amount,
-            0,
-          ),
-        );
-        const fatAmount = Math.round(
-          nutrientData.reduce(
-            (acc, curr, index) => acc + curr.nutrients['total-fat'].amount,
-            0,
-          ),
-        );
-        setCalorie(calorieAmount);
-        setProteinAmt(proteinAmount);
-        setCarb(carbAmount);
-        setFat(fatAmount);
-      })
-      .catch((err) => console.log(err));
+    let data = await requestNutrientConsumption(
+      getTodayDate(),
+      getLastMinuteFromTodayDate(),
+    );
+    const nutrientData = data.data;
+    const calorieAmount = Math.round(
+      nutrientData.reduce(
+        (acc, curr, index) => acc + curr.nutrients.energy.amount,
+        0,
+      ),
+    );
+    const proteinAmount = Math.round(
+      nutrientData.reduce(
+        (acc, curr, index) => acc + curr.nutrients.protein.amount,
+        0,
+      ),
+    );
+    const carbAmount = Math.round(
+      nutrientData.reduce(
+        (acc, curr, index) => acc + curr.nutrients.carbohydrate.amount,
+        0,
+      ),
+    );
+    const fatAmount = Math.round(
+      nutrientData.reduce(
+        (acc, curr, index) => acc + curr.nutrients['total-fat'].amount,
+        0,
+      ),
+    );
+    setCalorie(calorieAmount);
+    setProteinAmt(proteinAmount);
+    setCarb(carbAmount);
+    setFat(fatAmount);
 
-    let carbpercent = await renderNutrientPercent(carb, carbs);
-    let proteinpercent = await renderNutrientPercent(proteinAmt, protein);
-    let fatpercent = await renderNutrientPercent(fat, fats);
-    if (carbpercent >= 100 || proteinpercent >= 100 || fatpercent >= 100) {
-      setFoodPass(false);
-    }
+    let carbpercent = await renderNutrientPercent(carbAmount, carbs);
+    let proteinpercent = await renderNutrientPercent(proteinAmount, protein);
+    let fatpercent = await renderNutrientPercent(fatAmount, fats);
+
+    setTimeout(() => {
+      if (carbpercent >= 100 && proteinpercent >= 100 && fatpercent >= 100) {
+        setFoodPass(false);
+      } else {
+        setFoodPass(true);
+      }
+    }, 500);
   };
+
+  console.log('food pass ' + foodPass);
 
   return (
     <View style={globalStyles.pageContainer}>
