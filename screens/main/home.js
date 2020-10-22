@@ -31,6 +31,10 @@ import {
   getTodayDate,
   morningObj,
   afternoonObj,
+  renderNutrientPercent,
+  carbs,
+  fats,
+  protein,
 } from '../../commonFunctions/common';
 import {getEntry4Day} from '../../netcalls/requestsDiary';
 import {
@@ -45,6 +49,7 @@ import {getPatientProfile} from '../../netcalls/requestsAccount';
 import ActivityCollapse from '../../components/home/collapsible/activityCollapse';
 import OverviewCollapse from '../../components/home/collapsible/overviewCollapse';
 import GameCollapse from '../../components/home/collapsible/gameCollapse';
+import {getActivitySummaries} from '../../netcalls/requestsLog';
 
 // properties
 const {width, height} = Dimensions.get('window');
@@ -76,7 +81,7 @@ const HomeScreen = (props) => {
   const [lastWeight, setLastWeight] = useState('');
 
   // activity card
-  const [protein, setProtein] = useState(null);
+  const [proteinAmt, setProteinAmt] = useState(null);
   const [carb, setCarb] = useState(null);
   const [fat, setFat] = useState(null);
   const [activitySummary, setActivitySummary] = useState(null);
@@ -218,11 +223,11 @@ const HomeScreen = (props) => {
       setLastWeight(response);
     });
 
-    loadNutritionalData();
+    loadNutritionalData().then(() => {});
     initUncompleteLog();
   };
 
-  const loadNutritionalData = () => {
+  const loadNutritionalData = async () => {
     // reload nutrition data
     requestNutrientConsumption(getTodayDate(), getLastMinuteFromTodayDate())
       .then((data) => {
@@ -252,15 +257,18 @@ const HomeScreen = (props) => {
           ),
         );
         setCalorie(calorieAmount);
-        setProtein(proteinAmount);
+        setProteinAmt(proteinAmount);
         setCarb(carbAmount);
         setFat(fatAmount);
-
-        if (fat > maxFats && carb > maxCarbs && protein > maxProtein) {
-          setFoodPass(false);
-        }
       })
       .catch((err) => console.log(err));
+
+    let carbpercent = await renderNutrientPercent(carb, carbs);
+    let proteinpercent = await renderNutrientPercent(proteinAmt, protein);
+    let fatpercent = await renderNutrientPercent(fat, fats);
+    if (carbpercent >= 100 || proteinpercent >= 100 || fatpercent >= 100) {
+      setFoodPass(false);
+    }
   };
 
   return (
@@ -298,7 +306,7 @@ const HomeScreen = (props) => {
           />
           <ActivityCollapse
             carbAmt={carb}
-            proteinAmt={protein}
+            proteinAmt={proteinAmt}
             fatAmt={fat}
             activitySummary={activitySummary}
             activityTarget={activityTarget}
@@ -315,7 +323,7 @@ const HomeScreen = (props) => {
             foodLogs={foodLogs}
             carbs={carb}
             fats={fat}
-            protein={protein}
+            protein={proteinAmt}
             foodPass={foodPass}
             weightLogs={weightLogs}
             medLogs={medLogs}
