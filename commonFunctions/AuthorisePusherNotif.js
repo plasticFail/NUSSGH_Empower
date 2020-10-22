@@ -5,19 +5,16 @@ import {getToken} from "../storage/asyncStorageFunctions";
 const donutsInterest = 'debug-donuts';
 
 function initPusherNotif(username, pusherToken) {
-    // Init interests after registration
-    const id1 = "c18294e5-57a2-4a24-a0d4-ae51f312f7a4";
-    const id2 = "c7a6e2ea-9db6-4035-ad44-cbf8e6f23bd8";
-    RNPusherPushNotifications.setInstanceId(id1);
+    // Disable notification for 0.1.1
 
-    //RNPusherPushNotifications.setUserId(username, pusherToken, (statusCode, resp) => console.log('Error oh boy'), () => console.log('Registration success!'));
-
-    RNPusherPushNotifications.on('registered', () => {
-        subscribe(donutsInterest);
-        subscribe("hello");
-    });
+    /*
+    const PUSHER_INSTANCE_ID = "c7a6e2ea-9db6-4035-ad44-cbf8e6f23bd8";
+    RNPusherPushNotifications.setInstanceId(PUSHER_INSTANCE_ID);
+    RNPusherPushNotifications.setUserId(username, pusherToken, (statusCode, resp) => console.log('Error oh boy'), () => console.log('Registration success!'));
+    subscribe(donutsInterest);
     RNPusherPushNotifications.on("notification", handleNotification);
     RNPusherPushNotifications.getSubscriptions((sub)=> console.log('Get sub', sub), (e)=>console.log(e));
+     */
 }
 
 // Handle notifications received

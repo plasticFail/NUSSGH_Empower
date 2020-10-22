@@ -59,7 +59,6 @@ export default function BarChart(props) {
     const handleSelect = (index) => {
         setSelectedIndex(index);
     }
-
     return (
         <View style={styles.root}>
             <View style={styles.barchartContainer}>

@@ -197,7 +197,6 @@ const ReportsScreen = (props) => {
     const activityData = replaceActivitySummary((await getActivitySummaries(startDate.format('YYYY-MM-DD'),
         endDate.format('YYYY-MM-DD'))).summaries);
     const medPlan = await getPlan(startDate.format('YYYY-MM-DD'), endDate.format('YYYY-MM-DD'));
-
     return {foodData, medData, bglData, activityData, weightData, medPlan};
   }
 

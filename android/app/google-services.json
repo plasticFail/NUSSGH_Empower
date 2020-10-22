@@ -1,34 +1,34 @@
 {
   "project_info": {
-    "project_number": "1079759972309",
-    "firebase_url": "https://sghempower-test.firebaseio.com",
-    "project_id": "sghempower-test",
-    "storage_bucket": "sghempower-test.appspot.com"
+    "project_number": "43432919345",
+    "firebase_url": "https://empower-9378c.firebaseio.com",
+    "project_id": "empower-9378c",
+    "storage_bucket": "empower-9378c.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1079759972309:android:5c2c4fcedce2ee6053ff5c",
+        "mobilesdk_app_id": "1:43432919345:android:053751b6f38b7aef79b010",
         "android_client_info": {
           "package_name": "com.nussgh_empower"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1079759972309-eb30m38vrrogpr1us1h9bfb45ktn6ai8.apps.googleusercontent.com",
+          "client_id": "43432919345-6jlmlkefcibcekvb42clsf6p09gdela1.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyATDIz_EuQF6NX0kjjbJZjFq40-lryL8-Q"
+          "current_key": "AIzaSyBJN0TChMMsd0HIR5YjkRsxGh_AElloHag"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1079759972309-eb30m38vrrogpr1us1h9bfb45ktn6ai8.apps.googleusercontent.com",
+              "client_id": "43432919345-6jlmlkefcibcekvb42clsf6p09gdela1.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
