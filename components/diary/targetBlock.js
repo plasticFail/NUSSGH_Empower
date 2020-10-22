@@ -219,7 +219,7 @@ class TargetBlock extends Component {
         let proteinpercent = await renderNutrientPercent(totalProtein, protein);
         let fatpercent = await renderNutrientPercent(totalFats, fats);
 
-        if (carbpercent >= 100 || proteinpercent >= 100 || fatpercent >= 100) {
+        if (carbpercent >= 100 && proteinpercent >= 100 && fatpercent >= 100) {
           this.setState({foodPass: false});
         }
       }
