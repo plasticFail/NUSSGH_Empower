@@ -153,7 +153,6 @@ const HomeScreen = (props) => {
   };
 
   const initLogs = async () => {
-    console.log('calling init');
     checkLogDone(getGreetingFromHour(currHour)).then((response) => {
       if (response != null) {
         setUncompleteLogs(response.notCompleted);
@@ -275,8 +274,6 @@ const HomeScreen = (props) => {
       }
     }, 500);
   };
-
-  console.log('food pass ' + foodPass);
 
   return (
     <View style={globalStyles.pageContainer}>
