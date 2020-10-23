@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "43432919345",
+    "firebase_url": "https://empower-9378c.firebaseio.com",
+    "project_id": "empower-9378c",
+    "storage_bucket": "empower-9378c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:43432919345:android:053751b6f38b7aef79b010",
+        "android_client_info": {
+          "package_name": "com.nussgh_empower"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "43432919345-6jlmlkefcibcekvb42clsf6p09gdela1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBJN0TChMMsd0HIR5YjkRsxGh_AElloHag"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "43432919345-6jlmlkefcibcekvb42clsf6p09gdela1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

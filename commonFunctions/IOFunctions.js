@@ -31,7 +31,7 @@ function toCsv(reportType, data) {
         }
     } else if (reportType === 'Activity') {
         for (const d of data) {
-            const csv = [d.record_date, d.name, d.calories, d.steps, d.duration].join(',');
+            const csv = [d.date, d.distance, d.calories, d.steps, d.duration].join(',');
             result.push(csv);
         }
     }
