@@ -117,6 +117,7 @@
 		5BA6042D6523038A5DBCA67B /* Pods-NUSSGH_Empower.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NUSSGH_Empower.debug.xcconfig"; path = "Target Support Files/Pods-NUSSGH_Empower/Pods-NUSSGH_Empower.debug.xcconfig"; sourceTree = "<group>"; };
 		7A5B0DCA3D4C35F77ECF5A53 /* Pods-NUSSGH_Empower-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NUSSGH_Empower-tvOS.release.xcconfig"; path = "Target Support Files/Pods-NUSSGH_Empower-tvOS/Pods-NUSSGH_Empower-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = NUSSGH_Empower/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		8437C5FA2542A9EE00B251A2 /* NUSSGH_Empower.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = NUSSGH_Empower.entitlements; path = NUSSGH_Empower/NUSSGH_Empower.entitlements; sourceTree = "<group>"; };
 		84FE525C2513619400ADB28F /* Fontisto.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Fontisto.ttf; sourceTree = "<group>"; };
 		84FE525D2513619400ADB28F /* Octicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Octicons.ttf; sourceTree = "<group>"; };
 		84FE525E2513619400ADB28F /* Feather.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Feather.ttf; sourceTree = "<group>"; };
@@ -197,6 +198,7 @@
 		13B07FAE1A68108700A75B9A /* NUSSGH_Empower */ = {
 			isa = PBXGroup;
 			children = (
+				8437C5FA2542A9EE00B251A2 /* NUSSGH_Empower.entitlements */,
 				84FE525B2513619400ADB28F /* Fonts */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -885,6 +887,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = NUSSGH_Empower/NUSSGH_Empower.entitlements;
 				CURRENT_PROJECT_VERSION = 0.1.8;
 				DEVELOPMENT_TEAM = F24S5RZ4SU;
 				ENABLE_BITCODE = NO;
@@ -910,6 +913,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = NUSSGH_Empower/NUSSGH_Empower.entitlements;
 				CURRENT_PROJECT_VERSION = 0.1.8;
 				DEVELOPMENT_TEAM = F24S5RZ4SU;
 				INFOPLIST_FILE = NUSSGH_Empower/Info.plist;
