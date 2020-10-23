@@ -111,6 +111,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontFamily: 'SFProDisplay-Bold',
     marginStart: '5%',
+    marginTop: '2%',
   },
   taskText: {
     fontFamily: 'SFProDisplay-Regular',

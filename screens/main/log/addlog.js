@@ -450,10 +450,10 @@ const styles = StyleSheet.create({
   uncompleteDetail: {
     color: '#ff0844',
     fontFamily: 'SFProDisplay-Regular',
-    fontSize: 20,
+    fontSize: 14,
   },
   logHeader: {
-    fontSize: normalTextFontSize,
+    fontSize: 18,
     fontWeight: '800',
     fontFamily: 'SFProDisplay-Regular',
     marginBottom: '2%',
