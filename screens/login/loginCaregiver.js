@@ -5,7 +5,7 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
-  Switch,
+  Image,
   Alert,
   KeyboardAvoidingView,
 } from 'react-native';
@@ -27,9 +27,9 @@ import Loading from '../../components/loading';
 import globalStyles from '../../styles/globalStyles';
 //svg
 import Logo from '../../resources/images/Patient-Icons/SVG/icon-color-empower.svg';
-import {role_patient} from '../../commonFunctions/common';
+import {role_caregiver} from '../../commonFunctions/common';
 
-class Login extends Component {
+class LoginCaregiver extends Component {
   constructor(props) {
     super(props);
     this.props = props;
@@ -69,9 +69,10 @@ class Login extends Component {
       await storeUsername(this.state.username);
       await storePassword(this.state.password);
       await storeToken(token);
-      await storeRole(role_patient);
+      await storeRole(role_caregiver);
+
       this.props.login();
-      console.log('login success!');
+      console.log('login - caregiver success!');
     } else {
       Alert.alert('Error', 'Invalid username/password combination.', [
         {text: 'Got It'},
@@ -133,8 +134,8 @@ class Login extends Component {
           </Text>
           <Text
             style={styles.forgetPassword}
-            onPress={() => this.props.navigation.navigate('Login-Caregiver')}>
-            Login As Caregiver
+            onPress={() => this.props.navigation.navigate('Login')}>
+            Login As Patient
           </Text>
           <Loading isLoading={this.state.isLoading} />
           <View style={{justifyContent: 'flex-end', paddingTop: '3%'}}>
@@ -155,7 +156,7 @@ class Login extends Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default connect(mapStateToProps, mapDispatchToProps)(LoginCaregiver);
 
 const styles = StyleSheet.create({
   container: {

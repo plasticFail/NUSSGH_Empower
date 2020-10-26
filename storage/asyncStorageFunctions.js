@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-community/async-storage';
 
 const key_username = 'username';
+const key_role = 'role';
 const key_password = 'password';
 const key_token = 'token';
 const key_bloodGlucoseLog = 'lastBloodGlucoseLog';
@@ -67,6 +68,14 @@ const getUsername = async () => {
   return await getData(key_username);
 };
 
+const storeRole = async (role) => {
+  await storeData(key_role, role);
+};
+
+const getRole = async () => {
+  return await getData(key_role);
+};
+
 const storePassword = async (password) => {
   await storeData(key_password, password);
 };
@@ -125,6 +134,8 @@ const getFitbitToken = async () => {
 export {
   storeUsername,
   getUsername,
+  storeRole,
+  getRole,
   storePassword,
   getPassword,
   storeToken,
