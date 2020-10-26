@@ -8,6 +8,7 @@ import {
   Switch,
   Alert,
   KeyboardAvoidingView,
+  Dimensions,
 } from 'react-native';
 //third party libs
 import {connect} from 'react-redux';
@@ -114,14 +115,28 @@ class Login extends Component {
           <View style={{flex: 0.5}} />
 
           {/*Tabs*/}
-          <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
-            {tabs.map((item) => (
-              <TouchableOpacity
-                onPress={() => this.setState({roleSelected: item})}>
-                <Text style={styles.forgetPassword}>{item}</Text>
-                {roleSelected === item && <View style={styles.border} />}
-              </TouchableOpacity>
-            ))}
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              margin: '2%',
+            }}>
+            {tabs.map((item) =>
+              roleSelected === item ? (
+                <TouchableOpacity
+                  onPress={() => this.setState({roleSelected: item})}>
+                  <Text style={[styles.forgetPassword, {fontWeight: 'bold'}]}>
+                    {item}
+                  </Text>
+                  <View style={styles.border} />
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  onPress={() => this.setState({roleSelected: item})}>
+                  <Text style={styles.forgetPassword}>{item}</Text>
+                </TouchableOpacity>
+              ),
+            )}
           </View>
 
           <TextInput
@@ -225,6 +240,7 @@ const styles = StyleSheet.create({
   },
   border: {
     borderBottomColor: 'white',
-    borderBottomWidth: 1,
+    borderBottomWidth: 2,
+    width: 150,
   },
 });
