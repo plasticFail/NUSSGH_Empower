@@ -5,14 +5,10 @@ import {createDrawerNavigator, DrawerItem} from '@react-navigation/drawer';
 //third party library
 import Ionicon from 'react-native-vector-icons/Ionicons';
 //component
-import DashboardScreen from './dashboard';
+import CaregiverBottomTab from './caregiverDashboard';
 
 import ACCOUNT from '../resources/images/Patient-Icons//SVG/icon-white-sidemenu-account.svg';
 import DIARY from '../resources/images/Patient-Icons//SVG/icon-white-sidemenu-diary.svg';
-import MED from '../resources/images/Patient-Icons//SVG/icon-white-sidemenu-med.svg';
-import GOALS from '../resources/images/Patient-Icons//SVG/icon-white-sidemenu-goals.svg';
-import APPT from '../resources/images/Patient-Icons//SVG/icon-white-sidemenu-appt.svg';
-import RESOURCES from '../resources/images/Patient-Icons//SVG/icon-white-sidemenu-resources.svg';
 import {ScrollView} from 'react-native-gesture-handler';
 
 const iconStyle = {
@@ -38,30 +34,6 @@ const DrawerContent = (props) => {
         icon={() => <DIARY {...iconStyle} />}
         onPress={() => props.navigation.navigate('Diary')}
       />
-      <DrawerItem
-        label="Medication"
-        labelStyle={styles.subText}
-        icon={() => <MED {...iconStyle} />}
-        onPress={() => props.navigation.navigate('Medication')}
-      />
-      <DrawerItem
-        label="Goals"
-        labelStyle={styles.subText}
-        icon={() => <GOALS {...iconStyle} />}
-        onPress={() => props.navigation.navigate('Goals')}
-      />
-      <DrawerItem
-        label="Appointment"
-        labelStyle={styles.subText}
-        icon={() => <APPT {...iconStyle} />}
-        onPress={() => props.navigation.navigate('Appointment')}
-      />
-      <DrawerItem
-        label="Resources"
-        labelStyle={styles.subText}
-        icon={() => <RESOURCES {...iconStyle} />}
-        onPress={() => props.navigation.navigate('Resources')}
-      />
       <View style={{position: 'absolute', bottom: '10%'}}>
         <DrawerItem
           label="Log Out"
@@ -74,17 +46,17 @@ const DrawerContent = (props) => {
   );
 };
 
-const DrawerNavigator = (props) => {
+const CaregiverDrawerNavigator = (props) => {
   return (
     <Drawer.Navigator
       drawerType={'slide'}
       drawerStyle={{backgroundColor: Colors.menuColor}}
       drawerContent={DrawerContent}>
-      <Drawer.Screen name="Home" component={DashboardScreen} />
+      <Drawer.Screen name="Home" component={CaregiverBottomTab} />
     </Drawer.Navigator>
   );
 };
-export default DrawerNavigator;
+export default CaregiverDrawerNavigator;
 
 const styles = StyleSheet.create({
   headerTextStyle: {

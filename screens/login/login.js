@@ -27,7 +27,9 @@ import Loading from '../../components/loading';
 import globalStyles from '../../styles/globalStyles';
 //svg
 import Logo from '../../resources/images/Patient-Icons/SVG/icon-color-empower.svg';
-import {role_patient} from '../../commonFunctions/common';
+import {role_patient, role_caregiver} from '../../commonFunctions/common';
+
+const tabs = [role_patient, role_caregiver];
 
 class Login extends Component {
   constructor(props) {
@@ -38,6 +40,7 @@ class Login extends Component {
       username: '',
       password: '',
       isLoading: false,
+      roleSelected: role_patient,
     };
   }
 
@@ -66,10 +69,15 @@ class Login extends Component {
       this.state.password,
     );
     if (token != null) {
+      let role = this.state.roleSelected;
       await storeUsername(this.state.username);
       await storePassword(this.state.password);
       await storeToken(token);
-      await storeRole(role_patient);
+      if (role === role_patient) {
+        await storeRole(role_patient);
+      } else {
+        await storeRole(role_caregiver);
+      }
       this.props.login();
       console.log('login success!');
     } else {
@@ -89,6 +97,7 @@ class Login extends Component {
   };
 
   render() {
+    const {roleSelected} = this.state;
     return (
       <KeyboardAvoidingView
         style={{flex: 1}}
@@ -103,6 +112,18 @@ class Login extends Component {
             To proceed with the app, please log in with your credentials
           </Text>
           <View style={{flex: 0.5}} />
+
+          {/*Tabs*/}
+          <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
+            {tabs.map((item) => (
+              <TouchableOpacity
+                onPress={() => this.setState({roleSelected: item})}>
+                <Text style={styles.forgetPassword}>{item}</Text>
+                {roleSelected === item && <View style={styles.border} />}
+              </TouchableOpacity>
+            ))}
+          </View>
+
           <TextInput
             style={styles.inputBox}
             placeholder="Username"
@@ -130,11 +151,6 @@ class Login extends Component {
             style={styles.forgetPassword}
             onPress={() => this.props.navigation.navigate('ForgetPassword')}>
             Forget Password?
-          </Text>
-          <Text
-            style={styles.forgetPassword}
-            onPress={() => this.props.navigation.navigate('Login-Caregiver')}>
-            Login As Caregiver
           </Text>
           <Loading isLoading={this.state.isLoading} />
           <View style={{justifyContent: 'flex-end', paddingTop: '3%'}}>
@@ -206,5 +222,9 @@ const styles = StyleSheet.create({
     color: 'white',
     textAlign: 'center',
     fontSize: 17,
+  },
+  border: {
+    borderBottomColor: 'white',
+    borderBottomWidth: 1,
   },
 });

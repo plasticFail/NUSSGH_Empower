@@ -21,7 +21,6 @@ import ResetPasswordScreen from './login/resetPassword';
 import Logout from './more/logout';
 //components
 import ContactUs from './contactUs';
-import LoginCaregiver from './login/loginCaregiver';
 import PatientRoot from './patientRoot';
 import {getRole} from '../storage/asyncStorageFunctions';
 import {role_patient, role_caregiver} from '../commonFunctions/common';
@@ -37,6 +36,7 @@ class AppRoot extends Component {
     this.state = {
       user: '',
     };
+    this.initRole().then(() => {});
   }
 
   componentDidMount() {
@@ -44,8 +44,18 @@ class AppRoot extends Component {
     this.initRole().then(() => {});
   }
 
+  componentDidUpdate(prevProp, prevState) {
+    getRole().then((data) => {
+      if (data != prevState.user) {
+        this.setState({user: data});
+      }
+    });
+  }
+
   componentWillUnmount() {
+    console.log('unmounting -------');
     Linking.removeAllListeners('url');
+    this.setState({user: ''});
   }
 
   async initRole() {
@@ -110,11 +120,6 @@ class AppRoot extends Component {
                 <Stack.Screen
                   name="Login"
                   component={Login}
-                  options={{headerShown: false}}
-                />
-                <Stack.Screen
-                  name="Login-Caregiver"
-                  component={LoginCaregiver}
                   options={{headerShown: false}}
                 />
                 <Stack.Screen

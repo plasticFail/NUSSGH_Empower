@@ -41,8 +41,8 @@ const maxCal_M_60above = 2234;
 //notification type
 const notif_log = 'log';
 
-const role_patient = 'patient';
-const role_caregiver = 'caregiver';
+const role_patient = 'Patient';
+const role_caregiver = 'Caregiver';
 
 const morningObj = {
   name: 'Morning',

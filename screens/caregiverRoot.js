@@ -13,8 +13,9 @@ import {mapDispatchToProps, mapStateToProps} from '../redux/reduxMapping';
 //other screens
 
 //components
-import LoginCaregiver from './login/loginCaregiver';
-import ChatScreen from './main/chat';
+import CaregiverDrawerNavigator from './drawerCaregiver';
+import AccountDetailScreen from './more/accountDetails';
+import DiaryScreen from './main/diary/diary';
 
 Entypo.loadFont();
 
@@ -51,11 +52,26 @@ class CaregiverRoot extends Component {
           {this.props.isLogin ? (
             <>
               <Stack.Screen
-                name="Char"
-                component={ChatScreen}
+                name="CaregiverDashBoard"
+                component={CaregiverDrawerNavigator}
                 options={{
                   headerShown: false,
                   animationEnabled: true,
+                }}
+              />
+              {/* Drawer Screen */}
+              <Stack.Screen
+                name="Edit Account"
+                component={AccountDetailScreen}
+                options={{
+                  headerShown: false,
+                }}
+              />
+              <Stack.Screen
+                name="Diary"
+                component={DiaryScreen}
+                options={{
+                  headerShown: false,
                 }}
               />
             </>
