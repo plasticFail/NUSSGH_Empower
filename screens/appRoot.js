@@ -26,6 +26,7 @@ import {getRole} from '../storage/asyncStorageFunctions';
 import {role_patient, role_caregiver} from '../commonFunctions/common';
 import CaregiverRoot from './caregiverRoot';
 import LoadingScreen from '../components/account/initLoadingScreen';
+import {appRootUrl, availablePaths} from "../config/AppConfig";
 
 const Stack = createStackNavigator();
 
@@ -36,11 +37,11 @@ class AppRoot extends Component {
     this.state = {
       user: '',
     };
+    this.navigationRef = React.createRef();
     this.initRole().then(() => {});
   }
 
   componentDidMount() {
-    Linking.addEventListener('url', this.handleRedirectUrl);
     this.initRole().then(() => {});
   }
 
@@ -63,11 +64,23 @@ class AppRoot extends Component {
     this.setState({user: role});
   }
 
+  handleRedirectUrl = async () => {
+      const url = await Linking.getInitialURL();
+      if (url) {
+          const path = url.split(appRootUrl)[1];
+          console.log(`application opened from web. navigating to ${path}`);
+          if (availablePaths.has(path)) {
+              this.navigationRef.current.navigate(path);
+          }
+      }
+  }
+
   render() {
-    const {user} = this.state;
+    const user = role_caregiver;
+    //const {user} = this.state;
     return (
       <>
-        <NavigationContainer>
+        <NavigationContainer ref={this.navigationRef} onReady={this.handleRedirectUrl}>
           <Stack.Navigator
             screenOptions={({route}) => ({
               headerTintColor: '#000',
