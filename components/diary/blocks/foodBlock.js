@@ -26,6 +26,7 @@ import {
   carbs,
   fats,
   protein,
+  isEmpty,
 } from '../../../commonFunctions/common';
 //third party library
 import Modal from 'react-native-modal';
@@ -43,6 +44,7 @@ import globalStyles from '../../../styles/globalStyles';
 import {Colors} from '../../../styles/colors';
 import diaryStyles from '../../../styles/diaryStyles';
 import {horizontalMargins} from '../../../styles/variables';
+import {getPatientProfile} from '../../../netcalls/requestsAccount';
 //function
 
 const FoodBlock = (props) => {
@@ -219,7 +221,19 @@ function renderFoodItems(logs, editLog) {
 }
 
 function renderProgressBars(carbsAmt, fatsAmt, proteinAmt) {
-  return (
+  const [patient, setPatient] = useState({});
+  console.log('rendering progres bar----');
+  console.log(patient);
+
+  useEffect(() => {
+    async function getProfile() {
+      let p = await getPatientProfile();
+      setPatient(p?.patient);
+    }
+    getProfile();
+  }, []);
+
+  return !isEmpty(patient) ? (
     <View
       style={{
         flexDirection: 'row',
@@ -232,21 +246,24 @@ function renderProgressBars(carbsAmt, fatsAmt, proteinAmt) {
         value={carbsAmt}
         type={carbs}
         targetUnit={'g'}
+        patient={patient}
       />
       <ProgressContent
         header={'Fat'}
         value={fatsAmt}
         type={fats}
         targetUnit={'g'}
+        patient={patient}
       />
       <ProgressContent
         header={'Protein'}
         value={proteinAmt}
         type={protein}
         targetUnit={'g'}
+        patient={patient}
       />
     </View>
-  );
+  ) : null;
 }
 
 const styles = StyleSheet.create({
