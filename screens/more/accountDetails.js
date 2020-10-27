@@ -15,9 +15,11 @@ import USER_MALE from '../../resources/images/Patient-Icons/SVG/user-male.svg';
 import USER_FEMALE from '../../resources/images/Patient-Icons/SVG/user-female.svg';
 
 const iconStyle = {
-  height: 250,
-  width: 250,
+  height: 200,
+  width: 200,
   alignSelf: 'center',
+  marginBottom: '3%',
+  marginTop: '3%',
 };
 
 const AccountDetailScreen = (props) => {

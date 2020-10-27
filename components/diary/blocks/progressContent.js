@@ -37,7 +37,7 @@ const ProgressContent = (props) => {
     setTarget(max);
     let percent = Math.floor((Number(value) / Number(max)) * 100) + '%';
     setPercentage(percent);
-  }, []);
+  }, [value]);
 
   return !flip ? (
     <View style={{flex: 1, marginEnd: '1.5%', alignSelf: 'flex-start'}}>
