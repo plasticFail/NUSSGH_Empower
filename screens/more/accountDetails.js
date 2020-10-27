@@ -19,6 +19,7 @@ const iconStyle = {
   width: 200,
   alignSelf: 'center',
   marginBottom: '3%',
+  marginTop: '3%',
 };
 
 const AccountDetailScreen = (props) => {
