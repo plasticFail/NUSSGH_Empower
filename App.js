@@ -10,14 +10,12 @@ export default function App() {
   const [finishLoading, setFinishLoading] = useState(false);
 
   return (
-      <Provider store={store}>
-      {
-          finishLoading ? (
-              <AppRoot />
-          ) : (
-              <LoadingScreen finishHandler={() => setFinishLoading(true)}/>
-          )
-      }
-      </Provider>
+    <Provider store={store}>
+      {finishLoading ? (
+        <AppRoot />
+      ) : (
+        <LoadingScreen finishHandler={() => setFinishLoading(true)} />
+      )}
+    </Provider>
   );
 }

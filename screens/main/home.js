@@ -11,9 +11,6 @@ import {
 //third party lib
 import Moment from 'moment';
 //component
-import NotificationsCard from '../../components/dashboard/todayOverview/cards/NotificationsCard';
-import DiaryCard from '../../components/dashboard/todayOverview/cards/DiaryCard';
-import ActivityCard from '../../components/dashboard/todayOverview/cards/ActivityCard';
 import MenuBtn from '../../components/menuBtn';
 import HeaderCard from '../../components/home/headerCard';
 //styles
@@ -35,6 +32,7 @@ import {
   carbs,
   fats,
   protein,
+  role_patient,
 } from '../../commonFunctions/common';
 import {getEntry4Day} from '../../netcalls/requestsDiary';
 import {
@@ -50,6 +48,7 @@ import ActivityCollapse from '../../components/home/collapsible/activityCollapse
 import OverviewCollapse from '../../components/home/collapsible/overviewCollapse';
 import GameCollapse from '../../components/home/collapsible/gameCollapse';
 import {getActivitySummaries} from '../../netcalls/requestsLog';
+import {getRole} from '../../storage/asyncStorageFunctions';
 
 // properties
 const {width, height} = Dimensions.get('window');
@@ -61,6 +60,7 @@ const chances = 35;
 const rewards = 1;
 
 const HomeScreen = (props) => {
+  const [role, setRole] = useState('');
   const [currHour, setCurrHour] = useState(new Date().getHours());
   const [uncompleteLogs, setUncompleteLogs] = useState([]);
   const [firstName, setFirstName] = useState('');
@@ -92,11 +92,6 @@ const HomeScreen = (props) => {
   useEffect(() => {
     //slide right when enter screen
     props.navigation.addListener('focus', () => {
-      getPatientProfile().then((response) => {
-        if (response != null) {
-          setFirstName(response?.patient?.first_name);
-        }
-      });
       slideRightAnimation.setValue(0);
       Animated.timing(slideRightAnimation, {
         toValue: 1,
@@ -123,6 +118,12 @@ const HomeScreen = (props) => {
           setFirstName(response?.patient?.first_name);
         }
       });
+
+      //set role
+      getRole().then((data) => {
+        setRole(data);
+      });
+      console.log(role);
 
       checkLogDone(getGreetingFromHour(currHour))
         .then((response) => {
@@ -299,41 +300,44 @@ const HomeScreen = (props) => {
             username={firstName}
             hour={getGreetingFromHour(currHour)}
           />
-          <NotifCollapse
-            hour={getGreetingFromHour(currHour)}
-            morningNotDone={morningNotDone}
-            afternoonNotDone={afternoonNotDone}
-          />
-          <DailyCollapse
-            uncompleteLogs={uncompleteLogs}
-            hour={getGreetingFromHour(currHour)}
-          />
-          <ActivityCollapse
-            carbAmt={carb}
-            proteinAmt={proteinAmt}
-            fatAmt={fat}
-            activitySummary={activitySummary}
-            activityTarget={activityTarget}
-          />
-          <OverviewCollapse
-            bgl={bgl}
-            calorie={calorie}
-            medResult={med}
-            lastWeight={lastWeight}
-            dateString={dateString}
-            bgPass={bgPass}
-            bgMiss={bgMiss}
-            bgLogs={bgLogs}
-            foodLogs={foodLogs}
-            carbs={carb}
-            fats={fat}
-            protein={proteinAmt}
-            foodPass={foodPass}
-            weightLogs={weightLogs}
-            medLogs={medLogs}
-            init={() => initLogs()}
-          />
-          <GameCollapse points={point} chances={chances} rewards={rewards} />
+          <View style={{backgroundColor: 'transparent'}}>
+            <NotifCollapse
+              hour={getGreetingFromHour(currHour)}
+              morningNotDone={morningNotDone}
+              afternoonNotDone={afternoonNotDone}
+            />
+            <DailyCollapse
+              uncompleteLogs={uncompleteLogs}
+              hour={getGreetingFromHour(currHour)}
+            />
+            <ActivityCollapse
+              carbAmt={carb}
+              proteinAmt={proteinAmt}
+              fatAmt={fat}
+              activitySummary={activitySummary}
+              activityTarget={activityTarget}
+            />
+            <OverviewCollapse
+              bgl={bgl}
+              calorie={calorie}
+              medResult={med}
+              lastWeight={lastWeight}
+              dateString={dateString}
+              bgPass={bgPass}
+              bgMiss={bgMiss}
+              bgLogs={bgLogs}
+              foodLogs={foodLogs}
+              carbs={carb}
+              fats={fat}
+              protein={proteinAmt}
+              foodPass={foodPass}
+              weightLogs={weightLogs}
+              medLogs={medLogs}
+              init={() => initLogs()}
+            />
+            <GameCollapse points={point} chances={chances} rewards={rewards} />
+          </View>
+
           {/* Diary overview of weight, blood glucose, food, medication and physical activity */}
         </ScrollView>
       </Animated.View>

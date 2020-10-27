@@ -5,7 +5,6 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
-  Image,
   Alert,
   KeyboardAvoidingView,
 } from 'react-native';
@@ -19,13 +18,20 @@ import {
   storePassword,
   getPassword,
   storeToken,
+  storeRole,
 } from '../../storage/asyncStorageFunctions';
-import {patientLoginRequest} from '../../netcalls/requestsAuth';
+import {
+  patientLoginRequest,
+  caregiverLoginRequest,
+} from '../../netcalls/requestsAuth';
 //components
 import Loading from '../../components/loading';
 import globalStyles from '../../styles/globalStyles';
 //svg
 import Logo from '../../resources/images/Patient-Icons/SVG/icon-color-empower.svg';
+import {role_patient, role_caregiver} from '../../commonFunctions/common';
+
+const tabs = [role_patient, role_caregiver];
 
 class Login extends Component {
   constructor(props) {
@@ -36,6 +42,7 @@ class Login extends Component {
       username: '',
       password: '',
       isLoading: false,
+      roleSelected: role_patient,
     };
   }
 
@@ -59,14 +66,28 @@ class Login extends Component {
 
   handleLogin = async () => {
     this.setState({isLoading: true});
-    let token = await patientLoginRequest(
-      this.state.username,
-      this.state.password,
-    );
+    let role = this.state.roleSelected;
+    let token = '';
+    if (role === role_patient) {
+      token = await patientLoginRequest(
+        this.state.username,
+        this.state.password,
+      );
+    } else {
+      token = await caregiverLoginRequest(
+        this.state.username,
+        this.state.password,
+      );
+    }
     if (token != null) {
       await storeUsername(this.state.username);
       await storePassword(this.state.password);
       await storeToken(token);
+      if (role === role_patient) {
+        await storeRole(role_patient);
+      } else {
+        await storeRole(role_caregiver);
+      }
       this.props.login();
       console.log('login success!');
     } else {
@@ -86,7 +107,7 @@ class Login extends Component {
   };
 
   render() {
-    const {navigation} = this.props;
+    const {roleSelected} = this.state;
     return (
       <KeyboardAvoidingView
         style={{flex: 1}}
@@ -101,6 +122,32 @@ class Login extends Component {
             To proceed with the app, please log in with your credentials
           </Text>
           <View style={{flex: 0.5}} />
+
+          {/*Tabs*/}
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              margin: '2%',
+            }}>
+            {tabs.map((item) =>
+              roleSelected === item ? (
+                <TouchableOpacity
+                  onPress={() => this.setState({roleSelected: item})}>
+                  <Text style={[styles.forgetPassword, {fontWeight: 'bold'}]}>
+                    {item}
+                  </Text>
+                  <View style={styles.border} />
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  onPress={() => this.setState({roleSelected: item})}>
+                  <Text style={styles.forgetPassword}>{item}</Text>
+                </TouchableOpacity>
+              ),
+            )}
+          </View>
+
           <TextInput
             style={styles.inputBox}
             placeholder="Username"
@@ -199,5 +246,10 @@ const styles = StyleSheet.create({
     color: 'white',
     textAlign: 'center',
     fontSize: 17,
+  },
+  border: {
+    borderBottomColor: 'white',
+    borderBottomWidth: 2,
+    width: 150,
   },
 });

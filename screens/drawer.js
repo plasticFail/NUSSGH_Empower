@@ -1,27 +1,11 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {Colors} from '../styles/colors';
-import {
-  createDrawerNavigator,
-  DrawerContentScrollView,
-  DrawerItemList,
-  DrawerItem,
-} from '@react-navigation/drawer';
-import {useNavigation} from '@react-navigation/native';
+import {createDrawerNavigator, DrawerItem} from '@react-navigation/drawer';
 //third party library
-import Ant from 'react-native-vector-icons/AntDesign';
 import Ionicon from 'react-native-vector-icons/Ionicons';
-import Icon from 'react-native-vector-icons/FontAwesome';
 //component
 import DashboardScreen from './dashboard';
-import AccountDetailScreen from './more/accountDetails';
-import AppointmentScreen from './more/appointments';
-import EducationalMaterial from './more/educationMaterials';
-import DiaryScreen from './main/diary/diary';
-import Goals from './more/goals';
-import Medication from './more/medications';
-import Logout from './more/logout';
-import GameCenter from './main/gameCenter/gameCenter';
 
 import ACCOUNT from '../resources/images/Patient-Icons//SVG/icon-white-sidemenu-account.svg';
 import DIARY from '../resources/images/Patient-Icons//SVG/icon-white-sidemenu-diary.svg';

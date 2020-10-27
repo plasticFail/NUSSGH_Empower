@@ -59,7 +59,7 @@ const DailyCollapse = (props) => {
         </TouchableOpacity>
       </View>
       {/*Content */}
-      {open && (
+      {open ? (
         <Animated.View
           style={{
             maxHeight: heightInterpolation,
@@ -83,7 +83,7 @@ const DailyCollapse = (props) => {
             </Text>
           )}
         </Animated.View>
-      )}
+      ) : null}
     </View>
   );
 };

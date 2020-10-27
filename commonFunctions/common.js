@@ -41,6 +41,13 @@ const maxCal_M_60above = 2234;
 //notification type
 const notif_log = 'log';
 
+const role_patient = 'Patient';
+const role_caregiver = 'Caregiver';
+
+// type for options list
+const text = 'red';
+const bin = 'bin';
+
 const morningObj = {
   name: 'Morning',
   start: 5,
@@ -241,4 +248,8 @@ export {
   getMax4Type,
   getAge,
   notif_log,
+  role_caregiver,
+  role_patient,
+  bin,
+  text,
 };
