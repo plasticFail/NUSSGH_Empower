@@ -300,49 +300,43 @@ const HomeScreen = (props) => {
             username={firstName}
             hour={getGreetingFromHour(currHour)}
           />
-          {role === role_patient && (
-            <>
-              <NotifCollapse
-                hour={getGreetingFromHour(currHour)}
-                morningNotDone={morningNotDone}
-                afternoonNotDone={afternoonNotDone}
-              />
-              <DailyCollapse
-                uncompleteLogs={uncompleteLogs}
-                hour={getGreetingFromHour(currHour)}
-              />
-              <ActivityCollapse
-                carbAmt={carb}
-                proteinAmt={proteinAmt}
-                fatAmt={fat}
-                activitySummary={activitySummary}
-                activityTarget={activityTarget}
-              />
-              <OverviewCollapse
-                bgl={bgl}
-                calorie={calorie}
-                medResult={med}
-                lastWeight={lastWeight}
-                dateString={dateString}
-                bgPass={bgPass}
-                bgMiss={bgMiss}
-                bgLogs={bgLogs}
-                foodLogs={foodLogs}
-                carbs={carb}
-                fats={fat}
-                protein={proteinAmt}
-                foodPass={foodPass}
-                weightLogs={weightLogs}
-                medLogs={medLogs}
-                init={() => initLogs()}
-              />
-              <GameCollapse
-                points={point}
-                chances={chances}
-                rewards={rewards}
-              />
-            </>
-          )}
+          <View style={{backgroundColor: 'transparent'}}>
+            <NotifCollapse
+              hour={getGreetingFromHour(currHour)}
+              morningNotDone={morningNotDone}
+              afternoonNotDone={afternoonNotDone}
+            />
+            <DailyCollapse
+              uncompleteLogs={uncompleteLogs}
+              hour={getGreetingFromHour(currHour)}
+            />
+            <ActivityCollapse
+              carbAmt={carb}
+              proteinAmt={proteinAmt}
+              fatAmt={fat}
+              activitySummary={activitySummary}
+              activityTarget={activityTarget}
+            />
+            <OverviewCollapse
+              bgl={bgl}
+              calorie={calorie}
+              medResult={med}
+              lastWeight={lastWeight}
+              dateString={dateString}
+              bgPass={bgPass}
+              bgMiss={bgMiss}
+              bgLogs={bgLogs}
+              foodLogs={foodLogs}
+              carbs={carb}
+              fats={fat}
+              protein={proteinAmt}
+              foodPass={foodPass}
+              weightLogs={weightLogs}
+              medLogs={medLogs}
+              init={() => initLogs()}
+            />
+            <GameCollapse points={point} chances={chances} rewards={rewards} />
+          </View>
 
           {/* Diary overview of weight, blood glucose, food, medication and physical activity */}
         </ScrollView>

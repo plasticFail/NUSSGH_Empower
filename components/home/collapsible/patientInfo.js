@@ -1,24 +1,13 @@
 import React, {useEffect, useState, useRef} from 'react';
 import {View, StyleSheet, TouchableOpacity, Text, Animated} from 'react-native';
-import UncompleteLogCard from '../../uncompleteLogCard';
-import {green_color} from '../../../commonFunctions/common';
 import {Colors} from '../../../styles/colors';
 
-const DailyCollapse = (props) => {
-  const {uncompleteLogs, hour} = props;
+const PatientInfo = (props) => {
+  const {patient} = props;
   const [open, setOpen] = useState(true);
-  const [count, setCount] = useState(0);
   const [minHeight, setMinHeight] = useState(0);
   const [maxHeight, setMaxHeight] = useState(0);
   const dropDownAnimation = useRef(new Animated.Value(1)).current;
-
-  useEffect(() => {
-    setOpen(true);
-  }, []);
-
-  useEffect(() => {
-    setCount(uncompleteLogs.length);
-  }, [uncompleteLogs]);
 
   const toggle = (visible) => {
     if (visible) {
@@ -37,6 +26,10 @@ const DailyCollapse = (props) => {
     }
   };
 
+  useEffect(() => {
+    setOpen(true);
+  }, []);
+
   const heightInterpolation = dropDownAnimation.interpolate({
     inputRange: [0, 1],
     outputRange: [minHeight, maxHeight],
@@ -45,7 +38,7 @@ const DailyCollapse = (props) => {
   return (
     <View
       onLayout={(event) => setMaxHeight(event.nativeEvent.layout.height)}
-      style={{backgroundColor: Colors.notifTab}}>
+      style={{backgroundColor: Colors.patientType}}>
       <View
         style={styles.cardTab}
         onLayout={(event) => setMinHeight(event.nativeEvent.layout.height)}>
@@ -54,8 +47,7 @@ const DailyCollapse = (props) => {
             toggle(open);
           }}
           style={styles.headerTab}>
-          <Text style={[styles.headerText, {flex: 1}]}>Daily Tasks</Text>
-          <Text style={styles.headerText}>{count}</Text>
+          <Text style={[styles.headerText, {flex: 1}]}>Patient Info</Text>
         </TouchableOpacity>
       </View>
       {/*Content */}
@@ -63,36 +55,33 @@ const DailyCollapse = (props) => {
         <Animated.View
           style={{
             maxHeight: heightInterpolation,
-            backgroundColor: Colors.dailyTab,
-            paddingBottom: '2%',
+            backgroundColor: 'white',
           }}>
-          {uncompleteLogs.length > 0 ? (
-            <>
-              <Text style={styles.greetingText}>
-                Create a log for the {hour}
-              </Text>
-              <UncompleteLogCard
-                uncompleteLogs={uncompleteLogs}
-                color={green_color}
-                hideChevron={true}
-              />
-            </>
-          ) : (
-            <Text style={styles.taskText}>
-              You have completed your logs for the {hour}!
-            </Text>
-          )}
+          <View style={{marginBottom: '2%'}}>
+            <View style={styles.content}>
+              <Text style={styles.header}>ID</Text>
+              <Text style={styles.detail}>{patient?.id}</Text>
+            </View>
+            <View style={styles.content}>
+              <Text style={styles.header}>Date of Birth</Text>
+              <Text style={styles.detail}>{patient?.dob}</Text>
+            </View>
+            <View style={styles.content}>
+              <Text style={styles.header}>Weight</Text>
+              <Text style={styles.detail}>{patient?.weight} kg</Text>
+            </View>
+          </View>
         </Animated.View>
       ) : null}
     </View>
   );
 };
 
-export default DailyCollapse;
+export default PatientInfo;
 
 const styles = StyleSheet.create({
   cardTab: {
-    backgroundColor: Colors.dailyTab,
+    backgroundColor: 'white',
     borderTopStartRadius: 20,
     borderTopEndRadius: 20,
   },
@@ -102,21 +91,36 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontFamily: 'SFProDisplay-Bold',
-    color: 'white',
     fontSize: 18,
     marginStart: '3%',
   },
-  greetingText: {
-    color: '#005c30',
+  patientName: {
+    fontFamily: 'SFProDisplay-Regular',
     fontSize: 18,
-    fontFamily: 'SFProDisplay-Bold',
+    color: 'white',
+    alignSelf: 'center',
+  },
+  optionIcon: {
+    alignSelf: 'center',
+    marginEnd: '3%',
+  },
+  content: {
+    flexDirection: 'row',
     marginStart: '5%',
     marginTop: '2%',
+    marginBottom: '3%',
   },
-  taskText: {
-    fontFamily: 'SFProDisplay-Regular',
-    color: 'white',
-    marginStart: '5%',
+  header: {
+    fontFamily: 'SFProDisplay-Bold',
     fontSize: 18,
+    color: '#21293A',
+    opacity: 0.6,
+    flex: 1,
+  },
+  detail: {
+    justifyContent: 'center',
+    marginEnd: '3%',
+    fontSize: 18,
+    fontFamily: 'SFProDisplay-Regular',
   },
 });

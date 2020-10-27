@@ -18,6 +18,8 @@ import ALERT from '../resources/images/Caregiver-Additional-Icons/SVG/cg-icon-na
 import ALERT_FOCUSED from '../resources/images/Caregiver-Additional-Icons/SVG/cg-icon-green-footer-alert.svg';
 import CHAT from '../resources/images/Patient-Icons/SVG/icon-navy-footer-chat.svg';
 import CHAT_FOCUSED from '../resources/images/Patient-Icons/SVG/icon-green-footer-chat.svg';
+import HomeScreenPatient from './main/home-caregiver';
+import HomeScreenCaregiver from './main/home-caregiver';
 
 const Tab = createBottomTabNavigator();
 
@@ -26,7 +28,6 @@ const iconStyle = {
   height: 30,
 };
 const CaregiverBottomTab = (props) => {
-  console.log('caregiver bottom tab');
   return (
     <Tab.Navigator
       tabBarOptions={{
@@ -42,9 +43,8 @@ const CaregiverBottomTab = (props) => {
       }}>
       <Tab.Screen
         name="Home"
-        component={Home}
+        component={HomeScreenCaregiver}
         options={{
-          title: 'Home',
           tabBarIcon: ({focused}) => {
             if (focused) {
               return <HOME_FOCUSED {...iconStyle} />;
