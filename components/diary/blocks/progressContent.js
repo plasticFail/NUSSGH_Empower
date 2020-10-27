@@ -24,24 +24,16 @@ const ProgressContent = (props) => {
     targetUnit,
     clickable,
     small,
+    patient,
   } = props;
   const {chevronDownMethod} = props;
   const [percentage, setPercentage] = useState('');
   const [target, setTarget] = useState(0);
-  const [patient, setPatient] = useState({});
-  const [age, setAge] = useState(0);
-  const [gender, setGender] = useState('');
 
   useEffect(() => {
-    async function getProfile() {
-      let response = await getPatientProfile();
+    console.log('in progress content ---');
 
-      setPatient(response?.patient);
-      setGender(response?.patient?.gender);
-      setAge(getAge(response?.patient?.birth_date));
-    }
-    getProfile();
-    let max = getMax4Type(age, type, gender);
+    let max = getMax4Type(getAge(patient?.birth_date), type, patient?.gender);
     setTarget(max);
     let percent = Math.floor((Number(value) / Number(max)) * 100) + '%';
     setPercentage(percent);

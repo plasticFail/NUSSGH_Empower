@@ -36,7 +36,17 @@ const maxFat_M_60above = 75;
 const maxCarb_M_60under = 377;
 const maxCarb_M_60abv = 315;
 const maxCal_M_60under = 2590;
-const maxCal_M_60above = 2234;
+const maxCal_M_60above = 2235;
+
+//notification type
+const notif_log = 'log';
+
+const role_patient = 'Patient';
+const role_caregiver = 'Caregiver';
+
+// type for options list
+const text = 'red';
+const bin = 'bin';
 
 const morningObj = {
   name: 'Morning',
@@ -151,7 +161,7 @@ const getMax4Type = (age, type, gender) => {
       }
     } else {
       if (type === fats) {
-        return maxFat_M_60under;
+        return maxFat_F_60under;
       }
       if (type === carbs) {
         return maxCarb_F_60under;
@@ -237,4 +247,9 @@ export {
   maxCal_M_60above,
   getMax4Type,
   getAge,
+  notif_log,
+  role_caregiver,
+  role_patient,
+  bin,
+  text,
 };
