@@ -5,10 +5,8 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
-  Switch,
   Alert,
   KeyboardAvoidingView,
-  Dimensions,
 } from 'react-native';
 //third party libs
 import {connect} from 'react-redux';
@@ -70,7 +68,6 @@ class Login extends Component {
     this.setState({isLoading: true});
     let role = this.state.roleSelected;
     let token = '';
-    /* comment out when have caregiver account
     if (role === role_patient) {
       token = await patientLoginRequest(
         this.state.username,
@@ -81,9 +78,7 @@ class Login extends Component {
         this.state.username,
         this.state.password,
       );
-    }*/
-
-    token = await patientLoginRequest(this.state.username, this.state.password);
+    }
     if (token != null) {
       await storeUsername(this.state.username);
       await storePassword(this.state.password);

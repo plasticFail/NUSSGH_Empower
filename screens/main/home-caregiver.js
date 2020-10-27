@@ -39,7 +39,7 @@ const HomeScreenCaregiver = (props) => {
   const [patient, setPatient] = useState(patientSample);
   const [currHour, setCurrHour] = useState(new Date().getHours());
   const [uncompleteLogs, setUncompleteLogs] = useState([]);
-  const [firstName, setFirstName] = useState('');
+  const [firstName, setFirstName] = useState('Audrey');
 
   //animation
   const slideRightAnimation = useRef(new Animated.Value(0)).current;
@@ -64,12 +64,6 @@ const HomeScreenCaregiver = (props) => {
   //init
   useEffect(() => {
     props.navigation.addListener('focus', () => {
-      getPatientProfile().then((response) => {
-        if (response != null) {
-          setFirstName(response?.patient?.first_name);
-        }
-      });
-
       //set role
       getRole().then((data) => {
         setRole(data);

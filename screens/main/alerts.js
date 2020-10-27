@@ -1,13 +1,23 @@
-import React, {useRef, useEffect} from 'react';
+import React, {useRef, useEffect, useState} from 'react';
 import {View, StyleSheet, Text, Animated, Dimensions} from 'react-native';
-import MenuBtn from '../../components/menuBtn';
 import globalStyles from '../../styles/globalStyles';
 import LeftArrowBtn from '../../components/logs/leftArrowBtn';
-import logStyles from '../../styles/logStyles';
-import InProgress from '../../components/inProgress';
+import {checkLogDone} from '../../commonFunctions/logFunctions';
+import {
+  morningObj,
+  afternoonObj,
+  notif_log,
+} from '../../commonFunctions/common';
+import NotificationRow from '../../components/home/notificationRow';
+import getLogIncompleteText from '../../commonFunctions/notifFunction';
 
 const AlertsScreen = (props) => {
   const slideRightAnimation = useRef(new Animated.Value(0)).current;
+  const [currHour, setCurrHour] = useState(new Date().getHours());
+  //log notif
+  const [morningNotDone, setMorningNotDone] = useState([]);
+  const [afternoonNotDone, setAfternoonNotDone] = useState([]);
+  const [logNotDoneText, setLogNotDoneText] = useState('');
 
   useEffect(() => {
     //slide right when enter screen
@@ -27,6 +37,28 @@ const AlertsScreen = (props) => {
     extrapolate: 'clamp',
   });
 
+  const initUncompleteLog = () => {
+    if (currHour != morningObj.name) {
+      checkLogDone(morningObj.name).then((response) => {
+        if (response != null) {
+          setMorningNotDone(response.notCompleted);
+        }
+      });
+
+      checkLogDone(afternoonObj.name).then((response) => {
+        if (response != null) {
+          setAfternoonNotDone(response.notCompleted);
+        }
+      });
+    }
+    console.log(
+      getLogIncompleteText(morningNotDone, afternoonNotDone, currHour),
+    );
+    setLogNotDoneText(
+      getLogIncompleteText(morningNotDone, afternoonNotDone, currHour),
+    );
+  };
+
   return (
     <View style={globalStyles.pageContainer}>
       <Animated.View
@@ -37,8 +69,14 @@ const AlertsScreen = (props) => {
         <View style={globalStyles.menuBarContainer}>
           <LeftArrowBtn close={() => props.navigation.navigate('Home')} />
         </View>
-        <Text style={globalStyles.pageHeader}>Alerts</Text>
-        <InProgress />
+        <Text style={globalStyles.pageHeader}>Alert</Text>
+        {logNotDoneText.length > 0 && (
+          <NotificationRow
+            type={notif_log}
+            hour={currHour}
+            text={logNotDoneText}
+          />
+        )}
       </Animated.View>
     </View>
   );
