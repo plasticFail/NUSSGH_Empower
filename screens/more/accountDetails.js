@@ -11,7 +11,15 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import {Colors} from '../../styles/colors';
 import {getPatientProfile} from '../../netcalls/requestsAccount';
 
-const profilePic = require('../../resources/images/userPic.png');
+import USER_MALE from '../../resources/images/Patient-Icons/SVG/user-male.svg';
+import USER_FEMALE from '../../resources/images/Patient-Icons/SVG/user-female.svg';
+
+const iconStyle = {
+  height: 200,
+  width: 200,
+  alignSelf: 'center',
+  marginBottom: '3%',
+};
 
 const AccountDetailScreen = (props) => {
   const [usernameModalVisible, setUsernameModalVisible] = useState(false);
@@ -23,6 +31,8 @@ const AccountDetailScreen = (props) => {
   const [name, setName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [patient, setPatient] = useState({});
+
+  console.log(patient.gender);
 
   useEffect(() => {
     init();
@@ -48,7 +58,11 @@ const AccountDetailScreen = (props) => {
       </View>
       <Text style={globalStyles.pageHeader}>Edit Account</Text>
       <ScrollView contentContainerStyle={{...props.style}}>
-        <Image source={profilePic} style={styles.profileImg} />
+        {patient?.gender === 'female' ? (
+          <USER_FEMALE {...iconStyle} />
+        ) : (
+          <USER_MALE {...iconStyle} />
+        )}
         <View style={{flexDirection: 'row', margin: '2%'}}>
           <Ant name="user" size={30} color={Colors.lastLogValueColor} />
           <Text style={styles.sectionHeading}>Account Details</Text>
