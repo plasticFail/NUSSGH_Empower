@@ -31,6 +31,8 @@ const gameCenterGetOverview = server + 'game/bingo/overview';
 const gameCenterSelectGame = server + 'game/bingo/select';
 const gameCenterPerformSpin = server + 'game/bingo/spin';
 
+const caregiverLogin = server + 'auth/caregiver-login';
+
 export {
   patientLogin,
   isTokenValid,
@@ -61,4 +63,5 @@ export {
   gameCenterSelectGame,
   gameCenterPerformSpin,
   pusherTokenEndpoint,
+  caregiverLogin,
 };

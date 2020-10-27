@@ -92,4 +92,8 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginEnd: '3%',
   },
+  detail: {
+    fontSize: 18,
+    fontFamily: 'SFProDisplay-Regular',
+  },
 });

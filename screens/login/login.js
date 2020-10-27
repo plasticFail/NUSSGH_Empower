@@ -22,7 +22,10 @@ import {
   storeToken,
   storeRole,
 } from '../../storage/asyncStorageFunctions';
-import {patientLoginRequest} from '../../netcalls/requestsAuth';
+import {
+  patientLoginRequest,
+  caregiverLoginRequest,
+} from '../../netcalls/requestsAuth';
 //components
 import Loading from '../../components/loading';
 import globalStyles from '../../styles/globalStyles';
@@ -65,12 +68,23 @@ class Login extends Component {
 
   handleLogin = async () => {
     this.setState({isLoading: true});
-    let token = await patientLoginRequest(
-      this.state.username,
-      this.state.password,
-    );
+    let role = this.state.roleSelected;
+    let token = '';
+    /* comment out when have caregiver account
+    if (role === role_patient) {
+      token = await patientLoginRequest(
+        this.state.username,
+        this.state.password,
+      );
+    } else {
+      token = await caregiverLoginRequest(
+        this.state.username,
+        this.state.password,
+      );
+    }*/
+
+    token = await patientLoginRequest(this.state.username, this.state.password);
     if (token != null) {
-      let role = this.state.roleSelected;
       await storeUsername(this.state.username);
       await storePassword(this.state.password);
       await storeToken(token);
