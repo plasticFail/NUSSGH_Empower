@@ -1,15 +1,15 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, View, Text} from 'react-native';
 import RewardItem from './rewardItem';
 
 
 const RewardRow = (props) => {
-    const rewardList = [1, 1];
+    const {items} = props;
 
     return (
         <View style={styles.row}>
-            {rewardList.map((item, index) => (
-                <RewardItem key={index} numberInRow={rewardList.length}/>
+            {items.map((item, index) => (
+                <RewardItem key={index} item={item}/>
             ))}
         </View>
     );

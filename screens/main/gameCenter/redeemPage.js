@@ -7,6 +7,7 @@ import GameCenterStyles from '../../../styles/gameCenterStyles';
 import globalStyles from '../../../styles/globalStyles';
 //functions
 import {requestGetRewardOverview} from '../../../netcalls/gameCenterEndPoints/requestGameCenter';
+import {rewardItemInALine} from '../../../constants/gameCenter/gameCenterConstant';
 //components
 import LeftArrowBtn from '../../../components/logs/leftArrowBtn';
 import RedeemTab from '../../../components/gameCenter/redeemTabs';
@@ -21,16 +22,76 @@ const RedeemPage = (props) => {
         init();
     }, []);
 
-    const init = async () => {
-        console.log('init redeem page');
-        let responseObj = await requestGetRewardOverview();
-    };
-
     const [currentTabIndex, setCurrentTabIndex] = useState(0);
 
     const [showRedeemConfirm, setShowRedeemConfirm] = useState(false);
     const [showRedeemSuccess, setShowRedeemSuccess] = useState(false);
-    const [showUseVoucher, setShowUseVoucher] = useState(true);
+    const [showUseVoucher, setShowUseVoucher] = useState(false);
+
+    const [availablePoint, setAvailablePoint] = useState(0);
+    const [availableItems, setAvailableItems] = useState([]);
+    const [redeemedItems, setRedeemedItems] = useState([]);
+
+    const init = async () => {
+        console.log('init redeem page');
+        let responseObj = await requestGetRewardOverview();
+
+        setAvailablePoint(responseObj.available_points);
+
+        let dict = {};
+        for(let i=0; i<responseObj.all_items.length; i++){
+            dict[responseObj.all_items[i]._id] = responseObj.all_items[i];
+        }
+
+        initAvailableItem(responseObj.available_items, dict);
+
+        setRedeemedItems([]);
+        setRedeemedItems([...redeemedItems, responseObj.redeemed_items]);
+    };
+
+    const initAvailableItem = (available_items, dict) => {
+        for(let i=0; i<available_items.length; i++){
+            available_items[i].content = dict[available_items[i]._id];
+        }
+
+        let curIndex = 0, availableItemIndex = 0, availableItemSlice=[];
+        while(curIndex < available_items.length){
+            if(curIndex+1 < available_items.length){
+                availableItemSlice[availableItemIndex]=available_items.slice(curIndex, curIndex + rewardItemInALine);
+                availableItemIndex ++;
+                curIndex += rewardItemInALine;
+            }
+            else{
+                availableItemSlice[availableItemIndex]=available_items.slice(curIndex, curIndex + 1);
+                availableItemIndex ++;
+                curIndex ++;
+            }
+
+        }
+        setAvailableItems(availableItemSlice);
+    }
+
+    const initRedeemedItem = (redeemed_items, dict) => {
+        for(let i=0; i<redeemed_items.length; i++){
+            redeemed_items[i].content = dict[redeemed_items[i]._id];
+        }
+
+        let curIndex = 0, redeemedItemIndex = 0, redeemedItemSlice=[];
+        while(curIndex < redeemed_items.length){
+            if(curIndex+1 < redeemed_items.length){
+                redeemedItemSlice[redeemedItemIndex]=redeemed_items.slice(curIndex, curIndex + rewardItemInALine);
+                redeemedItemIndex ++;
+                curIndex += rewardItemInALine;
+            }
+            else{
+                redeemedItemSlice[redeemedItemIndex]=redeemed_items.slice(curIndex, curIndex + 1);
+                redeemedItemIndex ++;
+                curIndex ++;
+            }
+
+        }
+        setRedeemedItems(redeemedItemSlice);
+    }
 
     return (
         <View style={globalStyles.pageContainer}>
@@ -43,10 +104,14 @@ const RedeemPage = (props) => {
                 setTabCallback={setCurrentTabIndex}/>
 
             <View style={[GameCenterStyles.darkGreenColor, GameCenterStyles.center, GameCenterStyles.cardPadding]}>
-                <Text style={[GameCenterStyles.subText, GameCenterStyles.whiteText, GameCenterStyles.textBold]}>160 Points Available</Text>
+                <Text style={[GameCenterStyles.subText, GameCenterStyles.whiteText, GameCenterStyles.textBold]}>{availablePoint} Points Available</Text>
             </View>
 
-            <RewardBoard />
+            {currentTabIndex === 0 ? (
+                <RewardBoard items={redeemedItems}/>
+            ):(
+                <RewardBoard items={availableItems}/>
+            )}
 
             <Modal
                 isVisible={showRedeemConfirm}
