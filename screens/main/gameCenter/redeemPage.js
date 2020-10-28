@@ -44,9 +44,7 @@ const RedeemPage = (props) => {
         }
 
         initAvailableItem(responseObj.available_items, dict);
-
-        setRedeemedItems([]);
-        setRedeemedItems([...redeemedItems, responseObj.redeemed_items]);
+        initRedeemedItem( responseObj.redeemed_items, dict);
     };
 
     const initAvailableItem = (available_items, dict) => {
