@@ -1,12 +1,12 @@
 import React, {useState, useEffect} from 'react';
-import {Text, View} from 'react-native';
+import {Text, View, Alert} from 'react-native';
 //third party libs
 import Modal from 'react-native-modal';
 //styles
 import GameCenterStyles from '../../../styles/gameCenterStyles';
 import globalStyles from '../../../styles/globalStyles';
 //functions
-import {requestGetRewardOverview} from '../../../netcalls/gameCenterEndPoints/requestGameCenter';
+import {requestGetRewardOverview, requestRedeemReward} from '../../../netcalls/gameCenterEndPoints/requestGameCenter';
 import {rewardItemInALine} from '../../../constants/gameCenter/gameCenterConstant';
 //components
 import LeftArrowBtn from '../../../components/logs/leftArrowBtn';
@@ -32,10 +32,16 @@ const RedeemPage = (props) => {
     const [availableItems, setAvailableItems] = useState([]);
     const [redeemedItems, setRedeemedItems] = useState([]);
 
+    const [currentItem, setCurrentItem] = useState(null);
+
     const init = async () => {
         console.log('init redeem page');
         let responseObj = await requestGetRewardOverview();
 
+        setupData(responseObj);
+    };
+
+    const setupData = responseObj => {
         setAvailablePoint(responseObj.available_points);
 
         let dict = {};
@@ -44,8 +50,8 @@ const RedeemPage = (props) => {
         }
 
         initAvailableItem(responseObj.available_items, dict);
-        initRedeemedItem( responseObj.redeemed_items, dict);
-    };
+        initRedeemedItem(responseObj.redeemed_items, dict);
+    }
 
     const initAvailableItem = (available_items, dict) => {
         for(let i=0; i<available_items.length; i++){
@@ -91,6 +97,39 @@ const RedeemPage = (props) => {
         setRedeemedItems(redeemedItemSlice);
     }
 
+    const qrHandler = (item) => {
+        console.log('redeem : ' + item._id);
+        setCurrentItem(item);
+        setShowUseVoucher(true);
+    }
+
+    const selectRedeemHandler = (item) => {
+        console.log('select redeem : ' + item._id);
+        if(item.content.points > availablePoint) {
+            Alert.alert(
+                "Not Enough Points",
+                "Please accumulate more points",
+                [
+                    {text: "OK", onPress: () => console.log("OK Pressed")}
+                ],
+                {cancelable: false}
+            );
+        }else{
+            setCurrentItem(item);
+            setShowRedeemConfirm(true);
+        }
+    }
+
+    const redeemHandler = async (id, quantity) => {
+        console.log('redeem : ' + id + ' ' + quantity);
+        let responseObj = await requestRedeemReward(id, quantity);
+        if(responseObj !== null){
+            setupData(responseObj);
+            setShowRedeemConfirm(false);
+            setShowRedeemSuccess(true);
+        }
+    }
+
     return (
         <View style={globalStyles.pageContainer}>
             <View style={globalStyles.menuBarContainer}>
@@ -106,9 +145,9 @@ const RedeemPage = (props) => {
             </View>
 
             {currentTabIndex === 0 ? (
-                <RewardBoard items={redeemedItems}/>
+                <RewardBoard items={redeemedItems} clickFunc={qrHandler}/>
             ):(
-                <RewardBoard items={availableItems}/>
+                <RewardBoard items={availableItems} clickFunc={selectRedeemHandler}/>
             )}
 
             <Modal
@@ -116,7 +155,7 @@ const RedeemPage = (props) => {
                 transparent={true}
                 animationType='fade'
                 onRequestClose={() => setShowRedeemConfirm(false)}>
-                <RedeemConfirmPage />
+                <RedeemConfirmPage item={currentItem} points={availablePoint} redeemHandler={redeemHandler}/>
             </Modal>
 
             <Modal
@@ -124,7 +163,7 @@ const RedeemPage = (props) => {
                 transparent={true}
                 animationType='fade'
                 onRequestClose={() => setShowRedeemSuccess(false)}>
-                <RedeemSuccessPage />
+                <RedeemSuccessPage closeModal={() => setShowRedeemSuccess(false)} />
             </Modal>
 
             <Modal
@@ -132,7 +171,7 @@ const RedeemPage = (props) => {
                 transparent={true}
                 animationType='fade'
                 onRequestClose={() => setShowUseVoucher(false)}>
-                <UseVoucherPage />
+                <UseVoucherPage item={currentItem} closeModal={() => setShowUseVoucher(false)}/>
             </Modal>
 
         </View>

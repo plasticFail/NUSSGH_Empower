@@ -4,13 +4,13 @@ import RewardRow from './rewardRow';
 
 
 const RewardBoard = (props) => {
-    const {items} = props;
+    const {items, clickFunc} = props;
 
     return (
         <ScrollView contentContainerStyle={{flexGrow: 1}}>
             <View style={styles.column}>
                 {items.map((item, index) => (
-                    <RewardRow key={index} items={item} />
+                    <RewardRow key={index} items={item} clickFunc={clickFunc}/>
                 ))}
             </View>
         </ScrollView>

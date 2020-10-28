@@ -6,15 +6,17 @@ import QRCode from 'react-native-qrcode-svg';
 
 
 const UseVoucherPage = (props) => {
+    const {item, closeModal} = props;
+
     return (
         <View style={[GameCenterStyles.modalViewSmall, GameCenterStyles.card, GameCenterStyles.cardPadding]}>
-            <Text style={[GameCenterStyles.subText, GameCenterStyles.textBold]}>Use Voucher</Text>
+            <Text style={[GameCenterStyles.subText, GameCenterStyles.textBold, {marginVertical: '3%'}]}>Use Voucher</Text>
             <QRCode
                 size={200}
-                value="http://awesome.link.qr"
+                value={item.qr_code}
             />
-            <Text style={[GameCenterStyles.subText, GameCenterStyles.textBold]}>$5 Health Promotion Board Voucher</Text>
-            <TouchableOpacity style={{marginTop: '2%'}} onPress={() => {}}>
+            <Text style={[GameCenterStyles.subText, GameCenterStyles.textBold, {marginVertical: '3%'}]}>{item.content.name}</Text>
+            <TouchableOpacity style={{marginTop: '2%'}} onPress={() => {closeModal()}}>
                 <Text style={[globalStyles.actionButtonText, GameCenterStyles.redText]}>Cancel</Text>
             </TouchableOpacity>
         </View>

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Image, Text, View, Dimensions} from 'react-native';
+import {Image, Text, View, Dimensions, TouchableOpacity} from 'react-native';
 import GameCenterStyles from '../../styles/gameCenterStyles';
 import {rewardItemInALine} from '../../constants/gameCenter/gameCenterConstant';
 import {GetRewardIconByKey} from '../../commonFunctions/gameCenterFunctions';
@@ -17,27 +17,26 @@ const imgWidthCal = (width) => {
 const RewardItem = (props) => {
     const {width} = Dimensions.get('window');
 
-    const {item} = props;
+    const {item, clickFunc} = props;
 
     return (
-        <View
+        <TouchableOpacity
             style={[
                 GameCenterStyles.card,
                 GameCenterStyles.cardPadding,
                 GameCenterStyles.subContainerVertical,
                 {width: widthCal()}
-            ]}>
+            ]} onPress={() => {clickFunc(item)}}>
+                <Image
+                    resizeMode="contain"
+                    style={{width: imgWidthCal(width), height: imgWidthCal(width)}}
+                    source={GetRewardIconByKey(item.content.icon)}
+                />
 
-            <Image
-                resizeMode="contain"
-                style={{width: imgWidthCal(width), height: imgWidthCal(width)}}
-                source={GetRewardIconByKey(item.content.icon)}
-            />
+                <Text style={[GameCenterStyles.subText, GameCenterStyles.textBold]}>{item.content.name}</Text>
+                <Text style={[GameCenterStyles.subText]}>{item.content.points} points</Text>
+        </TouchableOpacity>
 
-            <Text style={[GameCenterStyles.subText, GameCenterStyles.textBold]}>{item.content.name}</Text>
-            <Text style={[GameCenterStyles.subText]}>{item.content.points} points</Text>
-
-        </View>
     );
 }
 

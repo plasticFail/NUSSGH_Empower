@@ -7,6 +7,8 @@ import globalStyles from '../../styles/globalStyles';
 
 
 const RedeemSuccessPage = (props) => {
+    const {closeModal} = props;
+
     return (
         <View style={[GameCenterStyles.modalViewSmall, GameCenterStyles.card, GameCenterStyles.cardPadding]}>
             <Text style={[GameCenterStyles.subText, {marginVertical: '5%'}]}>Successfully Redeemed</Text>
@@ -16,7 +18,7 @@ const RedeemSuccessPage = (props) => {
                 color={Colors.gameColorGreen}
                 onPress={() => this.setState({showTutorial: true})}
             />
-            <TouchableOpacity style={{marginTop: '2%'}} onPress={() => {}}>
+            <TouchableOpacity style={{marginTop: '2%'}} onPress={() => {closeModal()}}>
                 <Text style={[globalStyles.actionButtonText]}>Ok</Text>
             </TouchableOpacity>
         </View>

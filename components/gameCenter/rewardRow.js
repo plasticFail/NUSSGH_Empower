@@ -4,12 +4,12 @@ import RewardItem from './rewardItem';
 
 
 const RewardRow = (props) => {
-    const {items} = props;
+    const {items, clickFunc} = props;
 
     return (
         <View style={styles.row}>
             {items.map((item, index) => (
-                <RewardItem key={index} item={item}/>
+                <RewardItem key={index} item={item} clickFunc={clickFunc}/>
             ))}
         </View>
     );
