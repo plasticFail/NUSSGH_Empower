@@ -28,9 +28,9 @@ const RedeemPage = (props) => {
 
     const [currentTabIndex, setCurrentTabIndex] = useState(0);
 
-    const [showRedeemConfirm, setShowRedeemConfirm] = useState(true);
+    const [showRedeemConfirm, setShowRedeemConfirm] = useState(false);
     const [showRedeemSuccess, setShowRedeemSuccess] = useState(false);
-    const [showUseVoucher, setShowUseVoucher] = useState(false);
+    const [showUseVoucher, setShowUseVoucher] = useState(true);
 
     return (
         <View style={globalStyles.pageContainer}>

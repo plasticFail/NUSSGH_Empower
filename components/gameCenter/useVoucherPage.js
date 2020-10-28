@@ -10,7 +10,7 @@ const UseVoucherPage = (props) => {
         <View style={[GameCenterStyles.modalViewSmall, GameCenterStyles.card, GameCenterStyles.cardPadding]}>
             <Text style={[GameCenterStyles.subText, GameCenterStyles.textBold]}>Use Voucher</Text>
             <Text style={[GameCenterStyles.subText, GameCenterStyles.textBold]}>$5 Health Promotion Board Voucher</Text>
-            <TouchableOpacity style={styles.press} onPress={() => {}}>
+            <TouchableOpacity style={{marginTop: '2%'}} onPress={() => {}}>
                 <Text style={[globalStyles.actionButtonText, GameCenterStyles.redText]}>Cancel</Text>
             </TouchableOpacity>
         </View>
@@ -18,10 +18,4 @@ const UseVoucherPage = (props) => {
 };
 
 export default UseVoucherPage;
-
-const styles = StyleSheet.create({
-    press:{
-        marginTop: '2%',
-    }
-});
 
