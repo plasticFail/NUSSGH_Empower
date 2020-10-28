@@ -2,20 +2,20 @@ import React from 'react';
 import {View, Text, TouchableOpacity, Dimensions} from 'react-native';
 import {horizontalMargins} from "../../styles/variables";
 
-const wordTabTitles = [
+const redeemTabTitles = [
     {
-        name: "Completed",
+        name: "Redeemed",
         portion: 0.5
     },
     {
-        name: "In Progress",
+        name: "Catalogue",
         portion: 0.5
     }
 ]
 
 const {width} = Dimensions.get('window');
 
-const WordTab = props => {
+const RedeemTab = props => {
     const {currentTab, setTabCallback} = props;
     return (
         <View
@@ -23,7 +23,7 @@ const WordTab = props => {
                 {flexDirection: 'row', justifyContent: 'space-between'},
                 props.style,
             ]}>
-            {wordTabTitles.map((tab, index) => (
+            {redeemTabTitles.map((tab, index) => (
                 <TouchableOpacity
                     style={{
                         alignItems: 'center',
@@ -45,4 +45,4 @@ const WordTab = props => {
 
 }
 
-export default WordTab;
+export default RedeemTab;
