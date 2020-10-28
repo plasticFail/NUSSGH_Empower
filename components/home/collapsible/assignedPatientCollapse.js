@@ -19,9 +19,10 @@ const optionList = [
 ];
 
 const iconStyle = {
-  height: 70,
-  width: 70,
-  marginStart: '3%',
+  height: 50,
+  width: 50,
+  margin: '3%',
+  marginStart: '5%',
 };
 
 const AssignedPatientCollapse = (props) => {
