@@ -6,16 +6,16 @@ import {Colors} from '../../styles/colors';
 import globalStyles from '../../styles/globalStyles';
 
 
-const RedeemSuccessPage = (props) => {
+const RedeemFailPage = (props) => {
     const {closeModal} = props;
 
     return (
         <View style={[GameCenterStyles.modalViewSmall, GameCenterStyles.card, GameCenterStyles.cardPadding]}>
-            <Text style={[GameCenterStyles.subText, {marginVertical: '5%'}]}>Successfully Redeemed</Text>
+            <Text style={[GameCenterStyles.subText, {marginVertical: '5%'}]}>Not Enough Points</Text>
             <Ionicon
-                name="checkmark-circle-outline"
+                name="close-circle-outline"
                 size={80}
-                color={Colors.gameColorGreen}
+                color={Colors.alertColor}
             />
             <TouchableOpacity style={{marginTop: '2%'}} onPress={() => {closeModal()}}>
                 <Text style={[globalStyles.actionButtonText]}>Ok</Text>
@@ -24,4 +24,4 @@ const RedeemSuccessPage = (props) => {
     );
 };
 
-export default RedeemSuccessPage;
+export default RedeemFailPage;

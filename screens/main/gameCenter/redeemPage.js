@@ -15,6 +15,7 @@ import RewardBoard from '../../../components/gameCenter/rewardBoard';
 import UseVoucherPage from '../../../components/gameCenter/useVoucherPage';
 import RedeemConfirmPage from '../../../components/gameCenter/redeemConfirmPage';
 import RedeemSuccessPage from '../../../components/gameCenter/redeemSuccessPage';
+import RedeemFailPage from '../../../components/gameCenter/redeemFailPage';
 
 
 const RedeemPage = (props) => {
@@ -26,6 +27,7 @@ const RedeemPage = (props) => {
 
     const [showRedeemConfirm, setShowRedeemConfirm] = useState(false);
     const [showRedeemSuccess, setShowRedeemSuccess] = useState(false);
+    const [showRedeemFail, setShowRedeemFail] = useState(false);
     const [showUseVoucher, setShowUseVoucher] = useState(false);
 
     const [availablePoint, setAvailablePoint] = useState(0);
@@ -106,14 +108,7 @@ const RedeemPage = (props) => {
     const selectRedeemHandler = (item) => {
         console.log('select redeem : ' + item._id);
         if(item.content.points > availablePoint) {
-            Alert.alert(
-                "Not Enough Points",
-                "Please accumulate more points",
-                [
-                    {text: "OK", onPress: () => console.log("OK Pressed")}
-                ],
-                {cancelable: false}
-            );
+            setShowRedeemFail(true);
         }else{
             setCurrentItem(item);
             setShowRedeemConfirm(true);
@@ -164,6 +159,14 @@ const RedeemPage = (props) => {
                 animationType='fade'
                 onRequestClose={() => setShowRedeemSuccess(false)}>
                 <RedeemSuccessPage closeModal={() => setShowRedeemSuccess(false)} />
+            </Modal>
+
+            <Modal
+                isVisible={showRedeemFail}
+                transparent={true}
+                animationType='fade'
+                onRequestClose={() => setShowRedeemFail(false)}>
+                <RedeemFailPage closeModal={() => setShowRedeemFail(false)} />
             </Modal>
 
             <Modal
