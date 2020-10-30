@@ -27,7 +27,7 @@ import {role_patient, role_caregiver} from '../commonFunctions/common';
 import CaregiverRoot from './caregiverRoot';
 import LoadingScreen from '../components/account/initLoadingScreen';
 import {appRootUrl, availablePaths} from "../config/AppConfig";
-
+import { handler, defaultRoute } from "../config/TestPN";
 const Stack = createStackNavigator();
 
 // Allows for navigation to occur anywhere in app.
@@ -66,7 +66,7 @@ class AppRoot extends Component {
     this.setState({user: role});
   }
 
-  handleRedirectUrl = async () => {
+  onReady = async () => {
       const url = await Linking.getInitialURL();
       if (url) {
           const path = url.split(appRootUrl)[1];
@@ -75,13 +75,16 @@ class AppRoot extends Component {
               appRootNavigation.current.navigate(path);
           }
       }
+      const notifPath =  defaultRoute.current; // path from notification.
+      const parsedPath = notifPath.split(appRootUrl)[1];
+      appRootNavigation.current.navigate(parsedPath);
   }
 
   render() {
     const {user} = this.state;
     return (
       <>
-        <NavigationContainer ref={appRootNavigation} onReady={this.handleRedirectUrl}>
+        <NavigationContainer ref={appRootNavigation} onReady={this.onReady}>
           <Stack.Navigator
             screenOptions={({route}) => ({
               headerTintColor: '#000',
