@@ -10,7 +10,7 @@ import {Colors} from '../../../styles/colors';
 //components
 import LeftArrowBtn from '../../../components/logs/leftArrowBtn';
 import DotBoard from '../../../components/gameCenter/dotBoard';
-import SpinSlider from '../../../components/gameCenter/spinSlider';
+import SpinComponent from '../../../components/gameCenter/spinComponent';
 import SpinFinish from '../../../components/gameCenter/spinFinish';
 //functions
 import WordItem from '../../../components/gameCenter/wordItem';
@@ -152,7 +152,7 @@ const FillTheCard = (props) => {
                 animationType='fade'
                 onRequestClose={() => setShowSpin(false)}>
 
-                <SpinSlider processSpin={() => processSpin()} closeModal={() => setShowSpin(false)} />
+                <SpinComponent processSpin={() => processSpin()} closeModal={() => setShowSpin(false)} />
 
             </Modal>
 

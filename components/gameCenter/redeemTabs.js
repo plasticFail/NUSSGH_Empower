@@ -4,11 +4,11 @@ import {horizontalMargins} from "../../styles/variables";
 
 const redeemTabTitles = [
     {
-        name: "Redeemed",
+        name: "Catalogue",
         portion: 0.5
     },
     {
-        name: "Catalogue",
+        name: "Redeemed",
         portion: 0.5
     }
 ]

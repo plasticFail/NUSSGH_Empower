@@ -140,9 +140,9 @@ const RedeemPage = (props) => {
             </View>
 
             {currentTabIndex === 0 ? (
-                <RewardBoard items={redeemedItems} clickFunc={qrHandler}/>
-            ):(
                 <RewardBoard items={availableItems} clickFunc={selectRedeemHandler}/>
+            ):(
+                <RewardBoard items={redeemedItems} clickFunc={qrHandler}/>
             )}
 
             <Modal
