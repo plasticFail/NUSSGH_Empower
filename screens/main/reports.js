@@ -8,7 +8,8 @@ import {
   TouchableOpacity,
   Image,
   Animated,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+    Linking
 } from 'react-native';
 import globalStyles from '../../styles/globalStyles';
 import BarChart from '../../components/dashboard/reports/BarChart';
@@ -44,6 +45,8 @@ import {
 } from "../../components/dashboard/reports/ReportHelpInfo";
 import {headerHeight, statusBarHeight} from "../../styles/variables";
 import {replaceActivitySummary} from "../../commonFunctions/reportDataFormatter";
+import {appRootUrl} from "../../config/AppConfig";
+import InAppBrowser from 'react-native-inappbrowser-reborn';
 
 const EXPORT_BTN = require('../../resources/images/Patient-Icons/2x/icon-green-export-2x.png');
 
@@ -223,7 +226,7 @@ const ReportsScreen = (props) => {
           style={{transform: [{translateX: widthInterpolate}]}}>
         <View style={globalStyles.menuBarContainer}>
           <LeftArrowBtn close={() => props.navigation.navigate('Home')} />
-          <TouchableOpacity onPress={()=>setOpenExportModal(true)}>
+          <TouchableOpacity onPress={() => setOpenExportModal(true)} >
             <Image source={EXPORT_BTN} style={{width: 30, height: 30}} />
           </TouchableOpacity>
         </View>

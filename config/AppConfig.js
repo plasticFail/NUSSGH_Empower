@@ -17,4 +17,8 @@ const availablePaths = new Set([
     "Chat"
 ]);
 
-export {appRootUrl, availablePaths};
+const notificationPathMapping = {
+    "LOG_NEW": "AddLog"
+}
+
+export {appRootUrl, availablePaths, notificationPathMapping};

@@ -30,6 +30,9 @@ import {appRootUrl, availablePaths} from "../config/AppConfig";
 
 const Stack = createStackNavigator();
 
+// Allows for navigation to occur anywhere in app.
+export const appRootNavigation = React.createRef();
+
 class AppRoot extends Component {
   constructor(props) {
     super(props);
@@ -37,7 +40,6 @@ class AppRoot extends Component {
     this.state = {
       user: '',
     };
-    this.navigationRef = React.createRef();
     this.initRole().then(() => {});
   }
 
@@ -70,17 +72,16 @@ class AppRoot extends Component {
           const path = url.split(appRootUrl)[1];
           console.log(`application opened from web. navigating to ${path}`);
           if (availablePaths.has(path)) {
-              this.navigationRef.current.navigate(path);
+              appRootNavigation.current.navigate(path);
           }
       }
   }
 
   render() {
-    const user = role_caregiver;
-    //const {user} = this.state;
+    const {user} = this.state;
     return (
       <>
-        <NavigationContainer ref={this.navigationRef} onReady={this.handleRedirectUrl}>
+        <NavigationContainer ref={appRootNavigation} onReady={this.handleRedirectUrl}>
           <Stack.Navigator
             screenOptions={({route}) => ({
               headerTintColor: '#000',
