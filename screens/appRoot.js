@@ -27,7 +27,7 @@ import {role_patient, role_caregiver} from '../commonFunctions/common';
 import CaregiverRoot from './caregiverRoot';
 import LoadingScreen from '../components/account/initLoadingScreen';
 import {appRootUrl, availablePaths} from "../config/AppConfig";
-import { handler, defaultRoute } from "../config/TestPN";
+import { handler, defaultRoute } from "../components/notification/PushNotifHandler";
 const Stack = createStackNavigator();
 
 // Allows for navigation to occur anywhere in app.
@@ -67,17 +67,21 @@ class AppRoot extends Component {
   }
 
   onReady = async () => {
+      // Handle deep link from url
       const url = await Linking.getInitialURL();
-      if (url) {
+      if (url && this.props.isLogin) {
           const path = url.split(appRootUrl)[1];
           console.log(`application opened from web. navigating to ${path}`);
           if (availablePaths.has(path)) {
               appRootNavigation.current.navigate(path);
           }
       }
+
+      // Handle link from notification redirect
       const notifPath =  defaultRoute.current; // path from notification.
-      const parsedPath = notifPath.split(appRootUrl)[1];
-      appRootNavigation.current.navigate(parsedPath);
+      if (this.props.isLogin && notifPath) {
+          appRootNavigation.current.navigate(notifPath);
+      }
   }
 
   render() {

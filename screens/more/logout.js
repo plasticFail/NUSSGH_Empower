@@ -5,9 +5,11 @@ import {connect} from 'react-redux';
 //functions
 import {mapStateToProps, mapDispatchToProps} from '../../redux/reduxMapping';
 import {storeToken, storeRole} from '../../storage/asyncStorageFunctions';
+import {clearPushNotifState} from "../../commonFunctions/AuthorisePusherNotif";
 
 const Logout = (props) => {
   storeToken('');
+  clearPushNotifState(); // Remove user from receiving notifications
   props.logout();
   storeRole('');
   return <View></View>;

@@ -17,6 +17,7 @@ const availablePaths = new Set([
     "Chat"
 ]);
 
+// Add more paths when more redirect options are available. Handle the routing in appRoot.
 const notificationPathMapping = {
     "LOG_NEW": "AddLog"
 }

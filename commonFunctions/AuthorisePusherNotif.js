@@ -4,6 +4,7 @@ import RNPusherPushNotifications from 'react-native-pusher-push-notifications';
 import {getToken} from '../storage/asyncStorageFunctions';
 import {appRootNavigation} from "../screens/appRoot";
 import {notificationPathMapping} from "../config/AppConfig";
+import {defaultRoute} from "../components/notification/PushNotifHandler";
 
 const donutsInterest = 'debug-donuts';
 
@@ -17,7 +18,7 @@ function initPusherNotif(username, pusherToken) {
   RNPusherPushNotifications.setUserId(
     username,
     pusherToken,
-    (statusCode, resp) => console.log('Error oh boy'),
+    (statusCode, resp) => console.log('Error occurred while setting user id'),
     () => console.log('Registration success!'),
   );
 
@@ -30,9 +31,12 @@ function initPusherNotif(username, pusherToken) {
   );*/
 }
 
-// Handle notifications received
+// This is the notification handler for ios devices. To modify the handling of android notifications, modify the
+// PushNotifHandler.js file in ./components/notification/. Whenever there is a new notifcation behaviour you want to make,
+// both this file and PushNotifHandler needs to make changes because the way ios and android handles notifications
+// are different.
 const handleNotification = (notification) => {
-  console.log(notification);
+  // console.log(notification);
 
   // iOS app specific handling
   if (Platform.OS === 'ios') {
@@ -40,8 +44,10 @@ const handleNotification = (notification) => {
       case 'inactive':
       // inactive: App came in foreground by clicking on notification.
       //           Use notification.userInfo for redirecting to specific view controller
-      if (notification.redirect) {
-        appRootNavigation.current.navigate(notificationPathMapping[notification.redirect]);
+      if (notification.userInfo) {
+        if (notification.userInfo.redirect && notificationPathMapping[notification.redirect]) {
+          defaultRoute.current = notificationPathMapping[notification.redirect];
+        }
       }
       case 'background':
       // background: App is in background and notification is received.
@@ -53,7 +59,7 @@ const handleNotification = (notification) => {
         break;
     }
   } else {
-    console.log('android handled notification...');
+    console.log('android handled notification...'); // Will never be called if app fires from background
   }
 };
 
@@ -84,4 +90,8 @@ const unsubscribe = (interest) => {
   );
 };
 
-export {initPusherNotif};
+const clearPushNotifState = () => {
+    RNPusherPushNotifications.clearAllState();
+}
+
+export {initPusherNotif, clearPushNotifState};

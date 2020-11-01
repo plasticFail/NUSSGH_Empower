@@ -1,14 +1,30 @@
 import React from 'react';
 import {Linking} from 'react-native';
 import PushNotification from 'react-native-push-notification';
+import {notificationPathMapping} from "../../config/AppConfig";
 
 export const defaultRoute = React.createRef(null);
 
+// This is the notification handler for android devices. To modify the handling of ios notifications, modify the
+// AuthorisePusherNotif.js file in ./commonFunctions/. Whenever there is a new notifcation behaviour you want to make,
+// both this file and AuthorisePusherNotif needs to make changes because the way ios and android handles notifications
+// are different.
+// Also note that only the android portion of react-native-push-notification is setup. The ios version is not set up
+// because we're using pusher's default react-native package (b8ne) for handling ios notification.
 class NotificationHandler {
+    // All notification attributes will be present in notification.
+    // Access notification data using notification.data
+    // This function is called only when the application is running in the background or closed.
     onNotification(notification) {
         console.log('NotificationHandler: notification is: ', notification);
-        const path = notification.data.link;
-        defaultRoute.current = path;
+        let redirect = null;
+        if (notification.data) {
+            redirect = notification.data.redirect;
+        }
+
+        if (redirect && notificationPathMapping[redirect]) {
+            defaultRoute.current = notificationPathMapping[redirect];
+        }
 
         if (typeof this._onNotification === 'function') {
             this._onNotification(notification);
@@ -16,7 +32,7 @@ class NotificationHandler {
     }
 
     onRegister(token) {
-        console.log('NotificationHandler:', token);
+        // console.log('NotificationHandler:', token);
 
         if (typeof this._onRegister === 'function') {
             this._onRegister(token);
