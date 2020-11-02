@@ -19,7 +19,7 @@ const MyWord = (props) => {
   };
 
   return (
-    <View style={{...globalStyles.pageContainer, ...props.style}}>
+    <View style={globalStyles.pageContainer}>
       <View style={globalStyles.menuBarContainer}>
         <LeftArrowBtn close={() => props.navigation.goBack()} />
       </View>
@@ -43,9 +43,7 @@ const MyWord = (props) => {
                   wordText={item.word}
                   percentage={item.word_progress + '%'}
                   showArrow={true}
-                  clickFunc={() => {
-                    startWord(item.word);
-                  }}
+                  clickFunc={() => {}}
                 />
               ),
           )}

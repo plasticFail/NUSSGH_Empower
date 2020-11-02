@@ -1,4 +1,4 @@
-import {gameCenterGetOverview, gameCenterSelectGame, gameCenterPerformSpin} from '../urls';
+import {gameCenterGetOverview, gameCenterSelectGame, gameCenterPerformSpin, rewardGetOverview, rewardRedeem} from '../urls';
 import {getToken} from "../../storage/asyncStorageFunctions";
 
 
@@ -66,4 +66,46 @@ const requestPerformSpin = async (word, index) => {
     }
 };
 
-export {requestGetOverview, requestSelectGame, requestPerformSpin};
+const requestGetRewardOverview = async() => {
+    try {
+        let response = await fetch(rewardGetOverview, {
+            method: 'GET',
+            headers: {
+                Authorization: 'Bearer ' + (await getToken()),
+                Accept: 'application/json',
+                'Content-type': 'application/json',
+            },
+        });
+        let responseJson = await response.json();
+        console.log('requestGetRewardOverview : ' + JSON.stringify(responseJson));
+        return responseJson;
+    }catch (error) {
+        console.error(error);
+        return null;
+    }
+}
+
+const requestRedeemReward = async(id, quantity) => {
+    try {
+        let response = await fetch(rewardRedeem, {
+            method: 'POST',
+            headers: {
+                Authorization: 'Bearer ' + (await getToken()),
+                Accept: 'application/json',
+                'Content-type': 'application/json',
+            },
+            body: JSON.stringify({
+                _id: id,
+                quantity: quantity,
+            }),
+        });
+        let responseJson = await response.json();
+        console.log('requestRedeemReward : ' + JSON.stringify(responseJson));
+        return responseJson;
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
+}
+
+export {requestGetOverview, requestSelectGame, requestPerformSpin, requestGetRewardOverview, requestRedeemReward};

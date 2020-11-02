@@ -210,7 +210,9 @@ class GameCenter extends Component {
                 GameCenterStyles.buttonStyle,
                 GameCenterStyles.nextColor,
                 GameCenterStyles.marginBottom,
-              ]}>
+              ]}
+              onPress={() => {this.props.navigation.navigate('RedeemPage')}}
+            >
               <Text style={globalStyles.actionButtonText}>Redeem</Text>
             </TouchableOpacity>
           </ScrollView>
