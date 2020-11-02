@@ -23,7 +23,10 @@ import AssignedPatientCollapse from '../../components/home/collapsible/assignedP
 import PatientType from '../../components/home/collapsible/patientTypeCollapse';
 import PatientInfo from '../../components/home/collapsible/patientInfo';
 import AuthorisationCaregiver from '../../components/home/authorisationCaregiver';
-import {getAuthorisedStatusCaregiver} from '../../storage/asyncStorageFunctions';
+import {
+  getAuthorisedStatusCaregiver,
+  storeAuthorisedStatusCaregiver,
+} from '../../storage/asyncStorageFunctions';
 
 const HomeScreenCaregiver = (props) => {
   const [caregiver, setCaregiver] = useState({});
@@ -41,7 +44,8 @@ const HomeScreenCaregiver = (props) => {
     getAuthorisedStatusCaregiver().then((rsp) => {
       setAuthorise(rsp);
     });
-  }, [authorise]);
+  }, []);
+
   useEffect(() => {
     //slide right when enter screen
     props.navigation.addListener('focus', () => {
@@ -63,15 +67,7 @@ const HomeScreenCaregiver = (props) => {
   //init
   useEffect(() => {
     props.navigation.addListener('focus', () => {
-      getCaregiverProfile()
-        .then((response) => {
-          setCaregiver(response.caregiver);
-          setPatient(response.patient);
-          if (response.patient === null) {
-            setAuthorise(false); //for initial otp
-          }
-        })
-        .catch((err) => console.log(err));
+      initCaregiver().then(() => {});
 
       checkLogDone(getGreetingFromHour(currHour))
         .then((response) => {
@@ -82,6 +78,17 @@ const HomeScreenCaregiver = (props) => {
         .catch((err) => console.log(err));
     });
   }, []);
+
+  const initCaregiver = async () => {
+    let data = await getCaregiverProfile();
+    setCaregiver(data?.caregiver);
+
+    if (data?.patient === null) {
+      await storeAuthorisedStatusCaregiver(false);
+    } else {
+      setPatient(data?.patient);
+    }
+  };
 
   const toDoAfterOTP = () => {
     setAuthorise(true);
