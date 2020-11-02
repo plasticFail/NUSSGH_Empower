@@ -90,7 +90,7 @@ const AssignedPatientCollapse = (props) => {
             ) : (
               <USER_M {...iconStyle} />
             )}
-            <Text style={styles.patientName}>{patient?.name}</Text>
+            <Text style={styles.patientName}>{patient?.first_name}</Text>
             <TouchableOpacity
               style={styles.optionIcon}
               onPress={() => setOpenOption(true)}>

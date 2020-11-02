@@ -34,6 +34,10 @@ const rewardGetOverview = server + 'rewards';
 const rewardRedeem = server + 'rewards/redeem';
 
 const caregiverLogin = server + 'auth/caregiver-login';
+const caregiverProfile = server + 'profile/caregiver';
+const requestOTP_C = server + 'auth/caregiver/password-reset/request-otp';
+const verifyOTP_C = server + 'auth/caregiver/password-reset/verify-otp';
+const postNewPassword_C = server + 'auth/caregiver/password-reset/reset';
 
 export {
   login,
@@ -68,4 +72,8 @@ export {
   rewardRedeem,
   pusherTokenEndpoint,
   caregiverLogin,
+  caregiverProfile,
+  requestOTP_C,
+  verifyOTP_C,
+  postNewPassword_C,
 };

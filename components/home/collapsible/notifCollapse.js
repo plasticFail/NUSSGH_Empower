@@ -61,6 +61,12 @@ const NotifCollapse = (props) => {
   useEffect(() => {
     setLogNotDone();
     countNotif();
+    if (
+      hour === morningObj.name &&
+      String(logNotDoneText).includes('Afternoon')
+    ) {
+      setLogNotDoneText('');
+    }
   }, [morningNotDone, afternoonNotDone]);
 
   const setLogNotDone = () => {

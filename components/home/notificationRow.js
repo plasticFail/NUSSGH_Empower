@@ -25,7 +25,6 @@ const NotificationRow = (props) => {
     if (hour === morningObj.name) {
       return false;
     }
-
     return true;
   };
 

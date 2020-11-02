@@ -27,10 +27,8 @@ export default class PasswordStrengthMeter extends Component {
   }
 
   componentDidUpdate(prevProp, prevState) {
-    console.log('Updating password strength meter component');
     if (prevState.passwordString != this.state.passwordString) {
       this.getPasswordResult(this.state.passwordString);
-      console.log('Score: ' + this.state.score);
       this.setResultString(this.state.score);
       //animate
       Animated.timing(this.state.animation, {

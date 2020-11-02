@@ -24,7 +24,7 @@ import LeftArrowBtn from '../../components/logs/leftArrowBtn';
 import EditPhoneModal_2 from '../../components/account/editPhoneModal_2';
 
 const InputOTPScreen = (props) => {
-  const {phoneNumber, visible, parent} = props;
+  const {phoneNumber, visible, parent, selection} = props;
   const {close} = props;
   const [otp, setOtp] = useState('');
   const [showChangePassword, setShowChangePassword] = useState(false);
@@ -74,13 +74,14 @@ const InputOTPScreen = (props) => {
       !otp.includes('.')
     ) {
       if (parent === 'forgetPassword') {
-        verifyOTPRequest(phoneNumber, otp).then((response) => {
+        verifyOTPRequest(phoneNumber, otp, selection).then((response) => {
           if (response.message != null) {
             Alert.alert('Error', response.message, [{text: 'Got It'}]);
           } else {
             close();
             navigation.navigate('ResetPasswordScreen', {
               token: response.token,
+              selection: selection,
             });
           }
         });

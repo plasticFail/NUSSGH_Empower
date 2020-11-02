@@ -20,7 +20,7 @@ import {Colors} from '../../styles/colors';
 import {checkLogDone} from '../../commonFunctions/logFunctions';
 import {getGreetingFromHour, role_patient} from '../../commonFunctions/common';
 import DailyCollapse from '../../components/home/collapsible/dailyCollapse';
-import {getPatientProfile} from '../../netcalls/requestsAccount';
+import {getCaregiverProfile} from '../../netcalls/requestsAccount';
 import {getRole} from '../../storage/asyncStorageFunctions';
 import AssignedPatientCollapse from '../../components/home/collapsible/assignedPatientCollapse';
 import PatientType from '../../components/home/collapsible/patientTypeCollapse';
@@ -35,11 +35,10 @@ const patientSample = {
 };
 
 const HomeScreenCaregiver = (props) => {
-  const [role, setRole] = useState('');
-  const [patient, setPatient] = useState(patientSample);
+  const [caregiver, setCaregiver] = useState({});
+  const [patient, setPatient] = useState({});
   const [currHour, setCurrHour] = useState(new Date().getHours());
   const [uncompleteLogs, setUncompleteLogs] = useState([]);
-  const [firstName, setFirstName] = useState('Audrey');
 
   //animation
   const slideRightAnimation = useRef(new Animated.Value(0)).current;
@@ -64,10 +63,12 @@ const HomeScreenCaregiver = (props) => {
   //init
   useEffect(() => {
     props.navigation.addListener('focus', () => {
-      //set role
-      getRole().then((data) => {
-        setRole(data);
-      });
+      getCaregiverProfile()
+        .then((response) => {
+          setCaregiver(response.caregiver);
+          setPatient(response.patient);
+        })
+        .catch((err) => console.log(err));
 
       checkLogDone(getGreetingFromHour(currHour))
         .then((response) => {
@@ -100,7 +101,7 @@ const HomeScreenCaregiver = (props) => {
           }}>
           {/* Greetings and log to do*/}
           <HeaderCard
-            username={firstName}
+            username={caregiver?.first_name}
             hour={getGreetingFromHour(currHour)}
           />
 

@@ -16,7 +16,7 @@ import globalStyles from '../../styles/globalStyles';
 import PasswordStrengthMeter from '../../components/passwordStrengthMeter';
 
 const ResetPasswordScreen = (props) => {
-  const {token} = props.route.params; //rememberundo
+  const {token, selection} = props.route.params; //rememberundo
   const [pass1, setPass1] = useState('');
   const [pass2, setPass2] = useState('');
   const [strong, setStrong] = useState(false);
@@ -52,7 +52,7 @@ const ResetPasswordScreen = (props) => {
   };
 
   const submitPassword = () => {
-    resetPassword(pass1, token).then((response) => {
+    resetPassword(pass1, token, selection).then((response) => {
       if (response) {
         Alert.alert(
           'Success',
