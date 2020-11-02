@@ -14,14 +14,20 @@ const availablePaths = new Set([
     "Reports",
     "AddLog",
     "Alerts",
-    "Chat"
+    "Chat",
+    "GameCenter",
+    "RedeemPage",
+    "GlucoseMonitors",
+    "Reminders",
+    "HypocorrectionFood",
+    "AccountDetail"
 ]);
 
 // Add more paths when more redirect options are available. Handle the routing in appRoot.
 const notificationPathMapping = {
     "LOG_NEW": "AddLog",
     "GAME": "GameCenter",
-    "REWARDS_REDEEM": "GameCenter/rewards" // go to rewards redemption page in game center
+    "REWARDS_REDEEM": "RedeemPage" // go to rewards redemption page in game center
 }
 
 export {appRootUrl, availablePaths, notificationPathMapping};

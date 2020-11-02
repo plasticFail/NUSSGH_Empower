@@ -19,7 +19,9 @@ function initPusherNotif(username, pusherToken) {
     username,
     pusherToken,
     (statusCode, resp) => console.log('Error occurred while setting user id'),
-    () => console.log('Registration success!'),
+    () => {
+      //console.log('Registration success!')
+    },
   );
 
   subscribe(donutsInterest);
@@ -59,7 +61,7 @@ const handleNotification = (notification) => {
         break;
     }
   } else {
-    console.log('android handled notification...'); // Will never be called if app fires from background
+    // console.log('android handled notification...'); // Will never be called if app fires from background
   }
 };
 
@@ -72,7 +74,7 @@ const subscribe = (interest) => {
       console.error(statusCode, response);
     },
     () => {
-      console.log('Success subscribing interest');
+      // console.log('Success subscribing interest');
     },
   );
 };
