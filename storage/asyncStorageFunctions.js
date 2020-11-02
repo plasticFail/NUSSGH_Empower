@@ -9,6 +9,7 @@ const key_weightLog = 'lastWeightLog';
 const key_medicationLog = 'lastMedicationLog';
 const key_last_meal_log = 'lastMealLog';
 const key_fitbit_token = 'fitbitToken';
+const key_authorisedCaregiver = 'authorisedCaregiver';
 
 const storeData = async (key, value) => {
   try {
@@ -131,6 +132,14 @@ const getFitbitToken = async () => {
   return await getDataObj(key_fitbit_token);
 };
 
+const storeAuthorisedStatusCaregiver = async (bool) => {
+  return await storeDataObj(key_authorisedCaregiver, bool);
+};
+
+const getAuthorisedStatusCaregiver = async () => {
+  return await getDataObj(key_authorisedCaregiver);
+};
+
 export {
   storeUsername,
   getUsername,
@@ -151,4 +160,6 @@ export {
   getFitbitToken,
   storeFitbitToken,
   key_weightLog,
+  storeAuthorisedStatusCaregiver,
+  getAuthorisedStatusCaregiver,
 };

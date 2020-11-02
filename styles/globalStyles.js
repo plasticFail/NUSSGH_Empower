@@ -198,7 +198,7 @@ const globalStyles = StyleSheet.create({
   },
   field: {
     fontFamily: 'SFProDisplay-Regular',
-    fontSize: 20,
+    fontSize: 19,
     marginStart: '3%',
     alignSelf: 'center',
     flex: 1,
