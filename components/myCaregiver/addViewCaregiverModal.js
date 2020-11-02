@@ -74,6 +74,8 @@ const AddViewCaregiverModal = (props) => {
 
   const [chosenCaregiver, setChosenCaregiver] = useState({});
   const [accessName, setAccessName] = useState(false);
+  const [accessID, setAccessId] = useState(false);
+  const [accessDob, setAccessDob] = useState(false);
   const [accessRD, setAccessRd] = useState(false);
 
   useEffect(() => {
@@ -231,6 +233,18 @@ const AddViewCaregiverModal = (props) => {
             subheader={'Personal Information'}
             onSelect={() => setAccessName(!accessName)}
             selected={accessName}
+          />
+          <AccessOption
+            mainheader={'Your ID'}
+            subheader={'Personal Information'}
+            onSelect={() => setAccessId(!accessID)}
+            selected={accessID}
+          />
+          <AccessOption
+            mainheader={'Your Date of Birth'}
+            subheader={'Personal Information'}
+            onSelect={() => setAccessDob(!accessDob)}
+            selected={accessDob}
           />
           <AccessOption
             mainheader={'Your Report & Diary'}

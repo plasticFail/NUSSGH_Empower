@@ -68,7 +68,7 @@ const HomeScreenCaregiver = (props) => {
           setCaregiver(response.caregiver);
           setPatient(response.patient);
           if (response.patient === null) {
-            setAuthorise(false);
+            setAuthorise(false); //for initial otp
           }
         })
         .catch((err) => console.log(err));
@@ -82,6 +82,10 @@ const HomeScreenCaregiver = (props) => {
         .catch((err) => console.log(err));
     });
   }, []);
+
+  const toDoAfterOTP = () => {
+    setAuthorise(true);
+  };
 
   return (
     <View style={globalStyles.pageContainer}>
@@ -120,7 +124,7 @@ const HomeScreenCaregiver = (props) => {
                 <PatientInfo patient={patient} />
               </>
             ) : (
-              <AuthorisationCaregiver setAuthorise={setAuthorise} />
+              <AuthorisationCaregiver toDoAfterOTP={toDoAfterOTP} />
             )}
           </View>
 

@@ -5,12 +5,15 @@ import globalStyles from '../../styles/globalStyles';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import LoadingModal from '../loadingModal';
 import {storeAuthorisedStatusCaregiver} from '../../storage/asyncStorageFunctions';
+import SuccessDialogue from '../successDialogue';
+import AuthoriseSuccessMsg from '../authoriseSucessMsg';
 
 const AuthorisationCaregiver = (props) => {
-  const {setAuthorise} = props;
+  const {toDoAfterOTP} = props;
   const [open, setOpen] = useState(true);
   const [otp, setOtp] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   useEffect(() => {
     setOpen(true);
@@ -18,15 +21,27 @@ const AuthorisationCaregiver = (props) => {
 
   useEffect(() => {
     if (otp.length === 6) {
-      //assuming otp is correct.
-      setLoading(true);
-      setTimeout(() => {
-        storeAuthorisedStatusCaregiver(true).then((rsp) => {
-          setAuthorise(true);
-        });
-      }, 2000);
+      verifyingAuthorise();
     }
   }, [otp]);
+
+  const verifyingAuthorise = () => {
+    //assuming otp is correct.
+    setLoading(true);
+    setTimeout(() => {
+      storeAuthorisedStatusCaregiver(true).then((rsp) => {
+        setLoading(false);
+        setTimeout(() => {
+          setShowSuccess(true);
+        }, 1000);
+      });
+    }, 2000);
+  };
+
+  const closeOTPSuccess = () => {
+    toDoAfterOTP();
+    setShowSuccess(false);
+  };
 
   return (
     <View style={{backgroundColor: Colors.backgroundColor}}>
@@ -70,6 +85,12 @@ const AuthorisationCaregiver = (props) => {
         </View>
       </View>
       <LoadingModal visible={loading} message={'Validating OTP'} />
+      {showSuccess ? (
+        <AuthoriseSuccessMsg
+          visible={showSuccess}
+          closeSuccess={() => closeOTPSuccess()}
+        />
+      ) : null}
     </View>
   );
 };
