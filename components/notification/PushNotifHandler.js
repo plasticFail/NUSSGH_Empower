@@ -2,6 +2,7 @@ import React from 'react';
 import {Linking} from 'react-native';
 import PushNotification from 'react-native-push-notification';
 import {notificationPathMapping} from "../../config/AppConfig";
+import {appRootNavigation, navigate} from "../../screens/appRoot";
 
 export const defaultRoute = React.createRef(null);
 
@@ -22,8 +23,16 @@ class NotificationHandler {
             redirect = notification.data.redirect;
         }
 
+        // TWO CASES TO HANDLE:
+        // 1. APP LAUNCHED FROM START. NAVIGATION HAS NOT BEEN SETUP YET - WE'LL LET APPROOT HANDLE NAVIGATION.
+        // 2. APP LAUNCHED FROM BACKGROUND, NAVIGATION HAS ALREADY BEEN SET UP - WE'LL RESTART THE APPLICATION
         if (redirect && notificationPathMapping[redirect]) {
-            defaultRoute.current = notificationPathMapping[redirect];
+            if (navigate(notificationPathMapping[redirect], null)) {
+                // can navigate directly because navigation has been setup.
+            } else {
+                // navigation not setup yet. we'll wait for app root to navigate
+                defaultRoute.current = notificationPathMapping[redirect];
+            };
         }
 
         if (typeof this._onNotification === 'function') {

@@ -31,11 +31,11 @@ class PatientRoot extends Component {
   }
 
   componentDidMount() {
-    Linking.addEventListener('url', this.handleRedirectUrl);
+
   }
 
   componentWillUnmount() {
-    Linking.removeAllListeners('url');
+
   }
 
   render() {

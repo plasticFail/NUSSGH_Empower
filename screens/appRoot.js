@@ -32,6 +32,10 @@ const Stack = createStackNavigator();
 
 // Allows for navigation to occur anywhere in app.
 export const appRootNavigation = React.createRef();
+export function navigate(name, params) {
+    appRootNavigation.current?.navigate(name, params);
+    return appRootNavigation.current;
+}
 
 class AppRoot extends Component {
   constructor(props) {
@@ -82,6 +86,7 @@ class AppRoot extends Component {
       if (this.props.isLogin && notifPath) {
           appRootNavigation.current.navigate(notifPath);
       }
+      defaultRoute.current = null; // reset
   }
 
   render() {
