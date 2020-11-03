@@ -30,6 +30,8 @@ const pusherTokenEndpoint = server + 'auth/notification-token';
 const gameCenterGetOverview = server + 'game/bingo/overview';
 const gameCenterSelectGame = server + 'game/bingo/select';
 const gameCenterPerformSpin = server + 'game/bingo/spin';
+const rewardGetOverview = server + 'rewards';
+const rewardRedeem = server + 'rewards/redeem';
 
 const caregiverLogin = server + 'auth/caregiver-login';
 
@@ -62,6 +64,8 @@ export {
   gameCenterGetOverview,
   gameCenterSelectGame,
   gameCenterPerformSpin,
+  rewardGetOverview,
+  rewardRedeem,
   pusherTokenEndpoint,
   caregiverLogin,
 };

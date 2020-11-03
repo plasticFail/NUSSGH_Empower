@@ -75,8 +75,15 @@ const GameCenterStyles = StyleSheet.create({
         width: 30,
         height: 30,
     },
+    rewardIconProps: {
+        width: 80,
+        height: 80,
+    },
     subText:{
         fontSize: 20,
+    },
+    textBold:{
+        fontFamily: 'SFProDisplay-Bold',
     },
     center:{
         justifyContent:'center',
@@ -95,6 +102,9 @@ const GameCenterStyles = StyleSheet.create({
     greyText:{
         color: Colors.textGrey,
     },
+    redText:{
+        color: Colors.alertColor,
+    },
     darkGreen:{
         color: Colors.gameColorDarkGreen,
     },
@@ -102,6 +112,11 @@ const GameCenterStyles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         flexDirection: 'row'
+    },
+    subContainerVertical: {
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        flexDirection: 'column'
     },
     subContainerNarrow: {
         justifyContent: 'center',
@@ -134,6 +149,11 @@ const GameCenterStyles = StyleSheet.create({
         width:'100%',
         height: undefined,
         aspectRatio:1.5,
+    },
+    voucherLogo: {
+        width:'50%',
+        height: undefined,
+        aspectRatio:1,
     },
     ballImage: {
         width: 80,

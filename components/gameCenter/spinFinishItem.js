@@ -1,8 +1,6 @@
 import React from 'react';
 import {Image, Text, View} from 'react-native';
 import GameCenterStyles from '../../styles/gameCenterStyles';
-import ProgressBar from '../progressbar';
-import {Colors} from '../../styles/colors';
 
 
 const SpinFinishItem = (props) => {

@@ -17,6 +17,7 @@ import EducationMaterialsScreen from './more/educationMaterials';
 import StartNewWord from './main/gameCenter/startNewWord';
 import MyWord from './main/gameCenter/myWord';
 import FillTheCard from './main/gameCenter/fillTheCard';
+import RedeemPage from './main/gameCenter/redeemPage';
 //components
 import AskAdd from './onboarding/medicationPlan/askAdd';
 import FitbitSetup from './onboarding/fitbit/FitbitSetup';
