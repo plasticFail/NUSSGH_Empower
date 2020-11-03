@@ -198,6 +198,8 @@ dependencies {
 
     implementation project(':react-native-pusher-push-notifications')
 
+    implementation project(':react-native-push-notification')
+
     implementation 'com.pusher:push-notifications-android:1.6.2'
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {

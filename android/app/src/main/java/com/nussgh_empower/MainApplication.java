@@ -12,6 +12,7 @@ import com.facebook.soloader.SoLoader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import com.b8ne.RNPusherPushNotifications.RNPusherPushNotificationsPackage;
+import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 
 public class MainApplication extends Application implements ReactApplication {
 

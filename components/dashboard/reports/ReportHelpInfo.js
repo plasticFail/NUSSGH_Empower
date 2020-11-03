@@ -2,6 +2,9 @@ import React from 'react';
 import EvilIcon from "react-native-vector-icons/EvilIcons";
 import {Colors} from "../../../styles/colors";
 import {TouchableOpacity, View, Text, StyleSheet, TouchableWithoutFeedback, Dimensions} from "react-native";
+import Modal from 'react-native-modal';
+import globalStyles from "../../../styles/globalStyles";
+import {verticalMarginsBetweenComponent} from "../../../styles/variables";
 
 const lineChartToolTipMessage = "Swipe on the graph to look at various timestamps!";
 const barChartToolTipMessage = "Tap on the bars for more details!";
@@ -25,6 +28,41 @@ function ReportHelpInfo(props) {
     </TouchableOpacity>)
 }
 
+function ReportHelpModal(props) {
+    const {showInfo, toggleInfoCallback, image} = props;
+
+    return (
+        (<TouchableOpacity onPress={toggleInfoCallback}>
+            <EvilIcon
+                name="question"
+                color={Colors.lastLogButtonColor}
+                size={40}
+                style={{paddingRight: 15}}
+            />
+            <Modal isVisible={showInfo}
+                   style={{marginTop: '20%', marginBottom: '20%', borderRadius: 10, overflow: 'hidden', backgroundColor: '#fff'}}
+                   onBackButtonPress={toggleInfoCallback}
+                   onBackdropPress={toggleInfoCallback}>
+                <View style={[globalStyles.pageContainer]}>
+                    <View style={globalStyles.menuBarContainer} />
+                    {image}
+                    <View style={{width: '100%', alignItems: 'center'}}>
+                        <Text style={globalStyles.pageDetails}>Interact with the Graph!</Text>
+                        <Text style={globalStyles.pageSubDetails}>Drag the <View style={styles.cursor} /> left and right</Text>
+                        <Text style={globalStyles.pageSubDetails}>to view the data</Text>
+                    </View>
+                    <View style={{flex: 1}} />
+                    <TouchableOpacity onPress={toggleInfoCallback}>
+                        <View style={[globalStyles.nextButtonStyle, {alignItems: 'center'}]}>
+                            <Text style={globalStyles.actionButtonText}>Got It</Text>
+                        </View>
+                    </TouchableOpacity>
+                </View>
+            </Modal>
+        </TouchableOpacity>)
+    )
+}
+
 const styles = StyleSheet.create({
     tooltip: {
         position: 'absolute',
@@ -34,7 +72,13 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         borderColor: '#8d8d8d',
         borderWidth: 1
+    },
+    cursor: {
+        backgroundColor: Colors.nextBtnColor,
+        width: 20,
+        height: 20,
+        borderRadius: 10
     }
 })
 
-export {ReportHelpInfo, barChartToolTipMessage, lineChartToolTipMessage};
+export {ReportHelpInfo, ReportHelpModal, barChartToolTipMessage, lineChartToolTipMessage};
