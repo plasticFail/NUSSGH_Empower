@@ -21,6 +21,7 @@ import FillTheCard from './main/gameCenter/fillTheCard';
 import AskAdd from './onboarding/medicationPlan/askAdd';
 import FitbitSetup from './onboarding/fitbit/FitbitSetup';
 import DrawerNavigator from './drawer';
+import MyCaregiverScreen from './more/myCaregiver';
 
 const Stack = createStackNavigator();
 
@@ -103,6 +104,13 @@ class PatientRoot extends Component {
           <Stack.Screen
             name="Appointment"
             component={AppointmentScreen}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="MyCaregiver"
+            component={MyCaregiverScreen}
             options={{
               headerShown: false,
             }}
