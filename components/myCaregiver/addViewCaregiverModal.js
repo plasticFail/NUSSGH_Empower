@@ -230,11 +230,13 @@ const AddViewCaregiverModal = (props) => {
             mainheader={'Your Name'}
             subheader={'Personal Information'}
             onSelect={() => setAccessName(!accessName)}
+            selected={accessName}
           />
           <AccessOption
             mainheader={'Your Report & Diary'}
             subheader={'Health Information'}
             onSelect={() => setAccessRd(!accessRD)}
+            selected={accessRD}
           />
           <TouchableOpacity>
             <Text style={styles.pdpaText}>
@@ -264,6 +266,7 @@ const AddViewCaregiverModal = (props) => {
       <AuthoriseModal
         visible={showAuthorise}
         closeModal={() => setShowAuthorise(false)}
+        closeParent={() => closeModal()}
       />
     </Modal>
   );
