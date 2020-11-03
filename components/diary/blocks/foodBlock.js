@@ -222,8 +222,6 @@ function renderFoodItems(logs, editLog) {
 
 function renderProgressBars(carbsAmt, fatsAmt, proteinAmt) {
   const [patient, setPatient] = useState({});
-  console.log('rendering progres bar----');
-  console.log(patient);
 
   useEffect(() => {
     async function getProfile() {

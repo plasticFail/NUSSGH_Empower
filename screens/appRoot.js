@@ -26,6 +26,7 @@ import {getRole} from '../storage/asyncStorageFunctions';
 import {role_patient, role_caregiver} from '../commonFunctions/common';
 import CaregiverRoot from './caregiverRoot';
 import LoadingScreen from '../components/account/initLoadingScreen';
+import Loading from '../components/loading';
 
 const Stack = createStackNavigator();
 
@@ -34,37 +35,38 @@ class AppRoot extends Component {
     super(props);
     this.props = props;
     this.state = {
-      user: '',
+      role: '',
     };
-    this.initRole().then(() => {});
   }
 
   componentDidMount() {
+    console.log('in mount----');
     Linking.addEventListener('url', this.handleRedirectUrl);
-    this.initRole().then(() => {});
+    this.setState({role: this.props.role});
   }
 
-  componentDidUpdate(prevProp, prevState) {
-    getRole().then((data) => {
-      if (data != prevState.user) {
-        this.setState({user: data});
-      }
-    });
+  componentDidUpdate() {
+    console.log('pending role: ' + this.props.role);
+    if (this.props.role === undefined || this.props.role === '') {
+      this.initrole().then((data) => {
+        this.setState({role: data});
+        this.props.setUserRole(data);
+      });
+    }
   }
 
   componentWillUnmount() {
     console.log('unmounting -------');
     Linking.removeAllListeners('url');
-    this.setState({user: ''});
+    this.setState({role: ''});
   }
 
-  async initRole() {
-    let role = await getRole();
-    this.setState({user: role});
+  async initrole() {
+    return await getRole();
   }
 
   render() {
-    const {user} = this.state;
+    const {role} = this.state;
     return (
       <>
         <NavigationContainer>
@@ -82,7 +84,7 @@ class AppRoot extends Component {
             {this.props.isLogin ? (
               <>
                 {/* View depending on user role */}
-                {user === role_patient ? (
+                {role === role_patient ? (
                   <Stack.Screen
                     name="PatientDashBoard"
                     component={PatientRoot}
@@ -90,7 +92,7 @@ class AppRoot extends Component {
                       headerShown: false,
                     }}
                   />
-                ) : user === role_caregiver ? (
+                ) : role === role_caregiver ? (
                   <Stack.Screen
                     name="CaregiverDashBoard"
                     component={CaregiverRoot}
@@ -153,41 +155,3 @@ class AppRoot extends Component {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(AppRoot);
-
-const forSlide = ({current, next, inverted, layouts: {screen}}) => {
-  const progress = Animated.add(
-    current.progress.interpolate({
-      inputRange: [0, 1],
-      outputRange: [0, 1],
-      extrapolate: 'clamp',
-    }),
-    next
-      ? next.progress.interpolate({
-          inputRange: [0, 1],
-          outputRange: [0, 1],
-          extrapolate: 'clamp',
-        })
-      : 0,
-  );
-
-  return {
-    cardStyle: {
-      transform: [
-        {
-          translateX: Animated.multiply(
-            progress.interpolate({
-              inputRange: [0, 1, 2],
-              outputRange: [
-                screen.width, // Focused, but offscreen in the beginning
-                0, // Fully focused
-                screen.width * -0.3, // Fully unfocused
-              ],
-              extrapolate: 'clamp',
-            }),
-            inverted,
-          ),
-        },
-      ],
-    },
-  };
-};

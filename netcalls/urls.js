@@ -1,6 +1,6 @@
 const server = 'https://sghempower.com/';
 
-const patientLogin = server + 'auth/patient-login';
+const login = server + 'auth/login';
 const isTokenValid = server + 'auth/is-token-valid';
 const glucoseAddLog = server + 'log/glucose';
 const medicationAddLog = server + 'log/medication';
@@ -34,7 +34,7 @@ const gameCenterPerformSpin = server + 'game/bingo/spin';
 const caregiverLogin = server + 'auth/caregiver-login';
 
 export {
-  patientLogin,
+  login,
   isTokenValid,
   glucoseAddLog,
   medicationAddLog,
