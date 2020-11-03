@@ -166,7 +166,11 @@ const InputOTPScreen = (props) => {
         ) : null}
 
         <TouchableOpacity onPress={() => resendOTP()}>
-          <Text style={[globalStyles.pageSubDetails, {fontSize: 16}]}>
+          <Text
+            style={[
+              globalStyles.pageSubDetails,
+              {fontSize: 16, marginStart: '4%'},
+            ]}>
             Didn't receive it?{' '}
             <Text
               style={[

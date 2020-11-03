@@ -15,6 +15,7 @@ import Modal from 'react-native-modal';
 import LeftArrowBtn from '../logs/leftArrowBtn';
 import {Colors} from '../../styles/colors';
 import globalStyles from '../../styles/globalStyles';
+import CountdownTimer from '../countdownTimer';
 
 const sampleNum = '654321';
 
@@ -23,6 +24,7 @@ const AuthoriseModal = (props) => {
   const {closeModal, closeParent} = props;
   const [pinNum, setPinNum] = useState('');
   const [pinArr, setPinArr] = useState([]);
+  const [countdownTime, setCountdownTime] = useState(180);
 
   useEffect(() => {
     setPinNum(sampleNum);
@@ -34,6 +36,12 @@ const AuthoriseModal = (props) => {
     closeModal();
     closeParent();
   };
+
+  const handleTimout = () => {
+    setCountdownVisible(true);
+    setCountdownTime(0);
+  };
+
   return (
     <Modal
       isVisible={visible}
@@ -57,6 +65,7 @@ const AuthoriseModal = (props) => {
             flexDirection: 'row',
             justifyContent: 'space-around',
             margin: '10%',
+            alignItems: 'center',
           }}>
           {pinArr?.map((item, index) => (
             <Text key={index} style={styles.pinNo}>
@@ -64,6 +73,13 @@ const AuthoriseModal = (props) => {
             </Text>
           ))}
         </View>
+        <CountdownTimer
+          handleTimout={handleTimout}
+          countdownTime={countdownTime}
+          key={countdownTime}
+          text={'Code expires in'}
+          style={{alignItems: 'center', marginStart: 0}}
+        />
       </View>
       <View style={globalStyles.buttonContainer}>
         <TouchableOpacity

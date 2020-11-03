@@ -78,8 +78,6 @@ class Login extends Component {
       await storePassword(this.state.password);
       await storeToken(token);
       await storeRole(role);
-
-      this.props.setUserRole(role);
       this.props.login();
 
       console.log('login success!');

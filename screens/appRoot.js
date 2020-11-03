@@ -35,7 +35,7 @@ class AppRoot extends Component {
     super(props);
     this.props = props;
     this.state = {
-      role: '',
+      user: '',
     };
   }
 
@@ -45,14 +45,12 @@ class AppRoot extends Component {
     this.setState({role: this.props.role});
   }
 
-  componentDidUpdate() {
-    console.log('pending role: ' + this.props.role);
-    if (this.props.role === undefined || this.props.role === '') {
-      this.initrole().then((data) => {
-        this.setState({role: data});
-        this.props.setUserRole(data);
-      });
-    }
+  componentDidUpdate(prevProp, prevState) {
+    getRole().then((data) => {
+      if (data != prevState.user) {
+        this.setState({user: data});
+      }
+    });
   }
 
   componentWillUnmount() {
@@ -62,11 +60,12 @@ class AppRoot extends Component {
   }
 
   async initrole() {
-    return await getRole();
+    let role = await getRole();
+    this.setState({user: role});
   }
 
   render() {
-    const {role} = this.state;
+    const {user} = this.state;
     return (
       <>
         <NavigationContainer>
@@ -84,7 +83,7 @@ class AppRoot extends Component {
             {this.props.isLogin ? (
               <>
                 {/* View depending on user role */}
-                {role === role_patient ? (
+                {user === role_patient ? (
                   <Stack.Screen
                     name="PatientDashBoard"
                     component={PatientRoot}
@@ -92,7 +91,7 @@ class AppRoot extends Component {
                       headerShown: false,
                     }}
                   />
-                ) : role === role_caregiver ? (
+                ) : user === role_caregiver ? (
                   <Stack.Screen
                     name="CaregiverDashBoard"
                     component={CaregiverRoot}
