@@ -16,10 +16,14 @@ const AlertsScreen = (props) => {
   const navigation = useNavigation();
 
   useEffect(() => {
+    reInit().then(() => {});
+  }, []);
+
+  useEffect(() => {
     //slide right when enter screen
     navigation.addListener('focus', () => {
       //init notifications set from caregiverdashboard
-      reInit();
+      reInit().then(() => {});
       //when enter screen, set notification as read
       storeReadNotif(true).then(() => {});
       setBadge();
@@ -32,6 +36,9 @@ const AlertsScreen = (props) => {
       }).start();
     });
   }, [navigation]);
+
+  console.log('in alerts ');
+  console.log(logsNotDone);
 
   const widthInterpolate = slideRightAnimation.interpolate({
     inputRange: [0, 1],

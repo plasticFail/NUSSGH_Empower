@@ -37,7 +37,10 @@ const getParticularLogTypeIncompleteText = (
     string += ' in the Morning and Afternoon';
   } else if (noon > -1 && g === eveningObj.name) {
     string += ' in the Afternoon';
-  } else if (morn > -1 && g === afternoonObj.name) {
+  } else if (
+    (morn > -1 && g === afternoonObj.name) ||
+    (morn > -1 && g === eveningObj.name)
+  ) {
     string += ' in the Morning';
   } else {
     string = '';

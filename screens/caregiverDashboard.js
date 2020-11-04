@@ -68,6 +68,7 @@ const CaregiverBottomTab = (props) => {
     if (currHour != morningObj.name) {
       let rsp1 = await checkLogDone(morningObj.name);
       let rsp2 = await checkLogDone(afternoonObj.name);
+      console.log('re init');
       let bg = getParticularLogTypeIncompleteText(
         rsp1.notCompleted,
         rsp2.notCompleted,
