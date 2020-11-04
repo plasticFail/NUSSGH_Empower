@@ -85,8 +85,11 @@ const HomeScreenCaregiver = (props) => {
 
     if (data?.patient === null) {
       await storeAuthorisedStatusCaregiver(false);
+      setAuthorise(false);
     } else {
       setPatient(data?.patient);
+      await storeAuthorisedStatusCaregiver(true);
+      setAuthorise(true);
     }
   };
 

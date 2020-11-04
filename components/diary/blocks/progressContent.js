@@ -31,8 +31,6 @@ const ProgressContent = (props) => {
   const [target, setTarget] = useState(0);
 
   useEffect(() => {
-    console.log('in progress content ---');
-
     let max = getMax4Type(getAge(patient?.birth_date), type, patient?.gender);
     setTarget(max);
     let percent = Math.floor((Number(value) / Number(max)) * 100) + '%';

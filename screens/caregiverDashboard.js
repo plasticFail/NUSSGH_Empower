@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 //third party libs
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 //other screens
@@ -20,6 +20,25 @@ import CHAT from '../resources/images/Patient-Icons/SVG/icon-navy-footer-chat.sv
 import CHAT_FOCUSED from '../resources/images/Patient-Icons/SVG/icon-green-footer-chat.svg';
 import HomeScreenPatient from './main/home-caregiver';
 import HomeScreenCaregiver from './main/home-caregiver';
+import AlertNotifIcon from '../components/alertNotifIcon';
+
+import {
+  morningObj,
+  afternoonObj,
+  getGreetingFromHour,
+} from '../commonFunctions/common';
+import {
+  checkLogDone,
+  food_key,
+  bg_key,
+  med_key,
+  weight_key,
+} from '../commonFunctions/logFunctions';
+import {
+  getLogIncompleteText,
+  getParticularLogTypeIncompleteText,
+} from '../commonFunctions/notifFunction';
+import {getReadNotif} from '../storage/asyncStorageFunctions';
 
 const Tab = createBottomTabNavigator();
 
@@ -28,6 +47,77 @@ const iconStyle = {
   height: 30,
 };
 const CaregiverBottomTab = (props) => {
+  //states for the notifications*
+  const [currHour, setCurrHour] = useState(new Date().getHours());
+  //log notif
+  const [logsNotDone, setLogsNotDone] = useState([]);
+  const [count, setCount] = useState(0);
+  //badge
+  const [showBadge, setShowBadge] = useState(false);
+
+  useEffect(() => {
+    initUncompleteLog().then(() => {});
+    async function getRead() {
+      await setBadge();
+    }
+    getRead();
+  }, []);
+
+  //notif - log not done
+  const initUncompleteLog = async () => {
+    if (currHour != morningObj.name) {
+      let rsp1 = await checkLogDone(morningObj.name);
+      let rsp2 = await checkLogDone(afternoonObj.name);
+      let bg = getParticularLogTypeIncompleteText(
+        rsp1.notCompleted,
+        rsp2.notCompleted,
+        bg_key,
+      );
+      let food = getParticularLogTypeIncompleteText(
+        rsp1.notCompleted,
+        rsp2.notCompleted,
+        food_key,
+      );
+      let med = getParticularLogTypeIncompleteText(
+        rsp1.notCompleted,
+        rsp2.notCompleted,
+        med_key,
+      );
+      let weight = getParticularLogTypeIncompleteText(
+        rsp1.notCompleted,
+        rsp2.notCompleted,
+        weight_key,
+      );
+      let obj = [
+        {
+          type: bg_key,
+          msg: bg,
+        },
+        {
+          type: food_key,
+          msg: food,
+        },
+        {
+          type: med_key,
+          msg: med,
+        },
+        {
+          type: weight_key,
+          msg: weight,
+        },
+      ];
+      setLogsNotDone(obj);
+    }
+    await setBadge();
+  };
+
+  //notif - set show badge
+  const setBadge = async () => {
+    let r = await getReadNotif();
+    console.log('--- in dashboard ' + r);
+    setShowBadge(r);
+  };
+
   return (
     <Tab.Navigator
       tabBarOptions={{
@@ -84,14 +174,16 @@ const CaregiverBottomTab = (props) => {
       />
       <Tab.Screen
         name="Alerts"
-        component={AlertsScreen}
+        children={() => (
+          <AlertsScreen logsNotDone={logsNotDone} reInit={initUncompleteLog} />
+        )}
         options={{
           title: 'Alert',
           tabBarIcon: ({focused}) => {
             if (focused) {
-              return <ALERT_FOCUSED {...iconStyle} />;
+              return <AlertNotifIcon focused={true} showBadge={showBadge} />;
             } else {
-              return <ALERT {...iconStyle} />;
+              return <AlertNotifIcon focused={false} showBadge={showBadge} />;
             }
           },
         }}

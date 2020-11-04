@@ -1,6 +1,10 @@
+import React from 'react';
 import {Platform} from 'react-native';
 import RNPusherPushNotifications from 'react-native-pusher-push-notifications';
 import {getToken} from '../storage/asyncStorageFunctions';
+import {appRootNavigation} from "../screens/appRoot";
+import {notificationPathMapping} from "../config/AppConfig";
+import {defaultRoute} from "../components/notification/PushNotifHandler";
 
 const donutsInterest = 'debug-donuts';
 
@@ -10,12 +14,16 @@ function initPusherNotif(username, pusherToken) {
   const PUSHER_INSTANCE_ID = 'c7a6e2ea-9db6-4035-ad44-cbf8e6f23bd8';
 
   RNPusherPushNotifications.setInstanceId(PUSHER_INSTANCE_ID);
+
   RNPusherPushNotifications.setUserId(
     username,
     pusherToken,
-    (statusCode, resp) => console.log('Error oh boy'),
-    () => console.log('Registration success!'),
+    (statusCode, resp) => console.log('Error occurred while setting user id'),
+    () => {
+      //console.log('Registration success!')
+    },
   );
+
   subscribe(donutsInterest);
   RNPusherPushNotifications.on('notification', handleNotification);
   /*
@@ -25,9 +33,12 @@ function initPusherNotif(username, pusherToken) {
   );*/
 }
 
-// Handle notifications received
+// This is the notification handler for ios devices. To modify the handling of android notifications, modify the
+// PushNotifHandler.js file in ./components/notification/. Whenever there is a new notifcation behaviour you want to make,
+// both this file and PushNotifHandler needs to make changes because the way ios and android handles notifications
+// are different.
 const handleNotification = (notification) => {
-  console.log(notification);
+  // console.log(notification);
 
   // iOS app specific handling
   if (Platform.OS === 'ios') {
@@ -35,37 +46,23 @@ const handleNotification = (notification) => {
       case 'inactive':
       // inactive: App came in foreground by clicking on notification.
       //           Use notification.userInfo for redirecting to specific view controller
+      if (notification.userInfo) {
+        if (notification.userInfo.redirect && notificationPathMapping[notification.redirect]) {
+          defaultRoute.current = notificationPathMapping[notification.redirect];
+        }
+      }
       case 'background':
       // background: App is in background and notification is received.
       //             You can fetch required data here don't do anything with UI
       case 'active':
         // App is foreground and notification is received. Show a alert or something.
-        alert('hello world!');
+
       default:
         break;
     }
   } else {
-    console.log('android handled notification...');
+    // console.log('android handled notification...'); // Will never be called if app fires from background
   }
-};
-
-const testreg = async () => {
-  let res = await fetch(
-    'https://c18294e5-57a2-4a24-a0d4-ae51f312f7a4.pushnotifications.pusher.com/device_api/v1/instances/c18294e5-57a2-4a24-a0d4-ae51f312f7a4/devices/fcm',
-    {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-type': 'application/json',
-      },
-      body: {
-        token: 'AIzaSyATDIz_EuQF6NX0kjjbJZjFq40-lryL8-Q',
-      },
-    },
-  );
-  let respJson = await res.json();
-  console.log(respJson);
-  return respJson;
 };
 
 // Subscribe to an interest
@@ -77,7 +74,7 @@ const subscribe = (interest) => {
       console.error(statusCode, response);
     },
     () => {
-      console.log('Success subscribing interest');
+      // console.log('Success subscribing interest');
     },
   );
 };
@@ -95,4 +92,8 @@ const unsubscribe = (interest) => {
   );
 };
 
-export {initPusherNotif};
+const clearPushNotifState = () => {
+    RNPusherPushNotifications.clearAllState();
+}
+
+export {initPusherNotif, clearPushNotifState};

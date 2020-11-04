@@ -10,7 +10,7 @@ import {
   afternoonObj,
   eveningObj,
 } from '../../../commonFunctions/common';
-import getLogIncompleteText from '../../../commonFunctions/notifFunction';
+import {getLogIncompleteText} from '../../../commonFunctions/notifFunction';
 
 const NotifCollapse = (props) => {
   const {hour, morningNotDone, afternoonNotDone} = props;

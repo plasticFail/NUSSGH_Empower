@@ -27,6 +27,7 @@ import {
   fats,
   protein,
   isEmpty,
+  role_patient,
 } from '../../../commonFunctions/common';
 //third party library
 import Modal from 'react-native-modal';
@@ -44,7 +45,11 @@ import globalStyles from '../../../styles/globalStyles';
 import {Colors} from '../../../styles/colors';
 import diaryStyles from '../../../styles/diaryStyles';
 import {horizontalMargins} from '../../../styles/variables';
-import {getPatientProfile} from '../../../netcalls/requestsAccount';
+import {
+  getPatientProfile,
+  getCaregiverProfile,
+} from '../../../netcalls/requestsAccount';
+import {getRole} from '../../../storage/asyncStorageFunctions';
 //function
 
 const FoodBlock = (props) => {
@@ -225,8 +230,14 @@ function renderProgressBars(carbsAmt, fatsAmt, proteinAmt) {
 
   useEffect(() => {
     async function getProfile() {
-      let p = await getPatientProfile();
-      setPatient(p?.patient);
+      let role = await getRole();
+      if (role === role_patient) {
+        let p = await getPatientProfile();
+        setPatient(p?.patient);
+      } else {
+        let c = await getCaregiverProfile();
+        setPatient(c?.patient);
+      }
     }
     getProfile();
   }, []);

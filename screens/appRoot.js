@@ -28,7 +28,19 @@ import CaregiverRoot from './caregiverRoot';
 import LoadingScreen from '../components/account/initLoadingScreen';
 import Loading from '../components/loading';
 
+import {appRootUrl, availablePaths} from '../config/AppConfig';
+import {
+  handler,
+  defaultRoute,
+} from '../components/notification/PushNotifHandler';
 const Stack = createStackNavigator();
+
+// Allows for navigation to occur anywhere in app.
+export const appRootNavigation = React.createRef();
+export function navigate(name, params) {
+  appRootNavigation.current?.navigate(name, params);
+  return appRootNavigation.current;
+}
 
 class AppRoot extends Component {
   constructor(props) {
@@ -43,6 +55,7 @@ class AppRoot extends Component {
     console.log('in mount----');
     Linking.addEventListener('url', this.handleRedirectUrl);
     this.setState({role: this.props.role});
+    this.initrole().then(() => {});
   }
 
   componentDidUpdate(prevProp, prevState) {
@@ -64,11 +77,30 @@ class AppRoot extends Component {
     this.setState({user: role});
   }
 
+  onReady = async () => {
+    // Handle deep link from url
+    const url = await Linking.getInitialURL();
+    if (url && this.props.isLogin) {
+      const path = url.split(appRootUrl)[1];
+      console.log(`application opened from web. navigating to ${path}`);
+      if (availablePaths.has(path)) {
+        appRootNavigation.current.navigate(path);
+      }
+    }
+
+    // Handle link from notification redirect
+    const notifPath = defaultRoute.current; // path from notification.
+    if (this.props.isLogin && notifPath) {
+      appRootNavigation.current.navigate(notifPath);
+    }
+    defaultRoute.current = null; // reset
+  };
+
   render() {
     const {user} = this.state;
     return (
       <>
-        <NavigationContainer>
+        <NavigationContainer ref={appRootNavigation} onReady={this.onReady}>
           <Stack.Navigator
             screenOptions={({route}) => ({
               headerTintColor: '#000',

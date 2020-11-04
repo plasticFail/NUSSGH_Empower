@@ -10,6 +10,7 @@ const key_medicationLog = 'lastMedicationLog';
 const key_last_meal_log = 'lastMealLog';
 const key_fitbit_token = 'fitbitToken';
 const key_authorisedCaregiver = 'authorisedCaregiver';
+const key_notif_read = 'notif_read';
 
 const storeData = async (key, value) => {
   try {
@@ -140,6 +141,14 @@ const getAuthorisedStatusCaregiver = async () => {
   return await getDataObj(key_authorisedCaregiver);
 };
 
+const storeReadNotif = async (bool) => {
+  return await storeDataObj(key_notif_read, bool);
+};
+
+const getReadNotif = async () => {
+  return await getDataObj(key_notif_read);
+};
+
 export {
   storeUsername,
   getUsername,
@@ -162,4 +171,6 @@ export {
   key_weightLog,
   storeAuthorisedStatusCaregiver,
   getAuthorisedStatusCaregiver,
+  storeReadNotif,
+  getReadNotif,
 };

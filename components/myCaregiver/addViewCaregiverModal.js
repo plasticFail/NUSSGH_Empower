@@ -13,6 +13,8 @@ import {
 //third party lib
 import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import InAppBrowser from 'react-native-inappbrowser-reborn';
+
 //styles
 import {Colors} from '../../styles/colors';
 import globalStyles from '../../styles/globalStyles';
@@ -143,6 +145,18 @@ const AddViewCaregiverModal = (props) => {
     }
   };
 
+  const openURL = async () => {
+    let link =
+      'https://www.pdpc.gov.sg/Overview-of-PDPA/The-Legislation/Personal-Data-Protection-Act';
+    if (await InAppBrowser.isAvailable) {
+      InAppBrowser.open(link).then((resp) => {
+        if (resp.type === 'success') {
+          // Opened link successfully
+        }
+      });
+    }
+  };
+
   return (
     <Modal
       isVisible={visible}
@@ -252,7 +266,7 @@ const AddViewCaregiverModal = (props) => {
             onSelect={() => setAccessRd(!accessRD)}
             selected={accessRD}
           />
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => openURL()}>
             <Text style={styles.pdpaText}>
               Learn more about{' '}
               <Text style={{fontWeight: 'bold', color: '#aad326'}}>

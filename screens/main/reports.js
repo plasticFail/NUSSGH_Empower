@@ -8,7 +8,8 @@ import {
   TouchableOpacity,
   Image,
   Animated,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+    Linking
 } from 'react-native';
 import globalStyles from '../../styles/globalStyles';
 import BarChart from '../../components/dashboard/reports/BarChart';
@@ -40,10 +41,12 @@ import EvilIcon from "react-native-vector-icons/EvilIcons";
 import {
   barChartToolTipMessage,
   lineChartToolTipMessage,
-  ReportHelpInfo
+  ReportHelpInfo, ReportHelpModal
 } from "../../components/dashboard/reports/ReportHelpInfo";
 import {headerHeight, statusBarHeight} from "../../styles/variables";
 import {replaceActivitySummary} from "../../commonFunctions/reportDataFormatter";
+import {appRootUrl} from "../../config/AppConfig";
+import InAppBrowser from 'react-native-inappbrowser-reborn';
 
 const EXPORT_BTN = require('../../resources/images/Patient-Icons/2x/icon-green-export-2x.png');
 
@@ -51,6 +54,8 @@ const BGL_ICON = require('../../resources/images/Patient-Icons/2x/icon-navy-bloo
 const FOOD_ICON = require('../../resources/images/Patient-Icons/2x/icon-navy-food-2x.png');
 const MED_ICON = require('../../resources/images/Patient-Icons/2x/icon-navy-med-2x.png');
 const WEIGHT_ICON = require('../../resources/images/Patient-Icons/2x/icon-navy-weight-2x.png');
+
+const LINECHART_HELP_GIF = require('../../resources/images/Report-Modal/img-report-modal.gif');
 
 const iconProps = {
   width: 30,
@@ -221,7 +226,7 @@ const ReportsScreen = (props) => {
           style={{transform: [{translateX: widthInterpolate}]}}>
         <View style={globalStyles.menuBarContainer}>
           <LeftArrowBtn close={() => props.navigation.navigate('Home')} />
-          <TouchableOpacity onPress={()=>setOpenExportModal(true)}>
+          <TouchableOpacity onPress={() => setOpenExportModal(true)} >
             <Image source={EXPORT_BTN} style={{width: 30, height: 30}} />
           </TouchableOpacity>
         </View>
@@ -256,7 +261,9 @@ const ReportsScreen = (props) => {
                              textPaddingRight={20}/>
               </View>
               <View key='bgl-help-info' style={{position: 'absolute', alignSelf: 'flex-end'}}>
-                <ReportHelpInfo message={lineChartToolTipMessage} showInfo={showInfo} toggleInfoCallback={toggleInfoCallback} />
+                <ReportHelpModal image={<Image source={LINECHART_HELP_GIF} style={{width: '90%', height: 300, alignSelf: 'center'}} />}
+                                 showInfo={showInfo}
+                                 toggleInfoCallback={toggleInfoCallback} />
               </View>
               <LineChart data={fullDataset.bglData}
                          key={'bgl-chart'}
@@ -338,7 +345,9 @@ const ReportsScreen = (props) => {
                                textPaddingRight={20}/>
                 </View>
                 <View key='weight-help-info' style={{position: 'absolute', alignSelf: 'flex-end'}}>
-                  <ReportHelpInfo message={lineChartToolTipMessage} showInfo={showInfo} toggleInfoCallback={toggleInfoCallback} />
+                  <ReportHelpModal image={<Image source={LINECHART_HELP_GIF} style={{width: '90%', height: 300, alignSelf: 'center'}} />}
+                                   showInfo={showInfo}
+                                   toggleInfoCallback={toggleInfoCallback} />
                 </View>
                 <LineChart data={fullDataset.weightData} filterKey={filterKey}
                            width={width} height={300}
@@ -378,7 +387,7 @@ const ReportsScreen = (props) => {
                                textPaddingRight={20}/>
                 </View>
                 <View key='activity-help-info' style={{position: 'absolute', alignSelf: 'flex-end'}}>
-                  <ReportHelpInfo message={barChartToolTipMessage} />
+                  <ReportHelpInfo message={barChartToolTipMessage} showInfo={showInfo} toggleInfoCallback={toggleInfoCallback} />
                 </View>
                 <BarChart data={fullDataset.activityData}
                           filterKey={filterKey}

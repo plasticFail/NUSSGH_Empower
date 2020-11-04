@@ -52,6 +52,11 @@ import WHITE_FOOD from '../resources/images/Patient-Icons/SVG/icon-white-food.sv
 import WHITE_MED from '../resources/images/Patient-Icons/SVG/icon-white-med.svg';
 import WHITE_WEIGHT from '../resources/images/Patient-Icons/SVG/icon-white-weight.svg';
 
+import GREEN_BG from '../resources/images/Patient-Icons/SVG/icon-lightgreen-bloodglucose.svg';
+import GREEN_FOOD from '../resources/images/Patient-Icons/SVG/icon-lightgreen-food.svg';
+import GREEN_MED from '../resources/images/Patient-Icons/SVG/icon-lightgreen-med.svg';
+import GREEN_WEIGHT from '../resources/images/Patient-Icons/SVG/icon-lightgreen-weight.svg';
+
 const bg_key = 'Blood Glucose Log';
 const food_key = 'Food Intake Log';
 const med_key = 'Medication Log';
