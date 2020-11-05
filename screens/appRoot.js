@@ -26,8 +26,6 @@ import {getRole} from '../storage/asyncStorageFunctions';
 import {role_patient, role_caregiver} from '../commonFunctions/common';
 import CaregiverRoot from './caregiverRoot';
 import LoadingScreen from '../components/account/initLoadingScreen';
-import Loading from '../components/loading';
-
 import {appRootUrl, availablePaths} from '../config/AppConfig';
 import {
   handler,
