@@ -28,7 +28,7 @@ const getData = async (key) => {
   try {
     const value = await AsyncStorage.getItem(key);
     if (value !== null) {
-      console.log('load ' + key + ' : ' + value);
+      //console.log('load ' + key + ' : ' + value);
       return value;
     }
   } catch (e) {
@@ -54,7 +54,7 @@ const getDataObj = async (key) => {
     let objString = await AsyncStorage.getItem(key);
     let obj = JSON.parse(objString);
     if (obj !== null) {
-      console.log('load ' + key + ' : ' + objString);
+      //console.log('load ' + key + ' : ' + objString);
       return obj;
     }
   } catch (e) {

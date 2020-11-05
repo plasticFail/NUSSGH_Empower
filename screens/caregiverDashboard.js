@@ -132,8 +132,17 @@ const CaregiverBottomTab = (props) => {
       await storeReadNotifDate({period: currentperiod, date: currDate});
     } else if (moment(date).isSame(currDate)) {
       //if same date, but period !=currperiod , read false
-      console.log('read notification on same date ' + date);
+      console.log(
+        'read notification on same date ' + date + ' -checking period',
+      );
       if (period != currentperiod) {
+        console.log(
+          'read notification on ' +
+            period +
+            ', not ' +
+            currentperiod +
+            '-set showbadge to true',
+        );
         setShowBadge(true);
       } else {
         setShowBadge(false);

@@ -77,6 +77,8 @@ const AddViewCaregiverModal = (props) => {
         setSearchResult([]);
         setLoading(false);
       }, 500);
+    } else {
+      setSearchResult([]);
     }
   };
 
