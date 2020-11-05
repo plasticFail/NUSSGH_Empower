@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   Dimensions,
   Animated,
+  Alert,
 } from 'react-native';
 //third party lib
 import Modal from 'react-native-modal';
@@ -28,33 +29,13 @@ import USER_FEMALE from '../../resources/images/Patient-Icons/SVG/user-female.sv
 import USER_MALE from '../../resources/images/Patient-Icons/SVG/user-male.svg';
 import {isEmpty} from '../../commonFunctions/common';
 import AuthoriseModal from './authoriseModal';
-
-const sampleResults = [
-  {
-    _id: 4645645645645,
-    first_name: 'Audrey',
-    last_name: 'Soh',
-    gender: 'female',
-  },
-  {
-    _id: 46456452,
-    first_name: 'Jimmy',
-    last_name: 'M',
-    gender: 'male',
-  },
-  {
-    _id: 46456452,
-    first_name: 'Jimmy',
-    last_name: 'M',
-    gender: 'male',
-  },
-  {
-    _id: 46456452,
-    first_name: 'Jimmy',
-    last_name: 'M',
-    gender: 'male',
-  },
-];
+import {
+  search4Caregiver,
+  assignCaregiver2Patient,
+} from '../../netcalls/requestsMyCaregiver';
+import DeleteBin from '../deleteBin';
+import diaryStyles from '../../styles/diaryStyles';
+import logStyles from '../../styles/logStyles';
 
 const iconStyle = {
   width: 40,
@@ -72,7 +53,6 @@ const AddViewCaregiverModal = (props) => {
 
   //down animation
   const [showDown, setShowDown] = useState(true);
-  const moveDownAnimation = useRef(new Animated.Value(0)).current;
 
   const [chosenCaregiver, setChosenCaregiver] = useState({});
   const [accessName, setAccessName] = useState(false);
@@ -81,48 +61,23 @@ const AddViewCaregiverModal = (props) => {
   const [accessRD, setAccessRd] = useState(false);
 
   useEffect(() => {
-    if (showDown) {
-      runanimation();
+    setSearchResult([]);
+    if (type != 'add') {
+      setSearchResult([caregiver]);
     }
-  }, [visible, showDown]);
-
-  //animation
-  const runanimation = () => {
-    setShowDown(true);
-    moveDownAnimation.setValue(0);
-    Animated.loop(
-      Animated.timing(moveDownAnimation, {
-        toValue: 1,
-        duration: 1500,
-        useNativeDriver: true,
-      }),
-    ).start();
-  };
-
-  const heightInterpoloation = moveDownAnimation.interpolate({
-    inputRange: [0, 1],
-    outputRange: [height * 0.34, height * 0.43],
-  });
-
-  const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
-    return (
-      layoutMeasurement.height + contentOffset.y >= contentSize.height - 30
-    );
-  };
-
-  const removeAnimation = () => {
-    setShowDown(false);
-    moveDownAnimation.setValue(0);
-  };
+  }, []);
 
   const searchCaregiver = (searchKey) => {
-    console.log(searchKey);
-    setLoading(true);
-    setTimeout(() => {
-      setSearchResult(sampleResults);
-      setLoading(false);
-      runanimation();
-    }, 500);
+    if (searchKey.length === 8) {
+      setLoading(true);
+      setTimeout(() => {
+        search4Caregiver(searchKey).then((rsp) => {
+          setSearchResult(rsp?.results);
+        });
+        setSearchResult([]);
+        setLoading(false);
+      }, 500);
+    }
   };
 
   const selectedCaregiver = (caregiver) => {
@@ -139,10 +94,16 @@ const AddViewCaregiverModal = (props) => {
 
   const authorise = () => {
     console.log('authorising');
-    console.log(isEmpty(selectedCaregiver));
     if (!isEmpty(chosenCaregiver)) {
       //setShowAuthorise(true);
       //call api
+      assignCaregiver2Patient(chosenCaregiver.username).then((rsp) => {
+        if (rsp != null) {
+          Alert.alert('Caregiver Assigned Successfully!', '', [
+            {text: 'Got It', onPress: () => closeModal()},
+          ]);
+        }
+      });
     }
   };
 
@@ -157,6 +118,8 @@ const AddViewCaregiverModal = (props) => {
       });
     }
   };
+
+  const deleteCaregiver = () => {};
 
   return (
     <Modal
@@ -173,24 +136,19 @@ const AddViewCaregiverModal = (props) => {
         <Text style={globalStyles.pageHeader}>
           {type === 'add' ? 'Add Caregiver' : 'View Caregiver'}
         </Text>
-        <TextInput
-          style={globalStyles.row}
-          placeholder="Enter Caregiver ID"
-          placeholderTextColor={'#90949c'}
-          onChangeText={(value) => searchCaregiver(value)}
-          keyboardType={'number-pad'}
-          returnKeyType="done"
-        />
-        {/*Animated Down */}
-        {showDown && searchResult.length > 2 && !loading ? (
-          <Animated.View
-            style={[
-              {transform: [{translateY: heightInterpoloation}]},
-              styles.downIcon,
-            ]}>
-            <Icon name="arrow-circle-down" size={25} color="#aad326" />
-          </Animated.View>
-        ) : null}
+        {type === 'add' ? (
+          <TextInput
+            style={globalStyles.row}
+            placeholder="Enter Caregiver's Phone Number"
+            placeholderTextColor={'#90949c'}
+            onChangeText={(value) => searchCaregiver(value)}
+            keyboardType={'number-pad'}
+            returnKeyType="done"
+            maxLength={8}
+          />
+        ) : (
+          <Text style={styles.appointedText}>Appointed</Text>
+        )}
 
         {loading ? (
           <ActivityIndicator
@@ -200,32 +158,23 @@ const AddViewCaregiverModal = (props) => {
           />
         ) : searchResult.length > 0 ? (
           <View style={{maxHeight: '20%'}}>
-            <ScrollView
-              contentContainerStyle={{flexGrow: 0}}
-              scrollEventThrottle={100}
-              onScroll={({nativeEvent}) => {
-                if (isCloseToBottom(nativeEvent)) {
-                  return removeAnimation();
-                } else {
-                  setShowDown(true);
-                }
-              }}>
-              {searchResult.map((item) => (
-                <View
-                  style={[
-                    globalStyles.row,
-                    {
-                      marginBottom: '1%',
-                      marginTop: '1%',
-                      flexDirection: 'row',
-                    },
-                  ]}>
-                  {item?.gender === 'female' ? (
-                    <USER_FEMALE {...iconStyle} />
-                  ) : (
-                    <USER_MALE {...iconStyle} />
-                  )}
+            {searchResult.map((item) => (
+              <View style={[globalStyles.row, styles.container]}>
+                {item?.gender === 'female' ? (
+                  <USER_FEMALE {...iconStyle} />
+                ) : (
+                  <USER_MALE {...iconStyle} />
+                )}
+                {type === 'add' ? (
                   <Text style={globalStyles.field}>{item.first_name}</Text>
+                ) : (
+                  <View style={{flex: 1, marginStart: '3%'}}>
+                    <Text style={styles.mainField}>{item.first_name}</Text>
+                    <Text style={[styles.subField]}>{item.contact_number}</Text>
+                  </View>
+                )}
+
+                {type === 'add' ? (
                   <TouchableOpacity onPress={() => selectedCaregiver(item)}>
                     {chosenCaregiver._id === item._id ? (
                       <Tick selected={true} />
@@ -233,15 +182,15 @@ const AddViewCaregiverModal = (props) => {
                       <Tick selected={false} />
                     )}
                   </TouchableOpacity>
-                </View>
-              ))}
-            </ScrollView>
+                ) : null}
+              </View>
+            ))}
           </View>
         ) : null}
+        {/* 
         <Text style={styles.fieldText}>
           {type === 'add' ? 'Select' : 'Edit'} Access Privileges
-        </Text>
-        {/*Access Privileges */}
+        </Text>       
         <ScrollView style={{flexGrow: 1}}>
           <AccessOption
             mainheader={'Your Name'}
@@ -276,6 +225,7 @@ const AddViewCaregiverModal = (props) => {
             </Text>
           </TouchableOpacity>
         </ScrollView>
+        */}
       </View>
 
       <View style={globalStyles.buttonContainer}>
@@ -289,8 +239,19 @@ const AddViewCaregiverModal = (props) => {
             }>
             <Text style={globalStyles.actionButtonText}>Next</Text>
           </TouchableOpacity>
-        ) : null}
+        ) : (
+          <View style={{flexDirection: 'row'}}>
+            <DeleteBin style={diaryStyles.binIcon} method={deleteCaregiver} />
+
+            <TouchableOpacity
+              style={logStyles.enableEditButton}
+              onPress={() => closeModal()}>
+              <Text style={globalStyles.actionButtonText}>Done</Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
+
       {/*Show Authorise modal 
       <AuthoriseModal
         visible={showAuthorise}
@@ -336,5 +297,17 @@ const styles = StyleSheet.create({
     fontSize: 16,
     alignSelf: 'center',
     marginTop: '5%',
+  },
+  container: {
+    marginBottom: '1%',
+    marginTop: '1%',
+    flexDirection: 'row',
+  },
+  appointedText: {
+    fontFamily: 'SFProDisplay-Bold',
+    fontSize: 20,
+    marginStart: '3%',
+    color: Colors.grey,
+    opacity: 0.6,
   },
 });

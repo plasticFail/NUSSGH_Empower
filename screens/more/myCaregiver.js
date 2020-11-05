@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
 //style
 import {Colors} from '../../styles/colors';
@@ -14,13 +14,7 @@ import LeftArrowBtn from '../../components/logs/leftArrowBtn';
 import USER_MALE from '../../resources/images/Patient-Icons/SVG/user-male.svg';
 import USER_FEMALE from '../../resources/images/Patient-Icons/SVG/user-female.svg';
 import AddViewCaregiverModal from '../../components/myCaregiver/addViewCaregiverModal';
-
-//to be removed
-const sampleCaregiver = {
-  first_name: 'Audrey',
-  last_name: 'Soh',
-  gender: 'female',
-};
+import {getMyCaregiver} from '../../netcalls/requestsMyCaregiver';
 
 const iconStyle = {
   width: 40,
@@ -31,6 +25,18 @@ const MyCaregiverScreen = (props) => {
   const [caregiver, setCaregiver] = useState({});
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState('');
+
+  useEffect(() => {
+    init();
+  }, []);
+
+  const init = () => {
+    getMyCaregiver().then((rsp) => {
+      if (rsp?._id != null) {
+        setCaregiver(rsp);
+      }
+    });
+  };
 
   const openModal = (type) => {
     setModalType(type);
@@ -78,12 +84,17 @@ const MyCaregiverScreen = (props) => {
           </View>
         </TouchableOpacity>
       )}
-      <AddViewCaregiverModal
-        visible={showModal}
-        closeModal={() => setShowModal(false)}
-        type={modalType}
-        caregiver={caregiver}
-      />
+      {showModal ? (
+        <AddViewCaregiverModal
+          visible={showModal}
+          closeModal={() => {
+            setShowModal(false);
+            init();
+          }}
+          type={modalType}
+          caregiver={caregiver}
+        />
+      ) : null}
     </View>
   );
 };
