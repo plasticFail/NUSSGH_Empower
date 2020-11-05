@@ -1,10 +1,11 @@
 import React from 'react';
 import {Linking} from 'react-native';
 import PushNotification from 'react-native-push-notification';
+import PushNotificationIOS from "@react-native-community/push-notification-ios";
 import {notificationPathMapping} from "../../config/AppConfig";
 import {appRootNavigation, navigate} from "../../screens/appRoot";
 
-export const defaultRoute = React.createRef(null);
+//export const defaultRoute = React.createRef(null);
 
 // This is the notification handler for android devices. To modify the handling of ios notifications, modify the
 // AuthorisePusherNotif.js file in ./commonFunctions/. Whenever there is a new notifcation behaviour you want to make,
@@ -17,8 +18,12 @@ class NotificationHandler {
     // Access notification data using notification.data
     // This function is called only when the application is running in the background or closed.
     onNotification(notification) {
-        console.log('NotificationHandler: notification is: ', notification);
+        console.log('Notification: ', notification);
         let redirect = null;
+        if (notification === null || notification === undefined) {
+            return ;
+        }
+
         if (notification.data) {
             redirect = notification.data.redirect;
         }
@@ -30,8 +35,8 @@ class NotificationHandler {
             if (navigate(notificationPathMapping[redirect], null)) {
                 // can navigate directly because navigation has been setup.
             } else {
-                // navigation not setup yet. we'll wait for app root to navigate
-                defaultRoute.current = notificationPathMapping[redirect];
+                // navigation not setup yet. we'll wait for app root to navigate - Not needed
+                // defaultRoute.current = notificationPathMapping[redirect];
             };
         }
 
@@ -106,12 +111,22 @@ PushNotification.configure({
     requestPermissions: true,
 });
 
-/*
-PushNotification.localNotificationSchedule({
-    title: 'Notification with my name',
-    message: 'hello!', // (required)
-    date: new Date(Date.now()) // in 60 secs
-});
- */
+const testSendNotification = () => {
+    PushNotification.localNotificationSchedule({
+        title: 'Notification with my name',
+        message: 'hello test message here!', // send msg
+        aps: {
+            alert: {
+                userinfo: {
+                    redirect: "LOG_NEW"
+                },
+                body: "Test from local"
+            }
+        },
+        date: new Date(Date.now() + 10 * 1000) // now
+    });
+}
+
+//testSendNotification()
 
 export {handler};

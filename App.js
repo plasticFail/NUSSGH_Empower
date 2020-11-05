@@ -1,22 +1,34 @@
 import React, {useState} from 'react';
 import {Provider} from 'react-redux';
 import {store} from './redux/reduxInit';
-
+import {handler} from "./components/notification/PushNotifHandler";
 //component
 import AppRoot from './screens/appRoot';
 import LoadingScreen from './components/account/initLoadingScreen';
-import {defaultRoute} from "./components/notification/PushNotifHandler";
 
-export default function App() {
-  const [finishLoading, setFinishLoading] = useState(false);
+export default class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      finishLoading: false
+    }
+    handler.attachNotification(this.onNotification);
+  }
 
-  return (
-    <Provider store={store}>
-      {finishLoading ? (
-        <AppRoot />
-      ) : (
-        <LoadingScreen finishHandler={() => setFinishLoading(true)} />
-      )}
-    </Provider>
-  );
+  onNotification = (notification) => {
+    //console.log(notification);
+  }
+
+  render() {
+    const {finishLoading} = this.state;
+    return (
+        <Provider store={store}>
+          {finishLoading ? (
+              <AppRoot />
+          ) : (
+              <LoadingScreen finishHandler={() => this.setState({finishLoading: true})} />
+          )}
+        </Provider>
+    );
+  }
 }
