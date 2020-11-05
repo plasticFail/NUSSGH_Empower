@@ -55,7 +55,8 @@ const FOOD_ICON = require('../../resources/images/Patient-Icons/2x/icon-navy-foo
 const MED_ICON = require('../../resources/images/Patient-Icons/2x/icon-navy-med-2x.png');
 const WEIGHT_ICON = require('../../resources/images/Patient-Icons/2x/icon-navy-weight-2x.png');
 
-const LINECHART_HELP_GIF = require('../../resources/images/Report-Modal/img-report-modal.gif');
+const LINECHART_HELP_GIF = require('../../resources/images/Report-Modal/img-report-modal-01.gif');
+const BARCHART_HELP_GIF = require('../../resources/images/Report-Modal/img-report-modal-02.gif');
 
 const iconProps = {
   width: 30,
@@ -262,7 +263,7 @@ const ReportsScreen = (props) => {
               </View>
               <View key='bgl-help-info' style={{position: 'absolute', alignSelf: 'flex-end'}}>
                 <ReportHelpModal image={<Image source={LINECHART_HELP_GIF} style={{width: '90%', height: 300, alignSelf: 'center'}} />}
-                                 showInfo={showInfo}
+                                 showInfo={showInfo} type='line'
                                  toggleInfoCallback={toggleInfoCallback} />
               </View>
               <LineChart data={fullDataset.bglData}
@@ -290,7 +291,9 @@ const ReportsScreen = (props) => {
                                textPaddingRight={20}/>
                 </View>
                 <View key='food-help-info' style={{position: 'absolute', alignSelf: 'flex-end'}}>
-                  <ReportHelpInfo message={barChartToolTipMessage} showInfo={showInfo} toggleInfoCallback={toggleInfoCallback} />
+                  <ReportHelpModal image={<Image source={BARCHART_HELP_GIF} style={{width: '90%', height: 300, alignSelf: 'center'}} />}
+                                   showInfo={showInfo} type='bar'
+                                   toggleInfoCallback={toggleInfoCallback} />
                 </View>
                 <BarChart data={fullDataset.foodData} filterKey={filterKey}
                           xExtractor={d=>d.date}
@@ -346,7 +349,7 @@ const ReportsScreen = (props) => {
                 </View>
                 <View key='weight-help-info' style={{position: 'absolute', alignSelf: 'flex-end'}}>
                   <ReportHelpModal image={<Image source={LINECHART_HELP_GIF} style={{width: '90%', height: 300, alignSelf: 'center'}} />}
-                                   showInfo={showInfo}
+                                   showInfo={showInfo} type='line'
                                    toggleInfoCallback={toggleInfoCallback} />
                 </View>
                 <LineChart data={fullDataset.weightData} filterKey={filterKey}
@@ -387,7 +390,9 @@ const ReportsScreen = (props) => {
                                textPaddingRight={20}/>
                 </View>
                 <View key='activity-help-info' style={{position: 'absolute', alignSelf: 'flex-end'}}>
-                  <ReportHelpInfo message={barChartToolTipMessage} showInfo={showInfo} toggleInfoCallback={toggleInfoCallback} />
+                  <ReportHelpModal image={<Image source={BARCHART_HELP_GIF} style={{width: '90%', height: 300, alignSelf: 'center'}} />}
+                                   showInfo={showInfo} type='bar'
+                                   toggleInfoCallback={toggleInfoCallback} />
                 </View>
                 <BarChart data={fullDataset.activityData}
                           filterKey={filterKey}
@@ -408,11 +413,6 @@ const ReportsScreen = (props) => {
         }} />
       </Animated.View>
       </View>
-      { showInfo && // listen to taps outside
-      (<TouchableWithoutFeedback style={{position: 'absolute'}} onPress={toggleInfoCallback}>
-        <View style={{width: '100%', height: '100%', position: 'absolute', transform: [{translateY: statusBarHeight + headerHeight}]}}/>
-      </TouchableWithoutFeedback>)
-      }
       <ExportReportsModal visible={openExportModal} setVisible={setOpenExportModal} />
     </ScrollView>
   );

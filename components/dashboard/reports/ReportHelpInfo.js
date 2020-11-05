@@ -29,7 +29,7 @@ function ReportHelpInfo(props) {
 }
 
 function ReportHelpModal(props) {
-    const {showInfo, toggleInfoCallback, image} = props;
+    const {showInfo, toggleInfoCallback, image, type} = props;
 
     return (
         (<TouchableOpacity onPress={toggleInfoCallback}>
@@ -43,14 +43,23 @@ function ReportHelpModal(props) {
                    style={{marginTop: '20%', marginBottom: '20%', borderRadius: 10, overflow: 'hidden', backgroundColor: '#fff'}}
                    onBackButtonPress={toggleInfoCallback}
                    onBackdropPress={toggleInfoCallback}>
-                <View style={[globalStyles.pageContainer]}>
+                <View style={[globalStyles.pageContainer, {backgroundColor: type === 'bar' ? '#ffffff' : '#fbfbfb'}]}>
                     <View style={globalStyles.menuBarContainer} />
                     {image}
-                    <View style={{width: '100%', alignItems: 'center'}}>
-                        <Text style={globalStyles.pageDetails}>Interact with the Graph!</Text>
-                        <Text style={globalStyles.pageSubDetails}>Drag the <View style={styles.cursor} /> left and right</Text>
-                        <Text style={globalStyles.pageSubDetails}>to view the data</Text>
-                    </View>
+                    {   type === 'line' &&
+                        (<View style={{width: '100%', alignItems: 'center'}}>
+                            <Text style={globalStyles.pageDetails}>Interact with the Graph!</Text>
+                            <Text style={globalStyles.pageSubDetails}>Drag the <View style={styles.cursor}/> left and right</Text>
+                            <Text style={globalStyles.pageSubDetails}>to view the data</Text>
+                        </View>)
+                    }
+                    {
+                        type === 'bar' &&
+                        (<View style={{width: '100%', alignItems: 'center', paddingTop: '2%'}}>
+                            <Text style={globalStyles.pageDetails}>Tap on the bars <View style={styles.bars} /></Text>
+                            <Text style={globalStyles.pageSubDetails}>to view the data</Text>
+                        </View>)
+                    }
                     <View style={{flex: 1}} />
                     <TouchableOpacity onPress={toggleInfoCallback}>
                         <View style={[globalStyles.nextButtonStyle, {alignItems: 'center'}]}>
@@ -78,6 +87,12 @@ const styles = StyleSheet.create({
         width: 20,
         height: 20,
         borderRadius: 10
+    },
+    bars: {
+        backgroundColor: Colors.nextBtnColor,
+        width: 8,
+        height: 20,
+        borderRadius: 2
     }
 })
 

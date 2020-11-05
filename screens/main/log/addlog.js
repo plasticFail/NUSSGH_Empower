@@ -351,7 +351,7 @@ class AddLogScreen extends Component {
               <ScrollView
                 style={logStyles.modalContainer}
                 contentContainerStyle={{paddingBottom: '15%'}}>
-                <View style={globalStyles.menuBarContainer}>
+                <View style={[globalStyles.menuBarContainer, {paddingLeft: '4%'}]}>
                   <CrossBtn close={this.closeModal} />
                 </View>
                 <View style={[logStyles.bodyPadding, {flex: 1}]}>
