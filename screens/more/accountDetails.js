@@ -37,6 +37,7 @@ const AccountDetailScreen = (props) => {
   const [name, setName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [user, setUser] = useState({});
+  const [role, setRole] = useState('');
 
   useEffect(() => {
     init().then();
@@ -44,6 +45,7 @@ const AccountDetailScreen = (props) => {
 
   const init = async () => {
     let role = await getRole();
+    setRole(role);
     if (role === role_patient) {
       getPatientProfile().then((response) => {
         if (response != null) {
@@ -139,20 +141,24 @@ const AccountDetailScreen = (props) => {
         />
         */}
 
-        <View style={{flexDirection: 'row', margin: '2%'}}>
-          <Entypo name="link" size={30} color={Colors.lastLogValueColor} />
-          <Text style={styles.sectionHeading}>External Account</Text>
-        </View>
-        <Clickable
-          heading="Setup fitibt"
-          content=""
-          click={true}
-          openModal={() => props.navigation.navigate('FitbitSetup')}
-          closeModal={() => {}}
-          modalVisible={false}
-        />
+        {role === role_patient && (
+          <>
+            <View style={{flexDirection: 'row', margin: '2%'}}>
+              <Entypo name="link" size={30} color={Colors.lastLogValueColor} />
+              <Text style={styles.sectionHeading}>External Account</Text>
+            </View>
+            <Clickable
+              heading="Setup fitibt"
+              content=""
+              click={true}
+              openModal={() => props.navigation.navigate('FitbitSetup')}
+              closeModal={() => {}}
+              modalVisible={false}
+            />
 
-        <View style={{flex: 3}} />
+            <View style={{flex: 3}} />
+          </>
+        )}
       </ScrollView>
     </View>
   );
