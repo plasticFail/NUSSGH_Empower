@@ -141,7 +141,8 @@ const AddViewCaregiverModal = (props) => {
     console.log('authorising');
     console.log(isEmpty(selectedCaregiver));
     if (!isEmpty(chosenCaregiver)) {
-      setShowAuthorise(true);
+      //setShowAuthorise(true);
+      //call api
     }
   };
 
@@ -290,12 +291,13 @@ const AddViewCaregiverModal = (props) => {
           </TouchableOpacity>
         ) : null}
       </View>
-      {/*Show Authorise modal */}
+      {/*Show Authorise modal 
       <AuthoriseModal
         visible={showAuthorise}
         closeModal={() => setShowAuthorise(false)}
         closeParent={() => closeModal()}
       />
+      */}
     </Modal>
   );
 };

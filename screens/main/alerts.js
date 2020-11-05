@@ -10,7 +10,7 @@ import {bg_key} from '../../commonFunctions/logFunctions';
 
 const AlertsScreen = (props) => {
   const {logsNotDone} = props;
-  const {reInit} = props;
+  const {reInit, setBadge} = props;
   const [currHour, setCurrHour] = useState(new Date().getHours());
   const slideRightAnimation = useRef(new Animated.Value(0)).current;
   const navigation = useNavigation();
@@ -22,6 +22,7 @@ const AlertsScreen = (props) => {
       reInit();
       //when enter screen, set notification as read
       storeReadNotif(true).then(() => {});
+      setBadge();
 
       slideRightAnimation.setValue(0);
       Animated.timing(slideRightAnimation, {

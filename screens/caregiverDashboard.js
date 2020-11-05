@@ -38,7 +38,7 @@ import {
   getLogIncompleteText,
   getParticularLogTypeIncompleteText,
 } from '../commonFunctions/notifFunction';
-import {getReadNotif} from '../storage/asyncStorageFunctions';
+import {getReadNotif, storeReadNotif} from '../storage/asyncStorageFunctions';
 
 const Tab = createBottomTabNavigator();
 
@@ -88,6 +88,7 @@ const CaregiverBottomTab = (props) => {
         rsp2.notCompleted,
         weight_key,
       );
+
       let obj = [
         {
           type: bg_key,
@@ -106,16 +107,16 @@ const CaregiverBottomTab = (props) => {
           msg: weight,
         },
       ];
+
       setLogsNotDone(obj);
     }
-    await setBadge();
   };
 
   //notif - set show badge
   const setBadge = async () => {
     let r = await getReadNotif();
-    console.log('--- in dashboard ' + r);
     setShowBadge(r);
+    console.log('setting all notif as read ' + r);
   };
 
   return (
@@ -175,7 +176,11 @@ const CaregiverBottomTab = (props) => {
       <Tab.Screen
         name="Alerts"
         children={() => (
-          <AlertsScreen logsNotDone={logsNotDone} reInit={initUncompleteLog} />
+          <AlertsScreen
+            logsNotDone={logsNotDone}
+            reInit={initUncompleteLog}
+            setBadge={setBadge}
+          />
         )}
         options={{
           title: 'Alert',

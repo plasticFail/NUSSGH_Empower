@@ -1,4 +1,4 @@
-import {afternoonObj, eveningObj} from './common';
+import {afternoonObj, eveningObj, getGreetingFromHour} from './common';
 
 const getLogIncompleteText = (morningNotDone, afternoonNotDone, hour) => {
   let string = '';
@@ -31,12 +31,13 @@ const getParticularLogTypeIncompleteText = (
   let string = type + ' missed in the';
   let morn = morningNotDone.indexOf(type);
   let noon = afternoonNotDone.indexOf(type);
+  let g = getGreetingFromHour(new Date().getHours());
 
-  if (morn > -1 && noon > -1) {
+  if (morn > -1 && noon > -1 && g === eveningObj.name) {
     string += ' in the Morning and Afternoon';
-  } else if (noon > -1) {
+  } else if (noon > -1 && g === eveningObj.name) {
     string += ' in the Afternoon';
-  } else if (morn > -1) {
+  } else if (morn > -1 && g === afternoonObj.name) {
     string += ' in the Morning';
   } else {
     string = '';
