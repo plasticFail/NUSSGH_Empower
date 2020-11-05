@@ -26,6 +26,7 @@ const RedeemPage = (props) => {
     const [currentTabIndex, setCurrentTabIndex] = useState(0);
 
     const [showRedeemConfirm, setShowRedeemConfirm] = useState(false);
+    const [readyRedeemSuccess, setReadyRedeemSuccess] = useState(false);
     const [showRedeemSuccess, setShowRedeemSuccess] = useState(false);
     const [showRedeemFail, setShowRedeemFail] = useState(false);
     const [showUseVoucher, setShowUseVoucher] = useState(false);
@@ -121,7 +122,7 @@ const RedeemPage = (props) => {
         if(responseObj !== null){
             setupData(responseObj);
             setShowRedeemConfirm(false);
-            setShowRedeemSuccess(true);
+            setReadyRedeemSuccess(true);
         }
     }
 
@@ -149,7 +150,13 @@ const RedeemPage = (props) => {
                 isVisible={showRedeemConfirm}
                 transparent={true}
                 animationType='fade'
-                onRequestClose={() => setShowRedeemConfirm(false)}>
+                onRequestClose={() => setShowRedeemConfirm(false)}
+                onModalHide={() => {
+                    if(readyRedeemSuccess) {
+                        setShowRedeemSuccess(true);
+                        setReadyRedeemSuccess(false);
+                    }
+                }}>
                 <RedeemConfirmPage item={currentItem} points={availablePoint} redeemHandler={redeemHandler}/>
             </Modal>
 
