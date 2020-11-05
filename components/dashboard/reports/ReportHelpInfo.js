@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.nextBtnColor,
         width: 8,
         height: 20,
-        borderTopLeftRadiusRadius: 3,
+        borderTopLeftRadius: 3,
         borderTopRightRadius: 3,
     }
 })

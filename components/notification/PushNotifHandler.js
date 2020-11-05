@@ -1,5 +1,5 @@
 import React from 'react';
-import {Linking} from 'react-native';
+import {Platform} from 'react-native';
 import PushNotification from 'react-native-push-notification';
 import PushNotificationIOS from "@react-native-community/push-notification-ios";
 import {notificationPathMapping} from "../../config/AppConfig";
@@ -26,6 +26,13 @@ class NotificationHandler {
 
         if (notification.data) {
             redirect = notification.data.redirect;
+        }
+
+        // I put this in here first because I heard it only works in release / deployed app
+        // so it won't work on debug apps built on using xcode. - Hopefully when this gets pushed to
+        // test flight, we can get a confirmation if it works.
+        if (Platform.OS === 'ios') {
+            redirect = notification.aps?.alert?.userinfo?.redirect;
         }
 
         // TWO CASES TO HANDLE:
@@ -79,37 +86,39 @@ class NotificationHandler {
 
 const handler = new NotificationHandler();
 
-PushNotification.configure({
-    // (optional) Called when Token is generated (iOS and Android)
-    onRegister: handler.onRegister.bind(handler),
+const configure = (handler) => {
+    PushNotification.configure({
+        // (optional) Called when Token is generated (iOS and Android)
+        onRegister: handler.onRegister.bind(handler),
 
-    // (required) Called when a remote or local notification is opened or received
-    onNotification: handler.onNotification.bind(handler),
+        // (required) Called when a remote or local notification is opened or received
+        onNotification: handler.onNotification.bind(handler),
 
-    // (optional) Called when Action is pressed (Android)
-    onAction: handler.onAction.bind(handler),
+        // (optional) Called when Action is pressed (Android)
+        onAction: handler.onAction.bind(handler),
 
-    // (optional) Called when the user fails to register for remote notifications. Typically occurs when APNS is having issues, or the device is a simulator. (iOS)
-    onRegistrationError: handler.onRegistrationError.bind(handler),
+        // (optional) Called when the user fails to register for remote notifications. Typically occurs when APNS is having issues, or the device is a simulator. (iOS)
+        onRegistrationError: handler.onRegistrationError.bind(handler),
 
-    // IOS ONLY (optional): default: all - Permissions to register.
-    permissions: {
-        alert: true,
-        badge: true,
-        sound: true,
-    },
+        // IOS ONLY (optional): default: all - Permissions to register.
+        permissions: {
+            alert: true,
+            badge: true,
+            sound: true,
+        },
 
-    // Should the initial notification be popped automatically
-    // default: true
-    popInitialNotification: true,
+        // Should the initial notification be popped automatically
+        // default: true
+        popInitialNotification: true,
 
-    /**
-     * (optional) default: true
-     * - Specified if permissions (ios) and token (android and ios) will requested or not,
-     * - if not, you must call PushNotificationsHandler.requestPermissions() later
-     */
-    requestPermissions: true,
-});
+        /**
+         * (optional) default: true
+         * - Specified if permissions (ios) and token (android and ios) will requested or not,
+         * - if not, you must call PushNotificationsHandler.requestPermissions() later
+         */
+        requestPermissions: true,
+    });
+}
 
 const testSendNotification = () => {
     PushNotification.localNotificationSchedule({
@@ -129,4 +138,4 @@ const testSendNotification = () => {
 
 //testSendNotification()
 
-export {handler};
+export {handler, configure};

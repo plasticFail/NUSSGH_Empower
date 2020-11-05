@@ -217,7 +217,7 @@ export default class CreateMealLogBlock extends React.Component {
         return (
             <Modal visible={visible} transparent={true}>
                 <View style={[logStyles.modalContainer, styles.root]}>
-                    <View style={logStyles.menuBarContainer}>
+                    <View style={[logStyles.menuBarContainer, {paddingLeft: '4%'}]}>
                         <CrossBtn close={closeModal} />
                         <View style={{flex: 1}} />
                     </View>
