@@ -28,6 +28,7 @@ const LetterDotColor = (currentLetter, letter) => {
 const FillTheCard = (props) => {
 
     const [showSpin, setShowSpin] = useState(false);
+    const [readyFinish, setReadyFinish] = useState(false);
     const [showFinish, setShowFinish] = useState(false);
 
     const [activeGame, setActiveGame] = useState(props.route.params.activeGame);
@@ -92,6 +93,7 @@ const FillTheCard = (props) => {
             setActiveGame(responseObj.game_state);
             setChances(chances - responseObj.chance_used);
             setShowSpin(false);
+            setReadyFinish(true);
         }
     }
 
@@ -151,7 +153,10 @@ const FillTheCard = (props) => {
                 animationType='fade'
                 onRequestClose={() => setShowSpin(false)}
                 onModalHide={() => {
-                    setShowFinish(true);
+                    if(readyFinish) {
+                        setShowFinish(true);
+                        setReadyFinish(false);
+                    }
                 }}
             >
 
