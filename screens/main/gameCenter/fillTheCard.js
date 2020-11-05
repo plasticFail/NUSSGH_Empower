@@ -92,7 +92,6 @@ const FillTheCard = (props) => {
             setActiveGame(responseObj.game_state);
             setChances(chances - responseObj.chance_used);
             setShowSpin(false);
-            setShowFinish(true);
         }
     }
 
@@ -150,7 +149,11 @@ const FillTheCard = (props) => {
                 isVisible={showSpin}
                 transparent={true}
                 animationType='fade'
-                onRequestClose={() => setShowSpin(false)}>
+                onRequestClose={() => setShowSpin(false)}
+                onModalHide={() => {
+                    setShowFinish(true);
+                }}
+            >
 
                 <SpinComponent processSpin={() => processSpin()} closeModal={() => setShowSpin(false)} />
 

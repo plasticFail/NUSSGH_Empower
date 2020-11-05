@@ -11,7 +11,7 @@ const SpinFinish = (props) => {
     const {spinResponse} = props;
 
     return  <View style={[styles.container, GameCenterStyles.card, GameCenterStyles.cardPadding]}>
-        <Text style={[globalStyles.pageDetails]}>You Got a Number {props.number}</Text>
+        <Text style={[globalStyles.pageDetails]}>You Got a Number {spinResponse.hit_number}</Text>
         <View style={styles.overlayContainer}>
             <Image source={require('../../resources/images/gameCenter/img-green-rolled.png')} style={GameCenterStyles.ballImage} />
             <View style={styles.textInBallContainer}>
