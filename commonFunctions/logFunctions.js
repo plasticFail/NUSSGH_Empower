@@ -6,6 +6,7 @@ import {
   medicationAddLogRequest,
   weightAddLogRequest,
   getWeightLogs,
+  getBloodGlucoseLogs,
 } from '../netcalls/requestsLog';
 import {
   storeLastBgLog,
@@ -135,20 +136,28 @@ const isPeriod = (time) => {
   return getGreetingFromHour(hour);
 };
 
-const dateFrom2dayWeightLog = async () => {
-  let arr = getDateRange(7, new Date());
-  let arr1 = await getWeightLogs(
-    arr[0],
-    Moment(new Date()).add(1, 'days').format('YYYY-MM-DD'),
-  );
-  let weightLogs = arr1.logs;
-  if (weightLogs.length === 0) {
+const dateFrom2dayLog = async (type, date) => {
+  let arr = getDateRange(7, date);
+  let arr1 = [];
+  if (type === weight_key) {
+    arr1 = await getWeightLogs(
+      arr[0],
+      Moment(date).add(1, 'days').format('YYYY-MM-DD'),
+    );
+  } else if (type === bg_key) {
+    arr1 = await getBloodGlucoseLogs(
+      arr[0],
+      Moment(date).add(1, 'days').format('YYYY-MM-DD'),
+    );
+  }
+  let logs = arr1.logs;
+  if (logs.length === 0) {
     return noLog;
   } else {
     //weight exist in last 7 days
-    let today = Moment(new Date()).startOf('day');
+    let today = Moment(date).startOf('day');
     let takenDate = Moment(
-      getDateObj(weightLogs[weightLogs.length - 1].record_date),
+      getDateObj(logs[logs.length - 1].record_date),
     ).startOf('day');
     let diff = today.diff(takenDate, 'days');
     if (diff != 0) {
@@ -176,10 +185,10 @@ const checkLogDone = async (period) => {
     medLogs = d.medication.logs;
     weightLogs = d.weight.logs;
 
-    if (inPeriod(bgLogs, period)) {
-      completed.push(bg_key);
-    } else {
+    if ((await dateFrom2dayLog(bg_key, new Date())) === noLog) {
       notCompleted.push(bg_key);
+    } else {
+      completed.push(bg_key);
     }
 
     if (inPeriod(foodLogs, period)) {
@@ -195,7 +204,7 @@ const checkLogDone = async (period) => {
     }
 
     //check last weight
-    if ((await dateFrom2dayWeightLog()) == noLog) {
+    if ((await dateFrom2dayLog(weight_key, new Date())) === noLog) {
       notCompleted.push(weight_key);
     } else {
       completed.push(weight_key);
@@ -451,7 +460,7 @@ export {
   handleSubmitBloodGlucose,
   handleSubmitMedication,
   handleSubmitWeight,
-  dateFrom2dayWeightLog,
+  dateFrom2dayLog,
   renderUncompleteLogText,
 };
 //edit flag

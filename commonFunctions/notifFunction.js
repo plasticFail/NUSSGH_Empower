@@ -49,4 +49,19 @@ const getParticularLogTypeIncompleteText = (
   return string;
 };
 
-export {getLogIncompleteText, getParticularLogTypeIncompleteText};
+//determine if there is existing notification
+const checkNotificationMsg = (arr) => {
+  for (var x of arr) {
+    if (x?.msg?.length > 0) {
+      console.log('there exist log not done in notif');
+      return true;
+    }
+  }
+  return false;
+};
+
+export {
+  getLogIncompleteText,
+  getParticularLogTypeIncompleteText,
+  checkNotificationMsg,
+};

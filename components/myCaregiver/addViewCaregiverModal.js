@@ -160,8 +160,8 @@ const AddViewCaregiverModal = (props) => {
           />
         ) : searchResult.length > 0 ? (
           <View style={{maxHeight: '20%'}}>
-            {searchResult.map((item) => (
-              <View style={[globalStyles.row, styles.container]}>
+            {searchResult.map((item, index) => (
+              <View style={[globalStyles.row, styles.container]} key={index}>
                 {item?.gender === 'female' ? (
                   <USER_FEMALE {...iconStyle} />
                 ) : (

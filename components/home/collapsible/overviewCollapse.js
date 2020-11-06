@@ -19,7 +19,7 @@ import MedBlock from '../../diary/blocks/medBlock';
 import WeightBlock from '../../diary/blocks/weightBlock';
 
 const OverviewCollapse = (props) => {
-  const {bgl, bgLogs, bgPass, bgMiss, dateString} = props;
+  const {bgl, bgLogs, bgPass, bgMiss, dateString, lastBg} = props;
   const {foodLogs, carbs, protein, fats, foodPass, calorie} = props;
   const {medLogs, medResult, weightLogs, lastWeight} = props;
   const {init} = props;
@@ -87,11 +87,7 @@ const OverviewCollapse = (props) => {
       <View
         style={styles.cardTab}
         onLayout={(event) => setMinHeight(event.nativeEvent.layout.height)}>
-        <TouchableOpacity
-          onPress={() => {
-            toggle(open);
-          }}
-          style={styles.headerTab}>
+        <TouchableOpacity style={styles.headerTab}>
           <Text style={[styles.headerText, {flex: 1}]}>Overview</Text>
         </TouchableOpacity>
       </View>
@@ -111,7 +107,7 @@ const OverviewCollapse = (props) => {
                 <View style={styles.content}>
                   <Text style={styles.metricText}>Blood Glucose</Text>
                   <Text style={styles.measuredText}>
-                    {bgl ? bgl + ' mmol/L' : 'Not taken yet'}
+                    {bgl ? bgl + ' mmol/L' : lastBg}
                   </Text>
                 </View>
               </View>
@@ -142,7 +138,7 @@ const OverviewCollapse = (props) => {
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={styles.row}
+              style={[styles.row, {borderBottomWidth: 0}]}
               onPress={() => setShowWeight(true)}>
               <View style={{flexDirection: 'row', marginBottom: '3%'}}>
                 {renderLogIconNavy(weight_key)}
