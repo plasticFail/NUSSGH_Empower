@@ -124,8 +124,12 @@ const HomeScreenCaregiver = (props) => {
 
           <View style={{backgroundColor: 'transparent'}}>
             <>
-              <AssignedPatientCollapse patient={patient} />
+              <AssignedPatientCollapse
+                patient={patient}
+                setPatient={setPatient}
+              />
               <DailyCollapse
+                patient={patient}
                 uncompleteLogs={uncompleteLogs}
                 hour={getGreetingFromHour(currHour)}
               />

@@ -3,6 +3,7 @@ import {View, StyleSheet, TouchableOpacity, Text, Animated} from 'react-native';
 import {Colors} from '../../../styles/colors';
 import moment from 'moment';
 import {getDateObj} from '../../../commonFunctions/diaryFunctions';
+import {isEmpty} from '../../../commonFunctions/common';
 
 const PatientInfo = (props) => {
   const {patient} = props;
@@ -62,17 +63,25 @@ const PatientInfo = (props) => {
           <View style={{marginBottom: '2%'}}>
             <View style={styles.content}>
               <Text style={styles.header}>ID</Text>
-              <Text style={styles.detail}>{patient?._id}</Text>
+              <Text style={styles.detail}>
+                {isEmpty(patient) ? '-' : patient._id}
+              </Text>
             </View>
             <View style={styles.content}>
               <Text style={styles.header}>Date of Birth</Text>
               <Text style={styles.detail}>
-                {moment(getDateObj(patient?.birth_date)).format('DD MMM YYYY')}
+                {isEmpty(patient)
+                  ? '-'
+                  : moment(getDateObj(patient?.birth_date)).format(
+                      'DD MMM YYYY',
+                    )}
               </Text>
             </View>
             <View style={styles.content}>
               <Text style={styles.header}>Weight</Text>
-              <Text style={styles.detail}>{patient?.weight} kg</Text>
+              <Text style={styles.detail}>
+                {isEmpty(patient) ? '-' : patient?.weight} kg
+              </Text>
             </View>
           </View>
         </Animated.View>

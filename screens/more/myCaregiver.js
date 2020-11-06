@@ -34,6 +34,8 @@ const MyCaregiverScreen = (props) => {
     getMyCaregiver().then((rsp) => {
       if (rsp?._id != null) {
         setCaregiver(rsp);
+      } else {
+        setCaregiver({});
       }
     });
   };

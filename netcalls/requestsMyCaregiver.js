@@ -60,4 +60,27 @@ const getMyCaregiver = async () => {
   return null;
 };
 
-export {search4Caregiver, assignCaregiver2Patient, getMyCaregiver};
+const unassignCaregiver = async () => {
+  try {
+    let response = await fetch(getCaregiver, {
+      method: 'DELETE',
+      headers: {
+        Accept: 'application/json',
+        Authorization: 'Bearer ' + (await getToken()),
+        'Content-type': 'application/json',
+      },
+    });
+    let status = await response.status;
+    return status;
+  } catch (error) {
+    console.error(error);
+  }
+  return null;
+};
+
+export {
+  search4Caregiver,
+  assignCaregiver2Patient,
+  getMyCaregiver,
+  unassignCaregiver,
+};

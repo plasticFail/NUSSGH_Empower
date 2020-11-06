@@ -32,10 +32,12 @@ import AuthoriseModal from './authoriseModal';
 import {
   search4Caregiver,
   assignCaregiver2Patient,
+  unassignCaregiver,
 } from '../../netcalls/requestsMyCaregiver';
 import DeleteBin from '../deleteBin';
 import diaryStyles from '../../styles/diaryStyles';
 import logStyles from '../../styles/logStyles';
+import DeleteModal from '../deleteModal';
 
 const iconStyle = {
   width: 40,
@@ -51,8 +53,7 @@ const AddViewCaregiverModal = (props) => {
   const [loading, setLoading] = useState(false);
   const [showAuthorise, setShowAuthorise] = useState(false);
 
-  //down animation
-  const [showDown, setShowDown] = useState(true);
+  const [showDelete, setShowDelete] = useState(false);
 
   const [chosenCaregiver, setChosenCaregiver] = useState({});
   const [accessName, setAccessName] = useState(false);
@@ -121,7 +122,23 @@ const AddViewCaregiverModal = (props) => {
     }
   };
 
-  const deleteCaregiver = () => {};
+  const deleteCaregiver = () => {
+    unassignCaregiver().then((rsp) => {
+      if (rsp === 200) {
+        Alert.alert('Caregiver Unassigned Successfulyl!', '', [
+          {
+            text: 'Got It',
+            onPress: () => {
+              setShowDelete(false);
+              closeModal();
+            },
+          },
+        ]);
+      } else {
+        Alert.alert('Unexpected Error ', '', [{text: 'Try Again'}]);
+      }
+    });
+  };
 
   return (
     <Modal
@@ -242,7 +259,10 @@ const AddViewCaregiverModal = (props) => {
           </TouchableOpacity>
         ) : (
           <View style={{flexDirection: 'row'}}>
-            <DeleteBin style={diaryStyles.binIcon} method={deleteCaregiver} />
+            <DeleteBin
+              style={diaryStyles.binIcon}
+              method={() => setShowDelete(true)}
+            />
 
             <TouchableOpacity
               style={logStyles.enableEditButton}
@@ -260,6 +280,12 @@ const AddViewCaregiverModal = (props) => {
         closeParent={() => closeModal()}
       />
       */}
+      <DeleteModal
+        visible={showDelete}
+        item={caregiver.first_name}
+        confirmMethod={deleteCaregiver}
+        close={() => setShowDelete(false)}
+      />
     </Modal>
   );
 };
