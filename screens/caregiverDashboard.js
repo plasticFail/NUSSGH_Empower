@@ -34,7 +34,10 @@ import {
   med_key,
   weight_key,
 } from '../commonFunctions/logFunctions';
-import {getParticularLogTypeIncompleteText} from '../commonFunctions/notifFunction';
+import {
+  getParticularLogTypeIncompleteText,
+  checkNotificationMsg,
+} from '../commonFunctions/notifFunction';
 import {
   getReadNotifDate,
   storeReadNotifDate,
@@ -57,19 +60,22 @@ const CaregiverBottomTab = (props) => {
   const [showBadge, setShowBadge] = useState(false);
 
   useEffect(() => {
-    initUncompleteLog().then(() => {});
     async function getRead() {
+      await initUncompleteLog();
       await setBadge();
     }
     getRead();
   }, []);
+
+  useEffect(() => {
+    setBadge().then(() => {});
+  }, [logsNotDone]);
 
   //notif - log not done
   const initUncompleteLog = async () => {
     if (getGreetingFromHour(currHour) != morningObj.name) {
       let rsp1 = await checkLogDone(morningObj.name);
       let rsp2 = await checkLogDone(afternoonObj.name);
-      console.log('re init');
       let bg = getParticularLogTypeIncompleteText(
         rsp1.notCompleted,
         rsp2.notCompleted,
@@ -109,9 +115,8 @@ const CaregiverBottomTab = (props) => {
           msg: weight,
         },
       ];
-
+      console.log(obj);
       setLogsNotDone(obj);
-      await setBadge();
     }
   };
 
@@ -127,28 +132,29 @@ const CaregiverBottomTab = (props) => {
       setShowBadge(false);
       return;
     }
-    //check if date is same as today,
-    if (period === null && date === null) {
-      await storeReadNotifDate({period: currentperiod, date: currDate});
-    } else if (moment(date).isSame(currDate)) {
+    if (moment(date).isSame(currDate)) {
       //if same date, but period !=currperiod , read false
       console.log(
         'read notification on same date ' + date + ' -checking period',
       );
       if (period != currentperiod) {
-        console.log(
-          'read notification on ' +
-            period +
-            ', not ' +
-            currentperiod +
-            '-set showbadge to true',
-        );
+        console.log('past period read notif !=current period, set badge show');
+        //set badge only when logs not done msg is empty
+        if (checkNotificationMsg(logsNotDone)) {
+          setShowBadge(true);
+          return;
+        }
+      } else {
+        console.log('viewing notification now, turn badge off');
+        setShowBadge(false);
+      }
+    } else {
+      console.log('Day view notification diff than stored');
+      if (checkNotificationMsg(logsNotDone)) {
         setShowBadge(true);
       } else {
         setShowBadge(false);
       }
-    } else {
-      setShowBadge(true);
     }
   };
 
