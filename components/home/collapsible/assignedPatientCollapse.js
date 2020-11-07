@@ -1,5 +1,12 @@
 import React, {useEffect, useState, useRef} from 'react';
-import {View, StyleSheet, TouchableOpacity, Text, Animated} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+  Animated,
+  Alert,
+} from 'react-native';
 import {Colors} from '../../../styles/colors';
 //third party lib
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
@@ -8,7 +15,8 @@ import USER_F from '../../../resources/images/Patient-Icons/SVG/user-female.svg'
 import USER_M from '../../../resources/images/Patient-Icons/SVG/user-male.svg';
 
 import OptionsList from '../../optionList';
-import {bin, text} from '../../../commonFunctions/common';
+import {bin, text, isEmpty} from '../../../commonFunctions/common';
+import {unassignCaregiver} from '../../../netcalls/requestsMyCaregiver';
 
 const optionList = [
   {
@@ -19,13 +27,14 @@ const optionList = [
 ];
 
 const iconStyle = {
-  height: 70,
-  width: 70,
-  marginStart: '3%',
+  height: 50,
+  width: 50,
+  margin: '3%',
+  marginStart: '5%',
 };
 
 const AssignedPatientCollapse = (props) => {
-  const {patient} = props;
+  const {patient, setPatient} = props;
   const [open, setOpen] = useState(true);
   const [minHeight, setMinHeight] = useState(0);
   const [maxHeight, setMaxHeight] = useState(0);
@@ -34,7 +43,19 @@ const AssignedPatientCollapse = (props) => {
 
   const deletePatient = () => {
     console.log('Deleting Patient');
-    setOpenOption(false);
+    unassignCaregiver().then((rsp) => {
+      if (rsp === 200) {
+        Alert.alert('Removed Patient Successfully', '', [
+          {
+            text: 'Got It',
+            onPress: () => {
+              setPatient({});
+              setOpenOption(false);
+            },
+          },
+        ]);
+      }
+    });
   };
 
   const toggle = (visible) => {
@@ -77,7 +98,7 @@ const AssignedPatientCollapse = (props) => {
         </TouchableOpacity>
       </View>
       {/*Content */}
-      {open ? (
+      {open && !isEmpty(patient) ? (
         <Animated.View
           style={{
             maxHeight: heightInterpolation,
@@ -89,7 +110,7 @@ const AssignedPatientCollapse = (props) => {
             ) : (
               <USER_M {...iconStyle} />
             )}
-            <Text style={styles.patientName}>{patient?.name}</Text>
+            <Text style={styles.patientName}>{patient?.first_name}</Text>
             <TouchableOpacity
               style={styles.optionIcon}
               onPress={() => setOpenOption(true)}>

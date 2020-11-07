@@ -11,6 +11,7 @@ import {
   getMedDonePeriods,
   renderGreetingText,
   checkFoodLogQuantity,
+  getDateObj,
 } from '../../commonFunctions/diaryFunctions';
 import {
   bg_key,
@@ -20,6 +21,7 @@ import {
   activity_key,
   renderLogIcon,
   renderLogIconNavy,
+  dateFrom2dayLog,
 } from '../../commonFunctions/logFunctions';
 //styles
 import logStyles from '../../styles/logStyles';
@@ -61,6 +63,9 @@ class TargetBlock extends Component {
       weightMiss: false,
       medMiss: false,
       activityMiss: false,
+
+      lastBg: '',
+      lastWeight: '',
 
       avgBg: 0,
       bgPass: false,
@@ -191,14 +196,20 @@ class TargetBlock extends Component {
       }
     } else {
       this.setState({bgMiss: true});
+      dateFrom2dayLog(bg_key, this.props.date).then((rsp) => {
+        this.setState({lastBg: rsp});
+      });
     }
   };
 
-  getWeightResult = () => {
+  getWeightResult = async () => {
     if (this.state.weightLogs.length != 0) {
       this.setState({weightMiss: false});
     } else {
       this.setState({weightMiss: true});
+      dateFrom2dayLog(weight_key, this.props.date).then((rsp) => {
+        this.setState({lastWeight: rsp});
+      });
     }
   };
 
@@ -309,6 +320,9 @@ class TargetBlock extends Component {
       medMiss,
       activityMiss,
 
+      lastBg,
+      lastWeight,
+
       bgPass,
       foodPass,
       activityPass,
@@ -346,11 +360,12 @@ class TargetBlock extends Component {
             {renderLogIconNavy(item)}
             <View style={[styles.buttonContentContainer, {flex: 1}]}>
               <Text style={[logStyles.fieldName, {fontSize: 15}]}>{item}s</Text>
-              {item === bg_key && renderContent(bg_key, bgMiss, bgPass, avgBg)}
+              {item === bg_key &&
+                renderContent(bg_key, bgMiss, bgPass, avgBg, lastBg)}
               {item === food_key && renderContent(food_key, foodMiss, foodPass)}
               {item === med_key &&
                 renderMedContent(medMiss, medCompleted, medLogs)}
-              {item === weight_key && renderContent2(weightMiss)}
+              {item === weight_key && renderContent2(weightMiss, lastWeight)}
               {item === activity_key &&
                 renderContent(
                   activity_key,
@@ -471,11 +486,11 @@ function renderMedContent(medMiss, medCompleted, medLogs) {
 }
 
 //for logs with criteria : miss/completed
-function renderContent2(miss) {
+function renderContent2(miss, lastWeight) {
   if (miss) {
     return (
       <View style={{flexDirection: 'row'}}>
-        <Text style={styles.buttonDetail}>Missed </Text>
+        <Text style={styles.buttonDetail}>{lastWeight} </Text>
         <Ionicon
           name="alert-circle-outline"
           style={diaryStyles.failIcon}
@@ -494,18 +509,31 @@ function renderContent2(miss) {
 }
 
 //for logs with criteria besides miss - render result with diff icons
-function renderContent(type, miss, pass, value) {
+function renderContent(type, miss, pass, value, lastBg) {
   if (miss) {
-    return (
-      <View style={{flexDirection: 'row'}}>
-        <Text style={styles.buttonDetail}>Missed </Text>
-        <Ionicon
-          name="alert-circle-outline"
-          style={diaryStyles.failIcon}
-          size={25}
-        />
-      </View>
-    );
+    if (type != bg_key) {
+      return (
+        <View style={{flexDirection: 'row'}}>
+          <Text style={styles.buttonDetail}>Missed </Text>
+          <Ionicon
+            name="alert-circle-outline"
+            style={diaryStyles.failIcon}
+            size={25}
+          />
+        </View>
+      );
+    } else {
+      return (
+        <View style={{flexDirection: 'row'}}>
+          <Text style={styles.buttonDetail}>{lastBg} </Text>
+          <Ionicon
+            name="alert-circle-outline"
+            style={diaryStyles.failIcon}
+            size={25}
+          />
+        </View>
+      );
+    }
   } else if (pass) {
     return (
       <View style={{flexDirection: 'row'}}>

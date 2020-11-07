@@ -26,6 +26,8 @@ import {
   carbs,
   fats,
   protein,
+  isEmpty,
+  role_patient,
 } from '../../../commonFunctions/common';
 //third party library
 import Modal from 'react-native-modal';
@@ -43,6 +45,11 @@ import globalStyles from '../../../styles/globalStyles';
 import {Colors} from '../../../styles/colors';
 import diaryStyles from '../../../styles/diaryStyles';
 import {horizontalMargins} from '../../../styles/variables';
+import {
+  getPatientProfile,
+  getCaregiverProfile,
+} from '../../../netcalls/requestsAccount';
+import {getRole} from '../../../storage/asyncStorageFunctions';
 //function
 
 const FoodBlock = (props) => {
@@ -219,7 +226,23 @@ function renderFoodItems(logs, editLog) {
 }
 
 function renderProgressBars(carbsAmt, fatsAmt, proteinAmt) {
-  return (
+  const [patient, setPatient] = useState({});
+
+  useEffect(() => {
+    async function getProfile() {
+      let role = await getRole();
+      if (role === role_patient) {
+        let p = await getPatientProfile();
+        setPatient(p?.patient);
+      } else {
+        let c = await getCaregiverProfile();
+        setPatient(c?.patient);
+      }
+    }
+    getProfile();
+  }, []);
+
+  return !isEmpty(patient) ? (
     <View
       style={{
         flexDirection: 'row',
@@ -232,21 +255,24 @@ function renderProgressBars(carbsAmt, fatsAmt, proteinAmt) {
         value={carbsAmt}
         type={carbs}
         targetUnit={'g'}
+        patient={patient}
       />
       <ProgressContent
         header={'Fat'}
         value={fatsAmt}
         type={fats}
         targetUnit={'g'}
+        patient={patient}
       />
       <ProgressContent
         header={'Protein'}
         value={proteinAmt}
         type={protein}
         targetUnit={'g'}
+        patient={patient}
       />
     </View>
-  );
+  ) : null;
 }
 
 const styles = StyleSheet.create({

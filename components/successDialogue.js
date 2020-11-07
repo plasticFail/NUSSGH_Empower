@@ -32,7 +32,8 @@ import {
   getGoalTypeFromLog,
 } from '../commonFunctions/goalFunctions';
 import ProgressBar from './progressbar';
-import {isEmpty} from '../commonFunctions/common';
+import {isEmpty, role_patient} from '../commonFunctions/common';
+import {getRole} from '../storage/asyncStorageFunctions';
 
 const iconStyle = {
   width: 50,
@@ -49,11 +50,8 @@ function SuccessDialogue(props) {
   const navigation = useNavigation();
   const [chance, setChance] = useState(0);
   const [goalObj, setGoalObj] = useState([]);
+  const [role, setRole] = useState('');
   const springAnim = useRef(new Animated.Value(0)).current;
-
-  console.log('in success dialogue');
-  console.log(isEmpty(goalObj));
-  console.log(goalObj);
 
   useEffect(() => {
     setGoalObj({});
@@ -73,6 +71,10 @@ function SuccessDialogue(props) {
       }
       //set goal
       setGoal(type).then(() => {});
+
+      getRole().then((rsp) => {
+        setRole(rsp);
+      });
 
       setTimeout(() => {
         Animated.spring(springAnim, {
@@ -99,10 +101,12 @@ function SuccessDialogue(props) {
 
   const goGoals = () => {
     closeSuccess();
-    navigation.navigate('Goals', {
-      type: getGoalTypeFromLog(type),
-      item: goalObj,
-    });
+    if (role === role_patient) {
+      navigation.navigate('Goals', {
+        type: getGoalTypeFromLog(type),
+        item: goalObj,
+      });
+    }
   };
 
   return (
@@ -135,65 +139,77 @@ function SuccessDialogue(props) {
           onPress={() => closeSuccess()}>
           <Text style={styles.buttonText}>Continue</Text>
         </TouchableOpacity>
-        <View style={[styles.border, {marginTop: '7%'}]} />
-        {/*Game Center */}
-        <TouchableOpacity
-          style={{flexDirection: 'row', marginStart: '6%', marginTop: '3%'}}
-          onPress={() => goGameCenter()}>
-          <GAME {...iconStyle} />
-          <View style={{marginStart: '4%', marginTop: '2%'}}>
-            <Text
-              style={[
-                globalStyles.pageDetails,
-                {color: Colors.lastLogValueColor},
-              ]}>
-              Game Center
-            </Text>
-            <Text style={globalStyles.pageDetails}>+ {chance} Chance(s)</Text>
-          </View>
-          <View style={{flex: 1}} />
-          <Icon name="chevron-right" size={30} style={styles.chevron} />
-        </TouchableOpacity>
-        <View style={[styles.border, {marginTop: '7%'}]} />
 
-        {/*Goals */}
-        <TouchableOpacity
-          style={{flexDirection: 'row', marginStart: '6%', marginTop: '3%'}}
-          onPress={() => goGoals()}>
-          <GOAL {...iconStyle} />
-          <View style={{marginStart: '4%', marginTop: '2%', flex: 3}}>
-            <Text
-              style={[
-                globalStyles.pageDetails,
-                {color: Colors.lastLogValueColor},
-              ]}>
-              Goal
-            </Text>
-            {!isEmpty(goalObj) && goalObj?.set_by != defaultv ? (
-              <>
-                <ProgressBar
-                  progress={progress}
-                  useIndicatorLevel={false}
-                  reverse={true}
-                  progressBarColor={'#aad326'}
-                  containerStyle={{
-                    borderRadius: 9.5,
-                    height: 10,
-                    marginStart: '5%',
-                  }}
-                />
-                <Text style={[globalStyles.pageDetails]}>{goalObj?.name}</Text>
-              </>
-            ) : (
-              <Text
-                style={[globalStyles.pageDetails, {flex: 1, marginBottom: 0}]}>
-                Add a goal now
-              </Text>
-            )}
-          </View>
-          <View style={{flex: 1}} />
-          <Icon name="chevron-right" size={30} style={styles.chevron} />
-        </TouchableOpacity>
+        {role === role_patient && (
+          <>
+            <View style={[styles.border, {marginTop: '7%'}]} />
+            {/*Game Center */}
+            <TouchableOpacity
+              style={{flexDirection: 'row', marginStart: '6%', marginTop: '3%'}}
+              onPress={() => goGameCenter()}>
+              <GAME {...iconStyle} />
+              <View style={{marginStart: '4%', marginTop: '2%'}}>
+                <Text
+                  style={[
+                    globalStyles.pageDetails,
+                    {color: Colors.lastLogValueColor},
+                  ]}>
+                  Game Center
+                </Text>
+                <Text style={globalStyles.pageDetails}>
+                  + {chance} Chance(s)
+                </Text>
+              </View>
+              <View style={{flex: 1}} />
+              <Icon name="chevron-right" size={30} style={styles.chevron} />
+            </TouchableOpacity>
+            <View style={[styles.border, {marginTop: '7%'}]} />
+
+            {/*Goals */}
+            <TouchableOpacity
+              style={{flexDirection: 'row', marginStart: '6%', marginTop: '3%'}}
+              onPress={() => goGoals()}>
+              <GOAL {...iconStyle} />
+              <View style={{marginStart: '4%', marginTop: '2%', flex: 3}}>
+                <Text
+                  style={[
+                    globalStyles.pageDetails,
+                    {color: Colors.lastLogValueColor},
+                  ]}>
+                  Goal
+                </Text>
+                {!isEmpty(goalObj) && goalObj?.set_by != defaultv ? (
+                  <>
+                    <ProgressBar
+                      progress={progress}
+                      useIndicatorLevel={false}
+                      reverse={true}
+                      progressBarColor={'#aad326'}
+                      containerStyle={{
+                        borderRadius: 9.5,
+                        height: 10,
+                        marginStart: '5%',
+                      }}
+                    />
+                    <Text style={[globalStyles.pageDetails]}>
+                      {goalObj?.name}
+                    </Text>
+                  </>
+                ) : (
+                  <Text
+                    style={[
+                      globalStyles.pageDetails,
+                      {flex: 1, marginBottom: 0},
+                    ]}>
+                    Add a goal now
+                  </Text>
+                )}
+              </View>
+              <View style={{flex: 1}} />
+              <Icon name="chevron-right" size={30} style={styles.chevron} />
+            </TouchableOpacity>
+          </>
+        )}
       </View>
     </Modal>
   );
@@ -208,6 +224,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     width: '100%',
     paddingBottom: '10%',
+    paddingTop: '2%',
   },
   button: {
     backgroundColor: '#EEF3BD',

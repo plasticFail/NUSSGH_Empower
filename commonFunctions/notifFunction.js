@@ -1,4 +1,4 @@
-import {afternoonObj, eveningObj} from './common';
+import {afternoonObj, eveningObj, getGreetingFromHour} from './common';
 
 const getLogIncompleteText = (morningNotDone, afternoonNotDone, hour) => {
   let string = '';
@@ -23,4 +23,45 @@ const getLogIncompleteText = (morningNotDone, afternoonNotDone, hour) => {
   return string;
 };
 
-export default getLogIncompleteText;
+const getParticularLogTypeIncompleteText = (
+  morningNotDone,
+  afternoonNotDone,
+  type,
+) => {
+  let string = type + ' missed in the';
+  let morn = morningNotDone.indexOf(type);
+  let noon = afternoonNotDone.indexOf(type);
+  let g = getGreetingFromHour(new Date().getHours());
+
+  if (morn > -1 && noon > -1 && g === eveningObj.name) {
+    string += ' in the Morning and Afternoon';
+  } else if (noon > -1 && g === eveningObj.name) {
+    string += ' in the Afternoon';
+  } else if (
+    (morn > -1 && g === afternoonObj.name) ||
+    (morn > -1 && g === eveningObj.name)
+  ) {
+    string += ' in the Morning';
+  } else {
+    string = '';
+  }
+
+  return string;
+};
+
+//determine if there is existing notification
+const checkNotificationMsg = (arr) => {
+  for (var x of arr) {
+    if (x?.msg?.length > 0) {
+      console.log('there exist log not done in notif');
+      return true;
+    }
+  }
+  return false;
+};
+
+export {
+  getLogIncompleteText,
+  getParticularLogTypeIncompleteText,
+  checkNotificationMsg,
+};

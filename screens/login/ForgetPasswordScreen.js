@@ -15,11 +15,15 @@ import {sendOTPRequest} from '../../netcalls/requestsPasswordReset';
 import globalStyles from '../../styles/globalStyles';
 import LeftArrowBtn from '../../components/logs/leftArrowBtn';
 import InputOTPScreen from './inputOTPScreen';
+import {role_patient, role_caregiver} from '../../commonFunctions/common';
+
+const options = [role_patient, role_caregiver];
 
 function ForgetPasswordScreen({navigation}) {
   Icon.loadFont();
   const [phoneNumber, setPhoneNumber] = useState('');
   const [showOTP, setShowOtp] = useState(false);
+  const [selection, setSelection] = useState(role_patient);
 
   const checkPhoneNo = () => {
     if (phoneNumber) {
@@ -44,7 +48,7 @@ function ForgetPasswordScreen({navigation}) {
   };
 
   const handleButtonPress = () => {
-    sendOTPRequest(phoneNumber).then((response) => {
+    sendOTPRequest(phoneNumber, selection).then((response) => {
       if (response.message === 'OTP sent.') {
         Alert.alert(
           'Success',
@@ -84,6 +88,26 @@ function ForgetPasswordScreen({navigation}) {
         Password (OTP).
       </Text>
 
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-around',
+          marginTop: '4%',
+        }}>
+        {options.map((item) => (
+          <TouchableOpacity key={item} onPress={() => setSelection(item)}>
+            {selection === item ? (
+              <>
+                <Text style={styles.type}>{item}</Text>
+                <View style={styles.border} />
+              </>
+            ) : (
+              <Text style={styles.type}>{item}</Text>
+            )}
+          </TouchableOpacity>
+        ))}
+      </View>
+
       <TextInput
         style={globalStyles.editInputBox}
         placeholder="Phone Number"
@@ -91,7 +115,6 @@ function ForgetPasswordScreen({navigation}) {
         onChangeText={(value) => {
           var cleanNumber = value.replace(/[^0-9]/g, '');
           setPhoneNumber(cleanNumber);
-          console.log('Cleaning phone number:' + phoneNumber);
         }}
         keyboardType="number-pad"
         returnKeyType="done"
@@ -120,9 +143,21 @@ function ForgetPasswordScreen({navigation}) {
         close={() => setShowOtp(false)}
         phoneNumber={phoneNumber}
         parent={'forgetPassword'}
+        selection={selection}
       />
     </View>
   );
 }
 
 export default ForgetPasswordScreen;
+
+const styles = StyleSheet.create({
+  type: {
+    fontFamily: 'SFProDisplay-Regular',
+    fontSize: 18,
+  },
+  border: {
+    borderBottomWidth: 3,
+    borderBottomColor: '#aad326',
+  },
+});

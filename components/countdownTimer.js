@@ -3,6 +3,9 @@ import {View, Text, StyleSheet} from 'react-native';
 
 const CountdownTimer = (props) => {
   const [counter, setCounter] = useState(props.countdownTime);
+  const [text, setText] = useState(
+    props?.text === undefined ? ' Input new OTP within' : props.text,
+  );
 
   //run set timeout function whenever component state is updated, counter value change
   useEffect(() => {
@@ -13,8 +16,10 @@ const CountdownTimer = (props) => {
   }, [counter]);
 
   return (
-    <View style={styles.timerContainer}>
-      <Text style={{fontSize: 17}}>Input new OTP within : {counter} s</Text>
+    <View style={{...styles.timerContainer, ...props.style}}>
+      <Text style={{fontSize: 17}}>
+        {text} {counter} s
+      </Text>
     </View>
   );
 };

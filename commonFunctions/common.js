@@ -1,6 +1,10 @@
 import Moment from 'moment';
 import {getDateRange, getDateObj} from './diaryFunctions';
-import {getPatientProfile} from '../netcalls/requestsAccount';
+import {
+  getPatientProfile,
+  getCaregiverProfile,
+} from '../netcalls/requestsAccount';
+import {getRole} from '../storage/asyncStorageFunctions';
 
 const morning_key = 'Morning';
 const afternoon_key = 'Afternoon';
@@ -36,10 +40,11 @@ const maxFat_M_60above = 75;
 const maxCarb_M_60under = 377;
 const maxCarb_M_60abv = 315;
 const maxCal_M_60under = 2590;
-const maxCal_M_60above = 2234;
+const maxCal_M_60above = 2235;
 
 //notification type
 const notif_log = 'log';
+const notif_addlog = 'addlog';
 
 const role_patient = 'Patient';
 const role_caregiver = 'Caregiver';
@@ -134,10 +139,19 @@ const wholeNumber = 'number-pad';
 //for rendering % for nutrient type based on gender and age.
 const renderNutrientPercent = async (amount, type) => {
   //check gender, set the max
-  let response = await getPatientProfile();
-  let patient = response?.patient;
-  let gender = patient?.gender;
-  let age = getAge(patient.birth_date);
+  let role = await getRole();
+  let response = {};
+  let user = {};
+  let gender = {};
+  let age = {};
+  if (role === role_patient) {
+    response = await getPatientProfile();
+  } else {
+    response = await getCaregiverProfile();
+  }
+  user = response?.patient;
+  gender = user?.gender;
+  age = getAge(user.birth_date);
 
   let max = getMax4Type(age, type, gender);
   return Math.floor((amount / max) * 100);
@@ -161,7 +175,7 @@ const getMax4Type = (age, type, gender) => {
       }
     } else {
       if (type === fats) {
-        return maxFat_M_60under;
+        return maxFat_F_60under;
       }
       if (type === carbs) {
         return maxCarb_F_60under;
@@ -248,6 +262,7 @@ export {
   getMax4Type,
   getAge,
   notif_log,
+  notif_addlog,
   role_caregiver,
   role_patient,
   bin,

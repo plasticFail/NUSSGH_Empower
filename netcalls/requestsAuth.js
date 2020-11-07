@@ -1,8 +1,8 @@
-import {patientLogin, isTokenValid, caregiverLogin} from './urls';
+import {isTokenValid, caregiverLogin, login} from './urls';
 
-const patientLoginRequest = async (username, password) => {
+const loginRequest = async (username, password) => {
   try {
-    let response = await fetch(patientLogin, {
+    let response = await fetch(login, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -16,7 +16,7 @@ const patientLoginRequest = async (username, password) => {
     });
     let responseJson = await response.json();
     console.log(responseJson);
-    return responseJson.token;
+    return responseJson;
   } catch (error) {
     console.error(error);
   }
@@ -44,27 +44,4 @@ const isTokenValidRequest = async (token) => {
   return false;
 };
 
-const caregiverLoginRequest = async (username, password) => {
-  try {
-    let response = await fetch(caregiverLogin, {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-type': 'application/json',
-      },
-      body: JSON.stringify({
-        remember: true,
-        username: username,
-        password: password,
-      }),
-    });
-    let responseJson = await response.json();
-    console.log(responseJson);
-    return responseJson.token;
-  } catch (error) {
-    console.error(error);
-  }
-  return null;
-};
-
-export {patientLoginRequest, isTokenValidRequest, caregiverLoginRequest};
+export {loginRequest, isTokenValidRequest};

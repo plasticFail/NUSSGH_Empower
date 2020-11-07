@@ -8,8 +8,6 @@ import {
   ScrollView,
   Animated,
 } from 'react-native';
-//third party lib
-import Moment from 'moment';
 //component
 import MenuBtn from '../../components/menuBtn';
 import HeaderCard from '../../components/home/headerCard';
@@ -18,31 +16,36 @@ import globalStyles from '../../styles/globalStyles';
 import {Colors} from '../../styles/colors';
 //function
 import {checkLogDone} from '../../commonFunctions/logFunctions';
-import {getGreetingFromHour, role_patient} from '../../commonFunctions/common';
+import {getGreetingFromHour} from '../../commonFunctions/common';
 import DailyCollapse from '../../components/home/collapsible/dailyCollapse';
-import {getPatientProfile} from '../../netcalls/requestsAccount';
-import {getRole} from '../../storage/asyncStorageFunctions';
+import {getCaregiverProfile} from '../../netcalls/requestsAccount';
 import AssignedPatientCollapse from '../../components/home/collapsible/assignedPatientCollapse';
 import PatientType from '../../components/home/collapsible/patientTypeCollapse';
 import PatientInfo from '../../components/home/collapsible/patientInfo';
-
-const patientSample = {
-  name: 'Johnathan',
-  gender: 'f',
-  id: '-',
-  dob: '1 Feb 1980',
-  weight: 60,
-};
+import AuthorisationCaregiver from '../../components/home/authorisationCaregiver';
+import {
+  getAuthorisedStatusCaregiver,
+  storeAuthorisedStatusCaregiver,
+} from '../../storage/asyncStorageFunctions';
 
 const HomeScreenCaregiver = (props) => {
-  const [role, setRole] = useState('');
-  const [patient, setPatient] = useState(patientSample);
+  const [caregiver, setCaregiver] = useState({});
+  const [patient, setPatient] = useState({});
   const [currHour, setCurrHour] = useState(new Date().getHours());
   const [uncompleteLogs, setUncompleteLogs] = useState([]);
-  const [firstName, setFirstName] = useState('Audrey');
+
+  const [authorise, setAuthorise] = useState(false);
 
   //animation
   const slideRightAnimation = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    //determine whether authorised
+    getAuthorisedStatusCaregiver().then((rsp) => {
+      setAuthorise(rsp);
+    });
+  }, []);
+
   useEffect(() => {
     //slide right when enter screen
     props.navigation.addListener('focus', () => {
@@ -64,10 +67,7 @@ const HomeScreenCaregiver = (props) => {
   //init
   useEffect(() => {
     props.navigation.addListener('focus', () => {
-      //set role
-      getRole().then((data) => {
-        setRole(data);
-      });
+      initCaregiver().then(() => {});
 
       checkLogDone(getGreetingFromHour(currHour))
         .then((response) => {
@@ -78,6 +78,24 @@ const HomeScreenCaregiver = (props) => {
         .catch((err) => console.log(err));
     });
   }, []);
+
+  const initCaregiver = async () => {
+    let data = await getCaregiverProfile();
+    setCaregiver(data?.caregiver);
+
+    if (data?.patient === null) {
+      await storeAuthorisedStatusCaregiver(false);
+      setAuthorise(false);
+    } else {
+      setPatient(data?.patient);
+      await storeAuthorisedStatusCaregiver(true);
+      setAuthorise(true);
+    }
+  };
+
+  const toDoAfterOTP = () => {
+    setAuthorise(true);
+  };
 
   return (
     <View style={globalStyles.pageContainer}>
@@ -100,18 +118,24 @@ const HomeScreenCaregiver = (props) => {
           }}>
           {/* Greetings and log to do*/}
           <HeaderCard
-            username={firstName}
+            username={caregiver?.first_name}
             hour={getGreetingFromHour(currHour)}
           />
 
           <View style={{backgroundColor: 'transparent'}}>
-            <AssignedPatientCollapse patient={patient} />
-            <DailyCollapse
-              uncompleteLogs={uncompleteLogs}
-              hour={getGreetingFromHour(currHour)}
-            />
-            <PatientType patient={patient} />
-            <PatientInfo patient={patient} />
+            <>
+              <AssignedPatientCollapse
+                patient={patient}
+                setPatient={setPatient}
+              />
+              <DailyCollapse
+                patient={patient}
+                uncompleteLogs={uncompleteLogs}
+                hour={getGreetingFromHour(currHour)}
+              />
+              <PatientType patient={patient} />
+              <PatientInfo patient={patient} />
+            </>
           </View>
 
           {/* Diary overview of weight, blood glucose, food, medication and physical activity */}

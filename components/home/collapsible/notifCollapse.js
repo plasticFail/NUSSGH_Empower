@@ -10,7 +10,7 @@ import {
   afternoonObj,
   eveningObj,
 } from '../../../commonFunctions/common';
-import getLogIncompleteText from '../../../commonFunctions/notifFunction';
+import {getLogIncompleteText} from '../../../commonFunctions/notifFunction';
 
 const NotifCollapse = (props) => {
   const {hour, morningNotDone, afternoonNotDone} = props;
@@ -61,6 +61,12 @@ const NotifCollapse = (props) => {
   useEffect(() => {
     setLogNotDone();
     countNotif();
+    if (
+      hour === morningObj.name &&
+      String(logNotDoneText).includes('Afternoon')
+    ) {
+      setLogNotDoneText('');
+    }
   }, [morningNotDone, afternoonNotDone]);
 
   const setLogNotDone = () => {

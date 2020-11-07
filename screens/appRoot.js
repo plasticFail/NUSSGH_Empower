@@ -26,15 +26,18 @@ import {getRole} from '../storage/asyncStorageFunctions';
 import {role_patient, role_caregiver} from '../commonFunctions/common';
 import CaregiverRoot from './caregiverRoot';
 import LoadingScreen from '../components/account/initLoadingScreen';
-import {appRootUrl, availablePaths} from "../config/AppConfig";
-import { handler, defaultRoute } from "../components/notification/PushNotifHandler";
+import {appRootUrl, availablePaths} from '../config/AppConfig';
+import {
+  handler,
+  defaultRoute,
+} from '../components/notification/PushNotifHandler';
 const Stack = createStackNavigator();
 
 // Allows for navigation to occur anywhere in app.
 export const appRootNavigation = React.createRef();
 export function navigate(name, params) {
-    appRootNavigation.current?.navigate(name, params);
-    return appRootNavigation.current;
+  appRootNavigation.current?.navigate(name, params);
+  return appRootNavigation.current;
 }
 
 class AppRoot extends Component {
@@ -44,11 +47,13 @@ class AppRoot extends Component {
     this.state = {
       user: '',
     };
-    this.initRole().then(() => {});
   }
 
   componentDidMount() {
-    this.initRole().then(() => {});
+    console.log('in mount----');
+    Linking.addEventListener('url', this.handleRedirectUrl);
+    this.setState({role: this.props.role});
+    this.initrole().then(() => {});
   }
 
   componentDidUpdate(prevProp, prevState) {
@@ -62,32 +67,32 @@ class AppRoot extends Component {
   componentWillUnmount() {
     console.log('unmounting -------');
     Linking.removeAllListeners('url');
-    this.setState({user: ''});
+    this.setState({role: ''});
   }
 
-  async initRole() {
+  async initrole() {
     let role = await getRole();
     this.setState({user: role});
   }
 
   onReady = async () => {
-      // Handle deep link from url
-      const url = await Linking.getInitialURL();
-      if (url && this.props.isLogin) {
-          const path = url.split(appRootUrl)[1];
-          console.log(`application opened from web. navigating to ${path}`);
-          if (availablePaths.has(path)) {
-              appRootNavigation.current.navigate(path);
-          }
+    // Handle deep link from url
+    const url = await Linking.getInitialURL();
+    if (url && this.props.isLogin) {
+      const path = url.split(appRootUrl)[1];
+      console.log(`application opened from web. navigating to ${path}`);
+      if (availablePaths.has(path)) {
+        appRootNavigation.current.navigate(path);
       }
+    }
 
-      // Handle link from notification redirect
-      const notifPath =  defaultRoute.current; // path from notification.
-      if (this.props.isLogin && notifPath) {
-          appRootNavigation.current.navigate(notifPath);
-      }
-      defaultRoute.current = null; // reset
-  }
+    // Handle link from notification redirect
+    const notifPath = defaultRoute.current; // path from notification.
+    if (this.props.isLogin && notifPath) {
+      appRootNavigation.current.navigate(notifPath);
+    }
+    defaultRoute.current = null; // reset
+  };
 
   render() {
     const {user} = this.state;
@@ -179,41 +184,3 @@ class AppRoot extends Component {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(AppRoot);
-
-const forSlide = ({current, next, inverted, layouts: {screen}}) => {
-  const progress = Animated.add(
-    current.progress.interpolate({
-      inputRange: [0, 1],
-      outputRange: [0, 1],
-      extrapolate: 'clamp',
-    }),
-    next
-      ? next.progress.interpolate({
-          inputRange: [0, 1],
-          outputRange: [0, 1],
-          extrapolate: 'clamp',
-        })
-      : 0,
-  );
-
-  return {
-    cardStyle: {
-      transform: [
-        {
-          translateX: Animated.multiply(
-            progress.interpolate({
-              inputRange: [0, 1, 2],
-              outputRange: [
-                screen.width, // Focused, but offscreen in the beginning
-                0, // Fully focused
-                screen.width * -0.3, // Fully unfocused
-              ],
-              extrapolate: 'clamp',
-            }),
-            inverted,
-          ),
-        },
-      ],
-    },
-  };
-};
