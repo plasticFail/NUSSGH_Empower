@@ -1,9 +1,24 @@
-import {requestOTP, verifyOTP, postNewPassword} from './urls';
-import {Alert} from 'react-native';
+import {
+  requestOTP,
+  verifyOTP,
+  postNewPassword,
+  requestOTP_C,
+  verifyOTP_C,
+  postNewPassword_C,
+} from './urls';
+import {getRole} from '../storage/asyncStorageFunctions';
+import {role_patient} from '../commonFunctions/common';
 
-const sendOTPRequest = async (phoneNumber) => {
+const sendOTPRequest = async (phoneNumber, selection) => {
+  let role = await getRole();
+  let link = '';
   try {
-    let response = await fetch(requestOTP, {
+    if (role === role_patient || selection === role_patient) {
+      link = requestOTP;
+    } else {
+      link = requestOTP_C;
+    }
+    let response = await fetch(link, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -20,9 +35,16 @@ const sendOTPRequest = async (phoneNumber) => {
   }
 };
 
-const verifyOTPRequest = async (phoneNumber, otp) => {
+const verifyOTPRequest = async (phoneNumber, otp, selection) => {
+  let role = await getRole();
+  let link = '';
   try {
-    let response = await fetch(verifyOTP, {
+    if (role === role_patient || selection === role_patient) {
+      link = verifyOTP;
+    } else {
+      link = verifyOTP_C;
+    }
+    let response = await fetch(link, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -40,9 +62,18 @@ const verifyOTPRequest = async (phoneNumber, otp) => {
   }
 };
 
-const resetPassword = async (password, token) => {
+const resetPassword = async (password, token, selection) => {
+  let role = await getRole();
+  let link = '';
   try {
-    let response = await fetch(postNewPassword, {
+    if (role === role_patient || selection === role_patient) {
+      link = postNewPassword;
+    } else {
+      link = postNewPassword_C;
+    }
+    console.log('resetting password---');
+    console.log(selection);
+    let response = await fetch(link, {
       method: 'POST',
       headers: {
         Authorization: 'Bearer ' + token,

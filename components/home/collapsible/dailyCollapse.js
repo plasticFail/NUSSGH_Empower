@@ -1,12 +1,19 @@
 import React, {useEffect, useState, useRef} from 'react';
 import {View, StyleSheet, TouchableOpacity, Text, Animated} from 'react-native';
 import UncompleteLogCard from '../../uncompleteLogCard';
-import {green_color} from '../../../commonFunctions/common';
+import {
+  green_color,
+  role_caregiver,
+  isEmpty,
+} from '../../../commonFunctions/common';
 import {Colors} from '../../../styles/colors';
+import {getRole} from '../../../storage/asyncStorageFunctions';
 
 const DailyCollapse = (props) => {
   const {uncompleteLogs, hour} = props;
+  const {patient} = props;
   const [open, setOpen] = useState(true);
+  const [role, setRole] = useState('');
   const [count, setCount] = useState(0);
   const [minHeight, setMinHeight] = useState(0);
   const [maxHeight, setMaxHeight] = useState(0);
@@ -14,11 +21,21 @@ const DailyCollapse = (props) => {
 
   useEffect(() => {
     setOpen(true);
+    init().then(() => {});
   }, []);
 
   useEffect(() => {
     setCount(uncompleteLogs.length);
   }, [uncompleteLogs]);
+
+  useEffect(() => {
+    init().then(() => {});
+  }, [patient]);
+
+  const init = async () => {
+    let role = await getRole();
+    setRole(role);
+  };
 
   const toggle = (visible) => {
     if (visible) {
@@ -66,7 +83,9 @@ const DailyCollapse = (props) => {
             backgroundColor: Colors.dailyTab,
             paddingBottom: '2%',
           }}>
-          {uncompleteLogs.length > 0 ? (
+          {role === role_caregiver && isEmpty(patient) ? (
+            <Text style={styles.taskText}>No tasks to be done</Text>
+          ) : uncompleteLogs.length > 0 ? (
             <>
               <Text style={styles.greetingText}>
                 Create a log for the {hour}
@@ -117,6 +136,7 @@ const styles = StyleSheet.create({
     fontFamily: 'SFProDisplay-Regular',
     color: 'white',
     marginStart: '5%',
+    marginTop: '2%',
     fontSize: 18,
   },
 });

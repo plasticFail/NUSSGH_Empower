@@ -19,7 +19,9 @@ import {Colors} from '../../styles/colors';
 //function
 import {
   checkLogDone,
-  dateFrom2dayWeightLog,
+  dateFrom2dayLog,
+  weight_key,
+  bg_key,
 } from '../../commonFunctions/logFunctions';
 import {requestNutrientConsumption} from '../../netcalls/mealEndpoints/requestMealLog';
 import {
@@ -79,6 +81,7 @@ const HomeScreen = (props) => {
   const [medLogs, setMedLogs] = useState([]);
   const [weightLogs, setWeightLogs] = useState([]);
   const [lastWeight, setLastWeight] = useState('');
+  const [lastBg, setLastBg] = useState('');
 
   // activity card
   const [proteinAmt, setProteinAmt] = useState(null);
@@ -220,9 +223,14 @@ const HomeScreen = (props) => {
       })
       .catch((err) => console.log(err));
 
-    dateFrom2dayWeightLog().then((response) => {
+    dateFrom2dayLog(weight_key, new Date()).then((response) => {
       setLastWeight(response);
     });
+
+    dateFrom2dayLog(bg_key, new Date()).then((rsp) => {
+      setLastBg(rsp);
+    });
+
     loadNutritionalData().then(() => {});
     initUncompleteLog();
   };
@@ -319,6 +327,7 @@ const HomeScreen = (props) => {
             />
             <OverviewCollapse
               bgl={bgl}
+              lastBg={lastBg}
               calorie={calorie}
               medResult={med}
               lastWeight={lastWeight}

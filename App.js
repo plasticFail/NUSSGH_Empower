@@ -5,6 +5,7 @@ import {store} from './redux/reduxInit';
 import AppRoot from './screens/appRoot';
 import LoadingScreen from './components/account/initLoadingScreen';
 
+
 export default class App extends React.Component {
   constructor(props) {
     super(props);

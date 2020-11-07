@@ -5,27 +5,28 @@ import Octicon from 'react-native-vector-icons/Octicons';
 import {
   notif_log,
   morningObj,
-  afternoonObj,
-  eveningObj,
+  notif_addlog,
 } from '../../commonFunctions/common';
-import {checkLogDone} from '../../commonFunctions/logFunctions';
 import {useNavigation} from '@react-navigation/native';
-
-const logoStyle = {
-  width: 35,
-  height: 35,
-  marginEnd: '5%',
-};
+import {
+  bg_key,
+  renderLogIcon,
+  renderLightGreenIcon,
+  food_key,
+} from '../../commonFunctions/logFunctions';
 
 const NotificationRow = (props) => {
-  const {type, text, hour} = props;
+  const {type, text, hour, icon} = props;
   const navigation = useNavigation();
+
+  useEffect(() => {
+    console.log('rendered');
+  }, []);
 
   const showLogNotComplete = () => {
     if (hour === morningObj.name) {
       return false;
     }
-
     return true;
   };
 
@@ -33,15 +34,33 @@ const NotificationRow = (props) => {
     if (type === notif_log) {
       navigation.navigate('AddLog');
     }
+    if (type === notif_addlog) {
+      navigation.navigate('AddLog', {type: icon});
+    }
   };
 
   return (
-    <TouchableOpacity style={styles.container} onPress={() => notifPress()}>
+    <TouchableOpacity
+      style={{...styles.container, ...props.style}}
+      onPress={() => notifPress()}>
       {type === notif_log && showLogNotComplete() && (
         <>
           <Ionicon name="alert-circle-outline" size={40} color="red" />
           <View style={{flex: 1}}>
             <Text style={styles.notifDetails}>Incomplete Logs - </Text>
+            <Text style={styles.notifDetails}>{text}</Text>
+          </View>
+          <Octicon
+            name="primitive-dot"
+            color={'red'}
+            style={{alignSelf: 'center'}}
+          />
+        </>
+      )}
+      {type === notif_addlog && text.length > 1 && (
+        <>
+          {renderLogIcon(icon)}
+          <View style={{flex: 1}}>
             <Text style={styles.notifDetails}>{text}</Text>
           </View>
           <Octicon

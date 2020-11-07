@@ -13,7 +13,6 @@ import {initPusherNotif} from '../../commonFunctions/AuthorisePusherNotif';
 
 const init = async (props, finishHandler) => {
   const token = await getToken();
-  const role = await getRole();
   if (token !== null && token !== '') {
     //console.log('token : ' + token);
     let tokenIsValid = await isTokenValidRequest(token);
@@ -25,7 +24,6 @@ const init = async (props, finishHandler) => {
     }
   }
   console.log('token : ' + token);
-  console.log('role: ' + role);
 
   if (finishHandler != undefined) {
     finishHandler();

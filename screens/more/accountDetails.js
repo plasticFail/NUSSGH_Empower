@@ -9,9 +9,23 @@ import LeftArrowBtn from '../../components/logs/leftArrowBtn';
 import Ant from 'react-native-vector-icons/AntDesign';
 import Entypo from 'react-native-vector-icons/Entypo';
 import {Colors} from '../../styles/colors';
-import {getPatientProfile} from '../../netcalls/requestsAccount';
+import {
+  getPatientProfile,
+  getCaregiverProfile,
+} from '../../netcalls/requestsAccount';
 
-const profilePic = require('../../resources/images/userPic.png');
+import USER_MALE from '../../resources/images/Patient-Icons/SVG/user-male.svg';
+import USER_FEMALE from '../../resources/images/Patient-Icons/SVG/user-female.svg';
+import {getRole} from '../../storage/asyncStorageFunctions';
+import {role_patient} from '../../commonFunctions/common';
+
+const iconStyle = {
+  height: 200,
+  width: 200,
+  alignSelf: 'center',
+  marginBottom: '3%',
+  marginTop: '3%',
+};
 
 const AccountDetailScreen = (props) => {
   const [usernameModalVisible, setUsernameModalVisible] = useState(false);
@@ -22,23 +36,39 @@ const AccountDetailScreen = (props) => {
   const [username, setUsername] = useState('');
   const [name, setName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [patient, setPatient] = useState({});
+  const [user, setUser] = useState({});
+  const [role, setRole] = useState('');
 
   useEffect(() => {
-    init();
+    init().then();
   }, []);
 
-  const init = () => {
-    getPatientProfile().then((response) => {
-      if (response != null) {
-        let data = response.patient;
-        setPatient(data);
-        setUsername(data.username);
-        let nameString = data.first_name + ' ' + data.last_name;
-        setName(nameString);
-        setPhoneNumber(data.contact_number);
-      }
-    });
+  const init = async () => {
+    let role = await getRole();
+    setRole(role);
+    if (role === role_patient) {
+      getPatientProfile().then((response) => {
+        if (response != null) {
+          let data = response.patient;
+          setUser(data);
+          setUsername(data.username);
+          let nameString = data.first_name + ' ' + data.last_name;
+          setName(nameString);
+          setPhoneNumber(data.contact_number);
+        }
+      });
+    } else {
+      getCaregiverProfile().then((response) => {
+        if (response != null) {
+          let caregiver = response.caregiver;
+          setUser(caregiver);
+          setUsername(caregiver.username);
+          let nameString = caregiver.first_name + ' ' + caregiver.last_name;
+          setName(nameString);
+          setPhoneNumber(caregiver.contact_number);
+        }
+      });
+    }
   };
 
   return (
@@ -48,7 +78,11 @@ const AccountDetailScreen = (props) => {
       </View>
       <Text style={globalStyles.pageHeader}>Edit Account</Text>
       <ScrollView contentContainerStyle={{...props.style}}>
-        <Image source={profilePic} style={styles.profileImg} />
+        {user?.gender === 'female' ? (
+          <USER_FEMALE {...iconStyle} />
+        ) : (
+          <USER_MALE {...iconStyle} />
+        )}
         <View style={{flexDirection: 'row', margin: '2%'}}>
           <Ant name="user" size={30} color={Colors.lastLogValueColor} />
           <Text style={styles.sectionHeading}>Account Details</Text>
@@ -73,7 +107,7 @@ const AccountDetailScreen = (props) => {
             setNameModalVisible(false);
             init();
           }}
-          patient={patient}
+          user={user}
         />
         <Clickable
           heading={'Phone Number'}
@@ -85,7 +119,7 @@ const AccountDetailScreen = (props) => {
             setPhoneModalVisible(false);
             init();
           }}
-          patient={patient}
+          user={user}
         />
         <Clickable
           heading={'Change Password'}
@@ -107,20 +141,24 @@ const AccountDetailScreen = (props) => {
         />
         */}
 
-        <View style={{flexDirection: 'row', margin: '2%'}}>
-          <Entypo name="link" size={30} color={Colors.lastLogValueColor} />
-          <Text style={styles.sectionHeading}>External Account</Text>
-        </View>
-        <Clickable
-          heading="Setup fitibt"
-          content=""
-          click={true}
-          openModal={() => props.navigation.navigate('FitbitSetup')}
-          closeModal={() => {}}
-          modalVisible={false}
-        />
+        {role === role_patient && (
+          <>
+            <View style={{flexDirection: 'row', margin: '2%'}}>
+              <Entypo name="link" size={30} color={Colors.lastLogValueColor} />
+              <Text style={styles.sectionHeading}>External Account</Text>
+            </View>
+            <Clickable
+              heading="Setup fitibt"
+              content=""
+              click={true}
+              openModal={() => props.navigation.navigate('FitbitSetup')}
+              closeModal={() => {}}
+              modalVisible={false}
+            />
 
-        <View style={{flex: 3}} />
+            <View style={{flex: 3}} />
+          </>
+        )}
       </ScrollView>
     </View>
   );

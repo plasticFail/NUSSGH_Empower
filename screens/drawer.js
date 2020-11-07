@@ -7,12 +7,13 @@ import Ionicon from 'react-native-vector-icons/Ionicons';
 //component
 import DashboardScreen from './dashboard';
 
-import ACCOUNT from '../resources/images/Patient-Icons//SVG/icon-white-sidemenu-account.svg';
-import DIARY from '../resources/images/Patient-Icons//SVG/icon-white-sidemenu-diary.svg';
-import MED from '../resources/images/Patient-Icons//SVG/icon-white-sidemenu-med.svg';
-import GOALS from '../resources/images/Patient-Icons//SVG/icon-white-sidemenu-goals.svg';
-import APPT from '../resources/images/Patient-Icons//SVG/icon-white-sidemenu-appt.svg';
-import RESOURCES from '../resources/images/Patient-Icons//SVG/icon-white-sidemenu-resources.svg';
+import ACCOUNT from '../resources/images/Patient-Icons/SVG/icon-white-sidemenu-account.svg';
+import DIARY from '../resources/images/Patient-Icons/SVG/icon-white-sidemenu-diary.svg';
+import MED from '../resources/images/Patient-Icons/SVG/icon-white-sidemenu-med.svg';
+import GOALS from '../resources/images/Patient-Icons/SVG/icon-white-sidemenu-goals.svg';
+import APPT from '../resources/images/Patient-Icons/SVG/icon-white-sidemenu-appt.svg';
+import RESOURCES from '../resources/images/Patient-Icons/SVG/icon-white-sidemenu-resources.svg';
+import MY_CAREGIVER from '../resources/images/Patient-Icons/SVG/icon-white-sidemenu-mycaregiver.svg';
 import {ScrollView} from 'react-native-gesture-handler';
 
 const iconStyle = {
@@ -55,6 +56,12 @@ const DrawerContent = (props) => {
         labelStyle={styles.subText}
         icon={() => <APPT {...iconStyle} />}
         onPress={() => props.navigation.navigate('Appointment')}
+      />
+      <DrawerItem
+        label="My Caregiver"
+        labelStyle={styles.subText}
+        icon={() => <MY_CAREGIVER {...iconStyle} />}
+        onPress={() => props.navigation.navigate('MyCaregiver')}
       />
       <DrawerItem
         label="Resources"

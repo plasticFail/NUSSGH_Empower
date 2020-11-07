@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-community/async-storage';
+import {getDateObj} from '../commonFunctions/diaryFunctions';
 
 const key_username = 'username';
 const key_role = 'role';
@@ -9,6 +10,9 @@ const key_weightLog = 'lastWeightLog';
 const key_medicationLog = 'lastMedicationLog';
 const key_last_meal_log = 'lastMealLog';
 const key_fitbit_token = 'fitbitToken';
+const key_authorisedCaregiver = 'authorisedCaregiver';
+const key_notif_read = 'notif_read';
+const key_notifReadPeriod = 'notif_readPeriod';
 
 const storeData = async (key, value) => {
   try {
@@ -24,7 +28,7 @@ const getData = async (key) => {
   try {
     const value = await AsyncStorage.getItem(key);
     if (value !== null) {
-      console.log('load ' + key + ' : ' + value);
+      //console.log('load ' + key + ' : ' + value);
       return value;
     }
   } catch (e) {
@@ -50,7 +54,7 @@ const getDataObj = async (key) => {
     let objString = await AsyncStorage.getItem(key);
     let obj = JSON.parse(objString);
     if (obj !== null) {
-      console.log('load ' + key + ' : ' + objString);
+      //console.log('load ' + key + ' : ' + objString);
       return obj;
     }
   } catch (e) {
@@ -131,6 +135,22 @@ const getFitbitToken = async () => {
   return await getDataObj(key_fitbit_token);
 };
 
+const storeAuthorisedStatusCaregiver = async (bool) => {
+  return await storeDataObj(key_authorisedCaregiver, bool);
+};
+
+const getAuthorisedStatusCaregiver = async () => {
+  return await getDataObj(key_authorisedCaregiver);
+};
+
+const storeReadNotifDate = async (dateObj) => {
+  return await storeDataObj(key_notifReadPeriod, dateObj);
+};
+
+const getReadNotifDate = async () => {
+  return await getDataObj(key_notifReadPeriod);
+};
+
 export {
   storeUsername,
   getUsername,
@@ -151,4 +171,8 @@ export {
   getFitbitToken,
   storeFitbitToken,
   key_weightLog,
+  storeAuthorisedStatusCaregiver,
+  getAuthorisedStatusCaregiver,
+  storeReadNotifDate,
+  getReadNotifDate,
 };

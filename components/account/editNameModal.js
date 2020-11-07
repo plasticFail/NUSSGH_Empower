@@ -7,9 +7,9 @@ import LeftArrowBtn from '../logs/leftArrowBtn';
 import {editName} from '../../netcalls/requestsAccount';
 
 const EditNameModal = (props) => {
-  const {patient} = props;
-  const [firstName, setFirstName] = useState(patient.first_name);
-  const [lastName, setLastName] = useState(patient.last_name);
+  const {user} = props;
+  const [firstName, setFirstName] = useState(user?.first_name);
+  const [lastName, setLastName] = useState(user?.last_name);
 
   const checkInput = () => {
     if (firstName && lastName) {

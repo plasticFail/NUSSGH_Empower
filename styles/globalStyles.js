@@ -187,6 +187,22 @@ const globalStyles = StyleSheet.create({
     marginTop: '3%',
     flexDirection: 'row',
   },
+  //mycaregiver
+  row: {
+    backgroundColor: 'white',
+    borderRadius: 9.5,
+    borderWidth: 1,
+    borderColor: '#e3e8ee',
+    padding: '3%',
+    margin: '3%',
+  },
+  field: {
+    fontFamily: 'SFProDisplay-Regular',
+    fontSize: 19,
+    marginStart: '3%',
+    alignSelf: 'center',
+    flex: 1,
+  },
 });
 
 export default globalStyles;

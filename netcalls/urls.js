@@ -1,6 +1,6 @@
 const server = 'https://sghempower.com/';
 
-const patientLogin = server + 'auth/patient-login';
+const login = server + 'auth/login';
 const isTokenValid = server + 'auth/is-token-valid';
 const glucoseAddLog = server + 'log/glucose';
 const medicationAddLog = server + 'log/medication';
@@ -33,10 +33,18 @@ const gameCenterPerformSpin = server + 'game/bingo/spin';
 const rewardGetOverview = server + 'rewards';
 const rewardRedeem = server + 'rewards/redeem';
 
+const searchCaregiver = server + 'caregiver/search';
+const getCaregiver = server + 'caregiver';
+const assignCaregiver = server + 'caregiver/assign';
+
 const caregiverLogin = server + 'auth/caregiver-login';
+const caregiverProfile = server + 'profile/caregiver';
+const requestOTP_C = server + 'auth/caregiver/password-reset/request-otp';
+const verifyOTP_C = server + 'auth/caregiver/password-reset/verify-otp';
+const postNewPassword_C = server + 'auth/caregiver/password-reset/reset';
 
 export {
-  patientLogin,
+  login,
   isTokenValid,
   glucoseAddLog,
   medicationAddLog,
@@ -68,4 +76,11 @@ export {
   rewardRedeem,
   pusherTokenEndpoint,
   caregiverLogin,
+  caregiverProfile,
+  requestOTP_C,
+  verifyOTP_C,
+  postNewPassword_C,
+  searchCaregiver,
+  getCaregiver,
+  assignCaregiver,
 };
