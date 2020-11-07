@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-community/async-storage';
+import {getDateObj} from '../commonFunctions/diaryFunctions';
 
 const key_username = 'username';
 const key_role = 'role';
@@ -11,6 +12,7 @@ const key_last_meal_log = 'lastMealLog';
 const key_fitbit_token = 'fitbitToken';
 const key_authorisedCaregiver = 'authorisedCaregiver';
 const key_notif_read = 'notif_read';
+const key_notifReadPeriod = 'notif_readPeriod';
 
 const storeData = async (key, value) => {
   try {
@@ -141,12 +143,12 @@ const getAuthorisedStatusCaregiver = async () => {
   return await getDataObj(key_authorisedCaregiver);
 };
 
-const storeReadNotif = async (bool) => {
-  return await storeDataObj(key_notif_read, bool);
+const storeReadNotifDate = async (dateObj) => {
+  return await storeDataObj(key_notifReadPeriod, dateObj);
 };
 
-const getReadNotif = async () => {
-  return await getDataObj(key_notif_read);
+const getReadNotifDate = async () => {
+  return await getDataObj(key_notifReadPeriod);
 };
 
 export {
@@ -171,6 +173,6 @@ export {
   key_weightLog,
   storeAuthorisedStatusCaregiver,
   getAuthorisedStatusCaregiver,
-  storeReadNotif,
-  getReadNotif,
+  storeReadNotifDate,
+  getReadNotifDate,
 };

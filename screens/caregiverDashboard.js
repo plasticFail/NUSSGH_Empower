@@ -34,11 +34,12 @@ import {
   med_key,
   weight_key,
 } from '../commonFunctions/logFunctions';
+import {getParticularLogTypeIncompleteText} from '../commonFunctions/notifFunction';
 import {
-  getLogIncompleteText,
-  getParticularLogTypeIncompleteText,
-} from '../commonFunctions/notifFunction';
-import {getReadNotif, storeReadNotif} from '../storage/asyncStorageFunctions';
+  getReadNotifDate,
+  storeReadNotifDate,
+} from '../storage/asyncStorageFunctions';
+import moment from 'moment';
 
 const Tab = createBottomTabNavigator();
 
@@ -65,7 +66,7 @@ const CaregiverBottomTab = (props) => {
 
   //notif - log not done
   const initUncompleteLog = async () => {
-    if (currHour != morningObj.name) {
+    if (getGreetingFromHour(currHour) != morningObj.name) {
       let rsp1 = await checkLogDone(morningObj.name);
       let rsp2 = await checkLogDone(afternoonObj.name);
       console.log('re init');
@@ -110,14 +111,36 @@ const CaregiverBottomTab = (props) => {
       ];
 
       setLogsNotDone(obj);
+      await setBadge();
     }
   };
 
   //notif - set show badge
   const setBadge = async () => {
-    let r = await getReadNotif();
-    setShowBadge(r);
-    console.log('setting all notif as read ' + r);
+    let r = await getReadNotifDate();
+    let period = r?.period;
+    let date = r?.date;
+    let currDate = moment(new Date()).format('YYYY-MM-DD');
+    let currentperiod = getGreetingFromHour(currHour);
+    if (currentperiod === morningObj.name) {
+      console.log('morning, no new notif*');
+      setShowBadge(false);
+      return;
+    }
+    //check if date is same as today,
+    if (period === null && date === null) {
+      await storeReadNotifDate({period: currentperiod, date: currDate});
+    } else if (moment(date).isSame(currDate)) {
+      //if same date, but period !=currperiod , read false
+      console.log('read notification on same date ' + date);
+      if (period != currentperiod) {
+        setShowBadge(true);
+      } else {
+        setShowBadge(false);
+      }
+    } else {
+      setShowBadge(true);
+    }
   };
 
   return (

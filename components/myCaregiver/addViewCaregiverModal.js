@@ -187,10 +187,10 @@ const AddViewCaregiverModal = (props) => {
             ))}
           </View>
         ) : null}
-        {/* 
+
         <Text style={styles.fieldText}>
           {type === 'add' ? 'Select' : 'Edit'} Access Privileges
-        </Text>       
+        </Text>
         <ScrollView style={{flexGrow: 1}}>
           <AccessOption
             mainheader={'Your Name'}
@@ -225,7 +225,6 @@ const AddViewCaregiverModal = (props) => {
             </Text>
           </TouchableOpacity>
         </ScrollView>
-        */}
       </View>
 
       <View style={globalStyles.buttonContainer}>

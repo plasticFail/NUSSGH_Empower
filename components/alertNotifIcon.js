@@ -5,7 +5,6 @@ import Octicon from 'react-native-vector-icons/Octicons';
 
 import ALERT from '../resources/images/Caregiver-Additional-Icons/SVG/cg-icon-navy-footer-alert.svg';
 import ALERT_FOCUSED from '../resources/images/Caregiver-Additional-Icons/SVG/cg-icon-green-footer-alert.svg';
-import {getReadNotif} from '../storage/asyncStorageFunctions';
 
 const iconstyle = {
   width: 30,
@@ -20,7 +19,7 @@ const AlertNotifIcon = (props) => {
   return focused ? (
     <>
       <ALERT_FOCUSED {...iconstyle} />
-      {!showBadge && (
+      {showBadge && (
         <Octicon
           name="primitive-dot"
           color={'red'}
@@ -33,7 +32,7 @@ const AlertNotifIcon = (props) => {
   ) : (
     <>
       <ALERT {...iconstyle} />
-      {!showBadge && (
+      {showBadge && (
         <Octicon
           name="primitive-dot"
           color={'red'}

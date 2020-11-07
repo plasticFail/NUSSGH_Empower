@@ -2,11 +2,15 @@ import React, {useRef, useEffect, useState} from 'react';
 import {View, StyleSheet, Text, Animated, Dimensions} from 'react-native';
 import globalStyles from '../../styles/globalStyles';
 import LeftArrowBtn from '../../components/logs/leftArrowBtn';
-import {notif_log, notif_addlog} from '../../commonFunctions/common';
+import {
+  notif_log,
+  notif_addlog,
+  getGreetingFromHour,
+} from '../../commonFunctions/common';
 import NotificationRow from '../../components/home/notificationRow';
 import {useNavigation} from '@react-navigation/native';
-import {storeReadNotif} from '../../storage/asyncStorageFunctions';
-import {bg_key} from '../../commonFunctions/logFunctions';
+import {storeReadNotifDate} from '../../storage/asyncStorageFunctions';
+import moment from 'moment';
 
 const AlertsScreen = (props) => {
   const {logsNotDone} = props;
@@ -25,7 +29,11 @@ const AlertsScreen = (props) => {
       //init notifications set from caregiverdashboard
       reInit().then(() => {});
       //when enter screen, set notification as read
-      storeReadNotif(true).then(() => {});
+      let obj = {
+        period: getGreetingFromHour(currHour),
+        date: moment(new Date()).format('YYYY-MM-DD'),
+      };
+      storeReadNotifDate(obj).then(() => {});
       setBadge();
 
       slideRightAnimation.setValue(0);
@@ -58,9 +66,10 @@ const AlertsScreen = (props) => {
         </View>
         <Text style={globalStyles.pageHeader}>Alert</Text>
         {logsNotDone.map(
-          (item) =>
+          (item, index) =>
             item?.msg.length > 0 && (
               <NotificationRow
+                key={index}
                 type={notif_addlog}
                 hour={currHour}
                 text={item.msg}
