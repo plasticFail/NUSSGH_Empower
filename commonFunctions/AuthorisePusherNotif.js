@@ -25,7 +25,7 @@ function initPusherNotif(username, pusherToken) {
   );
 
   subscribe(donutsInterest);
-  RNPusherPushNotifications.on('notification', handleNotification);
+  // RNPusherPushNotifications.on('notification', handleNotification);
   /*
   RNPusherPushNotifications.getSubscriptions(
     (sub) => console.log('Get sub', sub),

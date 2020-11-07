@@ -26,11 +26,11 @@ import {getRole} from '../storage/asyncStorageFunctions';
 import {role_patient, role_caregiver} from '../commonFunctions/common';
 import CaregiverRoot from './caregiverRoot';
 import LoadingScreen from '../components/account/initLoadingScreen';
-import {appRootUrl, availablePaths} from '../config/AppConfig';
-import {
-  handler,
-  defaultRoute,
-} from '../components/notification/PushNotifHandler';
+
+import {appRootUrl, availablePaths} from "../config/AppConfig";
+import {defaultRoute, handler} from "../components/notification/PushNotifHandler";
+import PushNotification from 'react-native-push-notification';
+
 const Stack = createStackNavigator();
 
 // Allows for navigation to occur anywhere in app.
@@ -86,13 +86,9 @@ class AppRoot extends Component {
       }
     }
 
-    // Handle link from notification redirect
-    const notifPath = defaultRoute.current; // path from notification.
-    if (this.props.isLogin && notifPath) {
-      appRootNavigation.current.navigate(notifPath);
-    }
-    defaultRoute.current = null; // reset
-  };
+      // Handle link from notification redirect
+      PushNotification.popInitialNotification(notif => handler.onNotification(notif));
+  }
 
   render() {
     const {user} = this.state;
