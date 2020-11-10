@@ -69,7 +69,11 @@ const SelectMedicationModalContent = (props) => {
             fieldName="Default Dosage"
             item={dosage}
             setItem={setDosage}
-            parameter={'Unit(s)'}
+            parameter={
+              selectedMedicine?.dosage_unit === undefined
+                ? ''
+                : selectedMedicine.dosage_unit + '(s)'
+            }
             allowInput={false}
             showUnitInParam={false}
           />

@@ -38,6 +38,9 @@ const EditMedicineBlock = (props) => {
   useEffect(() => {
     let s = sideEffects.join(', ');
     setSeString(s);
+    if (sideEffects.length === 0) {
+      setSeString('-');
+    }
   }, [sideEffects]);
 
   useEffect(() => {

@@ -13,7 +13,7 @@ function ExtraMedItem({medication, handleDelete}) {
       <View style={{flex: 1}}>
         <Text style={globalStyles.pageSubDetails}>{medication.drugName}</Text>
         <Text style={[globalStyles.pageSubDetails, {color: Colors.textGrey}]}>
-          {medication.dosage} Unit(s)
+          {medication.dosage} {medication.unit}(s)
         </Text>
       </View>
       <DeleteBin

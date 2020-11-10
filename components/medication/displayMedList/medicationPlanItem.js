@@ -32,7 +32,7 @@ const MedicationPlanItem = (props) => {
           <>
             <Text
               style={[globalStyles.pageSubDetails, {color: Colors.textGrey}]}>
-              {item.dosage} Unit(s) Daily
+              {item.dosage} {item.dosage_unit}(s) Daily
             </Text>
             <Text
               style={[globalStyles.pageSubDetails, {color: Colors.textGrey}]}>
@@ -43,7 +43,7 @@ const MedicationPlanItem = (props) => {
           <>
             <Text
               style={[globalStyles.pageSubDetails, {color: Colors.textGrey}]}>
-              {item.dosage} Unit(s) Weekly
+              {item.dosage} {item.dosage_unit}(s) Weekly
             </Text>
             <Text
               style={[globalStyles.pageSubDetails, {color: Colors.textGrey}]}>

@@ -39,13 +39,13 @@ const Med4Day = (props) => {
         <Text style={globalStyles.pageSubDetails}>{medication.medication}</Text>
         {!selected ? (
           <Text style={[globalStyles.pageSubDetails, {color: Colors.textGrey}]}>
-            {medication.dosage} Unit(s)
+            {medication.dosage} {medication.dosage_unit}(s)
           </Text>
         ) : (
           <StepCounter
             count={dosage}
             setCount={setDosage}
-            parameter={'Unit(s)'}
+            parameter={medication.dosage_unit + '(s)'}
             fieldName={''}
             enableInput={false}
             style={{width: '60%'}}

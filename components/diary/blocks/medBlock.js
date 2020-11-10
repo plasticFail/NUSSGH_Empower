@@ -113,7 +113,7 @@ function renderMedLogs(logs, editLog) {
               <Text style={diaryStyles.recordContent}>
                 {item.dosage}{' '}
                 {String(item.unit).substring(0, 1).toUpperCase() +
-                  String(item.unit).substr(1, item.length)}{' '}
+                  String(item.unit).substr(1, item.length)}
                 (s) at {getTime12hr(item.record_date)}
               </Text>
             </View>
