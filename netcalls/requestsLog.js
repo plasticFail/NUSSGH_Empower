@@ -218,17 +218,20 @@ const getActivityLogs = async (startDateString, endDateString) => {
 };
 
 const getActivitySummaries = async (startDateString, endDateString) => {
-  let response = await fetch(getActivitySummary + `?start=${startDateString}&end=${endDateString}`, {
-    method: 'GET',
-    headers: {
-      Authorization: 'Bearer ' + (await getToken()),
-      Accept: 'application/json',
-      'Content-type': 'application/json',
-    }
-  });
+  let response = await fetch(
+    getActivitySummary + `?start=${startDateString}&end=${endDateString}`,
+    {
+      method: 'GET',
+      headers: {
+        Authorization: 'Bearer ' + (await getToken()),
+        Accept: 'application/json',
+        'Content-type': 'application/json',
+      },
+    },
+  );
   let responseJson = await response.json();
   return responseJson;
-}
+};
 
 export {
   glucoseAddLogRequest,
@@ -241,5 +244,5 @@ export {
   getMedicationLogs,
   getWeightLogs,
   getActivityLogs,
-  getActivitySummaries
+  getActivitySummaries,
 };

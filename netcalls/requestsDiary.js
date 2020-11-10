@@ -128,7 +128,7 @@ const editWeightLog = async (weight, datetime, id) => {
   }
 };
 
-const editMedicineInLog = async (dosage, pastMed, datetime) => {
+const editMedicineInLog = async (dosage, pastMed, datetime, sideEffects) => {
   try {
     let response = await fetch(medicationAddLog, {
       method: 'POST',
@@ -145,6 +145,7 @@ const editMedicineInLog = async (dosage, pastMed, datetime) => {
             unit: pastMed.unit,
             _id: pastMed['_id'],
             drugName: pastMed.medication,
+            side_effects: sideEffects,
           },
         ],
       }),

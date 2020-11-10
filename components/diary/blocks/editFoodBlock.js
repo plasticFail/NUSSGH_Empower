@@ -67,6 +67,7 @@ const EditFoodBlock = (props) => {
       foodItems: list,
       recordDate: moment(initialDate).format('DD/MM/YYYY HH:mm:ss'),
     };
+    console.log(newMeal);
     editMealLog(newMeal).then((response) => {
       if (response != null) {
         if (parent === from_edit) {
@@ -200,6 +201,7 @@ function foodItem(item, editQuantity, quantity) {
           fieldName={''}
           enableInput={false}
           style={{width: '45%'}}
+          incrementValue={0.5}
         />
       </View>
     </View>
