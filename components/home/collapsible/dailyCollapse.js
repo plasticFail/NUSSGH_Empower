@@ -35,6 +35,10 @@ const DailyCollapse = (props) => {
   const init = async () => {
     let role = await getRole();
     setRole(role);
+
+    if (role === role_caregiver) {
+      setCount(0);
+    }
   };
 
   const toggle = (visible) => {
