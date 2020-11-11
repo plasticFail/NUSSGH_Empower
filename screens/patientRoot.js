@@ -144,6 +144,13 @@ class PatientRoot extends Component {
               headerShown: false,
             }}
           />
+          <Stack.Screen
+            name="RedeemPage"
+            component={RedeemPage}
+            options={{
+              headerShown: false,
+            }}
+          />
         </>
       </Stack.Navigator>
     );

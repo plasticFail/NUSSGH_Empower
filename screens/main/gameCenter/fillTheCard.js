@@ -97,6 +97,13 @@ const FillTheCard = (props) => {
         }
     }
 
+    const startSpin = async () => {
+        setShowSpin(true);
+        setTimeout(processSpin,
+            1000
+        )
+    }
+
     return (
         <View style={{...globalStyles.pageContainer, ...props.style}}>
             <View style={globalStyles.menuBarContainer}>
@@ -143,7 +150,7 @@ const FillTheCard = (props) => {
             <TouchableOpacity
                 style={[GameCenterStyles.buttonStyleNarrow, colorOfSpin(disableSpin())]}
                 disabled={disableSpin()}
-                onPress={() => {setShowSpin(true)}}>
+                onPress={() => {startSpin()}}>
                 <Text style={globalStyles.actionButtonText}>Spin a Number</Text>
             </TouchableOpacity>
 
@@ -157,8 +164,7 @@ const FillTheCard = (props) => {
                         setShowFinish(true);
                         setReadyFinish(false);
                     }
-                }}
-            >
+                }}>
 
                 <SpinComponent processSpin={() => processSpin()} closeModal={() => setShowSpin(false)} />
 
