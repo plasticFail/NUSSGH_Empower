@@ -48,7 +48,7 @@ const Med4Day = (props) => {
             parameter={medication.dosage_unit + '(s)'}
             fieldName={''}
             enableInput={false}
-            style={{width: '60%'}}
+            style={{width: '65%'}}
           />
         )}
       </View>

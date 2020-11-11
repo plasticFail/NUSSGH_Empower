@@ -200,7 +200,7 @@ function foodItem(item, editQuantity, quantity) {
           parameter={''}
           fieldName={''}
           enableInput={false}
-          style={{width: '45%'}}
+          style={{width: '60%', padding: '1%'}}
           incrementValue={0.5}
         />
       </View>
@@ -223,6 +223,7 @@ const styles = StyleSheet.create({
   },
   foodName: {
     flex: 1,
+    marginStart: '12%',
   },
   counterStyle: {
     justifyContent: 'flex-start',

@@ -214,7 +214,7 @@ const MedicationLogBlock = (props) => {
               </TouchableOpacity>
             ) : (
               <TouchableOpacity
-                style={globalStyles.medContainer}
+                style={[globalStyles.medContainer, {marginBottom: '3%'}]}
                 onPress={() => setShowEffectModal(true)}>
                 <Text
                   style={{

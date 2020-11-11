@@ -1,5 +1,12 @@
 import React from 'react';
-import {View, StyleSheet, TextInput, Animated, Text} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  TextInput,
+  Animated,
+  Text,
+  Dimensions,
+} from 'react-native';
 //third party lib
 import Moment from 'moment';
 import {
@@ -12,6 +19,7 @@ import {
   Defs,
   LinearGradient,
   Stop,
+  Line,
 } from 'react-native-svg';
 import {scaleTime, scaleLinear} from 'd3-scale';
 import * as path from 'svg-path-properties';
@@ -22,6 +30,7 @@ import {
   generateYAxisValues,
   getYStepSize,
   processData,
+  squashToXY,
 } from '../../../commonFunctions/reportDataFormatter';
 import {DAY_FILTER_KEY} from '../../../screens/main/reports';
 import {Colors} from '../../../styles/colors';
@@ -39,6 +48,7 @@ import {
   filterMorning,
   filterAfternoon,
   filterEvening,
+  getDateObj,
 } from '../../../commonFunctions/diaryFunctions';
 
 // initialise all the graph properties.
@@ -99,7 +109,14 @@ export default class LineChart extends React.Component {
       ...components,
       foodDate: '',
       foodData: [],
-      showCutoff: false,
+      startX: '',
+      endX: '',
+      showStart: false,
+      showEnd: false,
+
+      clickMorning: false,
+      clickAfternoon: false,
+      clickEvening: false,
     };
   }
 
@@ -115,6 +132,7 @@ export default class LineChart extends React.Component {
     ) {
       this.scrollerKey.current += 1;
       this.updateComponent();
+      this.closePeriod();
     }
   }
 
@@ -245,6 +263,7 @@ export default class LineChart extends React.Component {
           text: `${Moment(this.state.scaleX.invert(shownDatapoint[0])).format(
             this.props.filterKey === DAY_FILTER_KEY ? 'h:mm a' : 'DD MMM YYYY',
           )}`,
+          left: shownDatapoint[0] - Dimensions.get('window').width * 0.55,
           opacity: 1,
         });
 
@@ -292,6 +311,60 @@ export default class LineChart extends React.Component {
     }
   }
 
+  //callback when click on the period text to show the line on graph
+  shiftTimeLine = (startTime, endTime, dataSet, period) => {
+    if (period === morningObj.name) {
+      this.setState({
+        clickMorning: true,
+        clickAfternoon: false,
+        clickEvening: false,
+      });
+    } else if (period === afternoonObj.name) {
+      this.setState({
+        clickAfternoon: true,
+        clickMorning: false,
+        clickEvening: false,
+      });
+    } else {
+      this.setState({
+        clickEvening: true,
+        clickMorning: false,
+        clickAfternoon: false,
+      });
+    }
+
+    let start = Moment(getDateObj(startTime)).format('HH:mm a');
+    let end = Moment(getDateObj(endTime)).format('HH:mm a');
+
+    if (this.props.filterKey === DAY_FILTER_KEY) {
+      let data = processData(
+        DAY_FILTER_KEY,
+        dataSet,
+        this.props.xExtractor,
+        this.props.yExtractor,
+        'average',
+      );
+      this.setState({startX: data[0]?.x});
+      this.setState({showStart: true});
+      if (start != end) {
+        this.setState({endX: data[1]?.x});
+        this.setState({showEnd: true});
+      } else {
+        this.setState({showEnd: false});
+      }
+    }
+  };
+
+  closePeriod = () => {
+    this.setState({startX: '', endX: ''});
+    this.setState({showStart: false, showEnd: false});
+    this.setState({
+      clickMorning: false,
+      clickAfternoon: false,
+      clickEvening: false,
+    });
+  };
+
   render() {
     const {
       width,
@@ -323,6 +396,13 @@ export default class LineChart extends React.Component {
       line,
       foodDate,
       foodData,
+      startX,
+      endX,
+      showStart,
+      showEnd,
+      clickMorning,
+      clickAfternoon,
+      clickEvening,
     } = this.state;
 
     // linear gradient calculations
@@ -356,7 +436,7 @@ export default class LineChart extends React.Component {
                 key={`cursor-line-${this.props.filterKey}`}
                 style={{
                   width: 1,
-                  backgroundColor: axisColour,
+                  backgroundColor: '#aad326',
                   height: height - padding,
                   position: 'absolute',
                 }}
@@ -520,6 +600,27 @@ export default class LineChart extends React.Component {
                 </React.Fragment>
               )
             }
+            {/*Line for BG-FOOD*/}
+            {showStart ? (
+              <Line
+                stroke={Colors.leftArrowColor}
+                strokeDasharray="5, 5"
+                x1={startX != null ? scaleX(startX) : 0}
+                y1="10"
+                x2={startX != null ? scaleX(startX) : 0}
+                y2={height - padding}
+              />
+            ) : null}
+            {showEnd ? (
+              <Line
+                stroke={Colors.leftArrowColor}
+                strokeDasharray="5, 5"
+                x1={startX != null ? scaleX(endX) : 0}
+                y1="10"
+                x2={startX != null ? scaleX(endX) : 0}
+                y2={height - padding}
+              />
+            ) : null}
           </Svg>
           {
             <Animated.ScrollView
@@ -551,15 +652,24 @@ export default class LineChart extends React.Component {
                 <>
                   <ExpandFood
                     period={morningObj.name}
+                    clickPeriod={clickMorning}
                     foodData={filterMorning(foodData)}
+                    callback={this.shiftTimeLine}
+                    closePeriod={this.closePeriod}
                   />
                   <ExpandFood
                     period={afternoonObj.name}
+                    clickPeriod={clickAfternoon}
                     foodData={filterAfternoon(foodData)}
+                    callback={this.shiftTimeLine}
+                    closePeriod={this.closePeriod}
                   />
                   <ExpandFood
                     period={eveningObj.name}
+                    clickPeriod={clickEvening}
                     foodData={filterEvening(foodData)}
+                    callback={this.shiftTimeLine}
+                    closePeriod={this.closePeriod}
                   />
                 </>
               ) : (
@@ -608,9 +718,9 @@ const styles = StyleSheet.create({
     width: cursorRadius * 2,
     height: cursorRadius * 2,
     borderRadius: cursorRadius,
-    borderColor: '#4d4d4d', //'#aad326',
+    borderColor: Colors.backgroundColor,
     borderWidth: 3,
-    backgroundColor: Colors.leftArrowColor,
+    backgroundColor: '#aad326',
   },
   cursorLabel: {
     backgroundColor: '#3c3c43',

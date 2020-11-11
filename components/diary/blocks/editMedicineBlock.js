@@ -146,9 +146,10 @@ const EditMedicineBlock = (props) => {
             fieldName={'Dosage'}
             item={dosage}
             setItem={setDosage}
-            parameter={medicineToEdit.unit}
+            parameter={medicineToEdit.unit + '(s)'}
             maxLength={2}
             allowInput={false}
+            showUnitInParam={false}
           />
           {dosage === 0 && (
             <Text style={[globalStyles.alertText, {marginStart: '4%'}]}>

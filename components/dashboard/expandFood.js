@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useRef, useState, useEffect} from 'react';
 import {
   View,
   StyleSheet,
@@ -9,9 +9,12 @@ import {
 } from 'react-native';
 //third party lib
 import Entypo from 'react-native-vector-icons/Entypo';
+import {Colors} from '../../styles/colors';
 
 const ExpandFood = (props) => {
-  const {period, foodData} = props;
+  const {period, foodData, clickPeriod} = props;
+  const {callback, closePeriod} = props;
+
   const [open, setOpen] = useState(false);
   const [showBottom, setShowBottom] = useState(false);
   const [minHeight, setMinHeight] = useState(0);
@@ -42,6 +45,17 @@ const ExpandFood = (props) => {
     outputRange: [minHeight, maxHeight],
   });
 
+  const onClickPeriod = () => {
+    if (clickPeriod) {
+      closePeriod();
+    } else {
+      let startdate = foodData[0]?.record_date;
+      let enddate = foodData[foodData.length - 1]?.record_date;
+
+      callback(startdate, enddate, foodData, period);
+    }
+  };
+
   return (
     <View onLayout={(event) => setMaxHeight(event.nativeEvent.layout.height)}>
       <View
@@ -49,7 +63,27 @@ const ExpandFood = (props) => {
           styles.periodContainer,
           showBottom ? {borderBottomWidth: 1} : {borderBottomWidth: 0},
         ]}>
-        <Text style={styles.periodText}>{period}</Text>
+        <TouchableOpacity
+          onPress={() => onClickPeriod()}
+          style={{flexDirection: 'row'}}>
+          {clickPeriod && (
+            <View
+              style={{
+                backgroundColor: Colors.lastLogButtonColor,
+                padding: '2%',
+                marginEnd: '3%',
+              }}
+            />
+          )}
+          <Text
+            style={[
+              styles.periodText,
+              clickPeriod && {color: Colors.leftArrowColor},
+            ]}>
+            {period}
+          </Text>
+        </TouchableOpacity>
+
         <TouchableOpacity
           onPress={() => {
             toggle(open);
