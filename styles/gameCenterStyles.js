@@ -56,7 +56,6 @@ const GameCenterStyles = StyleSheet.create({
         marginVertical: '2%',
         marginHorizontal: '10%',
         alignSelf: 'stretch',
-        marginBottom: '15%',
         padding: '3%',
     },
     darkGreenColor:{

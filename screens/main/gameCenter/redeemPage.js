@@ -157,7 +157,7 @@ const RedeemPage = (props) => {
                         setReadyRedeemSuccess(false);
                     }
                 }}>
-                <RedeemConfirmPage item={currentItem} points={availablePoint} redeemHandler={redeemHandler}/>
+                <RedeemConfirmPage item={currentItem} points={availablePoint} redeemHandler={redeemHandler} closeModal={() => setShowRedeemConfirm(false)}/>
             </Modal>
 
             <Modal

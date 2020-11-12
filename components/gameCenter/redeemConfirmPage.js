@@ -24,7 +24,7 @@ const enablePlus = (quantity, item_point, total_points) => {
 
 
 const RedeemConfirmPage = (props) => {
-    const {item, points, redeemHandler} = props;
+    const {item, points, redeemHandler, closeModal} = props;
 
     const [quantity, setQuantity] = useState(1);
 
@@ -60,6 +60,11 @@ const RedeemConfirmPage = (props) => {
                 style={[GameCenterStyles.buttonStyleNarrow, GameCenterStyles.nextColor, {marginTop: '3%'}]}
                 onPress={() => {redeemHandler(item._id, quantity)}}>
                 <Text style={globalStyles.actionButtonText}>Redeem</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+                style={[GameCenterStyles.buttonStyleNarrow, GameCenterStyles.backColor, {marginTop: '3%'}]}
+                onPress={() => {closeModal()}}>
+                <Text style={globalStyles.actionButtonText}>Cancel</Text>
             </TouchableOpacity>
         </View>
     );
