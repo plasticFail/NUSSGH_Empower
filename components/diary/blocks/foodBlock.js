@@ -136,7 +136,7 @@ const FoodBlock = (props) => {
             )}
           </View>
         )}
-        <ScrollView style={{flex: 1}}>
+        <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
           <TimeSection name={morningObj.name} />
           {renderFoodItems(morningMealLogs, editLog)}
           <TimeSection name={afternoonObj.name} />

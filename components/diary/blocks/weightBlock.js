@@ -78,7 +78,7 @@ const WeightBlock = (props) => {
         <Text style={globalStyles.pageDetails}>{day}</Text>
         {/* <MissedContent arr={missedArr} type={weight_key} /> */}
         {/*Show time section and data for log*/}
-        <ScrollView style={{flex: 1}}>
+        <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
           <TimeSection name={morningObj.name} />
           {renderWeightLogs(morningWeightLogs, editWeightLog)}
           <TimeSection name={afternoonObj.name} />
