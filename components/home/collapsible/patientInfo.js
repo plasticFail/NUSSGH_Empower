@@ -62,12 +62,6 @@ const PatientInfo = (props) => {
           }}>
           <View style={{marginBottom: '2%'}}>
             <View style={styles.content}>
-              <Text style={styles.header}>ID</Text>
-              <Text style={styles.detail}>
-                {isEmpty(patient) ? '-' : patient._id}
-              </Text>
-            </View>
-            <View style={styles.content}>
               <Text style={styles.header}>Age</Text>
               <Text style={styles.detail}>
                 {isEmpty(patient) ? '-' : getAge(patient?.birth_date)}
