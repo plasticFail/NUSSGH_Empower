@@ -9,7 +9,7 @@ import globalStyles from '../../styles/globalStyles';
 const SpinComponent = (props) => {
     return (
         <View style={[GameCenterStyles.card, GameCenterStyles.cardPadding]}>
-            <Image resizeMode="contain" style={GameCenterStyles.spinLogo} source={require('../../resources/images/gameCenter/2x/img-spinner-animate-2x.gif')}/>
+            <Image resizeMode="contain" style={GameCenterStyles.spinLogo} source={require('../../resources/images/gameCenter/img/img-spinner-animate.gif')}/>
         </View>
     );
 };

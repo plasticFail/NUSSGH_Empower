@@ -27,7 +27,7 @@ const SpinSlider = (props) => {
 
     const spinImageDisplay = () => {
         if(spinProgress === 1){
-            return require('../../resources/images/gameCenter/2x/img-spinner-animate-2x.gif')
+            return require('../../resources/images/gameCenter/img/img-spinner-animate@2x.gif')
         }
         return require('../../resources/images/gameCenter/img-spinner-static.png');
     }
