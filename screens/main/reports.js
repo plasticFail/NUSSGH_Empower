@@ -54,7 +54,7 @@ import {headerHeight, statusBarHeight} from '../../styles/variables';
 import {replaceActivitySummary} from '../../commonFunctions/reportDataFormatter';
 import {appRootUrl} from '../../config/AppConfig';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
-import {getEntryForDateRange} from '../../netcalls/requestsDiary';
+import {getEntryForDateRange, getEntry4Day} from '../../netcalls/requestsDiary';
 
 const EXPORT_BTN = require('../../resources/images/Patient-Icons/2x/icon-green-export-2x.png');
 
@@ -239,6 +239,10 @@ const ReportsScreen = (props) => {
       endDate.format('YYYY-MM-DD'),
     );
 
+    let today = Moment(new Date()).format('YYYY-MM-DD');
+    let data = await getEntry4Day(today);
+    const foodLogs = data?.[today]?.food?.logs;
+
     return {
       foodData,
       medData,
@@ -246,6 +250,7 @@ const ReportsScreen = (props) => {
       activityData,
       weightData,
       medPlan,
+      foodLogs,
     };
   };
 

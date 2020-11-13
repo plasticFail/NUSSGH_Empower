@@ -107,8 +107,7 @@ export default class LineChart extends React.Component {
       selectedIndex: 0,
       x: new Animated.Value(0),
       ...components,
-      foodDate: '',
-      foodData: [],
+      foodDate: Moment(new Date()).format('DD MMM YYYY'),
       startX: '',
       endX: '',
       showStart: false,
@@ -125,7 +124,7 @@ export default class LineChart extends React.Component {
     this.updateComponent();
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     if (
       prevProps.filterKey !== this.props.filterKey ||
       prevProps.data !== this.props.data
@@ -266,19 +265,6 @@ export default class LineChart extends React.Component {
           left: shownDatapoint[0] - Dimensions.get('window').width * 0.55,
           opacity: 1,
         });
-
-        let date = Moment(data[index].x);
-        this.setState({
-          foodDate: date.format('DD MMM YYYY'),
-        });
-
-        getEntry4Day(date.format('YYYY-MM-DD')).then((rsp) => {
-          if (rsp != null) {
-            this.setState({
-              foodData: rsp[date.format('YYYY-MM-DD')]?.food?.logs,
-            });
-          }
-        });
       } else {
         this.cursorLabel.current.setNativeProps({
           opacity: 0,
@@ -378,6 +364,7 @@ export default class LineChart extends React.Component {
       lowerBound,
       boundaryFill,
       showFood,
+      foodData,
     } = this.props;
     const {
       selectedIndex,
@@ -395,7 +382,6 @@ export default class LineChart extends React.Component {
       lineLength,
       line,
       foodDate,
-      foodData,
       startX,
       endX,
       showStart,
@@ -643,12 +629,12 @@ export default class LineChart extends React.Component {
               horizontal
             />
           }
-          {showFood && (
+          {showFood && filterKey === DAY_FILTER_KEY && (
             <View style={styles.foodTableContainer}>
               <Text style={styles.foodConsumedText}>
                 Food Consumed - {foodDate}
               </Text>
-              {foodData.length > 0 ? (
+              {foodData?.length > 0 ? (
                 <>
                   <ExpandFood
                     period={morningObj.name}
