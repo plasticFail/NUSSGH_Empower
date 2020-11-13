@@ -112,6 +112,7 @@ const ActivityBlock = (props) => {
         <View style={styles.border} />
         <ScrollView
           style={{flex: 1}}
+          showsVerticalScrollIndicator={false}
           ref={scrollViewRef}
           onContentSizeChange={() =>
             scrollViewRef.current.scrollToEnd({animated: true})

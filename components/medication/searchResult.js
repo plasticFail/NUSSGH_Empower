@@ -14,10 +14,13 @@ const SearchResult = (props) => {
   const {setSelectedMedicine, closeModal} = props;
 
   const handleSelect = (item) => {
+    let units =
+      String(item.unit).substr(0, 1).toUpperCase() +
+      String(item.unit).substr(1, item.unit.length);
     let medicineObj = {
       medication: item.drug_name,
       dosage: 0,
-      dosage_unit: 'unit',
+      dosage_unit: units,
       per_day: 0,
     };
     setSelectedMedicine(medicineObj);

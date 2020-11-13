@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, Alert} from 'react-native';
 //third party library
 import Modal from 'react-native-modal';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Entypo from 'react-native-vector-icons/Entypo';
 import moment from 'moment';
 //style
 import {Colors} from '../../../styles/colors';
@@ -18,6 +18,7 @@ import RenderCounter from '../../renderCounter';
 import {deleteMed, editMedicineInLog} from '../../../netcalls/requestsDiary';
 import RemoveModal from '../removeModal';
 import {med_key} from '../../../commonFunctions/logFunctions';
+import SideEffectModal from '../../logs/medication/sideEffectModal';
 
 const EditMedicineBlock = (props) => {
   const {visible, medicineToEdit, initialDate} = props;
@@ -28,14 +29,26 @@ const EditMedicineBlock = (props) => {
   const [dosage, setDosage] = useState(Number(medicineToEdit.dosage));
   const [deleteModal, setDeleteModal] = useState(false);
 
+  const [sideEffects, setSideEffects] = useState(medicineToEdit.side_effects);
+  const [showSeModal, setShowSeModal] = useState(false);
+  const [seString, setSeString] = useState('');
+
   console.log('in med bloc ' + moment(initialDate).format('DD-MM-YYYY HH:mm'));
 
   useEffect(() => {
+    let s = sideEffects.join(', ');
+    setSeString(s);
+    if (sideEffects.length === 0) {
+      setSeString('-');
+    }
+  }, [sideEffects]);
+
+  useEffect(() => {
     checkChange();
-  }, [dosage, datetime]);
+  }, [dosage, datetime, sideEffects]);
 
   const postChange = () => {
-    if (editMedicineInLog(dosage, medicineToEdit, datetime)) {
+    if (editMedicineInLog(dosage, medicineToEdit, datetime, sideEffects)) {
       Alert.alert('Medicine edited successfully!', '', [
         {
           text: 'Got It',
@@ -65,13 +78,28 @@ const EditMedicineBlock = (props) => {
   const checkChange = () => {
     if (
       String(initialDate) != String(datetime) ||
-      dosage != Number(medicineToEdit.dosage)
+      dosage != Number(medicineToEdit.dosage) ||
+      !checkSideEffectChange()
     ) {
       setChanged(true);
       return;
     }
     setChanged(false);
     return;
+  };
+
+  const checkSideEffectChange = () => {
+    let original = medicineToEdit.side_effects;
+    if (JSON.stringify(original) === JSON.stringify(sideEffects)) {
+      return true;
+    }
+    return false;
+  };
+
+  const onReturnSideEffect = (arr) => {
+    setSideEffects(arr);
+    let s = sideEffects.join(', ');
+    setSeString(s);
   };
 
   return (
@@ -95,13 +123,33 @@ const EditMedicineBlock = (props) => {
           />
           <Text style={logStyles.fieldName}>Medication Taken:</Text>
           <Text style={logStyles.inputField}>{medicineToEdit.medication}</Text>
+          {medicineToEdit.side_effects.length > 0 && (
+            <View style={{marginBottom: '3%'}}>
+              <Text style={logStyles.fieldName}>Side Effects:</Text>
+              <TouchableOpacity
+                style={globalStyles.medContainer}
+                onPress={() => setShowSeModal(true)}>
+                <Text
+                  style={{
+                    flex: 1,
+                    fontFamily: 'SFProDisplay-Regular',
+                    fontSize: 18,
+                  }}>
+                  {seString}
+                </Text>
+                <Entypo name="edit" style={diaryStyles.editIcon} size={30} />
+              </TouchableOpacity>
+            </View>
+          )}
+
           <RenderCounter
             fieldName={'Dosage'}
             item={dosage}
             setItem={setDosage}
-            parameter={'Unit(s)'}
+            parameter={medicineToEdit.unit + '(s)'}
             maxLength={2}
             allowInput={false}
+            showUnitInParam={false}
           />
           {dosage === 0 && (
             <Text style={[globalStyles.alertText, {marginStart: '4%'}]}>
@@ -134,6 +182,17 @@ const EditMedicineBlock = (props) => {
           logType={med_key}
           itemToDeleteName={medicineToEdit.medication}
           deleteMethod={() => removeMedFromLog()}
+        />
+      ) : null}
+      {/*Side Effect Modal */}
+      {showSeModal ? (
+        <SideEffectModal
+          visible={showSeModal}
+          close={() => setShowSeModal(false)}
+          parent="add"
+          chosenSideEffects={sideEffects}
+          deleteSideEffect={() => setSideEffects([])}
+          onReturnSideEffect={onReturnSideEffect}
         />
       ) : null}
     </Modal>

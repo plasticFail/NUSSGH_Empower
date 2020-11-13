@@ -77,7 +77,7 @@ const MedBlock = (props) => {
         <Text style={globalStyles.pageHeader}>Medication</Text>
         <Text style={globalStyles.pageDetails}>{day}</Text>
         <MissedContent arr={missedArr} type={med_key} />
-        <ScrollView style={{flex: 1}}>
+        <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
           {/*Show time section and data for log*/}
           <TimeSection name={morningObj.name} />
           {renderMedLogs(morningMedLogs, editLog)}
@@ -113,7 +113,7 @@ function renderMedLogs(logs, editLog) {
               <Text style={diaryStyles.recordContent}>
                 {item.dosage}{' '}
                 {String(item.unit).substring(0, 1).toUpperCase() +
-                  String(item.unit).substr(1, item.length)}{' '}
+                  String(item.unit).substr(1, item.length)}
                 (s) at {getTime12hr(item.record_date)}
               </Text>
             </View>

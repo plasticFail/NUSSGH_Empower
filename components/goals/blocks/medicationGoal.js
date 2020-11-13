@@ -33,6 +33,7 @@ const MedicationGoal = (props) => {
   const [dosage, setDosage] = useState(0);
   const [openSearchModal, setOpenSearchModal] = useState(false);
   const [pageText, setPageText] = useState('Add Goal');
+  const [units, setUnits] = useState('');
 
   useEffect(() => {
     if (parent != undefined && med != undefined) {
@@ -42,6 +43,11 @@ const MedicationGoal = (props) => {
       };
       setDosage(med.dosage);
       setSelectedMed(medObj);
+      let formatUnit =
+        String(med?.unit).substr(0, 1).toUpperCase() +
+        String(med?.unit).substr(1, med?.unit?.length) +
+        '(s)';
+      setUnits(formatUnit);
       setPageText('Edit Goal');
       if (parent === defaultv) {
         setPageText('Add Goal');
@@ -142,11 +148,16 @@ const MedicationGoal = (props) => {
                 fieldName={'Dosage'}
                 item={dosage}
                 setItem={setDosage}
-                parameter={'Unit(s)'}
+                parameter={
+                  selectedMed?.dosage_unit === undefined
+                    ? units
+                    : selectedMed?.dosage_unit + '(s)'
+                }
                 maxLength={2}
                 allowInput={false}
                 showUnitInParam={false}
                 style={{marginStart: '1%'}}
+                incrementValue={0.5}
               />
             </ScrollView>
           </View>

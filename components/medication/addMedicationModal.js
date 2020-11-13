@@ -77,7 +77,7 @@ const AddMedicationModal = (props) => {
       per_day: frequency,
       days: [...daysArr],
       medication: selectedMed.medication,
-      dosage_unit: 'unit',
+      dosage_unit: selectedMed.dosage_unit,
     };
 
     if (parent === onboardAdd || parent === med_planAdd) {
@@ -130,10 +130,15 @@ const AddMedicationModal = (props) => {
           fieldName="Default Dosage"
           item={dosage}
           setItem={setDosage}
-          parameter={'Unit(s)'}
+          parameter={
+            selectedMed?.dosage_unit === undefined
+              ? ''
+              : selectedMed?.dosage_unit + '(s)'
+          }
           allowInput={false}
           showUnitInParam={false}
           style={{marginStart: '3%', marginTop: '2%'}}
+          incrementValue={0.5}
         />
         <RenderCounter
           fieldName="Frequency"

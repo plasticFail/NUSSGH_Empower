@@ -20,6 +20,8 @@ import globalStyles from '../../../styles/globalStyles';
 import logStyles from '../../../styles/logStyles';
 import ScheduledMedicationList from './scheduledMedicationList';
 import {ScrollView} from 'react-native-gesture-handler';
+import SideEffectModal from './sideEffectModal';
+import diaryStyles from '../../../styles/diaryStyles';
 
 const extra = 'extra';
 
@@ -33,12 +35,15 @@ const MedicationLogBlock = (props) => {
   const [showSelectModal, setShowSelectModal] = useState(false);
   const [selectedMedList, setSelectedMedList] = useState([]); //from planned
   const [extraAddedList, setExtraAddedList] = useState([]); //from newly added
-  const [arr2Submit, setArr2Submit] = useState([]);
+  const [sideEffects, setSideEffects] = useState([]);
+  const [sideEffectString, setSideEffectString] = useState('');
+  const [showEffectModal, setShowEffectModal] = useState(false);
   const [success, setSuccess] = useState(false);
 
   useEffect(() => {
     setSelectedMedList([]);
     setExtraAddedList([]);
+    setSideEffects([]);
   }, []);
 
   useEffect(() => {
@@ -105,6 +110,11 @@ const MedicationLogBlock = (props) => {
 
   const combineArr = () => {
     let newArr = selectedMedList.concat(extraAddedList);
+
+    for (var x of newArr) {
+      x.side_effects = sideEffects;
+    }
+
     return newArr;
   };
 
@@ -124,6 +134,14 @@ const MedicationLogBlock = (props) => {
     setSuccess(false);
     closeModal();
     closeParent();
+  };
+
+  const onReturnSideEffect = (arr) => {
+    console.log(arr);
+    setSideEffects(arr);
+
+    let string = arr.join(', ');
+    setSideEffectString(string);
   };
 
   return (
@@ -176,6 +194,39 @@ const MedicationLogBlock = (props) => {
                 Add Medication
               </Text>
             </TouchableOpacity>
+
+            <Text style={[logStyles.fieldName, logStyles.componentMargin]}>
+              Side Effect
+            </Text>
+            {sideEffects.length === 0 ? (
+              <TouchableOpacity
+                onPress={() => setShowEffectModal(true)}
+                style={{flexDirection: 'row'}}>
+                <AntDesign
+                  name="pluscircleo"
+                  color={'#aad326'}
+                  size={25}
+                  style={{margin: '2%'}}
+                />
+                <Text style={[logStyles.fieldName, {color: '#aad326'}]}>
+                  Add Side Effect
+                </Text>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                style={[globalStyles.medContainer, {marginBottom: '3%'}]}
+                onPress={() => setShowEffectModal(true)}>
+                <Text
+                  style={{
+                    flex: 1,
+                    fontFamily: 'SFProDisplay-Regular',
+                    fontSize: 18,
+                  }}>
+                  {sideEffectString}
+                </Text>
+                <Entypo name="edit" style={diaryStyles.editIcon} size={30} />
+              </TouchableOpacity>
+            )}
           </ScrollView>
 
           {/*Select medication modal */}
@@ -187,6 +238,18 @@ const MedicationLogBlock = (props) => {
               getSelectedMedicineFromModal={getSelectedMedicineFromModal}
               recordDate={recordDate}
               medplanlist={selectedMedList}
+            />
+          ) : null}
+
+          {/*Side Effect Modal */}
+          {showEffectModal ? (
+            <SideEffectModal
+              visible={showEffectModal}
+              close={() => setShowEffectModal(false)}
+              parent="add"
+              chosenSideEffects={sideEffects}
+              onReturnSideEffect={onReturnSideEffect}
+              deleteSideEffect={() => setSideEffects([])}
             />
           ) : null}
         </View>

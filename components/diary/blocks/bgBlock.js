@@ -103,7 +103,7 @@ const BgBlock = (props) => {
             )}
           </View>
         )}
-        <ScrollView style={{flex: 1}}>
+        <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
           {/*Show time section and data for log*/}
           <TimeSection name={morningObj.name} />
           {renderLogs(morningBgLogs, editLog)}
