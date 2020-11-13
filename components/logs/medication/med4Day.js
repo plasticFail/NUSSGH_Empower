@@ -49,6 +49,7 @@ const Med4Day = (props) => {
             fieldName={''}
             enableInput={false}
             style={{width: '65%'}}
+            incrementValue={0.5}
           />
         )}
       </View>

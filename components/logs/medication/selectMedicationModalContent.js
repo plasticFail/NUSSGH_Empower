@@ -76,6 +76,7 @@ const SelectMedicationModalContent = (props) => {
             }
             allowInput={false}
             showUnitInParam={false}
+            incrementValue={0.5}
           />
           {checkRepeatMedicine(selectedMedicine, selectedMedList) ||
             (checkRepeatMedicine(selectedMedicine, medplanlist) && (

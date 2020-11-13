@@ -119,7 +119,7 @@ const GoalDetail = (props) => {
           ) : type === med ? (
             <>
               {RenderField('Medication', goalItem?.medication)}
-              {RenderField('Dosage', goalItem?.dosage, 'Unit(s)')}
+              {RenderField('Dosage', goalItem?.dosage, goalItem?.unit)}
             </>
           ) : type === weight ? (
             <>{RenderField('Goal Weight', goalItem?.goal_weight, 'kg')}</>
@@ -164,6 +164,11 @@ export default GoalDetail;
 
 function RenderField(fieldName, fieldData, units) {
   let string = '';
+  let formatUnit =
+    String(units).substr(0, 1).toUpperCase() +
+    String(units).substr(1, units?.length) +
+    '(s)';
+
   if (fieldData != null) {
     let stringLength = fieldData.length;
     string = fieldData;
@@ -174,9 +179,15 @@ function RenderField(fieldName, fieldData, units) {
   return (
     <View style={[{flexDirection: 'row'}, globalStyles.goalFieldBottomBorder]}>
       <Text style={[globalStyles.goalFieldName, {flex: 1}]}>{fieldName}</Text>
-      <Text style={styles.data}>
-        {string} {units}
-      </Text>
+      {fieldName === 'Dosage' ? (
+        <Text style={styles.data}>
+          {string} {formatUnit}
+        </Text>
+      ) : (
+        <Text style={styles.data}>
+          {string} {units}
+        </Text>
+      )}
     </View>
   );
 }

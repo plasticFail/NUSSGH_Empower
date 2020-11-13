@@ -138,6 +138,7 @@ const AddMedicationModal = (props) => {
           allowInput={false}
           showUnitInParam={false}
           style={{marginStart: '3%', marginTop: '2%'}}
+          incrementValue={0.5}
         />
         <RenderCounter
           fieldName="Frequency"
