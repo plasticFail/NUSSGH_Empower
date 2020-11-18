@@ -11,12 +11,12 @@ import CALBURNT from '../../../resources/images/Patient-Icons/SVG/icon-darkgreen
 import {carbs, fats, protein} from '../../../commonFunctions/common';
 import NutritionCol from '../nutritionCol';
 import {useNavigation} from '@react-navigation/native';
-import {scaleFont} from '../../../commonFunctions/scaleFunction';
-
-const logoStyle = {
-  width: 50,
-  height: 50,
-};
+import {
+  scaleFont,
+  activityIconStyle,
+  widthPercent2Dp,
+  heightPercent2Dp,
+} from '../../../commonFunctions/scaleFunction';
 
 const ActivityCollapse = (props) => {
   const {activitySummary, activityTarget, carbAmt, proteinAmt, fatAmt} = props;
@@ -90,12 +90,12 @@ const ActivityCollapse = (props) => {
                       : activitySummary?.steps / maxSteps
                   }
                   centreComponent={{
-                    width: 50 / 2,
-                    height: 50 / 1.5,
-                    component: <STEP {...logoStyle} />,
+                    width: widthPercent2Dp('4%'),
+                    height: heightPercent2Dp('5%'),
+                    component: <STEP {...activityIconStyle} />,
                   }}
-                  radius={50}
-                  padding={10}
+                  radius={heightPercent2Dp('6%')}
+                  padding={widthPercent2Dp('3%')}
                   strokeWidth={5}
                   fontSize={15}
                 />
@@ -113,12 +113,12 @@ const ActivityCollapse = (props) => {
                       : activitySummary?.duration / activityTarget
                   }
                   centreComponent={{
-                    width: 50 / 2,
-                    height: 50 / 1.5,
-                    component: <RUN {...logoStyle} />,
+                    width: widthPercent2Dp('4%'),
+                    height: heightPercent2Dp('5%'),
+                    component: <RUN {...activityIconStyle} />,
                   }}
-                  radius={50}
-                  padding={10}
+                  radius={heightPercent2Dp('6%')}
+                  padding={widthPercent2Dp('3%')}
                   strokeWidth={5}
                   fontSize={15}
                 />
@@ -136,12 +136,12 @@ const ActivityCollapse = (props) => {
                       : activitySummary?.calories / maxCalBurnt
                   }
                   centreComponent={{
-                    width: 50 / 2,
-                    height: 50 / 1.5,
-                    component: <CALBURNT {...logoStyle} />,
+                    width: widthPercent2Dp('4%'),
+                    height: heightPercent2Dp('5%'),
+                    component: <CALBURNT {...activityIconStyle} />,
                   }}
-                  radius={50}
-                  padding={10}
+                  radius={heightPercent2Dp('6%')}
+                  padding={widthPercent2Dp('3%')}
                   strokeWidth={5}
                   fontSize={15}
                 />

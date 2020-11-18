@@ -48,6 +48,7 @@ import LeftArrowBtn from '../../../components/logs/leftArrowBtn';
 import LoadingModal from '../../../components/loadingModal';
 import UncompleteLogCard from '../../../components/uncompleteLogCard';
 import {normalTextFontSize} from '../../../styles/variables';
+import {scaleFont} from '../../../commonFunctions/scaleFunction';
 // Functions
 
 const fixedDateTime = new Date();
@@ -351,7 +352,8 @@ class AddLogScreen extends Component {
               <ScrollView
                 style={logStyles.modalContainer}
                 contentContainerStyle={{paddingBottom: '15%'}}>
-                <View style={[globalStyles.menuBarContainer, {paddingLeft: '4%'}]}>
+                <View
+                  style={[globalStyles.menuBarContainer, {paddingLeft: '4%'}]}>
                   <CrossBtn close={this.closeModal} />
                 </View>
                 <View style={[logStyles.bodyPadding, {flex: 1}]}>
@@ -450,11 +452,11 @@ const styles = StyleSheet.create({
   uncompleteDetail: {
     color: '#ff0844',
     fontFamily: 'SFProDisplay-Regular',
-    fontSize: 14,
+    fontSize: scaleFont(12),
   },
   logHeader: {
-    fontSize: 18,
-    fontWeight: '800',
+    fontSize: scaleFont(15),
+    fontWeight: 'bold',
     fontFamily: 'SFProDisplay-Regular',
     marginBottom: '2%',
     color: '#21293a',

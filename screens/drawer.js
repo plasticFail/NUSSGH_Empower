@@ -70,7 +70,7 @@ const DrawerContent = (props) => {
         icon={() => <RESOURCES {...iconStyle} />}
         onPress={() => props.navigation.navigate('Resources')}
       />
-      <View style={{position: 'absolute', bottom: '10%'}}>
+      <View style={{position: 'absolute', bottom: '3%'}}>
         <DrawerItem
           label="Log Out"
           labelStyle={[styles.subText]}

@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, Dimensions} from 'react-native';
 //third party libs
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 //functions
@@ -28,14 +28,14 @@ import GAME_FOCUSED from '../resources/images/Patient-Icons/SVG/icon-green-foote
 import CHAT from '../resources/images/Patient-Icons/SVG/icon-navy-footer-chat.svg';
 import CHAT_FOCUSED from '../resources/images/Patient-Icons/SVG/icon-green-footer-chat.svg';
 import {CardStyleInterpolators} from '@react-navigation/stack';
-import {scaleFont} from '../commonFunctions/scaleFunction';
+import {
+  scaleFont,
+  bottomNavigationIconStyle,
+  heightPercent2Dp,
+} from '../commonFunctions/scaleFunction';
 
 const Tab = createBottomTabNavigator();
 
-const iconStyle = {
-  width: 30,
-  height: 30,
-};
 const DashboardScreen = (props) => {
   Icon.loadFont();
   return (
@@ -48,7 +48,7 @@ const DashboardScreen = (props) => {
           fontSize: scaleFont(10),
         },
         style: {
-          height: '10%',
+          height: heightPercent2Dp('10.5%'),
         },
       }}>
       <Tab.Screen
@@ -58,9 +58,9 @@ const DashboardScreen = (props) => {
           title: 'Home',
           tabBarIcon: ({focused}) => {
             if (focused) {
-              return <HOME_FOCUSED {...iconStyle} />;
+              return <HOME_FOCUSED {...bottomNavigationIconStyle} />;
             } else {
-              return <HOME {...iconStyle} />;
+              return <HOME {...bottomNavigationIconStyle} />;
             }
           },
         }}
@@ -72,9 +72,9 @@ const DashboardScreen = (props) => {
           title: 'Reports',
           tabBarIcon: ({focused}) => {
             if (focused) {
-              return <REPORTS_FOCUSED {...iconStyle} />;
+              return <REPORTS_FOCUSED {...bottomNavigationIconStyle} />;
             } else {
-              return <REPORTS {...iconStyle} />;
+              return <REPORTS {...bottomNavigationIconStyle} />;
             }
           },
         }}
@@ -86,9 +86,9 @@ const DashboardScreen = (props) => {
           title: 'Add Log',
           tabBarIcon: ({focused}) => {
             if (focused) {
-              return <ADD_FOCUSED {...iconStyle} />;
+              return <ADD_FOCUSED {...bottomNavigationIconStyle} />;
             } else {
-              return <ADD {...iconStyle} />;
+              return <ADD {...bottomNavigationIconStyle} />;
             }
           },
         }}
@@ -100,9 +100,9 @@ const DashboardScreen = (props) => {
           title: 'Game Center',
           tabBarIcon: ({focused}) => {
             if (focused) {
-              return <GAME_FOCUSED {...iconStyle} />;
+              return <GAME_FOCUSED {...bottomNavigationIconStyle} />;
             } else {
-              return <GAME {...iconStyle} />;
+              return <GAME {...bottomNavigationIconStyle} />;
             }
           },
         }}
@@ -114,9 +114,9 @@ const DashboardScreen = (props) => {
           title: 'Chat',
           tabBarIcon: ({focused}) => {
             if (focused) {
-              return <CHAT_FOCUSED {...iconStyle} />;
+              return <CHAT_FOCUSED {...bottomNavigationIconStyle} />;
             } else {
-              return <CHAT {...iconStyle} />;
+              return <CHAT {...bottomNavigationIconStyle} />;
             }
           },
         }}
