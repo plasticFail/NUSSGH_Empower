@@ -5,8 +5,19 @@ import globalStyles from '../../styles/globalStyles';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import LoadingModal from '../loadingModal';
 import {storeAuthorisedStatusCaregiver} from '../../storage/asyncStorageFunctions';
-import SuccessDialogue from '../successDialogue';
-import AuthoriseSuccessMsg from '../authoriseSucessMsg';
+import AddViewCaregiverModal from '../myCaregiver/addViewCaregiverModal';
+
+const caregiver = {
+  _id: '5f97a6cf074ac28669e13026',
+  contact_number: '88888888',
+  email: '',
+  first_name: 'Casp',
+  gender: 'male',
+  last_name: 'Tana',
+  patient: '5f326d192cc94fdc78bfe555',
+  roles: ['User'],
+  username: 'caregiver',
+};
 
 const AuthorisationCaregiver = (props) => {
   const {toDoAfterOTP} = props;
@@ -15,19 +26,34 @@ const AuthorisationCaregiver = (props) => {
   const [loading, setLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
+  const [showForm, setShowForm] = useState(false);
+  const [modalType, setModalType] = useState('');
+
   useEffect(() => {
     setOpen(true);
+    //check if there is any pending request*
   }, []);
 
   useEffect(() => {
     if (otp.length === 6) {
-      verifyingAuthorise();
+      setModalType('add');
+      validateOtp();
     }
   }, [otp]);
 
+  const validateOtp = () => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      setTimeout(() => {
+        setShowForm(true);
+      }, 1000);
+    }, 2000);
+  };
+
+  // to use when calling api to send permission
   const verifyingAuthorise = () => {
     //assuming otp is correct.
-    setLoading(true);
     setTimeout(() => {
       storeAuthorisedStatusCaregiver(true).then((rsp) => {
         setLoading(false);
@@ -83,14 +109,20 @@ const AuthorisationCaregiver = (props) => {
             }}
           />
         </View>
+        <LoadingModal visible={loading} message={'Validating OTP'} />
+        {showForm ? (
+          <AddViewCaregiverModal
+            visible={showForm}
+            closeModal={() => {
+              setShowForm(false);
+            }}
+            type={modalType}
+            caregiver={caregiver}
+            modalType={'card'}
+            from={'caregiver'}
+          />
+        ) : null}
       </View>
-      <LoadingModal visible={loading} message={'Validating OTP'} />
-      {showSuccess ? (
-        <AuthoriseSuccessMsg
-          visible={showSuccess}
-          closeSuccess={() => closeOTPSuccess()}
-        />
-      ) : null}
     </View>
   );
 };

@@ -15,6 +15,7 @@ import USER_MALE from '../../resources/images/Patient-Icons/SVG/user-male.svg';
 import USER_FEMALE from '../../resources/images/Patient-Icons/SVG/user-female.svg';
 import AddViewCaregiverModal from '../../components/myCaregiver/addViewCaregiverModal';
 import {getMyCaregiver} from '../../netcalls/requestsMyCaregiver';
+import AuthoriseContent from '../../components/myCaregiver/authoriseContent';
 
 const iconStyle = {
   width: 40,
@@ -22,9 +23,10 @@ const iconStyle = {
 };
 
 const MyCaregiverScreen = (props) => {
-  const [caregiver, setCaregiver] = useState({});
+  const [caregiver, setCaregiver] = useState();
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState('');
+  const [pinNum, setPinNum] = useState('');
 
   useEffect(() => {
     init();
@@ -36,8 +38,13 @@ const MyCaregiverScreen = (props) => {
         setCaregiver(rsp);
       } else {
         setCaregiver({});
+        setPinNum('656666');
       }
     });
+
+    setInterval(() => {
+      console.log('checking for any pending request');
+    }, 1000);
   };
 
   const openModal = (type) => {
@@ -52,39 +59,35 @@ const MyCaregiverScreen = (props) => {
         <LeftArrowBtn close={() => props.navigation.navigate('Home')} />
       </View>
       <Text style={globalStyles.pageHeader}>My Caregiver</Text>
-      <Text style={styles.subHeading}>Appointed</Text>
+
       {isEmpty(caregiver) ? (
-        <TouchableOpacity
-          style={{flexDirection: 'row'}}
-          onPress={() => openModal('add')}>
-          <AntDesign
-            name="pluscircleo"
-            color={'#aad326'}
-            size={25}
-            style={{margin: '2%'}}
-          />
-          <Text style={styles.addText}>Add Caregiver</Text>
-        </TouchableOpacity>
+        <>
+          <Text style={styles.subHeading}>Authorisation</Text>
+          <AuthoriseContent pinNum={pinNum} />
+        </>
       ) : (
-        <TouchableOpacity
-          style={globalStyles.row}
-          onPress={() => openModal('view')}>
-          <View style={{flexDirection: 'row'}}>
-            {caregiver?.gender === 'female' ? (
-              <USER_FEMALE {...iconStyle} />
-            ) : (
-              <USER_MALE {...iconStyle} />
-            )}
-            <Text style={globalStyles.field}>
-              {caregiver?.first_name} {caregiver?.last_name}{' '}
-            </Text>
-            <Entypo
-              name="chevron-small-right"
-              size={40}
-              style={{opacity: 0.5, color: '#21293A'}}
-            />
-          </View>
-        </TouchableOpacity>
+        <>
+          <Text style={styles.subHeading}>Appointed</Text>
+          <TouchableOpacity
+            style={globalStyles.row}
+            onPress={() => openModal('view')}>
+            <View style={{flexDirection: 'row'}}>
+              {caregiver?.gender === 'female' ? (
+                <USER_FEMALE {...iconStyle} />
+              ) : (
+                <USER_MALE {...iconStyle} />
+              )}
+              <Text style={globalStyles.field}>
+                {caregiver?.first_name} {caregiver?.last_name}{' '}
+              </Text>
+              <Entypo
+                name="chevron-small-right"
+                size={40}
+                style={{opacity: 0.5, color: '#21293A'}}
+              />
+            </View>
+          </TouchableOpacity>
+        </>
       )}
       {showModal ? (
         <AddViewCaregiverModal

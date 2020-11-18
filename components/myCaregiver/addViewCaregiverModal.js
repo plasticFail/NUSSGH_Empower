@@ -8,11 +8,10 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   Dimensions,
-  Animated,
+  Modal,
   Alert,
 } from 'react-native';
 //third party lib
-import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
 
@@ -22,13 +21,11 @@ import globalStyles from '../../styles/globalStyles';
 
 //component
 import LeftArrowBtn from '../logs/leftArrowBtn';
-import Tick from '../tick';
 import AccessOption from './accessOption';
 
 import USER_FEMALE from '../../resources/images/Patient-Icons/SVG/user-female.svg';
 import USER_MALE from '../../resources/images/Patient-Icons/SVG/user-male.svg';
 import {isEmpty} from '../../commonFunctions/common';
-import AuthoriseModal from './authoriseModal';
 import {
   search4Caregiver,
   assignCaregiver2Patient,
@@ -42,58 +39,21 @@ import DeleteModal from '../deleteModal';
 const iconStyle = {
   width: 40,
   height: 40,
+  alignSelf: 'center',
 };
 
 const height = Dimensions.get('window').height;
 
 const AddViewCaregiverModal = (props) => {
-  const {visible, type, caregiver} = props;
+  const {visible, type, caregiver, modalType, from} = props;
   const {closeModal} = props;
-  const [searchResult, setSearchResult] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [showAuthorise, setShowAuthorise] = useState(false);
 
   const [showDelete, setShowDelete] = useState(false);
 
-  const [chosenCaregiver, setChosenCaregiver] = useState({});
+  const [chosenCaregiver, setChosenCaregiver] = useState(caregiver);
   const [accessName, setAccessName] = useState(false);
-  const [accessID, setAccessId] = useState(false);
-  const [accessDob, setAccessDob] = useState(false);
   const [accessRD, setAccessRd] = useState(false);
-
-  useEffect(() => {
-    setSearchResult([]);
-    if (type != 'add') {
-      setSearchResult([caregiver]);
-    }
-  }, []);
-
-  const searchCaregiver = (searchKey) => {
-    if (searchKey.length === 8) {
-      setLoading(true);
-      setTimeout(() => {
-        search4Caregiver(searchKey).then((rsp) => {
-          setSearchResult(rsp?.results);
-        });
-        setSearchResult([]);
-        setLoading(false);
-      }, 500);
-    } else {
-      setSearchResult([]);
-    }
-  };
-
-  const selectedCaregiver = (caregiver) => {
-    setChosenCaregiver(caregiver);
-    //show search result only selected
-    let finalResult = [caregiver];
-    setSearchResult(finalResult);
-    //if selected alr, unselect
-    if (chosenCaregiver._id === caregiver._id) {
-      setChosenCaregiver({});
-      setSearchResult([]);
-    }
-  };
+  const [accessLr, setAccessLr] = useState(false);
 
   const authorise = () => {
     console.log('authorising');
@@ -125,7 +85,7 @@ const AddViewCaregiverModal = (props) => {
   const deleteCaregiver = () => {
     unassignCaregiver().then((rsp) => {
       if (rsp === 200) {
-        Alert.alert('Caregiver Unassigned Successfulyl!', '', [
+        Alert.alert('Unassigned Successfully!', '', [
           {
             text: 'Got It',
             onPress: () => {
@@ -142,98 +102,62 @@ const AddViewCaregiverModal = (props) => {
 
   return (
     <Modal
-      isVisible={visible}
-      coverScreen={true}
-      backdropOpacity={1}
+      visible={visible}
       onBackButtonPress={() => closeModal()}
-      style={{margin: 0}}
-      backdropColor={Colors.backgroundColor}>
+      presentationStyle={modalType === 'card' ? 'formSheet' : 'fullScreen'}
+      animationType="slide">
       <View style={globalStyles.pageContainer}>
-        <View style={globalStyles.menuBarContainer}>
+        <View
+          style={
+            from != 'caregiver'
+              ? globalStyles.menuBarContainer
+              : {marginTop: '3%'}
+          }>
           <LeftArrowBtn close={() => closeModal()} />
         </View>
         <Text style={globalStyles.pageHeader}>
-          {type === 'add' ? 'Add Caregiver' : 'View Caregiver'}
+          {from === 'caregiver'
+            ? type === 'add'
+              ? 'Request Access'
+              : 'Requested Access'
+            : 'View Caregiver'}
         </Text>
-        {type === 'add' ? (
-          <TextInput
-            style={globalStyles.row}
-            placeholder="Enter Caregiver's Phone Number"
-            placeholderTextColor={'#90949c'}
-            onChangeText={(value) => searchCaregiver(value)}
-            keyboardType={'number-pad'}
-            returnKeyType="done"
-            maxLength={8}
-          />
-        ) : (
-          <Text style={styles.appointedText}>Appointed</Text>
-        )}
+        <View style={[globalStyles.row, styles.container]}>
+          {chosenCaregiver?.gender === 'female' ? (
+            <USER_FEMALE {...iconStyle} />
+          ) : (
+            <USER_MALE {...iconStyle} />
+          )}
 
-        {loading ? (
-          <ActivityIndicator
-            animating={loading}
-            color="#aad326"
-            style={{marginTop: '2%', marginBottom: '2%'}}
-          />
-        ) : searchResult.length > 0 ? (
-          <View style={{maxHeight: '20%'}}>
-            {searchResult.map((item, index) => (
-              <View style={[globalStyles.row, styles.container]} key={index}>
-                {item?.gender === 'female' ? (
-                  <USER_FEMALE {...iconStyle} />
-                ) : (
-                  <USER_MALE {...iconStyle} />
-                )}
-                {type === 'add' ? (
-                  <Text style={globalStyles.field}>{item.first_name}</Text>
-                ) : (
-                  <View style={{flex: 1, marginStart: '3%'}}>
-                    <Text style={styles.mainField}>{item.first_name}</Text>
-                    <Text style={[styles.subField]}>{item.contact_number}</Text>
-                  </View>
-                )}
-
-                {type === 'add' ? (
-                  <TouchableOpacity onPress={() => selectedCaregiver(item)}>
-                    {chosenCaregiver._id === item._id ? (
-                      <Tick selected={true} />
-                    ) : (
-                      <Tick selected={false} />
-                    )}
-                  </TouchableOpacity>
-                ) : null}
-              </View>
-            ))}
+          <View style={{flex: 1, marginStart: '3%'}}>
+            <Text style={[styles.subField]}>
+              {chosenCaregiver?.contact_number}
+            </Text>
+            <Text style={styles.mainField}>{chosenCaregiver?.first_name}</Text>
           </View>
-        ) : null}
+        </View>
 
         <Text style={styles.fieldText}>
-          {type === 'add' ? 'Select' : 'Edit'} Access Privileges
+          {type === 'add' ? 'Select' : 'Requested'} Access Privileges
         </Text>
         <ScrollView style={{flexGrow: 1}}>
           <AccessOption
-            mainheader={'Your Name'}
+            mainheader={"Patient's First Name"}
             subheader={'Personal Information'}
             onSelect={() => setAccessName(!accessName)}
             selected={accessName}
           />
           <AccessOption
-            mainheader={'Your ID'}
-            subheader={'Personal Information'}
-            onSelect={() => setAccessId(!accessID)}
-            selected={accessID}
-          />
-          <AccessOption
-            mainheader={'Your Date of Birth'}
-            subheader={'Personal Information'}
-            onSelect={() => setAccessDob(!accessDob)}
-            selected={accessDob}
-          />
-          <AccessOption
-            mainheader={'Your Report & Diary'}
+            mainheader={"Patient's Report & Diary"}
             subheader={'Health Information'}
             onSelect={() => setAccessRd(!accessRD)}
             selected={accessRD}
+          />
+          <AccessOption
+            mainheader={"Patient's Result"}
+            subheader={'Health Information'}
+            onSelect={() => setAccessLr(!accessLr)}
+            selected={accessLr}
           />
           <TouchableOpacity onPress={() => openURL()}>
             <Text style={styles.pdpaText}>
@@ -247,7 +171,7 @@ const AddViewCaregiverModal = (props) => {
       </View>
 
       <View style={globalStyles.buttonContainer}>
-        {type === 'add' ? (
+        {from === 'caregiver' ? (
           <TouchableOpacity
             onPress={() => authorise()}
             style={
@@ -255,7 +179,7 @@ const AddViewCaregiverModal = (props) => {
                 ? globalStyles.submitButtonStyle
                 : globalStyles.skipButtonStyle
             }>
-            <Text style={globalStyles.actionButtonText}>Next</Text>
+            <Text style={globalStyles.actionButtonText}>Request</Text>
           </TouchableOpacity>
         ) : (
           <View style={{flexDirection: 'row'}}>
@@ -273,13 +197,6 @@ const AddViewCaregiverModal = (props) => {
         )}
       </View>
 
-      {/*Show Authorise modal 
-      <AuthoriseModal
-        visible={showAuthorise}
-        closeModal={() => setShowAuthorise(false)}
-        closeParent={() => closeModal()}
-      />
-      */}
       <DeleteModal
         visible={showDelete}
         item={caregiver.first_name}

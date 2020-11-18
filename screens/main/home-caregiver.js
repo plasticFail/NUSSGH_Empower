@@ -123,19 +123,23 @@ const HomeScreenCaregiver = (props) => {
           />
 
           <View style={{backgroundColor: 'transparent'}}>
-            <>
-              <AssignedPatientCollapse
-                patient={patient}
-                setPatient={setPatient}
-              />
-              <DailyCollapse
-                patient={patient}
-                uncompleteLogs={uncompleteLogs}
-                hour={getGreetingFromHour(currHour)}
-              />
-              <PatientType patient={patient} />
-              <PatientInfo patient={patient} />
-            </>
+            {authorise ? (
+              <>
+                <AssignedPatientCollapse
+                  patient={patient}
+                  setPatient={setPatient}
+                />
+                <DailyCollapse
+                  patient={patient}
+                  uncompleteLogs={uncompleteLogs}
+                  hour={getGreetingFromHour(currHour)}
+                />
+                <PatientType patient={patient} />
+                <PatientInfo patient={patient} />
+              </>
+            ) : (
+              <AuthorisationCaregiver toDoAfterOTP={toDoAfterOTP} />
+            )}
           </View>
 
           {/* Diary overview of weight, blood glucose, food, medication and physical activity */}
