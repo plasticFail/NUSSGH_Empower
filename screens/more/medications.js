@@ -46,7 +46,7 @@ export default class MedicationScreen extends Component {
   }
 
   componentDidUpdate(prevProp, prevState) {
-    if (prevProp.route.params != this.props.route.params) {
+    if (prevProp.route.params !== this.props.route.params) {
       console.log('in update-----');
       this.setUp();
     }

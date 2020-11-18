@@ -3,7 +3,6 @@ import {View, StyleSheet, Text, Animated, Dimensions} from 'react-native';
 import globalStyles from '../../styles/globalStyles';
 import LeftArrowBtn from '../../components/logs/leftArrowBtn';
 import {
-  notif_log,
   notif_addlog,
   getGreetingFromHour,
 } from '../../commonFunctions/common';
@@ -11,6 +10,8 @@ import NotificationRow from '../../components/home/notificationRow';
 import {useNavigation} from '@react-navigation/native';
 import {storeReadNotifDate} from '../../storage/asyncStorageFunctions';
 import moment from 'moment';
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
+
 
 const AlertsScreen = (props) => {
   const {logsNotDone} = props;
@@ -90,7 +91,7 @@ const AlertsScreen = (props) => {
 const styles = StyleSheet.create({
   chatScreen: {
     flex: 1,
-    padding: 10,
+    padding: adjustSize(10),
     alignItems: 'center',
     justifyContent: 'center',
   },

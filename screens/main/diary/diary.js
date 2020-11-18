@@ -8,11 +8,11 @@ import {
   Animated,
 } from 'react-native';
 //component
-import MenuBtn from '../../../components/menuBtn';
 import TargetBlock from '../../../components/diary/targetBlock';
 import CalendarDay2Component from '../../../components/diary/calendarDay_2';
 //functions
 import {getDateRange} from '../../../commonFunctions/diaryFunctions';
+import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
 //style
 import globalStyles from '../../../styles/globalStyles';
 import {Colors} from '../../../styles/colors';
@@ -126,7 +126,7 @@ const DiaryScreen = (props) => {
                   alignSelf: 'center',
                 },
                 monthText: {
-                  fontSize: 20,
+                  fontSize: adjustSize(20),
                   fontFamily: 'SFProDisplay-Bold',
                 },
               },
@@ -162,9 +162,9 @@ const DiaryScreen = (props) => {
       )}
       <TouchableOpacity onPress={() => displayCalendar()}>
         {showCalendarFull ? (
-          <Icon name="angle-double-up" size={40} style={styles.chevronDown} />
+          <Icon name="angle-double-up" size={adjustSize(40)} style={styles.chevronDown} />
         ) : (
-          <Icon name="angle-double-down" size={40} style={styles.chevronDown} />
+          <Icon name="angle-double-down" size={adjustSize(40)} style={styles.chevronDown} />
         )}
       </TouchableOpacity>
       <Text style={[globalStyles.pageDetails, styles.viewLog]}>
@@ -192,12 +192,12 @@ const styles = StyleSheet.create({
   },
   dateText: {
     textAlign: 'center',
-    fontSize: 17,
+    fontSize: adjustSize(17),
     fontFamily: 'SFProDisplay-Regular',
   },
   selectedDateText: {
     textAlign: 'center',
-    fontSize: 18,
+    fontSize: adjustSize(18),
     fontFamily: 'SFProDisplay-Bold',
   },
   dateContainer: {
@@ -216,10 +216,10 @@ const styles = StyleSheet.create({
     paddingTop: '5%',
     paddingBottom: '5%',
     paddingHorizontal: '1%',
-    borderRadius: 9.5,
+    borderRadius: adjustSize(9.5),
   },
   viewLog: {
-    fontSize: 23,
+    fontSize: adjustSize(23),
     color: Colors.lastLogValueColor,
   },
   chevronDown: {

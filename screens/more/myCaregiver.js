@@ -5,6 +5,7 @@ import {Colors} from '../../styles/colors';
 import globalStyles from '../../styles/globalStyles';
 //function
 import {isEmpty} from '../../commonFunctions/common';
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
 //third party lib
 import Entypo from 'react-native-vector-icons/Entypo';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -17,8 +18,8 @@ import AddViewCaregiverModal from '../../components/myCaregiver/addViewCaregiver
 import {getMyCaregiver} from '../../netcalls/requestsMyCaregiver';
 
 const iconStyle = {
-  width: 40,
-  height: 40,
+  width: adjustSize(40),
+  height: adjustSize(40),
 };
 
 const MyCaregiverScreen = (props) => {
@@ -60,7 +61,7 @@ const MyCaregiverScreen = (props) => {
           <AntDesign
             name="pluscircleo"
             color={'#aad326'}
-            size={25}
+            size={adjustSize(25)}
             style={{margin: '2%'}}
           />
           <Text style={styles.addText}>Add Caregiver</Text>
@@ -80,7 +81,7 @@ const MyCaregiverScreen = (props) => {
             </Text>
             <Entypo
               name="chevron-small-right"
-              size={40}
+              size={adjustSize(40)}
               style={{opacity: 0.5, color: '#21293A'}}
             />
           </View>
@@ -106,7 +107,7 @@ export default MyCaregiverScreen;
 const styles = StyleSheet.create({
   subHeading: {
     fontFamily: 'SFProDisplay-Bold',
-    fontSize: 20,
+    fontSize: adjustSize(20),
     marginStart: '3%',
     color: Colors.grey,
     opacity: 0.6,
@@ -117,7 +118,7 @@ const styles = StyleSheet.create({
   addText: {
     marginStart: '2%',
     color: '#a7d026',
-    fontSize: 20,
+    fontSize: adjustSize(20),
     marginTop: '2%',
   },
 });

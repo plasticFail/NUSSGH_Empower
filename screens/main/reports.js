@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useRef} from 'react';
 import {
   View,
   StyleSheet,
@@ -8,8 +8,6 @@ import {
   TouchableOpacity,
   Image,
   Animated,
-  TouchableWithoutFeedback,
-  Linking,
 } from 'react-native';
 import globalStyles from '../../styles/globalStyles';
 import BarChart from '../../components/dashboard/reports/BarChart';
@@ -26,7 +24,6 @@ import {requestNutrientConsumption} from '../../netcalls/mealEndpoints/requestMe
 import {getLastMinuteFromTodayDate} from '../../commonFunctions/common';
 import Moment from 'moment';
 import {
-  getActivityLogs,
   getActivitySummaries,
   getBloodGlucoseLogs,
   getMedicationLogs,
@@ -55,6 +52,7 @@ import {replaceActivitySummary} from '../../commonFunctions/reportDataFormatter'
 import {appRootUrl} from '../../config/AppConfig';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
 import {getEntryForDateRange, getEntry4Day} from '../../netcalls/requestsDiary';
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
 
 const EXPORT_BTN = require('../../resources/images/Patient-Icons/2x/icon-green-export-2x.png');
 
@@ -67,8 +65,8 @@ const LINECHART_HELP_GIF = require('../../resources/images/Report-Modal/img-repo
 const BARCHART_HELP_GIF = require('../../resources/images/Report-Modal/img-report-modal-02.gif');
 
 const iconProps = {
-  width: 30,
-  height: 30,
+  width: adjustSize(30),
+  height: adjustSize(30),
 };
 
 const BGL_TAB_KEY = 'Blood Glucose';
@@ -114,10 +112,10 @@ const timeFilterTabs = [
   {name: MONTH_FILTER_KEY},
 ];
 
-const padding = 20;
-const tabSpace = 15;
+const padding = adjustSize(20);
+const tabSpace = adjustSize(15);
 
-const chartLegendSize = 20;
+const chartLegendSize = adjustSize(20);
 
 const {width, height} = Dimensions.get('window');
 const tabWidth = (width - 2 * padding) / tabs.length - tabSpace;
@@ -271,7 +269,7 @@ const ReportsScreen = (props) => {
       <View style={globalStyles.menuBarContainer}>
         <LeftArrowBtn close={() => props.navigation.navigate('Home')} />
         <TouchableOpacity onPress={() => setOpenExportModal(true)}>
-          <Image source={EXPORT_BTN} style={{width: 30, height: 30}} />
+          <Image source={EXPORT_BTN} style={{width: adjustSize(30), height: adjustSize(30)}} />
         </TouchableOpacity>
       </View>
       <Text style={globalStyles.pageHeader}>Report</Text>
@@ -291,7 +289,7 @@ const ReportsScreen = (props) => {
         <View style={[{...globalStyles.pageContainer}]}>
           <Animated.View style={{transform: [{translateX: widthInterpolate}]}}>
             {tabName === BGL_TAB_KEY ? (
-              <View style={{marginTop: 20}}>
+              <View style={{marginTop: adjustSize(20)}}>
                 <Text style={globalStyles.pageDetails}>Blood Glucose</Text>
                 <Text style={[globalStyles.pageDetails, {color: 'grey'}]}>
                   Readings - mmol/L
@@ -302,22 +300,22 @@ const ReportsScreen = (props) => {
                     size={chartLegendSize}
                     legendName="Safe"
                     color="#aad326"
-                    textPaddingLeft={5}
-                    textPaddingRight={20}
+                    textPaddingLeft={adjustSize(5)}
+                    textPaddingRight={adjustSize(20)}
                   />
                   <ChartLegend
                     size={chartLegendSize}
                     legendName="Danger"
                     color="red"
-                    textPaddingLeft={5}
-                    textPaddingRight={20}
+                    textPaddingLeft={adjustSize(5)}
+                    textPaddingRight={adjustSize(20)}
                   />
                   <ChartLegend
                     size={chartLegendSize}
                     legendName="Target Range (4.0 - 12.0)"
                     color={boundaryFill}
-                    textPaddingLeft={5}
-                    textPaddingRight={20}
+                    textPaddingLeft={adjustSize(5)}
+                    textPaddingRight={adjustSize(20)}
                   />
                 </View>
                 <View
@@ -327,7 +325,7 @@ const ReportsScreen = (props) => {
                     image={
                       <Image
                         source={LINECHART_HELP_GIF}
-                        style={{width: '90%', height: 300, alignSelf: 'center'}}
+                        style={{width: '90%', height: adjustSize(300), alignSelf: 'center'}}
                       />
                     }
                     showInfo={showInfo}
@@ -347,13 +345,13 @@ const ReportsScreen = (props) => {
                   outsideBoundaryColor="red"
                   boundaryFill={boundaryFill}
                   width={width}
-                  height={300}
+                  height={adjustSize(300)}
                   showFood={true}
                   foodData={fullDataset.foodLogs}
                 />
               </View>
             ) : tabName === FOOD_INTAKE_KEY ? (
-              <View style={{marginTop: 20, paddingBottom: 50}}>
+              <View style={{marginTop: adjustSize(20), paddingBottom: adjustSize(50)}}>
                 <Text style={globalStyles.pageDetails}>Food Intake</Text>
                 <Text style={[globalStyles.pageDetails, {color: 'grey'}]}>
                   Total Calories Consumed - kcal
@@ -364,8 +362,8 @@ const ReportsScreen = (props) => {
                     size={chartLegendSize}
                     legendName="Target Range (1.7 K - 2.2 K)"
                     color={boundaryFill}
-                    textPaddingLeft={5}
-                    textPaddingRight={20}
+                    textPaddingLeft={adjustSize(5)}
+                    textPaddingRight={adjustSize(20)}
                   />
                 </View>
                 <View
@@ -375,7 +373,7 @@ const ReportsScreen = (props) => {
                     image={
                       <Image
                         source={BARCHART_HELP_GIF}
-                        style={{width: '90%', height: 300, alignSelf: 'center'}}
+                        style={{width: '90%', height: adjustSize(300), alignSelf: 'center'}}
                       />
                     }
                     showInfo={showInfo}
@@ -393,7 +391,7 @@ const ReportsScreen = (props) => {
                   lowerBound={1700}
                   upperBound={2200}
                   width={width}
-                  height={300}
+                  height={adjustSize(300)}
                 />
                 <Text style={[globalStyles.pageDetails, {color: 'grey'}]}>
                   Nutrition Distribution
@@ -414,13 +412,13 @@ const ReportsScreen = (props) => {
                 <NutritionPie
                   data={fullDataset.foodData}
                   width={width}
-                  height={300}
+                  height={adjustSize(300)}
                   filterKey={filterKey}
                   pieKeys={['carbohydrate', 'total-fat', 'protein']}
                 />
               </View>
             ) : tabName === MEDICATION_KEY ? (
-              <View style={{marginTop: 20}}>
+              <View style={{marginTop: adjustSize(20)}}>
                 <Text style={globalStyles.pageDetails}>Medication</Text>
                 <Text style={[globalStyles.pageDetails, {color: 'grey'}]}>
                   Average Adherence - %
@@ -439,7 +437,7 @@ const ReportsScreen = (props) => {
                 />
               </View>
             ) : tabName === WEIGHT_KEY ? (
-              <View style={{marginTop: 20}}>
+              <View style={{marginTop: adjustSize(20)}}>
                 <Text style={globalStyles.pageDetails}>Weight</Text>
                 <Text style={[globalStyles.pageDetails, {color: 'grey'}]}>
                   Progress - kg
@@ -461,7 +459,7 @@ const ReportsScreen = (props) => {
                     image={
                       <Image
                         source={LINECHART_HELP_GIF}
-                        style={{width: '90%', height: 300, alignSelf: 'center'}}
+                        style={{width: '90%', height: adjustSize(300), alignSelf: 'center'}}
                       />
                     }
                     showInfo={showInfo}
@@ -473,7 +471,7 @@ const ReportsScreen = (props) => {
                   data={fullDataset.weightData}
                   filterKey={filterKey}
                   width={width}
-                  height={300}
+                  height={adjustSize(300)}
                   xExtractor={(d) => d.record_date}
                   yExtractor={(d) => d.weight}
                   defaultMinY={30}
@@ -482,12 +480,12 @@ const ReportsScreen = (props) => {
                 />
               </View>
             ) : tabName === ACTIVITY_KEY ? (
-              <View style={{marginTop: 20, paddingBottom: 50}}>
+              <View style={{marginTop: adjustSize(20), paddingBottom: adjustSize(50)}}>
                 <Text style={globalStyles.pageDetails}>Activity</Text>
                 <Text
                   style={[
                     globalStyles.pageDetails,
-                    {color: 'grey', marginTop: 5},
+                    {color: 'grey', marginTop: adjustSize(5)},
                   ]}>
                   Calories Burnt
                 </Text>
@@ -504,7 +502,7 @@ const ReportsScreen = (props) => {
                 <Text
                   style={[
                     globalStyles.pageDetails,
-                    {color: 'grey', marginTop: 5},
+                    {color: 'grey', marginTop: adjustSize(5)},
                   ]}>
                   Duration (minutes)
                 </Text>
@@ -521,7 +519,7 @@ const ReportsScreen = (props) => {
                 <Text
                   style={[
                     globalStyles.pageDetails,
-                    {color: 'grey', marginTop: 5},
+                    {color: 'grey', marginTop: adjustSize(5)},
                   ]}>
                   Steps Taken
                 </Text>
@@ -531,8 +529,8 @@ const ReportsScreen = (props) => {
                     size={chartLegendSize}
                     legendName="Target Range (1K - 1.5K)"
                     color={boundaryFill}
-                    textPaddingLeft={5}
-                    textPaddingRight={20}
+                    textPaddingLeft={adjustSize(5)}
+                    textPaddingRight={adjustSize(20)}
                   />
                 </View>
                 <View
@@ -542,7 +540,7 @@ const ReportsScreen = (props) => {
                     image={
                       <Image
                         source={BARCHART_HELP_GIF}
-                        style={{width: '90%', height: 300, alignSelf: 'center'}}
+                        style={{width: '90%', height: adjustSize(300), alignSelf: 'center'}}
                       />
                     }
                     showInfo={showInfo}
@@ -560,14 +558,14 @@ const ReportsScreen = (props) => {
                   upperBound={1500}
                   xExtractor={(d) => d.date}
                   yExtractor={(d) => d.steps}
-                  height={300}
+                  height={adjustSize(300)}
                 />
               </View>
             ) : null}
             <View
               style={{
                 //bottom padding just so it looks better
-                paddingBottom: 50,
+                paddingBottom: adjustSize(50),
               }}
             />
           </Animated.View>
@@ -594,7 +592,7 @@ function ReportsTabs(props) {
           style={{
             alignItems: 'center',
             width: tabWidth,
-            padding: 10,
+            padding: adjustSize(10),
             borderBottomWidth: currentTab === index ? 3 : 0,
             borderColor: '#aad326',
           }}
@@ -644,26 +642,26 @@ const styles = StyleSheet.create({
   timeFilterTabContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    borderRadius: 7,
+    borderRadius: adjustSize(7),
     borderWidth: 1,
     borderColor: Colors.nextBtnColor,
   },
   selectedTimeFilterTabContainer: {
     backgroundColor: Colors.nextBtnColor,
-    borderRadius: 7,
-    width: `${Math.round(100 / timeFilterTabs.length)}%`,
+    borderRadius: adjustSize(7),
+    width: `${Math.round(adjustSize(100) / timeFilterTabs.length)}%`,
     alignItems: 'center',
-    padding: 7,
+    padding: adjustSize(7),
   },
   selectedTimeFilterText: {
     fontWeight: 'bold',
     color: '#000',
   },
   normTimeFilterTabContainer: {
-    borderRadius: 5,
-    width: `${Math.round(100 / timeFilterTabs.length)}%`,
+    borderRadius: adjustSize(5),
+    width: `${Math.round(adjustSize(100) / timeFilterTabs.length)}%`,
     alignItems: 'center',
-    padding: 7,
+    padding: adjustSize(7),
   },
   normTimeFilterText: {
     color: '#000',

@@ -23,7 +23,7 @@ import {
   editMed,
 } from '../../../commonFunctions/medicationFunction';
 import {prepareData, postPlan} from '../../../netcalls/requestsMedPlan';
-import {stat} from 'react-native-fs';
+import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
 
 class AskAdd extends Component {
   constructor(props) {
@@ -79,7 +79,7 @@ class AskAdd extends Component {
 
   handleDelete = (toDelete) => {
     let arr = this.state.selectedMedList.filter(
-      (item) => item.medication != toDelete.medication,
+      (item) => item.medication !== toDelete.medication,
     );
     this.setState({selectedMedList: arr});
     this.setState({showAddModal: false});
@@ -133,7 +133,7 @@ class AskAdd extends Component {
           <TouchableOpacity
             style={styles.addButton}
             onPress={this.handleAddMedication}>
-            <Ionicons name="add-circle" size={80} color={Colors.nextBtnColor} />
+            <Ionicons name="add-circle" size={adjustSize(80)} color={Colors.nextBtnColor} />
           </TouchableOpacity>
         ) : (
           <PlannedMedList

@@ -18,10 +18,12 @@ import USER_MALE from '../../resources/images/Patient-Icons/SVG/user-male.svg';
 import USER_FEMALE from '../../resources/images/Patient-Icons/SVG/user-female.svg';
 import {getRole} from '../../storage/asyncStorageFunctions';
 import {role_patient} from '../../commonFunctions/common';
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
+
 
 const iconStyle = {
-  height: 200,
-  width: 200,
+  height: adjustSize(200),
+  width: adjustSize(200),
   alignSelf: 'center',
   marginBottom: '3%',
   marginTop: '3%',
@@ -84,7 +86,7 @@ const AccountDetailScreen = (props) => {
           <USER_MALE {...iconStyle} />
         )}
         <View style={{flexDirection: 'row', margin: '2%'}}>
-          <Ant name="user" size={30} color={Colors.lastLogValueColor} />
+          <Ant name="user" size={adjustSize(30)} color={Colors.lastLogValueColor} />
           <Text style={styles.sectionHeading}>Account Details</Text>
         </View>
         <Clickable
@@ -144,7 +146,7 @@ const AccountDetailScreen = (props) => {
         {role === role_patient && (
           <>
             <View style={{flexDirection: 'row', margin: '2%'}}>
-              <Entypo name="link" size={30} color={Colors.lastLogValueColor} />
+              <Entypo name="link" size={adjustSize(30)} color={Colors.lastLogValueColor} />
               <Text style={styles.sectionHeading}>External Account</Text>
             </View>
             <Clickable
@@ -166,18 +168,18 @@ const AccountDetailScreen = (props) => {
 
 const styles = StyleSheet.create({
   profileImg: {
-    width: 150,
-    height: 150,
+    width: adjustSize(150),
+    height: adjustSize(150),
     padding: '2%',
-    borderRadius: 150 / 2,
-    borderWidth: 4,
+    borderRadius: adjustSize(150) / 2,
+    borderWidth: adjustSize(4),
     borderColor: '#AAD326',
     marginTop: '7%',
     alignSelf: 'center',
   },
   sectionHeading: {
     fontFamily: 'SFProDisplay-Bold',
-    fontSize: 19,
+    fontSize: adjustSize(19),
     color: Colors.lastLogValueColor,
     marginTop: '2%',
     marginStart: '2%',

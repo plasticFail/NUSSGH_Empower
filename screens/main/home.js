@@ -1,8 +1,6 @@
 import React, {useEffect, useState, useRef} from 'react';
-import Icon from 'react-native-vector-icons/FontAwesome5';
 import {
   View,
-  Text,
   StyleSheet,
   Dimensions,
   ScrollView,
@@ -34,7 +32,6 @@ import {
   carbs,
   fats,
   protein,
-  role_patient,
 } from '../../commonFunctions/common';
 import {getEntry4Day} from '../../netcalls/requestsDiary';
 import {
@@ -42,18 +39,16 @@ import {
   getMedDonePeriods,
   renderGreetingText,
 } from '../../commonFunctions/diaryFunctions';
-import GameCard from '../../components/home/gameCard';
 import NotifCollapse from '../../components/home/collapsible/notifCollapse';
 import DailyCollapse from '../../components/home/collapsible/dailyCollapse';
 import {getPatientProfile} from '../../netcalls/requestsAccount';
 import ActivityCollapse from '../../components/home/collapsible/activityCollapse';
 import OverviewCollapse from '../../components/home/collapsible/overviewCollapse';
 import GameCollapse from '../../components/home/collapsible/gameCollapse';
-import {getActivitySummaries} from '../../netcalls/requestsLog';
 import {getRole} from '../../storage/asyncStorageFunctions';
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
 
 // properties
-const {width, height} = Dimensions.get('window');
 const today_date = Moment(new Date()).format('YYYY-MM-DD');
 const dateString = Moment(new Date()).format('DD MMM YYYY');
 
@@ -70,7 +65,6 @@ const HomeScreen = (props) => {
   // diary card
   const [bgl, setBgl] = useState(null);
   const [calorie, setCalorie] = useState(null);
-  const [weight, setWeight] = useState(null);
   const [med, setMed] = useState('');
 
   const [bgLogs, setBgLogs] = useState([]);
@@ -141,7 +135,7 @@ const HomeScreen = (props) => {
   }, []);
 
   const initUncompleteLog = () => {
-    if (currHour != morningObj.name) {
+    if (currHour !== morningObj.name) {
       checkLogDone(morningObj.name).then((response) => {
         if (response != null) {
           setMorningNotDone(response.notCompleted);
@@ -165,7 +159,7 @@ const HomeScreen = (props) => {
 
     getEntry4Day(today_date)
       .then((data) => {
-        if (data != undefined) {
+        if (data !== undefined) {
           const bglLogs = data[today_date].glucose.logs;
           const weightLogs = data[today_date].weight.logs;
           const foodLogs = data[today_date].food.logs;
@@ -357,7 +351,7 @@ const HomeScreen = (props) => {
 const styles = StyleSheet.create({
   greetingText: {
     color: 'black',
-    fontSize: 18,
+    fontSize: adjustSize(18),
     fontFamily: 'SFProDisplay-Bold',
     marginStart: '5%',
   },
@@ -365,17 +359,17 @@ const styles = StyleSheet.create({
     fontFamily: 'SFProDisplay-Regular',
     color: 'white',
     marginStart: '5%',
-    fontSize: 18,
+    fontSize: adjustSize(18),
   },
   bold: {
     fontFamily: 'SFProDisplay-Bold',
     color: 'white',
     marginStart: '5%',
-    fontSize: 18,
+    fontSize: adjustSize(18),
   },
   logCard: {
     backgroundColor: 'white',
-    borderRadius: 9.5,
+    borderRadius: adjustSize(9.5),
     marginTop: '3%',
     marginStart: '5%',
     marginEnd: '5%',
@@ -388,18 +382,18 @@ const styles = StyleSheet.create({
   },
   usernameText: {
     color: 'white',
-    fontSize: 40,
+    fontSize: adjustSize(40),
     fontFamily: 'SFProDisplay-Bold',
     marginStart: '5%',
   },
   buttonStyle: {
     backgroundColor: '#aad326',
     padding: '2%',
-    borderRadius: 20,
+    borderRadius: adjustSize(20),
     margin: '4%',
   },
   buttonText: {
-    fontSize: 18,
+    fontSize: adjustSize(18),
     fontWeight: '700',
     textAlign: 'center',
   },

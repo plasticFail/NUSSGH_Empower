@@ -55,7 +55,7 @@ const ContactUs = (props) => {
             placeholderTextColor="#a1a3a0"
             onChangeText={setEmail}
           />
-          {!emailRgx.test(email) && email != '' && (
+          {!emailRgx.test(email) && email !== '' && (
             <Text style={[globalStyles.alertText, {marginBottom: '2%'}]}>
               Please input a valid email address
             </Text>
@@ -92,7 +92,7 @@ const ContactUs = (props) => {
       </KeyboardAvoidingView>
 
       <View style={globalStyles.buttonContainer}>
-        {description.length != 0 && emailRgx.test(email) ? (
+        {description.length !== 0 && emailRgx.test(email) ? (
           <TouchableOpacity
             style={globalStyles.submitButtonStyle}
             onPress={() => submit()}>

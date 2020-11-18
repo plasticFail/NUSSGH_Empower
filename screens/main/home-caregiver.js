@@ -22,11 +22,11 @@ import {getCaregiverProfile} from '../../netcalls/requestsAccount';
 import AssignedPatientCollapse from '../../components/home/collapsible/assignedPatientCollapse';
 import PatientType from '../../components/home/collapsible/patientTypeCollapse';
 import PatientInfo from '../../components/home/collapsible/patientInfo';
-import AuthorisationCaregiver from '../../components/home/authorisationCaregiver';
 import {
   getAuthorisedStatusCaregiver,
   storeAuthorisedStatusCaregiver,
 } from '../../storage/asyncStorageFunctions';
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
 
 const HomeScreenCaregiver = (props) => {
   const [caregiver, setCaregiver] = useState({});
@@ -148,7 +148,7 @@ const HomeScreenCaregiver = (props) => {
 const styles = StyleSheet.create({
   greetingText: {
     color: 'black',
-    fontSize: 18,
+    fontSize: adjustSize(18),
     fontFamily: 'SFProDisplay-Bold',
     marginStart: '5%',
   },
@@ -156,17 +156,17 @@ const styles = StyleSheet.create({
     fontFamily: 'SFProDisplay-Regular',
     color: 'white',
     marginStart: '5%',
-    fontSize: 18,
+    fontSize: adjustSize(18),
   },
   bold: {
     fontFamily: 'SFProDisplay-Bold',
     color: 'white',
     marginStart: '5%',
-    fontSize: 18,
+    fontSize: adjustSize(18),
   },
   logCard: {
     backgroundColor: 'white',
-    borderRadius: 9.5,
+    borderRadius: adjustSize(9.5),
     marginTop: '3%',
     marginStart: '5%',
     marginEnd: '5%',
@@ -179,18 +179,18 @@ const styles = StyleSheet.create({
   },
   usernameText: {
     color: 'white',
-    fontSize: 40,
+    fontSize: adjustSize(40),
     fontFamily: 'SFProDisplay-Bold',
     marginStart: '5%',
   },
   buttonStyle: {
     backgroundColor: '#aad326',
     padding: '2%',
-    borderRadius: 20,
+    borderRadius: adjustSize(20),
     margin: '4%',
   },
   buttonText: {
-    fontSize: 18,
+    fontSize: adjustSize(18),
     fontWeight: '700',
     textAlign: 'center',
   },
