@@ -53,7 +53,7 @@ const CaregiverDrawerNavigator = (props) => {
   return (
     <Drawer.Navigator
       drawerType={'slide'}
-      drawerStyle={{backgroundColor: Colors.menuColor}}
+      drawerStyle={{backgroundColor: Colors.menuColor, width:'65%'}}
       drawerContent={DrawerContent}>
       <Drawer.Screen name="Home" component={CaregiverBottomTab} />
     </Drawer.Navigator>

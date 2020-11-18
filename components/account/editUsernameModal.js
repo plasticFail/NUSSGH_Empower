@@ -1,9 +1,12 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {View, TouchableOpacity, TextInput, Text, Alert} from 'react-native';
 //third party lib
 import Modal from 'react-native-modal';
 import globalStyles from '../../styles/globalStyles';
 import LeftArrowBtn from '../logs/leftArrowBtn';
+//functions
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
+
 
 const EditUsernameModal = (props) => {
   const [username, setUsername] = useState('');
@@ -36,7 +39,7 @@ const EditUsernameModal = (props) => {
           <LeftArrowBtn close={props.close} />
         </View>
         <Text style={globalStyles.pageHeader}>Edit Username</Text>
-        <Text style={[globalStyles.pageSubDetails, {fontSize: 18}]}>
+        <Text style={[globalStyles.pageSubDetails, {fontSize: adjustSize(18)}]}>
           Please enter the username that you wish to change to:
         </Text>
         <TextInput

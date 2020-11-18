@@ -5,10 +5,11 @@ import {
   TextInput,
   TouchableOpacity,
   Text,
-  Dimensions,
 } from 'react-native';
 import PasswordStrengthMeter from '../passwordStrengthMeter';
 import globalStyles from '../../styles/globalStyles';
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
+
 
 const SetPassword = (props) => {
   return (
@@ -55,14 +56,14 @@ const styles = StyleSheet.create({
   },
   buttonStyle: {
     backgroundColor: '#AAD326',
-    borderRadius: 20,
+    borderRadius: adjustSize(20),
     alignSelf: 'center',
     padding: '3%',
     marginTop: ' 2%',
     marginBottom: '2%',
   },
   buttonText: {
-    fontSize: 20,
+    fontSize: adjustSize(20),
     fontWeight: '500',
     textAlign: 'center',
   },

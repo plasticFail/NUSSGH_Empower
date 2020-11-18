@@ -4,16 +4,16 @@ import {
   Text,
   StyleSheet,
   Dimensions,
-  TextInput,
   TouchableOpacity,
   Alert,
-  Platform,
 } from 'react-native';
 //third party library
 import Modal from 'react-native-modal';
 //component
 import LeftArrowBtn from '../logs/leftArrowBtn';
 import InputOTPScreen from '../../screens/login/inputOTPScreen';
+//functions
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
 //style
 import globalStyles from '../../styles/globalStyles';
 import {sendOTPRequest} from '../../netcalls/requestsPasswordReset';
@@ -94,30 +94,30 @@ export default EditPhoneModal;
 
 const styles = StyleSheet.create({
   inputBox: {
-    width: Dimensions.get('window').width - 60,
-    borderRadius: 20,
+    width: Dimensions.get('window').width - adjustSize(60),
+    borderRadius: adjustSize(20),
     backgroundColor: '#EEF3BD',
-    paddingStart: 30, //position placeholder text
-    marginVertical: 10,
+    paddingStart: adjustSize(30), //position placeholder text
+    marginVertical: adjustSize(10),
     alignSelf: 'center',
     padding: '3%',
   },
   header: {
-    fontSize: 18,
+    fontSize: adjustSize(18),
     margin: '3%',
     textAlign: 'center',
   },
   button: {
     backgroundColor: '#AAD326',
-    width: 300,
-    height: 40,
-    borderRadius: 20,
-    marginVertical: 10,
-    paddingVertical: 6,
+    width: adjustSize(300),
+    height: adjustSize(40),
+    borderRadius: adjustSize(20),
+    marginVertical: adjustSize(10),
+    paddingVertical: adjustSize(6),
     alignSelf: 'center',
   },
   buttonText: {
-    fontSize: 23,
+    fontSize: adjustSize(23),
     fontWeight: '500',
     textAlign: 'center',
   },

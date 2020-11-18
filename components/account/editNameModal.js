@@ -5,6 +5,8 @@ import Modal from 'react-native-modal';
 import globalStyles from '../../styles/globalStyles';
 import LeftArrowBtn from '../logs/leftArrowBtn';
 import {editName} from '../../netcalls/requestsAccount';
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
+
 
 const EditNameModal = (props) => {
   const {user} = props;
@@ -64,7 +66,7 @@ const EditNameModal = (props) => {
           <LeftArrowBtn close={props.close} />
         </View>
         <Text style={globalStyles.pageHeader}>Edit Name</Text>
-        <Text style={[globalStyles.pageSubDetails, {fontSize: 18}]}>
+        <Text style={[globalStyles.pageSubDetails, {fontSize: adjustSize(18)}]}>
           Please enter the name that you wish to change to:
         </Text>
         <TextInput

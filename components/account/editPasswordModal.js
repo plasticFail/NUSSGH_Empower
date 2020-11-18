@@ -17,6 +17,7 @@ import {
   storePassword,
 } from '../../storage/asyncStorageFunctions';
 import {resetPassword} from '../../netcalls/requestsPasswordReset';
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
 //style
 import globalStyles from '../../styles/globalStyles';
 //component
@@ -67,7 +68,7 @@ const EditPasswordModal = (props) => {
 
   const checkInput = () => {
     if (inputCurrent) {
-      if (inputCurrent != currentPassword) {
+      if (inputCurrent !== currentPassword) {
         return 'Please make sure you enter your current password correctly.';
       }
     }
@@ -77,7 +78,7 @@ const EditPasswordModal = (props) => {
       }
     }
     if (newPassword && confirmPassword) {
-      if (newPassword != confirmPassword) {
+      if (newPassword !== confirmPassword) {
         return 'New passwords does not match';
       }
     }
@@ -120,7 +121,7 @@ const EditPasswordModal = (props) => {
         ) : (
           <Text style={globalStyles.pageHeader}>Change Password</Text>
         )}
-        <Text style={[globalStyles.pageSubDetails, {fontSize: 18}]}>
+        <Text style={[globalStyles.pageSubDetails, {fontSize: adjustSize(18)}]}>
           Please enter the password that you wish to change to:
         </Text>
         <KeyboardAvoidingView
