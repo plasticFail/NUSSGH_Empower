@@ -125,6 +125,7 @@ const globalStyles = StyleSheet.create({
     backgroundColor: Colors.editBackgroundColor,
   },
   editInputBox: {
+    fontSize: adjustSize(18),
     marginBottom: '2%',
     backgroundColor: 'white',
     padding: '3%',

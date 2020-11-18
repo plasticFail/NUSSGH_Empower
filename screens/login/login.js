@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
   },
   inputBox: {
     width: '90%',
-    fontSize: adjustSize(20),
+    fontSize: adjustSize(18),
     height: adjustSize(50),
     borderRadius: adjustSize(20),
     backgroundColor: '#12683E',

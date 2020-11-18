@@ -81,7 +81,7 @@ function ForgetPasswordScreen({navigation}) {
       </View>
       <Text style={globalStyles.pageHeader}>Forget Password</Text>
       <Text style={globalStyles.pageDetails}>Verficiation Required</Text>
-      <Text style={[globalStyles.pageSubDetails, {fontSize: 18}]}>
+      <Text style={[globalStyles.pageSubDetails, {fontSize: adjustSize(18)}]}>
         For security measures, to reset password, we will send you a One Time
         Password (OTP).
       </Text>
