@@ -8,12 +8,12 @@ import {
   TouchableOpacity,
   TextInput,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {resetPassword} from '../../netcalls/requestsPasswordReset';
-import SetPassword from '../../components/account/setPassword';
 import LeftArrowBtn from '../../components/logs/leftArrowBtn';
 import globalStyles from '../../styles/globalStyles';
 import PasswordStrengthMeter from '../../components/passwordStrengthMeter';
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
+
 
 const ResetPasswordScreen = (props) => {
   const {token, selection} = props.route.params; //rememberundo
@@ -45,7 +45,7 @@ const ResetPasswordScreen = (props) => {
   };
 
   const showSubmit = () => {
-    if (checkInput() == '' && strong) {
+    if (checkInput() === '' && strong) {
       return true;
     }
     return false;
@@ -114,40 +114,40 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   inner: {
-    padding: 10,
+    padding: adjustSize(10),
     flex: 1,
     justifyContent: 'flex-end',
   },
   text: {
     fontWeight: '500',
     marginTop: '2%',
-    fontSize: 20,
+    fontSize: adjustSize(20),
     textAlign: 'center',
     marginStart: '2%',
     marginEnd: '2%',
   },
   headerText: {
     alignSelf: 'center',
-    fontSize: 18,
+    fontSize: adjustSize(18),
   },
   subText: {
-    fontSize: 18,
+    fontSize: adjustSize(18),
     marginStart: '3%',
     marginTop: '2%',
   },
   formContainer: {
-    width: Dimensions.get('window').width - 20,
+    width: Dimensions.get('window').width - adjustSize(20),
     backgroundColor: 'white',
-    borderRadius: 25,
+    borderRadius: adjustSize(25),
     paddingTop: '5%',
     paddingBottom: '3%',
   },
   inputBox: {
-    width: Dimensions.get('window').width - 30,
-    borderRadius: 20,
+    width: Dimensions.get('window').width - adjustSize(30),
+    borderRadius: adjustSize(20),
     backgroundColor: '#EEF3BD',
-    paddingStart: 30, //position placeholder text
-    marginVertical: 10,
+    paddingStart: adjustSize(30), //position placeholder text
+    marginVertical: adjustSize(10),
     alignSelf: 'center',
     padding: '3%',
   },
@@ -163,13 +163,13 @@ const styles = StyleSheet.create({
   },
   buttonStyle: {
     backgroundColor: '#AAD326',
-    borderRadius: 20,
+    borderRadius: adjustSize(20),
     alignSelf: 'center',
     padding: '3%',
     marginTop: ' 2%',
   },
   buttonText: {
-    fontSize: 20,
+    fontSize: adjustSize(20),
     fontWeight: '500',
     textAlign: 'center',
   },

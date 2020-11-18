@@ -5,6 +5,7 @@ import globalStyles from '../../styles/globalStyles';
 import {Colors} from '../../styles/colors';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import {GetRewardIconByKey} from '../../commonFunctions/gameCenterFunctions';
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
 
 
 const colorIcon = enable => {
@@ -43,15 +44,15 @@ const RedeemConfirmPage = (props) => {
                 <TouchableOpacity disabled={!enableMinus(quantity)} onPress={() => {setQuantity(quantity - 1)}}>
                     <Ionicon
                         name="remove-circle"
-                        size={40}
+                        size={adjustSize(40)}
                         color={colorIcon(enableMinus(quantity))}
                     />
                 </TouchableOpacity>
-                <Text style={[GameCenterStyles.subText, {marginStart: 20, marginEnd: 20}]}>{quantity}</Text>
+                <Text style={[GameCenterStyles.subText, {marginStart: adjustSize(20), marginEnd: adjustSize(20)}]}>{quantity}</Text>
                 <TouchableOpacity disabled={!enablePlus(quantity, item.content.points, points)} onPress={() => {setQuantity(quantity + 1)}}>
                     <Ionicon
                         name="add-circle"
-                        size={40}
+                        size={adjustSize(40)}
                         color={colorIcon(enablePlus(quantity, item.content.points, points))}
                     />
                 </TouchableOpacity>

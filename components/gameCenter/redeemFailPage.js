@@ -4,6 +4,7 @@ import Ionicon from 'react-native-vector-icons/Ionicons';
 import GameCenterStyles from '../../styles/gameCenterStyles';
 import {Colors} from '../../styles/colors';
 import globalStyles from '../../styles/globalStyles';
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
 
 
 const RedeemFailPage = (props) => {
@@ -14,7 +15,7 @@ const RedeemFailPage = (props) => {
             <Text style={[GameCenterStyles.subText, {marginVertical: '5%'}]}>Not Enough Points</Text>
             <Ionicon
                 name="close-circle-outline"
-                size={80}
+                size={adjustSize(80)}
                 color={Colors.alertColor}
             />
             <TouchableOpacity style={{marginTop: '2%'}} onPress={() => {closeModal()}}>

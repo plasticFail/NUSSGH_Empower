@@ -1,5 +1,6 @@
 import {StyleSheet} from 'react-native';
 import {Colors} from './colors';
+import {adjustSize} from '../commonFunctions/autoResizeFuncs';
 
 
 const GameCenterStyles = StyleSheet.create({
@@ -7,13 +8,13 @@ const GameCenterStyles = StyleSheet.create({
         flex:1,
         backgroundColor: 'white',
         marginHorizontal: '5%',
-        marginVertical: '15%',
+        marginVertical: '8%',
         justifyContent: 'space-between',
         alignItems: 'center',
     },
     modalViewSmall: {
         backgroundColor: 'white',
-        marginVertical: '15%',
+        marginVertical: '8%',
         justifyContent: 'space-between',
         alignItems: 'center',
     },
@@ -71,15 +72,15 @@ const GameCenterStyles = StyleSheet.create({
         backgroundColor: Colors.gameColorGrey,
     },
     iconProps: {
-        width: 30,
-        height: 30,
+        width: adjustSize(30),
+        height: adjustSize(30),
     },
     rewardIconProps: {
-        width: 80,
-        height: 80,
+        width: adjustSize(80),
+        height: adjustSize(80),
     },
     subText:{
-        fontSize: 20,
+        fontSize: adjustSize(20),
     },
     textBold:{
         fontFamily: 'SFProDisplay-Bold',
@@ -90,7 +91,7 @@ const GameCenterStyles = StyleSheet.create({
         width: '100%'
     },
     wordText:{
-        fontSize: 18,
+        fontSize: adjustSize(18),
     },
     greenText:{
         color: Colors.gameColorGreen,
@@ -132,7 +133,7 @@ const GameCenterStyles = StyleSheet.create({
         flex:1,
         justifyContent: 'space-between',
         flexDirection: 'column',
-        paddingHorizontal: 10,
+        paddingHorizontal: adjustSize(10),
     },
     logo:{
         width:'100%',
@@ -155,8 +156,8 @@ const GameCenterStyles = StyleSheet.create({
         aspectRatio:1,
     },
     ballImage: {
-        width: 80,
-        height: 80,
+        width: adjustSize(80),
+        height: adjustSize(80),
     },
 });
 

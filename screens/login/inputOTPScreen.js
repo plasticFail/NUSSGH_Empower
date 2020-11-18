@@ -6,7 +6,6 @@ import {
   Alert,
   TouchableOpacity,
   Dimensions,
-  CheckBox,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
@@ -15,6 +14,7 @@ import {
   verifyOTPRequest,
   sendOTPRequest,
 } from '../../netcalls/requestsPasswordReset';
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
 //third party lib
 import Modal from 'react-native-modal';
 //styles
@@ -139,7 +139,7 @@ const InputOTPScreen = (props) => {
           pinCount={6}
           style={{
             width: '100%',
-            height: 100,
+            height: adjustSize(100),
             fontWeight: '1000',
             padding: '5%',
           }}
@@ -170,13 +170,13 @@ const InputOTPScreen = (props) => {
           <Text
             style={[
               globalStyles.pageSubDetails,
-              {fontSize: 16, marginStart: '4%'},
+              {fontSize: adjustSize(16), marginStart: '4%'},
             ]}>
             Didn't receive it?{' '}
             <Text
               style={[
                 globalStyles.pageDetails,
-                {fontSize: 16, color: '#aad326'},
+                {fontSize: adjustSize(16), color: '#aad326'},
               ]}>
               Resend Again
             </Text>
@@ -215,7 +215,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   inner: {
-    padding: 20,
+    padding: adjustSize(20),
     flex: 1,
     alignItems: 'center',
     justifyContent: 'flex-end',
@@ -223,7 +223,7 @@ const styles = StyleSheet.create({
   text: {
     fontWeight: '500',
     marginTop: '2%',
-    fontSize: 20,
+    fontSize: adjustSize(20),
     textAlign: 'center',
     marginStart: '2%',
     marginEnd: '2%',
@@ -231,13 +231,13 @@ const styles = StyleSheet.create({
   buttonStyle: {
     flex: 1,
     backgroundColor: '#AAD326',
-    borderRadius: 20,
+    borderRadius: adjustSize(20),
     alignSelf: 'center',
     padding: '2%',
     marginEnd: '2%',
   },
   buttonText: {
-    fontSize: 20,
+    fontSize: adjustSize(20),
     fontWeight: '500',
     textAlign: 'center',
   },
@@ -245,14 +245,14 @@ const styles = StyleSheet.create({
     margin: '7%',
     padding: '4%',
     backgroundColor: 'white',
-    borderRadius: 25,
+    borderRadius: adjustSize(25),
   },
   inputBox: {
-    width: Dimensions.get('window').width - 70,
-    borderRadius: 20,
+    width: Dimensions.get('window').width - adjustSize(70),
+    borderRadius: adjustSize(20),
     backgroundColor: '#EEF3BD',
-    paddingStart: 30, //position placeholder text
-    marginVertical: 10,
+    paddingStart: adjustSize(30), //position placeholder text
+    marginVertical: adjustSize(10),
     alignSelf: 'center',
   },
   shadow: {
@@ -266,12 +266,12 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   underlineStyleBase: {
-    width: 40,
-    height: 45,
+    width: adjustSize(40),
+    height: adjustSize(45),
     borderWidth: 0,
     borderBottomWidth: 3,
     color: 'black',
-    fontSize: 23,
+    fontSize: adjustSize(23),
   },
   underlineStyleHighLighted: {
     borderColor: '#aad326',

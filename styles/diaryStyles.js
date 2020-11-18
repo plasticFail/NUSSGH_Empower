@@ -1,11 +1,13 @@
 import {StyleSheet} from 'react-native';
 import {Colors} from './colors';
 import {normalTextFontSize} from './variables';
+import {adjustSize} from '../commonFunctions/autoResizeFuncs';
+
 
 const diaryStyles = StyleSheet.create({
   diaryLogItem: {
     backgroundColor: 'white',
-    borderRadius: 9.31,
+    borderRadius: adjustSize(9.31),
     margin: '2%',
     padding: '3%',
     flexDirection: 'row',
@@ -17,8 +19,8 @@ const diaryStyles = StyleSheet.create({
     top: '20%',
     left: '5%',
     bottom: '10%',
-    width: 40,
-    height: 40,
+    width: adjustSize(40),
+    height: adjustSize(40),
     resizeMode: 'contain', //resize image so dont cut off
     flex: 1,
   },
@@ -41,13 +43,13 @@ const diaryStyles = StyleSheet.create({
   },
   recordContent: {
     fontFamily: 'SFProDisplay-Regular',
-    fontSize: 18,
+    fontSize: adjustSize(18),
     color: Colors.lastLogValueColor,
     marginStart: '5%',
   },
   noRecordText: {
     fontFamily: 'SFProDisplay-Regular',
-    fontSize: 18,
+    fontSize: adjustSize(18),
     marginStart: '5%',
     color: Colors.alertColor,
   },

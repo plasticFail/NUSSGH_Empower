@@ -1,6 +1,8 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, Dimensions} from 'react-native';
 import {horizontalMargins} from "../../styles/variables";
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
+
 
 const redeemTabTitles = [
     {
@@ -28,8 +30,8 @@ const RedeemTab = props => {
                     style={{
                         alignItems: 'center',
                         width: (width - horizontalMargins) * tab.portion,
-                        paddingTop: 10,
-                        paddingBottom: 10,
+                        paddingTop: adjustSize(10),
+                        paddingBottom: adjustSize(10),
                         borderBottomWidth: currentTab === index ? 3 : 0,
                         borderColor: '#aad326',
                     }}

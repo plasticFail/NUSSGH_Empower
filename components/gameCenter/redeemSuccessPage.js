@@ -4,6 +4,7 @@ import Ionicon from 'react-native-vector-icons/Ionicons';
 import GameCenterStyles from '../../styles/gameCenterStyles';
 import {Colors} from '../../styles/colors';
 import globalStyles from '../../styles/globalStyles';
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
 
 
 const RedeemSuccessPage = (props) => {
@@ -14,7 +15,7 @@ const RedeemSuccessPage = (props) => {
             <Text style={[GameCenterStyles.subText, {marginVertical: '5%'}]}>Successfully Redeemed</Text>
             <Ionicon
                 name="checkmark-circle-outline"
-                size={80}
+                size={adjustSize(80)}
                 color={Colors.gameColorGreen}
             />
             <TouchableOpacity style={{marginTop: '2%'}} onPress={() => {closeModal()}}>

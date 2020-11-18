@@ -5,17 +5,15 @@ import {
   StyleSheet,
   TouchableOpacity,
   Alert,
-  Dimensions,
-  KeyboardAvoidingView,
-  Platform,
 } from 'react-native';
-import {TextInput, ScrollView} from 'react-native-gesture-handler';
+import {TextInput} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {sendOTPRequest} from '../../netcalls/requestsPasswordReset';
 import globalStyles from '../../styles/globalStyles';
 import LeftArrowBtn from '../../components/logs/leftArrowBtn';
 import InputOTPScreen from './inputOTPScreen';
 import {role_patient, role_caregiver} from '../../commonFunctions/common';
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
 
 const options = [role_patient, role_caregiver];
 
@@ -27,9 +25,9 @@ function ForgetPasswordScreen({navigation}) {
 
   const checkPhoneNo = () => {
     if (phoneNumber) {
-      if (phoneNumber != '') {
+      if (phoneNumber !== '') {
         let first = phoneNumber.substring(0, 1);
-        if (first == '8' || first == '9') {
+        if (first === '8' || first === '9') {
           if (phoneNumber.length === 8) {
             return '';
           }
@@ -41,7 +39,7 @@ function ForgetPasswordScreen({navigation}) {
   };
 
   const showSubmit = () => {
-    if (checkPhoneNo() === '' && phoneNumber.length == 8) {
+    if (checkPhoneNo() === '' && phoneNumber.length === 8) {
       return true;
     }
     return false;
@@ -154,7 +152,7 @@ export default ForgetPasswordScreen;
 const styles = StyleSheet.create({
   type: {
     fontFamily: 'SFProDisplay-Regular',
-    fontSize: 18,
+    fontSize: adjustSize(18),
   },
   border: {
     borderBottomWidth: 3,

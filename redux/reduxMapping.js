@@ -1,5 +1,3 @@
-import {setRole} from './reduxInit';
-
 const mapStateToProps = (state) => {
   return {
     isLogin: state.isLogin,

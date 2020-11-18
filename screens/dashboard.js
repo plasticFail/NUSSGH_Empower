@@ -1,22 +1,16 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
 //third party libs
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import Icon from 'react-native-vector-icons/dist/FontAwesome';
 //functions
-import {
-  getFocusedRouteNameFromRoute,
-  TabActions,
-} from '@react-navigation/native';
+import {adjustSize} from '../commonFunctions/autoResizeFuncs';
+import GameCenter from './main/gameCenter/gameCenter';
 //other screens
 import Home from './main/home';
 import AddLog from './main/log/addlog';
 import ChatScreen from './main/chat';
 import {ReportsScreen} from './main/reports';
-//third party lib
-import Icon from 'react-native-vector-icons/dist/FontAwesome';
-import Ant from 'react-native-vector-icons/AntDesign';
-import GameCenter from './main/gameCenter/gameCenter';
-
+//images
 import HOME from '../resources/images/Patient-Icons/SVG/icon-navy-footer-home.svg';
 import HOME_FOCUSED from '../resources/images/Patient-Icons/SVG/icon-green-footer-home.svg';
 import REPORTS from '../resources/images/Patient-Icons/SVG/icon-navy-footer-report.svg';
@@ -27,13 +21,12 @@ import GAME from '../resources/images/Patient-Icons/SVG/icon-navy-footer-game.sv
 import GAME_FOCUSED from '../resources/images/Patient-Icons/SVG/icon-green-footer-game.svg';
 import CHAT from '../resources/images/Patient-Icons/SVG/icon-navy-footer-chat.svg';
 import CHAT_FOCUSED from '../resources/images/Patient-Icons/SVG/icon-green-footer-chat.svg';
-import {CardStyleInterpolators} from '@react-navigation/stack';
 
 const Tab = createBottomTabNavigator();
 
 const iconStyle = {
-  width: 30,
-  height: 30,
+  width: adjustSize(30),
+  height: adjustSize(30),
 };
 const DashboardScreen = (props) => {
   Icon.loadFont();
@@ -44,7 +37,7 @@ const DashboardScreen = (props) => {
         inactiveTintColor: 'gray',
         adaptive: false,
         labelStyle: {
-          fontSize: 12,
+          fontSize: adjustSize(12),
         },
         style: {
           height: '10%',
