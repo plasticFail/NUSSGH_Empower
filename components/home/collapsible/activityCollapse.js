@@ -11,6 +11,7 @@ import CALBURNT from '../../../resources/images/Patient-Icons/SVG/icon-darkgreen
 import {carbs, fats, protein} from '../../../commonFunctions/common';
 import NutritionCol from '../nutritionCol';
 import {useNavigation} from '@react-navigation/native';
+import {scaleFont} from '../../../commonFunctions/scaleFunction';
 
 const logoStyle = {
   width: 50,
@@ -188,20 +189,8 @@ const styles = StyleSheet.create({
   headerText: {
     fontFamily: 'SFProDisplay-Bold',
     color: '#21293a',
-    fontSize: 18,
+    fontSize: scaleFont(15),
     marginStart: '3%',
-  },
-  greetingText: {
-    color: '#005c30',
-    fontSize: 18,
-    fontFamily: 'SFProDisplay-Bold',
-    marginStart: '5%',
-  },
-  taskText: {
-    fontFamily: 'SFProDisplay-Regular',
-    color: 'white',
-    marginStart: '5%',
-    fontSize: 18,
   },
   activityCircular: {
     flexDirection: 'column',
@@ -210,11 +199,11 @@ const styles = StyleSheet.create({
   activityCount: {
     fontFamily: 'SFProDisplay-Bold',
     color: '#005c30',
-    fontSize: 20,
+    fontSize: scaleFont(17),
   },
   activityParam: {
     fontFamily: 'SFProDisplay-Regular',
-    fontSize: 17,
+    fontSize: scaleFont(15),
   },
   whiteborder: {
     borderBottomColor: 'white',

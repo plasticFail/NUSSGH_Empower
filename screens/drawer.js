@@ -15,6 +15,7 @@ import APPT from '../resources/images/Patient-Icons/SVG/icon-white-sidemenu-appt
 import RESOURCES from '../resources/images/Patient-Icons/SVG/icon-white-sidemenu-resources.svg';
 import MY_CAREGIVER from '../resources/images/Patient-Icons/SVG/icon-white-sidemenu-mycaregiver.svg';
 import {ScrollView} from 'react-native-gesture-handler';
+import {scaleFont} from '../commonFunctions/scaleFunction';
 
 const iconStyle = {
   width: 30,
@@ -95,7 +96,7 @@ export default DrawerNavigator;
 
 const styles = StyleSheet.create({
   headerTextStyle: {
-    fontSize: 24,
+    fontSize: scaleFont(22),
     fontFamily: 'SFProDisplay-Bold',
     color: 'white',
     margin: '5%',
@@ -103,7 +104,7 @@ const styles = StyleSheet.create({
     marginTop: '2%',
   },
   subText: {
-    fontSize: 18,
+    fontSize: scaleFont(15),
     fontFamily: 'SFProDisplay-Bold',
     color: 'white',
   },

@@ -31,6 +31,7 @@ import globalStyles from '../../styles/globalStyles';
 //svg
 import Logo from '../../resources/images/Patient-Icons/SVG/icon-color-empower.svg';
 import {role_patient, role_caregiver} from '../../commonFunctions/common';
+import {scaleFont} from '../../commonFunctions/scaleFunction';
 
 const tabs = [role_patient, role_caregiver];
 
@@ -169,18 +170,17 @@ const styles = StyleSheet.create({
     padding: '6%',
   },
   logoStyle: {
-    width: 100,
-    height: 100,
-    marginBottom: 10,
+    width: '30%',
+    height: '20%',
     borderRadius: 20,
   },
   welcomeText: {
-    fontSize: 30,
+    fontSize: scaleFont(30),
     color: 'white',
     fontFamily: 'SFProDisplay-Bold',
   },
   detailText: {
-    fontSize: 20,
+    fontSize: scaleFont(17),
     color: 'white',
     fontFamily: 'SFProDisplay-Regular',
   },
@@ -190,18 +190,18 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     backgroundColor: '#12683E',
     paddingStart: 30, //position placeholder text
-    marginVertical: 10,
+    marginVertical: '3%',
     alignSelf: 'center',
     color: 'white',
   },
   light: {
     color: 'white',
-    fontSize: 17,
+    fontSize: scaleFont(15),
     marginTop: '3%',
     fontFamily: 'SFProDisplay-Regular',
   },
   bold: {
-    fontWeight: '800',
+    fontWeight: 'bold',
     color: 'white',
     fontFamily: 'SFProDisplay-Bold',
   },
@@ -209,7 +209,7 @@ const styles = StyleSheet.create({
     margin: '4%',
     color: 'white',
     textAlign: 'center',
-    fontSize: 17,
+    fontSize: scaleFont(15),
   },
   border: {
     borderBottomColor: 'white',

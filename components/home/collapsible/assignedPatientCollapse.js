@@ -17,6 +17,7 @@ import USER_M from '../../../resources/images/Patient-Icons/SVG/user-male.svg';
 import OptionsList from '../../optionList';
 import {bin, text, isEmpty} from '../../../commonFunctions/common';
 import {unassignCaregiver} from '../../../netcalls/requestsMyCaregiver';
+import {scaleFont} from '../../../commonFunctions/scaleFunction';
 
 const optionList = [
   {
@@ -145,12 +146,12 @@ const styles = StyleSheet.create({
   headerText: {
     fontFamily: 'SFProDisplay-Bold',
     color: 'white',
-    fontSize: 18,
+    fontSize: scaleFont(15),
     marginStart: '3%',
   },
   patientName: {
     fontFamily: 'SFProDisplay-Regular',
-    fontSize: 18,
+    fontSize: scaleFont(17),
     color: 'white',
     flex: 1,
     alignSelf: 'center',

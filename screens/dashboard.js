@@ -28,6 +28,7 @@ import GAME_FOCUSED from '../resources/images/Patient-Icons/SVG/icon-green-foote
 import CHAT from '../resources/images/Patient-Icons/SVG/icon-navy-footer-chat.svg';
 import CHAT_FOCUSED from '../resources/images/Patient-Icons/SVG/icon-green-footer-chat.svg';
 import {CardStyleInterpolators} from '@react-navigation/stack';
+import {scaleFont} from '../commonFunctions/scaleFunction';
 
 const Tab = createBottomTabNavigator();
 
@@ -44,7 +45,7 @@ const DashboardScreen = (props) => {
         inactiveTintColor: 'gray',
         adaptive: false,
         labelStyle: {
-          fontSize: 12,
+          fontSize: scaleFont(10),
         },
         style: {
           height: '10%',

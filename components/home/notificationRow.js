@@ -14,6 +14,7 @@ import {
   renderLightGreenIcon,
   food_key,
 } from '../../commonFunctions/logFunctions';
+import {scaleFont} from '../../commonFunctions/scaleFunction';
 
 const NotificationRow = (props) => {
   const {type, text, hour, icon} = props;
@@ -87,6 +88,6 @@ const styles = StyleSheet.create({
   notifDetails: {
     fontFamily: 'SFProDisplay-Regular',
     marginStart: '2%',
-    fontSize: 15,
+    fontSize: scaleFont(13),
   },
 });

@@ -8,6 +8,7 @@ import {
   normalTextFontSize,
   headerTextFontSize,
 } from './variables';
+import {scaleFont} from '../commonFunctions/scaleFunction';
 
 const globalStyles = StyleSheet.create({
   //added from ui / ux change
@@ -47,7 +48,7 @@ const globalStyles = StyleSheet.create({
     margin: '5%',
     alignSelf: 'center',
     marginBottom: '15%',
-    paddingTop: '3%',
+    justifyContent: 'center',
   },
   submitButtonStyle: {
     backgroundColor: Colors.submitBtnColor,
@@ -70,9 +71,9 @@ const globalStyles = StyleSheet.create({
     paddingTop: '3%',
   },
   actionButtonText: {
-    fontSize: 19,
+    fontSize: scaleFont(17),
     textAlign: 'center',
-    fontWeight: '700',
+    fontWeight: 'bold',
   },
   pageHeader: {
     fontSize: headerTextFontSize,
