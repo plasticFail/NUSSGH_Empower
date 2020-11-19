@@ -18,6 +18,7 @@ import OptionsList from '../../optionList';
 import {bin, text, isEmpty} from '../../../commonFunctions/common';
 import {unassignCaregiver} from '../../../netcalls/requestsMyCaregiver';
 import {scaleFont} from '../../../commonFunctions/scaleFunction';
+import {storeAuthorisedStatusCaregiver} from '../../../storage/asyncStorageFunctions';
 
 const optionList = [
   {
@@ -52,6 +53,7 @@ const AssignedPatientCollapse = (props) => {
             onPress: () => {
               setPatient({});
               setOpenOption(false);
+              storeAuthorisedStatusCaregiver(false).then(() => {});
             },
           },
         ]);

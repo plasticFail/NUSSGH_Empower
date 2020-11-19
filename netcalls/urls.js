@@ -36,6 +36,9 @@ const rewardRedeem = server + 'rewards/redeem';
 const searchCaregiver = server + 'caregiver/search';
 const getCaregiver = server + 'caregiver';
 const assignCaregiver = server + 'caregiver/assign';
+const pendingCaregiverReq = server + 'caregiver/pending';
+const patientCode = server + 'caregiver/code';
+const sendCaregiverReq = server + 'caregiver/request';
 
 const caregiverLogin = server + 'auth/caregiver-login';
 const caregiverProfile = server + 'profile/caregiver';
@@ -83,4 +86,7 @@ export {
   searchCaregiver,
   getCaregiver,
   assignCaregiver,
+  pendingCaregiverReq,
+  patientCode,
+  sendCaregiverReq,
 };

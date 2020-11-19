@@ -1,25 +1,16 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {
-  View,
-  StyleSheet,
-  Text,
-  TextInput,
-  ScrollView,
-  ActivityIndicator,
-  TouchableOpacity,
-  Dimensions,
-  Animated,
-} from 'react-native';
+import {View, StyleSheet, Text} from 'react-native';
 //third party lib
-import Modal from 'react-native-modal';
-import LeftArrowBtn from '../logs/leftArrowBtn';
-import {Colors} from '../../styles/colors';
 import globalStyles from '../../styles/globalStyles';
-import CountdownTimer from '../countdownTimer';
 
 const AuthoriseContent = (props) => {
   const {pinNum} = props;
-  const [pinArr, setPinArr] = useState(pinNum?.split(''));
+  const [pinArr, setPinArr] = useState([]);
+
+  useEffect(() => {
+    let s = pinNum?.split('');
+    setPinArr(s);
+  }, [pinNum]);
 
   return (
     <>

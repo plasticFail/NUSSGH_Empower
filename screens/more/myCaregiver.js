@@ -14,8 +14,14 @@ import LeftArrowBtn from '../../components/logs/leftArrowBtn';
 import USER_MALE from '../../resources/images/Patient-Icons/SVG/user-male.svg';
 import USER_FEMALE from '../../resources/images/Patient-Icons/SVG/user-female.svg';
 import AddViewCaregiverModal from '../../components/myCaregiver/addViewCaregiverModal';
-import {getMyCaregiver} from '../../netcalls/requestsMyCaregiver';
+import {
+  getMyCaregiver,
+  getPendingReq,
+  getCode,
+} from '../../netcalls/requestsMyCaregiver';
 import AuthoriseContent from '../../components/myCaregiver/authoriseContent';
+import AuthoriseReqModal from '../../components/authoriseReqModal';
+import {pendingCaregiverReq} from '../../netcalls/urls';
 
 const iconStyle = {
   width: 40,
@@ -23,33 +29,54 @@ const iconStyle = {
 };
 
 const MyCaregiverScreen = (props) => {
-  const [caregiver, setCaregiver] = useState();
+  const [caregiver, setCaregiver] = useState({});
   const [showModal, setShowModal] = useState(false);
+  const [showDetailModal, setShowDetailModal] = useState(false);
   const [modalType, setModalType] = useState('');
   const [pinNum, setPinNum] = useState('');
 
+  const [pendingCaregiver, setPendingCaregiver] = useState({});
+  const [permissions, setPermissions] = useState([]);
+
   useEffect(() => {
-    init();
+    async function setUp() {
+      await init();
+    }
+    setUp();
+    //when enter page, check if there is any incoming request*
   }, []);
 
-  const init = () => {
-    getMyCaregiver().then((rsp) => {
-      if (rsp?._id != null) {
-        setCaregiver(rsp);
+  const init = async () => {
+    let rsp = await getMyCaregiver();
+    if (rsp?._id != null) {
+      setCaregiver(rsp);
+      setPendingCaregiver({});
+    } else {
+      setCaregiver({});
+      let obj = await getPendingReq();
+      //there is a pending request
+      console.log(obj.response);
+      if (obj?.status === 200) {
+        setShowModal(true);
+        setPermissions(obj?.response?.permissions);
+        setPendingCaregiver(obj?.response?.caregiver);
       } else {
-        setCaregiver({});
-        setPinNum('656666');
+        let code = await getCode();
+        setPinNum(code?.code);
+        //check again for any incoming req
+        setTimeout(init, 5000);
       }
-    });
-
-    setInterval(() => {
-      console.log('checking for any pending request');
-    }, 1000);
+    }
   };
 
   const openModal = (type) => {
     setModalType(type);
-    setShowModal(true);
+    setShowDetailModal(true);
+  };
+
+  const closeReqModal = () => {
+    setShowModal(false);
+    init().then(() => {});
   };
 
   //get caregiver assigned and the list of permission granted*
@@ -90,14 +117,25 @@ const MyCaregiverScreen = (props) => {
         </>
       )}
       {showModal ? (
-        <AddViewCaregiverModal
+        <AuthoriseReqModal
           visible={showModal}
+          closeSuccess={closeReqModal}
+          pendingCaregiver={pendingCaregiver}
+          permissions={permissions}
+        />
+      ) : null}
+      {showDetailModal ? (
+        <AddViewCaregiverModal
+          visible={showDetailModal}
           closeModal={() => {
-            setShowModal(false);
+            setShowDetailModal(false);
             init();
           }}
           type={modalType}
           caregiver={caregiver}
+          pendingCaregiver={pendingCaregiver}
+          patient={null}
+          permissions={permissions}
         />
       ) : null}
     </View>

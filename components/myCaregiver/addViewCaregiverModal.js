@@ -30,6 +30,7 @@ import {
   search4Caregiver,
   assignCaregiver2Patient,
   unassignCaregiver,
+  sendReqPermission,
 } from '../../netcalls/requestsMyCaregiver';
 import DeleteBin from '../deleteBin';
 import diaryStyles from '../../styles/diaryStyles';
@@ -45,30 +46,76 @@ const iconStyle = {
 const height = Dimensions.get('window').height;
 
 const AddViewCaregiverModal = (props) => {
-  const {visible, type, caregiver, modalType, from} = props;
+  const {
+    visible,
+    type,
+    caregiver,
+    modalType,
+    from,
+    patient,
+    permissions,
+    pendingCaregiver,
+  } = props;
   const {closeModal} = props;
 
   const [showDelete, setShowDelete] = useState(false);
 
-  const [chosenCaregiver, setChosenCaregiver] = useState(caregiver);
+  const [chosenUser, setChosenUser] = useState(
+    patient != null ? patient : caregiver,
+  );
   const [accessName, setAccessName] = useState(false);
   const [accessRD, setAccessRd] = useState(false);
   const [accessLr, setAccessLr] = useState(false);
 
+  useEffect(() => {
+    if (permissions != undefined) {
+      if (permissions.includes('diary')) {
+        setAccessRd(true);
+      }
+      if (permissions.includes('lab_results')) {
+        setAccessLr(true);
+      }
+      if (permissions.includes('first_name')) {
+        setAccessName(true);
+      }
+    }
+  }, [visible]);
+
   const authorise = () => {
-    console.log('authorising');
-    if (!isEmpty(chosenCaregiver)) {
-      //setShowAuthorise(true);
-      //call api
-      assignCaregiver2Patient(chosenCaregiver.username).then((rsp) => {
-        if (rsp != null) {
-          Alert.alert('Caregiver Assigned Successfully!', '', [
+    if (!isEmpty(patient) && getPermissionsArr().length > 0) {
+      let obj = {
+        patient: patient?.username,
+        permissions: getPermissionsArr(),
+      };
+      sendReqPermission(obj).then((rsp) => {
+        if (rsp === 200) {
+          Alert.alert('Request Sent Successfully', '', [
             {text: 'Got It', onPress: () => closeModal()},
           ]);
+        } else if (rsp === 400) {
+          Alert.alert('Conflicting Request', '', [{text: 'Got It'}]);
+        } else {
+          Alert.alert('Error', 'Try again later', [{text: 'Got It'}]);
         }
       });
     }
   };
+
+  const getPermissionsArr = () => {
+    let arr = [];
+    if (accessName) {
+      arr.push('first_name');
+    }
+    if (accessRD) {
+      arr.push('diary');
+    }
+    if (accessLr) {
+      arr.push('lab_results');
+    }
+    return arr;
+  };
+
+  console.log(chosenUser);
 
   const openURL = async () => {
     let link =
@@ -122,18 +169,18 @@ const AddViewCaregiverModal = (props) => {
               : 'Requested Access'
             : 'View Caregiver'}
         </Text>
+        {from === 'caregiver' && (
+          <Text style={styles.fieldText}>Patient Info</Text>
+        )}
+
         <View style={[globalStyles.row, styles.container]}>
-          {chosenCaregiver?.gender === 'female' ? (
+          {chosenUser?.gender === 'female' ? (
             <USER_FEMALE {...iconStyle} />
           ) : (
             <USER_MALE {...iconStyle} />
           )}
-
           <View style={{flex: 1, marginStart: '3%'}}>
-            <Text style={[styles.subField]}>
-              {chosenCaregiver?.contact_number}
-            </Text>
-            <Text style={styles.mainField}>{chosenCaregiver?.first_name}</Text>
+            <Text style={styles.mainField}>{chosenUser?.first_name}</Text>
           </View>
         </View>
 
@@ -144,19 +191,31 @@ const AddViewCaregiverModal = (props) => {
           <AccessOption
             mainheader={"Patient's First Name"}
             subheader={'Personal Information'}
-            onSelect={() => setAccessName(!accessName)}
+            onSelect={() => {
+              if (from === 'caregiver' && !isEmpty(patient)) {
+                setAccessName(!accessName);
+              }
+            }}
             selected={accessName}
           />
           <AccessOption
             mainheader={"Patient's Report & Diary"}
             subheader={'Health Information'}
-            onSelect={() => setAccessRd(!accessRD)}
+            onSelect={() => {
+              if (from === 'caregiver' && !isEmpty(patient)) {
+                setAccessRd(!accessRD);
+              }
+            }}
             selected={accessRD}
           />
           <AccessOption
-            mainheader={"Patient's Result"}
+            mainheader={"Patient's Lab Results"}
             subheader={'Health Information'}
-            onSelect={() => setAccessLr(!accessLr)}
+            onSelect={() => {
+              if (from === 'caregiver' && !isEmpty(patient)) {
+                setAccessLr(!accessLr);
+              }
+            }}
             selected={accessLr}
           />
           <TouchableOpacity onPress={() => openURL()}>
@@ -170,36 +229,40 @@ const AddViewCaregiverModal = (props) => {
         </ScrollView>
       </View>
 
-      <View style={globalStyles.buttonContainer}>
-        {from === 'caregiver' ? (
-          <TouchableOpacity
-            onPress={() => authorise()}
-            style={
-              !isEmpty(chosenCaregiver)
-                ? globalStyles.submitButtonStyle
-                : globalStyles.skipButtonStyle
-            }>
-            <Text style={globalStyles.actionButtonText}>Request</Text>
-          </TouchableOpacity>
-        ) : (
+      {/*Entering into page after accepting request - from patient*/}
+      {caregiver != null && (
+        <View style={globalStyles.buttonContainer}>
           <View style={{flexDirection: 'row'}}>
             <DeleteBin
               style={diaryStyles.binIcon}
               method={() => setShowDelete(true)}
             />
-
             <TouchableOpacity
               style={logStyles.enableEditButton}
               onPress={() => closeModal()}>
               <Text style={globalStyles.actionButtonText}>Done</Text>
             </TouchableOpacity>
           </View>
-        )}
-      </View>
+        </View>
+      )}
+
+      {!isEmpty(patient) && isEmpty(pendingCaregiver) && (
+        <View style={globalStyles.buttonContainer}>
+          <TouchableOpacity
+            onPress={() => authorise()}
+            style={
+              getPermissionsArr().length > 0
+                ? globalStyles.submitButtonStyle
+                : globalStyles.skipButtonStyle
+            }>
+            <Text style={globalStyles.actionButtonText}>Request</Text>
+          </TouchableOpacity>
+        </View>
+      )}
 
       <DeleteModal
         visible={showDelete}
-        item={caregiver.first_name}
+        item={chosenUser?.first_name}
         confirmMethod={deleteCaregiver}
         close={() => setShowDelete(false)}
       />
@@ -246,6 +309,7 @@ const styles = StyleSheet.create({
     marginBottom: '1%',
     marginTop: '1%',
     flexDirection: 'row',
+    alignItems: 'center',
   },
   appointedText: {
     fontFamily: 'SFProDisplay-Bold',
