@@ -151,7 +151,7 @@ const renderNutrientPercent = async (amount, type) => {
   }
   user = response?.patient;
   gender = user?.gender;
-  age = getAge(user.birth_date);
+  age = Number(user?.age);
 
   let max = getMax4Type(age, type, gender);
   return Math.floor((amount / max) * 100);

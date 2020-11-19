@@ -12,7 +12,6 @@ import {
   fats,
   protein,
 } from '../../../commonFunctions/common';
-import {getPatientProfile} from '../../../netcalls/requestsAccount';
 
 const ProgressContent = (props) => {
   const {
@@ -31,7 +30,8 @@ const ProgressContent = (props) => {
   const [target, setTarget] = useState(0);
 
   useEffect(() => {
-    let max = getMax4Type(getAge(patient?.birth_date), type, patient?.gender);
+    console.log(patient?.age);
+    let max = getMax4Type(Number(patient?.age), type, patient?.gender);
     setTarget(max);
     let percent = Math.floor((Number(value) / Number(max)) * 100) + '%';
     setPercentage(percent);
