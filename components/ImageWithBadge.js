@@ -1,5 +1,7 @@
 import React from 'react';
 import {StyleSheet, TouchableOpacity, Image} from "react-native";
+import {adjustSize} from '../commonFunctions/autoResizeFuncs';
+
 
 export default function ImageWithBadge({imageProps, badgeColor, badgeIcon, containerStyle, badgeSize, onPressImage}) {
     const finalContainerStyle = {
@@ -29,8 +31,8 @@ export default function ImageWithBadge({imageProps, badgeColor, badgeIcon, conta
 
 const styles = StyleSheet.create({
     container: {
-        width: 60,
-        height: 60,
+        width: adjustSize(60),
+        height: adjustSize(60),
         flexDirection: 'row',
         display: 'flex',
         alignItems: 'center',

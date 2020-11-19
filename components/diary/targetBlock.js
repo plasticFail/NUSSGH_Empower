@@ -23,6 +23,7 @@ import {
   renderLogIconNavy,
   dateFrom2dayLog,
 } from '../../commonFunctions/logFunctions';
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
 //styles
 import logStyles from '../../styles/logStyles';
 import diaryStyles from '../../styles/diaryStyles';
@@ -122,7 +123,7 @@ class TargetBlock extends Component {
   };
 
   componentDidUpdate(prevProp) {
-    if (prevProp.date != this.props.date) {
+    if (prevProp.date !== this.props.date) {
       console.log('choosing a new date in diary');
       this.init();
     }
@@ -170,7 +171,7 @@ class TargetBlock extends Component {
     let total = 0;
     let count = 0;
     let length = this.state.bgLogs.length;
-    if (length != 0) {
+    if (length !== 0) {
       for (var x of this.state.bgLogs) {
         //calculate average
         total += x.bg_reading;
@@ -203,7 +204,7 @@ class TargetBlock extends Component {
   };
 
   getWeightResult = async () => {
-    if (this.state.weightLogs.length != 0) {
+    if (this.state.weightLogs.length !== 0) {
       this.setState({weightMiss: false});
     } else {
       this.setState({weightMiss: true});
@@ -219,7 +220,7 @@ class TargetBlock extends Component {
     let totalFats = 0;
     let length = this.state.foodLogs.length;
     let passCount = 0;
-    if (length != 0) {
+    if (length !== 0) {
       for (var a of this.state.foodLogs) {
         let arr = getNutrientCount(a.foodItems);
         totalCarbs += Number(arr[0]);
@@ -359,7 +360,7 @@ class TargetBlock extends Component {
             key={item}>
             {renderLogIconNavy(item)}
             <View style={[styles.buttonContentContainer, {flex: 1}]}>
-              <Text style={[logStyles.fieldName, {fontSize: 15}]}>{item}s</Text>
+              <Text style={[logStyles.fieldName, {fontSize: adjustSize(15)}]}>{item}s</Text>
               {item === bg_key &&
                 renderContent(bg_key, bgMiss, bgPass, avgBg, lastBg)}
               {item === food_key && renderContent(food_key, foodMiss, foodPass)}
@@ -467,7 +468,7 @@ function renderMedContent(medMiss, medCompleted, medLogs) {
         <Ionicon
           name="alert-circle-outline"
           style={diaryStyles.failIcon}
-          size={25}
+          size={adjustSize(25)}
         />
       </View>
     );
@@ -479,7 +480,7 @@ function renderMedContent(medMiss, medCompleted, medLogs) {
     return (
       <View style={{flexDirection: 'row'}}>
         <Text style={styles.buttonDetail}>Completed</Text>
-        <Ionicon name="checkmark" style={diaryStyles.passIcon} size={25} />
+        <Ionicon name="checkmark" style={diaryStyles.passIcon} size={adjustSize(25)} />
       </View>
     );
   }
@@ -502,7 +503,7 @@ function renderContent2(miss, lastWeight) {
     return (
       <View style={{flexDirection: 'row'}}>
         <Text style={styles.buttonDetail}>Completed</Text>
-        <Ionicon name="checkmark" style={diaryStyles.passIcon} size={25} />
+        <Ionicon name="checkmark" style={diaryStyles.passIcon} size={adjustSize(25)} />
       </View>
     );
   }
@@ -511,14 +512,14 @@ function renderContent2(miss, lastWeight) {
 //for logs with criteria besides miss - render result with diff icons
 function renderContent(type, miss, pass, value, lastBg) {
   if (miss) {
-    if (type != bg_key) {
+    if (type !== bg_key) {
       return (
         <View style={{flexDirection: 'row'}}>
           <Text style={styles.buttonDetail}>Missed </Text>
           <Ionicon
             name="alert-circle-outline"
             style={diaryStyles.failIcon}
-            size={25}
+            size={adjustSize(25)}
           />
         </View>
       );
@@ -529,7 +530,7 @@ function renderContent(type, miss, pass, value, lastBg) {
           <Ionicon
             name="alert-circle-outline"
             style={diaryStyles.failIcon}
-            size={25}
+            size={adjustSize(25)}
           />
         </View>
       );
@@ -546,7 +547,7 @@ function renderContent(type, miss, pass, value, lastBg) {
         {type === activity_key && (
           <Text style={styles.buttonDetail}>{value} Active Minutes</Text>
         )}
-        <Ionicon name="checkmark" style={diaryStyles.passIcon} size={25} />
+        <Ionicon name="checkmark" style={diaryStyles.passIcon} size={adjustSize(25)} />
       </View>
     );
   } else if (!pass) {
@@ -564,7 +565,7 @@ function renderContent(type, miss, pass, value, lastBg) {
         <Ionicon
           name="alert-circle-outline"
           style={diaryStyles.failIcon}
-          size={25}
+          size={adjustSize(25)}
         />
       </View>
     );
@@ -579,11 +580,11 @@ const styles = StyleSheet.create({
   },
   buttonDetail: {
     fontFamily: 'SFProDisplay-Bold',
-    fontSize: 20,
+    fontSize: adjustSize(20),
   },
   buttonDetail2: {
     fontFamily: 'SFProDisplay-Bold',
-    fontSize: 18,
+    fontSize: adjustSize(18),
   },
   chevronForward: {
     marginTop: '-3%',

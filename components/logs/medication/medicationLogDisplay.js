@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {View, StyleSheet, FlatList, Text, Animated} from 'react-native';
 //styles
 import logStyles from '../../../styles/logStyles';
@@ -60,64 +60,3 @@ const MedicationLogDisplay = (props) => {
 };
 
 export default MedicationLogDisplay;
-
-const styles = StyleSheet.create({
-  scrollView: {
-    display: 'flex',
-    flexDirection: 'row',
-    overflow: 'hidden',
-    padding: '1%',
-  },
-  container: {
-    alignItems: 'center',
-    backgroundColor: 'white',
-    padding: '3%',
-    margin: '3%',
-    borderRadius: 20,
-    flex: 1,
-  },
-  shadow: {
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  textStyle: {
-    fontSize: 17,
-  },
-  bold: {
-    fontWeight: '700',
-    color: '#d22b55',
-  },
-  hyperLinkStyle: {
-    alignSelf: 'flex-end',
-    color: '#3D5E50',
-    margin: '3%',
-    fontSize: 17,
-  },
-  modal: {
-    backgroundColor: 'white',
-    marginBottom: '3%',
-  },
-  modalText: {
-    color: '#3D5E50',
-    margin: '3%',
-    fontSize: 19,
-    fontWeight: '700',
-  },
-  header: {
-    backgroundColor: '#aad326',
-    padding: '4%',
-    flexDirection: 'row',
-  },
-  headerTitle: {
-    fontWeight: '700',
-    fontSize: 20,
-    marginStart: '30%',
-    marginTop: '2%',
-  },
-});

@@ -8,13 +8,12 @@ import {
   eveningObj,
 } from '../../../commonFunctions/common';
 import {
-  getTime,
   showEdit,
   getMissedArr,
-  getDateObj,
   getTime12hr,
 } from '../../../commonFunctions/diaryFunctions';
 import {bg_key} from '../../../commonFunctions/logFunctions';
+import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
 //third party library
 import Modal from 'react-native-modal';
 import Ionicon from 'react-native-vector-icons/Ionicons';
@@ -73,7 +72,7 @@ const BgBlock = (props) => {
         <Text style={globalStyles.pageHeader}>Blood Glucose</Text>
         <Text style={globalStyles.pageDetails}>{day}</Text>
         <MissedContent arr={missedArr} type={bg_key} />
-        {missedArr.length != 3 && (
+        {missedArr.length !== 3 && (
           <View
             style={{flexDirection: 'row', marginTop: '3%', marginBottom: '2%'}}>
             {pass ? (
@@ -85,7 +84,7 @@ const BgBlock = (props) => {
                 <Ionicon
                   name="checkmark"
                   style={diaryStyles.passIcon}
-                  size={25}
+                  size={adjustSize(25)}
                 />
               </>
             ) : (
@@ -97,7 +96,7 @@ const BgBlock = (props) => {
                 <Ionicon
                   name="alert-circle-outline"
                   style={diaryStyles.failIcon}
-                  size={25}
+                  size={adjustSize(25)}
                 />
               </>
             )}
@@ -144,7 +143,7 @@ function renderLogs(logs, editLog) {
               <>
                 <View style={{flex: 1}} />
                 <TouchableOpacity onPress={() => editLog(item)}>
-                  <Entypo name="edit" style={diaryStyles.editIcon} size={30} />
+                  <Entypo name="edit" style={diaryStyles.editIcon} size={adjustSize(30)} />
                 </TouchableOpacity>
               </>
             ) : null}

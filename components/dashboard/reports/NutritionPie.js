@@ -1,9 +1,9 @@
 import React from 'react';
-import {View, StyleSheet, Text} from 'react-native';
 import { PieChart } from 'react-native-svg-charts';
 import {Line, G, Text as SvgText, Circle, Rect} from 'react-native-svg';
 import {DAY_FILTER_KEY, WEEK_FILTER_KEY} from "../../../screens/main/reports";
 import {filterToDayData, filterToWeekData, getBinCount} from "../../../commonFunctions/reportDataFormatter";
+import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
 
 const COLOR_MAP = {
     'carbohydrate': '#73CA93',
@@ -11,11 +11,11 @@ const COLOR_MAP = {
     'protein': '#005C30',
 }
 
-const labelFontSize = 13;
-const emptyLabelFontSize = 30;
+const labelFontSize = adjustSize(13);
+const emptyLabelFontSize = adjustSize(30);
 
-const labelContainerWidth = 40;
-const labelContainerHeight = 30;
+const labelContainerWidth = adjustSize(40);
+const labelContainerHeight = adjustSize(30);
 
 function NutritionPie(props) {
     const pieData = filterAndProcessData(props.data, props.filterKey, props.pieKeys);
@@ -63,8 +63,8 @@ function NutritionPie(props) {
 
     return (
         <PieChart labelRadius={pieData.length > 1 ? 125 : -5}
-              innerRadius={70}
-              outerRadius={100}
+              innerRadius={adjustSize(70)}
+              outerRadius={adjustSize(100)}
               style={{ height: props.height || 300, width: props.width || '100%' }}
               data={pieData}>
             {   pieData.length > 1 ?
@@ -80,7 +80,7 @@ function filterAndProcessData(data, filterKey, pieKeys) {
     let result = [];
     for (const key of pieKeys) {
         const binCount = getBinCount(filteredData, d=>key, d=>d.nutrients[key].amount);
-        if (binCount != -1) {
+        if (binCount !== -1) {
             result.push(binCount);
         }
     }

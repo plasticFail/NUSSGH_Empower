@@ -9,11 +9,10 @@ import {
 } from '../../commonFunctions/common';
 import {useNavigation} from '@react-navigation/native';
 import {
-  bg_key,
   renderLogIcon,
-  renderLightGreenIcon,
-  food_key,
 } from '../../commonFunctions/logFunctions';
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
+
 
 const NotificationRow = (props) => {
   const {type, text, hour, icon} = props;
@@ -79,7 +78,7 @@ export default NotificationRow;
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    borderRadius: 10,
+    borderRadius: adjustSize(10),
     margin: '3%',
     flexDirection: 'row',
     padding: '2%',
@@ -87,6 +86,6 @@ const styles = StyleSheet.create({
   notifDetails: {
     fontFamily: 'SFProDisplay-Regular',
     marginStart: '2%',
-    fontSize: 15,
+    fontSize: adjustSize(15),
   },
 });

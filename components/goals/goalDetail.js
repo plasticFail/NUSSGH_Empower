@@ -15,7 +15,6 @@ import {Colors} from '../../styles/colors';
 import globalStyles from '../../styles/globalStyles';
 import logStyles from '../../styles/logStyles';
 //function
-import {getDateObj} from '../../commonFunctions/diaryFunctions';
 import {normalTextFontSize} from '../../styles/variables';
 import {
   weight,
@@ -23,17 +22,14 @@ import {
   food,
   med,
   activity,
-  steps,
-  weeklyGoalList,
   renderGoalTypeName,
-  goalEnded,
   isMonday,
   bgpost,
-  defaultv,
   phyv,
   selfv,
 } from '../../commonFunctions/goalFunctions';
 import {deleteGoal} from '../../netcalls/requestsGoals';
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
 //component
 import LeftArrowBtn from '../logs/leftArrowBtn';
 import DeleteBin from '../deleteBin';
@@ -74,7 +70,7 @@ const GoalDetail = (props) => {
   };
 
   const showActionButton = () => {
-    if (isMonday() && goalItem?.set_by != phyv) {
+    if (isMonday() && goalItem?.set_by !== phyv) {
       return true;
     }
     return false;
@@ -99,7 +95,7 @@ const GoalDetail = (props) => {
         ) : null}
 
         <ScrollView contentContainerStyle={{flexGrow: 1}}>
-          {type != food
+          {type !== food
             ? RenderProgressCard(type, goalItem?.name, progress)
             : RenderProgressBarCard(type, goalItem?.name, progress)}
 
@@ -216,8 +212,8 @@ function RenderProgressBarCard(type, goalName, progress) {
       <View style={{flexDirection: 'row'}}>
         <ProgressBar
           containerStyle={{
-            height: 20,
-            marginBottom: 5,
+            height: adjustSize(20),
+            marginBottom: adjustSize(5),
             flex: 1,
             marginStart: '3%',
             marginEnd: '2%',
@@ -273,14 +269,14 @@ function RenderProgressCard(type, goalName, progress) {
         color="#aad326"
         percent={progress}
         centreComponent={{
-          width: 40 / 2,
-          height: 40 / 2,
+          width: adjustSize(40) / 2,
+          height: adjustSize(40) / 2,
           component: <Text style={styles.percentageText}>{percent}</Text>,
         }}
-        radius={40}
-        padding={5}
-        strokeWidth={5}
-        fontSize={15}
+        radius={adjustSize(40)}
+        padding={adjustSize(5)}
+        strokeWidth={adjustSize(5)}
+        fontSize={adjustSize(15)}
       />
       <View style={{flex: 1}}>
         <Text style={globalStyles.pageDetails}>{renderGoalTypeName(type)}</Text>
@@ -301,7 +297,7 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: '#fff',
-    borderRadius: 10,
+    borderRadius: adjustSize(10),
     margin: '2%',
     flexDirection: 'row',
     alignItems: 'center',
@@ -319,22 +315,22 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   percentageText: {
-    fontSize: 18,
+    fontSize: adjustSize(18),
     fontFamily: 'SFProDisplay-Bold',
     color: '#a8d126',
   },
   goalName: {
     color: Colors.textGrey,
-    fontSize: 15,
+    fontSize: adjustSize(15),
     fontFamily: 'SFProDisplay-Regular',
     fontWeight: 'bold',
   },
   targetStyle: {
-    fontSize: 18,
+    fontSize: adjustSize(18),
   },
   foodpercent: {
     color: '#ff0844',
     alignSelf: 'flex-end',
-    fontSize: 20,
+    fontSize: adjustSize(20),
   },
 });

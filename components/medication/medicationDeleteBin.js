@@ -1,11 +1,12 @@
-import React, {useState, useEffect} from 'react';
-import {View, TouchableOpacity, Text, StyleSheet, Alert} from 'react-native';
+import React, {useState} from 'react';
+import {View, StyleSheet} from 'react-native';
 //third party
 import Modal from 'react-native-modal';
 //component
 import DeleteBin from '../deleteBin';
 import diaryStyles from '../../styles/diaryStyles';
 import DeleteConfirmation from './deleteConfirmation';
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
 
 const MedicationDeleteBin = (props) => {
   const {medication, deleteMethod} = props;
@@ -42,6 +43,6 @@ const styles = StyleSheet.create({
   deleteContainer: {
     width: '100%',
     backgroundColor: 'white',
-    borderRadius: 20,
+    borderRadius: adjustSize(20),
   },
 });

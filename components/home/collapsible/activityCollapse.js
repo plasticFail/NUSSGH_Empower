@@ -12,9 +12,11 @@ import {carbs, fats, protein} from '../../../commonFunctions/common';
 import NutritionCol from '../nutritionCol';
 import {useNavigation} from '@react-navigation/native';
 
+import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
+
 const logoStyle = {
-  width: 50,
-  height: 50,
+  width: adjustSize(50),
+  height: adjustSize(50),
 };
 
 const ActivityCollapse = (props) => {
@@ -89,14 +91,14 @@ const ActivityCollapse = (props) => {
                       : activitySummary?.steps / maxSteps
                   }
                   centreComponent={{
-                    width: 50 / 2,
-                    height: 50 / 1.5,
+                    width: adjustSize(50) / 2,
+                    height: adjustSize(50) / 1.5,
                     component: <STEP {...logoStyle} />,
                   }}
-                  radius={50}
-                  padding={10}
-                  strokeWidth={5}
-                  fontSize={15}
+                  radius={adjustSize(50)}
+                  padding={adjustSize(10)}
+                  strokeWidth={adjustSize(5)}
+                  fontSize={adjustSize(15)}
                 />
                 <Text style={styles.activityCount}>
                   {activitySummary?.steps}
@@ -112,14 +114,14 @@ const ActivityCollapse = (props) => {
                       : activitySummary?.duration / activityTarget
                   }
                   centreComponent={{
-                    width: 50 / 2,
-                    height: 50 / 1.5,
+                    width: adjustSize(50) / 2,
+                    height: adjustSize(50) / 1.5,
                     component: <RUN {...logoStyle} />,
                   }}
-                  radius={50}
-                  padding={10}
-                  strokeWidth={5}
-                  fontSize={15}
+                  radius={adjustSize(50)}
+                  padding={adjustSize(10)}
+                  strokeWidth={adjustSize(5)}
+                  fontSize={adjustSize(15)}
                 />
                 <Text style={styles.activityCount}>
                   {activitySummary?.duration}
@@ -135,14 +137,14 @@ const ActivityCollapse = (props) => {
                       : activitySummary?.calories / maxCalBurnt
                   }
                   centreComponent={{
-                    width: 50 / 2,
-                    height: 50 / 1.5,
+                    width: adjustSize(50) / 2,
+                    height: adjustSize(50) / 1.5,
                     component: <CALBURNT {...logoStyle} />,
                   }}
-                  radius={50}
-                  padding={10}
-                  strokeWidth={5}
-                  fontSize={15}
+                  radius={adjustSize(50)}
+                  padding={adjustSize(10)}
+                  strokeWidth={adjustSize(5)}
+                  fontSize={adjustSize(15)}
                 />
                 <Text style={styles.activityCount}>
                   {activitySummary?.calories}
@@ -178,8 +180,8 @@ export default ActivityCollapse;
 const styles = StyleSheet.create({
   cardTab: {
     backgroundColor: Colors.activityTab,
-    borderTopStartRadius: 20,
-    borderTopEndRadius: 20,
+    borderTopStartRadius: adjustSize(20),
+    borderTopEndRadius: adjustSize(20),
   },
   headerTab: {
     padding: '3%',
@@ -188,12 +190,12 @@ const styles = StyleSheet.create({
   headerText: {
     fontFamily: 'SFProDisplay-Bold',
     color: '#21293a',
-    fontSize: 18,
+    fontSize: adjustSize(18),
     marginStart: '3%',
   },
   greetingText: {
     color: '#005c30',
-    fontSize: 18,
+    fontSize: adjustSize(18),
     fontFamily: 'SFProDisplay-Bold',
     marginStart: '5%',
   },
@@ -201,7 +203,7 @@ const styles = StyleSheet.create({
     fontFamily: 'SFProDisplay-Regular',
     color: 'white',
     marginStart: '5%',
-    fontSize: 18,
+    fontSize: adjustSize(18),
   },
   activityCircular: {
     flexDirection: 'column',
@@ -210,11 +212,11 @@ const styles = StyleSheet.create({
   activityCount: {
     fontFamily: 'SFProDisplay-Bold',
     color: '#005c30',
-    fontSize: 20,
+    fontSize: adjustSize(20),
   },
   activityParam: {
     fontFamily: 'SFProDisplay-Regular',
-    fontSize: 17,
+    fontSize: adjustSize(17),
   },
   whiteborder: {
     borderBottomColor: 'white',

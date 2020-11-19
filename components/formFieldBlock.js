@@ -1,5 +1,7 @@
-import React, {Component} from 'react';
-import {View, Text, StyleSheet, TextInput} from 'react-native';
+import React from 'react';
+import {Text, StyleSheet, TextInput} from 'react-native';
+import {adjustSize} from '../commonFunctions/autoResizeFuncs';
+
 const FormFieldBlock = (props) => {
   const {title, expandable} = props;
   return (
@@ -26,20 +28,20 @@ export default FormFieldBlock;
 const styles = StyleSheet.create({
   formHeader: {
     fontWeight: '700',
-    fontSize: 18,
+    fontSize: adjustSize(18),
     margin: '3%',
   },
   inputBox: {
     borderWidth: 0.5,
     margin: '2%',
     padding: '3%',
-    fontSize: 16,
+    fontSize: adjustSize(16),
   },
   inputBox1: {
     borderBottomWidth: 0.5,
     marginStart: '3%',
     marginEnd: '3%',
     marginBottom: ' 3%',
-    fontSize: 16,
+    fontSize: adjustSize(16),
   },
 });

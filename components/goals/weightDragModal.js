@@ -1,7 +1,6 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {
   View,
-  TouchableOpacity,
   Text,
   Dimensions,
   StyleSheet,
@@ -13,6 +12,7 @@ import PickDrag from '../logs/weight/pickDrag';
 
 import TICK from '../../resources/images/Patient-Icons/SVG/icon-green-accept.svg';
 import globalStyles from '../../styles/globalStyles';
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
 
 const WeightDragModal = (props) => {
   const {visible, weight} = props;
@@ -30,7 +30,7 @@ const WeightDragModal = (props) => {
       <View style={styles.modalContainer}>
         <View style={styles.actionContainer}>
           <CrossBtn close={() => close()} />
-          <TICK height={30} width={30} onPress={() => tick()} />
+          <TICK height={adjustSize(30)} width={adjustSize(30)} onPress={() => tick()} />
         </View>
         <Text style={[globalStyles.pageHeader, styles.bottom]}>
           Goal Weight

@@ -3,6 +3,8 @@ import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
 //third party lib
 import Modal from 'react-native-modal';
 import globalStyles from '../../styles/globalStyles';
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
+
 
 const AboutDateSelection = (props) => {
   const {visible, closeModal} = props;
@@ -34,19 +36,19 @@ const styles = StyleSheet.create({
   container: {
     width: '90%',
     backgroundColor: 'white',
-    borderRadius: 9.5,
+    borderRadius: adjustSize(9.5),
     alignSelf: 'center',
     padding: '3%',
   },
   text: {
     fontFamily: 'SFProDisplay-Bold',
-    fontSize: 20,
+    fontSize: adjustSize(20),
     textAlign: 'center',
   },
   textDetail: {
     marginTop: '2%',
     fontFamily: 'SFProDisplay-Regular',
-    fontSize: 18,
+    fontSize: adjustSize(18),
     textAlign: 'center',
   },
 });

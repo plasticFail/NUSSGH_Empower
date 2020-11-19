@@ -9,6 +9,7 @@ import {
   Dimensions,
 } from 'react-native';
 import {Colors} from '../../../styles/colors';
+import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
 
 //Props:
 //max, min: range of number
@@ -24,7 +25,7 @@ const scale = (v, inputMin, interval) => {
   console.log('v: ' + v);
   let factor = Math.round(v / interval_width);
   let num = 0;
-  if (factor == 0) {
+  if (factor === 0) {
     num = inputMin;
   } else {
     num = inputMin + (factor - 1) * interval;
@@ -61,7 +62,7 @@ export default class PickDrag extends Component {
   }
 
   componentDidUpdate(prevProp) {
-    if (prevProp != this.props) {
+    if (prevProp !== this.props) {
       this.scrollInitial();
     }
   }
@@ -173,12 +174,12 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOffset: {width: 0, height: 2}, // change this for more shadow
     shadowOpacity: 0.2,
-    shadowRadius: 6,
-    elevation: 10,
+    shadowRadius: adjustSize(6),
+    elevation: adjustSize(10),
   },
   scrollcontainer: {
     width: '100%',
-    height: 150,
+    height: adjustSize(150),
     flexGrow: 1,
     marginTop: '-8%',
   },
@@ -193,7 +194,7 @@ const styles = StyleSheet.create({
     color: '#e2e8ee',
   },
   intervalValue: {
-    fontSize: 18,
+    fontSize: adjustSize(18),
     width: '120%',
     margin: 2,
     color: '#aad326',
@@ -203,9 +204,9 @@ const styles = StyleSheet.create({
   cursor: {
     width: 0,
     height: 0,
-    borderLeftWidth: 28,
-    borderRightWidth: 28,
-    borderTopWidth: 30,
+    borderLeftWidth: adjustSize(28),
+    borderRightWidth: adjustSize(28),
+    borderTopWidth: adjustSize(30),
     borderStyle: 'solid',
     borderLeftColor: 'transparent',
     borderRightColor: 'transparent',

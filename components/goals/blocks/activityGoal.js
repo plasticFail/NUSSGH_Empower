@@ -3,14 +3,12 @@ import {
   View,
   TouchableOpacity,
   Text,
-  StyleSheet,
   ScrollView,
   Alert,
 } from 'react-native';
 import {
   maxDuration,
   maxCalBurnt,
-  getDateObj,
 } from '../../../commonFunctions/diaryFunctions';
 //third party lib
 import Modal from 'react-native-modal';
@@ -41,7 +39,7 @@ const ActivityGoal = (props) => {
   const [pageText, setPageText] = useState('Add Goal');
 
   useEffect(() => {
-    if (parent != undefined && activity != undefined) {
+    if (parent !== undefined && activity !== undefined) {
       setGoalName(activity.name);
       setMinute(activity.duration);
       setCalBurnt(activity.cal_burnt);
@@ -63,7 +61,7 @@ const ActivityGoal = (props) => {
       duration: minute,
       cal_burnt: calBurnt,
     };
-    if (parent != undefined && parent != defaultv) {
+    if (parent !== undefined && parent !== defaultv) {
       let status = await addActivityGoalReq(obj, activity._id);
       if (status === 200) {
         Alert.alert('Activity goal edited successfully', '', [
@@ -171,9 +169,3 @@ const ActivityGoal = (props) => {
 
 export default ActivityGoal;
 
-const styles = StyleSheet.create({
-  spacing: {
-    marginStart: '4%',
-    marginEnd: '4%',
-  },
-});

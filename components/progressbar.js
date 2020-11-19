@@ -1,5 +1,6 @@
 import React from 'react';
 import {Animated, View, StyleSheet, TouchableWithoutFeedback} from 'react-native';
+import {adjustSize} from '../commonFunctions/autoResizeFuncs';
 
 // PROPS TO CUSTOMISE PROGRESS BAR
 // backgroundBarColor: string. The color of the background, which is usually greyish white.
@@ -96,7 +97,7 @@ function getReverseColorRange() {
 const styles = StyleSheet.create({
     container: {
         width: '100%',
-        height: 20
+        height: adjustSize(20)
     },
     backgroundFill : {
         position: 'absolute',

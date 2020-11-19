@@ -1,7 +1,9 @@
-import React, {useEffect, useState, useRef} from 'react';
-import {View, StyleSheet, TouchableOpacity, Text, Animated} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {View, StyleSheet, Text} from 'react-native';
 import {renderNutrientPercent} from '../../commonFunctions/common';
 import ProgressBar from '../progressbar';
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
+
 
 const NutritionCol = (props) => {
   const {amount, nutrientType, header} = props;
@@ -35,13 +37,13 @@ export default NutritionCol;
 const styles = StyleSheet.create({
   foodHeader: {
     fontFamily: 'SFProDisplay-Bold',
-    fontSize: 17,
+    fontSize: adjustSize(17),
     marginBottom: '6%',
     opacity: 0.5,
   },
   foodDetail: {
     fontFamily: 'SFProDisplay-Bold',
-    fontSize: 17,
+    fontSize: adjustSize(17),
     color: 'black',
   },
 });

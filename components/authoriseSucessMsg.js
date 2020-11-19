@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 //third party lib
-import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import Modal from 'react-native-modal';
 //style
@@ -17,10 +16,12 @@ import {Colors} from '../styles/colors';
 import globalStyles from '../styles/globalStyles';
 import TICK from '../resources/images/Patient-Icons/SVG/icon-green-accept.svg';
 import CROSS from '../resources/images/Caregiver-Additional-Icons/SVG/cg-icon-red-denied.svg';
+import {adjustSize} from '../commonFunctions/autoResizeFuncs';
+
 
 const iconStyle = {
-  width: 40,
-  height: 40,
+  width: adjustSize(40),
+  height: adjustSize(40),
   marginTop: '5%',
   marginStart: '3%',
 };
@@ -53,7 +54,7 @@ function AuthoriseSuccessMsg(props) {
       <View style={styles.modalContainer}>
         <Text
           style={{
-            fontSize: 20,
+            fontSize: adjustSize(20),
             marginTop: '3%',
             fontFamily: 'SFProDisplay-Regular',
           }}>
@@ -61,14 +62,14 @@ function AuthoriseSuccessMsg(props) {
         </Text>
         <Animated.View
           style={{
-            height: 80,
-            width: 80,
+            height: adjustSize(80),
+            width: adjustSize(80),
             transform: [{scale: springAnim}],
           }}>
           <Ionicon
             name="checkmark-circle-outline"
             color={Colors.backArrowColor}
-            size={80}
+            size={adjustSize(80)}
           />
         </Animated.View>
 
@@ -121,20 +122,20 @@ const styles = StyleSheet.create({
   modalContainer: {
     backgroundColor: 'white',
     alignItems: 'center',
-    borderRadius: 20,
+    borderRadius: adjustSize(20),
     width: '100%',
     paddingBottom: '4%',
   },
   button: {
     backgroundColor: '#EEF3BD',
-    borderRadius: 9.5,
-    marginVertical: 10,
-    paddingVertical: 10,
-    paddingHorizontal: 40,
-    width: Dimensions.get('window').width - 90,
+    borderRadius: adjustSize(9.5),
+    marginVertical: adjustSize(10),
+    paddingVertical: adjustSize(10),
+    paddingHorizontal: adjustSize(40),
+    width: Dimensions.get('window').width - adjustSize(90),
   },
   buttonText: {
-    fontSize: 23,
+    fontSize: adjustSize(23),
     fontWeight: '500',
     textAlign: 'center',
     fontFamily: 'SFProDisplay-Bold',
@@ -157,7 +158,7 @@ const styles = StyleSheet.create({
   },
   pdpaText: {
     fontFamily: 'SFProDisplay-Regular',
-    fontSize: 15,
+    fontSize: adjustSize(15),
     marginTop: '4%',
   },
 });

@@ -18,11 +18,11 @@ import {
   checkBloodGlucoseText,
   checkBloodGlucose,
   handleSubmitBloodGlucose,
-  min_bg,
   bg_key,
 } from '../../../commonFunctions/logFunctions';
 import {getDateObj} from '../../../commonFunctions/diaryFunctions';
 import {deleteBgLog, editBgLog} from '../../../netcalls/requestsDiary';
+import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
 //styles
 import globalStyles from '../../../styles/globalStyles';
 import {Colors} from '../../../styles/colors';
@@ -70,7 +70,7 @@ const BloodGlucoseLogBlock = (props) => {
 
   useEffect(() => {
     console.log('Navigating to bg modal from ' + parent);
-    if (selectedLog != undefined) {
+    if (selectedLog !== undefined) {
       setBloodGlucose(String(initialBg));
       setDatetime(initialDate);
       setEatSelection(initialEat);
@@ -145,11 +145,11 @@ const BloodGlucoseLogBlock = (props) => {
 
   const checkChange = () => {
     if (
-      bloodGlucose != initialBg ||
-      String(initialDate) != String(datetime) ||
-      eatSelection != initialEat ||
-      exerciseSelection != initialEx ||
-      alcholicSelection != initialAlcohol
+      bloodGlucose !== initialBg ||
+      String(initialDate) !== String(datetime) ||
+      eatSelection !== initialEat ||
+      exerciseSelection !== initialEx ||
+      alcholicSelection !== initialAlcohol
     ) {
       setChanged(true);
       return;
@@ -310,7 +310,7 @@ const styles = StyleSheet.create({
   unitText: {
     marginTop: '5%',
     marginStart: '3%',
-    fontSize: 18,
+    fontSize: adjustSize(18),
   },
 });
 

@@ -4,7 +4,7 @@ import logStyles from '../../styles/logStyles';
 //third party lib
 import Ionicons from 'react-native-vector-icons/Ionicons';
 //function
-import {isEmpty} from '../../commonFunctions/common';
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
 //component
 import SearchMedication from '../medication/searchMedication';
 
@@ -19,11 +19,11 @@ const SearchBarMed = (props) => {
           style={[logStyles.inputField, {margin: '3%'}]}
           onPress={() => setOpenSearchModal(true)}>
           {selectedMed.medication === undefined ? (
-            <Text style={{fontSize: 17, color: '#b5b5b5'}}>
-              <Ionicons name="search" size={20} /> Name (eg. Metformin)
+            <Text style={{fontSize: adjustSize(17), color: '#b5b5b5'}}>
+              <Ionicons name="search" size={adjustSize(20)} /> Name (eg. Metformin)
             </Text>
           ) : (
-            <Text style={{fontSize: 17, color: 'black'}}>
+            <Text style={{fontSize: adjustSize(17), color: 'black'}}>
               {selectedMed.medication}
             </Text>
           )}
@@ -31,11 +31,11 @@ const SearchBarMed = (props) => {
       ) : (
         <TouchableOpacity style={[logStyles.inputField, {margin: '3%'}]}>
           {selectedMed.medication === undefined ? (
-            <Text style={{fontSize: 17, color: '#b5b5b5'}}>
-              <Ionicons name="search" size={20} /> Name (eg. Metformin)
+            <Text style={{fontSize: adjustSize(17), color: '#b5b5b5'}}>
+              <Ionicons name="search" size={adjustSize(20)} /> Name (eg. Metformin)
             </Text>
           ) : (
-            <Text style={{fontSize: 17, color: 'black'}}>
+            <Text style={{fontSize: adjustSize(17), color: 'black'}}>
               {selectedMed.medication}
             </Text>
           )}

@@ -1,8 +1,8 @@
 import React from 'react';
-import {View, Text, StyleSheet, Dimensions, Animated} from 'react-native';
+import {StyleSheet, Dimensions, Animated} from 'react-native';
 
 const windowHeight = Dimensions.get('window').height;
-const windowWidth = Dimensions.get('window').width;
+
 
 /*
 Props description for customisability.

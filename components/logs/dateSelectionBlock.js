@@ -1,9 +1,8 @@
-import React, {useState, useRef, useEffect} from 'react';
+import React, {useState, useRef} from 'react';
 import {
   View,
   StyleSheet,
   Text,
-  TextInput,
   Animated,
   TouchableOpacity,
 } from 'react-native';
@@ -14,6 +13,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 //styles
 import logStyles from '../../styles/logStyles';
 import AboutDateSelection from './aboutDateSelection';
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
 
 const DateSelectionBlock = (props) => {
   const {initialDate} = props;
@@ -56,7 +56,7 @@ const DateSelectionBlock = (props) => {
         <TouchableOpacity
           style={{alignSelf: 'flex-end'}}
           onPress={() => setShowInfo(true)}>
-          <Icon name="information-outline" size={25} color={'#aad326'} />
+          <Icon name="information-outline" size={adjustSize(25)} color={'#aad326'} />
         </TouchableOpacity>
       </View>
       <TouchableOpacity onPress={() => handleOpenCloseWithAnimation(visible)}>

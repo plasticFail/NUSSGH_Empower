@@ -4,6 +4,8 @@ import {View, StyleSheet, Text, Animated} from 'react-native';
 import Moment from 'moment';
 import {Svg, Rect, Text as SvgText, Path, G} from 'react-native-svg';
 import {scaleTime, scaleLinear} from "d3-scale";
+import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
+
 
 const data = [
     {
@@ -34,21 +36,21 @@ export default function DailyBloodSugarLevelBarChart(props) {
     const {width, height} = props;
     // initialise all the graph properties.
     // style options
-    const padding = 20;
-    const paddingLeft = 20;
-    const paddingRight = 20;
-    const xAxisGapFromText = 15;
-    const yAxisGapFromText = 25;
-    const axisMargin = 10;
-    const barGap = 20;
-    let xAxisTextFontSize = 12;
-    const yAxisTextFontSize = 12;
+    const padding = adjustSize(20);
+    const paddingLeft = adjustSize(20);
+    const paddingRight = adjustSize(20);
+    const xAxisGapFromText = adjustSize(15);
+    const yAxisGapFromText = adjustSize(25);
+    const axisMargin = adjustSize(10);
+    const barGap = adjustSize(20);
+    let xAxisTextFontSize = adjustSize(12);
+    const yAxisTextFontSize = adjustSize(12);
     const stepSize = 2;
     const yAxisStartsFrom = 0;
     // bar label properties
-    const barLabelHeight = 20;
-    const barLabelWidth = 30;
-    const barLabelYOffset = 10;
+    const barLabelHeight = adjustSize(20);
+    const barLabelWidth = adjustSize(30);
+    const barLabelYOffset = adjustSize(10);
     // lower and upper bound labels
     const lowerBound = 4.0;
     const upperBound = 11.0;
@@ -62,7 +64,7 @@ export default function DailyBloodSugarLevelBarChart(props) {
     const scaleX = scaleTime().domain([minX, maxX]).range([paddingLeft, width - paddingRight]);
     const scaleY = scaleLinear().domain([yAxisStartsFrom, maxY]).range([height - padding, padding]);
     const scaleHeight = scaleLinear().domain([yAxisStartsFrom, maxY]).range([0, height - 2 * padding]);
-    const barWidth = 9.5;
+    const barWidth = adjustSize(9.5);
 
     // event handlers
     const handleSelect = (index) => {
@@ -164,7 +166,7 @@ export default function DailyBloodSugarLevelBarChart(props) {
 function generateXAxisLabels() {
     let result = []
     for (let i = 0; i <= 24; i = i + 6) {
-        if (i == 24) {
+        if (i === 24) {
             result.push(new Date(2020, 8, 27, 23, 59, 59, 0));
         } else {
             result.push(new Date(2020, 8, 27, i, 0, 0, 0));
@@ -186,7 +188,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff'
     },
     titleText: {
-        fontSize: 18,
+        fontSize: adjustSize(18),
         fontWeight: 'bold',
         color: '#B1B0B0',
     },

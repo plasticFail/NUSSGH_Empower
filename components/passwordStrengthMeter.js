@@ -3,8 +3,8 @@ import {View, TextInput, Animated, Text, StyleSheet} from 'react-native';
 //third party lib
 import zxcvbn from 'zxcvbn';
 //styles
-import {Colors} from '../styles/colors';
 import globalStyles from '../styles/globalStyles';
+import {adjustSize} from '../commonFunctions/autoResizeFuncs';
 
 //using score 1 - 4, animate the respective bars to show strength
 export default class PasswordStrengthMeter extends Component {
@@ -27,7 +27,7 @@ export default class PasswordStrengthMeter extends Component {
   }
 
   componentDidUpdate(prevProp, prevState) {
-    if (prevState.passwordString != this.state.passwordString) {
+    if (prevState.passwordString !== this.state.passwordString) {
       this.getPasswordResult(this.state.passwordString);
       this.setResultString(this.state.score);
       //animate
@@ -140,7 +140,7 @@ export default class PasswordStrengthMeter extends Component {
         <View
           style={{
             flexDirection: 'row',
-            height: 10,
+            height: adjustSize(10),
             marginStart: '4%',
             marginEnd: '4%',
           }}>
@@ -154,7 +154,7 @@ export default class PasswordStrengthMeter extends Component {
             alignSelf: 'flex-end',
             marginEnd: '4%',
             marginBottom: '2%',
-            fontSize: 16,
+            fontSize: adjustSize(16),
           }}>
           {this.state.result}
         </Text>

@@ -1,14 +1,9 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   StyleSheet,
   Text,
-  TextInput,
-  ScrollView,
-  ActivityIndicator,
   TouchableOpacity,
-  Dimensions,
-  Animated,
 } from 'react-native';
 //third party lib
 import Modal from 'react-native-modal';
@@ -16,6 +11,7 @@ import LeftArrowBtn from '../logs/leftArrowBtn';
 import {Colors} from '../../styles/colors';
 import globalStyles from '../../styles/globalStyles';
 import CountdownTimer from '../countdownTimer';
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
 
 const sampleNum = '654321';
 
@@ -97,13 +93,13 @@ export default AuthoriseModal;
 const styles = StyleSheet.create({
   subHeading: {
     fontFamily: 'SFProDisplay-Bold',
-    fontSize: 20,
+    fontSize: adjustSize(20),
     marginStart: '3%',
     color: Colors.grey,
     opacity: 0.6,
   },
   pinNo: {
     fontFamily: 'SFProDisplay-Bold',
-    fontSize: 20,
+    fontSize: adjustSize(20),
   },
 });

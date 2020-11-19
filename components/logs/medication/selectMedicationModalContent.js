@@ -1,5 +1,5 @@
-import React, {Component, useState, useEffect} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import React, {useState} from 'react';
+import {View, Text, TouchableOpacity} from 'react-native';
 //third party lib
 import Modal from 'react-native-modal';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -35,7 +35,7 @@ const SelectMedicationModalContent = (props) => {
 
   const enableButton = () => {
     if (
-      checkDosageText(dosage).length == 0 &&
+      checkDosageText(dosage).length === 0 &&
       !checkRepeatMedicine(selectedMedicine, selectedMedList) &&
       !checkRepeatMedicine(selectedMedicine, medplanlist) &&
       !isEmpty(selectedMedicine)
@@ -116,19 +116,6 @@ const SelectMedicationModalContent = (props) => {
   );
 };
 
-const styles = StyleSheet.create({
-  searchInput: {
-    borderColor: '#e2e8ee',
-    borderWidth: 1,
-    borderRadius: 9.5,
-    marginBottom: '3%',
-    marginTop: '2%',
-    padding: '2%',
-    marginStart: '3%',
-    marginEnd: '3%',
-    backgroundColor: 'white',
-  },
-});
 
 export default SelectMedicationModalContent;
 

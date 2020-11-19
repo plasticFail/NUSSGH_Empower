@@ -1,18 +1,14 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {
   View,
   StyleSheet,
   Text,
-  TextInput,
-  ScrollView,
-  ActivityIndicator,
 } from 'react-native';
 
-import USER_FEMALE from '../../resources/images/Patient-Icons/SVG/user-female.svg';
-import USER_MALE from '../../resources/images/Patient-Icons/SVG/user-male.svg';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import globalStyles from '../../styles/globalStyles';
 import Tick from '../tick';
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
 
 const AccessOption = (props) => {
   const {mainheader, subheader, selected} = props;
@@ -42,10 +38,10 @@ const styles = StyleSheet.create({
   subField: {
     fontFamily: 'SFProDisplay-Regular',
     opacity: 0.6,
-    fontSize: 16,
+    fontSize: adjustSize(16),
   },
   mainField: {
     fontFamily: 'SFProDisplay-Regular',
-    fontSize: 20,
+    fontSize: adjustSize(20),
   },
 });

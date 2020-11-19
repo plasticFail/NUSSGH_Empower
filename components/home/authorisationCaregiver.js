@@ -1,12 +1,13 @@
-import React, {useEffect, useState, useRef} from 'react';
-import {View, StyleSheet, TouchableOpacity, Text, Animated} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {View, StyleSheet, Text} from 'react-native';
 import {Colors} from '../../styles/colors';
 import globalStyles from '../../styles/globalStyles';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import LoadingModal from '../loadingModal';
 import {storeAuthorisedStatusCaregiver} from '../../storage/asyncStorageFunctions';
-import SuccessDialogue from '../successDialogue';
 import AuthoriseSuccessMsg from '../authoriseSucessMsg';
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
+
 
 const AuthorisationCaregiver = (props) => {
   const {toDoAfterOTP} = props;
@@ -69,7 +70,7 @@ const AuthorisationCaregiver = (props) => {
             pinCount={6}
             style={{
               width: '90%',
-              height: 100,
+              height: adjustSize(100),
               fontWeight: '1000',
               padding: '5%',
               alignSelf: 'center',
@@ -100,8 +101,8 @@ export default AuthorisationCaregiver;
 const styles = StyleSheet.create({
   cardTab: {
     backgroundColor: '#e1e7ed',
-    borderTopStartRadius: 20,
-    borderTopEndRadius: 20,
+    borderTopStartRadius: adjustSize(20),
+    borderTopEndRadius: adjustSize(20),
   },
   headerTab: {
     padding: '3%',
@@ -109,7 +110,7 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontFamily: 'SFProDisplay-Bold',
-    fontSize: 18,
+    fontSize: adjustSize(18),
     marginStart: '3%',
     color: '#3c3c43',
     opacity: 0.6,
@@ -117,9 +118,9 @@ const styles = StyleSheet.create({
   //otp
   otpInput: {
     backgroundColor: 'white',
-    borderRadius: 10,
+    borderRadius: adjustSize(10),
     fontFamily: 'SFProDisplay-Bold',
-    fontSize: 20,
+    fontSize: adjustSize(20),
     color: 'black',
   },
 });

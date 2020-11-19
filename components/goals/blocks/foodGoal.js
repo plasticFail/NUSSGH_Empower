@@ -3,7 +3,6 @@ import {
   View,
   TouchableOpacity,
   Text,
-  StyleSheet,
   ScrollView,
   Alert,
   KeyboardAvoidingView,
@@ -44,7 +43,7 @@ const FoodGoal = (props) => {
   const [pageText, setPageText] = useState('Add Goal');
 
   useEffect(() => {
-    if (parent != undefined && food != undefined) {
+    if (parent !== undefined && food !== undefined) {
       setGoalName(food.name);
       setCal(food.calories);
       setCarbs(food.carbs);
@@ -69,7 +68,7 @@ const FoodGoal = (props) => {
       protein: protein,
       fats: fats,
     };
-    if (parent != undefined && parent != defaultv) {
+    if (parent !== undefined && parent !== defaultv) {
       let status = await addFoodGoalReq(obj, food._id);
       if (status === 200) {
         Alert.alert('Food goal edited successfully', '', [
@@ -117,10 +116,10 @@ const FoodGoal = (props) => {
   const showSubmitBtn = () => {
     if (
       goalName?.length > 0 &&
-      protein != 0 &&
-      carbs != 0 &&
-      cal != 0 &&
-      fats != 0
+      protein !== 0 &&
+      carbs !== 0 &&
+      cal !== 0 &&
+      fats !== 0
     ) {
       return true;
     }
@@ -203,9 +202,3 @@ const FoodGoal = (props) => {
 
 export default FoodGoal;
 
-const styles = StyleSheet.create({
-  spacing: {
-    marginStart: '4%',
-    marginEnd: '4%',
-  },
-});

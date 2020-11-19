@@ -17,6 +17,8 @@ import {
 import FoodBlock from '../../diary/blocks/foodBlock';
 import MedBlock from '../../diary/blocks/medBlock';
 import WeightBlock from '../../diary/blocks/weightBlock';
+import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
+
 
 const OverviewCollapse = (props) => {
   const {bgl, bgLogs, bgPass, bgMiss, dateString, lastBg} = props;
@@ -203,8 +205,8 @@ export default OverviewCollapse;
 const styles = StyleSheet.create({
   cardTab: {
     backgroundColor: Colors.overviewTab,
-    borderTopStartRadius: 20,
-    borderTopEndRadius: 20,
+    borderTopStartRadius: adjustSize(20),
+    borderTopEndRadius: adjustSize(20),
   },
   headerTab: {
     padding: '3%',
@@ -212,12 +214,12 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontFamily: 'SFProDisplay-Bold',
-    fontSize: 18,
+    fontSize: adjustSize(18),
     marginStart: '3%',
   },
   greetingText: {
     color: '#005c30',
-    fontSize: 18,
+    fontSize: adjustSize(18),
     fontFamily: 'SFProDisplay-Bold',
     marginStart: '5%',
   },
@@ -225,16 +227,17 @@ const styles = StyleSheet.create({
     fontFamily: 'SFProDisplay-Regular',
     color: 'white',
     marginStart: '5%',
-    fontSize: 18,
+    fontSize: adjustSize(18),
   },
   metricText: {
     fontFamily: 'SFProDisplay-Bold',
     color: '#7d7d7d',
+    fontSize: adjustSize(14),
   },
   measuredText: {
     fontFamily: 'SFProDisplay-Bold',
     color: '#000',
-    fontSize: 18,
+    fontSize: adjustSize(18),
   },
   row: {
     borderBottomWidth: 1,

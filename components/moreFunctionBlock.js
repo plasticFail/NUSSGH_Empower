@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
+import {adjustSize} from '../commonFunctions/autoResizeFuncs';
 
 Icon.loadFont();
 
@@ -12,7 +13,7 @@ const MoreFunctionBlock = props => {
                     <Text style={styles.functionText}>{props.text}</Text>
                 </View>
                 <View style={styles.rightContainer}>
-                    <Icon style={styles.icon} name='chevron-right' size={22} color={'#D1D1D6'} />
+                    <Icon style={styles.icon} name='chevron-right' size={adjustSize(22)} color={'#D1D1D6'} />
                 </View>
             </View>
         </TouchableOpacity>
@@ -25,10 +26,10 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         alignItems:'flex-start',
         justifyContent:'space-between',
-        padding:10,
+        padding:adjustSize(10),
     },
     functionText: {
-        fontSize: 20,
+        fontSize: adjustSize(20),
         alignItems:'center',
         justifyContent:'center',
     },
@@ -40,13 +41,13 @@ const styles = StyleSheet.create({
         flex:1,
         alignItems:'flex-start',
         justifyContent:'center',
-        height:30,
+        height:adjustSize(30),
     },
     rightContainer:{
         flex:0,
         alignItems:'center',
         justifyContent:'center',
-        height:30,
+        height:adjustSize(30),
     },
 })
 

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -23,6 +23,7 @@ import {
   med_key,
   weight_key,
 } from '../../../../commonFunctions/logFunctions';
+import {adjustSize} from '../../../../commonFunctions/autoResizeFuncs';
 
 const {width} = Dimensions.get('window');
 
@@ -69,7 +70,7 @@ export default function DiaryCard(props) {
         style={{borderBottomWidth: 0.5, borderColor: '#7d7d7d', width: '100%'}}>
         <Text
           style={{
-            padding: 20,
+            padding: adjustSize(20),
             fontWeight: 'bold',
             fontSize: 24,
             color: '#7d7d7d',
@@ -173,7 +174,7 @@ export default function DiaryCard(props) {
 const styles = StyleSheet.create({
   card: {
     backgroundColor: '#fff',
-    borderRadius: 10,
+    borderRadius: adjustSize(10),
     marginTop: '2%',
     flexDirection: 'row',
     alignItems: 'center',
@@ -190,13 +191,13 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   overviewRow: {
-    paddingTop: 10,
-    paddingBottom: 10,
-    marginLeft: 20,
-    marginRight: 20,
+    paddingTop: adjustSize(10),
+    paddingBottom: adjustSize(10),
+    marginLeft: adjustSize(20),
+    marginRight: adjustSize(20),
     borderBottomWidth: 0.5,
     borderColor: '#7d7d7d',
-    width: width - 80,
+    width: width - adjustSize(80),
   },
   metricText: {
     fontWeight: 'bold',
@@ -205,7 +206,7 @@ const styles = StyleSheet.create({
   measuredText: {
     fontWeight: 'bold',
     color: '#000',
-    fontSize: 18,
+    fontSize: adjustSize(18),
   },
   content: {
     marginStart: '5%',

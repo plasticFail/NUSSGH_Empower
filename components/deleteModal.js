@@ -1,15 +1,15 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {
   View,
   Text,
   StyleSheet,
-  ScrollView,
   TouchableOpacity,
-  Alert,
 } from 'react-native';
 //third party lib
 import Modal from 'react-native-modal';
 import globalStyles from '../styles/globalStyles';
+import {adjustSize} from '../commonFunctions/autoResizeFuncs';
+
 
 const DeleteModal = (props) => {
   const {visible, item} = props;
@@ -24,7 +24,7 @@ const DeleteModal = (props) => {
         <Text
           style={[
             globalStyles.deleteDetails,
-            {fontFamily: 'SFProDisplay-Bold', fontSize: 18},
+            {fontFamily: 'SFProDisplay-Bold', fontSize: adjustSize(18)},
           ]}>
           Are you sure you want to delete
         </Text>
@@ -47,6 +47,6 @@ const styles = StyleSheet.create({
   deleteContainer: {
     width: '100%',
     backgroundColor: 'white',
-    borderRadius: 20,
+    borderRadius: adjustSize(20),
   },
 });

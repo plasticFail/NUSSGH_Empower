@@ -21,8 +21,9 @@ import RemoveModal from '../removeModal';
 import StepCounter from '../../stepCounter';
 //function
 import {food_key} from '../../../commonFunctions/logFunctions';
-import {deleteMealLog, editMealLog} from '../../../netcalls/requestsDiary';
+import {editMealLog} from '../../../netcalls/requestsDiary';
 import DeleteBin from '../../deleteBin';
+import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
 
 const from_delete = 'delete';
 const from_edit = 'edit';
@@ -57,7 +58,7 @@ const EditFoodBlock = (props) => {
     let newMeal = initalMeal;
     let list = [];
     if (parent === from_delete) {
-      list = foodItems.filter((food) => food != selectedFood);
+      list = foodItems.filter((food) => food !== selectedFood);
       console.log(list);
     } else {
       list = foodItems;
@@ -91,7 +92,7 @@ const EditFoodBlock = (props) => {
   const editQuantity = (value) => {
     setQuantity(value);
     const elementIndex = foodItems.findIndex(
-      (element) => element['food-name'] == selectedFood['food-name'],
+      (element) => element['food-name'] === selectedFood['food-name'],
     );
     let newArr = [...foodItems];
     newArr[elementIndex] = {
@@ -116,7 +117,7 @@ const EditFoodBlock = (props) => {
       for (var y of initalMeal.foodItems) {
         //check qty change
         if (x['food-name'] === y['food-name']) {
-          if (x['quantity'] != y['quantity']) {
+          if (x['quantity'] !== y['quantity']) {
             return true;
           }
         }
@@ -146,7 +147,7 @@ const EditFoodBlock = (props) => {
           <Text style={logStyles.fieldName}>Number of Servings (s)</Text>
           {foodItem(selectedFood, editQuantity, quantity)}
           {quantity === 0 && (
-            <Text style={{fontSize: 18, color: 'red', marginTop: '2%'}}>
+            <Text style={{fontSize: adjustSize(18), color: 'red', marginTop: '2%'}}>
               *Invalid Quantity for Food
             </Text>
           )}
@@ -217,9 +218,9 @@ const styles = StyleSheet.create({
     marginTop: '3%',
   },
   foodStyle: {
-    width: 90,
-    height: 90,
-    borderRadius: 20,
+    width: adjustSize(90),
+    height: adjustSize(90),
+    borderRadius: adjustSize(20),
   },
   foodName: {
     flex: 1,

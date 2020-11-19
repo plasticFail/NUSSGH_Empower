@@ -1,6 +1,8 @@
 import React, {useEffect, useState, useRef} from 'react';
 import {View, StyleSheet, TouchableOpacity, Text, Animated} from 'react-native';
 import {Colors} from '../../../styles/colors';
+import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
+
 
 const PatientType = (props) => {
   const {patient} = props;
@@ -69,8 +71,8 @@ export default PatientType;
 const styles = StyleSheet.create({
   cardTab: {
     backgroundColor: Colors.patientType,
-    borderTopStartRadius: 20,
-    borderTopEndRadius: 20,
+    borderTopStartRadius: adjustSize(20),
+    borderTopEndRadius: adjustSize(20),
   },
   headerTab: {
     padding: '3%',
@@ -78,12 +80,12 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontFamily: 'SFProDisplay-Bold',
-    fontSize: 18,
+    fontSize: adjustSize(18),
     marginStart: '3%',
   },
   patientName: {
     fontFamily: 'SFProDisplay-Regular',
-    fontSize: 18,
+    fontSize: adjustSize(18),
     color: 'white',
     flex: 1,
     alignSelf: 'center',
@@ -93,7 +95,7 @@ const styles = StyleSheet.create({
     marginEnd: '3%',
   },
   detail: {
-    fontSize: 18,
+    fontSize: adjustSize(18),
     fontFamily: 'SFProDisplay-Regular',
   },
 });

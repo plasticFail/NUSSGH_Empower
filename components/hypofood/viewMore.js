@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, StyleSheet, Text, Image} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 //data
 import SampleData from '../../screens/more/sampleHypoList.json';

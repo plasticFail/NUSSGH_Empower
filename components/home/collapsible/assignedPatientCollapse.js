@@ -18,6 +18,9 @@ import OptionsList from '../../optionList';
 import {bin, text, isEmpty} from '../../../commonFunctions/common';
 import {unassignCaregiver} from '../../../netcalls/requestsMyCaregiver';
 
+import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
+
+
 const optionList = [
   {
     name: 'Remove Patient',
@@ -27,8 +30,8 @@ const optionList = [
 ];
 
 const iconStyle = {
-  height: 50,
-  width: 50,
+  height: adjustSize(50),
+  width: adjustSize(50),
   margin: '3%',
   marginStart: '5%',
 };
@@ -135,8 +138,8 @@ const styles = StyleSheet.create({
   cardTab: {
     flexGrow: 1,
     backgroundColor: Colors.notifTab,
-    borderTopStartRadius: 20,
-    borderTopEndRadius: 20,
+    borderTopStartRadius: adjustSize(20),
+    borderTopEndRadius: adjustSize(20),
   },
   headerTab: {
     padding: '3%',
@@ -145,12 +148,12 @@ const styles = StyleSheet.create({
   headerText: {
     fontFamily: 'SFProDisplay-Bold',
     color: 'white',
-    fontSize: 18,
+    fontSize: adjustSize(18),
     marginStart: '3%',
   },
   patientName: {
     fontFamily: 'SFProDisplay-Regular',
-    fontSize: 18,
+    fontSize: adjustSize(18),
     color: 'white',
     flex: 1,
     alignSelf: 'center',

@@ -1,9 +1,10 @@
 import React from 'react';
-import {View, TouchableOpacity, StyleSheet} from 'react-native';
+import {TouchableOpacity, StyleSheet} from 'react-native';
 //third party lib
 import Entypo from 'react-native-vector-icons/Entypo';
 //function
 import {useNavigation, DrawerActions} from '@react-navigation/native';
+import {adjustSize} from '../commonFunctions/autoResizeFuncs';
 //style
 import {Colors} from '../styles/colors';
 
@@ -18,7 +19,7 @@ const MenuBtn = (props) => {
     <TouchableOpacity style={{...styles.buttonstyle}}>
       <Entypo
         name="menu"
-        size={50}
+        size={adjustSize(50)}
         onPress={onClick}
         color={Colors.backArrowColor}
       />

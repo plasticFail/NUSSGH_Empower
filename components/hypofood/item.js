@@ -1,5 +1,6 @@
 import React from 'react';
 import {View, StyleSheet, Text, Image} from 'react-native';
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
 
 const Item = (props) => {
   const {content} = props;
@@ -18,11 +19,11 @@ const Item = (props) => {
 const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
-    padding: 20,
+    padding: adjustSize(20),
     width: '100%',
     backgroundColor: '#f5f5f5',
     margin: '1%',
-    borderRadius: 20,
+    borderRadius: adjustSize(20),
     alignItems: 'center',
     marginEnd: '2%',
   },
@@ -37,21 +38,21 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   contentImg: {
-    height: 110,
-    width: 110,
-    borderRadius: 50,
+    height: adjustSize(110),
+    width: adjustSize(110),
+    borderRadius: adjustSize(50),
     borderColor: '#aad326',
     borderWidth: 3,
   },
   foodName: {
     fontWeight: '700',
     color: '#0f0f0f',
-    fontSize: 17,
+    fontSize: adjustSize(17),
   },
   hyposerving: {
     fontWeight: '500',
     color: '#0f0f0f',
-    fontSize: 16,
+    fontSize: adjustSize(16),
   },
 });
 

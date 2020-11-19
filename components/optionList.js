@@ -5,17 +5,18 @@ import {
   Text,
   TouchableOpacity,
   Animated,
-  TouchableWithoutFeedback,
 } from 'react-native';
 import Modal from 'react-native-modal';
 
 //icons for the options
 import BIN from '../resources/images/Patient-Icons/SVG/icon-red-remove.svg';
 import {bin, text} from '../commonFunctions/common';
+import {adjustSize} from '../commonFunctions/autoResizeFuncs';
+
 
 const iconStyle = {
-  height: 35,
-  width: 35,
+  height: adjustSize(35),
+  width: adjustSize(35),
   marginEnd: '5%',
   marginStart: '5%',
 };
@@ -70,39 +71,39 @@ const modalStyles = StyleSheet.create({
     alignItems: 'center',
   },
   option: {
-    height: 60,
+    height: adjustSize(60),
     justifyContent: 'flex-start',
     alignItems: 'center',
     borderBottomWidth: 0.7,
     borderColor: '#cdcdcd',
     backgroundColor: 'rgba(248,248,248, 0.79)',
     width: '100%',
-    borderRadius: 20,
+    borderRadius: adjustSize(20),
     marginBottom: '3%',
     flexDirection: 'row',
   },
   optionText: {
-    fontSize: 20,
+    fontSize: adjustSize(20),
     color: '#007aff',
   },
   optionTextRed: {
-    fontSize: 20,
+    fontSize: adjustSize(20),
     color: '#FF0844',
   },
   cancelOptionText: {
-    fontSize: 20,
+    fontSize: adjustSize(20),
     color: '#007AFF',
     fontFamily: 'SFProDisplay-Bold',
   },
   optionCancel: {
-    height: 60,
+    height: adjustSize(60),
     justifyContent: 'center',
     alignItems: 'center',
     borderBottomWidth: 0.7,
     borderColor: '#cdcdcd',
     backgroundColor: 'white',
     width: '100%',
-    borderRadius: 20,
+    borderRadius: adjustSize(20),
     marginBottom: '3%',
     flexDirection: 'row',
   },

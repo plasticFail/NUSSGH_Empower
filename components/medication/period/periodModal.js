@@ -23,6 +23,7 @@ import {
 } from '../../../commonFunctions/medicationFunction';
 
 import CHEVRON_RIGHT from '../../../resources/images/Patient-Icons/SVG/icon-grey-chevron-right.svg';
+import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
 
 const PeriodModal = (props) => {
   const {visible, daysArr, setDaysArr} = props;
@@ -103,7 +104,7 @@ const PeriodModal = (props) => {
           style={[globalStyles.pageHeader, {marginStart: horizontalMargins}]}>
           Recurring Period
         </Text>
-        {selectedPeriod.length == 0 ? (
+        {selectedPeriod.length === 0 ? (
           <Animated.View style={{opacity: fadeAnim}}>
             <Text style={globalStyles.pageSubDetails}>
               Select the recurring periods for this medication below:{' '}
@@ -187,7 +188,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#e2e8ee',
     width: '40%',
     paddingVertical: '4%',
-    borderRadius: 15,
+    borderRadius: adjustSize(15),
     margin: '3%',
   },
 });

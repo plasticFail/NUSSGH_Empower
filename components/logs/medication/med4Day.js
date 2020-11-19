@@ -1,11 +1,11 @@
 import React, {useState, useEffect} from 'react';
-import {View, StyleSheet, Text, TouchableOpacity, FlatList} from 'react-native';
+import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import globalStyles from '../../../styles/globalStyles';
 import Tick from '../../tick';
 import StepCounter from '../../stepCounter';
-import {deleteMed} from '../../../netcalls/requestsDiary';
-import {add} from 'react-native-reanimated';
 import {Colors} from '../../../styles/colors';
+import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
+
 
 const Med4Day = (props) => {
   const {medication} = props;
@@ -67,7 +67,7 @@ export default Med4Day;
 const styles = StyleSheet.create({
   medContainer: {
     backgroundColor: 'white',
-    borderRadius: 20,
+    borderRadius: adjustSize(20),
     borderColor: '#e1e7ed',
     borderWidth: 1,
     padding: '3%',

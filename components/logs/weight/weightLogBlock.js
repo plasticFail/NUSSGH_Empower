@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {
   View,
-  StyleSheet,
   Text,
   TouchableOpacity,
   Alert,
@@ -51,7 +50,7 @@ const WeightLogBlock = (props) => {
   const [deleteModal, setDeleteModal] = useState(false);
 
   useEffect(() => {
-    if (selectedLog != undefined) {
+    if (selectedLog !== undefined) {
       setWeight(initialWeight);
       setDatetime(initialDate);
     }

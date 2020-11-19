@@ -26,12 +26,11 @@ import {
   eveningObj,
 } from '../../../commonFunctions/common';
 import {
-  getTime,
   showEdit,
   getMissedArr,
   getTime12hr,
 } from '../../../commonFunctions/diaryFunctions';
-import {weight_key} from '../../../commonFunctions/logFunctions';
+import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
 
 const WeightBlock = (props) => {
   const {
@@ -114,7 +113,7 @@ function renderWeightLogs(logs, editLog) {
               <>
                 <View style={{flex: 1}} />
                 <TouchableOpacity onPress={() => editLog(item)}>
-                  <Entypo name="edit" style={diaryStyles.editIcon} size={30} />
+                  <Entypo name="edit" style={diaryStyles.editIcon} size={adjustSize(30)} />
                 </TouchableOpacity>
               </>
             ) : null}

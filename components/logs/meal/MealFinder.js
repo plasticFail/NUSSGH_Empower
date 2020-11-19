@@ -1,5 +1,7 @@
 import React from 'react';
 import {Text, TouchableHighlight, StyleSheet} from "react-native";
+import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
+
 
 const buttons = [
     {
@@ -40,24 +42,24 @@ export default function MealFinder({parentScreen, navigation}) {
 const styles = StyleSheet.create({
     textPrompt: {
         fontWeight: "bold",
-        fontSize: 28,
-        paddingBottom: 30,
+        fontSize: adjustSize(28),
+        paddingBottom: adjustSize(30),
         alignSelf: 'center'
     },
     button:{
         width: '70%',
-        height: 65,
+        height: adjustSize(65),
         backgroundColor:'#288259',
-        borderRadius:10,
+        borderRadius:adjustSize(10),
         borderWidth: 1,
         borderColor: '#fff',
         justifyContent: 'center',
-        marginTop: 20,
+        marginTop: adjustSize(20),
         alignSelf: 'center'
     },
     buttonText:{
         color:'#fff',
         textAlign:'center',
-        fontSize: 26
+        fontSize: adjustSize(26)
     },
 })

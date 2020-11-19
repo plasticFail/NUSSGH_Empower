@@ -1,9 +1,10 @@
-import React, {useState, useEffect} from 'react';
-import {View, TouchableOpacity, Text, StyleSheet, Alert} from 'react-native';
+import React from 'react';
+import {View, TouchableOpacity, Text, StyleSheet} from 'react-native';
 //funtcion
 import {getSelectedCount} from '../../../commonFunctions/medicationFunction';
 import PeriodModal from './periodModal';
 import {normalTextFontSize} from '../../../styles/variables';
+import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
 
 const SelectPeriod = (props) => {
   const {openPeriodModal, daysArr, setDaysArr} = props;
@@ -54,9 +55,9 @@ export default SelectPeriod;
 const styles = StyleSheet.create({
   selectPeriodButton: {
     backgroundColor: 'white',
-    height: 45,
+    height: adjustSize(45),
     width: '90%',
-    borderRadius: 15,
+    borderRadius: adjustSize(15),
     borderWidth: 2,
     borderColor: '#e2e8ee',
     alignSelf: 'center',
@@ -74,7 +75,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   weeklyDayText: {
-    fontSize: 14,
+    fontSize: adjustSize(14),
     fontWeight: 'normal',
   },
 });

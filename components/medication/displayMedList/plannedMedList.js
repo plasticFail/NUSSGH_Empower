@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  View,
   Text,
   StyleSheet,
   TouchableOpacity,
@@ -10,6 +9,8 @@ import {
 import MedicationPlanItem from './medicationPlanItem';
 //third party
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
+
 
 const PlannedMedList = (props) => {
   const {medList} = props;
@@ -27,7 +28,7 @@ const PlannedMedList = (props) => {
         <TouchableOpacity
           onPress={() => openAddModal()}
           style={styles.addButtonWText}>
-          <AntDesign name="pluscircleo" color={'#aad326'} size={25} />
+          <AntDesign name="pluscircleo" color={'#aad326'} size={adjustSize(25)} />
           <Text style={styles.addButtonText}>Add Medication</Text>
         </TouchableOpacity>
       </ScrollView>
@@ -45,7 +46,7 @@ const styles = StyleSheet.create({
   addButtonText: {
     marginStart: '3%',
     color: '#aad326',
-    fontSize: 20,
+    fontSize: adjustSize(20),
   },
   addButtonWText: {
     flexDirection: 'row',

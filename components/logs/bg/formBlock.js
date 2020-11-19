@@ -1,5 +1,7 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
+import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
+
 
 const FormBlock = (props) => {
   const {question, value} = props;
@@ -8,16 +10,16 @@ const FormBlock = (props) => {
   const getContentStyle = () => {
     const style = {
       yesOptionStyle: {
-        borderTopStartRadius: 9.5,
-        borderBottomStartRadius: 9.5,
+        borderTopStartRadius: adjustSize(9.5),
+        borderBottomStartRadius: adjustSize(9.5),
         padding: '2%',
         paddingHorizontal: '5%',
         borderWidth: 1,
         borderColor: '#aad326',
       },
       noOptionStyle: {
-        borderTopEndRadius: 9.5,
-        borderBottomEndRadius: 9.5,
+        borderTopEndRadius: adjustSize(9.5),
+        borderBottomEndRadius: adjustSize(9.5),
         padding: '2%',
         paddingHorizontal: '5%',
         borderWidth: 1,
@@ -60,7 +62,7 @@ export default FormBlock;
 
 const styles = StyleSheet.create({
   questionHeader: {
-    fontSize: 17,
+    fontSize: adjustSize(17),
     color: 'black',
     marginTop: '5%',
     marginStart: '2%',
@@ -73,6 +75,6 @@ const styles = StyleSheet.create({
     marginStart: '5%',
   },
   optionWord: {
-    fontSize: 17,
+    fontSize: adjustSize(17),
   },
 });

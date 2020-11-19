@@ -1,6 +1,8 @@
 import React from 'react';
-import {View, StyleSheet, Text, TouchableOpacity, Dimensions} from 'react-native';
+import {View, Text, TouchableOpacity, Dimensions} from 'react-native';
 import {horizontalMargins} from "../../styles/variables";
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
+
 
 const resourcesTabs = [
     {
@@ -28,14 +30,14 @@ function ResourcesTab(props) {
                     style={{
                         alignItems: 'center',
                         width: (width - horizontalMargins) * tab.portion,
-                        paddingTop: 10,
-                        paddingBottom: 10,
+                        paddingTop: adjustSize(10),
+                        paddingBottom: adjustSize(10),
                         borderBottomWidth: currentTab === index ? 3 : 0,
                         borderColor: '#aad326',
                     }}
                     onPress={() => setTabCallback(index)}
                     key={tab.name}>
-                    <Text style={{color: currentTab === index ? "#aad326" : "#000", fontSize: 18}}>
+                    <Text style={{color: currentTab === index ? "#aad326" : "#000", fontSize: adjustSize(18)}}>
                         {tab.name}
                     </Text>
                 </TouchableOpacity>

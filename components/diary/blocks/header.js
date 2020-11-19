@@ -1,7 +1,8 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {View, StyleSheet, Text} from 'react-native';
 //third part library
 import Entypo from 'react-native-vector-icons/Entypo';
+import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
 
 Entypo.loadFont();
 
@@ -12,7 +13,7 @@ const Header = (props) => {
       <Text style={styles.headerTitle}>{title}</Text>
       <Entypo
         name="cross"
-        size={30}
+        size={adjustSize(30)}
         style={{marginTop: '1%', alignSelf: 'flex-end'}}
         onPress={closeModal}
       />
@@ -33,7 +34,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontWeight: '700',
-    fontSize: 20,
+    fontSize: adjustSize(20),
     textAlign: 'center',
     marginTop: '1%',
     flex: 1, //for flex end to work for icon

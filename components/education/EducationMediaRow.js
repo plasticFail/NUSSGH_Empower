@@ -1,19 +1,19 @@
 import React from 'react';
-import {View, Text, Image, StyleSheet, Dimensions, Platform, TouchableOpacity, TouchableWithoutFeedback} from 'react-native';
+import {View, Text, Image, StyleSheet, Dimensions, TouchableOpacity, TouchableWithoutFeedback} from 'react-native';
 import globalStyles from "../../styles/globalStyles";
 import {horizontalMargins} from "../../styles/variables";
-import {WebView} from "react-native-webview";
 import InAppBrowser from 'react-native-inappbrowser-reborn';
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
 
 const {width, height} = Dimensions.get('window');
 
-const topBottomPadding = 15;
+const topBottomPadding = adjustSize(15);
 const mediaWidthRatio = 0.47;
 const mediaHeightRatio = 0.11;
 const mediaWidth = mediaWidthRatio * (width - horizontalMargins);
 const mediaHeight = mediaHeightRatio * height;
 
-const playButtonSize = 40;
+const playButtonSize = adjustSize(40);
 
 function EducationMediaRow(props) {
     const {title, videoUrl, organization, pictureUrl, url} = props;
@@ -78,9 +78,9 @@ const styles = StyleSheet.create({
         height: 0,
         backgroundColor: 'transparent',
         borderStyle: 'solid',
-        borderLeftWidth: 8,
-        borderRightWidth:  8,
-        borderBottomWidth: 8,
+        borderLeftWidth: adjustSize(8),
+        borderRightWidth:  adjustSize(8),
+        borderBottomWidth: adjustSize(8),
         borderLeftColor: 'transparent',
         borderRightColor: 'transparent',
         borderBottomColor: 'white'

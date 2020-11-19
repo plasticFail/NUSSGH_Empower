@@ -3,9 +3,7 @@ import {
   View,
   TouchableOpacity,
   Text,
-  Image,
   FlatList,
-  Settings,
 } from 'react-native';
 //third party lib
 import Modal from 'react-native-modal';

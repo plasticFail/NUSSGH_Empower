@@ -4,6 +4,9 @@ import {View, StyleSheet, TouchableOpacity, Text, Animated} from 'react-native';
 import {Colors} from '../../../styles/colors';
 import {useNavigation} from '@react-navigation/native';
 
+import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
+
+
 const GameCollapse = (props) => {
   const {points, chances, reward} = props;
   const [open, setOpen] = useState(true);
@@ -92,8 +95,8 @@ const styles = StyleSheet.create({
   cardTab: {
     flexGrow: 1,
     backgroundColor: Colors.gameTab,
-    borderTopStartRadius: 20,
-    borderTopEndRadius: 20,
+    borderTopStartRadius: adjustSize(20),
+    borderTopEndRadius: adjustSize(20),
   },
   headerTab: {
     padding: '3%',
@@ -102,19 +105,19 @@ const styles = StyleSheet.create({
   headerText: {
     fontFamily: 'SFProDisplay-Bold',
     color: '#3e3e43',
-    fontSize: 18,
+    fontSize: adjustSize(18),
     marginStart: '3%',
     opacity: 0.5,
   },
   paramText: {
     fontFamily: 'SFProDisplay-Bold',
     color: '#3c3c43',
-    fontSize: 17,
+    fontSize: adjustSize(17),
     opacity: 0.5,
   },
   valueText: {
     color: '#16A64F',
     fontFamily: 'SFProDisplay-Bold',
-    fontSize: 17,
+    fontSize: adjustSize(17),
   },
 });

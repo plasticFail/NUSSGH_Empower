@@ -3,13 +3,10 @@ import {
   View,
   Text,
   StyleSheet,
-  Image,
-  TouchableOpacity,
   ScrollView,
 } from 'react-native';
 import {
   maxSteps,
-  maxDuration,
   maxCalBurnt,
 } from '../../../commonFunctions/diaryFunctions';
 //component
@@ -24,14 +21,7 @@ import {Colors} from '../../../styles/colors';
 import globalStyles from '../../../styles/globalStyles';
 import diaryStyles from '../../../styles/diaryStyles';
 import logStyles from '../../../styles/logStyles';
-//svg
-import HEARTRATE from '../../../resources/images/Patient-Icons/SVG/icon-navy-heartrate.svg';
-import DISTANCE from '../../../resources/images/Patient-Icons/SVG/icon-navy-distance.svg';
-import CALBURNT from '../../../resources/images/Patient-Icons/SVG/icon-navy-calburnt.svg';
-import STEPS from '../../../resources/images/Patient-Icons/SVG/icon-navy-steps.svg';
-import EXERCISE from '../../../resources/images/Patient-Icons/SVG/icon-navy-activemins.svg';
-import {step_key} from '../../../commonFunctions/logFunctions';
-import ProgressContent2 from './progressContent2';
+import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
 
 const heartRate = 'heartrate';
 const distance_key = 'distance';
@@ -40,8 +30,8 @@ const steps_taken = 'Steps Taken';
 const excerise = 'Exercise';
 
 const iconStyle = {
-  width: 35,
-  height: 35,
+  width: adjustSize(35),
+  height: adjustSize(35),
   margin: '2%',
 };
 
@@ -92,7 +82,7 @@ const ActivityBlock = (props) => {
               <Ionicon
                 name="checkmark"
                 style={diaryStyles.passIcon}
-                size={25}
+                size={adjustSize(25)}
               />
             </>
           ) : (
@@ -103,7 +93,7 @@ const ActivityBlock = (props) => {
               <Ionicon
                 name="alert-circle-outline"
                 style={diaryStyles.failIcon}
-                size={25}
+                size={adjustSize(25)}
               />
             </>
           )}
@@ -221,13 +211,13 @@ const styles = StyleSheet.create({
   header: {
     fontFamily: 'SFProDisplay-Bold',
     color: Colors.lastLogValueColor,
-    fontSize: 20,
+    fontSize: adjustSize(20),
     marginTop: '7%',
     marginStart: '5%',
   },
   content: {
     fontFamily: 'SFProDisplay-Bold',
-    fontSize: 18,
+    fontSize: adjustSize(18),
     marginTop: '7%',
     marginStart: '5%',
     flex: 1,
@@ -235,7 +225,7 @@ const styles = StyleSheet.create({
   contentDetail: {
     fontFamily: 'SFProDisplay-Bold',
     color: Colors.lastLogValueColor,
-    fontSize: 17,
+    fontSize: adjustSize(17),
     marginTop: '7%',
     marginStart: '5%',
   },
@@ -250,15 +240,15 @@ const styles = StyleSheet.create({
     margin: '3%',
   },
   iconImg2: {
-    height: 50,
-    width: 50,
+    height: adjustSize(50),
+    width: adjustSize(50),
   },
   iconImg: {
     position: 'absolute',
     top: '40%',
     left: '20%',
-    width: 30,
-    height: 30,
+    width: adjustSize(30),
+    height: adjustSize(30),
     resizeMode: 'contain', //resize image so dont cut off
   },
   activityBlock: {

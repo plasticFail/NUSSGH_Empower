@@ -12,10 +12,11 @@ import Modal from 'react-native-modal';
 import Tick from '../../tick';
 import globalStyles from '../../../styles/globalStyles';
 import {TextInput} from 'react-native-gesture-handler';
-import {set} from 'react-native-reanimated';
 import DeleteBin from '../../deleteBin';
 import diaryStyles from '../../../styles/diaryStyles';
 import logStyles from '../../../styles/logStyles';
+import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
+
 
 const effectsList = [
   {name: 'Constipation', selected: false},
@@ -127,7 +128,7 @@ const SideEffectModal = (props) => {
       style={{width: '80%', alignSelf: 'center'}}>
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : null}>
         <View
-          style={{backgroundColor: 'white', borderRadius: 15, padding: '4%'}}>
+          style={{backgroundColor: 'white', borderRadius: adjustSize(15), padding: '4%'}}>
           {chosenSideEffects.length === 0 ? (
             <Text style={styles.headerText}>Add Side Effect</Text>
           ) : (
@@ -144,7 +145,7 @@ const SideEffectModal = (props) => {
               </TouchableOpacity>
               {item?.name === 'Other' && showInput && (
                 <TextInput
-                  style={[globalStyles.medContainer, {borderRadius: 10}]}
+                  style={[globalStyles.medContainer, {borderRadius: adjustSize(10)}]}
                   placeholder={'Please specify'}
                   value={otherText}
                   onChangeText={setOtherText}
@@ -204,18 +205,18 @@ export default SideEffectModal;
 const styles = StyleSheet.create({
   headerText: {
     fontFamily: 'SFProDisplay-Bold',
-    fontSize: 18,
+    fontSize: adjustSize(18),
     margin: '2%',
   },
   effectText: {
     fontFamily: 'SFProDisplay-Regular',
-    fontSize: 18,
+    fontSize: adjustSize(18),
     marginStart: '2%',
     marginTop: '2%',
   },
   cancelText: {
     fontFamily: 'SFProDisplay-Regular',
-    fontSize: 18,
+    fontSize: adjustSize(18),
     color: '#aad326',
     alignSelf: 'center',
   },

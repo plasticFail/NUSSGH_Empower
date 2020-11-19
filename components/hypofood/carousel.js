@@ -4,6 +4,9 @@ import {useNavigation} from '@react-navigation/native';
 //component
 import Item from './item';
 
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
+
+
 const Carousel = (props) => {
   //basic carousel set up
   const {category} = props;
@@ -102,6 +105,6 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
     color: '#3D5E50',
     margin: '3%',
-    fontSize: 17,
+    fontSize: adjustSize(17),
   },
 });

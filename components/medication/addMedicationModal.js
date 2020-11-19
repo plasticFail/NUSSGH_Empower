@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, TouchableOpacity, Text, StyleSheet, Alert} from 'react-native';
+import {View, TouchableOpacity, Text, Alert} from 'react-native';
 //third party lib
 import Modal from 'react-native-modal';
 //styles
@@ -49,7 +49,7 @@ const AddMedicationModal = (props) => {
 
   useEffect(() => {
     if (parent === onboardEdit || parent === med_planEdit) {
-      if (med2Edit != undefined) {
+      if (med2Edit !== undefined) {
         setSelectedMed(med2Edit);
         setDosage(med2Edit.dosage);
         setFrequency(med2Edit.per_day);

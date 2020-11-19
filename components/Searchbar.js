@@ -2,6 +2,7 @@ import React from 'react';
 import {TextInput, StyleSheet, View, Keyboard, Animated, Platform, TouchableOpacity, Text} from 'react-native';
 // Others
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
+import {adjustSize} from '../commonFunctions/autoResizeFuncs';
 
 Icon.loadFont();
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
@@ -15,8 +16,8 @@ class Searchbar extends React.Component {
     }
 
     componentDidMount () {
-        this.keyboardWillShowSub = Keyboard.addListener(Platform.OS == 'android' ? 'keyboardDidShow' : 'keyboardWillShow', this.keyboardWillShow);
-        this.keyboardWillHideSub = Keyboard.addListener(Platform.OS == 'android' ? "keyboardDidHide" : 'keyboardWillHide', this.keyboardWillHide);
+        this.keyboardWillShowSub = Keyboard.addListener(Platform.OS === 'android' ? 'keyboardDidShow' : 'keyboardWillShow', this.keyboardWillShow);
+        this.keyboardWillHideSub = Keyboard.addListener(Platform.OS === 'android' ? "keyboardDidHide" : 'keyboardWillHide', this.keyboardWillHide);
     }
 
     componentWillUnmount() {
@@ -90,23 +91,23 @@ class Searchbar extends React.Component {
 
 const styles = StyleSheet.create({
     root: {
-        height: 45,
-        paddingRight: 10,
+        height: adjustSize(45),
+        paddingRight: adjustSize(10),
         flexDirection: 'row',
         alignItems: 'center',
     },
     textInput: {
-        fontSize: 20,
+        fontSize: adjustSize(20),
         color: '#4d4d4d',
-        paddingLeft: 40,
-        height: 45,
+        paddingLeft: adjustSize(40),
+        height: adjustSize(45),
         backgroundColor: '#E2E7EE',
-        borderRadius: 10,
-        marginRight: 10
+        borderRadius: adjustSize(10),
+        marginRight: adjustSize(10)
     },
     cancelText: {
         color: '#288259',
-        fontSize: 16
+        fontSize: adjustSize(16)
     }
 })
 

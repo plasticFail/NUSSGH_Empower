@@ -8,6 +8,8 @@ import {
 } from '../../../commonFunctions/common';
 import {Colors} from '../../../styles/colors';
 import {getRole} from '../../../storage/asyncStorageFunctions';
+import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
+
 
 const DailyCollapse = (props) => {
   const {uncompleteLogs, hour} = props;
@@ -116,8 +118,8 @@ export default DailyCollapse;
 const styles = StyleSheet.create({
   cardTab: {
     backgroundColor: Colors.dailyTab,
-    borderTopStartRadius: 20,
-    borderTopEndRadius: 20,
+    borderTopStartRadius: adjustSize(20),
+    borderTopEndRadius: adjustSize(20),
   },
   headerTab: {
     padding: '3%',
@@ -126,12 +128,12 @@ const styles = StyleSheet.create({
   headerText: {
     fontFamily: 'SFProDisplay-Bold',
     color: 'white',
-    fontSize: 18,
+    fontSize: adjustSize(18),
     marginStart: '3%',
   },
   greetingText: {
     color: '#005c30',
-    fontSize: 18,
+    fontSize: adjustSize(18),
     fontFamily: 'SFProDisplay-Bold',
     marginStart: '5%',
     marginTop: '2%',
@@ -141,6 +143,6 @@ const styles = StyleSheet.create({
     color: 'white',
     marginStart: '5%',
     marginTop: '2%',
-    fontSize: 18,
+    fontSize: adjustSize(18),
   },
 });

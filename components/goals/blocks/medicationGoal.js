@@ -3,7 +3,6 @@ import {
   View,
   TouchableOpacity,
   Text,
-  StyleSheet,
   ScrollView,
   Alert,
   KeyboardAvoidingView,
@@ -31,12 +30,11 @@ const MedicationGoal = (props) => {
   const [goalName, setGoalName] = useState('');
   const [selectedMed, setSelectedMed] = useState({});
   const [dosage, setDosage] = useState(0);
-  const [openSearchModal, setOpenSearchModal] = useState(false);
   const [pageText, setPageText] = useState('Add Goal');
   const [units, setUnits] = useState('');
 
   useEffect(() => {
-    if (parent != undefined && med != undefined) {
+    if (parent !== undefined && med !== undefined) {
       setGoalName(med.name);
       let medObj = {
         medication: med.medication,
@@ -65,7 +63,7 @@ const MedicationGoal = (props) => {
       medication: selectedMed.medication,
       dosage: dosage,
     };
-    if (parent != undefined && parent != defaultv) {
+    if (parent !== undefined && parent !== defaultv) {
       let status = await addMedGoalReq(obj, med._id);
       if (status === 200) {
         Alert.alert('Medication goal edited successfully', '', [
@@ -182,9 +180,3 @@ const MedicationGoal = (props) => {
 
 export default MedicationGoal;
 
-const styles = StyleSheet.create({
-  spacing: {
-    marginStart: '4%',
-    marginEnd: '4%',
-  },
-});

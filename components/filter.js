@@ -1,12 +1,10 @@
-import React, {useState, useEffect} from 'react';
-import {View, StyleSheet, ActionSheetIOS, Text} from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import React from 'react';
+import {View, StyleSheet} from 'react-native';
 //component
 import Select from '../components/select';
-//third party library
-import Entypo from 'react-native-vector-icons/Entypo';
 //functions
 import {getDateRange} from '../commonFunctions/diaryFunctions';
+import {adjustSize} from '../commonFunctions/autoResizeFuncs';
 
 //*use options as title for arra
 const dates = [
@@ -30,7 +28,7 @@ const Filter = (props) => {
         options={dates}
         onSelect={returnDateArray}
         containerStyle={styles.containerStyle}
-        textStyle={{fontSize: 15}}
+        textStyle={{fontSize: adjustSize(15)}}
         rightIcon="chevron-down"
       />
     </View>
@@ -42,14 +40,14 @@ export default Filter;
 const styles = StyleSheet.create({
   containerStyle: {
     alignSelf: 'flex-end',
-    fontSize: 16,
+    fontSize: adjustSize(16),
     width: '70%',
-    height: 30,
+    height: adjustSize(30),
     borderWidth: 1,
     backgroundColor: 'white',
   },
   filterButtonStyle: {
-    borderRadius: 10,
+    borderRadius: adjustSize(10),
     borderWidth: 2,
     padding: '4%',
     flexDirection: 'row',

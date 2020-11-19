@@ -1,14 +1,16 @@
-import React, {useEffect, useState, useRef} from 'react';
-import {View, StyleSheet, TouchableOpacity, Text} from 'react-native';
+import React, {useState} from 'react';
+import {StyleSheet} from 'react-native';
 //third party lib
 import Octicon from 'react-native-vector-icons/Octicons';
 
 import ALERT from '../resources/images/Caregiver-Additional-Icons/SVG/cg-icon-navy-footer-alert.svg';
 import ALERT_FOCUSED from '../resources/images/Caregiver-Additional-Icons/SVG/cg-icon-green-footer-alert.svg';
+import {adjustSize} from '../commonFunctions/autoResizeFuncs';
+
 
 const iconstyle = {
-  width: 30,
-  height: 30,
+  width: adjustSize(30),
+  height: adjustSize(30),
 };
 
 const AlertNotifIcon = (props) => {

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Animated, Text, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {Text, StyleSheet, TouchableOpacity, View} from 'react-native';
 //component
 import ProgressBar from '../../progressbar';
 //style
@@ -9,10 +9,9 @@ import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import {
   getAge,
   getMax4Type,
-  fats,
-  protein,
 } from '../../../commonFunctions/common';
-import {getPatientProfile} from '../../../netcalls/requestsAccount';
+import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
+
 
 const ProgressContent = (props) => {
   const {
@@ -88,14 +87,14 @@ const ProgressContent = (props) => {
         <TouchableOpacity
           style={styles.chevron}
           onPress={() => chevronDownMethod(!clickable)}>
-          <EvilIcons name="chevron-down" size={50} />
+          <EvilIcons name="chevron-down" size={adjustSize(50)} />
         </TouchableOpacity>
       )}
       {clickable === false && (
         <TouchableOpacity
           style={styles.chevron}
           onPress={() => chevronDownMethod(!clickable)}>
-          <EvilIcons name="chevron-up" size={50} />
+          <EvilIcons name="chevron-up" size={adjustSize(50)} />
         </TouchableOpacity>
       )}
     </View>
@@ -106,29 +105,29 @@ export default ProgressContent;
 
 const styles = StyleSheet.create({
   progressContainer: {
-    borderRadius: 9.5,
-    height: 7,
+    borderRadius: adjustSize(9.5),
+    height: adjustSize(7),
   },
   progressContainerLarge: {
-    borderRadius: 9.5,
-    width: 250,
-    height: 7,
+    borderRadius: adjustSize(9.5),
+    width: adjustSize(250),
+    height: adjustSize(7),
   },
   header: {
     fontFamily: 'SFProDisplay-Bold',
     color: Colors.lastLogValueColor,
-    fontSize: 18,
+    fontSize: adjustSize(18),
     margin: '1%',
   },
   outOf: {
     fontFamily: 'SFProDisplay-Bold',
     color: Colors.lastLogValueColor,
-    fontSize: 16,
+    fontSize: adjustSize(16),
     margin: '1%',
   },
   valueStyle: {
     fontFamily: 'SFProDisplay-Bold',
-    fontSize: 19,
+    fontSize: adjustSize(19),
     margin: '1%',
   },
   chevron: {

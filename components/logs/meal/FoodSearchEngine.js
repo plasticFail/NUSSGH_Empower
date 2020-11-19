@@ -19,6 +19,7 @@ import Searchbar from '../../Searchbar';
 import FoodModalContent from './FoodModalContent';
 import FavouriteMealComponent from "./FavouriteMeals";
 // Functions
+import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
 // Others
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import {requestFoodSearch} from '../../../netcalls/foodEndpoints/requestFoodSearch';
@@ -58,8 +59,8 @@ export default class FoodSearchEngineScreen extends React.Component {
   }
 
   componentDidMount () {
-    this.keyboardWillShowSub = Keyboard.addListener(Platform.OS == 'android' ? 'keyboardDidShow' : 'keyboardWillShow', this.keyboardWillShow);
-    this.keyboardWillHideSub = Keyboard.addListener(Platform.OS == 'android' ? "keyboardDidHide" : 'keyboardWillHide', this.keyboardWillHide);
+    this.keyboardWillShowSub = Keyboard.addListener(Platform.OS === 'android' ? 'keyboardDidShow' : 'keyboardWillShow', this.keyboardWillShow);
+    this.keyboardWillHideSub = Keyboard.addListener(Platform.OS === 'android' ? "keyboardDidHide" : 'keyboardWillHide', this.keyboardWillHide);
     // Read recently selected food and add them here.
     const endDate = Moment(new Date()).add(1, 'day').format('YYYY-MM-DD');
     const startDate = Moment(new Date()).subtract(7, "days").format('YYYY-MM-DD');
@@ -133,7 +134,7 @@ export default class FoodSearchEngineScreen extends React.Component {
   // handler for making lazy requests.
   updateQuery = (text) => {
     // Update query for food search text input
-    if (this.state.selectedTab == TABS["Food Search"]) {
+    if (this.state.selectedTab === TABS["Food Search"]) {
       // query is empty
       if (text === '') {
         clearTimeout(this.timeout);
@@ -326,7 +327,7 @@ function FoodResultList({foodList, addFoodItemCallback}) {
   const renderFoodListItem = ({item}) => {
     return (
       <TouchableOpacity style={listStyles.li} onPress={() => handleOpen(item)}>
-        <Image source={{uri: item.imgUrl.url}} style={{width: 70, height: 70, borderRadius: 10, marginRight: 15}} />
+        <Image source={{uri: item.imgUrl.url}} style={{width: adjustSize(70), height: adjustSize(70), borderRadius: adjustSize(10), marginRight: adjustSize(15)}} />
         <View style={listStyles.foodDescription}>
           <Text style={listStyles.foodServingText}>
             {item['household-measure']}
@@ -406,8 +407,8 @@ const listStyles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingTop: 20,
-    paddingBottom: 20,
+    paddingTop: adjustSize(20),
+    paddingBottom: adjustSize(20),
     borderBottomWidth: 1,
     borderColor: '#E2E7EE'
   },
@@ -434,11 +435,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   searchPromptText: {
-    fontSize: 32,
+    fontSize: adjustSize(32),
     fontWeight: 'bold',
   },
   searchHintText: {
-    fontSize: 16,
+    fontSize: adjustSize(16),
     color: '#9f9f9f',
   },
   searchLoading: {
@@ -457,24 +458,24 @@ const styles = StyleSheet.create({
     marginTop: '3%'
   },
   tabs: {
-    height: 40,
+    height: adjustSize(40),
     width: '45%',
     alignItems: 'center'
   },
   selectedTab: {
-    height: 35,
-    borderBottomWidth: 3.5,
+    height: adjustSize(35),
+    borderBottomWidth: adjustSize(3.5),
     borderColor: '#aad326',
     width: '45%',
     alignItems: 'center'
   },
   tabText: {
-    fontSize: 20,
+    fontSize: adjustSize(20),
     color: '#8d8d8d'
   },
   selectedTabText: {
     color: '#aad326',
-    fontSize: 20
+    fontSize: adjustSize(20)
   }
 });
 //edit flag

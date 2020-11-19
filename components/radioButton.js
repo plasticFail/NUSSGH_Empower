@@ -1,5 +1,7 @@
 import React from 'react';
 import {View, Text} from 'react-native';
+import {adjustSize} from '../commonFunctions/autoResizeFuncs';
+
 
 function RadioButton(props) {
   return (
@@ -7,9 +9,9 @@ function RadioButton(props) {
       <View
         style={[
           {
-            height: 24,
-            width: 24,
-            borderRadius: 12,
+            height: adjustSize(24),
+            width: adjustSize(24),
+            borderRadius: adjustSize(12),
             borderWidth: 2,
             borderColor: props.color,
             alignItems: 'center',
@@ -21,9 +23,9 @@ function RadioButton(props) {
         {props.selected ? (
           <View
             style={{
-              height: 12,
-              width: 12,
-              borderRadius: 6,
+              height: adjustSize(12),
+              width: adjustSize(12),
+              borderRadius: adjustSize(6),
               backgroundColor: props.color,
             }}
           />
@@ -33,7 +35,7 @@ function RadioButton(props) {
         style={{
           marginStart: '3%',
           marginTop: '1.5%',
-          fontSize: 17,
+          fontSize: adjustSize(17),
           color: props.color,
           fontWeight: '700',
         }}>

@@ -2,6 +2,8 @@ import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 //styles
 import {Colors} from '../../styles/colors';
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
+
 
 const HeaderCard = (props) => {
   const {username, hour} = props;
@@ -22,7 +24,7 @@ const HeaderCard = (props) => {
 const styles = StyleSheet.create({
   greetingText: {
     color: 'black',
-    fontSize: 18,
+    fontSize: adjustSize(18),
     fontFamily: 'SFProDisplay-Bold',
     marginStart: '5%',
   },
@@ -30,17 +32,17 @@ const styles = StyleSheet.create({
     fontFamily: 'SFProDisplay-Regular',
     color: 'white',
     marginStart: '5%',
-    fontSize: 18,
+    fontSize: adjustSize(18),
   },
   bold: {
     fontFamily: 'SFProDisplay-Bold',
     color: 'white',
     marginStart: '5%',
-    fontSize: 18,
+    fontSize: adjustSize(18),
   },
   logCard: {
     backgroundColor: 'white',
-    borderRadius: 9.5,
+    borderRadius: adjustSize(9.5),
     marginTop: '3%',
     marginStart: '5%',
     marginEnd: '5%',
@@ -53,18 +55,18 @@ const styles = StyleSheet.create({
   },
   usernameText: {
     color: '#16A750',
-    fontSize: 40,
+    fontSize: adjustSize(40),
     fontFamily: 'SFProDisplay-Bold',
     marginStart: '5%',
   },
   buttonStyle: {
     backgroundColor: '#aad326',
     padding: '2%',
-    borderRadius: 20,
+    borderRadius: adjustSize(20),
     margin: '4%',
   },
   buttonText: {
-    fontSize: 18,
+    fontSize: adjustSize(18),
     fontWeight: '700',
     textAlign: 'center',
   },

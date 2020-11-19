@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import RadioButton from '../radioButton';
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
 
 const FormBlockFix = (props) => {
   return (
@@ -32,7 +33,7 @@ export default FormBlockFix;
 
 const styles = StyleSheet.create({
   questionHeader: {
-    fontSize: 17,
+    fontSize: adjustSize(17),
     fontWeight: '500',
     color: 'black',
     marginTop: '5%',
