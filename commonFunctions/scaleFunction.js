@@ -20,7 +20,7 @@ const heightPercent2Dp = (value) => {
 };
 
 const bottomNavigationIconStyle = {
-  width: widthPercent2Dp('10%'),
+  width: widthPercent2Dp('7%'),
   height: heightPercent2Dp('9%'),
 };
 

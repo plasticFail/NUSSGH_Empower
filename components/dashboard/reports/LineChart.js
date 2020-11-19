@@ -309,8 +309,6 @@ export default class LineChart extends React.Component {
                     selectedIndex: index
                 })
             }*/
-    } else {
-      console.log('in else');
     }
   }
 

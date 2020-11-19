@@ -58,7 +58,8 @@ const BgFilterDate = (props) => {
                 styles.optionContainer,
                 {
                   backgroundColor:
-                    date === Moment(new Date(item)).format('YYYY/MM/DD')
+                    Moment(new Date(date)).format('YYYY/MM/DD') ===
+                    Moment(new Date(item)).format('YYYY/MM/DD')
                       ? '#aad326'
                       : null,
                 },

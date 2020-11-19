@@ -120,7 +120,7 @@ const ReportsScreen = (props) => {
   const [openExportModal, setOpenExportModal] = React.useState(false);
 
   const [selectedDate, setSelectedDate] = useState(
-    Moment(new Date()).format('YYYY/MM/DD'),
+    Moment(new Date()).format('YYYY-MM-DD'),
   );
   const [bgFoodData, setBgFoodData] = useState({});
 
