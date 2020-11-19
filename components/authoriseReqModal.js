@@ -8,11 +8,9 @@ import {
   Animated,
   Alert,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
 //third party lib
-import Icon from 'react-native-vector-icons/dist/FontAwesome';
-import Ionicon from 'react-native-vector-icons/Ionicons';
 import Modal from 'react-native-modal';
+import InAppBrowser from 'react-native-inappbrowser-reborn';
 //style
 import {Colors} from '../styles/colors';
 import globalStyles from '../styles/globalStyles';
@@ -153,6 +151,18 @@ function AuthoriseReqModal(props) {
     });
   };
 
+  const openURL = async () => {
+    let link =
+      'https://www.pdpc.gov.sg/Overview-of-PDPA/The-Legislation/Personal-Data-Protection-Act';
+    if (await InAppBrowser.isAvailable) {
+      InAppBrowser.open(link).then((resp) => {
+        if (resp.type === 'success') {
+          // Opened link successfully
+        }
+      });
+    }
+  };
+
   return (
     <Modal isVisible={visible} animationIn="slideInUp">
       <View style={styles.modalContainer}>
@@ -212,7 +222,9 @@ function AuthoriseReqModal(props) {
         <View style={[styles.border, {marginTop: '2%'}]} />
         <Text style={styles.pdpaText}>
           Learn more about{' '}
-          <Text style={{color: '#aad326', fontFamily: 'SFProDisplay-Bold'}}>
+          <Text
+            style={{color: '#aad326', fontFamily: 'SFProDisplay-Bold'}}
+            onPress={() => openURL()}>
             PDPA
           </Text>
           .
