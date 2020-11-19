@@ -1,5 +1,4 @@
-import {StyleSheet, Dimensions, Platform} from 'react-native';
-import {getStatusBarHeight} from 'react-native-status-bar-height';
+import {StyleSheet, Dimensions} from 'react-native';
 import {Colors} from './colors';
 import {
   statusBarHeight,
@@ -11,6 +10,8 @@ import {
   normalTextFontSize,
   regularFontFamily,
 } from './variables';
+import {adjustSize} from '../commonFunctions/autoResizeFuncs';
+
 
 const {width, height} = Dimensions.get('window');
 
@@ -55,7 +56,7 @@ const logStyles = StyleSheet.create({
   // previous
   logItem: {
     backgroundColor: 'white',
-    borderRadius: 9.31,
+    borderRadius: adjustSize(9.31),
     margin: '3%',
     padding: '6%',
     flexDirection: 'row',
@@ -73,8 +74,8 @@ const logStyles = StyleSheet.create({
     position: 'absolute',
     top: '60%',
     left: '7%',
-    width: 40,
-    height: 40,
+    width: adjustSize(40),
+    height: adjustSize(40),
     resizeMode: 'contain', //resize image so dont cut off
     flex: 1,
   },
@@ -82,8 +83,8 @@ const logStyles = StyleSheet.create({
     position: 'absolute',
     top: '60%',
     right: '7%',
-    width: 40,
-    height: 40,
+    width: adjustSize(40),
+    height: adjustSize(40),
   },
   //modal content
   modalContainer: {
@@ -104,7 +105,7 @@ const logStyles = StyleSheet.create({
   inputField: {
     padding: '2%',
     backgroundColor: 'white',
-    borderRadius: 9.5,
+    borderRadius: adjustSize(9.5),
     borderWidth: 1,
     borderColor: '#e2e8ee',
     fontSize: normalTextFontSize,
@@ -113,7 +114,7 @@ const logStyles = StyleSheet.create({
   },
   //last log
   lastLogSummary: {
-    fontSize: 18,
+    fontSize: adjustSize(18),
     marginStart: horizontalMargins,
     fontFamily: 'SFProDisplay-Regular',
     color: 'white',
@@ -121,7 +122,7 @@ const logStyles = StyleSheet.create({
   lastLogContainer: {
     backgroundColor: Colors.lastLogButtonColor,
     padding: '3%',
-    borderRadius: 9.31,
+    borderRadius: adjustSize(9.31),
     flexDirection: 'row',
     alignItems: 'center',
   },
@@ -135,8 +136,8 @@ const logStyles = StyleSheet.create({
     marginStart: width * 0.04,
   },
   mini_loglogo: {
-    width: 40,
-    height: 40,
+    width: adjustSize(40),
+    height: adjustSize(40),
     resizeMode: 'contain', //resize image so dont cut off
     padding: '3%',
   },
@@ -160,9 +161,9 @@ const logStyles = StyleSheet.create({
   },
   enableEditButton: {
     backgroundColor: Colors.nextBtnColor,
-    height: 45,
+    height: adjustSize(45),
     width: '90%',
-    borderRadius: 9.5,
+    borderRadius: adjustSize(9.5),
     margin: '5%',
     alignSelf: 'center',
     marginBottom: '15%',
@@ -171,9 +172,9 @@ const logStyles = StyleSheet.create({
   },
   disableEditButton: {
     backgroundColor: '#e4e4e4',
-    height: 45,
+    height: adjustSize(45),
     width: '90%',
-    borderRadius: 9.5,
+    borderRadius: adjustSize(9.5),
     margin: '5%',
     alignSelf: 'center',
     marginBottom: '15%',

@@ -3,13 +3,14 @@ import {ActivityIndicator, StyleSheet, View} from 'react-native';
 import {
   getToken,
   getUsername,
-  getRole,
 } from '../../storage/asyncStorageFunctions';
 import {isTokenValidRequest} from '../../netcalls/requestsAuth';
 import {connect} from 'react-redux';
 import {mapDispatchToProps, mapStateToProps} from '../../redux/reduxMapping';
 import {getPusherToken} from '../../netcalls/notif/requestsPusher';
 import {initPusherNotif} from '../../commonFunctions/AuthorisePusherNotif';
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
+
 
 const init = async (props, finishHandler) => {
   const token = await getToken();
@@ -25,7 +26,7 @@ const init = async (props, finishHandler) => {
   }
   console.log('token : ' + token);
 
-  if (finishHandler != undefined) {
+  if (finishHandler !== undefined) {
     finishHandler();
   }
 };
@@ -51,7 +52,7 @@ const styles = StyleSheet.create({
   horizontal: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    padding: 10,
+    padding: adjustSize(10),
   },
 });
 

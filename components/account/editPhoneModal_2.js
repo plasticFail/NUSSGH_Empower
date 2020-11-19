@@ -7,6 +7,9 @@ import globalStyles from '../../styles/globalStyles';
 //component
 import LeftArrowBtn from '../logs/leftArrowBtn';
 import {editPhonNum} from '../../netcalls/requestsAccount';
+//functions
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
+
 
 const EditPhoneModal_2 = (props) => {
   const {token} = props;
@@ -14,9 +17,9 @@ const EditPhoneModal_2 = (props) => {
 
   const checkPhoneNo = () => {
     if (number) {
-      if (number != '') {
+      if (number !== '') {
         let first = number.substring(0, 1);
-        if (first == '8' || first == '9') {
+        if (first === '8' || first === '9') {
           if (number.length === 8) {
             return '';
           }
@@ -73,7 +76,7 @@ const EditPhoneModal_2 = (props) => {
         </View>
         <Text style={globalStyles.pageHeader}>Edit Mobile No.</Text>
         <Text style={globalStyles.pageDetails}>Verficiation Success</Text>
-        <Text style={[globalStyles.pageSubDetails, {fontSize: 18}]}>
+        <Text style={[globalStyles.pageSubDetails, {fontSize: adjustSize(18)}]}>
           Please enter the new mobile no. that you wish to change to:
         </Text>
         <TextInput

@@ -8,6 +8,9 @@ import EditPhoneModal from './editPhoneModal';
 import {Colors} from '../../styles/colors';
 import EditUsernameModal from './editUsernameModal';
 import EditNameModal from './editNameModal';
+//functions
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
+
 
 Entypo.loadFont();
 
@@ -80,11 +83,11 @@ const styles = StyleSheet.create({
   },
   headingText: {
     fontFamily: 'SFProDisplay-Regular',
-    fontSize: 14,
+    fontSize: adjustSize(14),
     color: Colors.lastLogValueColor,
   },
   contentText: {
-    fontSize: 18,
+    fontSize: adjustSize(18),
     marginRight: '3%',
     fontFamily: 'SFProDisplay-Regular',
   },

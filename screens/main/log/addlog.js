@@ -42,14 +42,11 @@ import CrossBtn from '../../../components/crossBtn';
 import MedicationLogBlock from '../../../components/logs/medication/medicationLogBlock';
 import WeightLogBlock from '../../../components/logs/weight/weightLogBlock';
 import {getDefaultMealType} from '../../../commonFunctions/mealLogFunctions';
-import MealTypeSelectionBlock from '../../../components/logs/meal/MealTypeSelectionBlock';
 import CreateMealLogBlock from '../../../components/logs/meal/CreateMealLogBlock';
 import LeftArrowBtn from '../../../components/logs/leftArrowBtn';
 import LoadingModal from '../../../components/loadingModal';
-import UncompleteLogCard from '../../../components/uncompleteLogCard';
-import {normalTextFontSize} from '../../../styles/variables';
-import {scaleFont} from '../../../commonFunctions/scaleFunction';
 // Functions
+import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
 
 const fixedDateTime = new Date();
 
@@ -139,15 +136,15 @@ class AddLogScreen extends Component {
   initUncomplete() {
     let period = getGreetingFromHour(this.state.recordDate.getHours());
     //get logs not done for morning and afternoon
-    if (period != morningObj.name) {
+    if (period !== morningObj.name) {
       checkLogDone(morningObj.name).then((response) => {
-        if (response != undefined) {
+        if (response !== undefined) {
           this.setState({uncompletedMorningType: response.notCompleted});
         }
       });
 
       checkLogDone(afternoonObj.name).then((response) => {
-        if (response != undefined) {
+        if (response !== undefined) {
           this.setState({uncompletedAfternoonType: response.notCompleted});
         }
       });
@@ -298,7 +295,7 @@ class AddLogScreen extends Component {
 
                 <Ionicon
                   name="alert-circle-outline"
-                  size={40}
+                  size={adjustSize(40)}
                   style={logStyles.completeIcon}
                   color="red"
                 />
@@ -335,7 +332,7 @@ class AddLogScreen extends Component {
                 )}
                 <Ionicon
                   name="checkmark"
-                  size={40}
+                  size={adjustSize(40)}
                   style={logStyles.completeIcon}
                   color={Colors.backArrowColor}
                 />
@@ -388,7 +385,7 @@ class AddLogScreen extends Component {
                     onPress={() => this.showLogForm(selectedLogType)}>
                     <Ionicon
                       name="add-circle"
-                      size={60}
+                      size={adjustSize(60)}
                       color={Colors.nextBtnColor}
                     />
                   </TouchableOpacity>
@@ -452,11 +449,11 @@ const styles = StyleSheet.create({
   uncompleteDetail: {
     color: '#ff0844',
     fontFamily: 'SFProDisplay-Regular',
-    fontSize: scaleFont(12),
+    fontSize: adjustSize(14),
   },
   logHeader: {
-    fontSize: scaleFont(15),
-    fontWeight: 'bold',
+    fontSize: adjustSize(18),
+    fontWeight: '800',
     fontFamily: 'SFProDisplay-Regular',
     marginBottom: '2%',
     color: '#21293a',

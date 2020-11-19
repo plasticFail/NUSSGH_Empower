@@ -5,6 +5,7 @@ import {connect} from 'react-redux';
 //functions
 import {mapStateToProps, mapDispatchToProps} from '../../redux/reduxMapping';
 import {storeToken} from '../../storage/asyncStorageFunctions';
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
 //components
 import MoreFunctionBlock from '../../components/moreFunctionBlock';
 
@@ -95,7 +96,7 @@ const MoreRootScreen = (props) => {
 const styles = StyleSheet.create({
   moreScreen: {
     flex: 1,
-    padding: 10,
+    padding: adjustSize(10),
     alignItems: 'center',
     justifyContent: 'center',
   },

@@ -1,7 +1,6 @@
 import React from 'react';
-import {View, StyleSheet, Text} from 'react-native';
+import {View, Text} from 'react-native';
 import globalStyles from '../../styles/globalStyles';
-import MenuBtn from '../../components/menuBtn';
 import LeftArrowBtn from '../../components/logs/leftArrowBtn';
 import InProgress from '../../components/inProgress';
 

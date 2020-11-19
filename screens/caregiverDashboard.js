@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 //third party libs
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 //other screens
-import Home from './main/home';
 import AddLog from './main/log/addlog';
 import ChatScreen from './main/chat';
 import {ReportsScreen} from './main/reports';
@@ -14,13 +13,13 @@ import REPORTS from '../resources/images/Patient-Icons/SVG/icon-navy-footer-repo
 import REPORTS_FOCUSED from '../resources/images/Patient-Icons/SVG/icon-green-footer-report.svg';
 import ADD from '../resources/images/Patient-Icons/SVG/icon-navy-footer-add.svg';
 import ADD_FOCUSED from '../resources/images/Patient-Icons/SVG/icon-green-footer-add.svg';
-import ALERT from '../resources/images/Caregiver-Additional-Icons/SVG/cg-icon-navy-footer-alert.svg';
-import ALERT_FOCUSED from '../resources/images/Caregiver-Additional-Icons/SVG/cg-icon-green-footer-alert.svg';
 import CHAT from '../resources/images/Patient-Icons/SVG/icon-navy-footer-chat.svg';
 import CHAT_FOCUSED from '../resources/images/Patient-Icons/SVG/icon-green-footer-chat.svg';
-import HomeScreenPatient from './main/home-caregiver';
 import HomeScreenCaregiver from './main/home-caregiver';
 import AlertNotifIcon from '../components/alertNotifIcon';
+//function
+import {adjustSize} from '../commonFunctions/autoResizeFuncs';
+
 
 import {
   morningObj,
@@ -47,8 +46,8 @@ import moment from 'moment';
 const Tab = createBottomTabNavigator();
 
 const iconStyle = {
-  width: 30,
-  height: 30,
+  width: adjustSize(30),
+  height: adjustSize(30),
 };
 const CaregiverBottomTab = (props) => {
   //states for the notifications*
@@ -73,7 +72,7 @@ const CaregiverBottomTab = (props) => {
 
   //notif - log not done
   const initUncompleteLog = async () => {
-    if (getGreetingFromHour(currHour) != morningObj.name) {
+    if (getGreetingFromHour(currHour) !== morningObj.name) {
       let rsp1 = await checkLogDone(morningObj.name);
       let rsp2 = await checkLogDone(afternoonObj.name);
       let bg = getParticularLogTypeIncompleteText(
@@ -137,7 +136,7 @@ const CaregiverBottomTab = (props) => {
       console.log(
         'read notification on same date ' + date + ' -checking period',
       );
-      if (period != currentperiod) {
+      if (period !== currentperiod) {
         console.log('past period read notif !=current period, set badge show');
         //set badge only when logs not done msg is empty
         if (checkNotificationMsg(logsNotDone)) {
@@ -165,7 +164,7 @@ const CaregiverBottomTab = (props) => {
         inactiveTintColor: 'gray',
         adaptive: false,
         labelStyle: {
-          fontSize: 12,
+          fontSize: adjustSize(12),
         },
         style: {
           height: '10%',

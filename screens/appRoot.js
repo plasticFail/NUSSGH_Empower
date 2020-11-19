@@ -58,7 +58,7 @@ class AppRoot extends Component {
 
   componentDidUpdate(prevProp, prevState) {
     getRole().then((data) => {
-      if (data != prevState.user) {
+      if (data !== prevState.user) {
         this.setState({user: data});
       }
     });

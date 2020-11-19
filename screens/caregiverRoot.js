@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {View, Linking} from 'react-native';
 //third party libs
-import {NavigationContainer} from '@react-navigation/native';
 import {
   createStackNavigator,
   CardStyleInterpolators,

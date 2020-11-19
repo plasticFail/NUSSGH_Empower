@@ -6,6 +6,8 @@ import {createDrawerNavigator, DrawerItem} from '@react-navigation/drawer';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 //component
 import DashboardScreen from './dashboard';
+//functions
+import {adjustSize} from '../commonFunctions/autoResizeFuncs';
 
 import ACCOUNT from '../resources/images/Patient-Icons/SVG/icon-white-sidemenu-account.svg';
 import DIARY from '../resources/images/Patient-Icons/SVG/icon-white-sidemenu-diary.svg';
@@ -18,8 +20,8 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {scaleFont} from '../commonFunctions/scaleFunction';
 
 const iconStyle = {
-  width: 30,
-  height: 30,
+  width: adjustSize(30),
+  height: adjustSize(30),
 };
 
 const Drawer = createDrawerNavigator();
@@ -74,7 +76,13 @@ const DrawerContent = (props) => {
         <DrawerItem
           label="Log Out"
           labelStyle={[styles.subText]}
-          icon={() => <Ionicon name="exit-outline" size={27} color={'white'} />}
+          icon={() => (
+            <Ionicon
+              name="exit-outline"
+              size={adjustSize(27)}
+              color={'white'}
+            />
+          )}
           onPress={() => props.navigation.navigate('Log Out')}
         />
       </View>
@@ -86,7 +94,7 @@ const DrawerNavigator = (props) => {
   return (
     <Drawer.Navigator
       drawerType={'slide'}
-      drawerStyle={{backgroundColor: Colors.menuColor}}
+      drawerStyle={{backgroundColor: Colors.menuColor, width: '65%'}}
       drawerContent={DrawerContent}>
       <Drawer.Screen name="Home" component={DashboardScreen} />
     </Drawer.Navigator>
@@ -96,7 +104,7 @@ export default DrawerNavigator;
 
 const styles = StyleSheet.create({
   headerTextStyle: {
-    fontSize: scaleFont(22),
+    fontSize: adjustSize(24),
     fontFamily: 'SFProDisplay-Bold',
     color: 'white',
     margin: '5%',
@@ -104,7 +112,7 @@ const styles = StyleSheet.create({
     marginTop: '2%',
   },
   subText: {
-    fontSize: scaleFont(15),
+    fontSize: adjustSize(18),
     fontFamily: 'SFProDisplay-Bold',
     color: 'white',
   },

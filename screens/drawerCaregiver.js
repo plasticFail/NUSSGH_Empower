@@ -6,14 +6,17 @@ import {createDrawerNavigator, DrawerItem} from '@react-navigation/drawer';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 //component
 import CaregiverBottomTab from './caregiverDashboard';
+//functions
+import {adjustSize} from '../commonFunctions/autoResizeFuncs';
+
 
 import ACCOUNT from '../resources/images/Patient-Icons//SVG/icon-white-sidemenu-account.svg';
 import DIARY from '../resources/images/Patient-Icons//SVG/icon-white-sidemenu-diary.svg';
 import {ScrollView} from 'react-native-gesture-handler';
 
 const iconStyle = {
-  width: 30,
-  height: 30,
+  width: adjustSize(30),
+  height: adjustSize(30),
 };
 
 const Drawer = createDrawerNavigator();
@@ -50,7 +53,7 @@ const CaregiverDrawerNavigator = (props) => {
   return (
     <Drawer.Navigator
       drawerType={'slide'}
-      drawerStyle={{backgroundColor: Colors.menuColor}}
+      drawerStyle={{backgroundColor: Colors.menuColor, width:'65%'}}
       drawerContent={DrawerContent}>
       <Drawer.Screen name="Home" component={CaregiverBottomTab} />
     </Drawer.Navigator>
@@ -60,7 +63,7 @@ export default CaregiverDrawerNavigator;
 
 const styles = StyleSheet.create({
   headerTextStyle: {
-    fontSize: 24,
+    fontSize: adjustSize(24),
     fontFamily: 'SFProDisplay-Bold',
     color: 'white',
     margin: '5%',
@@ -68,7 +71,7 @@ const styles = StyleSheet.create({
     marginTop: '2%',
   },
   subText: {
-    fontSize: 18,
+    fontSize: adjustSize(18),
     fontFamily: 'SFProDisplay-Bold',
     color: 'white',
   },

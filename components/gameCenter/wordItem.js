@@ -3,6 +3,7 @@ import GameCenterStyles from '../../styles/gameCenterStyles';
 import {Image, Text, TouchableOpacity, View} from 'react-native';
 import ProgressBar from '../progressbar';
 import {Colors} from '../../styles/colors';
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
 
 
 const WordItem = props => {
@@ -20,7 +21,7 @@ const WordItem = props => {
             <View style={[GameCenterStyles.verticalContainer]}>
                 <Text style={GameCenterStyles.wordText}>{wordText}</Text>
                 <ProgressBar
-                    containerStyle={{height: 7.5, width: '50%'}}
+                    containerStyle={{height: adjustSize(7.5), width: '50%'}}
                     progress={percentage}
                     reverse={true}
                     progressBarColor={Colors.gameColorGreen}

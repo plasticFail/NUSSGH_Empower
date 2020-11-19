@@ -19,6 +19,7 @@ import GameCenterStyles from '../../../styles/gameCenterStyles';
 //functions
 import {requestGetOverview} from '../../../netcalls/gameCenterEndPoints/requestGameCenter';
 import {GetIconByWord} from '../../../commonFunctions/gameCenterFunctions';
+import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
 //components
 import LeftArrowBtn from '../../../components/logs/leftArrowBtn';
 import TutorialPage from '../../../components/gameCenter/tutorialPage';
@@ -104,7 +105,7 @@ class GameCenter extends Component {
             <Ionicon
               style={globalStyles.pageIcon}
               name="help-circle-outline"
-              size={40}
+              size={adjustSize(40)}
               color={Colors.gameColorGreen}
               onPress={() => this.setState({showTutorial: true})}
             />
@@ -241,10 +242,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   scrollContainer: {
-    paddingVertical: 100,
+    paddingVertical: adjustSize(100),
   },
   marginTop: {
-    marginTop: 15,
+    marginTop: adjustSize(15),
   },
   divider: {
     height: 2,

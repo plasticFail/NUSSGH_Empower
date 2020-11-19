@@ -1,15 +1,15 @@
 import React from 'react';
-import {View, StyleSheet, Text, ActivityIndicator, FlatList} from 'react-native';
+import {View, Text, ActivityIndicator, FlatList} from 'react-native';
 import globalStyles from '../../styles/globalStyles';
 import LeftArrowBtn from '../../components/logs/leftArrowBtn';
-import InProgress from '../../components/inProgress';
 import {ResourcesTab} from "../../components/education/ResourcesTab";
 import {getArticles, getHypoCorrectionFoodArticles} from "../../netcalls/education/educationEndpoints";
 import {EducationMediaRow} from "../../components/education/EducationMediaRow";
-import HypocorrectionFood from "./hypocorrectionFood";
 import {HypoCorrectionFoodRow} from "../../components/education/HypoCorrectionFoodRow";
 import Modal from 'react-native-modal';
 import FoodModalContent from "../../components/logs/meal/FoodModalContent";
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
+
 
 const EducationMaterialsScreen = (props) => {
   const [currentTabIndex, setCurrentTabIndex] = React.useState(0);
@@ -80,8 +80,8 @@ const EducationMaterialsScreen = (props) => {
                     onBackButtonPress={handleClose}
                     style={{marginTop: '20%', marginBottom: '20%'}}
                     isVisible={selectedFood !== null}>
-                    <FoodModalContent style={{borderRadius: 10, overflow: 'hidden'}} onClose={handleClose} selected={selectedFood}>
-                        <View style={{paddingBottom: 40}}/>
+                    <FoodModalContent style={{borderRadius: adjustSize(10), overflow: 'hidden'}} onClose={handleClose} selected={selectedFood}>
+                        <View style={{paddingBottom: adjustSize(40)}}/>
                     </FoodModalContent>
                 </Modal>
             )

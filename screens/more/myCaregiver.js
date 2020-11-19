@@ -5,6 +5,7 @@ import {Colors} from '../../styles/colors';
 import globalStyles from '../../styles/globalStyles';
 //function
 import {isEmpty} from '../../commonFunctions/common';
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
 //third party lib
 import Entypo from 'react-native-vector-icons/Entypo';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -24,8 +25,8 @@ import AuthoriseReqModal from '../../components/authoriseReqModal';
 import {pendingCaregiverReq} from '../../netcalls/urls';
 
 const iconStyle = {
-  width: 40,
-  height: 40,
+  width: adjustSize(40),
+  height: adjustSize(40),
 };
 
 const MyCaregiverScreen = (props) => {
@@ -147,7 +148,7 @@ export default MyCaregiverScreen;
 const styles = StyleSheet.create({
   subHeading: {
     fontFamily: 'SFProDisplay-Bold',
-    fontSize: 20,
+    fontSize: adjustSize(20),
     marginStart: '3%',
     color: Colors.grey,
     opacity: 0.6,
@@ -158,7 +159,7 @@ const styles = StyleSheet.create({
   addText: {
     marginStart: '2%',
     color: '#a7d026',
-    fontSize: 20,
+    fontSize: adjustSize(20),
     marginTop: '2%',
   },
 });

@@ -1,10 +1,10 @@
 import React, {useRef, useEffect} from 'react';
 import {View, StyleSheet, Text, Animated, Dimensions} from 'react-native';
-import MenuBtn from '../../components/menuBtn';
 import globalStyles from '../../styles/globalStyles';
 import LeftArrowBtn from '../../components/logs/leftArrowBtn';
-import logStyles from '../../styles/logStyles';
 import InProgress from '../../components/inProgress';
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
+
 
 const ChatScreen = (props) => {
   const slideRightAnimation = useRef(new Animated.Value(0)).current;
@@ -47,7 +47,7 @@ const ChatScreen = (props) => {
 const styles = StyleSheet.create({
   chatScreen: {
     flex: 1,
-    padding: 10,
+    padding: adjustSize(10),
     alignItems: 'center',
     justifyContent: 'center',
   },

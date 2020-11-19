@@ -21,6 +21,7 @@ import {
   handleSubmitMedication,
   handleSubmitWeight,
 } from '../../../commonFunctions/logFunctions';
+import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
 //components
 import FormBlockFix from '../../../components/logs/formBlockFix';
 import BloodGlucoseLogBlock from '../../../components/logs/bg/bloodGlucoseLogBlock';
@@ -653,25 +654,25 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     width: '100%',
     alignItems: 'center',
-    padding: 20,
+    padding: adjustSize(20),
     backgroundColor: 'white',
   },
   textContainer: {
     width: '100%',
   },
   text: {
-    fontSize: 18,
+    fontSize: adjustSize(18),
   },
   progress: {
     width: '100%',
-    height: 100,
+    height: adjustSize(100),
   },
   container: {
     backgroundColor: 'white',
     alignItems: 'center',
     width: '100%',
     paddingBottom: '5%',
-    borderRadius: 20,
+    borderRadius: adjustSize(20),
   },
   shadow: {
     shadowColor: '#000',

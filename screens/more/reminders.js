@@ -1,5 +1,7 @@
 import React from 'react';
 import {View, StyleSheet, Text} from 'react-native';
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
+
 
 const RemindersScreen = (props) => {
   return (
@@ -12,7 +14,7 @@ const RemindersScreen = (props) => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    padding: 10,
+    padding: adjustSize(10),
     alignItems: 'center',
     justifyContent: 'center',
   },

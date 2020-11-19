@@ -20,11 +20,8 @@ import {
   storeToken,
   storeRole,
 } from '../../storage/asyncStorageFunctions';
-import {
-  patientLoginRequest,
-  caregiverLoginRequest,
-  loginRequest,
-} from '../../netcalls/requestsAuth';
+import {loginRequest} from '../../netcalls/requestsAuth';
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
 //components
 import Loading from '../../components/loading';
 import globalStyles from '../../styles/globalStyles';
@@ -170,33 +167,35 @@ const styles = StyleSheet.create({
     padding: '6%',
   },
   logoStyle: {
-    width: '30%',
-    height: '20%',
-    borderRadius: 20,
+    width: adjustSize(100),
+    height: adjustSize(100),
+    marginBottom: adjustSize(10),
+    borderRadius: adjustSize(20),
   },
   welcomeText: {
-    fontSize: scaleFont(30),
+    fontSize: adjustSize(30),
     color: 'white',
     fontFamily: 'SFProDisplay-Bold',
   },
   detailText: {
-    fontSize: scaleFont(17),
+    fontSize: adjustSize(20),
     color: 'white',
     fontFamily: 'SFProDisplay-Regular',
   },
   inputBox: {
     width: '90%',
-    height: 50,
-    borderRadius: 20,
+    fontSize: adjustSize(18),
+    height: adjustSize(50),
+    borderRadius: adjustSize(20),
     backgroundColor: '#12683E',
-    paddingStart: 30, //position placeholder text
-    marginVertical: '3%',
+    paddingStart: adjustSize(30), //position placeholder text
+    marginVertical: adjustSize(10),
     alignSelf: 'center',
     color: 'white',
   },
   light: {
     color: 'white',
-    fontSize: scaleFont(15),
+    fontSize: adjustSize(17),
     marginTop: '3%',
     fontFamily: 'SFProDisplay-Regular',
   },
@@ -209,11 +208,11 @@ const styles = StyleSheet.create({
     margin: '4%',
     color: 'white',
     textAlign: 'center',
-    fontSize: scaleFont(15),
+    fontSize: adjustSize(17),
   },
   border: {
     borderBottomColor: 'white',
     borderBottomWidth: 2,
-    width: 150,
+    width: adjustSize(150),
   },
 });

@@ -4,10 +4,7 @@ import {
   TouchableOpacity,
   Text,
   StyleSheet,
-  Animated,
   ScrollView,
-  Dimensions,
-  Easing,
 } from 'react-native';
 import CHEV_RIGHT from '../../resources/images/Patient-Icons/SVG/icon-grey-chevron-right.svg';
 //styles
@@ -26,7 +23,8 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 //function
 import {getGoals} from '../../netcalls/requestsGoals';
 import {isMonday} from '../../commonFunctions/goalFunctions';
-import InProgress from '../../components/inProgress';
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
+
 
 const GoalsScreen = (props) => {
   const [openAdd, setOpenAdd] = useState(false);
@@ -70,7 +68,7 @@ const GoalsScreen = (props) => {
           <AntDesign
             name="pluscircleo"
             color={'#aad326'}
-            size={25}
+            size={adjustSize(25)}
             style={{margin: '2%'}}
           />
           <Text style={styles.addbutton}>Add Goal</Text>
@@ -106,18 +104,18 @@ const styles = StyleSheet.create({
   addbutton: {
     marginStart: '2%',
     color: '#aad326',
-    fontSize: 20,
+    fontSize: adjustSize(20),
     marginTop: '2%',
   },
   goalType: {
     fontFamily: 'SFProDisplay-Bold',
     color: Colors.lastLogValueColor,
-    fontSize: 15,
+    fontSize: adjustSize(15),
     marginBottom: '2%',
   },
   progressContainer: {
-    borderRadius: 9.5,
-    height: 7,
+    borderRadius: adjustSize(9.5),
+    height: adjustSize(7),
   },
   border: {
     borderBottomWidth: 0.5,
@@ -132,7 +130,7 @@ const styles = StyleSheet.create({
   noGoalsText: {
     fontFamily: 'SFProDisplay-Regular',
     color: Colors.alertColor,
-    fontSize: 18,
+    fontSize: adjustSize(18),
     margin: '3%',
   },
 });

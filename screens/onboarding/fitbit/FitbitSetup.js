@@ -10,6 +10,7 @@ import {
 //function
 import {getFitbitToken} from '../../../storage/asyncStorageFunctions';
 import {AuthoriseFitbit} from '../../../commonFunctions/AuthoriseFitbit';
+import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
 // config
 import {
   fitbitOAuthUri,
@@ -145,19 +146,19 @@ export default function FitbitSetup(props) {
                     <Text style={{paddingLeft: 15, fontWeight: 'bold'}}>{!authorised.current && processingStatus}</Text>
                  */}
       {authorised.current ? (
-        <View style={{padding: 15}}>
+        <View style={{padding: adjustSize(15)}}>
           <Text style={styles.fitbitDoneMainText}>Done!</Text>
           <Text style={styles.fitbitDoneSubText}>You are all set</Text>
         </View>
       ) : (
         <TouchableOpacity onPress={handleOpenFitbitOAuthUrl}>
-          <View style={[styles.fitbitRedirectButton, {marginTop: 50}]}>
-            <Text style={{fontWeight: 'bold', color: '#fff', fontSize: 20}}>
+          <View style={[styles.fitbitRedirectButton, {marginTop: adjustSize(50)}]}>
+            <Text style={{fontWeight: 'bold', color: '#fff', fontSize: adjustSize(20)}}>
               Continue with
             </Text>
             <Animated.View
               style={[styles.fitbitIconStyle, {transform: [{scale}], justifyContent: 'center'}]}>
-              <Image source={FitbitLogo} resizeMode='contain' style={{height: 20, width: 90}} />
+              <Image source={FitbitLogo} resizeMode='contain' style={{height: adjustSize(20), width: adjustSize(90)}} />
             </Animated.View>
           </View>
         </TouchableOpacity>
@@ -198,32 +199,32 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   fitbitIconStyle: {
-    width: 50,
-    height: 50,
-    margin: 5,
+    width: adjustSize(50),
+    height: adjustSize(50),
+    margin: adjustSize(5),
   },
   fitbitPromptContainer: {
     justifyContent: 'center',
     alignItems: 'center',
   },
   fitbitPromptText: {
-    fontSize: 24,
+    fontSize: adjustSize(24),
     fontWeight: 'bold',
-    paddingBottom: 50,
+    paddingBottom: adjustSize(50),
   },
   fitbitDoneMainText: {
-    fontSize: 24,
+    fontSize: adjustSize(24),
     fontWeight: 'bold',
   },
   fitbitDoneSubText: {
-    fontSize: 20,
+    fontSize: adjustSize(20),
   },
   fitbitRedirectButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    margin: 15,
+    margin: adjustSize(15),
     backgroundColor: '#4FACB6',
-    borderRadius: 15,
+    borderRadius: adjustSize(15),
     justifyContent: 'center',
   },
 });

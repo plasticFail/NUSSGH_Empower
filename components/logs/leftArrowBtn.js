@@ -1,11 +1,10 @@
 import React from 'react';
-import {View, StyleSheet, Dimensions} from 'react-native';
 //third party lib
 import Ionicons from 'react-native-vector-icons/Ionicons';
 //styles
 import globalStyles from '../../styles/globalStyles';
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
 
-const {height, width} = Dimensions.get('window');
 
 const LeftArrowBtn = (props) => {
   const {close} = props;
@@ -14,7 +13,7 @@ const LeftArrowBtn = (props) => {
     <>
       <Ionicons
         name={'arrow-back'}
-        size={40}
+        size={adjustSize(40)}
         color={'#aad326'}
         style={globalStyles.leftArrowBack}
         onPress={() => close()}
@@ -25,12 +24,4 @@ const LeftArrowBtn = (props) => {
 
 export default LeftArrowBtn;
 
-/*
-const styles = StyleSheet.create({
-  buttonPosition: {
-    marginTop: height * 0.05,
-    marginBottom: height * 0.07,
-    marginStart: width * 0.03,
-  },
-});
-*/
+

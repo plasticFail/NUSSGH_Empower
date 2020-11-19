@@ -9,24 +9,25 @@ import {
   headerTextFontSize,
 } from './variables';
 import {scaleFont} from '../commonFunctions/scaleFunction';
+import {adjustSize} from '../commonFunctions/autoResizeFuncs';
 
 const globalStyles = StyleSheet.create({
   //added from ui / ux change
   alertText: {
     //tweak
-    fontSize: 18,
+    fontSize: adjustSize(18),
     fontFamily: 'SFProDisplay-Regular',
     color: Colors.alertColor,
   },
   buttonContainer: {
     backgroundColor: 'white',
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: -10},
+    shadowOffset: {width: 0, height: -adjustSize(10)},
     shadowOpacity: 0.15,
-    shadowRadius: 6,
-    elevation: 30,
+    shadowRadius: adjustSize(6),
+    elevation: adjustSize(30),
     paddingBottom: '10%',
-    height: 120,
+    height: adjustSize(120),
     margin: 0,
     alignSelf: 'flex-end',
     width: Dimensions.get('window').width,
@@ -42,9 +43,9 @@ const globalStyles = StyleSheet.create({
   },
   nextButtonStyle: {
     backgroundColor: Colors.nextBtnColor,
-    height: 45,
+    height: adjustSize(45),
     width: '90%',
-    borderRadius: 9.5,
+    borderRadius: adjustSize(9.5),
     margin: '5%',
     alignSelf: 'center',
     marginBottom: '15%',
@@ -52,9 +53,9 @@ const globalStyles = StyleSheet.create({
   },
   submitButtonStyle: {
     backgroundColor: Colors.submitBtnColor,
-    height: 45,
+    height: adjustSize(45),
     width: '90%',
-    borderRadius: 9.5,
+    borderRadius: adjustSize(9.5),
     margin: '5%',
     alignSelf: 'center',
     marginBottom: '15%',
@@ -62,16 +63,16 @@ const globalStyles = StyleSheet.create({
   },
   skipButtonStyle: {
     backgroundColor: '#e4e4e4',
-    height: 45,
+    height: adjustSize(45),
     width: '90%',
-    borderRadius: 9.5,
+    borderRadius: adjustSize(9.5),
     margin: '5%',
     alignSelf: 'center',
     marginBottom: '15%',
     paddingTop: '3%',
   },
   actionButtonText: {
-    fontSize: scaleFont(17),
+    fontSize: adjustSize(19),
     textAlign: 'center',
     fontWeight: 'bold',
   },
@@ -125,11 +126,12 @@ const globalStyles = StyleSheet.create({
     backgroundColor: Colors.editBackgroundColor,
   },
   editInputBox: {
+    fontSize: adjustSize(18),
     marginBottom: '2%',
     backgroundColor: 'white',
     padding: '3%',
     margin: '4%',
-    borderRadius: 9.5,
+    borderRadius: adjustSize(9.5),
     borderWidth: 0.5,
     borderColor: Colors.inputBorderColor,
   },
@@ -148,26 +150,26 @@ const globalStyles = StyleSheet.create({
   },
   //delete modal
   deleteDetails: {
-    fontSize: 16,
+    fontSize: adjustSize(16),
     margin: '4%',
   },
   deleteButton: {
     backgroundColor: '#ff0844',
-    height: 45,
+    height: adjustSize(45),
     width: '70%',
     alignSelf: 'center',
-    borderRadius: 15,
+    borderRadius: adjustSize(15),
     margin: '4%',
   },
   deleteButtonText: {
-    fontSize: 20,
+    fontSize: adjustSize(20),
     textAlign: 'center',
     marginVertical: '3%',
     fontWeight: '500',
     color: 'white',
   },
   subOptionText: {
-    fontSize: 20,
+    fontSize: adjustSize(20),
     textAlign: 'center',
     color: '#ff0844',
     marginBottom: '3%',
@@ -181,7 +183,7 @@ const globalStyles = StyleSheet.create({
   //medicationItem
   medContainer: {
     backgroundColor: 'white',
-    borderRadius: 20,
+    borderRadius: adjustSize(20),
     borderColor: '#e1e7ed',
     borderWidth: 1,
     padding: '3%',
@@ -191,7 +193,7 @@ const globalStyles = StyleSheet.create({
   //mycaregiver
   row: {
     backgroundColor: 'white',
-    borderRadius: 9.5,
+    borderRadius: adjustSize(9.5),
     borderWidth: 1,
     borderColor: '#e3e8ee',
     padding: '3%',
@@ -199,7 +201,7 @@ const globalStyles = StyleSheet.create({
   },
   field: {
     fontFamily: 'SFProDisplay-Regular',
-    fontSize: 19,
+    fontSize: adjustSize(19),
     marginStart: '3%',
     alignSelf: 'center',
     flex: 1,
