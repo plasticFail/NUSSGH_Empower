@@ -185,14 +185,16 @@ const AddViewCaregiverModal = (props) => {
         </View>
 
         <Text style={styles.fieldText}>
-          {type === 'add' ? 'Select' : 'Requested'} Access Privileges
+          {type === 'add' && from === 'caregiver' && !isEmpty(patient)
+            ? 'Requested Access Privileges'
+            : 'Select Access Privileges'}
         </Text>
         <ScrollView style={{flexGrow: 1}}>
           <AccessOption
             mainheader={"Patient's First Name"}
             subheader={'Personal Information'}
             onSelect={() => {
-              if (from === 'caregiver' && !isEmpty(patient)) {
+              if (from === 'caregiver' && isEmpty(pendingCaregiver)) {
                 setAccessName(!accessName);
               }
             }}
@@ -202,7 +204,7 @@ const AddViewCaregiverModal = (props) => {
             mainheader={"Patient's Report & Diary"}
             subheader={'Health Information'}
             onSelect={() => {
-              if (from === 'caregiver' && !isEmpty(patient)) {
+              if (from === 'caregiver' && isEmpty(pendingCaregiver)) {
                 setAccessRd(!accessRD);
               }
             }}
@@ -212,7 +214,7 @@ const AddViewCaregiverModal = (props) => {
             mainheader={"Patient's Lab Results"}
             subheader={'Health Information'}
             onSelect={() => {
-              if (from === 'caregiver' && !isEmpty(patient)) {
+              if (from === 'caregiver' && isEmpty(pendingCaregiver)) {
                 setAccessLr(!accessLr);
               }
             }}
