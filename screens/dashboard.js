@@ -21,6 +21,10 @@ import GAME from '../resources/images/Patient-Icons/SVG/icon-navy-footer-game.sv
 import GAME_FOCUSED from '../resources/images/Patient-Icons/SVG/icon-green-footer-game.svg';
 import CHAT from '../resources/images/Patient-Icons/SVG/icon-navy-footer-chat.svg';
 import CHAT_FOCUSED from '../resources/images/Patient-Icons/SVG/icon-green-footer-chat.svg';
+import {
+  heightPercent2Dp,
+  bottomNavigationIconStyle,
+} from '../commonFunctions/scaleFunction';
 
 const Tab = createBottomTabNavigator();
 

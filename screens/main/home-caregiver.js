@@ -27,6 +27,8 @@ import {
   storeAuthorisedStatusCaregiver,
 } from '../../storage/asyncStorageFunctions';
 import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
+import AuthorisationCaregiver from '../../components/home/authorisationCaregiver';
+import {getPendingReq} from '../../netcalls/requestsMyCaregiver';
 
 const HomeScreenCaregiver = (props) => {
   const [caregiver, setCaregiver] = useState({});

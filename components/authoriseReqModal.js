@@ -24,8 +24,8 @@ import {
 } from '../netcalls/requestsMyCaregiver';
 
 const iconStyle = {
-  width: 40,
-  height: 40,
+  width: 30,
+  height: 30,
   marginTop: '5%',
   marginStart: '3%',
 };
@@ -214,7 +214,7 @@ function AuthoriseReqModal(props) {
           <CROSS {...iconStyle} />
           <View style={{marginTop: '4%', flex: 2}}>
             <Text style={[globalStyles.pageDetails, styles.accessText]}>
-              Unrequested Access
+              Access Rejected
             </Text>
             <Text style={globalStyles.pageDetails}>{unacceptedPermission}</Text>
           </View>
