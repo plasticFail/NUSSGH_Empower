@@ -13,6 +13,8 @@ import globalStyles from '../../styles/globalStyles';
 import {Colors} from '../../styles/colors';
 import SecurityQnDropdown from '../../components/account/SecurityQnDropdown';
 import {TextInput, TouchableOpacity} from 'react-native-gesture-handler';
+import {getQuestions} from '../../netcalls/requestsSecurityQn';
+import {isEmpty} from '../../commonFunctions/common';
 
 const securityList = [
   "What is your favourite children's book?",
@@ -23,20 +25,29 @@ const securityList = [
 ];
 
 const SecurityQns = (props) => {
-  const [originalQnsList, setOriginalQnList] = useState(securityList);
-  const [list, setList] = useState(originalQnsList);
+  const [originalQnsList, setOriginalQnList] = useState([]);
+  const [list, setList] = useState([]);
 
   const [expand1, setExpand1] = useState(false);
-  const [security1Qn, setSecurity1Qn] = useState('');
+  const [security1Qn, setSecurity1Qn] = useState({});
   const [security1Ans, setSecurity1Ans] = useState('');
 
   const [expand2, setExpand2] = useState(false);
-  const [security2Qn, setSecurity2Qn] = useState('');
+  const [security2Qn, setSecurity2Qn] = useState({});
   const [security2Ans, setSecurity2Ans] = useState('');
 
   const [expand3, setExpand3] = useState(false);
-  const [security3Qn, setSecurity3Qn] = useState('');
+  const [security3Qn, setSecurity3Qn] = useState({});
   const [security3Ans, setSecurity3Ans] = useState('');
+
+  useEffect(() => {
+    async function getList() {
+      let list = await getQuestions();
+      setOriginalQnList(list);
+      setList(list);
+    }
+    getList();
+  }, []);
 
   useEffect(() => {
     manageDropDownOpen();
@@ -71,9 +82,9 @@ const SecurityQns = (props) => {
 
   const enableNextButton = () => {
     if (
-      security1Qn &&
-      security2Qn &&
-      security3Qn &&
+      !isEmpty(security1Qn) &&
+      !isEmpty(security2Qn) &&
+      !isEmpty(security3Qn) &&
       security1Ans &&
       security2Ans &&
       security3Ans

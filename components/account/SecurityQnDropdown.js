@@ -3,20 +3,24 @@ import {View, StyleSheet, Text, Image, ScrollView} from 'react-native';
 import EvilIcon from 'react-native-vector-icons/EvilIcons';
 import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
 import {TouchableOpacity, TextInput} from 'react-native-gesture-handler';
+import {isEmpty} from '../../commonFunctions/common';
 
 const SecurityQnDropdown = (props) => {
   const {num, selectedQn, list, expand, otherQn1, otherQn2} = props;
   const {onSelectQn, close, open} = props;
 
   const [top, setTop] = useState('');
-  const [optionList, setOptionList] = useState(list);
+  const [optionList, setOptionList] = useState([]);
 
   useEffect(() => {
-    let newFiltered = list.filter(
-      (item) => item != otherQn1 && item != otherQn2,
+    let newFiltered = list?.filter(
+      (item) =>
+        item?.content != otherQn1?.content &&
+        item?.content != otherQn2?.content,
     );
+
     setOptionList(newFiltered);
-  }, [otherQn1, otherQn2]);
+  }, [otherQn1, otherQn2, list]);
 
   useEffect(() => {
     if (num === 1) {
@@ -32,7 +36,9 @@ const SecurityQnDropdown = (props) => {
     <>
       <TouchableOpacity style={styles.container} onPress={() => open()}>
         <Text style={styles.questionText}>
-          {selectedQn.length != 0 ? selectedQn : 'Security Question ' + num}
+          {!isEmpty(selectedQn)
+            ? selectedQn?.content
+            : 'Security Question ' + num}
         </Text>
         {expand ? (
           <EvilIcon name="chevron-up" size={30} />
@@ -58,7 +64,7 @@ const SecurityQnDropdown = (props) => {
                     onSelectQn(item, num);
                     close();
                   }}>
-                  <Text style={styles.options}>{item}</Text>
+                  <Text style={styles.options}>{item?.content}</Text>
                 </TouchableOpacity>
               ))}
             </ScrollView>
