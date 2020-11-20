@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
   },
   patientName: {
     fontFamily: 'SFProDisplay-Regular',
-    fontSize: scaleFont(17),
+    fontSize: scaleFont(15),
     color: 'white',
     flex: 1,
     alignSelf: 'center',

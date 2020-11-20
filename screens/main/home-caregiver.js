@@ -33,6 +33,7 @@ import {getPendingReq} from '../../netcalls/requestsMyCaregiver';
 const HomeScreenCaregiver = (props) => {
   const [caregiver, setCaregiver] = useState({});
   const [patient, setPatient] = useState({});
+  const [patientTypes, setPatientType] = useState({});
   const [currHour, setCurrHour] = useState(new Date().getHours());
   const [uncompleteLogs, setUncompleteLogs] = useState([]);
 
@@ -99,6 +100,7 @@ const HomeScreenCaregiver = (props) => {
       }
     } else {
       setPatient(data?.patient);
+      setPatientType(data?.patient_type);
       await storeAuthorisedStatusCaregiver(true);
       setAuthorise(true);
     }
@@ -146,7 +148,7 @@ const HomeScreenCaregiver = (props) => {
                   uncompleteLogs={uncompleteLogs}
                   hour={getGreetingFromHour(currHour)}
                 />
-                <PatientType patient={patient} />
+                <PatientType patientTypes={patientTypes} />
                 <PatientInfo patient={patient} />
               </>
             ) : (

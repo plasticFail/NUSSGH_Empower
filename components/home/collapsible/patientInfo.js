@@ -4,6 +4,8 @@ import {Colors} from '../../../styles/colors';
 import moment from 'moment';
 import {getDateObj} from '../../../commonFunctions/diaryFunctions';
 import {isEmpty, getAge} from '../../../commonFunctions/common';
+import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
+import {scaleFont} from '../../../commonFunctions/scaleFunction';
 
 const PatientInfo = (props) => {
   const {patient} = props;
@@ -67,12 +69,14 @@ const PatientInfo = (props) => {
                 {isEmpty(patient) ? '-' : patient?.age}
               </Text>
             </View>
+            {/*
             <View style={styles.content}>
               <Text style={styles.header}>Weight</Text>
               <Text style={styles.detail}>
                 {isEmpty(patient) ? '-' : patient?.weight} kg
               </Text>
             </View>
+        */}
           </View>
         </Animated.View>
       ) : null}
@@ -94,18 +98,14 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontFamily: 'SFProDisplay-Bold',
-    fontSize: 18,
+    fontSize: adjustSize(18),
     marginStart: '3%',
   },
   patientName: {
     fontFamily: 'SFProDisplay-Regular',
-    fontSize: 18,
+    fontSize: adjustSize(18),
     color: 'white',
     alignSelf: 'center',
-  },
-  optionIcon: {
-    alignSelf: 'center',
-    marginEnd: '3%',
   },
   content: {
     flexDirection: 'row',
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
   },
   header: {
     fontFamily: 'SFProDisplay-Bold',
-    fontSize: 18,
+    fontSize: scaleFont(15),
     color: '#21293A',
     opacity: 0.6,
     flex: 1,
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
   detail: {
     justifyContent: 'center',
     marginEnd: '3%',
-    fontSize: 18,
+    fontSize: adjustSize(17),
     fontFamily: 'SFProDisplay-Regular',
   },
 });

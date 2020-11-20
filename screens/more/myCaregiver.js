@@ -80,7 +80,6 @@ const MyCaregiverScreen = (props) => {
     init().then(() => {});
   };
 
-  //get caregiver assigned and the list of permission granted*
   return (
     <View style={{...globalStyles.pageContainer, ...props.style}}>
       <View style={globalStyles.menuBarContainer}>

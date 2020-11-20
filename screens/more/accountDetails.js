@@ -20,7 +20,6 @@ import {getRole} from '../../storage/asyncStorageFunctions';
 import {role_patient} from '../../commonFunctions/common';
 import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
 
-
 const iconStyle = {
   height: adjustSize(200),
   width: adjustSize(200),
@@ -65,7 +64,7 @@ const AccountDetailScreen = (props) => {
           let caregiver = response.caregiver;
           setUser(caregiver);
           setUsername(caregiver.username);
-          let nameString = caregiver.first_name + ' ' + caregiver.last_name;
+          let nameString = caregiver.first_name;
           setName(nameString);
           setPhoneNumber(caregiver.contact_number);
         }
@@ -86,7 +85,11 @@ const AccountDetailScreen = (props) => {
           <USER_MALE {...iconStyle} />
         )}
         <View style={{flexDirection: 'row', margin: '2%'}}>
-          <Ant name="user" size={adjustSize(30)} color={Colors.lastLogValueColor} />
+          <Ant
+            name="user"
+            size={adjustSize(30)}
+            color={Colors.lastLogValueColor}
+          />
           <Text style={styles.sectionHeading}>Account Details</Text>
         </View>
         <Clickable
@@ -111,6 +114,7 @@ const AccountDetailScreen = (props) => {
           }}
           user={user}
         />
+        {/*
         <Clickable
           heading={'Phone Number'}
           content={phoneNumber}
@@ -123,6 +127,7 @@ const AccountDetailScreen = (props) => {
           }}
           user={user}
         />
+        */}
         <Clickable
           heading={'Change Password'}
           content={''}
@@ -146,7 +151,11 @@ const AccountDetailScreen = (props) => {
         {role === role_patient && (
           <>
             <View style={{flexDirection: 'row', margin: '2%'}}>
-              <Entypo name="link" size={adjustSize(30)} color={Colors.lastLogValueColor} />
+              <Entypo
+                name="link"
+                size={adjustSize(30)}
+                color={Colors.lastLogValueColor}
+              />
               <Text style={styles.sectionHeading}>External Account</Text>
             </View>
             <Clickable
