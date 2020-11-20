@@ -93,18 +93,18 @@ const PatientType = (props) => {
                 <Text style={styles.detail}>Type 2 Diabetes</Text>
               </View>
             )}
-            {patientTypes?.hyperglycemia_risk && (
+
+            {patientTypes?.blevel_risk === 0 ? (
               <View style={styles.typeContainer}>
                 <HYPER {...iconStyle} />
                 <Text style={styles.detail}>Hyperglycemia Risk</Text>
               </View>
-            )}
-            {patientTypes?.hypoglycemia_risk && (
+            ) : patientTypes?.blevel_risk === 1 ? (
               <View style={styles.typeContainer}>
-                <HYPO {...iconStyle} />
+                <HYPER {...iconStyle} />
                 <Text style={styles.detail}>Hypoglycemia Risk</Text>
               </View>
-            )}
+            ) : null}
             {patientTypes?.newly_started_insulin && (
               <View style={styles.typeContainer}>
                 <INSULIN {...iconStyle} />
@@ -117,14 +117,17 @@ const PatientType = (props) => {
                 <Text style={styles.detail}>Pregnancy</Text>
               </View>
             )}
-            {patientTypes?.steroid && (
+            {patientTypes?.steroid === 0 ? (
               <View style={styles.typeContainer}>
                 <STEROID {...iconStyle} />
-                <Text style={styles.detail}>
-                  Steroid-Induced / Steriod with Chemo
-                </Text>
+                <Text style={styles.detail}>Steroid-Induced</Text>
               </View>
-            )}
+            ) : patientTypes?.steroid === 1 ? (
+              <View style={styles.typeContainer}>
+                <STEROID {...iconStyle} />
+                <Text style={styles.detail}>Steroid with Chemo</Text>
+              </View>
+            ) : null}
           </View>
         </Animated.View>
       )}
