@@ -1,5 +1,13 @@
 import React, {useState, useEffect} from 'react';
-import {View, StyleSheet, Text, Image, ScrollView} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Text,
+  Image,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native';
 
 import globalStyles from '../../styles/globalStyles';
 import {Colors} from '../../styles/colors';
@@ -90,68 +98,72 @@ const SecurityQns = (props) => {
         recover your password if you ever forget it.
       </Text>
 
-      <View style={{flex: 1}}>
-        <ScrollView
-          style={{
-            flexGrow: 1,
-            position: 'relative',
-          }}>
-          <SecurityQnDropdown
-            num={1}
-            selectedQn={security1Qn}
-            onSelectQn={filterQns}
-            list={list}
-            expand={expand1}
-            open={() => setExpand1(true)}
-            close={() => setExpand1(false)}
-            otherQn1={security2Qn}
-            otherQn2={security3Qn}
-          />
-          <TextInput
-            style={styles.answerInput}
-            placeholder={'Answer'}
-            placeholderTextColor={'#90949c'}
-            value={security1Ans}
-            onChangeText={setSecurity1Ans}
-          />
-          <SecurityQnDropdown
-            num={2}
-            selectedQn={security2Qn}
-            onSelectQn={filterQns}
-            list={list}
-            expand={expand2}
-            open={() => setExpand2(true)}
-            close={() => setExpand2(false)}
-            otherQn1={security1Qn}
-            otherQn2={security3Qn}
-          />
-          <TextInput
-            style={styles.answerInput}
-            placeholder={'Answer'}
-            placeholderTextColor={'#90949c'}
-            value={security2Ans}
-            onChangeText={setSecurity2Ans}
-          />
-          <SecurityQnDropdown
-            num={3}
-            selectedQn={security3Qn}
-            onSelectQn={filterQns}
-            list={list}
-            expand={expand3}
-            open={() => setExpand3(true)}
-            close={() => setExpand3(false)}
-            otherQn1={security1Qn}
-            otherQn2={security2Qn}
-          />
-          <TextInput
-            style={styles.answerInput}
-            placeholder={'Answer'}
-            placeholderTextColor={'#90949c'}
-            value={security3Ans}
-            onChangeText={setSecurity3Ans}
-          />
-        </ScrollView>
-      </View>
+      <KeyboardAvoidingView
+        style={{flex: 1}}
+        behavior={Platform.OS === 'ios' ? 'padding' : null}>
+        <View style={{flex: 1}}>
+          <ScrollView
+            style={{
+              flexGrow: 1,
+              position: 'relative',
+            }}>
+            <SecurityQnDropdown
+              num={1}
+              selectedQn={security1Qn}
+              onSelectQn={filterQns}
+              list={list}
+              expand={expand1}
+              open={() => setExpand1(true)}
+              close={() => setExpand1(false)}
+              otherQn1={security2Qn}
+              otherQn2={security3Qn}
+            />
+            <TextInput
+              style={styles.answerInput}
+              placeholder={'Answer'}
+              placeholderTextColor={'#90949c'}
+              value={security1Ans}
+              onChangeText={setSecurity1Ans}
+            />
+            <SecurityQnDropdown
+              num={2}
+              selectedQn={security2Qn}
+              onSelectQn={filterQns}
+              list={list}
+              expand={expand2}
+              open={() => setExpand2(true)}
+              close={() => setExpand2(false)}
+              otherQn1={security1Qn}
+              otherQn2={security3Qn}
+            />
+            <TextInput
+              style={styles.answerInput}
+              placeholder={'Answer'}
+              placeholderTextColor={'#90949c'}
+              value={security2Ans}
+              onChangeText={setSecurity2Ans}
+            />
+            <SecurityQnDropdown
+              num={3}
+              selectedQn={security3Qn}
+              onSelectQn={filterQns}
+              list={list}
+              expand={expand3}
+              open={() => setExpand3(true)}
+              close={() => setExpand3(false)}
+              otherQn1={security1Qn}
+              otherQn2={security2Qn}
+            />
+            <TextInput
+              style={styles.answerInput}
+              placeholder={'Answer'}
+              placeholderTextColor={'#90949c'}
+              value={security3Ans}
+              onChangeText={setSecurity3Ans}
+            />
+          </ScrollView>
+        </View>
+      </KeyboardAvoidingView>
 
       <View style={globalStyles.buttonContainer}>
         <TouchableOpacity

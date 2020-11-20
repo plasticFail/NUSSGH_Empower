@@ -1,5 +1,5 @@
 import Moment from 'moment';
-import {getDateRange, getDateObj} from './diaryFunctions';
+import {getDateRange, getDateObj, getDateArray} from './diaryFunctions';
 import {
   getPatientProfile,
   getCaregiverProfile,
@@ -219,6 +219,12 @@ const getAge = (date) => {
   return diff;
 };
 
+const get3DayB4NAfter = (selectedDate) => {
+  let startDate = Moment(selectedDate).subtract(3, 'days');
+  let endDate = Moment(selectedDate).add(3, 'days');
+  return getDateArray(startDate, endDate);
+};
+
 export {
   getGreetingFromHour,
   isEmpty,
@@ -267,4 +273,5 @@ export {
   role_patient,
   bin,
   text,
+  get3DayB4NAfter,
 };
