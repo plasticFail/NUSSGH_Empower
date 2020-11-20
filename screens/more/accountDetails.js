@@ -53,7 +53,7 @@ const AccountDetailScreen = (props) => {
           let data = response.patient;
           setUser(data);
           setUsername(data.username);
-          let nameString = data.first_name + ' ' + data.last_name;
+          let nameString = data.first_name;
           setName(nameString);
           setPhoneNumber(data.contact_number);
         }
@@ -136,7 +136,6 @@ const AccountDetailScreen = (props) => {
           openModal={() => setPasswordModalVisible(true)}
           closeModal={() => setPasswordModalVisible(false)}
         />
-
         {/*
         <Clickable
           heading="Medication Plan"
@@ -150,6 +149,14 @@ const AccountDetailScreen = (props) => {
 
         {role === role_patient && (
           <>
+            <Clickable
+              heading="Security Qns [Onboard]"
+              content=""
+              click={true}
+              openModal={() => props.navigation.navigate('SecurityQnSetUp')}
+              closeModal={() => {}}
+              modalVisible={false}
+            />
             <View style={{flexDirection: 'row', margin: '2%'}}>
               <Entypo
                 name="link"
@@ -159,7 +166,7 @@ const AccountDetailScreen = (props) => {
               <Text style={styles.sectionHeading}>External Account</Text>
             </View>
             <Clickable
-              heading="Setup fitibt"
+              heading="Setup Fitbit"
               content=""
               click={true}
               openModal={() => props.navigation.navigate('FitbitSetup')}
