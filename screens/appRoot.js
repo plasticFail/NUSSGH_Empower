@@ -27,9 +27,13 @@ import {role_patient, role_caregiver} from '../commonFunctions/common';
 import CaregiverRoot from './caregiverRoot';
 import LoadingScreen from '../components/account/initLoadingScreen';
 
-import {appRootUrl, availablePaths} from "../config/AppConfig";
-import {defaultRoute, handler} from "../components/notification/PushNotifHandler";
+import {appRootUrl, availablePaths} from '../config/AppConfig';
+import {
+  defaultRoute,
+  handler,
+} from '../components/notification/PushNotifHandler';
 import PushNotification from 'react-native-push-notification';
+import QnVerifcationScreen from './login/qnVerificationScreen';
 
 const Stack = createStackNavigator();
 
@@ -86,9 +90,11 @@ class AppRoot extends Component {
       }
     }
 
-      // Handle link from notification redirect
-      PushNotification.popInitialNotification(notif => handler.onNotification(notif));
-  }
+    // Handle link from notification redirect
+    PushNotification.popInitialNotification((notif) =>
+      handler.onNotification(notif),
+    );
+  };
 
   render() {
     const {user} = this.state;
@@ -159,6 +165,13 @@ class AppRoot extends Component {
                 <Stack.Screen
                   name="ForgetPassword"
                   component={ForgetPasswordScreen}
+                  options={{
+                    headerShown: false,
+                  }}
+                />
+                <Stack.Screen
+                  name="QnVerficationScreen"
+                  component={QnVerifcationScreen}
                   options={{
                     headerShown: false,
                   }}

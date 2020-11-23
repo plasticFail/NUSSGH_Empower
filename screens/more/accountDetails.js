@@ -146,17 +146,17 @@ const AccountDetailScreen = (props) => {
           modalVisible={false}
         />
         */}
+        <Clickable
+          heading="Security Qns [Onboard]"
+          content=""
+          click={true}
+          openModal={() => props.navigation.navigate('SecurityQnSetUp')}
+          closeModal={() => {}}
+          modalVisible={false}
+        />
 
         {role === role_patient && (
           <>
-            <Clickable
-              heading="Security Qns [Onboard]"
-              content=""
-              click={true}
-              openModal={() => props.navigation.navigate('SecurityQnSetUp')}
-              closeModal={() => {}}
-              modalVisible={false}
-            />
             <View style={{flexDirection: 'row', margin: '2%'}}>
               <Entypo
                 name="link"

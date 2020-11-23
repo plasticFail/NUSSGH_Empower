@@ -7,22 +7,18 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
+  Alert,
+  TextInput,
+  TouchableOpacity,
 } from 'react-native';
-
+//styles
 import globalStyles from '../../styles/globalStyles';
 import {Colors} from '../../styles/colors';
+//component
 import SecurityQnDropdown from '../../components/account/SecurityQnDropdown';
-import {TextInput, TouchableOpacity} from 'react-native-gesture-handler';
-import {getQuestions} from '../../netcalls/requestsSecurityQn';
+//function
+import {getQuestions, setSecurityQn} from '../../netcalls/requestsSecurityQn';
 import {isEmpty} from '../../commonFunctions/common';
-
-const securityList = [
-  "What is your favourite children's book?",
-  'What is your dream job?',
-  'What was your childhood nickname?',
-  'What was the model of your first car?',
-  'Who was your favourite singer or band in highschool',
-];
 
 const SecurityQns = (props) => {
   const [originalQnsList, setOriginalQnList] = useState([]);
@@ -97,7 +93,34 @@ const SecurityQns = (props) => {
 
   const submit = () => {
     if (enableNextButton()) {
-      console.log('submitting');
+      let obj = [
+        {
+          question_id: security1Qn._id,
+          answer: security1Ans,
+        },
+        {
+          question_id: security2Qn._id,
+          answer: security2Ans,
+        },
+        {
+          question_id: security3Qn._id,
+          answer: security3Ans,
+        },
+      ];
+      console.log('submitting ');
+      console.log(obj);
+
+      setSecurityQn(obj).then((rsp) => {
+        if (rsp === 200) {
+          Alert.alert('Security Questions Set Successfully!', '', [
+            {text: 'Got It', onPress: () => props.navigation.goBack()},
+          ]);
+        } else {
+          Alert.alert('Unexpected Error!', 'Please try again later', [
+            {text: 'Got It'},
+          ]);
+        }
+      });
     }
   };
   return (

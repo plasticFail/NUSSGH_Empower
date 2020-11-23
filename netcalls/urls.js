@@ -47,8 +47,9 @@ const verifyOTP_C = server + 'auth/caregiver/password-reset/verify-otp';
 const postNewPassword_C = server + 'auth/caregiver/password-reset/reset';
 
 const authSecurityQn = server + 'auth/security-questions';
+const authSecurityQnAns = server + 'auth/security-answers';
 const get_authSecurityQn = server + 'auth/security-questions/all';
-const verify_authSecurityQn = server + 'auth/security-questions/verify';
+const verify_authSecurityQn = server + 'auth/security-answers/verify';
 
 export {
   login,
@@ -96,4 +97,5 @@ export {
   authSecurityQn,
   get_authSecurityQn,
   verify_authSecurityQn,
+  authSecurityQnAns,
 };

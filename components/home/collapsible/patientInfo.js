@@ -64,6 +64,12 @@ const PatientInfo = (props) => {
           }}>
           <View style={{marginBottom: '2%'}}>
             <View style={styles.content}>
+              <Text style={styles.header}>Trial ID</Text>
+              <Text style={styles.detail}>
+                {patient?.trial_id.length === 0 ? '-' : patient?.trial_id}
+              </Text>
+            </View>
+            <View style={styles.content}>
               <Text style={styles.header}>Age</Text>
               <Text style={styles.detail}>
                 {isEmpty(patient) ? '-' : patient?.age}

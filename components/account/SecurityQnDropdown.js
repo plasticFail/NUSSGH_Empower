@@ -24,11 +24,11 @@ const SecurityQnDropdown = (props) => {
 
   useEffect(() => {
     if (num === 1) {
-      setTop('2%');
+      setTop('1%');
     } else if (num === 2) {
-      setTop('35%');
+      setTop('34%');
     } else if (num === 3) {
-      setTop('68%');
+      setTop('67%');
     }
   }, []);
 

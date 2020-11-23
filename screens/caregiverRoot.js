@@ -15,6 +15,7 @@ import {mapDispatchToProps, mapStateToProps} from '../redux/reduxMapping';
 import CaregiverDrawerNavigator from './drawerCaregiver';
 import AccountDetailScreen from './more/accountDetails';
 import DiaryScreen from './main/diary/diary';
+import SecurityQns from './onboarding/securityQns';
 
 Entypo.loadFont();
 
@@ -72,6 +73,12 @@ class CaregiverRoot extends Component {
                 options={{
                   headerShown: false,
                 }}
+              />
+              {/*Onboarding */}
+              <Stack.Screen
+                name="SecurityQnSetUp"
+                component={SecurityQns}
+                options={{headerShown: false}}
               />
             </>
           ) : (

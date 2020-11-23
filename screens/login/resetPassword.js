@@ -7,19 +7,25 @@ import {
   Dimensions,
   TouchableOpacity,
   TextInput,
+  KeyboardAvoidingView,
 } from 'react-native';
 import {resetPassword} from '../../netcalls/requestsPasswordReset';
-import LeftArrowBtn from '../../components/logs/leftArrowBtn';
 import globalStyles from '../../styles/globalStyles';
 import PasswordStrengthMeter from '../../components/passwordStrengthMeter';
 import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
+import loginStyles, {loginLogoStyle} from '../../styles/loginStyles';
 
+import Logo from '../../resources/images/Patient-Icons/SVG/icon-color-empower.svg';
+import {Colors} from '../../styles/colors';
 
 const ResetPasswordScreen = (props) => {
   const {token, selection} = props.route.params; //rememberundo
   const [pass1, setPass1] = useState('');
   const [pass2, setPass2] = useState('');
   const [strong, setStrong] = useState(false);
+
+  console.log(token);
+  console.log(selection);
 
   const setPassword = (password, score) => {
     setPass1(password);
@@ -52,58 +58,78 @@ const ResetPasswordScreen = (props) => {
   };
 
   const submitPassword = () => {
-    resetPassword(pass1, token, selection).then((response) => {
-      if (response) {
-        Alert.alert(
-          'Success',
-          'Password changed.',
-          [
-            {
-              text: 'Got It',
-              onPress: () => props.navigation.navigate('Login'),
-            },
-          ],
-          {cancelable: false},
-        );
-      }
-    });
+    if (showSubmit()) {
+      resetPassword(pass1, token, selection).then((response) => {
+        if (response) {
+          Alert.alert(
+            'Success',
+            'Password changed.',
+            [
+              {
+                text: 'Got It',
+                onPress: () => props.navigation.navigate('Login'),
+              },
+            ],
+            {cancelable: false},
+          );
+        }
+      });
+    } else {
+      Alert.alert(
+        'Please make sure passwords match and is of at least strength fair',
+        '',
+        [{text: 'Got It'}],
+      );
+    }
   };
 
   return (
-    <View style={globalStyles.editPageContainer}>
-      <View style={globalStyles.menuBarContainer}>
-        <LeftArrowBtn close={() => props.navigation.goBack()} />
-      </View>
-      <Text style={globalStyles.pageHeader}>Reset Password</Text>
-      <Text style={[globalStyles.pageSubDetails, {fontSize: 18}]}>
-        Set a password that is not easily guessable.
-      </Text>
-      <PasswordStrengthMeter setPassword={setPassword} />
-      <TextInput
-        style={globalStyles.editInputBox}
-        placeholder="Confirm New Password"
-        placeholderTextColor="#a1a3a0"
-        secureTextEntry={true}
-        onChangeText={setPass2}
-      />
-      <Text style={[globalStyles.alertText, {marginStart: '3%'}]}>
-        {checkInput()}
-      </Text>
-      <View style={{flex: 1}} />
-      <View style={globalStyles.buttonContainer}>
-        {showSubmit() ? (
+    <KeyboardAvoidingView
+      style={{flex: 1}}
+      behavior={Platform.OS === 'ios' ? 'padding' : null}>
+      <View style={loginStyles.container}>
+        <View style={{flex: 1}} />
+        <Logo {...loginLogoStyle} />
+        <Text style={loginStyles.headerText}>Change Password</Text>
+        <Text style={loginStyles.subText}>
+          Verification was a success, please enter the password that you wish to
+          change to:
+        </Text>
+        <View style={{marginTop: '10%'}}>
+          <PasswordStrengthMeter
+            setPassword={setPassword}
+            style={{...loginStyles.inputBox, ...{borderWidth: 0}}}
+            notLogined={true}
+            strengthContainerStyle={{
+              borderWidth: 1,
+              borderRadius: 20,
+              borderColor: 'white',
+            }}
+          />
+          <TextInput
+            style={loginStyles.inputBox}
+            placeholder="Confirm New Password"
+            placeholderTextColor={Colors.loginPlaceholder}
+            secureTextEntry={true}
+            onChangeText={setPass2}
+          />
           <TouchableOpacity
-            style={globalStyles.submitButtonStyle}
+            style={[
+              globalStyles.nextButtonStyle,
+              {backgroundColor: 'white', marginBottom: 0},
+            ]}
             onPress={submitPassword}>
             <Text style={globalStyles.actionButtonText}>Change Password</Text>
           </TouchableOpacity>
-        ) : (
-          <TouchableOpacity style={globalStyles.skipButtonStyle}>
-            <Text style={globalStyles.actionButtonText}>Change Password</Text>
-          </TouchableOpacity>
-        )}
+          <Text
+            style={loginStyles.clickableText}
+            onPress={() => props.navigation.navigate('Login')}>
+            Cancel
+          </Text>
+        </View>
+        <View style={{flex: 2}} />
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
