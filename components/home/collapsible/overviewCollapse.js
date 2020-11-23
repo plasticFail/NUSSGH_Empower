@@ -17,6 +17,7 @@ import {
 import FoodBlock from '../../diary/blocks/foodBlock';
 import MedBlock from '../../diary/blocks/medBlock';
 import WeightBlock from '../../diary/blocks/weightBlock';
+import {scaleFont} from '../../../commonFunctions/scaleFunction';
 
 const OverviewCollapse = (props) => {
   const {bgl, bgLogs, bgPass, bgMiss, dateString, lastBg} = props;
@@ -212,29 +213,19 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontFamily: 'SFProDisplay-Bold',
-    fontSize: 18,
+    fontSize: scaleFont(15),
     marginStart: '3%',
   },
-  greetingText: {
-    color: '#005c30',
-    fontSize: 18,
-    fontFamily: 'SFProDisplay-Bold',
-    marginStart: '5%',
-  },
-  taskText: {
-    fontFamily: 'SFProDisplay-Regular',
-    color: 'white',
-    marginStart: '5%',
-    fontSize: 18,
-  },
+
   metricText: {
     fontFamily: 'SFProDisplay-Bold',
     color: '#7d7d7d',
+    fontSize: scaleFont(12),
   },
   measuredText: {
     fontFamily: 'SFProDisplay-Bold',
     color: '#000',
-    fontSize: 18,
+    fontSize: scaleFont(15),
   },
   row: {
     borderBottomWidth: 1,

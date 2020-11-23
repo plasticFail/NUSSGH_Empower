@@ -8,6 +8,7 @@ import {
 } from '../../../commonFunctions/common';
 import {Colors} from '../../../styles/colors';
 import {getRole} from '../../../storage/asyncStorageFunctions';
+import {scaleFont} from '../../../commonFunctions/scaleFunction';
 
 const DailyCollapse = (props) => {
   const {uncompleteLogs, hour} = props;
@@ -126,12 +127,12 @@ const styles = StyleSheet.create({
   headerText: {
     fontFamily: 'SFProDisplay-Bold',
     color: 'white',
-    fontSize: 18,
+    fontSize: scaleFont(15),
     marginStart: '3%',
   },
   greetingText: {
     color: '#005c30',
-    fontSize: 18,
+    fontSize: scaleFont(15),
     fontFamily: 'SFProDisplay-Bold',
     marginStart: '5%',
     marginTop: '2%',
@@ -141,6 +142,6 @@ const styles = StyleSheet.create({
     color: 'white',
     marginStart: '5%',
     marginTop: '2%',
-    fontSize: 18,
+    fontSize: scaleFont(15),
   },
 });

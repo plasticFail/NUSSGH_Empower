@@ -48,7 +48,6 @@ import LoadingModal from '../../../components/loadingModal';
 // Functions
 import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
 
-
 const fixedDateTime = new Date();
 
 // AddLog view
@@ -350,7 +349,8 @@ class AddLogScreen extends Component {
               <ScrollView
                 style={logStyles.modalContainer}
                 contentContainerStyle={{paddingBottom: '15%'}}>
-                <View style={[globalStyles.menuBarContainer, {paddingLeft: '4%'}]}>
+                <View
+                  style={[globalStyles.menuBarContainer, {paddingLeft: '4%'}]}>
                   <CrossBtn close={this.closeModal} />
                 </View>
                 <View style={[logStyles.bodyPadding, {flex: 1}]}>

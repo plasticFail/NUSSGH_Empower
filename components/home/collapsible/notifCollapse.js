@@ -11,6 +11,7 @@ import {
   eveningObj,
 } from '../../../commonFunctions/common';
 import {getLogIncompleteText} from '../../../commonFunctions/notifFunction';
+import {scaleFont} from '../../../commonFunctions/scaleFunction';
 
 const NotifCollapse = (props) => {
   const {hour, morningNotDone, afternoonNotDone} = props;
@@ -131,7 +132,7 @@ const styles = StyleSheet.create({
   headerText: {
     fontFamily: 'SFProDisplay-Bold',
     color: 'white',
-    fontSize: 18,
+    fontSize: scaleFont(15),
     marginStart: '3%',
   },
 });

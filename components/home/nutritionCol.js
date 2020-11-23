@@ -2,6 +2,7 @@ import React, {useEffect, useState, useRef} from 'react';
 import {View, StyleSheet, TouchableOpacity, Text, Animated} from 'react-native';
 import {renderNutrientPercent} from '../../commonFunctions/common';
 import ProgressBar from '../progressbar';
+import {scaleFont} from '../../commonFunctions/scaleFunction';
 
 const NutritionCol = (props) => {
   const {amount, nutrientType, header} = props;
@@ -35,13 +36,13 @@ export default NutritionCol;
 const styles = StyleSheet.create({
   foodHeader: {
     fontFamily: 'SFProDisplay-Bold',
-    fontSize: 17,
+    fontSize: scaleFont(15),
     marginBottom: '6%',
     opacity: 0.5,
   },
   foodDetail: {
     fontFamily: 'SFProDisplay-Bold',
-    fontSize: 17,
+    fontSize: scaleFont(15),
     color: 'black',
   },
 });

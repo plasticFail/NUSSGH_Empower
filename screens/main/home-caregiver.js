@@ -27,6 +27,8 @@ import {
   storeAuthorisedStatusCaregiver,
 } from '../../storage/asyncStorageFunctions';
 import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
+import AuthorisationCaregiver from '../../components/home/authorisationCaregiver';
+import {getPendingReq} from '../../netcalls/requestsMyCaregiver';
 
 const HomeScreenCaregiver = (props) => {
   const [caregiver, setCaregiver] = useState({});
@@ -35,6 +37,7 @@ const HomeScreenCaregiver = (props) => {
   const [uncompleteLogs, setUncompleteLogs] = useState([]);
 
   const [authorise, setAuthorise] = useState(false);
+  const [pendingReq, setPendingReq] = useState({});
 
   //animation
   const slideRightAnimation = useRef(new Animated.Value(0)).current;
@@ -86,6 +89,14 @@ const HomeScreenCaregiver = (props) => {
     if (data?.patient === null) {
       await storeAuthorisedStatusCaregiver(false);
       setAuthorise(false);
+      //check if there is any pending req
+      let obj = await getPendingReq();
+      if (obj?.status === 200) {
+        setPendingReq(obj?.response);
+      } else {
+        setPendingReq({});
+        setTimeout(initCaregiver, 5000);
+      }
     } else {
       setPatient(data?.patient);
       await storeAuthorisedStatusCaregiver(true);
@@ -94,7 +105,8 @@ const HomeScreenCaregiver = (props) => {
   };
 
   const toDoAfterOTP = () => {
-    setAuthorise(true);
+    console.log('reininting caregiver check');
+    initCaregiver().then(() => {});
   };
 
   return (
@@ -123,19 +135,26 @@ const HomeScreenCaregiver = (props) => {
           />
 
           <View style={{backgroundColor: 'transparent'}}>
-            <>
-              <AssignedPatientCollapse
-                patient={patient}
-                setPatient={setPatient}
+            {authorise ? (
+              <>
+                <AssignedPatientCollapse
+                  patient={patient}
+                  setPatient={setPatient}
+                />
+                <DailyCollapse
+                  patient={patient}
+                  uncompleteLogs={uncompleteLogs}
+                  hour={getGreetingFromHour(currHour)}
+                />
+                <PatientType patient={patient} />
+                <PatientInfo patient={patient} />
+              </>
+            ) : (
+              <AuthorisationCaregiver
+                toDoAfterOTP={toDoAfterOTP}
+                pendingReq={pendingReq}
               />
-              <DailyCollapse
-                patient={patient}
-                uncompleteLogs={uncompleteLogs}
-                hour={getGreetingFromHour(currHour)}
-              />
-              <PatientType patient={patient} />
-              <PatientInfo patient={patient} />
-            </>
+            )}
           </View>
 
           {/* Diary overview of weight, blood glucose, food, medication and physical activity */}

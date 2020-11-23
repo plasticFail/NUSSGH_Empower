@@ -55,9 +55,9 @@ const styles = StyleSheet.create({
   },
   container: {
     backgroundColor: 'white',
-    paddingTop: '5%',
-    paddingBottom: '5%',
     borderRadius: 9,
-    marginEnd: '6%',
+    margin: '3%',
+    paddingTop: '3%',
+    paddingBottom: '3%',
   },
 });

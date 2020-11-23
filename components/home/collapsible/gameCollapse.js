@@ -3,6 +3,7 @@ import {View, StyleSheet, TouchableOpacity, Text, Animated} from 'react-native';
 
 import {Colors} from '../../../styles/colors';
 import {useNavigation} from '@react-navigation/native';
+import {scaleFont} from '../../../commonFunctions/scaleFunction';
 
 const GameCollapse = (props) => {
   const {points, chances, reward} = props;
@@ -102,19 +103,19 @@ const styles = StyleSheet.create({
   headerText: {
     fontFamily: 'SFProDisplay-Bold',
     color: '#3e3e43',
-    fontSize: 18,
+    fontSize: scaleFont(15),
     marginStart: '3%',
     opacity: 0.5,
   },
   paramText: {
     fontFamily: 'SFProDisplay-Bold',
     color: '#3c3c43',
-    fontSize: 17,
+    fontSize: scaleFont(14),
     opacity: 0.5,
   },
   valueText: {
     color: '#16A64F',
     fontFamily: 'SFProDisplay-Bold',
-    fontSize: 17,
+    fontSize: scaleFont(16),
   },
 });

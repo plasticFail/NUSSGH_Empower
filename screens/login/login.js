@@ -20,9 +20,7 @@ import {
   storeToken,
   storeRole,
 } from '../../storage/asyncStorageFunctions';
-import {
-  loginRequest,
-} from '../../netcalls/requestsAuth';
+import {loginRequest} from '../../netcalls/requestsAuth';
 import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
 //components
 import Loading from '../../components/loading';
@@ -30,6 +28,7 @@ import globalStyles from '../../styles/globalStyles';
 //svg
 import Logo from '../../resources/images/Patient-Icons/SVG/icon-color-empower.svg';
 import {role_patient, role_caregiver} from '../../commonFunctions/common';
+import {scaleFont} from '../../commonFunctions/scaleFunction';
 
 const tabs = [role_patient, role_caregiver];
 
@@ -201,7 +200,7 @@ const styles = StyleSheet.create({
     fontFamily: 'SFProDisplay-Regular',
   },
   bold: {
-    fontWeight: '800',
+    fontWeight: 'bold',
     color: 'white',
     fontFamily: 'SFProDisplay-Bold',
   },
