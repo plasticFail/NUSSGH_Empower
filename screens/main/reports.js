@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useRef, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -40,18 +40,11 @@ import {
 import {getPlan} from '../../netcalls/requestsMedPlan';
 import {ChartLegend} from '../../components/dashboard/reports/ChartLegend';
 import {ExportReportsModal} from '../../components/dashboard/reports/ExportReportsModal';
-import EvilIcon from 'react-native-vector-icons/EvilIcons';
-import {
-  barChartToolTipMessage,
-  lineChartToolTipMessage,
-  ReportHelpInfo,
-  ReportHelpModal,
-} from '../../components/dashboard/reports/ReportHelpInfo';
-import {headerHeight, statusBarHeight} from '../../styles/variables';
 import {replaceActivitySummary} from '../../commonFunctions/reportDataFormatter';
-import {appRootUrl} from '../../config/AppConfig';
-import InAppBrowser from 'react-native-inappbrowser-reborn';
 import {getEntryForDateRange, getEntry4Day} from '../../netcalls/requestsDiary';
+import ReportInfo from '../../components/dashboard/reports/reportInfo';
+import BgFilterDate from '../../components/dashboard/reports/bgFilterDate';
+import {getDateObj} from '../../commonFunctions/diaryFunctions';
 import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
 
 const EXPORT_BTN = require('../../resources/images/Patient-Icons/2x/icon-green-export-2x.png');
@@ -60,9 +53,6 @@ const BGL_ICON = require('../../resources/images/Patient-Icons/2x/icon-navy-bloo
 const FOOD_ICON = require('../../resources/images/Patient-Icons/2x/icon-navy-food-2x.png');
 const MED_ICON = require('../../resources/images/Patient-Icons/2x/icon-navy-med-2x.png');
 const WEIGHT_ICON = require('../../resources/images/Patient-Icons/2x/icon-navy-weight-2x.png');
-
-const LINECHART_HELP_GIF = require('../../resources/images/Report-Modal/img-report-modal-01.gif');
-const BARCHART_HELP_GIF = require('../../resources/images/Report-Modal/img-report-modal-02.gif');
 
 const iconProps = {
   width: adjustSize(30),
@@ -129,6 +119,11 @@ const ReportsScreen = (props) => {
   const [showInfo, setShowInfo] = React.useState(false);
   const [openExportModal, setOpenExportModal] = React.useState(false);
 
+  const [selectedDate, setSelectedDate] = useState(
+    Moment(new Date()).format('YYYY-MM-DD'),
+  );
+  const [bgFoodData, setBgFoodData] = useState({});
+
   const [fullDataset, setFullDataset] = React.useState({
     bglData: [],
     weightData: [],
@@ -137,14 +132,7 @@ const ReportsScreen = (props) => {
     medData: [],
     foodData: [],
   });
-  /*
-  const [bglData, setBglData] = React.useState([]);
-  const [foodIntakeData, setFoodIntakeData] = React.useState([]);
-  const [medConsumptionData, setMedConsumptionData] = React.useState([]);
-  const [medPlan, setMedPlan] = React.useState([]);
-  const [weightData, setWeightData] = React.useState([]);
-  const [activityData, setActivityData] = React.useState([]);
-   */
+
   const initialTab =
     props.route.params?.initialTab === undefined
       ? 0
@@ -178,14 +166,6 @@ const ReportsScreen = (props) => {
         init().then((d) => {
           setShowInfo(false);
           setFullDataset(d);
-          /*
-        setBglData(d.bglData);
-        setFoodIntakeData(d.foodData);
-        setWeightData(d.weightData);
-        setMedConsumptionData(d.medData);
-        setActivityData(d.activityData);
-        setMedPlan(d.medPlan);
-         */
         });
       }),
     ];
@@ -194,9 +174,10 @@ const ReportsScreen = (props) => {
         unSub();
       });
     };
-  }, [props.route.params, props.navigation]);
+  }, [props.route.params, props.navigation, selectedDate]);
 
   const init = async () => {
+    console.log('initing ');
     //load data
     const startDate = Moment(new Date()).subtract(28, 'days');
     const endDate = Moment(new Date()).add(1, 'day');
@@ -237,9 +218,8 @@ const ReportsScreen = (props) => {
       endDate.format('YYYY-MM-DD'),
     );
 
-    let today = Moment(new Date()).format('YYYY-MM-DD');
-    let data = await getEntry4Day(today);
-    const foodLogs = data?.[today]?.food?.logs;
+    let data = await getEntry4Day(selectedDate);
+    const foodLogs = data?.[selectedDate]?.food?.logs;
 
     return {
       foodData,
@@ -261,6 +241,27 @@ const ReportsScreen = (props) => {
     setShowInfo(!showInfo);
   };
 
+  //for bg-food
+  const onSelectFilterDate = async (value) => {
+    console.log('setting selected date in reports ' + value);
+    setSelectedDate(Moment(new Date(value)).format('YYYY/MM/DD'));
+
+    let bgData4Day = [];
+
+    for (var x of fullDataset.bglData) {
+      let d1 = Moment(getDateObj(x?.record_date)).format('YYYY-MM-DD');
+      if (d1 === value) {
+        bgData4Day.push(x);
+      }
+    }
+
+    let data = await getEntry4Day(value);
+    const foodLogs = data?.[value]?.food?.logs;
+
+    let obj = {bglData: bgData4Day, foodData: foodLogs};
+    setBgFoodData(obj);
+  };
+
   const tabName = tabs[tabIndex].name;
   const filterKey = timeFilterTabs[timeTabIndexFilter].name;
 
@@ -269,10 +270,16 @@ const ReportsScreen = (props) => {
       <View style={globalStyles.menuBarContainer}>
         <LeftArrowBtn close={() => props.navigation.navigate('Home')} />
         <TouchableOpacity onPress={() => setOpenExportModal(true)}>
-          <Image source={EXPORT_BTN} style={{width: adjustSize(30), height: adjustSize(30)}} />
+          <Image
+            source={EXPORT_BTN}
+            style={{width: adjustSize(30), height: adjustSize(30)}}
+          />
         </TouchableOpacity>
       </View>
-      <Text style={globalStyles.pageHeader}>Report</Text>
+      <View style={{flexDirection: 'row'}}>
+        <Text style={[globalStyles.pageHeader, {flex: 1}]}>Report</Text>
+        <ReportInfo closeModal={toggleInfoCallback} visible={showInfo} />
+      </View>
       <ReportsTabs
         style={{marginLeft: '4%', marginRight: '4%'}}
         currentTab={tabIndex}
@@ -294,8 +301,17 @@ const ReportsScreen = (props) => {
                 <Text style={[globalStyles.pageDetails, {color: 'grey'}]}>
                   Readings - mmol/L
                 </Text>
+                {filterKey === DAY_FILTER_KEY && (
+                  <BgFilterDate
+                    date={selectedDate}
+                    getSelectedDate={onSelectFilterDate}
+                  />
+                )}
                 <View
-                  style={[globalStyles.pageDetails, {flexDirection: 'row'}]}>
+                  style={[
+                    globalStyles.pageDetails,
+                    {flexDirection: 'row', marginTop: '2%'},
+                  ]}>
                   <ChartLegend
                     size={chartLegendSize}
                     legendName="Safe"
@@ -318,40 +334,55 @@ const ReportsScreen = (props) => {
                     textPaddingRight={adjustSize(20)}
                   />
                 </View>
-                <View
-                  key="bgl-help-info"
-                  style={{position: 'absolute', alignSelf: 'flex-end'}}>
-                  <ReportHelpModal
-                    image={
-                      <Image
-                        source={LINECHART_HELP_GIF}
-                        style={{width: '90%', height: adjustSize(300), alignSelf: 'center'}}
-                      />
+                {filterKey === DAY_FILTER_KEY ? (
+                  <LineChart
+                    data={
+                      bgFoodData.bglData === undefined
+                        ? fullDataset.bglData
+                        : bgFoodData.bglData
                     }
-                    showInfo={showInfo}
-                    type="line"
-                    toggleInfoCallback={toggleInfoCallback}
+                    key={'bgl-chart'}
+                    filterKey={filterKey}
+                    xExtractor={(d) => d.record_date}
+                    yExtractor={(d) => d.bg_reading}
+                    defaultMaxY={14}
+                    lowerBound={4}
+                    upperBound={12}
+                    outsideBoundaryColor="red"
+                    boundaryFill={boundaryFill}
+                    width={width}
+                    height={300}
+                    showFood={true}
+                    foodData={
+                      bgFoodData.foodData === undefined
+                        ? fullDataset.foodLogs
+                        : bgFoodData.foodData
+                    }
+                    selectedDate={selectedDate}
                   />
-                </View>
-                <LineChart
-                  data={fullDataset.bglData}
-                  key={'bgl-chart'}
-                  filterKey={filterKey}
-                  xExtractor={(d) => d.record_date}
-                  yExtractor={(d) => d.bg_reading}
-                  defaultMaxY={14}
-                  lowerBound={4}
-                  upperBound={12}
-                  outsideBoundaryColor="red"
-                  boundaryFill={boundaryFill}
-                  width={width}
-                  height={adjustSize(300)}
-                  showFood={true}
-                  foodData={fullDataset.foodLogs}
-                />
+                ) : (
+                  <LineChart
+                    data={fullDataset.bglData}
+                    key={'bgl-chart'}
+                    filterKey={filterKey}
+                    xExtractor={(d) => d.record_date}
+                    yExtractor={(d) => d.bg_reading}
+                    defaultMaxY={14}
+                    lowerBound={4}
+                    upperBound={12}
+                    outsideBoundaryColor="red"
+                    boundaryFill={boundaryFill}
+                    width={width}
+                    height={300}
+                  />
+                )}
               </View>
             ) : tabName === FOOD_INTAKE_KEY ? (
-              <View style={{marginTop: adjustSize(20), paddingBottom: adjustSize(50)}}>
+              <View
+                style={{
+                  marginTop: adjustSize(20),
+                  paddingBottom: adjustSize(50),
+                }}>
                 <Text style={globalStyles.pageDetails}>Food Intake</Text>
                 <Text style={[globalStyles.pageDetails, {color: 'grey'}]}>
                   Total Calories Consumed - kcal
@@ -364,21 +395,6 @@ const ReportsScreen = (props) => {
                     color={boundaryFill}
                     textPaddingLeft={adjustSize(5)}
                     textPaddingRight={adjustSize(20)}
-                  />
-                </View>
-                <View
-                  key="food-help-info"
-                  style={{position: 'absolute', alignSelf: 'flex-end'}}>
-                  <ReportHelpModal
-                    image={
-                      <Image
-                        source={BARCHART_HELP_GIF}
-                        style={{width: '90%', height: adjustSize(300), alignSelf: 'center'}}
-                      />
-                    }
-                    showInfo={showInfo}
-                    type="bar"
-                    toggleInfoCallback={toggleInfoCallback}
                   />
                 </View>
                 <BarChart
@@ -452,21 +468,6 @@ const ReportsScreen = (props) => {
                     textPaddingRight={20}
                   />
                 </View>
-                <View
-                  key="weight-help-info"
-                  style={{position: 'absolute', alignSelf: 'flex-end'}}>
-                  <ReportHelpModal
-                    image={
-                      <Image
-                        source={LINECHART_HELP_GIF}
-                        style={{width: '90%', height: adjustSize(300), alignSelf: 'center'}}
-                      />
-                    }
-                    showInfo={showInfo}
-                    type="line"
-                    toggleInfoCallback={toggleInfoCallback}
-                  />
-                </View>
                 <LineChart
                   data={fullDataset.weightData}
                   filterKey={filterKey}
@@ -480,7 +481,11 @@ const ReportsScreen = (props) => {
                 />
               </View>
             ) : tabName === ACTIVITY_KEY ? (
-              <View style={{marginTop: adjustSize(20), paddingBottom: adjustSize(50)}}>
+              <View
+                style={{
+                  marginTop: adjustSize(20),
+                  paddingBottom: adjustSize(50),
+                }}>
                 <Text style={globalStyles.pageDetails}>Activity</Text>
                 <Text
                   style={[
@@ -531,21 +536,6 @@ const ReportsScreen = (props) => {
                     color={boundaryFill}
                     textPaddingLeft={adjustSize(5)}
                     textPaddingRight={adjustSize(20)}
-                  />
-                </View>
-                <View
-                  key="activity-help-info"
-                  style={{position: 'absolute', alignSelf: 'flex-end'}}>
-                  <ReportHelpModal
-                    image={
-                      <Image
-                        source={BARCHART_HELP_GIF}
-                        style={{width: '90%', height: adjustSize(300), alignSelf: 'center'}}
-                      />
-                    }
-                    showInfo={showInfo}
-                    type="bar"
-                    toggleInfoCallback={toggleInfoCallback}
                   />
                 </View>
                 <BarChart

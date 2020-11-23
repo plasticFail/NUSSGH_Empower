@@ -9,7 +9,6 @@ import DashboardScreen from './dashboard';
 //functions
 import {adjustSize} from '../commonFunctions/autoResizeFuncs';
 
-
 import ACCOUNT from '../resources/images/Patient-Icons/SVG/icon-white-sidemenu-account.svg';
 import DIARY from '../resources/images/Patient-Icons/SVG/icon-white-sidemenu-diary.svg';
 import MED from '../resources/images/Patient-Icons/SVG/icon-white-sidemenu-med.svg';
@@ -18,6 +17,7 @@ import APPT from '../resources/images/Patient-Icons/SVG/icon-white-sidemenu-appt
 import RESOURCES from '../resources/images/Patient-Icons/SVG/icon-white-sidemenu-resources.svg';
 import MY_CAREGIVER from '../resources/images/Patient-Icons/SVG/icon-white-sidemenu-mycaregiver.svg';
 import {ScrollView} from 'react-native-gesture-handler';
+import {scaleFont} from '../commonFunctions/scaleFunction';
 
 const iconStyle = {
   width: adjustSize(30),
@@ -72,11 +72,17 @@ const DrawerContent = (props) => {
         icon={() => <RESOURCES {...iconStyle} />}
         onPress={() => props.navigation.navigate('Resources')}
       />
-      <View style={{position: 'absolute', bottom: '10%'}}>
+      <View style={{position: 'absolute', bottom: '3%'}}>
         <DrawerItem
           label="Log Out"
           labelStyle={[styles.subText]}
-          icon={() => <Ionicon name="exit-outline" size={adjustSize(27)} color={'white'} />}
+          icon={() => (
+            <Ionicon
+              name="exit-outline"
+              size={adjustSize(27)}
+              color={'white'}
+            />
+          )}
           onPress={() => props.navigation.navigate('Log Out')}
         />
       </View>

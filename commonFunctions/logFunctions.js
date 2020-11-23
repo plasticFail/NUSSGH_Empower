@@ -57,6 +57,7 @@ import GREEN_BG from '../resources/images/Patient-Icons/SVG/icon-lightgreen-bloo
 import GREEN_FOOD from '../resources/images/Patient-Icons/SVG/icon-lightgreen-food.svg';
 import GREEN_MED from '../resources/images/Patient-Icons/SVG/icon-lightgreen-med.svg';
 import GREEN_WEIGHT from '../resources/images/Patient-Icons/SVG/icon-lightgreen-weight.svg';
+import {logIconHomeStyle, logIconAddLogStyle} from './scaleFunction';
 
 const bg_key = 'Blood Glucose Log';
 const food_key = 'Food Intake Log';
@@ -74,40 +75,40 @@ const logoStyle = {
 
 const renderLogIcon = (logType) => {
   if (logType === bg_key) {
-    return <DARKGREEN_BG {...logoStyle} />;
+    return <DARKGREEN_BG {...logIconHomeStyle} />;
   }
   if (logType === food_key) {
-    return <DARKGREEN_FOOD {...logoStyle} />;
+    return <DARKGREEN_FOOD {...logIconHomeStyle} />;
   }
   if (logType === med_key) {
-    return <DARKGREEN_MED {...logoStyle} />;
+    return <DARKGREEN_MED {...logIconHomeStyle} />;
   }
   if (logType === weight_key) {
-    return <DARKGREEN_WEIGHT {...logoStyle} />;
+    return <DARKGREEN_WEIGHT {...logIconHomeStyle} />;
   }
   if (logType === activity_key) {
-    return <DARKGREEN_ACTIVITY {...logoStyle} />;
+    return <DARKGREEN_ACTIVITY {...logIconHomeStyle} />;
   }
 };
 
 const renderLogIconNavy = (logType) => {
   if (logType === bg_key) {
-    return <NAVY_BG {...logoStyle} />;
+    return <NAVY_BG {...logIconAddLogStyle} />;
   }
   if (logType === food_key) {
-    return <NAVY_FOOD {...logoStyle} />;
+    return <NAVY_FOOD {...logIconAddLogStyle} />;
   }
   if (logType === med_key) {
-    return <NAVY_MED {...logoStyle} />;
+    return <NAVY_MED {...logIconAddLogStyle} />;
   }
   if (logType === weight_key) {
-    return <NAVY_WEIGHT {...logoStyle} />;
+    return <NAVY_WEIGHT {...logIconAddLogStyle} />;
   }
   if (logType === activity_key) {
-    return <NAVY_ACTIVITY {...logoStyle} />;
+    return <NAVY_ACTIVITY {...logIconAddLogStyle} />;
   }
   if (logType === step_key) {
-    return <NAVY_STEPS {...logoStyle} />;
+    return <NAVY_STEPS {...logIconAddLogStyle} />;
   }
 };
 

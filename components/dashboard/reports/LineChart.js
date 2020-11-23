@@ -49,6 +49,7 @@ import {
   filterAfternoon,
   filterEvening,
   getDateObj,
+  showEdit,
 } from '../../../commonFunctions/diaryFunctions';
 import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
 
@@ -128,7 +129,8 @@ export default class LineChart extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     if (
       prevProps.filterKey !== this.props.filterKey ||
-      prevProps.data !== this.props.data
+      prevProps.data !== this.props.data ||
+      prevProps.selectedDate !== this.props.selectedDate
     ) {
       this.scrollerKey.current += 1;
       this.updateComponent();
@@ -148,6 +150,7 @@ export default class LineChart extends React.Component {
       upperBound,
       lowerBound,
       boundaryFill,
+      selectedDate,
     } = this.props;
     const data = processData(
       filterKey,
@@ -155,13 +158,17 @@ export default class LineChart extends React.Component {
       xExtractor,
       yExtractor,
       'average',
+      this.props.selectedDate,
     );
     // d3 properties
     const maxY = Math.max(
       defaultMaxY,
       1.25 * Math.max(...data.map((d) => d.y)),
     );
-    const xAxisLabels = generateXAxisLabels(filterKey);
+    const xAxisLabels = generateXAxisLabels(
+      filterKey,
+      this.props?.selectedDate,
+    );
     const yAxisStartsFrom = Math.min(
       defaultMinY ? defaultMinY : 0,
       Math.round(0.75 * Math.min(...data.map((d) => d.y))),
@@ -173,6 +180,9 @@ export default class LineChart extends React.Component {
       yAxisStartsFrom,
       maxY,
     );
+
+    console.log('min X ' + minX);
+    console.log('max X ' + maxX);
 
     // d3 scale properties
     const scaleX = scaleTime()
@@ -198,6 +208,10 @@ export default class LineChart extends React.Component {
 
     // new field for tracking cursor
     const dataCoordinates = data.map((d) => [scaleX(d.x), scaleY(d.y)]);
+
+    console.log('mapping ----');
+    console.log(data);
+    console.log(dataCoordinates);
 
     return {
       scaleX,
@@ -234,6 +248,7 @@ export default class LineChart extends React.Component {
       dataCoordinates,
       data,
     } = this.state;
+    console.log('move cursor----');
     if (lineLength > 0) {
       const {x, y} = lineProperties.getPointAtLength(lineLength - value);
       const mapped = dataCoordinates.map((d) =>
@@ -318,6 +333,7 @@ export default class LineChart extends React.Component {
         this.props.xExtractor,
         this.props.yExtractor,
         'average',
+        this.props.selectedDate,
       );
       this.setState({startX: data[0]?.x});
       this.setState({showStart: true});
@@ -354,6 +370,7 @@ export default class LineChart extends React.Component {
       boundaryFill,
       showFood,
       foodData,
+      selectedDate,
     } = this.props;
     const {
       selectedIndex,
@@ -579,23 +596,32 @@ export default class LineChart extends React.Component {
             {showStart ? (
               <Line
                 stroke={Colors.leftArrowColor}
-                strokeDasharray="5, 5"
                 x1={startX != null ? scaleX(startX) : 0}
-                y1="10"
+                y1="0"
                 x2={startX != null ? scaleX(startX) : 0}
                 y2={height - padding}
+                strokeWidth={2}
               />
             ) : null}
             {showEnd ? (
               <Line
                 stroke={Colors.leftArrowColor}
-                strokeDasharray="5, 5"
                 x1={startX != null ? scaleX(endX) : 0}
-                y1="10"
+                y1="0"
                 x2={startX != null ? scaleX(endX) : 0}
                 y2={height - padding}
+                strokeWidth={2}
               />
             ) : null}
+            {showStart && showEnd && (
+              <Rect
+                x={scaleX(startX)}
+                y="0"
+                width={scaleX(endX) - scaleX(startX)}
+                height={height - padding - height * 0.0005}
+                fill={'rgba(22, 168, 80, 0.1)'}
+              />
+            )}
           </Svg>
           {
             <Animated.ScrollView
@@ -621,7 +647,7 @@ export default class LineChart extends React.Component {
           {showFood && filterKey === DAY_FILTER_KEY && (
             <View style={styles.foodTableContainer}>
               <Text style={styles.foodConsumedText}>
-                Food Consumed - {foodDate}
+                Food Consumed - {Moment(selectedDate).format('DD MMM YYYY')}
               </Text>
               {foodData?.length > 0 ? (
                 <>
@@ -659,6 +685,9 @@ export default class LineChart extends React.Component {
 }
 
 function LinePlot({data, scaleX, scaleY, lineColor, lineWidth}) {
+  console.log('in line plot');
+  console.log(data);
+
   if (data.length <= 1) {
     return null;
   } else {
@@ -679,11 +708,13 @@ function LinePlot({data, scaleX, scaleY, lineColor, lineWidth}) {
           stroke={lineColor}
           strokeWidth={lineWidth || 1}
           d={`M ${currX} ${currY} l ${dx} ${dy}`}
+          key={i}
         />
       );
       result.push(p);
       currentDataPoint = nextPoint;
     }
+    console.log(result);
     return result;
   }
 }
