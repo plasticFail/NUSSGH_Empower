@@ -9,23 +9,24 @@ import {
   TextInput,
   KeyboardAvoidingView,
 } from 'react-native';
-import {resetPassword} from '../../netcalls/requestsPasswordReset';
+//third party
+import LinearGradient from 'react-native-linear-gradient';
+//styles
 import globalStyles from '../../styles/globalStyles';
-import PasswordStrengthMeter from '../../components/passwordStrengthMeter';
-import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
 import loginStyles, {loginLogoStyle} from '../../styles/loginStyles';
-
-import Logo from '../../resources/images/Patient-Icons/SVG/icon-color-empower.svg';
 import {Colors} from '../../styles/colors';
+//component
+import PasswordStrengthMeter from '../../components/passwordStrengthMeter';
+import Logo from '../../resources/images/Patient-Icons/SVG/icon-color-empower.svg';
+//function
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
+import {resetPassword} from '../../netcalls/requestsPasswordReset';
 
 const ResetPasswordScreen = (props) => {
   const {token, selection} = props.route.params; //rememberundo
   const [pass1, setPass1] = useState('');
   const [pass2, setPass2] = useState('');
   const [strong, setStrong] = useState(false);
-
-  console.log(token);
-  console.log(selection);
 
   const setPassword = (password, score) => {
     setPass1(password);
@@ -87,7 +88,11 @@ const ResetPasswordScreen = (props) => {
     <KeyboardAvoidingView
       style={{flex: 1}}
       behavior={Platform.OS === 'ios' ? 'padding' : null}>
-      <View style={loginStyles.container}>
+      <LinearGradient
+        colors={Colors.loginColorArr}
+        useAngle={true}
+        angle={240}
+        style={loginStyles.container}>
         <View style={{flex: 1}} />
         <Logo {...loginLogoStyle} />
         <Text style={loginStyles.headerText}>Change Password</Text>
@@ -128,7 +133,7 @@ const ResetPasswordScreen = (props) => {
           </Text>
         </View>
         <View style={{flex: 2}} />
-      </View>
+      </LinearGradient>
     </KeyboardAvoidingView>
   );
 };

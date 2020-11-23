@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 //third party libs
 import {connect} from 'react-redux';
+import LinearGradient from 'react-native-linear-gradient';
 //functions
 import {mapStateToProps, mapDispatchToProps} from '../../redux/reduxMapping';
 import {
@@ -101,7 +102,11 @@ class Login extends Component {
       <KeyboardAvoidingView
         style={{flex: 1}}
         behavior={Platform.OS === 'ios' ? 'padding' : null}>
-        <View style={loginStyles.container}>
+        <LinearGradient
+          colors={Colors.loginColorArr}
+          useAngle={true}
+          angle={240}
+          style={loginStyles.container}>
           <View style={{flex: 1}} />
           <Logo {...loginLogoStyle} />
           <Text style={loginStyles.headerText}>Welcome</Text>
@@ -140,23 +145,25 @@ class Login extends Component {
             </Text>
             <Loading isLoading={this.state.isLoading} />
           </View>
-        </View>
-        <View
-          style={{
-            justifyContent: 'flex-end',
-            backgroundColor: '#0D8b43',
-            padding: '5%',
-            paddingBottom: '10%',
-          }}>
-          <Text style={styles.light}>
-            Having trouble?
-            <Text
-              style={styles.bold}
-              onPress={() => this.props.navigation.navigate('ContactUsScreen')}>
-              Contact Us Now!
+
+          <View
+            style={{
+              justifyContent: 'flex-end',
+              padding: '5%',
+              paddingBottom: '10%',
+            }}>
+            <Text style={styles.light}>
+              Having trouble?{' '}
+              <Text
+                style={styles.bold}
+                onPress={() =>
+                  this.props.navigation.navigate('ContactUsScreen')
+                }>
+                Contact Us Now!
+              </Text>
             </Text>
-          </Text>
-        </View>
+          </View>
+        </LinearGradient>
       </KeyboardAvoidingView>
     );
   }

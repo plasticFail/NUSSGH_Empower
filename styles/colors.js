@@ -27,4 +27,5 @@ export const Colors = {
   gameTab: '#e1e7ed',
   patientType: '#73ca93',
   loginPlaceholder: '#89b680',
+  loginColorArr: ['#16A950', '#13a04c', '#0c8742', '#016031'],
 };

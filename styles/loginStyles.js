@@ -10,7 +10,7 @@ export const loginLogoStyle = {
 const loginStyles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0D8b43',
+    // backgroundColor: '#0D8b43',
     paddingStart: '6%',
     paddingEnd: '6%',
     justifyContent: 'center',

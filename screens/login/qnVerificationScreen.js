@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 //third party lib
 import Modal from 'react-native-modal';
+import LinearGradient from 'react-native-linear-gradient';
 //styles
 import globalStyles from '../../styles/globalStyles';
 import loginStyles, {loginLogoStyle} from '../../styles/loginStyles';
@@ -83,6 +84,7 @@ function QnVerifcationScreen(props) {
       } else if (rsp.status === 200) {
         props.navigation.navigate('ResetPasswordScreen', {
           token: rsp?.token,
+          selection: rsp?.role,
         });
       } else {
         Alert.alert('Unexpected Error!', 'Please try again later', [
@@ -96,7 +98,11 @@ function QnVerifcationScreen(props) {
     <KeyboardAvoidingView
       style={{flex: 1}}
       behavior={Platform.OS === 'ios' ? 'padding' : null}>
-      <View style={loginStyles.container}>
+      <LinearGradient
+        colors={Colors.loginColorArr}
+        useAngle={true}
+        angle={240}
+        style={loginStyles.container}>
         <View style={{flex: 1}} />
         <Logo {...loginLogoStyle} />
         <Text style={loginStyles.headerText}>Verification</Text>
@@ -144,7 +150,7 @@ function QnVerifcationScreen(props) {
           </Text>
         </View>
         <View style={{flex: 1}} />
-      </View>
+      </LinearGradient>
 
       <TriesModal
         visible={showChance}
@@ -175,7 +181,7 @@ class TriesModal extends React.Component {
                 Incorrect Answer
               </Text>
               <Text style={[styles.text, {margin: '3%'}]}>
-                You have {chance} tries left
+                You have {chance} trie(s) left
               </Text>
             </>
           ) : (

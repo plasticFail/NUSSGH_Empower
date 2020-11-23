@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 //third party lib
 import Icon from 'react-native-vector-icons/FontAwesome';
+import LinearGradient from 'react-native-linear-gradient';
 //styles
 import globalStyles from '../../styles/globalStyles';
 import loginStyles, {loginLogoStyle} from '../../styles/loginStyles';
@@ -25,7 +26,11 @@ function ForgetPasswordScreen({navigation}) {
 
   const retrieveQns = () => {
     if (username.length != 0) {
-      getSecurityQnByUsername(username).then((rsp) => {
+      let string =
+        String(username).substr(0, 1).toLowerCase() +
+        String(username).substr(1, username.length);
+
+      getSecurityQnByUsername(string).then((rsp) => {
         let status = rsp.status;
         if (status === 200) {
           navigation.navigate('QnVerficationScreen', {
@@ -49,7 +54,11 @@ function ForgetPasswordScreen({navigation}) {
     <KeyboardAvoidingView
       style={{flex: 1}}
       behavior={Platform.OS === 'ios' ? 'padding' : null}>
-      <View style={loginStyles.container}>
+      <LinearGradient
+        colors={Colors.loginColorArr}
+        useAngle={true}
+        angle={240}
+        style={loginStyles.container}>
         <View style={{flex: 1}} />
         <Logo {...loginLogoStyle} />
         <Text style={loginStyles.headerText}>Forget Password</Text>
@@ -79,7 +88,7 @@ function ForgetPasswordScreen({navigation}) {
             Cancel
           </Text>
         </View>
-      </View>
+      </LinearGradient>
     </KeyboardAvoidingView>
   );
 }

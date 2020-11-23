@@ -76,7 +76,7 @@ const verifySecurityAns = async (obj, username) => {
     });
     let status = response.status;
     let json = await response.json();
-    return {status: status, token: json?.token, type: json?.type};
+    return {status: status, token: json?.token, role: json?.role};
   } catch (error) {
     console.error(error);
   }

@@ -66,7 +66,7 @@ const PatientInfo = (props) => {
             <View style={styles.content}>
               <Text style={styles.header}>Trial ID</Text>
               <Text style={styles.detail}>
-                {patient?.trial_id.length === 0 ? '-' : patient?.trial_id}
+                {patient?.trial_id?.length === 0 ? '-' : patient?.trial_id}
               </Text>
             </View>
             <View style={styles.content}>
