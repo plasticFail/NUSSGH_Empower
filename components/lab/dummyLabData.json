@@ -8,7 +8,7 @@
           "title": "Insulin",
           "value": 20,
           "units": "uIU/mL",
-          "target": 20,
+          "target": 30,
           "comparator": "<="
         },
         {

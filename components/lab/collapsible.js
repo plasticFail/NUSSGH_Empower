@@ -5,12 +5,18 @@ import Feather from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
 
+const high = 'High';
+const low = 'Low';
+
 const Collapsible = (props) => {
   const {title, detailArr} = props;
   const [open, setOpen] = useState(false);
   const dropDownAnimation = useRef(new Animated.Value(1)).current;
   const [minHeight, setMinHeight] = useState(0);
   const [maxHeight, setMaxHeight] = useState(0);
+
+  const [showDetail, setShowDetail] = useState(false);
+  const [selectedItem, setSelectedItem] = useState({});
 
   const heightInterpolation = dropDownAnimation.interpolate({
     inputRange: [0, 1],
@@ -56,19 +62,28 @@ const Collapsible = (props) => {
             paddingBottom: '2%',
           }}>
           {detailArr?.map((item, index) => (
-            <View
-              style={[
-                styles.border,
-                {
-                  flexDirection: 'row',
-                  marginStart: '20%',
-                  padding: '3%',
-                  justifyContent: 'space-between',
-                },
-              ]}
-              key={index}>
+            <View style={[styles.border, styles.container]} key={index}>
               <Text style={styles.bold}>{item?.title}</Text>
-              {evaluateValue(item)}
+              {evaluateValue(item) === '' ? (
+                <Text style={styles.value}>
+                  {item?.value} {item?.units}
+                </Text>
+              ) : (
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
+                  <Text style={[styles.value, styles.redValue]}>
+                    {item?.value} {item?.units}
+                  </Text>
+                  <Ionicons
+                    name="alert-circle-outline"
+                    size={30}
+                    color={'#ff0844'}
+                  />
+                </View>
+              )}
             </View>
           ))}
         </Animated.View>
@@ -80,21 +95,16 @@ export default Collapsible;
 
 function evaluateValue(item) {
   if (item?.comparator === '<=') {
-    if (item?.value <= item?.target) {
-      return (
-        <Text style={styles.value}>
-          {item?.value} {item?.units}
-        </Text>
-      );
+    if (item?.value >= item?.target) {
+      return high;
     } else {
-      return (
-        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-          <Text style={[styles.value, styles.redValue]}>
-            {item?.value} {item?.units}
-          </Text>
-          <Ionicons name="alert-circle-outline" size={30} color={'#ff0844'} />
-        </View>
-      );
+      return '';
+    }
+  } else if (item?.comparator === '>=') {
+    if (item?.value <= item?.target) {
+      return low;
+    } else {
+      return '';
     }
   }
 }
@@ -111,6 +121,12 @@ const styles = StyleSheet.create({
     fontSize: adjustSize(20),
     opacity: 0.6,
     flex: 1,
+  },
+  container: {
+    flexDirection: 'row',
+    marginStart: '20%',
+    padding: '3%',
+    justifyContent: 'space-between',
   },
   bold: {
     fontFamily: 'SFProDisplay-Bold',
