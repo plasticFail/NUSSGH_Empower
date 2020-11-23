@@ -1,9 +1,8 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState} from 'react';
 import {
   View,
   StyleSheet,
   Text,
-  ScrollView,
   TouchableOpacity,
   Image,
 } from 'react-native';
@@ -14,6 +13,7 @@ import Ionicon from 'react-native-vector-icons/Ionicons';
 import GameCenterStyles from '../../../styles/gameCenterStyles';
 import {Colors} from '../../../styles/colors';
 import globalStyles from '../../../styles/globalStyles';
+import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
 
 const ReportInfo = (props) => {
   const {visible} = props;
@@ -115,7 +115,7 @@ const ReportInfo = (props) => {
           style={[
             {
               padding: '3%',
-              borderRadius: 10,
+              borderRadius: adjustSize(10),
               backgroundColor: currentStep === 0 ? '#fbfbfb' : 'white',
             },
           ]}>
@@ -136,7 +136,7 @@ const ReportInfo = (props) => {
               <Ionicon
                 key={index}
                 name="ellipse"
-                size={10}
+                size={adjustSize(10)}
                 style={{marginHorizontal: '1%'}}
                 color={StepDotColor(currentStep, index)}
               />
@@ -178,14 +178,14 @@ export default ReportInfo;
 const styles = StyleSheet.create({
   cursor: {
     backgroundColor: Colors.nextBtnColor,
-    width: 20,
-    height: 20,
-    borderRadius: 10,
+    width: adjustSize(20),
+    height: adjustSize(20),
+    borderRadius: adjustSize(10),
   },
 
   subText: {
     fontFamily: 'SFProDisplay-Regular',
-    fontSize: 18,
+    fontSize: adjustSize(18),
     textAlign: 'center',
     marginStart: '3%',
     marginEnd: '3%',
