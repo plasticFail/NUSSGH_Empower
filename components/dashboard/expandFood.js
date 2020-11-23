@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useRef, useState, useEffect} from 'react';
 import {
   View,
   StyleSheet,
@@ -20,7 +20,12 @@ const ExpandFood = (props) => {
   const [showBottom, setShowBottom] = useState(false);
   const [minHeight, setMinHeight] = useState(0);
   const [maxHeight, setMaxHeight] = useState(0);
+  const [calories, setCalories] = useState(0);
   const dropDownAnimation = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    getCalories();
+  }, [foodData]);
 
   const toggle = (visible) => {
     if (visible) {
@@ -57,6 +62,16 @@ const ExpandFood = (props) => {
     }
   };
 
+  const getCalories = () => {
+    let total = 0;
+    for (var x of foodData) {
+      for (var o of x?.foodItems) {
+        total += Number(o?.nutrients?.energy?.amount) * Number(o.quantity);
+      }
+    }
+    setCalories(Math.trunc(total));
+  };
+
   return (
     <View onLayout={(event) => setMaxHeight(event.nativeEvent.layout.height)}>
       <View
@@ -82,6 +97,14 @@ const ExpandFood = (props) => {
               clickPeriod && {color: Colors.leftArrowColor},
             ]}>
             {period}
+          </Text>
+          <Text
+            style={[
+              styles.periodText,
+              clickPeriod && {color: Colors.leftArrowColor},
+            ]}>
+            {'  -  '}
+            {calories} kCal
           </Text>
         </TouchableOpacity>
 
@@ -115,9 +138,15 @@ const ExpandFood = (props) => {
                         source={{uri: inner.imgUrl.url}}
                         style={styles.foodImg}
                       />
-                      <Text style={styles.periodText}>
-                        {inner['food-name']}
-                      </Text>
+                      <View>
+                        <Text style={styles.periodText}>
+                          {inner['food-name']}
+                        </Text>
+                        <Text style={[styles.periodText, {opacity: 0.6}]}>
+                          {inner?.nutrients?.energy?.amount} kCal *{' '}
+                          {inner?.quantity} qty
+                        </Text>
+                      </View>
                     </View>
                   ))
                 : null}
@@ -144,7 +173,7 @@ const styles = StyleSheet.create({
   periodText: {
     fontFamily: 'SFProDisplay-Regular',
     fontSize: adjustSize(17),
-    alignSelf: 'center',
+    alignSelf: 'flex-start',
   },
   foodImg: {
     height: adjustSize(80),

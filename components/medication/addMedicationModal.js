@@ -6,7 +6,7 @@ import Modal from 'react-native-modal';
 import {Colors} from '../../styles/colors';
 import logStyles from '../../styles/logStyles';
 import globalStyles from '../../styles/globalStyles';
-import {horizontalMargins, normalTextFontSize} from '../../styles/variables';
+import {horizontalMargins} from '../../styles/variables';
 //component
 import LeftArrowBtn from '../logs/leftArrowBtn';
 import SearchBarMed from './searchBarMed';
@@ -20,7 +20,6 @@ import {
   checkMedExistInArr,
   onboardEdit,
   getSelectedCount,
-  med_plan,
   med_planAdd,
   med_planEdit,
 } from '../../commonFunctions/medicationFunction';

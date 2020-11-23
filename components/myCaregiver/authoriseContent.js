@@ -2,6 +2,7 @@ import React, {useState, useEffect, useRef} from 'react';
 import {View, StyleSheet, Text} from 'react-native';
 //third party lib
 import globalStyles from '../../styles/globalStyles';
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
 
 const AuthoriseContent = (props) => {
   const {pinNum} = props;
@@ -44,13 +45,13 @@ export default AuthoriseContent;
 const styles = StyleSheet.create({
   pinNo: {
     fontFamily: 'SFProDisplay-Bold',
-    fontSize: 20,
+    fontSize: adjustSize(20),
   },
   acknowledgeText: {
     textAlign: 'center',
     margin: '6%',
     marginTop: '3%',
     opacity: 0.5,
-    fontSize: 15,
+    fontSize: adjustSize(15),
   },
 });
