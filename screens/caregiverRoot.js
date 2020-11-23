@@ -16,6 +16,7 @@ import CaregiverDrawerNavigator from './drawerCaregiver';
 import AccountDetailScreen from './more/accountDetails';
 import DiaryScreen from './main/diary/diary';
 import SecurityQns from './onboarding/securityQns';
+import LabResults from './more/labResults';
 
 Entypo.loadFont();
 
@@ -63,6 +64,13 @@ class CaregiverRoot extends Component {
               <Stack.Screen
                 name="Edit Account"
                 component={AccountDetailScreen}
+                options={{
+                  headerShown: false,
+                }}
+              />
+              <Stack.Screen
+                name="LabResults"
+                component={LabResults}
                 options={{
                   headerShown: false,
                 }}

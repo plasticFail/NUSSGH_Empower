@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View, ScrollView} from 'react-native';
 import {Colors} from '../styles/colors';
 import {createDrawerNavigator, DrawerItem} from '@react-navigation/drawer';
 //third party library
@@ -9,10 +9,9 @@ import CaregiverBottomTab from './caregiverDashboard';
 //functions
 import {adjustSize} from '../commonFunctions/autoResizeFuncs';
 
-
 import ACCOUNT from '../resources/images/Patient-Icons//SVG/icon-white-sidemenu-account.svg';
 import DIARY from '../resources/images/Patient-Icons//SVG/icon-white-sidemenu-diary.svg';
-import {ScrollView} from 'react-native-gesture-handler';
+import LAB from '../resources/images/Patient-Icons/SVG/icon-white-sidemenu-lab.svg';
 
 const iconStyle = {
   width: adjustSize(30),
@@ -30,6 +29,12 @@ const DrawerContent = (props) => {
         labelStyle={styles.subText}
         icon={() => <ACCOUNT {...iconStyle} />}
         onPress={() => props.navigation.navigate('Edit Account')}
+      />
+      <DrawerItem
+        label="Lab Results"
+        labelStyle={styles.subText}
+        icon={() => <LAB {...iconStyle} />}
+        onPress={() => props.navigation.navigate('LabResults')}
       />
       <DrawerItem
         label="Diary"
@@ -53,7 +58,7 @@ const CaregiverDrawerNavigator = (props) => {
   return (
     <Drawer.Navigator
       drawerType={'slide'}
-      drawerStyle={{backgroundColor: Colors.menuColor, width:'65%'}}
+      drawerStyle={{backgroundColor: Colors.menuColor, width: '65%'}}
       drawerContent={DrawerContent}>
       <Drawer.Screen name="Home" component={CaregiverBottomTab} />
     </Drawer.Navigator>

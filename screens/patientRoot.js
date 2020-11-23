@@ -24,6 +24,7 @@ import FitbitSetup from './onboarding/fitbit/FitbitSetup';
 import DrawerNavigator from './drawer';
 import MyCaregiverScreen from './more/myCaregiver';
 import SecurityQns from './onboarding/securityQns';
+import LabResults from './more/labResults';
 
 const Stack = createStackNavigator();
 
@@ -79,6 +80,13 @@ class PatientRoot extends Component {
           <Stack.Screen
             name="Edit Account"
             component={AccountDetailScreen}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="LabResults"
+            component={LabResults}
             options={{
               headerShown: false,
             }}
