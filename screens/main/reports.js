@@ -644,6 +644,7 @@ const styles = StyleSheet.create({
     padding: adjustSize(7),
   },
   selectedTimeFilterText: {
+    fontSize: adjustSize(13),
     fontWeight: 'bold',
     color: '#000',
   },
@@ -654,6 +655,7 @@ const styles = StyleSheet.create({
     padding: adjustSize(7),
   },
   normTimeFilterText: {
+    fontSize: adjustSize(13),
     color: '#000',
   },
 });

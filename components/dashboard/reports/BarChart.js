@@ -79,7 +79,8 @@ export default function BarChart(props) {
                                      key={xVal.toString()}
                                      fontSize={xAxisTextFontSize}
                                      textAnchor='middle'
-                                     y={height - padding + xAxisGapFromText} fill={axisTextLabelColour}>
+                                     y={height - padding + xAxisGapFromText} fill={axisTextLabelColour}
+                                     style={{fontSize: adjustSize(10)}}>
                                 {Moment(xVal).format(props.filterKey === DAY_FILTER_KEY ? "H:mm" : "DD/MM")}
                             </SvgText>
                         ))
@@ -89,7 +90,8 @@ export default function BarChart(props) {
                         showYAxis &&
                         yAxisLabels.map((y, index) => (
                             <SvgText x={paddingLeft - barWidth / 2 - axisMargin - yAxisGapFromText}
-                                     y={scaleY(y)} fill={axisTextLabelColour} textAnchor='middle'>
+                                     y={scaleY(y)} fill={axisTextLabelColour} textAnchor='middle'
+                                     style={{fontSize: adjustSize(10)}}>
                                 {formatY(y)}
                             </SvgText>
                         ))
@@ -160,7 +162,8 @@ export default function BarChart(props) {
                                          fontSize={barLabelFontSize}
                                          fontWeight='bold'
                                          y={scaleY(d.y) - barLabelHeight + barLabelTextYOffset} textAnchor='middle'
-                                         x={scaleX(d.x)} fill='#fff'>
+                                         x={scaleX(d.x)} fill='#fff'
+                                         style={{fontSize: adjustSize(14)}}>
                                     {formatY(d.y)}
                                 </SvgText>
                             </G>

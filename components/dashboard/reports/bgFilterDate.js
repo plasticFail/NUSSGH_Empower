@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from 'react';
 import {
-  View,
   Text,
   TouchableOpacity,
   StyleSheet,
@@ -9,6 +8,7 @@ import {
 import EvilIcon from 'react-native-vector-icons/EvilIcons';
 import {getDateRange} from '../../../commonFunctions/diaryFunctions';
 import Moment from 'moment';
+import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
 
 const BgFilterDate = (props) => {
   const {date} = props;
@@ -40,7 +40,7 @@ const BgFilterDate = (props) => {
           {' '}
           {Moment(new Date(date)).format('D MMM YYYY')}
         </Text>
-        <EvilIcon name="chevron-down" size={30} />
+        <EvilIcon name="chevron-down" size={adjustSize(30)} />
       </TouchableOpacity>
 
       {expand && (
@@ -49,7 +49,7 @@ const BgFilterDate = (props) => {
             style={[{flexDirection: 'row'}, styles.optionContainer]}
             onPress={() => setExpand(false)}>
             <Text style={[styles.dateText, {opacity: 0.5}]}>Please Select</Text>
-            <EvilIcon name="chevron-up" size={30} style={{opacity: 0.5}} />
+            <EvilIcon name="chevron-up" size={adjustSize(30)} style={{opacity: 0.5}} />
           </TouchableOpacity>
           {dateList.map((item, index) => (
             <TouchableOpacity
@@ -91,11 +91,11 @@ const styles = StyleSheet.create({
     paddingVertical: '1%',
     justifyContent: 'center',
     flexDirection: 'row',
-    borderRadius: 10,
+    borderRadius: adjustSize(10),
   },
   dateText: {
     fontFamily: 'SFProDisplay-Regular',
-    fontSize: 15,
+    fontSize: adjustSize(15),
   },
   expandContent: {
     position: 'absolute',
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
     right: '5%',
     paddingHorizontal: '3%',
     top: '3%',
-    borderRadius: 10,
+    borderRadius: adjustSize(10),
     borderWidth: 1,
     borderColor: '#e1e7ed',
     height: '50%',

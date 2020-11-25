@@ -484,7 +484,8 @@ export default class LineChart extends React.Component {
                     fill={axisTextLabelColour}
                     y={height - padding + xAxisGapFromText}
                     x={scaleX(x)}
-                    textAnchor="middle">
+                    textAnchor="middle"
+                    style={{fontSize: adjustSize(10)}}>
                     {Moment(x).format(
                       filterKey === DAY_FILTER_KEY ? 'H:mm' : 'DD/MM',
                     )}
@@ -500,7 +501,8 @@ export default class LineChart extends React.Component {
                     fill={axisTextLabelColour}
                     x={paddingLeft - axisMargin - yAxisGapFromText}
                     y={scaleY(y)}
-                    textAnchor="middle">
+                    textAnchor="middle"
+                    style={{fontSize: adjustSize(10)}}>
                     {y}
                   </SvgText>
                 ))

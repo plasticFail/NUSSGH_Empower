@@ -122,7 +122,8 @@ const EmptyLabels = ({ slices }) => {
                          fontSize={emptyLabelFontSize}
                          fontWeight='bold'
                          x={labelCentroid[0]}
-                         y={labelCentroid[1] + labelFontSize}>
+                         y={labelCentroid[1] + labelFontSize}
+                         style={{fontSize: adjustSize(10)}}>
                     0%
                 </SvgText>
             </G>
