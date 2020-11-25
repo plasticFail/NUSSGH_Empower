@@ -51,6 +51,10 @@ const authSecurityQnAns = server + 'auth/security-answers';
 const get_authSecurityQn = server + 'auth/security-questions/all';
 const verify_authSecurityQn = server + 'auth/security-answers/verify';
 
+const getLab = server + 'profile/lab-data';
+
+const getAppointment = server + 'profile/appointment';
+
 export {
   login,
   isTokenValid,
@@ -98,4 +102,6 @@ export {
   get_authSecurityQn,
   verify_authSecurityQn,
   authSecurityQnAns,
+  getLab,
+  getAppointment,
 };

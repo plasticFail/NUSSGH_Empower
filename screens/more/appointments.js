@@ -7,31 +7,39 @@ import PartialNFullCalendar from '../../components/partialNFullCalendar';
 //third party lib
 import Moment from 'moment';
 //function
-import {get3DayB4NAfter} from '../../commonFunctions/common';
+import {get3DayB4NAfter, convertDatestring} from '../../commonFunctions/common';
 import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
 import AppointmentContainer from '../../components/appointmentContainer';
-
-const appointments = [
-  {
-    date: '10/11/2020 ',
-    title: 'Chat with Dr. Andrew',
-    startTime: '12:00 PM',
-    endTime: '2:00 PM',
-    sessionId: 3,
-  },
-];
+import {getAppointments} from '../../netcalls/requestsAppointment';
+import {getDateObj} from '../../commonFunctions/diaryFunctions';
 
 const AppointmentScreen = (props) => {
   const today_date = Moment(new Date()).format('YYYY-MM-DD');
 
   const [dates, setDates] = useState([]);
   const [selectedDate, setSelectedDate] = useState(today_date); //to be used to get appointment*
+  const [appointments, setAppointments] = useState([]);
 
   useEffect(() => {
     props.navigation.addListener('focus', () => {
       setDates(get3DayB4NAfter(new Date(today_date)));
     });
   }, []);
+
+  useEffect(() => {
+    getAppointments().then((rsp) => {
+      if (rsp != null) {
+        let arr = [];
+        for (var x of rsp) {
+          let d = Moment(getDateObj(x?.start)).format('YYYY-MM-DD');
+          if (d === selectedDate) {
+            arr.push(x);
+          }
+        }
+        setAppointments(arr);
+      }
+    });
+  }, [selectedDate]);
 
   return (
     <View style={{...globalStyles.pageContainer, ...props.style}}>
@@ -54,10 +62,10 @@ const AppointmentScreen = (props) => {
         {appointments.map((item, index) => (
           <AppointmentContainer
             key={index}
-            date={item.date}
-            title={item.title}
-            startTime={item.startTime}
-            endTime={item.endTime}
+            date={item.start}
+            title={item.title + ' with ' + item?.physician}
+            startTime={Moment(getDateObj(item.start)).format('hh:mm a')}
+            endTime={Moment(getDateObj(item.end)).format('hh:mm a')}
             sessionId={item.sessionId}
             type={'chat'}
           />

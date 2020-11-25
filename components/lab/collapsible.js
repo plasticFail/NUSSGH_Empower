@@ -3,7 +3,10 @@ import {View, StyleSheet, Text, TouchableOpacity, Animated} from 'react-native';
 //third party lib
 import Feather from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import Modal from 'react-native-modal';
+//function
 import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
+import globalStyles from '../../styles/globalStyles';
 
 const high = 'High';
 const low = 'Low';
@@ -15,8 +18,8 @@ const Collapsible = (props) => {
   const [minHeight, setMinHeight] = useState(0);
   const [maxHeight, setMaxHeight] = useState(0);
 
-  const [showDetail, setShowDetail] = useState(false);
-  const [selectedItem, setSelectedItem] = useState({});
+  const [showModal, setShowModal] = useState(false);
+  const [modalContent, setModalContent] = useState({});
 
   const heightInterpolation = dropDownAnimation.interpolate({
     inputRange: [0, 1],
@@ -40,6 +43,12 @@ const Collapsible = (props) => {
     }
   };
 
+  const openAndSetModalContent = (finalValue, item) => {
+    item.results = finalValue;
+    setModalContent(item);
+    setShowModal(true);
+  };
+
   return (
     <View onLayout={(event) => setMaxHeight(event.nativeEvent.layout.height)}>
       <>
@@ -61,19 +70,25 @@ const Collapsible = (props) => {
             maxHeight: heightInterpolation,
             paddingBottom: '2%',
           }}>
-          {detailArr?.map((item, index) => (
-            <View style={[styles.border, styles.container]} key={index}>
-              <Text style={styles.bold}>{item?.title}</Text>
-              {evaluateValue(item) === '' ? (
+          {detailArr?.map((item, index) =>
+            evaluateValue(item) === '' ? (
+              <View style={[styles.border, styles.container]} key={index}>
+                <Text style={styles.bold}>{item?.title}</Text>
                 <Text style={styles.value}>
                   {item?.value} {item?.units}
                 </Text>
-              ) : (
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                  }}>
+              </View>
+            ) : (
+              <TouchableOpacity
+                style={[styles.border, styles.container]}
+                key={index}
+                onPress={() =>
+                  openAndSetModalContent(evaluateValue(item), item)
+                }>
+                <Text style={[styles.bold, {alignSelf: 'center'}]}>
+                  {item?.title}
+                </Text>
+                <View style={{flexDirection: 'row'}}>
                   <Text style={[styles.value, styles.redValue]}>
                     {item?.value} {item?.units}
                   </Text>
@@ -83,11 +98,16 @@ const Collapsible = (props) => {
                     color={'#ff0844'}
                   />
                 </View>
-              )}
-            </View>
-          ))}
+              </TouchableOpacity>
+            ),
+          )}
         </Animated.View>
       ) : null}
+      <MoreInfo
+        visible={showModal}
+        close={() => setShowModal(false)}
+        modalContent={modalContent}
+      />
     </View>
   );
 };
@@ -106,6 +126,41 @@ function evaluateValue(item) {
     } else {
       return '';
     }
+  }
+}
+
+class MoreInfo extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+  render() {
+    const {visible, close, modalContent} = this.props;
+    return (
+      <Modal
+        isVisible={visible}
+        onBackButtonPress={() => close()}
+        onBackdropPress={() => close()}>
+        <View style={styles.modalStyle}>
+          <Text style={styles.modalHeading}>{modalContent.title}</Text>
+          <Text style={styles.text}>
+            Your result {modalContent.value} {modalContent?.units} is{' '}
+            <Text style={[styles.bold, {color: '#ff0844'}]}>
+              {modalContent.results}
+            </Text>
+            , the reference range is{' '}
+            {modalContent?.comparator === '<=' ? 'more than' : 'less than '} or
+            equals to {modalContent?.target} {modalContent?.units}.
+          </Text>
+
+          <View style={{paddingBottom: '10%'}} />
+          <TouchableOpacity
+            onPress={() => close()}
+            style={[globalStyles.deleteButton, {marginBottom: '3%'}]}>
+            <Text style={globalStyles.deleteButtonText}>Close</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+    );
   }
 }
 
@@ -142,5 +197,20 @@ const styles = StyleSheet.create({
     opacity: 1,
     alignSelf: 'center',
     marginEnd: '2%',
+  },
+  modalStyle: {
+    backgroundColor: 'white',
+    padding: '3%',
+    borderRadius: 15,
+  },
+  modalHeading: {
+    fontSize: adjustSize(18),
+    fontFamily: 'SFProDisplay-Bold',
+  },
+  text: {
+    fontSize: adjustSize(18),
+    fontFamily: 'SFProDisplay-Regular',
+    marginTop: '3%',
+    marginBottom: '3%',
   },
 });

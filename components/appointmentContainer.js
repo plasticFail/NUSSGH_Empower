@@ -14,7 +14,7 @@ const AppointmentContainer = (props) => {
     <View style={styles.container}>
       <View style={{flexDirection: 'row'}}>
         <View style={styles.dateContainer}>
-          <Text style={styles.textBold}>
+          <Text style={[styles.textBold, {textAlign: 'center'}]}>
             {Moment(getDateObj(date)).format('DD MMM')}
           </Text>
         </View>
@@ -57,7 +57,6 @@ const styles = StyleSheet.create({
   textBold: {
     fontFamily: 'SFProDisplay-Bold',
     fontSize: adjustSize(18),
-    textAlign: 'center',
   },
   text: {
     fontFamily: 'SFProDisplay-Regular',

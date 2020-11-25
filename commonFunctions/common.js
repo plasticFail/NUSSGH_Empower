@@ -274,4 +274,5 @@ export {
   bin,
   text,
   get3DayB4NAfter,
+  convertDatestring,
 };

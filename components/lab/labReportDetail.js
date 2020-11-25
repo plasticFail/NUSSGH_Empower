@@ -16,7 +16,7 @@ const LabReportDetail = (props) => {
   const {visible, date, diabeticArr, lipidArr, cardiacArr} = props;
   const {close} = props;
 
-  console.log(diabeticArr);
+  console.log(lipidArr);
 
   return (
     <Modal
@@ -38,6 +38,7 @@ const LabReportDetail = (props) => {
         <Text style={globalStyles.pageDetails}>Medical Report</Text>
         <Collapsible title="Diabetic Profile" detailArr={diabeticArr} />
         <Collapsible title="Lipid Profile" detailArr={lipidArr} />
+        <Collapsible title="Cardiac Profile" detailArr={cardiacArr} />
       </View>
     </Modal>
   );

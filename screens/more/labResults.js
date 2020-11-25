@@ -12,21 +12,95 @@ import {getDateObj} from '../../commonFunctions/diaryFunctions';
 import dummyData from '../../components/lab/dummyLabData.json';
 import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
 import LabReportDetail from '../../components/lab/labReportDetail';
+import {getLabResults} from '../../netcalls/requestsLab';
 
 const LabResults = (props) => {
-  const [labResults, setLabResults] = useState(dummyData.data);
+  const [labResults, setLabResults] = useState([]);
   const [selected, setSelected] = useState({});
   const [openDetail, setOpenDetail] = useState(false);
+
+  useEffect(() => {
+    let dateS = moment(new Date()).format('YYYY-MM');
+    getMonthSelected(dateS);
+  }, []);
+
+  console.log(selected);
 
   const getMonthSelected = (value) => {
     console.log('month selected ' + value);
     //call api to get lab results.
-    setLabResults(dummyData.data);
+    getLabResults(value).then((rsp) => {
+      if (rsp != null) {
+        prepareData(rsp?.data);
+      }
+    });
   };
 
   const openResult = (obj) => {
     setSelected(obj);
     setOpenDetail(true);
+  };
+
+  const prepareData = (array) => {
+    let profilekeys = prepareProfile(array);
+    let datearr = prepareDateArr(array, profilekeys);
+    for (var x of datearr) {
+      let day = moment(getDateObj(x?.date)).format('DD MM YYYY');
+      for (var y of array) {
+        let day1 = moment(getDateObj(y?.date)).format('DD MM YYYY');
+        if (day === day1) {
+          let keys = Object.keys(y);
+          let profilekey = keys[0] === 'date' ? keys[1] : keys[0];
+          for (var z of profilekeys) {
+            if (y[String(z)] != null && z === profilekey) {
+              x[profilekey].push(y[String(z)][0]);
+            }
+          }
+        }
+      }
+    }
+    setLabResults(datearr);
+  };
+
+  const prepareDateArr = (data, profilekeys) => {
+    let arr = [];
+    for (var x of data) {
+      let obj = {
+        date: x?.date,
+        title: 'Medical Report (Dummy)',
+      };
+
+      //assuming all labs have the different types of profile*
+      for (var z of profilekeys) {
+        obj[String(z)] = [];
+      }
+      arr.push(obj);
+    }
+
+    //remove duplicates
+    const newArr = arr.filter(
+      (elem, index) =>
+        arr.findIndex(
+          (obj) =>
+            moment(obj?.date).format('DD MM YYYY') ===
+            moment(elem?.date).format('DD MM YYYY'),
+        ) === index,
+    );
+
+    return newArr;
+  };
+
+  //get profile keys
+  const prepareProfile = (data) => {
+    let keys = [];
+    for (var x of data) {
+      for (const key of Object.keys(x)) {
+        if (key != 'date' && !keys.includes(key)) {
+          keys.push(key);
+        }
+      }
+    }
+    return keys;
   };
 
   return (
@@ -53,8 +127,9 @@ const LabResults = (props) => {
       <LabReportDetail
         visible={openDetail}
         close={() => setOpenDetail(false)}
-        diabeticArr={selected?.diabeticProfile}
-        lipidArr={selected?.lipidProfile}
+        diabeticArr={selected?.diabetic_profile}
+        lipidArr={selected?.lipid_profile}
+        cardiacArr={selected?.cardiac_profile}
         date={selected?.date}
       />
     </View>
