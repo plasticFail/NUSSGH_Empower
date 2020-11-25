@@ -148,7 +148,7 @@ class MoreInfo extends React.Component {
               {modalContent.results}
             </Text>
             , the reference range is{' '}
-            {modalContent?.comparator === '<=' ? 'more than' : 'less than '} or
+            {modalContent?.comparator === '<=' ? 'less than' : 'more than '} or
             equals to {modalContent?.target} {modalContent?.units}.
           </Text>
 

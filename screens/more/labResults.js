@@ -41,13 +41,14 @@ const LabResults = (props) => {
     setOpenDetail(true);
   };
 
+  //mainly aim to prepare data similar to dummyLabData.json
   const prepareData = (array) => {
     let profilekeys = prepareProfile(array);
     let datearr = prepareDateArr(array, profilekeys);
     for (var x of datearr) {
-      let day = moment(getDateObj(x?.date)).format('DD MM YYYY');
+      let day = moment(getDateObj(x?.date)).format('DD/MM/YYYY');
       for (var y of array) {
-        let day1 = moment(getDateObj(y?.date)).format('DD MM YYYY');
+        let day1 = moment(getDateObj(y?.date)).format('DD/MM/YYYY');
         if (day === day1) {
           let keys = Object.keys(y);
           let profilekey = keys[0] === 'date' ? keys[1] : keys[0];
