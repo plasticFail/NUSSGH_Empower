@@ -23,7 +23,7 @@ import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
 import {resetPassword} from '../../netcalls/requestsPasswordReset';
 
 const ResetPasswordScreen = (props) => {
-  const {token, selection} = props.route.params; //rememberundo
+  const {token, selection} = props.route.params;
   const [pass1, setPass1] = useState('');
   const [pass2, setPass2] = useState('');
   const [strong, setStrong] = useState(false);
@@ -85,14 +85,14 @@ const ResetPasswordScreen = (props) => {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={{flex: 1}}
-      behavior={Platform.OS === 'ios' ? 'padding' : null}>
-      <LinearGradient
-        colors={Colors.loginColorArr}
-        useAngle={true}
-        angle={240}
-        style={loginStyles.container}>
+    <LinearGradient
+      colors={Colors.loginColorArr}
+      useAngle={true}
+      angle={240}
+      style={loginStyles.container}>
+      <KeyboardAvoidingView
+        style={{flex: 1}}
+        behavior={Platform.OS === 'ios' ? 'padding' : null}>
         <View style={{flex: 1}} />
         <Logo {...loginLogoStyle} />
         <Text style={loginStyles.headerText}>Change Password</Text>
@@ -133,8 +133,8 @@ const ResetPasswordScreen = (props) => {
           </Text>
         </View>
         <View style={{flex: 2}} />
-      </LinearGradient>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </LinearGradient>
   );
 };
 

@@ -35,7 +35,7 @@ function ForgetPasswordScreen({navigation}) {
         if (status === 200) {
           navigation.navigate('QnVerficationScreen', {
             qnList: rsp?.qnList,
-            username: username,
+            username: string,
           });
         } else {
           Alert.alert(
@@ -51,14 +51,14 @@ function ForgetPasswordScreen({navigation}) {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={{flex: 1}}
-      behavior={Platform.OS === 'ios' ? 'padding' : null}>
-      <LinearGradient
-        colors={Colors.loginColorArr}
-        useAngle={true}
-        angle={240}
-        style={loginStyles.container}>
+    <LinearGradient
+      colors={Colors.loginColorArr}
+      useAngle={true}
+      angle={240}
+      style={loginStyles.container}>
+      <KeyboardAvoidingView
+        style={{flex: 1}}
+        behavior={Platform.OS === 'ios' ? 'padding' : null}>
         <View style={{flex: 1}} />
         <Logo {...loginLogoStyle} />
         <Text style={loginStyles.headerText}>Forget Password</Text>
@@ -88,8 +88,8 @@ function ForgetPasswordScreen({navigation}) {
             Cancel
           </Text>
         </View>
-      </LinearGradient>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </LinearGradient>
   );
 }
 

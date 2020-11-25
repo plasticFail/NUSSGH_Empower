@@ -8,6 +8,7 @@ import LeftArrowBtn from '../../components/logs/leftArrowBtn';
 //third party lib
 import Ant from 'react-native-vector-icons/AntDesign';
 import Entypo from 'react-native-vector-icons/Entypo';
+import moment from 'moment';
 import {Colors} from '../../styles/colors';
 import {
   getPatientProfile,
@@ -19,6 +20,8 @@ import USER_FEMALE from '../../resources/images/Patient-Icons/SVG/user-female.sv
 import {getRole} from '../../storage/asyncStorageFunctions';
 import {role_patient} from '../../commonFunctions/common';
 import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
+import {getSecurityQnByUsername} from '../../netcalls/requestsSecurityQn';
+import {getDateObj} from '../../commonFunctions/diaryFunctions';
 
 const iconStyle = {
   height: adjustSize(200),
@@ -39,10 +42,23 @@ const AccountDetailScreen = (props) => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [user, setUser] = useState({});
   const [role, setRole] = useState('');
+  const [qns, setQns] = useState([]);
 
   useEffect(() => {
     init().then();
   }, []);
+
+  useEffect(() => {
+    props.navigation.addListener('focus', () => {
+      if (username.length != 0) {
+        getSecurityQnByUsername(username).then((rsp) => {
+          if (rsp.status === 200) {
+            setQns(rsp?.qnList);
+          }
+        });
+      }
+    });
+  }, [username]);
 
   const init = async () => {
     let role = await getRole();
@@ -136,6 +152,17 @@ const AccountDetailScreen = (props) => {
           openModal={() => setPasswordModalVisible(true)}
           closeModal={() => setPasswordModalVisible(false)}
         />
+
+        <Clickable
+          heading="Security Qns [Onboard]"
+          content=""
+          click={true}
+          openModal={() =>
+            props.navigation.navigate('SecurityQnSetUp', {type: 'add'})
+          }
+          closeModal={() => {}}
+          modalVisible={false}
+        />
         {/*
         <Clickable
           heading="Medication Plan"
@@ -147,10 +174,20 @@ const AccountDetailScreen = (props) => {
         />
         */}
         <Clickable
-          heading="Security Qns [Onboard]"
-          content=""
+          heading="Security Questions"
+          content={
+            qns.length != 0
+              ? 'Last Updated ' +
+                moment(getDateObj(qns[0]?.updated_at)).format('DD MMM YYYY')
+              : '-'
+          }
           click={true}
-          openModal={() => props.navigation.navigate('SecurityQnSetUp')}
+          openModal={() =>
+            props.navigation.navigate('SecurityQnSetUp', {
+              type: 'edit',
+              qns: qns,
+            })
+          }
           closeModal={() => {}}
           modalVisible={false}
         />

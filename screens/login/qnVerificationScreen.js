@@ -95,14 +95,14 @@ function QnVerifcationScreen(props) {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={{flex: 1}}
-      behavior={Platform.OS === 'ios' ? 'padding' : null}>
-      <LinearGradient
-        colors={Colors.loginColorArr}
-        useAngle={true}
-        angle={240}
-        style={loginStyles.container}>
+    <LinearGradient
+      colors={Colors.loginColorArr}
+      useAngle={true}
+      angle={240}
+      style={loginStyles.container}>
+      <KeyboardAvoidingView
+        style={{flex: 1}}
+        behavior={Platform.OS === 'ios' ? 'padding' : null}>
         <View style={{flex: 1}} />
         <Logo {...loginLogoStyle} />
         <Text style={loginStyles.headerText}>Verification</Text>
@@ -150,14 +150,14 @@ function QnVerifcationScreen(props) {
           </Text>
         </View>
         <View style={{flex: 1}} />
-      </LinearGradient>
+      </KeyboardAvoidingView>
 
       <TriesModal
         visible={showChance}
         chance={chance}
         close={() => setShowChance(false)}
       />
-    </KeyboardAvoidingView>
+    </LinearGradient>
   );
 }
 

@@ -16,11 +16,13 @@ import globalStyles from '../../styles/globalStyles';
 import {Colors} from '../../styles/colors';
 //component
 import SecurityQnDropdown from '../../components/account/SecurityQnDropdown';
+import LeftArrowBtn from '../../components/logs/leftArrowBtn';
 //function
 import {getQuestions, setSecurityQn} from '../../netcalls/requestsSecurityQn';
 import {isEmpty} from '../../commonFunctions/common';
 
 const SecurityQns = (props) => {
+  const [type, setType] = useState('');
   const [originalQnsList, setOriginalQnList] = useState([]);
   const [list, setList] = useState([]);
 
@@ -37,13 +39,23 @@ const SecurityQns = (props) => {
   const [security3Ans, setSecurity3Ans] = useState('');
 
   useEffect(() => {
+    setType(props.route?.params?.type);
     async function getList() {
       let list = await getQuestions();
       setOriginalQnList(list);
       setList(list);
     }
     getList();
-  }, []);
+    if (props.route?.params?.type === 'edit') {
+      console.log('come from editing page');
+      let qnlist = props?.route?.params?.qns;
+      if (qnlist != null) {
+        setSecurity1Qn(qnlist[0]);
+        setSecurity2Qn(qnlist[1]);
+        setSecurity3Qn(qnlist[2]);
+      }
+    }
+  }, [props.route?.params]);
 
   useEffect(() => {
     manageDropDownOpen();
@@ -124,9 +136,26 @@ const SecurityQns = (props) => {
     }
   };
   return (
-    <View style={styles.onboardingContainer}>
-      <Text style={[globalStyles.pageHeader, styles.stepText]}>Step 1</Text>
-      <Text style={globalStyles.pageDetails}>Set up Security Questions</Text>
+    <View
+      style={[
+        styles.onboardingContainer,
+        {paddingTop: type === 'edit' ? '0%' : '8%'},
+      ]}>
+      {type === 'edit' ? (
+        <View style={globalStyles.menuBarContainer}>
+          <LeftArrowBtn close={() => props.navigation.goBack()} />
+        </View>
+      ) : null}
+      <Text
+        style={[
+          globalStyles.pageHeader,
+          type === 'add' ? styles.stepText : null,
+        ]}>
+        {type === 'add' ? 'Step 1' : 'Edit'}
+      </Text>
+      <Text style={globalStyles.pageDetails}>
+        {type === 'add' ? 'Set Up Security Questions' : 'Security Questions'}
+      </Text>
       <Text style={[globalStyles.pageSubDetails, styles.stepContent]}>
         These security questions will be used to verify your identity and help
         recover your password if you ever forget it.
@@ -207,7 +236,9 @@ const SecurityQns = (props) => {
               ? globalStyles.nextButtonStyle
               : globalStyles.skipButtonStyle
           }>
-          <Text style={globalStyles.actionButtonText}>Next</Text>
+          <Text style={globalStyles.actionButtonText}>
+            {type === 'add' ? 'Next' : 'Save'}
+          </Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -218,7 +249,6 @@ export default SecurityQns;
 
 const styles = StyleSheet.create({
   onboardingContainer: {
-    paddingTop: '8%',
     backgroundColor: Colors.backgroundColor,
     flex: 1,
   },

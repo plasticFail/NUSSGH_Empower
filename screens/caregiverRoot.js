@@ -17,6 +17,7 @@ import AccountDetailScreen from './more/accountDetails';
 import DiaryScreen from './main/diary/diary';
 import SecurityQns from './onboarding/securityQns';
 import LabResults from './more/labResults';
+import AppointmentScreen from './more/appointments';
 
 Entypo.loadFont();
 
@@ -78,6 +79,13 @@ class CaregiverRoot extends Component {
               <Stack.Screen
                 name="Diary"
                 component={DiaryScreen}
+                options={{
+                  headerShown: false,
+                }}
+              />
+              <Stack.Screen
+                name="Appointment"
+                component={AppointmentScreen}
                 options={{
                   headerShown: false,
                 }}

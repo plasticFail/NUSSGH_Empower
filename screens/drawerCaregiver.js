@@ -12,6 +12,7 @@ import {adjustSize} from '../commonFunctions/autoResizeFuncs';
 import ACCOUNT from '../resources/images/Patient-Icons//SVG/icon-white-sidemenu-account.svg';
 import DIARY from '../resources/images/Patient-Icons//SVG/icon-white-sidemenu-diary.svg';
 import LAB from '../resources/images/Patient-Icons/SVG/icon-white-sidemenu-lab.svg';
+import APPT from '../resources/images/Patient-Icons/SVG/icon-white-sidemenu-appt.svg';
 
 const iconStyle = {
   width: adjustSize(30),
@@ -41,6 +42,12 @@ const DrawerContent = (props) => {
         labelStyle={styles.subText}
         icon={() => <DIARY {...iconStyle} />}
         onPress={() => props.navigation.navigate('Diary')}
+      />
+      <DrawerItem
+        label="Appointments"
+        labelStyle={styles.subText}
+        icon={() => <APPT {...iconStyle} />}
+        onPress={() => props.navigation.navigate('Appointment')}
       />
       <View style={{position: 'absolute', bottom: '10%'}}>
         <DrawerItem

@@ -60,7 +60,7 @@ const DrawerContent = (props) => {
         onPress={() => props.navigation.navigate('Goals')}
       />
       <DrawerItem
-        label="Appointment"
+        label="Appointments"
         labelStyle={styles.subText}
         icon={() => <APPT {...iconStyle} />}
         onPress={() => props.navigation.navigate('Appointment')}

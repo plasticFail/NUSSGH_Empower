@@ -18,9 +18,8 @@ const SecurityQnDropdown = (props) => {
         item?.content != otherQn1?.content &&
         item?.content != otherQn2?.content,
     );
-
     setOptionList(newFiltered);
-  }, [otherQn1, otherQn2, list]);
+  }, [otherQn1, otherQn2, list, selectedQn]);
 
   useEffect(() => {
     if (num === 1) {
@@ -58,7 +57,8 @@ const SecurityQnDropdown = (props) => {
                 <TouchableOpacity
                   key={index}
                   style={{
-                    backgroundColor: selectedQn === item ? '#aad326' : null,
+                    backgroundColor:
+                      selectedQn._id === item._id ? '#aad326' : null,
                   }}
                   onPress={() => {
                     onSelectQn(item, num);
