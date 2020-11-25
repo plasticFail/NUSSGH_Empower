@@ -37,7 +37,7 @@ const WordTab = props => {
                     }}
                     onPress={() => setTabCallback(index)}
                     key={tab.name}>
-                    <Text style={{color: currentTab === index ? "#aad326" : "#000", fontSize: 18}}>
+                    <Text style={{color: currentTab === index ? "#aad326" : "#000", fontSize: adjustSize(18)}}>
                         {tab.name}
                     </Text>
                 </TouchableOpacity>
