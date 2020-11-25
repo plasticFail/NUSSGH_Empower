@@ -288,7 +288,7 @@ const ReportsScreen = (props) => {
       <TimeFilterTab
         currentTab={timeTabIndexFilter}
         setTabCallback={setTimeTabIndexFilter}
-        style={{alignSelf: 'center', width: '50%', marginTop: '3.5%'}}
+        style={{alignSelf: 'center', width:'50%', marginTop: '3.5%'}}
       />
       <ScrollView
         style={{...styles.screen, ...props.style}}
@@ -639,7 +639,7 @@ const styles = StyleSheet.create({
   selectedTimeFilterTabContainer: {
     backgroundColor: Colors.nextBtnColor,
     borderRadius: adjustSize(7),
-    width: `${Math.round(adjustSize(100) / timeFilterTabs.length)}%`,
+    width: `${Math.round(100 / timeFilterTabs.length)}%`,
     alignItems: 'center',
     padding: adjustSize(7),
   },
@@ -649,7 +649,7 @@ const styles = StyleSheet.create({
   },
   normTimeFilterTabContainer: {
     borderRadius: adjustSize(5),
-    width: `${Math.round(adjustSize(100) / timeFilterTabs.length)}%`,
+    width: `${Math.round(100 / timeFilterTabs.length)}%`,
     alignItems: 'center',
     padding: adjustSize(7),
   },

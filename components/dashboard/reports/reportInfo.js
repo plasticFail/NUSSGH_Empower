@@ -104,7 +104,7 @@ const ReportInfo = (props) => {
   return (
     <>
       <TouchableOpacity onPress={() => closeModal()} style={{margin: '3%'}}>
-        <Icon name="info-outline" color={'#aad326'} size={35} />
+        <Icon name="info-outline" color={'#aad326'} size={adjustSize(35)} />
       </TouchableOpacity>
 
       <Modal
