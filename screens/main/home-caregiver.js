@@ -25,6 +25,7 @@ import PatientInfo from '../../components/home/collapsible/patientInfo';
 import {
   getAuthorisedStatusCaregiver,
   storeAuthorisedStatusCaregiver,
+  storePermissions,
 } from '../../storage/asyncStorageFunctions';
 import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
 import AuthorisationCaregiver from '../../components/home/authorisationCaregiver';
@@ -86,6 +87,7 @@ const HomeScreenCaregiver = (props) => {
   const initCaregiver = async () => {
     let data = await getCaregiverProfile();
     setCaregiver(data?.caregiver);
+    await storePermissions(data?.caregiver?.permissions);
 
     if (data?.patient === null) {
       await storeAuthorisedStatusCaregiver(false);
