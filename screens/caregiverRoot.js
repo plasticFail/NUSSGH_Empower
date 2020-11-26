@@ -15,7 +15,7 @@ import {mapDispatchToProps, mapStateToProps} from '../redux/reduxMapping';
 import CaregiverDrawerNavigator from './drawerCaregiver';
 import AccountDetailScreen from './more/accountDetails';
 import DiaryScreen from './main/diary/diary';
-import SecurityQns from './onboarding/securityQns';
+import SecurityQns from './more/securityQns';
 import LabResults from './more/labResults';
 import AppointmentScreen from './more/appointments';
 

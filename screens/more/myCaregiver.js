@@ -51,6 +51,7 @@ const MyCaregiverScreen = (props) => {
     if (rsp?._id != null) {
       setCaregiver(rsp);
       setPendingCaregiver({});
+      setPermissions(rsp?.permissions);
     } else {
       setCaregiver({});
     }

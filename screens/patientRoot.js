@@ -23,8 +23,9 @@ import AskAdd from './onboarding/medicationPlan/askAdd';
 import FitbitSetup from './onboarding/fitbit/FitbitSetup';
 import DrawerNavigator from './drawer';
 import MyCaregiverScreen from './more/myCaregiver';
-import SecurityQns from './onboarding/securityQns';
+import SecurityQns from './more/securityQns';
 import LabResults from './more/labResults';
+import OnboardingWizard from './onboarding/onboardingWizard';
 
 const Stack = createStackNavigator();
 
@@ -41,6 +42,7 @@ class PatientRoot extends Component {
   render() {
     return (
       <Stack.Navigator
+        //initialRouteName="OnboardingWizard"
         screenOptions={({route}) => ({
           headerTintColor: '#000',
           headerTitleStyle: {
@@ -62,6 +64,11 @@ class PatientRoot extends Component {
           />
           {/* Onboarding */}
           <Stack.Screen
+            name="OnboardingWizard"
+            component={OnboardingWizard}
+            options={{header: () => <View />}}
+          />
+          <Stack.Screen
             name="MedicationPlan"
             component={AskAdd}
             options={{header: () => <View />}}
@@ -69,11 +76,6 @@ class PatientRoot extends Component {
           <Stack.Screen
             name="FitbitSetup"
             component={FitbitSetup}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="SecurityQnSetUp"
-            component={SecurityQns}
             options={{headerShown: false}}
           />
           {/* Drawer Screen */}
@@ -160,6 +162,11 @@ class PatientRoot extends Component {
             options={{
               headerShown: false,
             }}
+          />
+          <Stack.Screen
+            name="SecurityQnSetUp"
+            component={SecurityQns}
+            options={{headerShown: false}}
           />
         </>
       </Stack.Navigator>
