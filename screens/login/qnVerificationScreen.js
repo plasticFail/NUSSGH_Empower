@@ -184,8 +184,9 @@ class TriesModal extends React.Component {
               <Text style={[styles.qnText, {color: 'black'}]}>
                 Incorrect Answer
               </Text>
+
               <Text style={[styles.text, {margin: '3%'}]}>
-                You have {chance} trie(s) left
+                You have {chance} {chance > 1 ? 'tries' : 'try'} left
               </Text>
             </>
           ) : (

@@ -5,6 +5,7 @@ import zxcvbn from 'zxcvbn';
 //styles
 import globalStyles from '../styles/globalStyles';
 import {adjustSize} from '../commonFunctions/autoResizeFuncs';
+import {Colors} from '../styles/colors';
 
 //using score 1 - 4, animate the respective bars to show strength
 export default class PasswordStrengthMeter extends Component {
