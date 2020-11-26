@@ -65,7 +65,7 @@ function NutritionPie(props) {
         <PieChart labelRadius={pieData.length > 1 ? 125 : -5}
               innerRadius={adjustSize(70)}
               outerRadius={adjustSize(100)}
-              style={{ height: props.height || 300, width: props.width || '100%' }}
+              style={{ height: props.height || adjustSize(300), width: props.width || '100%' }}
               data={pieData}>
             {   pieData.length > 1 ?
                 (<Labels />): (<EmptyLabels />)
@@ -115,7 +115,7 @@ const EmptyLabels = ({ slices }) => {
                 <Circle
                     cx={ labelCentroid[ 0 ] }
                     cy={ labelCentroid[ 1 ] }
-                    r={ 40 }
+                    r={ adjustSize(40) }
                     fill={ data.svg.fill }
                 />
                 <SvgText fill='#fff' textAnchor='middle'
