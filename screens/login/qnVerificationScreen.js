@@ -103,53 +103,57 @@ function QnVerifcationScreen(props) {
       <KeyboardAvoidingView
         style={{flex: 1}}
         behavior={Platform.OS === 'ios' ? 'padding' : null}>
-        <View style={{flex: 1}} />
-        <Logo {...loginLogoStyle} />
-        <Text style={loginStyles.headerText}>Verification</Text>
-        <Text style={loginStyles.subText}>
-          To help us verify your identity, please answer your security
-          questions:
-        </Text>
-        <View style={{marginTop: '10%'}}>
-          <Text style={styles.qnText}>{qn1?.content}</Text>
-          <TextInput
-            style={[loginStyles.inputBox, {width: '100%'}]}
-            placeholder="Answer"
-            onChangeText={setAns1}
-            placeholderTextColor={Colors.loginPlaceholder}
-            returnKeyType="done"
-          />
-          <Text style={styles.qnText}>{qn2?.content}</Text>
-          <TextInput
-            style={[loginStyles.inputBox, {width: '100%'}]}
-            placeholder="Answer"
-            onChangeText={setAns2}
-            placeholderTextColor={Colors.loginPlaceholder}
-            returnKeyType="done"
-          />
-          <Text style={styles.qnText}>{qn3?.content}</Text>
-          <TextInput
-            style={[loginStyles.inputBox, {width: '100%'}]}
-            placeholder="Answer"
-            onChangeText={setAns3}
-            placeholderTextColor={Colors.loginPlaceholder}
-            returnKeyType="done"
-          />
-          <TouchableOpacity
-            style={[
-              globalStyles.nextButtonStyle,
-              {backgroundColor: 'white', marginBottom: 0, width: '100%'},
-            ]}
-            onPress={submitAns}>
-            <Text style={globalStyles.actionButtonText}>Next</Text>
-          </TouchableOpacity>
-          <Text
-            style={loginStyles.clickableText}
-            onPress={() => props.navigation.goBack()}>
-            Back
-          </Text>
+        <View style={{flex: 1}}>
+          <View style={{flex: 1, justifyContent: 'flex-end'}}>
+            <View style={{flex: 1}} />
+            <Logo {...loginLogoStyle} />
+            <Text style={loginStyles.headerText}>Verification</Text>
+            <Text style={loginStyles.subText}>
+              To help us verify your identity, please answer your security
+              questions:
+            </Text>
+            <View style={{marginTop: '10%'}}>
+              <Text style={styles.qnText}>{qn1?.content}</Text>
+              <TextInput
+                style={[loginStyles.inputBox, {width: '100%'}]}
+                placeholder="Answer"
+                onChangeText={setAns1}
+                placeholderTextColor={Colors.loginPlaceholder}
+                returnKeyType="done"
+              />
+              <Text style={styles.qnText}>{qn2?.content}</Text>
+              <TextInput
+                style={[loginStyles.inputBox, {width: '100%'}]}
+                placeholder="Answer"
+                onChangeText={setAns2}
+                placeholderTextColor={Colors.loginPlaceholder}
+                returnKeyType="done"
+              />
+              <Text style={styles.qnText}>{qn3?.content}</Text>
+              <TextInput
+                style={[loginStyles.inputBox, {width: '100%'}]}
+                placeholder="Answer"
+                onChangeText={setAns3}
+                placeholderTextColor={Colors.loginPlaceholder}
+                returnKeyType="done"
+              />
+              <TouchableOpacity
+                style={[
+                  globalStyles.nextButtonStyle,
+                  {backgroundColor: 'white', marginBottom: 0, width: '100%'},
+                ]}
+                onPress={submitAns}>
+                <Text style={globalStyles.actionButtonText}>Next</Text>
+              </TouchableOpacity>
+              <Text
+                style={loginStyles.clickableText}
+                onPress={() => props.navigation.goBack()}>
+                Back
+              </Text>
+            </View>
+            <View style={{flex: 1}} />
+          </View>
         </View>
-        <View style={{flex: 1}} />
       </KeyboardAvoidingView>
 
       <TriesModal

@@ -111,20 +111,31 @@ const LabResults = (props) => {
       </View>
       <Text style={globalStyles.pageHeader}>Lab Results</Text>
       <MonthPicker getMonthSelected={getMonthSelected} />
-      {labResults.map((item, index) => (
-        <TouchableOpacity
-          style={styles.reportContainer}
-          key={index}
-          onPress={() => openResult(item)}>
-          <View style={{flex: 1}}>
-            <Text style={styles.text}>{item?.title}</Text>
-            <Text style={[styles.text, {opacity: 0.5}]}>
-              {moment(getDateObj(item?.date)).format('DD MMM YYYY')}
-            </Text>
-          </View>
-          <Feather name="chevron-right" size={30} color={'#8b8f9a'} />
-        </TouchableOpacity>
-      ))}
+      {labResults.length > 0 ? (
+        labResults.map((item, index) => (
+          <TouchableOpacity
+            style={styles.reportContainer}
+            key={index}
+            onPress={() => openResult(item)}>
+            <View style={{flex: 1}}>
+              <Text style={styles.text}>{item?.title}</Text>
+              <Text style={[styles.text, {opacity: 0.5}]}>
+                {moment(getDateObj(item?.date)).format('DD MMM YYYY')}
+              </Text>
+            </View>
+            <Feather name="chevron-right" size={30} color={'#8b8f9a'} />
+          </TouchableOpacity>
+        ))
+      ) : (
+        <Text
+          style={[
+            globalStyles.pageSubDetails,
+            {textAlign: 'center', marginTop: '3%'},
+          ]}>
+          No Lab Reports for the month
+        </Text>
+      )}
+
       <LabReportDetail
         visible={openDetail}
         close={() => setOpenDetail(false)}

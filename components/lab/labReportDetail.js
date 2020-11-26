@@ -16,8 +16,6 @@ const LabReportDetail = (props) => {
   const {visible, date, diabeticArr, lipidArr, cardiacArr} = props;
   const {close} = props;
 
-  console.log(lipidArr);
-
   return (
     <Modal
       isVisible={visible}

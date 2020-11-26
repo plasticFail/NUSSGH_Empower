@@ -72,6 +72,7 @@ const AccountDetailScreen = (props) => {
           let nameString = data.first_name;
           setName(nameString);
           setPhoneNumber(data.contact_number);
+          setSecurityQn(data.username);
         }
       });
     } else {
@@ -83,9 +84,18 @@ const AccountDetailScreen = (props) => {
           let nameString = caregiver.first_name;
           setName(nameString);
           setPhoneNumber(caregiver.contact_number);
+          setSecurityQn(caregiver.username);
         }
       });
     }
+  };
+
+  const setSecurityQn = (username) => {
+    getSecurityQnByUsername(username).then((rsp) => {
+      if (rsp.status === 200) {
+        setQns(rsp?.qnList);
+      }
+    });
   };
 
   return (

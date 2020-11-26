@@ -99,14 +99,14 @@ class Login extends Component {
 
   render() {
     return (
-      <KeyboardAvoidingView
-        style={{flex: 1}}
-        behavior={Platform.OS === 'ios' ? 'padding' : null}>
-        <LinearGradient
-          colors={Colors.loginColorArr}
-          useAngle={true}
-          angle={240}
-          style={loginStyles.container}>
+      <LinearGradient
+        colors={Colors.loginColorArr}
+        useAngle={true}
+        angle={240}
+        style={loginStyles.container}>
+        <KeyboardAvoidingView
+          style={{flex: 1}}
+          behavior={Platform.OS === 'ios' ? 'padding' : null}>
           <View style={{flex: 1}} />
           <Logo {...loginLogoStyle} />
           <Text style={loginStyles.headerText}>Welcome</Text>
@@ -145,26 +145,24 @@ class Login extends Component {
             </Text>
             <Loading isLoading={this.state.isLoading} />
           </View>
+        </KeyboardAvoidingView>
 
-          <View
-            style={{
-              justifyContent: 'flex-end',
-              padding: '5%',
-              paddingBottom: '10%',
-            }}>
-            <Text style={styles.light}>
-              Having trouble?{' '}
-              <Text
-                style={styles.bold}
-                onPress={() =>
-                  this.props.navigation.navigate('ContactUsScreen')
-                }>
-                Contact Us Now!
-              </Text>
+        <View
+          style={{
+            justifyContent: 'flex-end',
+            padding: '5%',
+            paddingBottom: '10%',
+          }}>
+          <Text style={styles.light}>
+            Having trouble?{' '}
+            <Text
+              style={styles.bold}
+              onPress={() => this.props.navigation.navigate('ContactUsScreen')}>
+              Contact Us Now!
             </Text>
-          </View>
-        </LinearGradient>
-      </KeyboardAvoidingView>
+          </Text>
+        </View>
+      </LinearGradient>
     );
   }
 }

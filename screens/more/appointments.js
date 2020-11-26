@@ -59,17 +59,23 @@ const AppointmentScreen = (props) => {
         Upcoming Appointment
       </Text>
       <ScrollView contentContainerStyle={{flexGrow: 0}}>
-        {appointments.map((item, index) => (
-          <AppointmentContainer
-            key={index}
-            date={item.start}
-            title={item.title + ' with ' + item?.physician}
-            startTime={Moment(getDateObj(item.start)).format('hh:mm a')}
-            endTime={Moment(getDateObj(item.end)).format('hh:mm a')}
-            sessionId={item.sessionId}
-            type={'chat'}
-          />
-        ))}
+        {appointments.length > 0 ? (
+          appointments.map((item, index) => (
+            <AppointmentContainer
+              key={index}
+              date={item.start}
+              title={item.title + ' with ' + item?.physician}
+              startTime={Moment(getDateObj(item.start)).format('hh:mm a')}
+              endTime={Moment(getDateObj(item.end)).format('hh:mm a')}
+              sessionId={item.sessionId}
+              type={'chat'}
+            />
+          ))
+        ) : (
+          <Text style={globalStyles.pageSubDetails}>
+            No Appointment for the day
+          </Text>
+        )}
       </ScrollView>
     </View>
   );
