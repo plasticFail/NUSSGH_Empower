@@ -143,7 +143,7 @@ class MoreInfo extends React.Component {
         <View style={styles.modalStyle}>
           <Text style={styles.modalHeading}>{modalContent.title}</Text>
           <Text style={styles.text}>
-            Your result {modalContent.value} {modalContent?.units} is{' '}
+            Your result ({modalContent.value} {modalContent?.units}) is{' '}
             <Text style={[styles.bold, {color: '#ff0844'}]}>
               {modalContent.results}
             </Text>

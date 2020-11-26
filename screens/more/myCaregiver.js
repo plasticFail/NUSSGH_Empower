@@ -22,7 +22,6 @@ import {
 } from '../../netcalls/requestsMyCaregiver';
 import AuthoriseContent from '../../components/myCaregiver/authoriseContent';
 import AuthoriseReqModal from '../../components/authoriseReqModal';
-import {pendingCaregiverReq} from '../../netcalls/urls';
 
 const iconStyle = {
   width: adjustSize(40),
@@ -54,19 +53,18 @@ const MyCaregiverScreen = (props) => {
       setPendingCaregiver({});
     } else {
       setCaregiver({});
-      let obj = await getPendingReq();
-      //there is a pending request
-      console.log(obj.response);
-      if (obj?.status === 200) {
-        setShowModal(true);
-        setPermissions(obj?.response?.permissions);
-        setPendingCaregiver(obj?.response?.caregiver);
-      } else {
-        let code = await getCode();
-        setPinNum(code?.code);
-        //check again for any incoming req
-        setTimeout(init, 5000);
-      }
+    }
+    let obj = await getPendingReq();
+    //there is a pending request
+    if (obj?.status === 200) {
+      setShowModal(true);
+      setPermissions(obj?.response?.permissions);
+      setPendingCaregiver(obj?.response?.caregiver);
+    } else {
+      let code = await getCode();
+      setPinNum(code?.code);
+      //check again for any incoming req
+      setTimeout(init, 5000);
     }
   };
 

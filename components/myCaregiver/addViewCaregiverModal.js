@@ -40,8 +40,6 @@ const iconStyle = {
   alignSelf: 'center',
 };
 
-const height = Dimensions.get('window').height;
-
 const AddViewCaregiverModal = (props) => {
   const {
     visible,
@@ -60,11 +58,12 @@ const AddViewCaregiverModal = (props) => {
   const [chosenUser, setChosenUser] = useState(
     patient != null ? patient : caregiver,
   );
-  const [accessName, setAccessName] = useState(false);
+  const [accessAppt, setAccessAppt] = useState(false);
   const [accessRD, setAccessRd] = useState(false);
   const [accessLr, setAccessLr] = useState(false);
 
   useEffect(() => {
+    console.log([permissions]);
     if (permissions !== undefined) {
       if (permissions.includes('diary')) {
         setAccessRd(true);
@@ -72,11 +71,11 @@ const AddViewCaregiverModal = (props) => {
       if (permissions.includes('lab_results')) {
         setAccessLr(true);
       }
-      if (permissions.includes('first_name')) {
-        setAccessName(true);
+      if (permissions.includes('appointment')) {
+        setAccessAppt(true);
       }
     }
-  }, [visible]);
+  }, [visible, permissions]);
 
   const authorise = () => {
     if (!isEmpty(patient) && getPermissionsArr().length > 0) {
@@ -100,8 +99,8 @@ const AddViewCaregiverModal = (props) => {
 
   const getPermissionsArr = () => {
     let arr = [];
-    if (accessName) {
-      arr.push('first_name');
+    if (accessAppt) {
+      arr.push('appointment');
     }
     if (accessRD) {
       arr.push('diary');
@@ -111,8 +110,6 @@ const AddViewCaregiverModal = (props) => {
     }
     return arr;
   };
-
-  console.log(chosenUser);
 
   const openURL = async () => {
     let link =
@@ -188,14 +185,14 @@ const AddViewCaregiverModal = (props) => {
         </Text>
         <ScrollView style={{flexGrow: 1}}>
           <AccessOption
-            mainheader={"Patient's First Name"}
+            mainheader={"Patient's Appointment"}
             subheader={'Personal Information'}
             onSelect={() => {
               if (from === 'caregiver' && isEmpty(pendingCaregiver)) {
-                setAccessName(!accessName);
+                setAccessAppt(!accessAppt);
               }
             }}
-            selected={accessName}
+            selected={accessAppt}
           />
           <AccessOption
             mainheader={"Patient's Report & Diary"}

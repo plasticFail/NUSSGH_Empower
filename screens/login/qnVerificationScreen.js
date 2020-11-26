@@ -20,28 +20,22 @@ import {Colors} from '../../styles/colors';
 import Logo from '../../resources/images/Patient-Icons/SVG/icon-color-empower.svg';
 import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
 import {verifySecurityAns} from '../../netcalls/requestsSecurityQn';
+import SecurityQnDropdown from '../../components/account/SecurityQnDropdown';
 
 function QnVerifcationScreen(props) {
-  const [qn1, setQn1] = useState('');
-  const [qn2, setQn2] = useState('');
-  const [qn3, setQn3] = useState('');
-
-  const [ans1, setAns1] = useState('');
-  const [ans2, setAns2] = useState('');
-  const [ans3, setAns3] = useState('');
-
+  const [expand, setExpand] = useState(false);
+  const [qnList, setQnList] = useState([]);
+  const [selectedQn, setSelectedQn] = useState({});
+  const [ans, setAns] = useState('');
   const [chance, setChance] = useState(3);
   const [showChance, setShowChance] = useState(false);
+  const [show3, setShow3] = useState(false);
 
   useEffect(() => {
     let qnList = props.route.params?.qnList;
     let username = props.route.params?.username;
     if (qnList != null && username != null) {
-      //selectRandomQn(qnList);
-      //console.log('randomising qn list');
-      setQn1(qnList[0]);
-      setQn2(qnList[1]);
-      setQn3(qnList[2]);
+      setQnList(qnList);
     }
   }, []);
 
@@ -62,18 +56,12 @@ function QnVerifcationScreen(props) {
     console.log('submitting ans');
     let obj = [
       {
-        answer: ans1,
-        question_id: qn1._id,
-      },
-      {
-        answer: ans2,
-        question_id: qn2._id,
-      },
-      {
-        answer: ans3,
-        question_id: qn3._id,
+        answer: ans,
+        question_id: selectedQn._id,
       },
     ];
+    console.log(obj);
+
     verifySecurityAns(obj, props.route.params?.username).then((rsp) => {
       if (rsp.status === 401) {
         setChance(chance - 1);
@@ -113,27 +101,19 @@ function QnVerifcationScreen(props) {
               questions:
             </Text>
             <View style={{marginTop: '10%'}}>
-              <Text style={styles.qnText}>{qn1?.content}</Text>
-              <TextInput
-                style={[loginStyles.inputBox, {width: '100%'}]}
-                placeholder="Answer"
-                onChangeText={setAns1}
-                placeholderTextColor={Colors.loginPlaceholder}
-                returnKeyType="done"
+              <SecurityQnDropdown
+                selectedQn={selectedQn}
+                onSelectQn={setSelectedQn}
+                list={qnList}
+                expand={expand}
+                open={() => setExpand(true)}
+                close={() => setExpand(false)}
+                topValue={'5%'}
               />
-              <Text style={styles.qnText}>{qn2?.content}</Text>
               <TextInput
                 style={[loginStyles.inputBox, {width: '100%'}]}
                 placeholder="Answer"
-                onChangeText={setAns2}
-                placeholderTextColor={Colors.loginPlaceholder}
-                returnKeyType="done"
-              />
-              <Text style={styles.qnText}>{qn3?.content}</Text>
-              <TextInput
-                style={[loginStyles.inputBox, {width: '100%'}]}
-                placeholder="Answer"
-                onChangeText={setAns3}
+                onChangeText={setAns}
                 placeholderTextColor={Colors.loginPlaceholder}
                 returnKeyType="done"
               />
@@ -192,7 +172,7 @@ class TriesModal extends React.Component {
           ) : (
             <>
               <Text style={[styles.qnText, {color: 'black'}]}>
-                Account Temporarily Locked
+                We will approach you soon
               </Text>
               <Text style={[styles.text, {margin: '3%'}]}>
                 A request has been sent to the administrator, you will get a

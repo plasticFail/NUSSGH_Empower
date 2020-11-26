@@ -20,6 +20,7 @@ import LeftArrowBtn from '../../components/logs/leftArrowBtn';
 //function
 import {getQuestions, setSecurityQn} from '../../netcalls/requestsSecurityQn';
 import {isEmpty} from '../../commonFunctions/common';
+import RadioButton from '../../components/radioButton';
 
 const SecurityQns = (props) => {
   const [type, setType] = useState('');
@@ -38,6 +39,8 @@ const SecurityQns = (props) => {
   const [security3Qn, setSecurity3Qn] = useState({});
   const [security3Ans, setSecurity3Ans] = useState('');
 
+  const [show3, setShow3] = useState(false);
+
   useEffect(() => {
     setType(props.route?.params?.type);
     async function getList() {
@@ -52,7 +55,10 @@ const SecurityQns = (props) => {
       if (qnlist != null) {
         setSecurity1Qn(qnlist[0]);
         setSecurity2Qn(qnlist[1]);
-        setSecurity3Qn(qnlist[2]);
+        if (qnlist.length === 3) {
+          setSecurity3Qn(qnlist[2]);
+          setShow3(true);
+        }
       }
     }
   }, [props.route?.params]);
@@ -92,12 +98,16 @@ const SecurityQns = (props) => {
     if (
       !isEmpty(security1Qn) &&
       !isEmpty(security2Qn) &&
-      !isEmpty(security3Qn) &&
       security1Ans &&
-      security2Ans &&
-      security3Ans
+      security2Ans
     ) {
-      return true;
+      if (show3 && !isEmpty(security3Qn) && security3Ans) {
+        return true;
+      } else if (!show3) {
+        return true;
+      } else {
+        return false;
+      }
     } else {
       return false;
     }
@@ -105,20 +115,35 @@ const SecurityQns = (props) => {
 
   const submit = () => {
     if (enableNextButton()) {
-      let obj = [
-        {
-          question_id: security1Qn._id,
-          answer: security1Ans,
-        },
-        {
-          question_id: security2Qn._id,
-          answer: security2Ans,
-        },
-        {
-          question_id: security3Qn._id,
-          answer: security3Ans,
-        },
-      ];
+      let obj = [];
+      if (show3) {
+        obj = [
+          {
+            question_id: security1Qn._id,
+            answer: security1Ans,
+          },
+          {
+            question_id: security2Qn._id,
+            answer: security2Ans,
+          },
+          {
+            question_id: security3Qn._id,
+            answer: security3Ans,
+          },
+        ];
+      } else {
+        obj = [
+          {
+            question_id: security1Qn._id,
+            answer: security1Ans,
+          },
+          {
+            question_id: security2Qn._id,
+            answer: security2Ans,
+          },
+        ];
+      }
+
       console.log('submitting ');
       console.log(obj);
 
@@ -206,24 +231,38 @@ const SecurityQns = (props) => {
               value={security2Ans}
               onChangeText={setSecurity2Ans}
             />
-            <SecurityQnDropdown
-              num={3}
-              selectedQn={security3Qn}
-              onSelectQn={filterQns}
-              list={list}
-              expand={expand3}
-              open={() => setExpand3(true)}
-              close={() => setExpand3(false)}
-              otherQn1={security1Qn}
-              otherQn2={security2Qn}
-            />
-            <TextInput
-              style={styles.answerInput}
-              placeholder={'Answer'}
-              placeholderTextColor={'#90949c'}
-              value={security3Ans}
-              onChangeText={setSecurity3Ans}
-            />
+            <TouchableOpacity
+              onPress={() => setShow3(!show3)}
+              style={{marginStart: '3%'}}>
+              <RadioButton
+                btnText={'Choose Third Qn'}
+                color={'#aad326'}
+                selected={show3}
+              />
+            </TouchableOpacity>
+
+            {show3 && (
+              <>
+                <SecurityQnDropdown
+                  num={3}
+                  selectedQn={security3Qn}
+                  onSelectQn={filterQns}
+                  list={list}
+                  expand={expand3}
+                  open={() => setExpand3(true)}
+                  close={() => setExpand3(false)}
+                  otherQn1={security1Qn}
+                  otherQn2={security2Qn}
+                />
+                <TextInput
+                  style={styles.answerInput}
+                  placeholder={'Answer'}
+                  placeholderTextColor={'#90949c'}
+                  value={security3Ans}
+                  onChangeText={setSecurity3Ans}
+                />
+              </>
+            )}
           </ScrollView>
         </View>
       </KeyboardAvoidingView>

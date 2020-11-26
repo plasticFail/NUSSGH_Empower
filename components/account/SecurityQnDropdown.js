@@ -6,7 +6,7 @@ import {TouchableOpacity, TextInput} from 'react-native-gesture-handler';
 import {isEmpty} from '../../commonFunctions/common';
 
 const SecurityQnDropdown = (props) => {
-  const {num, selectedQn, list, expand, otherQn1, otherQn2} = props;
+  const {num, selectedQn, list, expand, otherQn1, otherQn2, topValue} = props;
   const {onSelectQn, close, open} = props;
 
   const [top, setTop] = useState('');
@@ -23,11 +23,13 @@ const SecurityQnDropdown = (props) => {
 
   useEffect(() => {
     if (num === 1) {
-      setTop('1%');
+      setTop('2%');
     } else if (num === 2) {
-      setTop('34%');
+      setTop('50%');
     } else if (num === 3) {
-      setTop('67%');
+      setTop('72%');
+    } else {
+      setTop(topValue);
     }
   }, []);
 
@@ -37,7 +39,9 @@ const SecurityQnDropdown = (props) => {
         <Text style={styles.questionText}>
           {!isEmpty(selectedQn)
             ? selectedQn?.content
-            : 'Security Question ' + num}
+            : num != undefined
+            ? 'Security Question ' + num
+            : 'Select Security Qn'}
         </Text>
         {expand ? (
           <EvilIcon name="chevron-up" size={30} />
