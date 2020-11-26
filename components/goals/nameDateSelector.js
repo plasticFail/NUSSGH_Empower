@@ -4,8 +4,7 @@ import {TextInput, StyleSheet} from 'react-native';
 import logStyles from '../../styles/logStyles';
 import {Colors} from '../../styles/colors';
 import {normalTextFontSize} from '../../styles/variables';
-//component
-import DateSelector from './dateSelector';
+
 
 const NameDateSelector = (props) => {
   const {goalName, startDate, endDate, opened} = props;

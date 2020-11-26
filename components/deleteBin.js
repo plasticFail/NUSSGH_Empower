@@ -1,12 +1,13 @@
-import React, {useState, useEffect} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, Alert} from 'react-native';
+import React from 'react';
+import {TouchableOpacity} from 'react-native';
 import BIN from '../resources/images/Patient-Icons/SVG/icon-red-remove.svg';
+import {adjustSize} from '../commonFunctions/autoResizeFuncs';
 
 const DeleteBin = (props) => {
   const {method} = props;
   return (
     <TouchableOpacity style={{...props.style}} onPress={() => method()}>
-      <BIN height={30} width={30} />
+      <BIN height={adjustSize(30)} width={adjustSize(30)} />
     </TouchableOpacity>
   );
 };

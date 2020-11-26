@@ -22,7 +22,6 @@ import diaryStyles from '../../../styles/diaryStyles';
 import {
   getMissedArr,
   showEdit,
-  getTime,
   getDateObj,
   getTime12hr,
 } from '../../../commonFunctions/diaryFunctions';
@@ -33,6 +32,7 @@ import {
   eveningObj,
 } from '../../../commonFunctions/common';
 import EditMedicineBlock from './editMedicineBlock';
+import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
 
 const MedBlock = (props) => {
   const {
@@ -121,7 +121,7 @@ function renderMedLogs(logs, editLog) {
               <>
                 <View style={{flex: 1}} />
                 <TouchableOpacity onPress={() => editLog(item)}>
-                  <Entypo name="edit" style={diaryStyles.editIcon} size={30} />
+                  <Entypo name="edit" style={diaryStyles.editIcon} size={adjustSize(30)} />
                 </TouchableOpacity>
               </>
             ) : null}

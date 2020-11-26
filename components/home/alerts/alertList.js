@@ -1,10 +1,12 @@
 import React from 'react';
-import {View, StyleSheet, Text} from 'react-native';
+import {View, Text} from 'react-native';
 import Modal from 'react-native-modal';
-import {Colors} from '../../styles/colors';
-import globalStyles from '../../styles/globalStyles';
-import LeftArrowBtn from '../logs/leftArrowBtn';
-import InProgress from '../inProgress';
+import {Colors} from '../../../styles/colors';
+import globalStyles from '../../../styles/globalStyles';
+import LeftArrowBtn from '../../logs/leftArrowBtn';
+import InProgress from '../../inProgress';
+import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
+
 
 const AlertList = (props) => {
   const {visible} = props;
@@ -20,7 +22,7 @@ const AlertList = (props) => {
       <View
         style={{
           backgroundColor: Colors.backgroundColor,
-          borderRadius: 20,
+          borderRadius: adjustSize(20),
           flex: 1,
         }}>
         <View style={globalStyles.menuBarContainer}>

@@ -12,6 +12,7 @@ import {Colors} from '../styles/colors';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 
 import {useNavigation} from '@react-navigation/native';
+import {adjustSize} from '../commonFunctions/autoResizeFuncs';
 
 const UncompleteLogCard = (props) => {
   const {uncompleteLogs, color, hideChevron} = props;
@@ -40,7 +41,7 @@ const UncompleteLogCard = (props) => {
 
       <View style={{flex: 1}} />
       {!hideChevron && (
-        <Icon name="chevron-right" size={20} style={styles.chevron} />
+        <Icon name="chevron-right" size={adjustSize(20)} style={styles.chevron} />
       )}
     </View>
   );
@@ -55,9 +56,9 @@ const styles = StyleSheet.create({
   },
   container: {
     backgroundColor: 'white',
-    borderRadius: 9,
-    margin: '3%',
-    paddingTop: '3%',
-    paddingBottom: '3%',
+    paddingTop: '5%',
+    paddingBottom: '5%',
+    borderRadius: adjustSize(9),
+    marginEnd: '6%',
   },
 });

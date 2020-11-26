@@ -1,9 +1,10 @@
-import React, {useState, useEffect} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import React from 'react';
+import {View, Text, StyleSheet} from 'react-native';
 import globalStyles from '../../../styles/globalStyles';
 import {Colors} from '../../../styles/colors';
 import {renderGreetingText} from '../../../commonFunctions/diaryFunctions';
 import {horizontalMargins} from '../../../styles/variables';
+import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
 
 const MissedContent = (props) => {
   const {arr, type} = props;
@@ -26,20 +27,19 @@ export default MissedContent;
 
 const styles = StyleSheet.create({
   missedPara: {
-    marginStart: '4%',
     marginTop: '3%',
     fontFamily: 'SFProDisplay-Regular',
-    fontSize: 17,
+    fontSize: adjustSize(17),
     marginEnd: '4%',
     marginStart: horizontalMargins,
   },
   missedText: {
     fontFamily: 'SFProDisplay-Bold',
-    fontSize: 17,
+    fontSize: adjustSize(17),
     color: Colors.alertColor,
   },
   period: {
     fontFamily: 'SFProDisplay-Bold',
-    fontSize: 17,
+    fontSize: adjustSize(17),
   },
 });

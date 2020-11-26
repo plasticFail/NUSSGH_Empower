@@ -10,6 +10,7 @@ import {
 //third party lib
 import Entypo from 'react-native-vector-icons/Entypo';
 import {Colors} from '../../styles/colors';
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
 
 const ExpandFood = (props) => {
   const {period, foodData, clickPeriod} = props;
@@ -112,9 +113,9 @@ const ExpandFood = (props) => {
             toggle(open);
           }}>
           {open ? (
-            <Entypo name="chevron-small-up" size={30} />
+            <Entypo name="chevron-small-up" size={adjustSize(30)} />
           ) : (
-            <Entypo name="chevron-small-down" size={30} />
+            <Entypo name="chevron-small-down" size={adjustSize(30)} />
           )}
         </TouchableOpacity>
       </View>
@@ -171,13 +172,13 @@ const styles = StyleSheet.create({
   },
   periodText: {
     fontFamily: 'SFProDisplay-Regular',
-    fontSize: 17,
+    fontSize: adjustSize(17),
     alignSelf: 'flex-start',
   },
   foodImg: {
-    height: 80,
-    width: 80,
-    borderRadius: 9.5,
+    height: adjustSize(80),
+    width: adjustSize(80),
+    borderRadius: adjustSize(9.5),
     borderWidth: 2,
     borderColor: '#e2e8ee',
     marginEnd: '2%',

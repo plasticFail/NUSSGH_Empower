@@ -1,10 +1,12 @@
 import React from 'react';
 import {Image, Text, View, StyleSheet} from 'react-native';
+import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
+
 
 export default function FoodItem({food}) {
   let foodName =
     food['food-name'][0].toUpperCase() + food['food-name'].slice(1);
-  const adjustedFontSize = 13;
+  const adjustedFontSize = adjustSize(13);
   if (foodName.length > 20) {
     foodName = foodName.slice(0, 20) + '...';
   }
@@ -12,10 +14,10 @@ export default function FoodItem({food}) {
     <View style={styles.foodItem}>
       <Image source={{uri: food.imgUrl.url}} style={styles.foodImage} />
       <View style={{justifyContent: 'center', alignItems: 'center'}}>
-        <Text style={{fontSize: adjustedFontSize, height: 50, paddingTop: 3}}>
+        <Text style={{fontSize: adjustedFontSize, height: adjustSize(50), paddingTop: adjustSize(3)}}>
           {foodName}
         </Text>
-        <Text style={{paddingTop: 3}}>{'Qty: ' + food['quantity']}</Text>
+        <Text style={{paddingTop: adjustSize(3)}}>{'Qty: ' + food['quantity']}</Text>
       </View>
     </View>
   );
@@ -23,12 +25,12 @@ export default function FoodItem({food}) {
 
 const styles = StyleSheet.create({
   foodImage: {
-    width: 80,
-    height: 80,
+    width: adjustSize(80),
+    height: adjustSize(80),
   },
   foodItem: {
-    width: 80,
-    marginRight: 20,
+    width: adjustSize(80),
+    marginRight: adjustSize(20),
   },
 });
 //edit flag

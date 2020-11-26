@@ -4,7 +4,6 @@ import {
   TouchableOpacity,
   Text,
   StyleSheet,
-  TextInput,
   ScrollView,
   Alert,
   KeyboardAvoidingView,
@@ -63,7 +62,7 @@ const BgGoal = (props) => {
       min_bg: Number(minBg),
       max_bg: Number(maxBg),
     };
-    if (parent != undefined && parent != defaultv) {
+    if (parent !== undefined && parent !== defaultv) {
       let status = await addBgGoalReq(obj, bg._id);
       if (status === 200) {
         Alert.alert('Blood glucose goal edited successfully', '', [
@@ -109,7 +108,7 @@ const BgGoal = (props) => {
   };
 
   const showSubmitBtn = () => {
-    if (goalName?.length != 0 && errorMsg === '') {
+    if (goalName?.length !== 0 && errorMsg === '') {
       return true;
     } else {
       return false;
@@ -117,7 +116,7 @@ const BgGoal = (props) => {
   };
 
   const check = () => {
-    if (minBg != '' && maxBg != '') {
+    if (minBg !== '' && maxBg !== '') {
       let max = Number(maxBg);
       let min = Number(minBg);
       if (min <= min_bg || max <= min_bg) {
@@ -191,12 +190,12 @@ const BgGoal = (props) => {
                   {errorMsg}
                 </Text>
               )}
-              {checkBloodGlucoseText(String(minBg)) != '' && (
+              {checkBloodGlucoseText(String(minBg)) !== '' && (
                 <Text style={[globalStyles.alertText, styles.spacing]}>
                   Min Reading: {checkBloodGlucoseText(minBg)}
                 </Text>
               )}
-              {checkBloodGlucoseText(String(maxBg)) != '' && (
+              {checkBloodGlucoseText(String(maxBg)) !== '' && (
                 <Text style={[globalStyles.alertText, styles.spacing]}>
                   Max Reading: {checkBloodGlucoseText(maxBg)}
                 </Text>

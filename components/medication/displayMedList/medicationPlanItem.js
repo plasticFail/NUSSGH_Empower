@@ -1,10 +1,12 @@
 import React, {useState, useEffect} from 'react';
-import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
+import {View, Text, TouchableOpacity} from 'react-native';
 import {getSelectedCount} from '../../../commonFunctions/medicationFunction';
 import globalStyles from '../../../styles/globalStyles';
 
 import CHEVRON_RIGHT from '../../../resources/images/Patient-Icons/SVG/icon-grey-chevron-right.svg';
 import {Colors} from '../../../styles/colors';
+
+import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
 
 const MedicationPlanItem = (props) => {
   const {item} = props;
@@ -56,15 +58,10 @@ const MedicationPlanItem = (props) => {
           </>
         )}
       </View>
-      <CHEVRON_RIGHT height={20} width={20} marginTop={'3%'} marginEnd={'3%'} />
+      <CHEVRON_RIGHT height={adjustSize(20)} width={adjustSize(20)} marginTop={'3%'} marginEnd={'3%'} />
     </TouchableOpacity>
   );
 };
 
 export default MedicationPlanItem;
 
-const styles = StyleSheet.create({
-  perDay: {
-    marginStart: '5%',
-  },
-});

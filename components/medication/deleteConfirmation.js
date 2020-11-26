@@ -1,7 +1,8 @@
-import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import React from 'react';
+import {Text, StyleSheet, TouchableOpacity} from 'react-native';
 
 import globalStyles from '../../styles/globalStyles';
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
 
 //calling removeObj from askAdd.js
 const DeleteConfirmation = (props) => {
@@ -30,7 +31,7 @@ export default DeleteConfirmation;
 
 const styles = StyleSheet.create({
   header: {
-    fontSize: 20,
+    fontSize: adjustSize(20),
     fontFamily: 'SFProDisplay-Bold',
     marginTop: '4%',
     marginStart: '4%',

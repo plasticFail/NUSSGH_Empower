@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -12,18 +12,17 @@ import {Colors} from '../../styles/colors';
 import globalStyles from '../../styles/globalStyles';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import LoadingModal from '../loadingModal';
-import {storeAuthorisedStatusCaregiver} from '../../storage/asyncStorageFunctions';
 import AddViewCaregiverModal from '../myCaregiver/addViewCaregiverModal';
 import {validateCode} from '../../netcalls/requestsMyCaregiver';
 import {isEmpty} from '../../commonFunctions/common';
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
 
 import USER_FEMALE from '../../resources/images/Patient-Icons/SVG/user-female.svg';
 import USER_MALE from '../../resources/images/Patient-Icons/SVG/user-male.svg';
-import {pendingCaregiverReq} from '../../netcalls/urls';
 
 const iconStyle = {
-  width: 40,
-  height: 40,
+  width: adjustSize(40),
+  height: adjustSize(40),
   alignSelf: 'center',
 };
 
@@ -101,7 +100,7 @@ const AuthorisationCaregiver = (props) => {
               pinCount={6}
               style={{
                 width: '90%',
-                height: 100,
+                height: adjustSize(100),
                 fontWeight: '1000',
                 padding: '5%',
                 alignSelf: 'center',
@@ -161,8 +160,8 @@ export default AuthorisationCaregiver;
 const styles = StyleSheet.create({
   cardTab: {
     backgroundColor: '#e1e7ed',
-    borderTopStartRadius: 20,
-    borderTopEndRadius: 20,
+    borderTopStartRadius: adjustSize(20),
+    borderTopEndRadius: adjustSize(20),
   },
   headerTab: {
     padding: '3%',
@@ -170,7 +169,7 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontFamily: 'SFProDisplay-Bold',
-    fontSize: 18,
+    fontSize: adjustSize(18),
     marginStart: '3%',
     color: '#3c3c43',
     opacity: 0.6,
@@ -178,9 +177,9 @@ const styles = StyleSheet.create({
   //otp
   otpInput: {
     backgroundColor: 'white',
-    borderRadius: 10,
+    borderRadius: adjustSize(10),
     fontFamily: 'SFProDisplay-Bold',
-    fontSize: 20,
+    fontSize: adjustSize(20),
     color: 'black',
   },
 });

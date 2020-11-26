@@ -16,13 +16,12 @@ import {
   FlatList,
   Modal,
 } from 'react-native';
-// Third-party lib
-import Moment from 'moment';
 // Components
 import FoodModalContent from './FoodModalContent';
 import IntegerQuantitySelector from '../../IntegerQuantitySelector';
 // Functions
 import {requestFavouriteMealList} from '../../../netcalls/mealEndpoints/requestMealLog';
+import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
 // Others such as images, icons.
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import FlashMessage from '../../FlashMessage';
@@ -273,7 +272,7 @@ export default class CreateMealLogBlock extends React.Component {
               />
               <Icon
                 name="star"
-                size={40}
+                size={adjustSize(40)}
                 color={isFavourite ? '#B3D14C' : '#e4e4e4'}
                 onPress={this.toggleFavouriteIcon}
                 style={styles.favouriteIcon}
@@ -282,7 +281,7 @@ export default class CreateMealLogBlock extends React.Component {
             <Text
               style={[
                 logStyles.componentMargin,
-                {fontSize: 18, color: '#8A8A8E', fontWeight: 'bold'},
+                {fontSize: adjustSize(18), color: '#8A8A8E', fontWeight: 'bold'},
               ]}>
               Food intake
             </Text>
@@ -292,14 +291,14 @@ export default class CreateMealLogBlock extends React.Component {
                   logStyles.componentMargin,
                   {flexDirection: 'row', alignItems: 'center'},
                 ]}>
-                <Icon name="plus-square" size={30} color="#4DAA50" />
+                <Icon name="plus-square" size={adjustSize(30)} color="#4DAA50" />
                 <Text
-                  style={{fontSize: 18, color: '#4DAA50', paddingLeft: 7.5}}>
+                  style={{fontSize: adjustSize(18), color: '#4DAA50', paddingLeft: adjustSize(7.5)}}>
                   Add Item
                 </Text>
               </View>
             </TouchableOpacity>
-            <View style={{flex: 1, paddingBottom: 15}}>
+            <View style={{flex: 1, paddingBottom: adjustSize(15)}}>
               <FlatList
                 data={foodItems}
                 showScrollIndicator={false}
@@ -335,14 +334,14 @@ export default class CreateMealLogBlock extends React.Component {
                 <View
                   style={{
                     backgroundColor: Colors.leftArrowColor,
-                    borderRadius: 20,
-                    paddingLeft: 15,
-                    paddingRight: 15,
-                    height: 50,
+                    borderRadius: adjustSize(20),
+                    paddingLeft: adjustSize(15),
+                    paddingRight: adjustSize(15),
+                    height: adjustSize(50),
                     justifyContent: 'center',
                   }}>
                   <Text
-                    style={{color: '#fff', fontSize: 24, fontWeight: 'bold'}}>
+                    style={{color: '#fff', fontSize: adjustSize(24), fontWeight: 'bold'}}>
                     Favourited!
                   </Text>
                 </View>
@@ -350,20 +349,20 @@ export default class CreateMealLogBlock extends React.Component {
                 <View
                   style={{
                     backgroundColor: Colors.alertColor,
-                    borderRadius: 20,
-                    height: 50,
-                    paddingLeft: 15,
-                    paddingRight: 15,
+                    borderRadius: adjustSize(20),
+                    height: adjustSize(50),
+                    paddingLeft: adjustSize(15),
+                    paddingRight: adjustSize(15),
                     justifyContent: 'center',
                   }}>
                   <Text
-                    style={{color: '#fff', fontSize: 24, fontWeight: 'bold'}}>
+                    style={{color: '#fff', fontSize: adjustSize(24), fontWeight: 'bold'}}>
                     Unfavourited!
                   </Text>
                 </View>
               )
             }
-            messageComponentHeight={50}
+            messageComponentHeight={adjustSize(50)}
           />
           <Modal visible={modalOpen} coverScreen={true}>
             {selected && (
@@ -443,7 +442,7 @@ function FoodItem({onImagePress, item, handleDelete, onQuantityChange}) {
         <TouchableWithoutFeedback onPress={onImagePress}>
           <Image
             source={{uri: item.imgUrl.url}}
-            style={{width: 65, height: 65, borderRadius: 10}}
+            style={{width: adjustSize(65), height: adjustSize(65), borderRadius: adjustSize(10)}}
           />
         </TouchableWithoutFeedback>
         <View style={styles.foodTextWrapper}>
@@ -461,7 +460,7 @@ function FoodItem({onImagePress, item, handleDelete, onQuantityChange}) {
           <Icon
             name="trash"
             color="red"
-            size={30}
+            size={adjustSize(30)}
             onPress={handleDeleteWithAnimation}
           />
         </View>
@@ -474,19 +473,19 @@ const styles = StyleSheet.create({
   mealNameTextAndIcon: {
     display: 'flex',
     flexDirection: 'row',
-    paddingBottom: 20,
+    paddingBottom: adjustSize(20),
     alignItems: 'center',
   },
   mealNameTextInput: {
-    height: 50,
-    padding: 10,
+    height: adjustSize(50),
+    padding: adjustSize(10),
     borderColor: '#dddddd',
     borderWidth: 1,
-    borderRadius: 5,
+    borderRadius: adjustSize(5),
     flex: 1,
   },
   favouriteIcon: {
-    paddingLeft: 20,
+    paddingLeft: adjustSize(20),
   },
   button: {
     ...globalStyles.buttonContainer,
@@ -501,9 +500,9 @@ const styles = StyleSheet.create({
     paddingBottom: '2%',
   },
   foodTextWrapper: {
-    paddingLeft: 10,
-    width: 80,
-    height: 40,
+    paddingLeft: adjustSize(10),
+    width: adjustSize(80),
+    height: adjustSize(40),
     justifyContent: 'center',
     flexDirection: 'column',
     flex: 1,

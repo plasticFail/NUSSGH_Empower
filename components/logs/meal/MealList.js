@@ -3,15 +3,12 @@ import {
     FlatList,
     View,
     Text,
-    TouchableOpacity,
     ScrollView,
-    Image,
     StyleSheet,
-    Alert,
-    Dimensions,
     TouchableHighlight
 } from "react-native";
 // Functions
+import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
 // Components
 import RenderMealItem from './RenderMealItem';
 // Others
@@ -62,7 +59,7 @@ export default function MealList({filterQuery, meals, options, onMealAdd}) {
         onMealAdd(meal);
     }
 
-    const filtered = meals.filter(x => x.mealName.toLowerCase().indexOf(filterQuery.trim().toLowerCase()) != -1);
+    const filtered = meals.filter(x => x.mealName.toLowerCase().indexOf(filterQuery.trim().toLowerCase()) !== -1);
     return (
         <React.Fragment>
             <FlatList data={filtered}
@@ -78,9 +75,9 @@ export default function MealList({filterQuery, meals, options, onMealAdd}) {
                             <ScrollView contentContainerStyle={[{flexGrow: 1}]}>
                                 <View style={[logStyles.bodyPadding]}>
                                     <Icon onPress={handleCloseModal} style={logStyles.componentMargin} color='#4DAA50' name='chevron-down' size={34}/>
-                                    <Text style={{fontSize: 32, fontWeight: "bold"}}>Meal Info</Text>
-                                    <Text style={{fontSize: 24, fontWeight: "bold", paddingTop: '3%'}}>{selectedMeal.mealName}</Text>
-                                    <Text style={{fontSize: 24, fontWeight: "bold", color: '#7d7d7d', paddingTop: '3%'}}>Meal Includes</Text>
+                                    <Text style={{fontSize: adjustSize(32), fontWeight: "bold"}}>Meal Info</Text>
+                                    <Text style={{fontSize: adjustSize(24), fontWeight: "bold", paddingTop: '3%'}}>{selectedMeal.mealName}</Text>
+                                    <Text style={{fontSize: adjustSize(24), fontWeight: "bold", color: '#7d7d7d', paddingTop: '3%'}}>Meal Includes</Text>
                                     {
                                         selectedMeal.foodItems.map(food => (
                                             <FoodRow key={food['food-name']} food={food} />
@@ -107,24 +104,24 @@ const styles = StyleSheet.create({
     listContainer: {
         borderColor: '#cfcfcf',
         flexGrow: 1,
-        paddingTop: 10
+        paddingTop: adjustSize(10)
     },
     button: {
         width: '90%',
-        height: 55,
+        height: adjustSize(55),
         backgroundColor: '#aad326',
         justifyContent: 'center',
         alignSelf: 'center',
-        borderRadius: 10
+        borderRadius: adjustSize(10)
     },
     buttonText: {
         color: '#000',
         textAlign: 'center',
-        fontSize: 22,
+        fontSize: adjustSize(22),
         fontWeight: 'bold',
     },
     buttonContainer: {
-        height: 150,
+        height: adjustSize(150),
         paddingTop: '5%',
         backgroundColor: '#fff'
     },
@@ -132,7 +129,7 @@ const styles = StyleSheet.create({
         shadowColor: '#000',
         shadowOffset: {
             width: 0,
-            height: -5,
+            height: -adjustSize(5),
         },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,

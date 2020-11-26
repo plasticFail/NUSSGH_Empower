@@ -1,7 +1,7 @@
 import React from 'react';
-import {View, Text} from 'react-native';
+import {View,} from 'react-native';
 import {Circle, G, Svg, Text as SvgText} from 'react-native-svg';
-import Icon from 'react-native-vector-icons/FontAwesome5';
+
 
 export default function CircularProgress({
   percent,

@@ -4,6 +4,7 @@ import {View, Dimensions} from 'react-native';
 import Moment from 'moment';
 import {Svg, Rect, Text, Path, G} from 'react-native-svg';
 import {scaleTime, scaleLinear} from "d3-scale";
+import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
 
 //test data
 const data = [
@@ -45,18 +46,18 @@ const data = [
 ]
 
 // style options
-const padding = 20;
-const paddingLeft = 60;
-const paddingRight = 40;
+const padding = adjustSize(20);
+const paddingLeft = adjustSize(60);
+const paddingRight = adjustSize(40);
 const {width} = Dimensions.get('window');
-const height = 300;
-const xAxisGapFromText = 15;
-const yAxisGapFromText = 25;
-const axisMargin = 10;
-const barGap = 20;
-let xAxisTextFontSize = 12;
-const yAxisTextFontSize = 12;
-const stepSize = 500;
+const height = adjustSize(300);
+const xAxisGapFromText = adjustSize(15);
+const yAxisGapFromText = adjustSize(25);
+const axisMargin = adjustSize(10);
+const barGap = adjustSize(20);
+let xAxisTextFontSize = adjustSize(12);
+const yAxisTextFontSize = adjustSize(12);
+const stepSize = adjustSize(500);
 const yAxisStartsFrom = 0;
 
 // Scale axis functions from d3.
@@ -117,30 +118,6 @@ export default function SimpleBarChart(props) {
                       d={`M ${paddingLeft - scaledWidth / 2 - axisMargin} ${height - padding} l ${width - paddingRight - paddingLeft + scaledWidth + 2 * axisMargin} 0`} />
                 {
                     data.map((d, index) => (
-                        /*
-                        <G>
-                            <Rect
-                                onPress={handleBarSelect(index)}
-                                key={d.x.toString()}
-                                rx={3}
-                                ry={3}
-                                x={scaleX(d.x) - scaledWidth / 2}
-                                y={scaleY(d.y)}
-                                width={scaledWidth / 2 - 2}
-                                fill={selectedIndex === index ? '#3caea3' : '#03dac6'} height={scaleHeight(d.y)}
-                            />
-                            <Rect
-                                onPress={handleBarSelect(index)}
-                                key={d.x.toString()+ '1'}
-                                rx={3}
-                                ry={3}
-                                x={scaleX(d.x) + 2}
-                                y={scaleY(d.y2)}
-                                width={scaledWidth / 2 - 2}
-                                fill={selectedIndex === index ? '#3caea3' : '#03dac6'} height={scaleHeight(d.y2)}
-                            />
-                        </G>
-                         */
 
                         <Rect
                             onPress={handleBarSelect(index)}

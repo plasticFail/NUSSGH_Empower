@@ -27,13 +27,13 @@ import GAME from '../resources/images/Patient-Icons/SVG/icon-navy-game.svg';
 import GOAL from '../resources/images/Patient-Icons/SVG/icon-navy-goals.svg';
 import {getGoal4Type} from '../netcalls/requestsGoals';
 import {
-  food,
   defaultv,
   getGoalTypeFromLog,
 } from '../commonFunctions/goalFunctions';
 import ProgressBar from './progressbar';
 import {isEmpty, role_patient} from '../commonFunctions/common';
 import {getRole} from '../storage/asyncStorageFunctions';
+import {adjustSize} from '../commonFunctions/autoResizeFuncs';
 
 const iconStyle = {
   width: 50,
@@ -114,7 +114,7 @@ function SuccessDialogue(props) {
       <View style={styles.modalContainer}>
         <Text
           style={{
-            fontSize: 20,
+            fontSize: adjustSize(20),
             fontWeight: '500',
             marginTop: '3%',
             fontFamily: 'SFProDisplay-Bold',
@@ -123,14 +123,14 @@ function SuccessDialogue(props) {
         </Text>
         <Animated.View
           style={{
-            height: 80,
-            width: 80,
+            height: adjustSize(80),
+            width: adjustSize(80),
             transform: [{scale: springAnim}],
           }}>
           <Ionicon
             name="checkmark-circle-outline"
             color={Colors.backArrowColor}
-            size={80}
+            size={adjustSize(80)}
           />
         </Animated.View>
 
@@ -161,7 +161,7 @@ function SuccessDialogue(props) {
                 </Text>
               </View>
               <View style={{flex: 1}} />
-              <Icon name="chevron-right" size={30} style={styles.chevron} />
+              <Icon name="chevron-right" size={adjustSize(30)} style={styles.chevron} />
             </TouchableOpacity>
             <View style={[styles.border, {marginTop: '7%'}]} />
 
@@ -178,7 +178,7 @@ function SuccessDialogue(props) {
                   ]}>
                   Goal
                 </Text>
-                {!isEmpty(goalObj) && goalObj?.set_by != defaultv ? (
+                {!isEmpty(goalObj) && goalObj?.set_by !== defaultv ? (
                   <>
                     <ProgressBar
                       progress={progress}
@@ -186,8 +186,8 @@ function SuccessDialogue(props) {
                       reverse={true}
                       progressBarColor={'#aad326'}
                       containerStyle={{
-                        borderRadius: 9.5,
-                        height: 10,
+                        borderRadius: adjustSize(9.5),
+                        height: adjustSize(10),
                         marginStart: '5%',
                       }}
                     />
@@ -206,7 +206,7 @@ function SuccessDialogue(props) {
                 )}
               </View>
               <View style={{flex: 1}} />
-              <Icon name="chevron-right" size={30} style={styles.chevron} />
+              <Icon name="chevron-right" size={adjustSize(30)} style={styles.chevron} />
             </TouchableOpacity>
           </>
         )}
@@ -221,21 +221,21 @@ const styles = StyleSheet.create({
   modalContainer: {
     backgroundColor: 'white',
     alignItems: 'center',
-    borderRadius: 20,
+    borderRadius: adjustSize(20),
     width: '100%',
     paddingBottom: '10%',
     paddingTop: '2%',
   },
   button: {
     backgroundColor: '#EEF3BD',
-    borderRadius: 9.5,
-    marginVertical: 10,
-    paddingVertical: 10,
-    paddingHorizontal: 40,
-    width: Dimensions.get('window').width - 90,
+    borderRadius: adjustSize(9.5),
+    marginVertical: adjustSize(10),
+    paddingVertical: adjustSize(10),
+    paddingHorizontal: adjustSize(40),
+    width: Dimensions.get('window').width - adjustSize(90),
   },
   buttonText: {
-    fontSize: 23,
+    fontSize: adjustSize(23),
     fontWeight: '500',
     textAlign: 'center',
   },

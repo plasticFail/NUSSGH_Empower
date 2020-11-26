@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, Text, StyleSheet, ActivityIndicator} from 'react-native';
 import Modal from 'react-native-modal';
+import {adjustSize} from '../commonFunctions/autoResizeFuncs';
 
 const LoadingModal = (props) => {
   const {visible} = props;
@@ -26,12 +27,12 @@ const styles = StyleSheet.create({
   loadingContainer: {
     backgroundColor: 'white',
     alignSelf: 'center',
-    borderRadius: 20,
+    borderRadius: adjustSize(20),
     width: '100%',
     flexBasis: '24%',
   },
   text: {
-    fontSize: 18,
+    fontSize: adjustSize(18),
     fontWeight: '700',
     alignSelf: 'center',
     marginTop: '10%',

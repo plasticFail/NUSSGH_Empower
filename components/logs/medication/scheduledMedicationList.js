@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from 'react';
-import {View, StyleSheet, Text, TouchableOpacity, FlatList} from 'react-native';
 
 import {getMedication4Day} from '../../../netcalls/requestsLog';
 

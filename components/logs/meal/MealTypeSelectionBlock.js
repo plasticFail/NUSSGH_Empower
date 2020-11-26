@@ -2,8 +2,9 @@ import React from 'react';
 import {Text, View, StyleSheet} from "react-native";
 // Components
 import Select from "../../select";
-import Icon from "react-native-vector-icons/FontAwesome";
 import logStyles from "../../../styles/logStyles";
+import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
+
 
 const options = [{name: "Breakfast", value: "breakfast"},
     {name: "Lunch", value: "lunch"},
@@ -26,7 +27,7 @@ export default function MealTypeSelectionBlock({onSelectChange, defaultValue}) {
 
 const styles = StyleSheet.create({
     selectStyle: {
-        height: 43,
+        height: adjustSize(43),
     },
 })
 //edit flag

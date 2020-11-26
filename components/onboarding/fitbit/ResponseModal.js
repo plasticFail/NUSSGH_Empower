@@ -4,6 +4,7 @@ import Modal from 'react-native-modal';
 import {Colors} from "../../../styles/colors";
 import {STATUS} from "./Status";
 import Ionicon from "react-native-vector-icons/Ionicons";
+import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
 
 export default function ResponseModal(props) {
     const {visible, status, closeModal} = props;
@@ -34,13 +35,13 @@ export default function ResponseModal(props) {
                 {
                     status === STATUS.IN_PROGRESS ?
                         <ActivityIndicator size='large' color={Colors.backArrowColor} />
-                        : status === STATUS.CANCELLED || status == STATUS.ERROR ?
-                        <Ionicon name='close-circle-outline' size={60} color={Colors.alertColor}/>
+                        : status === STATUS.CANCELLED || status === STATUS.ERROR ?
+                        <Ionicon name='close-circle-outline' size={adjustSize(60)} color={Colors.alertColor}/>
                         : status === STATUS.FINISHED_SUCCESSFULLY ?
                             <Ionicon
                                 name="checkmark-circle-outline"
                                 color={Colors.backArrowColor}
-                                size={60}
+                                size={adjustSize(60)}
                             />
                             : null
 
@@ -52,18 +53,18 @@ export default function ResponseModal(props) {
 
 const styles = StyleSheet.create({
     messageText: {
-        fontSize: 20,
-        paddingBottom: 10
+        fontSize: adjustSize(20),
+        paddingBottom: adjustSize(10)
     },
     messageSubText: {
-        fontSize: 16,
-        paddingBottom: 10
+        fontSize: adjustSize(16),
+        paddingBottom: adjustSize(10)
     },
     messageBox: {
         backgroundColor: '#fff',
         width: '90%',
-        borderRadius: 15,
-        padding: 20,
+        borderRadius: adjustSize(15),
+        padding: adjustSize(20),
         alignItems: 'center',
         justifyContent: 'center',
     },

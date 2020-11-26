@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Image, StyleSheet, Text} from 'react-native';
+import {View, Image, StyleSheet} from 'react-native';
 
 const ColourArray = [
     "#60A354","#8F31AA","#F5C444","#7BBFDB", "#77B9D2", "#E67471", "#5F90D5",'#5D5D5D'

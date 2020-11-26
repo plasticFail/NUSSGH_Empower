@@ -51,6 +51,8 @@ import {
 } from '../../../netcalls/requestsAccount';
 import {getRole} from '../../../storage/asyncStorageFunctions';
 //function
+import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
+
 
 const FoodBlock = (props) => {
   const {
@@ -87,7 +89,7 @@ const FoodBlock = (props) => {
 
   const showRange = () => {
     let total = carbs + protein + fats;
-    if (missedArr.length < 3 && miss != true && total > 0) {
+    if (missedArr.length < 3 && miss !== true && total > 0) {
       return true;
     }
     return false;
@@ -120,7 +122,7 @@ const FoodBlock = (props) => {
                 <Ionicon
                   name="checkmark"
                   style={diaryStyles.passIcon}
-                  size={25}
+                  size={adjustSize(25)}
                 />
               </>
             ) : (
@@ -130,7 +132,7 @@ const FoodBlock = (props) => {
                 <Ionicon
                   name="alert-circle-outline"
                   style={diaryStyles.failIcon}
-                  size={25}
+                  size={adjustSize(25)}
                 />
               </>
             )}
@@ -178,7 +180,7 @@ function renderFoodItems(logs, editLog) {
             {item.foodItems.length > 0 &&
               item.foodItems.map(
                 (inner, index) =>
-                  inner.quantity != 0 && (
+                  inner.quantity !== 0 && (
                     <View key={inner['_id']}>
                       <View style={styles.foodItem}>
                         <Image
@@ -202,7 +204,7 @@ function renderFoodItems(logs, editLog) {
                               <Entypo
                                 name="edit"
                                 style={diaryStyles.editIcon}
-                                size={30}
+                                size={adjustSize(30)}
                               />
                             </TouchableOpacity>
                           </>
@@ -283,9 +285,9 @@ const styles = StyleSheet.create({
     marginStart: '3%',
   },
   foodImg: {
-    height: 80,
-    width: 80,
-    borderRadius: 20,
+    height: adjustSize(80),
+    width: adjustSize(80),
+    borderRadius: adjustSize(20),
   },
   border: {
     borderWidth: 0.5,

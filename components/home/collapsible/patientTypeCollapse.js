@@ -140,8 +140,8 @@ export default PatientType;
 const styles = StyleSheet.create({
   cardTab: {
     backgroundColor: Colors.patientType,
-    borderTopStartRadius: 20,
-    borderTopEndRadius: 20,
+    borderTopStartRadius: adjustSize(20),
+    borderTopEndRadius: adjustSize(20),
   },
   headerTab: {
     padding: '3%',
@@ -157,6 +157,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: '3%',
+  },
+  patientName: {
+    fontFamily: 'SFProDisplay-Regular',
+    fontSize: adjustSize(18),
+    color: 'white',
+    flex: 1,
+    alignSelf: 'center',
+  },
+  optionIcon: {
+    alignSelf: 'center',
+    marginEnd: '3%',
   },
   detail: {
     fontSize: adjustSize(18),

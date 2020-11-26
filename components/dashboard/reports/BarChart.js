@@ -12,23 +12,24 @@ import {
     processData,
 } from "../../../commonFunctions/reportDataFormatter";
 import {DAY_FILTER_KEY, WEEK_FILTER_KEY} from "../../../screens/main/reports";
+import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
 
 // initialise all the graph properties.
 // global style options
-const padding = 20;
-const paddingLeft = 60;
-const paddingRight = 40;
-const xAxisGapFromText = 15;
-const yAxisGapFromText = 12;
-const axisMargin = 20;
-const barWidth = 9.5;
-let xAxisTextFontSize = 12;
+const padding = adjustSize(20);
+const paddingLeft = adjustSize(60);
+const paddingRight = adjustSize(40);
+const xAxisGapFromText = adjustSize(15);
+const yAxisGapFromText = adjustSize(12);
+const axisMargin = adjustSize(20);
+const barWidth = adjustSize(9.5);
+let xAxisTextFontSize = adjustSize(12);
 const yAxisStartsFrom = 0;
 // bar label properties
-const barLabelHeight = 25;
-const barLabelWidth = 35;
-const barLabelYOffset = 10;
-const barLabelFontSize = 14;
+const barLabelHeight = adjustSize(25);
+const barLabelWidth = adjustSize(35);
+const barLabelYOffset = adjustSize(10);
+const barLabelFontSize = adjustSize(14);
 const barLabelTextYOffset = barLabelFontSize / 2;
 
 const axisColour = '#E1E7ED';
@@ -78,7 +79,8 @@ export default function BarChart(props) {
                                      key={xVal.toString()}
                                      fontSize={xAxisTextFontSize}
                                      textAnchor='middle'
-                                     y={height - padding + xAxisGapFromText} fill={axisTextLabelColour}>
+                                     y={height - padding + xAxisGapFromText} fill={axisTextLabelColour}
+                                     style={{fontSize: adjustSize(10)}}>
                                 {Moment(xVal).format(props.filterKey === DAY_FILTER_KEY ? "H:mm" : "DD/MM")}
                             </SvgText>
                         ))
@@ -88,7 +90,8 @@ export default function BarChart(props) {
                         showYAxis &&
                         yAxisLabels.map((y, index) => (
                             <SvgText x={paddingLeft - barWidth / 2 - axisMargin - yAxisGapFromText}
-                                     y={scaleY(y)} fill={axisTextLabelColour} textAnchor='middle'>
+                                     y={scaleY(y)} fill={axisTextLabelColour} textAnchor='middle'
+                                     style={{fontSize: adjustSize(10)}}>
                                 {formatY(y)}
                             </SvgText>
                         ))
@@ -159,7 +162,8 @@ export default function BarChart(props) {
                                          fontSize={barLabelFontSize}
                                          fontWeight='bold'
                                          y={scaleY(d.y) - barLabelHeight + barLabelTextYOffset} textAnchor='middle'
-                                         x={scaleX(d.x)} fill='#fff'>
+                                         x={scaleX(d.x)} fill='#fff'
+                                         style={{fontSize: adjustSize(14)}}>
                                     {formatY(d.y)}
                                 </SvgText>
                             </G>

@@ -3,7 +3,6 @@ import {
   View,
   TouchableOpacity,
   Text,
-  StyleSheet,
   ScrollView,
   Alert,
   KeyboardAvoidingView,
@@ -34,7 +33,7 @@ const StepsGoal = (props) => {
   const [pageText, setPageText] = useState('Add Goal');
 
   useEffect(() => {
-    if (parent != undefined && step != undefined) {
+    if (parent !== undefined && step !== undefined) {
       setGoalName(step.name);
       setSteps(step.steps);
       setPageText('Edit Goal');
@@ -53,7 +52,7 @@ const StepsGoal = (props) => {
       name: goalName,
       steps: steps,
     };
-    if (parent != undefined && parent != defaultv) {
+    if (parent !== undefined && parent !== defaultv) {
       let status = await addStepsGoalReq(obj, step._id);
       if (status === 200) {
         Alert.alert('Step goal edited successfully', '', [
@@ -158,9 +157,3 @@ const StepsGoal = (props) => {
 
 export default StepsGoal;
 
-const styles = StyleSheet.create({
-  spacing: {
-    marginStart: '4%',
-    marginEnd: '4%',
-  },
-});

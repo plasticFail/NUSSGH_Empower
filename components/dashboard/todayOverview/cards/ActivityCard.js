@@ -8,17 +8,16 @@ import {
 //component
 import CircularProgress from '../CircularProgress';
 //third party lib
-import Icon from 'react-native-vector-icons/FontAwesome5';
-
 import STEP_lg from '../../../../resources/images/Patient-Icons/SVG/icon-lightgreen-steps-home.svg';
 import RUN_lg from '../../../../resources/images/Patient-Icons/SVG/icon-lightgreen-running-home.svg';
 import CALBURNT_lg from '../../../../resources/images/Patient-Icons/SVG/icon-lightgreen-calburnt-home.svg';
 import NutritionCol from '../../../home/nutritionCol';
 import {protein, carbs, fats} from '../../../../commonFunctions/common';
+import {adjustSize} from '../../../../commonFunctions/autoResizeFuncs';
 
 const logoStyle = {
-  width: 50,
-  height: 50,
+  width: adjustSize(50),
+  height: adjustSize(50),
 };
 
 export default function ActivityCard(props) {
@@ -54,14 +53,14 @@ export default function ActivityCard(props) {
                 : activitySummary?.steps / maxSteps
             }
             centreComponent={{
-              width: 50 / 2,
-              height: 50 / 1.5,
+              width: adjustSize(50) / 2,
+              height: adjustSize(50) / 1.5,
               component: <STEP_lg {...logoStyle} />,
             }}
-            radius={50}
-            padding={10}
-            strokeWidth={5}
-            fontSize={15}
+            radius={adjustSize(50)}
+            padding={adjustSize(10)}
+            strokeWidth={adjustSize(5)}
+            fontSize={adjustSize(15)}
             remainingStrokeColor={'#e2e8ee'}
           />
           <Text style={styles.activityCount}>{activitySummary?.steps}</Text>
@@ -76,14 +75,14 @@ export default function ActivityCard(props) {
                 : activitySummary?.duration / activityTarget
             }
             centreComponent={{
-              width: 50 / 2,
-              height: 50 / 1.5,
+              width: adjustSize(50) / 2,
+              height: adjustSize(50) / 1.5,
               component: <RUN_lg {...logoStyle} />,
             }}
-            radius={50}
-            padding={10}
-            strokeWidth={5}
-            fontSize={15}
+            radius={adjustSize(50)}
+            padding={adjustSize(10)}
+            strokeWidth={adjustSize(5)}
+            fontSize={adjustSize(15)}
             remainingStrokeColor={'#e2e8ee'}
           />
           <Text style={styles.activityCount}>{activitySummary?.duration}</Text>
@@ -98,14 +97,14 @@ export default function ActivityCard(props) {
                 : activitySummary?.calories / maxCalBurnt
             }
             centreComponent={{
-              width: 50 / 2,
-              height: 50 / 1.5,
+              width: adjustSize(50) / 2,
+              height: adjustSize(50) / 1.5,
               component: <CALBURNT_lg {...logoStyle} />,
             }}
-            radius={50}
-            padding={10}
-            strokeWidth={5}
-            fontSize={15}
+            radius={adjustSize(50)}
+            padding={adjustSize(10)}
+            strokeWidth={adjustSize(5)}
+            fontSize={adjustSize(15)}
             remainingStrokeColor={'#e2e8ee'}
           />
           <Text style={styles.activityCount}>{activitySummary?.calories}</Text>
@@ -131,7 +130,7 @@ export default function ActivityCard(props) {
 const styles = StyleSheet.create({
   card: {
     backgroundColor: 'white',
-    borderRadius: 10,
+    borderRadius: adjustSize(10),
     marginTop: '7%',
     margin: '4%',
     paddingBottom: '2%',
@@ -154,11 +153,11 @@ const styles = StyleSheet.create({
   activityCount: {
     fontFamily: 'SFProDisplay-Bold',
     color: '#aad326',
-    fontSize: 20,
+    fontSize: adjustSize(20),
   },
   activityParam: {
     fontFamily: 'SFProDisplay-Regular',
-    fontSize: 17,
+    fontSize: adjustSize(17),
     color: '#3c3c43',
   },
   whiteborder: {

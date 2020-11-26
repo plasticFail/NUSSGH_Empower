@@ -2,7 +2,7 @@ import React from 'react';
 import {View, StyleSheet, Text, Platform, ActionSheetIOS, TouchableOpacity, Modal, Animated, TouchableWithoutFeedback} from 'react-native';
 // Others
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
-import logStyles from "../styles/logStyles";
+import {adjustSize} from '../commonFunctions/autoResizeFuncs';
 
 // Determine what ui to render for select. Different os render different select types.
 // Props description for customizability.
@@ -66,7 +66,7 @@ export default class Select extends React.Component {
                     cancelButtonIndex: 0
                 },
                 buttonIndex => {
-                    if (buttonIndex == 0) {
+                    if (buttonIndex === 0) {
                         this.handleClose();
                     } else {
                         this.handleCloseAfterSelect(options[buttonIndex - 1]);
@@ -183,23 +183,23 @@ const modalStyles = StyleSheet.create({
     },
     optionsContainer: {
         backgroundColor: 'rgba(255,255,255, 0.96)',
-        borderRadius: 10,
+        borderRadius: adjustSize(10),
         width: '95%',
-        marginBottom: 20
+        marginBottom: adjustSize(20)
     },
     option: {
-        height: 60,
+        height: adjustSize(60),
         justifyContent: 'center',
         alignItems: 'center',
         borderBottomWidth: 0.7,
         borderColor: '#cdcdcd'
     },
     optionText: {
-        fontSize: 20,
+        fontSize: adjustSize(20),
         color: '#007aff'
     },
     cancelOptionText: {
-        fontSize: 20,
+        fontSize: adjustSize(20),
         color: 'rgb(255,59,48)'
     },
 })
@@ -207,18 +207,18 @@ const modalStyles = StyleSheet.create({
 const iosStyles = StyleSheet.create({
     container: {
         width: '100%',
-        height: 50,
+        height: adjustSize(50),
         alignItems: 'center',
         backgroundColor: 'white',
         borderWidth: 1,
         borderColor: '#e2e8ee',
-        borderRadius: 10,
+        borderRadius: adjustSize(10),
         flexDirection: 'row',
         paddingLeft: '4%',
         paddingRight: '3%'
     },
     textStyle: {
-        fontSize: 18,
+        fontSize: adjustSize(18),
         width: '90%'
     },
 })

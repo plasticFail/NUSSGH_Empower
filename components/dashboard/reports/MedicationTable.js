@@ -1,17 +1,13 @@
 import React from 'react';
-import {View, Text, StyleSheet, FlatList} from 'react-native';
+import {View, Text} from 'react-native';
 import {DAY_FILTER_KEY, WEEK_FILTER_KEY} from "../../../screens/main/reports";
 import {
     filterToDayData,
     filterToWeekData,
-    getBinCount,
-    partitionDataPoints,
-    squashToXY
 } from "../../../commonFunctions/reportDataFormatter";
 import ProgressBar from "../../progressbar";
 import Moment from 'moment';
-import globalStyles from "../../../styles/globalStyles";
-import {getPlan} from "../../../netcalls/requestsMedPlan";
+import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
 
 function MedicationTable(props) {
     const filteredData = props.filterKey === DAY_FILTER_KEY ? filterToDayData(props.data, new Date(), d=>d.record_date)
@@ -29,18 +25,6 @@ function MedicationTable(props) {
                 )
             })}
         </View>
-        /*
-        <FlatList data={Object.entries(binCount)}
-                  style={props.style}
-                  keyExtractor={(item, index) => index.toString()}
-                  renderItem={({item}) => {
-                      const [key, value] = item;
-                      return (
-                          <MedicationRowDisplay med={key} quantity={value} />
-                      )
-                  }}
-        />
-         */
     )
 }
 
@@ -130,12 +114,12 @@ function calculateAdherence(zippedData) {
 
 function MedicationRowDisplay({med, quantity}) {
     return (
-        <View style={{paddingTop: 15, paddingBottom: 15}}>
-            <View style={{flexDirection: 'row', justifyContent: 'space-between', marginBottom: 7, alignItems: 'center'}}>
-                <Text style={{fontSize: 18, fontFamily: 'SFProDisplay-Regular'}}>{med}</Text>
+        <View style={{paddingTop: adjustSize(15), paddingBottom: adjustSize(15)}}>
+            <View style={{flexDirection: 'row', justifyContent: 'space-between', marginBottom: adjustSize(7), alignItems: 'center'}}>
+                <Text style={{fontSize: adjustSize(18), fontFamily: 'SFProDisplay-Regular'}}>{med}</Text>
                 <Text>{Math.round(quantity * 100) + "%"}</Text>
             </View>
-            <ProgressBar containerStyle={{height: 7.5, width: '90%', marginBottom: 5}} progress={`${quantity * 100}%`}
+            <ProgressBar containerStyle={{height: adjustSize(7.5), width: '90%', marginBottom: adjustSize(5)}} progress={`${quantity * 100}%`}
                          reverse={true}
                          useIndicatorLevel={true} />
         </View>
@@ -151,7 +135,7 @@ function MedicationDateDisplay({filterKey, style}) {
 
     return (
         <View style={style}>
-            <Text style={{fontSize: 18, color: '#3C3C43'}}>{`${startDate} - ${endDate}`}</Text>
+            <Text style={{fontSize: adjustSize(18), color: '#3C3C43'}}>{`${startDate} - ${endDate}`}</Text>
         </View>
     )
 }

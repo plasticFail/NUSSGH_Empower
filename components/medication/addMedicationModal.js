@@ -1,12 +1,12 @@
 import React, {useState, useEffect} from 'react';
-import {View, TouchableOpacity, Text, StyleSheet, Alert} from 'react-native';
+import {View, TouchableOpacity, Text, Alert} from 'react-native';
 //third party lib
 import Modal from 'react-native-modal';
 //styles
 import {Colors} from '../../styles/colors';
 import logStyles from '../../styles/logStyles';
 import globalStyles from '../../styles/globalStyles';
-import {horizontalMargins, normalTextFontSize} from '../../styles/variables';
+import {horizontalMargins} from '../../styles/variables';
 //component
 import LeftArrowBtn from '../logs/leftArrowBtn';
 import SearchBarMed from './searchBarMed';
@@ -20,7 +20,6 @@ import {
   checkMedExistInArr,
   onboardEdit,
   getSelectedCount,
-  med_plan,
   med_planAdd,
   med_planEdit,
 } from '../../commonFunctions/medicationFunction';
@@ -49,7 +48,7 @@ const AddMedicationModal = (props) => {
 
   useEffect(() => {
     if (parent === onboardEdit || parent === med_planEdit) {
-      if (med2Edit != undefined) {
+      if (med2Edit !== undefined) {
         setSelectedMed(med2Edit);
         setDosage(med2Edit.dosage);
         setFrequency(med2Edit.per_day);

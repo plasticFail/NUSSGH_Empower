@@ -1,8 +1,9 @@
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Colors} from '../styles/colors';
-import {scaleFont} from '../commonFunctions/scaleFunction';
+import {adjustSize} from '../commonFunctions/autoResizeFuncs';
+
 
 const InProgress = () => {
   return (
@@ -14,7 +15,7 @@ const InProgress = () => {
       }}>
       <Icon
         name="progress-clock"
-        size={150}
+        size={adjustSize(150)}
         color={Colors.lastLogButtonColor}
       />
       <Text style={styles.text}>Work in progress, check back soon!</Text>
@@ -27,7 +28,7 @@ export default InProgress;
 const styles = StyleSheet.create({
   text: {
     fontFamily: 'SFProDisplay-Bold',
-    fontSize: scaleFont(17),
+    fontSize: adjustSize(20),
     margin: '3%',
   },
 });

@@ -5,7 +5,7 @@ const DataField = (props) => {
   const {fieldName, value} = props;
   return (
     <>
-      <Text style={[styles.inputHeader, {marginTop: 20}]}>{fieldName} : </Text>
+      <Text style={[styles.inputHeader, {marginTop: adjustSize(20)}]}>{fieldName} : </Text>
       <TextInput
         style={styles.inputBox}
         placeholderTextColor="black"
@@ -22,14 +22,14 @@ export default DataField;
 
 const styles = StyleSheet.create({
   inputBox: {
-    fontSize: 19,
+    fontSize: adjustSize(19),
     backgroundColor: '#EEF3BD',
-    paddingStart: 20, //position placeholder text
-    marginVertical: 10,
+    paddingStart: adjustSize(20), //position placeholder text
+    marginVertical: adjustSize(10),
     padding: '2%',
   },
   inputHeader: {
-    fontSize: 18,
+    fontSize: adjustSize(18),
     fontWeight: '700',
   },
 });

@@ -4,10 +4,6 @@ import {
   TouchableOpacity,
   Text,
   StyleSheet,
-  Animated,
-  ScrollView,
-  Dimensions,
-  Easing,
 } from 'react-native';
 import CHEV_RIGHT from '../../resources/images/Patient-Icons/SVG/icon-grey-chevron-right.svg';
 //styles
@@ -40,7 +36,6 @@ import {
   activity,
   steps,
   renderGoalTypeName,
-  getNumofGoals,
   getGoalObjById,
   filterForGoalType,
   selfv,
@@ -48,6 +43,7 @@ import {
   phyv,
   bgpost,
 } from '../../commonFunctions/goalFunctions';
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
 
 const progress = 0.3;
 
@@ -72,7 +68,7 @@ const GoalList = (props) => {
       setSelectedGoal({});
     }
     //division of goal type
-    if (goals != undefined) {
+    if (goals !== undefined) {
       setOwnGoals(filterForGoalType(goals, selfv));
       setPhysicianGoals(filterForGoalType(goals, phyv));
       setSuggestedGoals(filterForGoalType(goals, defaultv));
@@ -87,7 +83,7 @@ const GoalList = (props) => {
       if (fromAddLog === bgpost) {
         type = bg;
       }
-      if (toOpen.set_by != defaultv) {
+      if (toOpen.set_by !== defaultv) {
         setTimeout(() => {
           openGoalDetail(toOpen, type);
         }, 500);
@@ -124,7 +120,7 @@ const GoalList = (props) => {
   const closeEdit = () => {
     setShowEditModal(false);
     init();
-    if (selectedGoal?.set_by != defaultv) {
+    if (selectedGoal?.set_by !== defaultv) {
       setTimeout(() => setShowDetail(true), 500);
     } else {
       setShowDetail(false);
@@ -153,7 +149,7 @@ const GoalList = (props) => {
       )}
 
       {/*Render Suggested Goal*/}
-      {suggestedGoal.length != 0 && (
+      {suggestedGoal.length !== 0 && (
         <>
           <Text style={[globalStyles.goalFieldName, {marginBottom: '3%'}]}>
             Suggested Goals
@@ -161,7 +157,7 @@ const GoalList = (props) => {
           {RenderGoalItems(suggestedGoal, openGoalDetail)}
         </>
       )}
-      {selectedGoal?.set_by != defaultv && (
+      {selectedGoal?.set_by !== defaultv && (
         <GoalDetail
           visible={showDetail}
           close={() => setShowDetail(false)}
@@ -257,7 +253,7 @@ function renderGoalType(goalItem, type) {
       {renderGoalLogo(type)}
       <View style={{flex: 1}}>
         <Text style={styles.goalType}>{renderGoalTypeName(type)}</Text>
-        {goalItem?.set_by != defaultv ? (
+        {goalItem?.set_by !== defaultv ? (
           <>
             <ProgressBar
               progress={percent}
@@ -281,7 +277,7 @@ function renderGoalType(goalItem, type) {
           </Text>
         )}
       </View>
-      <CHEV_RIGHT height={23} width={23} marginTop={'2%'} />
+      <CHEV_RIGHT height={adjustSize(23)} width={adjustSize(23)} marginTop={'2%'} />
     </View>
   );
 }
@@ -307,18 +303,18 @@ const styles = StyleSheet.create({
   addbutton: {
     marginStart: '2%',
     color: '#aad326',
-    fontSize: 20,
+    fontSize: adjustSize(20),
     marginTop: '2%',
   },
   goalType: {
     fontFamily: 'SFProDisplay-Bold',
     color: Colors.lastLogValueColor,
-    fontSize: 15,
+    fontSize: adjustSize(15),
     marginBottom: '2%',
   },
   progressContainer: {
-    borderRadius: 9.5,
-    height: 7,
+    borderRadius: adjustSize(9.5),
+    height: adjustSize(7),
   },
   border: {
     borderBottomWidth: 0.5,
@@ -333,11 +329,11 @@ const styles = StyleSheet.create({
   noGoalsText: {
     fontFamily: 'SFProDisplay-Regular',
     color: Colors.alertColor,
-    fontSize: 18,
+    fontSize: adjustSize(18),
     margin: '3%',
   },
   byWhoTag: {
-    borderRadius: 20,
+    borderRadius: adjustSize(20),
     backgroundColor: '#aad326',
     marginStart: '3%',
     paddingHorizontal: '3%',

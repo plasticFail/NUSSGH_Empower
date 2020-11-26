@@ -8,6 +8,7 @@ import EvilIcon from 'react-native-vector-icons/EvilIcons';
 import CALENDAR_LOGO from '../../../../resources/images/Patient-Icons/SVG/icon-green-calendar.svg';
 //function
 import {appointment, howTo} from '../../../../commonFunctions/common';
+import {adjustSize} from '../../../../commonFunctions/autoResizeFuncs';
 //style
 import {Colors} from '../../../../styles/colors';
 import TutorialModal from '../../../home/tutorialModal';
@@ -23,13 +24,13 @@ export default function NotificationsCard(props) {
         <TouchableOpacity
           style={[styles.card, styles.shadow]}
           onPress={() => setShowTutorial(true)}>
-          <CALENDAR_LOGO width={30} height={30} marginStart={'2%'} />
+          <CALENDAR_LOGO width={adjustSize(30)} height={adjustSize(30)} marginStart={'2%'} />
           <Text style={[{color: Colors.backArrowColor}, styles.text]}>
             {count} <Text style={{color: '#000'}}>Upcoming Appointments</Text>
           </Text>
           <Icon
             name="chevron-right"
-            size={20}
+            size={adjustSize(20)}
             color={Colors.lastLogValueColor}
           />
         </TouchableOpacity>
@@ -41,12 +42,12 @@ export default function NotificationsCard(props) {
           <EvilIcon
             name="question"
             color={Colors.lastLogButtonColor}
-            size={40}
+            size={adjustSize(40)}
           />
           <Text style={styles.text}>How To Use Empower</Text>
           <Icon
             name="chevron-right"
-            size={20}
+            size={adjustSize(20)}
             color={Colors.lastLogValueColor}
           />
         </TouchableOpacity>
@@ -71,7 +72,7 @@ const styles = StyleSheet.create({
     padding: '4%',
     justifyContent: 'space-between',
     alignItems: 'center',
-    borderRadius: 10,
+    borderRadius: adjustSize(10),
   },
   shadow: {
     shadowColor: '#000',
@@ -86,7 +87,7 @@ const styles = StyleSheet.create({
   text: {
     fontWeight: 'bold',
     color: '#000',
-    fontSize: 18,
+    fontSize: adjustSize(18),
     flex: 1,
     marginLeft: '3%',
   },

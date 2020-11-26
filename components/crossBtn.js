@@ -1,11 +1,10 @@
 import React from 'react';
 import {View, StyleSheet, Dimensions} from 'react-native';
-//third party lib
-import Entypo from 'react-native-vector-icons/Entypo';
 //styles
 import globalStyles from '../styles/globalStyles';
 
 import CROSS from '../resources/images/Patient-Icons/SVG/icon-green-close.svg';
+import {adjustSize} from '../commonFunctions/autoResizeFuncs';
 
 const {height} = Dimensions.get('window');
 
@@ -14,7 +13,7 @@ const CrossBtn = (props) => {
 
   return (
     <View style={globalStyles.topLeftButtonPosition}>
-      <CROSS height={30} width={30} onPress={() => close()} />
+      <CROSS height={adjustSize(30)} width={adjustSize(30)} onPress={() => close()} />
     </View>
   );
 };

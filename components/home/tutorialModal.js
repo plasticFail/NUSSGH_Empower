@@ -1,13 +1,14 @@
 import React from 'react';
-import {View, StyleSheet, Text} from 'react-native';
+import {View, Text} from 'react-native';
 import Modal from 'react-native-modal';
 import {Colors} from '../../styles/colors';
 import globalStyles from '../../styles/globalStyles';
-import LeftArrowBtn from '../logs/leftArrowBtn';
 import InProgress from '../inProgress';
 import CrossBtn from "../crossBtn";
 import {BackAndForwardButton} from "../BackAndForwardButtons";
 import {Pagination} from "../common/Pagination";
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
+
 
 const pages = [
     {name: "Logging"},
@@ -36,23 +37,19 @@ const TutorialModal = (props) => {
   return (
     <Modal
       isVisible={visible}
-      //coverScreen={fullScreen}
       backdropOpacity={!fullScreen && 0.4}
-      //animationIn="slideInRight"
-      //animationOut="slideOutRight"
       onBackButtonPress={() => closeModal()}
       onBackdropPress={closeModal}
-      //backdropColor={fullScreen && Colors.backgroundColor}
-      style={fullScreen ? {margin: 0} : {marginTop:50, marginBottom: 50}}
+      style={fullScreen ? {margin: 0} : {marginTop:adjustSize(50), marginBottom: adjustSize(50)}}
     >
         <View
             style={{
                 backgroundColor: Colors.backgroundColor,
-                borderRadius: 20,
+                borderRadius: adjustSize(20),
                 flex: 1,
-                paddingBottom: 20,
+                paddingBottom: adjustSize(20),
             }}>
-            <View style={[globalStyles.menuBarContainer, {height: 80}]}>
+            <View style={[globalStyles.menuBarContainer, {height: adjustSize(80)}]}>
                 <CrossBtn close={closeModal} />
             </View>
             {
@@ -60,14 +57,14 @@ const TutorialModal = (props) => {
             }
             {   !wip &&
             (
-                <View style={[{paddingTop: 20}]}>
+                <View style={[{paddingTop: adjustSize(20)}]}>
                     <Text style={globalStyles.pageDetails}>{pages[paginateIndex].name}</Text>
                 </View>
             )
             }
             <View style={{flex: 1}} />
             <View style={{alignItems: 'center'}}>
-                <Pagination numOfPages={3} width={120} currentPageIndex={paginateIndex} size={10} />
+                <Pagination numOfPages={3} width={adjustSize(120)} currentPageIndex={paginateIndex} size={adjustSize(10)} />
             </View>
             <BackAndForwardButton onPressForward={incrementPageIndex}
                                   onPressBack={decrementPageIndex}

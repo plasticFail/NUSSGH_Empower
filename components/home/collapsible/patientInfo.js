@@ -1,11 +1,8 @@
 import React, {useEffect, useState, useRef} from 'react';
 import {View, StyleSheet, TouchableOpacity, Text, Animated} from 'react-native';
 import {Colors} from '../../../styles/colors';
-import moment from 'moment';
-import {getDateObj} from '../../../commonFunctions/diaryFunctions';
 import {isEmpty, getAge} from '../../../commonFunctions/common';
 import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
-import {scaleFont} from '../../../commonFunctions/scaleFunction';
 
 const PatientInfo = (props) => {
   const {patient} = props;
@@ -95,8 +92,8 @@ export default PatientInfo;
 const styles = StyleSheet.create({
   cardTab: {
     backgroundColor: 'white',
-    borderTopStartRadius: 20,
-    borderTopEndRadius: 20,
+    borderTopStartRadius: adjustSize(20),
+    borderTopEndRadius: adjustSize(20),
   },
   headerTab: {
     padding: '3%',
@@ -121,7 +118,7 @@ const styles = StyleSheet.create({
   },
   header: {
     fontFamily: 'SFProDisplay-Bold',
-    fontSize: scaleFont(15),
+    fontSize: adjustSize(18),
     color: '#21293A',
     opacity: 0.6,
     flex: 1,
@@ -129,7 +126,7 @@ const styles = StyleSheet.create({
   detail: {
     justifyContent: 'center',
     marginEnd: '3%',
-    fontSize: adjustSize(17),
+    fontSize: adjustSize(18),
     fontFamily: 'SFProDisplay-Regular',
   },
 });

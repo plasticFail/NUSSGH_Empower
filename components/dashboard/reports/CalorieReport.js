@@ -1,9 +1,11 @@
 import React from 'react';
 import {View, StyleSheet, Text, Dimensions, ScrollView} from 'react-native';
 import SimpleBarChart from "./SimpleBarChart";
-import Animated, {Easing, Extrapolate} from 'react-native-reanimated';
+import Animated, {Easing} from 'react-native-reanimated';
 import Moment from 'moment';
 import Card from '../../common/Card';
+import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
+
 
 const {width, height} = Dimensions.get('window');
 const {
@@ -71,7 +73,7 @@ function runTiming(clock, value, dest) {
 
 class CalorieReport extends React.Component {
     // Animation variables.
-    transY = runTiming(new Clock(), height - 300, 0);
+    transY = runTiming(new Clock(), height - adjustSize(300), 0);
     opacity = runTiming(new Clock(), 0, 1);
     constructor(props) {
         super(props);
@@ -84,7 +86,7 @@ class CalorieReport extends React.Component {
         this.setState({
             selectedData: data
         }, () => {
-            this.transY = runTiming(new Clock(), height - 300, 0);
+            this.transY = runTiming(new Clock(), height - adjustSize(300), 0);
             this.opacity = runTiming(new Clock(), 0, 1);
         });
     }
@@ -109,19 +111,19 @@ class CalorieReport extends React.Component {
                                 <Text style={styles.selectedDateText}>{Moment(selectedData.x).format('D MMM, ddd')}</Text>
                                 <View style={styles.overviewContainer}>
                                     <View style={{alignItems: 'center'}}>
-                                        <Text style={{fontSize:16, color: '#7F8286'}}>Total</Text>
-                                        <Text style={{fontSize:20, color: '#545E65'}}>{total} kcal</Text>
+                                        <Text style={{fontSize:adjustSize(16), color: '#7F8286'}}>Total</Text>
+                                        <Text style={{fontSize:adjustSize(20), color: '#545E65'}}>{total} kcal</Text>
                                     </View>
                                     <View style={{alignItems: 'center'}}>
-                                        <Text style={{fontSize:16, color: '#AFB2B6'}}>From Recommended</Text>
-                                        <Text style={{fontSize:20, color: '#545E65'}}>-6%</Text>
+                                        <Text style={{fontSize:adjustSize(16), color: '#AFB2B6'}}>From Recommended</Text>
+                                        <Text style={{fontSize:adjustSize(20), color: '#545E65'}}>-6%</Text>
                                     </View>
                                 </View>
                                 <Text style={styles.tableDescText}>Breakdown</Text>
                                 <View style={styles.table}>
                                     <View style={styles.row}>
                                         <Text style={styles.rowLeftHeaderText}>Food</Text>
-                                        <Text style={[styles.rowHeaderText, {paddingRight: 7}]}>Qty</Text>
+                                        <Text style={[styles.rowHeaderText, {paddingRight: adjustSize(7)}]}>Qty</Text>
                                         <Text style={styles.rowHeaderText}>Calorie (kcal)</Text>
                                     </View>
                                     {
@@ -156,8 +158,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         textAlign: 'center',
         color: '#4d4d4d',
-        paddingTop: 10,
-        paddingBottom: 10
+        paddingTop: adjustSize(10),
+        paddingBottom: adjustSize(10)
     },
     //content related
     overviewContainer: {
@@ -171,7 +173,7 @@ const styles = StyleSheet.create({
     selectedDateText: {
         paddingTop: '3%',
         paddingBottom: '3%',
-        fontSize: 24,
+        fontSize: adjustSize(24),
         fontWeight: 'bold',
         width: '100%',
         textAlign: 'center',
@@ -181,48 +183,48 @@ const styles = StyleSheet.create({
 
     },
     tableDescText: {
-        fontSize: 20,
+        fontSize: adjustSize(20),
         fontWeight: 'bold',
         color: '#4d4d4d',
-        paddingLeft: 20,
-        paddingTop: 10
+        paddingLeft: adjustSize(20),
+        paddingTop: adjustSize(10)
     },
     row: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        paddingLeft: 20,
-        paddingRight: 20,
-        height: 50
+        paddingLeft: adjustSize(20),
+        paddingRight: adjustSize(20),
+        height: adjustSize(50)
     },
     rowAlt: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
         backgroundColor: '#F6FAFE',
-        paddingLeft: 20,
-        paddingRight: 20,
-        height: 50
+        paddingLeft: adjustSize(20),
+        paddingRight: adjustSize(20),
+        height: adjustSize(50)
     },
     rowHeaderText:{
-        fontSize: 16,
+        fontSize: adjustSize(16),
         color: '#4d4d4d',
         flex: 1,
         textAlign: 'right'
     },
     rowLeftHeaderText:{
-        fontSize: 16,
+        fontSize: adjustSize(16),
         color: '#4d4d4d',
         flex: 3
     },
     rowText: {
-        fontSize: 16,
+        fontSize: adjustSize(16),
         color: '#4d4d4d',
         flex: 1,
         textAlign: 'right'
     },
     rowLeftText: {
-        fontSize: 16,
+        fontSize: adjustSize(16),
         color: '#4d4d4d',
         flex: 3
     }

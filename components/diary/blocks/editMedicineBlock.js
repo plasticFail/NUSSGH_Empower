@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, Alert} from 'react-native';
+import {View, Text, TouchableOpacity, Alert} from 'react-native';
 //third party library
 import Modal from 'react-native-modal';
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -19,6 +19,7 @@ import {deleteMed, editMedicineInLog} from '../../../netcalls/requestsDiary';
 import RemoveModal from '../removeModal';
 import {med_key} from '../../../commonFunctions/logFunctions';
 import SideEffectModal from '../../logs/medication/sideEffectModal';
+import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
 
 const EditMedicineBlock = (props) => {
   const {visible, medicineToEdit, initialDate} = props;
@@ -77,8 +78,8 @@ const EditMedicineBlock = (props) => {
 
   const checkChange = () => {
     if (
-      String(initialDate) != String(datetime) ||
-      dosage != Number(medicineToEdit.dosage) ||
+      String(initialDate) !== String(datetime) ||
+      dosage !== Number(medicineToEdit.dosage) ||
       !checkSideEffectChange()
     ) {
       setChanged(true);
@@ -133,11 +134,11 @@ const EditMedicineBlock = (props) => {
                   style={{
                     flex: 1,
                     fontFamily: 'SFProDisplay-Regular',
-                    fontSize: 18,
+                    fontSize: adjustSize(18),
                   }}>
                   {seString}
                 </Text>
-                <Entypo name="edit" style={diaryStyles.editIcon} size={30} />
+                <Entypo name="edit" style={diaryStyles.editIcon} size={adjustSize(30)} />
               </TouchableOpacity>
             </View>
           )}
@@ -161,7 +162,7 @@ const EditMedicineBlock = (props) => {
       <View style={[globalStyles.buttonContainer]}>
         <View style={{flexDirection: 'row'}}>
           <DeleteBin style={diaryStyles.binIcon} method={requestDelete} />
-          {dosage != 0 && changed ? (
+          {dosage !== 0 && changed ? (
             <TouchableOpacity
               style={logStyles.enableEditButton}
               onPress={() => postChange()}>

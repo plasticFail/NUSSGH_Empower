@@ -16,6 +16,7 @@ import SpinFinish from '../../../components/gameCenter/spinFinish';
 import WordItem from '../../../components/gameCenter/wordItem';
 import {GetIconByWord} from '../../../commonFunctions/gameCenterFunctions';
 import {requestPerformSpin} from '../../../netcalls/gameCenterEndPoints/requestGameCenter';
+import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
 
 
 const LetterDotColor = (currentLetter, letter) => {
@@ -140,7 +141,7 @@ const FillTheCard = (props) => {
                     <Ionicon
                         key={index}
                         name="ellipse"
-                        size={20}
+                        size={adjustSize(20)}
                         style={styles.stepDot}
                         color={LetterDotColor(currentLetter, index)}
                     />

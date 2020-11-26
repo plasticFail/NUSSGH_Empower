@@ -1,5 +1,7 @@
 import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
+
 
 const CalendarDay2Component = (props) => {
   const {state, marking = {}, date} = props;
@@ -53,14 +55,14 @@ const styles = StyleSheet.create({
     padding: '30%',
   },
   content: {
-    width: 35,
-    height: 35,
+    width: adjustSize(35),
+    height: adjustSize(35),
     justifyContent: 'center',
     alignItems: 'center',
-    margin: 20,
+    margin: adjustSize(20),
   },
   contentText: {
-    fontSize: 18,
+    fontSize: adjustSize(18),
   },
 });
 

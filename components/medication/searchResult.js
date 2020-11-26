@@ -1,10 +1,9 @@
 import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, FlatList} from 'react-native';
+import {Text, StyleSheet, TouchableOpacity, FlatList} from 'react-native';
 //third party library
 import Ionicon from 'react-native-vector-icons/Ionicons';
-import Moment from 'moment';
-
 import CHEVRON_RIGHT from '../../resources/images/Patient-Icons/SVG/icon-grey-chevron-right.svg';
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
 
 Ionicon.loadFont();
 
@@ -38,7 +37,7 @@ const SearchResult = (props) => {
             key={index}
             onPress={() => handleSelect(item)}>
             <Text style={styles.medicineName}>{item.drug_name}</Text>
-            <CHEVRON_RIGHT height={20} width={20} marginStart={'2%'} />
+            <CHEVRON_RIGHT height={adjustSize(20)} width={adjustSize(20)} marginStart={'2%'} />
           </TouchableOpacity>
         )}
       />
@@ -56,7 +55,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   medicineName: {
-    fontSize: 18,
+    fontSize: adjustSize(18),
     flex: 1,
   },
 });

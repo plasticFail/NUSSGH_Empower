@@ -2,6 +2,7 @@ import React from 'react';
 import {View, StyleSheet, ActivityIndicator, Alert, TouchableOpacity, Text} from 'react-native';
 // Functions
 import {requestUnfavouriteMeal, requestFavouriteMealList} from "../../../netcalls/mealEndpoints/requestMealLog";
+import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
 // Others
 import MealList from "./MealList";
 // third party lib
@@ -87,7 +88,7 @@ export default class FavouriteMealComponent extends React.Component {
                                             },
                                             onPress: this.handleUnfavouriteMeal,
                                             buttonStyle: {
-                                                width: 40
+                                                width: adjustSize(40)
                                             }
                                         }
                                     ],
@@ -97,13 +98,13 @@ export default class FavouriteMealComponent extends React.Component {
                 }
                 {   showUnfavouriteConfirmation &&
                     <Modal isVisible={showUnfavouriteConfirmation} onBackdropPress={this.abortUnfavouriteMeal}>
-                        <View style={{backgroundColor: '#fff', padding: 20, width: '85%',
-                                        borderRadius: 15, justifyContent: 'space-between',
+                        <View style={{backgroundColor: '#fff', padding: adjustSize(20), width: '85%',
+                                        borderRadius: adjustSize(15), justifyContent: 'space-between',
                                         alignSelf: 'center'}}>
-                            <Text style={{fontSize: 20, paddingTop: '4%', fontFamily: 'SFProDisplay-Bold'}}>
+                            <Text style={{fontSize: adjustSize(20), paddingTop: '4%', fontFamily: 'SFProDisplay-Bold'}}>
                                 Remove from favourites
                             </Text>
-                            <Text style={{fontSize: 20, paddingTop: '8%', paddingBottom: '8%', fontFamily: 'SFProDisplay-Regular'}}>
+                            <Text style={{fontSize: adjustSize(20), paddingTop: '8%', paddingBottom: '8%', fontFamily: 'SFProDisplay-Regular'}}>
                                 {targetMealToUnfavourite.mealName}
                             </Text>
                             <TouchableOpacity onPress={this.unfavouriteMeal} style={[styles.removeButton, {marginTop: '4%'}]}>
@@ -137,14 +138,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         width: '100%',
-        padding: 15
+        padding: adjustSize(15)
     },
     removeButton: {
         backgroundColor: 'red',
-        borderRadius: 10,
+        borderRadius: adjustSize(10),
         alignItems: 'center',
         justifyContent: 'center',
         width: '100%',
-        padding: 15
+        padding: adjustSize(15)
     }
 })

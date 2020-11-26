@@ -12,6 +12,7 @@ import Modal from 'react-native-modal';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 //function
 import {storeMedications} from '../../netcalls/requestsLog';
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
 //component
 import SearchResult from './searchResult';
 //style
@@ -31,7 +32,7 @@ const SearchMedication = (props) => {
   //time lag when call api*
   useEffect(() => {
     let mounted = true;
-    if (searchKeyCache == searchTerm) {
+    if (searchKeyCache === searchTerm) {
       if (mounted) {
         setTimeout(() => searchMedication(), 800);
       }
@@ -60,7 +61,7 @@ const SearchMedication = (props) => {
 
   //make api call
   const searchMedication = () => {
-    if (searchTerm != '') {
+    if (searchTerm !== '') {
       let arr = [];
       storeMedications().then((response) => {
         for (let x of response.medications) {
@@ -155,14 +156,9 @@ const SearchMedication = (props) => {
 export default SearchMedication;
 
 const styles = StyleSheet.create({
-  searchContainer: {
-    width: '100%',
-    backgroundColor: 'white',
-    flex: 1,
-  },
   cancelText: {
     alignSelf: 'flex-end',
-    fontSize: 20,
+    fontSize: adjustSize(20),
     color: '#aad326',
     marginTop: '10%',
     marginStart: '3%',
@@ -172,25 +168,24 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: 'white',
-    borderRadius: 20,
-    fontSize: 20,
-    borderRadius: 9.5,
+    fontSize: adjustSize(20),
+    borderRadius: adjustSize(9.5),
     borderWidth: 1,
     borderColor: '#e2e8ee',
   },
   searchInput: {
     flex: 1,
-    paddingTop: 10,
-    paddingBottom: 10,
+    paddingTop: adjustSize(10),
+    paddingBottom: adjustSize(10),
     backgroundColor: 'white',
     color: '#424242',
-    fontSize: 20,
-    borderRadius: 9.5,
+    fontSize: adjustSize(20),
+    borderRadius: adjustSize(9.5),
   },
   prompt: {
     alignSelf: 'center',
     marginTop: '50%',
-    fontSize: 20,
+    fontSize: adjustSize(20),
     width: '90%',
     textAlign: 'center',
   },

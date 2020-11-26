@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, StyleSheet, Text, TouchableOpacity, FlatList} from 'react-native';
+import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
 //third party lib
 import Modal from 'react-native-modal';
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -14,6 +14,7 @@ import {
   handleSubmitMedication,
   med_key,
 } from '../../../commonFunctions/logFunctions';
+import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
 //style
 import {Colors} from '../../../styles/colors';
 import globalStyles from '../../../styles/globalStyles';
@@ -73,13 +74,13 @@ const MedicationLogBlock = (props) => {
     console.log('removing');
     if (type === extra) {
       setExtraAddedList(
-        extraAddedList.filter((medication) => medication != item),
+        extraAddedList.filter((medication) => medication !== item),
       );
       return;
     } else {
       setSelectedMedList(
         selectedMedList.filter(
-          (medication) => medication.drugName != item.medication,
+          (medication) => medication.drugName !== item.medication,
         ),
       );
       return;
@@ -93,7 +94,7 @@ const MedicationLogBlock = (props) => {
     for (var x of selectedMedList) {
       //if item exist, update dosage if change
       if (item.drugName === x.drugName) {
-        if (item.dosage != x.dosage) {
+        if (item.dosage !== x.dosage) {
           x.dosage = item.dosage;
           found = true;
         }
@@ -205,7 +206,7 @@ const MedicationLogBlock = (props) => {
                 <AntDesign
                   name="pluscircleo"
                   color={'#aad326'}
-                  size={25}
+                  size={adjustSize(25)}
                   style={{margin: '2%'}}
                 />
                 <Text style={[logStyles.fieldName, {color: '#aad326'}]}>
@@ -220,11 +221,11 @@ const MedicationLogBlock = (props) => {
                   style={{
                     flex: 1,
                     fontFamily: 'SFProDisplay-Regular',
-                    fontSize: 18,
+                    fontSize: adjustSize(18),
                   }}>
                   {sideEffectString}
                 </Text>
-                <Entypo name="edit" style={diaryStyles.editIcon} size={30} />
+                <Entypo name="edit" style={diaryStyles.editIcon} size={adjustSize(30)} />
               </TouchableOpacity>
             )}
           </ScrollView>

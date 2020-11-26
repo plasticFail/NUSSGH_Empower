@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
 //third party lib
 import Modal from 'react-native-modal';
@@ -8,6 +8,8 @@ import {
   bg_key,
   weight_key,
 } from '../../commonFunctions/logFunctions';
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
+
 
 const RemoveModal = (props) => {
   const {visible, logType, itemToDeleteName} = props;
@@ -33,7 +35,7 @@ const RemoveModal = (props) => {
           <Text style={styles.removeItem}>{itemToDeleteName} mmol/L</Text>
         ) : logType === weight_key ? (
           <Text style={styles.removeItem}>{itemToDeleteName} kg</Text>
-        ) : itemToDeleteName != '' ? (
+        ) : itemToDeleteName !== '' ? (
           <Text style={styles.removeItem}>{itemToDeleteName}</Text>
         ) : null}
 
@@ -56,41 +58,41 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     backgroundColor: 'white',
-    borderRadius: 9.5,
+    borderRadius: adjustSize(9.5),
   },
   removeHeader: {
-    fontSize: 18,
+    fontSize: adjustSize(18),
     fontFamily: 'SFProDisplay-Bold',
     marginTop: '4%',
     marginStart: '5%',
   },
   removeItem: {
-    fontSize: 18,
+    fontSize: adjustSize(18),
     fontFamily: 'SFProDisplay-Regular',
     marginTop: '4%',
     marginStart: '5%',
   },
   removeButton: {
     backgroundColor: '#ff0844',
-    height: 50,
+    height: adjustSize(50),
     alignSelf: 'center',
     paddingHorizontal: '30%',
     marginTop: '10%',
     marginBottom: '3%',
-    borderRadius: 15,
+    borderRadius: adjustSize(15),
     justifyContent: 'center',
   },
   removeButtonText: {
     color: 'white',
     fontFamily: 'SFProDisplay-Bold',
-    fontSize: 18,
+    fontSize: adjustSize(18),
     textAlign: 'center',
   },
   cancelText: {
     alignSelf: 'center',
     color: '#ff0844',
     fontFamily: 'SFProDisplay-Regular',
-    fontSize: 18,
+    fontSize: adjustSize(18),
     marginBottom: '5%',
   },
 });

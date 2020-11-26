@@ -51,15 +51,16 @@ import {
   getDateObj,
   showEdit,
 } from '../../../commonFunctions/diaryFunctions';
+import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
 
 // initialise all the graph properties.
 // global style options
-const padding = 20;
-const paddingLeft = 60;
-const paddingRight = 40;
-const xAxisGapFromText = 15;
-const yAxisGapFromText = 18;
-const axisMargin = 20;
+const padding = adjustSize(20);
+const paddingLeft = adjustSize(60);
+const paddingRight = adjustSize(40);
+const xAxisGapFromText = adjustSize(15);
+const yAxisGapFromText = adjustSize(18);
+const axisMargin = adjustSize(20);
 
 const axisColour = '#cdcdcd';
 const axisLabelColour = '#E1E7ED';
@@ -71,14 +72,14 @@ const showYAxis = true;
 const showYAxisLines = true;
 
 // cursor
-const cursorRadius = 10;
-const THRESHOLD = 12.5; // The min distance to switch index.
+const cursorRadius = adjustSize(10);
+const THRESHOLD = adjustSize(12.5); // The min distance to switch index.
 
 // bar label properties
-const barLabelHeight = 25;
-const barLabelWidth = 50;
-const barLabelYOffset = 10 + cursorRadius;
-const barLabelFontSize = 14;
+const barLabelHeight = adjustSize(25);
+const barLabelWidth = adjustSize(50);
+const barLabelYOffset = adjustSize(10) + cursorRadius;
+const barLabelFontSize = adjustSize(14);
 const barLabelTextYOffset = barLabelFontSize / 2 - cursorRadius;
 const carrotHeight = barLabelHeight / 2;
 const carrotWidth = barLabelWidth / 5;
@@ -259,7 +260,7 @@ export default class LineChart extends React.Component {
         index = mapped.indexOf(minDist);
       }
       // show the label that is within threshold.
-      if (index != -1) {
+      if (index !== -1) {
         const shownDatapoint = dataCoordinates[index];
         this.cursorLabel.current.setNativeProps({
           top: shownDatapoint[1] - barLabelHeight - barLabelYOffset,
@@ -296,19 +297,7 @@ export default class LineChart extends React.Component {
         left: x - cursorRadius,
       });
       this.cursorAxis.current.setNativeProps({top: 0, left: x});
-      /*
-            this.xLabel.current.setNativeProps({
-                text: `${Moment(this.state.scaleX.invert(x))
-                    .format(this.props.filterKey === DAY_FILTER_KEY ? 'h:mm' : 'D MMM')}`,
-                opacity: 1
-            });
-             */
-      /*
-            if (index != this.state.selectedIndex) {
-                this.setState({
-                    selectedIndex: index
-                })
-            }*/
+
     }
   }
 
@@ -348,7 +337,7 @@ export default class LineChart extends React.Component {
       );
       this.setState({startX: data[0]?.x});
       this.setState({showStart: true});
-      if (start != end) {
+      if (start !== end) {
         this.setState({endX: data[1]?.x});
         this.setState({showEnd: true});
       } else {
@@ -422,7 +411,7 @@ export default class LineChart extends React.Component {
       <View>
         {
           // x - label
-          this.state.lineLength != 0 && (
+          this.state.lineLength !== 0 && (
             <TextInput
               ref={this.xLabel}
               key={`header-x-label`}
@@ -433,7 +422,7 @@ export default class LineChart extends React.Component {
         <View>
           {
             // cursor line
-            this.state.lineLength != 0 && (
+            this.state.lineLength !== 0 && (
               <View
                 ref={this.cursorAxis}
                 key={`cursor-line-${this.props.filterKey}`}
@@ -495,7 +484,8 @@ export default class LineChart extends React.Component {
                     fill={axisTextLabelColour}
                     y={height - padding + xAxisGapFromText}
                     x={scaleX(x)}
-                    textAnchor="middle">
+                    textAnchor="middle"
+                    style={{fontSize: adjustSize(10)}}>
                     {Moment(x).format(
                       filterKey === DAY_FILTER_KEY ? 'H:mm' : 'DD/MM',
                     )}
@@ -511,7 +501,8 @@ export default class LineChart extends React.Component {
                     fill={axisTextLabelColour}
                     x={paddingLeft - axisMargin - yAxisGapFromText}
                     y={scaleY(y)}
-                    textAnchor="middle">
+                    textAnchor="middle"
+                    style={{fontSize: adjustSize(10)}}>
                     {y}
                   </SvgText>
                 ))
@@ -578,7 +569,7 @@ export default class LineChart extends React.Component {
             }
             {
               // cursor point
-              this.state.lineLength != 0 && (
+              this.state.lineLength !== 0 && (
                 <View
                   ref={this.cursor}
                   style={[styles.cursor, {position: 'absolute'}]}
@@ -587,7 +578,7 @@ export default class LineChart extends React.Component {
             }
             {
               // cursor label
-              this.state.lineLength != 0 && (
+              this.state.lineLength !== 0 && (
                 <React.Fragment>
                   <TextInput
                     ref={this.cursorLabel}
@@ -754,7 +745,7 @@ const styles = StyleSheet.create({
   },
   xLabel: {
     fontFamily: 'SFProDisplay-Bold',
-    fontSize: 16,
+    fontSize: adjustSize(16),
     color: '#3c3c43',
     opacity: 0.6,
     alignSelf: 'center',
@@ -777,10 +768,10 @@ const styles = StyleSheet.create({
   },
   foodConsumedText: {
     fontFamily: 'SFProDisplay-Bold',
-    fontSize: 20,
+    fontSize: adjustSize(20),
   },
   emptyFood: {
     fontFamily: 'SFProDisplay-Regular',
-    fontSize: 18,
+    fontSize: adjustSize(18),
   },
 });

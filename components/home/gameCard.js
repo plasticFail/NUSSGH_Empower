@@ -5,6 +5,7 @@ import {Colors} from '../../styles/colors';
 //svg
 import NAVY_GAME from '../../resources/images/Patient-Icons/SVG/icon-navy-game.svg';
 import {useNavigation} from '@react-navigation/native';
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
 
 export default function GameCard(props) {
   const {points, chances, rewardCount} = props;
@@ -16,7 +17,7 @@ export default function GameCard(props) {
 
   return (
     <View style={[styles.card, styles.shadow]}>
-      <NAVY_GAME height={35} width={35} marginStart={'2%'} marginEnd={'2%'} />
+      <NAVY_GAME height={adjustSize(35)} width={adjustSize(35)} marginStart={'2%'} marginEnd={'2%'} />
       <TouchableOpacity
         style={[{alignSelf: 'flex-start'}, styles.rightBorder]}
         onPress={() => goGameCenter()}>
@@ -24,7 +25,7 @@ export default function GameCard(props) {
         <Text
           style={[
             styles.headerText,
-            {color: Colors.backArrowColor, fontSize: 20},
+            {color: Colors.backArrowColor, fontSize: adjustSize(20)},
           ]}>
           {points}
         </Text>
@@ -36,7 +37,7 @@ export default function GameCard(props) {
         <Text
           style={[
             styles.headerText,
-            {color: Colors.backArrowColor, fontSize: 20},
+            {color: Colors.backArrowColor, fontSize: adjustSize(20)},
           ]}>
           {chances}
         </Text>
@@ -46,9 +47,9 @@ export default function GameCard(props) {
         <Text
           style={[
             styles.headerText,
-            {color: Colors.backArrowColor, fontSize: 20},
+            {color: Colors.backArrowColor, fontSize: adjustSize(20)},
           ]}>
-          {rewardCount} <Text style={{fontSize: 15}}>Rewards</Text>
+          {rewardCount} <Text style={{fontSize: adjustSize(15)}}>Rewards</Text>
         </Text>
       </TouchableOpacity>
     </View>
@@ -65,7 +66,7 @@ const styles = StyleSheet.create({
     marginBottom: '4%',
     padding: '4%',
     alignItems: 'center',
-    borderRadius: 10,
+    borderRadius: adjustSize(10),
     width: '90%',
   },
   shadow: {
@@ -84,7 +85,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginLeft: '3%',
     marginEnd: '2%',
-    fontSize: 16,
+    fontSize: adjustSize(16),
   },
   rightBorder: {
     marginStart: '2%',

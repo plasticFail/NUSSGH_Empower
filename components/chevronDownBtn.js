@@ -3,6 +3,7 @@ import React from 'react';
 import Entypo from 'react-native-vector-icons/Entypo';
 //styles
 import globalStyles from '../styles/globalStyles';
+import {adjustSize} from '../commonFunctions/autoResizeFuncs';
 
 const ChevronDownBtn = (props) => {
   const {close} = props;
@@ -11,7 +12,7 @@ const ChevronDownBtn = (props) => {
       <Entypo
         name="chevron-thin-down"
         onPress={() => close()}
-        size={30}
+        size={adjustSize(30)}
         style={globalStyles.chevronDown}
       />
     </>

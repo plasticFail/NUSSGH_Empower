@@ -8,6 +8,8 @@ import Moment from 'moment';
 import {getReportsData} from "../../../netcalls/reports/exportReports";
 import {getCsvHeader, toCsv} from "../../../commonFunctions/IOFunctions";
 import {getUsername} from "../../../storage/asyncStorageFunctions";
+import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
+
 
 // fs library
 const RNFS = require('react-native-fs');
@@ -85,7 +87,7 @@ function ExportReportsModal(props) {
                 <ScrollView>
                     <View style={globalStyles.menuBarContainer}>
                         <TouchableOpacity onPress={()=>setVisible(false)}>
-                            <Icon name={'chevron-down'} size={34} color='#16A850' />
+                            <Icon name={'chevron-down'} size={adjustSize(34)} color='#16A850' />
                         </TouchableOpacity>
                     </View>
                     <Text style={globalStyles.pageHeader}>Export</Text>
@@ -143,11 +145,11 @@ function CustomDatePicker({date, setDate, label}) {
             <TouchableOpacity onPress={()=>handleOpenCloseWithAnimation(visible)}>
                 <View style={{flexDirection: 'row', justifyContent: 'space-between',
                     borderBottomWidth: 1,
-                    paddingTop: 10,
-                    paddingBottom: 10,
+                    paddingTop: adjustSize(10),
+                    paddingBottom: adjustSize(10),
                     borderColor: '#e5e5e5'}}>
-                    <Text style={{fontSize: 18, fontWeight: 'bold', color: '#8d8d8d'}}>{label}</Text>
-                    <Text style={{fontSize: 18}}>{Moment(date).format('DD MMM YYYY')}</Text>
+                    <Text style={{fontSize: adjustSize(18), fontWeight: 'bold', color: '#8d8d8d'}}>{label}</Text>
+                    <Text style={{fontSize: adjustSize(18)}}>{Moment(date).format('DD MMM YYYY')}</Text>
                 </View>
             </TouchableOpacity>
             {visible &&
@@ -172,22 +174,14 @@ function ReportTypeSelector(props) {
         <FlatList data={props.reportTypes} style={style} keyExtractor={i => `report-type-${i.name}`}
                   numColumns={2}
                   renderItem={({item}) => (
-                      <View style={{width: '50%', flexDirection: 'row', alignItems: 'center', paddingTop: 5, paddingBottom: 5}}>
+                      <View style={{width: '50%', flexDirection: 'row', alignItems: 'center', paddingTop: adjustSize(5), paddingBottom: adjustSize(5)}}>
                           <TouchableOpacity onPress={()=>updateSelectionCallback(item.name)}>
                               {
                                   item.selected ?
-                                      <Image style={{width: 30, height: 30}}
+                                      <Image style={{width: adjustSize(30), height: adjustSize(30)}}
                                              source={require('../../../resources/images/Patient-Icons/2x/icon-lightgreen-tick-2x.png')} />
-                                    : <Image style={{width: 30, height: 30}}
+                                    : <Image style={{width: adjustSize(30), height: adjustSize(30)}}
                                              source={require('../../../resources/images/Patient-Icons/2x/icon-lightgrey-tick-2x.png')} />
-                              }
-                              {
-                                  /*
-                                  <View style={{width: 30, height: 30,
-                                      backgroundColor: `${item.selected ? '#aad326' : '#d5d5d5'}`,
-                                      borderRadius: 5}}/>
-
-                                   */
                               }
                           </TouchableOpacity>
                           <Text style={[globalStyles.pageDetails, {fontWeight: 'normal'}]}>{item.name}</Text>

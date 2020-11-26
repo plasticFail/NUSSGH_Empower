@@ -2,16 +2,14 @@ import React, {useEffect, useState, useRef} from 'react';
 import {View, StyleSheet, TouchableOpacity, Text, Animated} from 'react-native';
 import NotificationRow from '../notificationRow';
 
-import {bg_key, checkLogDone} from '../../../commonFunctions/logFunctions';
 import {Colors} from '../../../styles/colors';
 import {
   notif_log,
   morningObj,
-  afternoonObj,
-  eveningObj,
 } from '../../../commonFunctions/common';
 import {getLogIncompleteText} from '../../../commonFunctions/notifFunction';
-import {scaleFont} from '../../../commonFunctions/scaleFunction';
+import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
+
 
 const NotifCollapse = (props) => {
   const {hour, morningNotDone, afternoonNotDone} = props;
@@ -103,7 +101,7 @@ const NotifCollapse = (props) => {
             maxHeight: heightInterpolation,
             backgroundColor: Colors.notifTab,
           }}>
-          {logNotDoneText.length != 0 && (
+          {logNotDoneText.length !== 0 && (
             <NotificationRow
               type={notif_log}
               hour={hour}
@@ -122,8 +120,8 @@ const styles = StyleSheet.create({
   cardTab: {
     flexGrow: 1,
     backgroundColor: Colors.notifTab,
-    borderTopStartRadius: 20,
-    borderTopEndRadius: 20,
+    borderTopStartRadius: adjustSize(20),
+    borderTopEndRadius: adjustSize(20),
   },
   headerTab: {
     padding: '3%',
@@ -132,7 +130,7 @@ const styles = StyleSheet.create({
   headerText: {
     fontFamily: 'SFProDisplay-Bold',
     color: 'white',
-    fontSize: scaleFont(15),
+    fontSize: adjustSize(18),
     marginStart: '3%',
   },
 });

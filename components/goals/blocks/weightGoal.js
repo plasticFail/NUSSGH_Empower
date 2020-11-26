@@ -40,7 +40,7 @@ const WeightGoal = (props) => {
   const [pageText, setPageText] = useState('Add Goal');
 
   useEffect(() => {
-    if (parent != undefined && weightObj != undefined) {
+    if (parent !== undefined && weightObj !== undefined) {
       setGoalName(weightObj.name);
       setWeight(weightObj.goal_weight);
       setPageText('Edit Goal');
@@ -60,7 +60,7 @@ const WeightGoal = (props) => {
       name: goalName,
       goal_weight: weight,
     };
-    if (parent != undefined && parent != defaultv) {
+    if (parent !== undefined && parent != defaultv) {
       let status = await addWeightGoalReq(obj, weightObj._id);
       if (status === 200) {
         Alert.alert('Weight goal edited successfully', '', [

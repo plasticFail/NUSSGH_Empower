@@ -1,9 +1,10 @@
-import React, {useState, Component} from 'react';
+import React, {Component} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 //third party lib
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {TextInput} from 'react-native-gesture-handler';
 import {decimal, wholeNumber} from '../commonFunctions/common';
+import {adjustSize} from '../commonFunctions/autoResizeFuncs';
 
 //this stepper is only for whole numbers**
 //Props:
@@ -42,7 +43,7 @@ export default class StepCounter extends Component {
   }
 
   componentDidUpdate(prevProp) {
-    if (prevProp.count != this.props.count) {
+    if (prevProp.count !== this.props.count) {
       this.setState({
         count: this.props.count === undefined ? 0 : this.props.count,
       });
@@ -157,18 +158,18 @@ const styles = StyleSheet.create({
   countContent: {
     marginVertical: '8%',
     marginHorizontal: '5%',
-    fontSize: 17,
+    fontSize: adjustSize(17),
     textAlign: 'center',
   },
   textInput: {
     backgroundColor: 'white',
-    borderRadius: 10,
+    borderRadius: adjustSize(10),
     textAlign: 'center',
     width: '60%',
     height: '100%',
     marginBottom: '3%',
     flexDirection: 'row',
-    fontSize: 19,
+    fontSize: adjustSize(19),
   },
   shadow: {
     shadowColor: '#000',

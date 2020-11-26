@@ -9,6 +9,8 @@ import {normalTextFontSize} from '../../styles/variables';
 import globalStyles from '../../styles/globalStyles';
 import {frequencyOption} from '../../commonFunctions/goalFunctions';
 
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
+
 const DropDownSelector = (props) => {
   const {selected, setSelected, fieldName, dropDownType, optionList} = props;
   const [open, setOpen] = useState(false);
@@ -40,13 +42,13 @@ const DropDownSelector = (props) => {
           <Entypo
             name="chevron-thin-up"
             color={Colors.lastLogValueColor}
-            size={20}
+            size={adjustSize(20)}
           />
         ) : (
           <Entypo
             name="chevron-thin-down"
             color={Colors.lastLogValueColor}
-            size={20}
+            size={adjustSize(20)}
           />
         )}
       </TouchableOpacity>

@@ -1,12 +1,14 @@
 import React from 'react';
-import {View, StyleSheet, Text} from 'react-native';
+import {View, Text} from 'react-native';
+import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
+
 
 function ChartLegend(props) {
-    const size = props.size || 30;
+    const size = props.size || adjustSize(30);
     return (
         <View style={{alignItems: 'center', flexDirection: 'row'}}>
             <LegendCircle color={props.color} size={size} />
-            <Text style={{paddingLeft: props.textPaddingLeft || 0, paddingRight: props.textPaddingRight || 0, color: '#3C3C43'}}>
+            <Text style={{paddingLeft: props.textPaddingLeft || 0, paddingRight: props.textPaddingRight || 0, color: '#3C3C43', fontSize: adjustSize(13)}}>
                 {props.legendName}
             </Text>
         </View>

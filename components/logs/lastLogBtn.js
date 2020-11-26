@@ -23,6 +23,7 @@ import {
   getLastMedicationLog,
   getLastWeightLog,
 } from '../../storage/asyncStorageFunctions';
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
 //component
 import BloodGlucoseLogDisplay from './bg/bloodGlucoseLogDisplay';
 import MedicationLogDisplay from './medication/medicationLogDisplay';
@@ -92,14 +93,14 @@ const LastLogButton = (props) => {
         {show === false ? (
           <Entypo
             name="chevron-down"
-            size={30}
+            size={adjustSize(30)}
             color="white"
             onPress={() => setShow(true)}
           />
         ) : (
           <Entypo
             name="chevron-up"
-            size={30}
+            size={adjustSize(30)}
             color="white"
             onPress={() => setShow(false)}
           />

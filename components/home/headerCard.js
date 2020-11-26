@@ -2,7 +2,7 @@ import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 //styles
 import {Colors} from '../../styles/colors';
-import {scaleFont} from '../../commonFunctions/scaleFunction';
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
 
 const HeaderCard = (props) => {
   const {username, hour} = props;
@@ -23,13 +23,13 @@ const HeaderCard = (props) => {
 const styles = StyleSheet.create({
   greetingText: {
     color: 'black',
-    fontSize: scaleFont(15),
+    fontSize: adjustSize(18),
     fontFamily: 'SFProDisplay-Bold',
     marginStart: '5%',
   },
   usernameText: {
     color: '#16A750',
-    fontSize: scaleFont(30),
+    fontSize: adjustSize(40),
     fontFamily: 'SFProDisplay-Bold',
     marginStart: '5%',
   },

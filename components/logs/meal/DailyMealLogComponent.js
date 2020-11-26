@@ -7,6 +7,7 @@ import MealFinder from "./MealFinder";
 import RenderMealItem from "./RenderMealItem";
 // Others
 import Entypo from 'react-native-vector-icons/Entypo';
+import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
 
 Entypo.loadFont();
 
@@ -68,7 +69,7 @@ function DailyMealLogComponent(props) {
                                                         onPress: handleDeleteMeal,
                                                         buttonStyle: {
                                                             backgroundColor: 'red',
-                                                            width: 80
+                                                            width: adjustSize(80)
                                                         }
                                                     },
                                                     {

@@ -1,18 +1,15 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   StyleSheet,
   Text,
-  TextInput,
   ScrollView,
-  ActivityIndicator,
   TouchableOpacity,
   Dimensions,
   Modal,
   Alert,
 } from 'react-native';
 //third party lib
-import Icon from 'react-native-vector-icons/FontAwesome5';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
 
 //styles
@@ -27,8 +24,6 @@ import USER_FEMALE from '../../resources/images/Patient-Icons/SVG/user-female.sv
 import USER_MALE from '../../resources/images/Patient-Icons/SVG/user-male.svg';
 import {isEmpty} from '../../commonFunctions/common';
 import {
-  search4Caregiver,
-  assignCaregiver2Patient,
   unassignCaregiver,
   sendReqPermission,
 } from '../../netcalls/requestsMyCaregiver';
@@ -37,9 +32,11 @@ import diaryStyles from '../../styles/diaryStyles';
 import logStyles from '../../styles/logStyles';
 import DeleteModal from '../deleteModal';
 
+import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
+
 const iconStyle = {
-  width: 40,
-  height: 40,
+  width: adjustSize(40),
+  height: adjustSize(40),
   alignSelf: 'center',
 };
 
@@ -68,7 +65,7 @@ const AddViewCaregiverModal = (props) => {
   const [accessLr, setAccessLr] = useState(false);
 
   useEffect(() => {
-    if (permissions != undefined) {
+    if (permissions !== undefined) {
       if (permissions.includes('diary')) {
         setAccessRd(true);
       }
@@ -279,7 +276,7 @@ const styles = StyleSheet.create({
     fontFamily: 'SFProDisplay-Bold',
     color: '#3c3c43',
     opacity: 0.6,
-    fontSize: 20,
+    fontSize: adjustSize(20),
     marginStart: '3%',
   },
   rowMargin: {
@@ -290,11 +287,11 @@ const styles = StyleSheet.create({
   subField: {
     fontFamily: 'SFProDisplay-Regular',
     opacity: 0.6,
-    fontSize: 16,
+    fontSize: adjustSize(16),
   },
   mainField: {
     fontFamily: 'SFProDisplay-Regular',
-    fontSize: 20,
+    fontSize: adjustSize(20),
   },
   downIcon: {
     position: 'absolute',
@@ -303,7 +300,7 @@ const styles = StyleSheet.create({
   },
   pdpaText: {
     fontFamily: 'SFProDisplay-Regular',
-    fontSize: 16,
+    fontSize: adjustSize(16),
     alignSelf: 'center',
     marginTop: '5%',
   },
@@ -315,7 +312,7 @@ const styles = StyleSheet.create({
   },
   appointedText: {
     fontFamily: 'SFProDisplay-Bold',
-    fontSize: 20,
+    fontSize: adjustSize(20),
     marginStart: '3%',
     color: Colors.grey,
     opacity: 0.6,

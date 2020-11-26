@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, StyleSheet, Text} from 'react-native';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
+import {adjustSize} from '../commonFunctions/autoResizeFuncs';
 
 Icon.loadFont()
 
@@ -34,10 +35,10 @@ export default class IntegerQuantitySelector extends React.Component {
         return (
             <View style={styles.container}>
                 <Icon name="arrow-circle-left" color={buttonColor}
-                      size={25} onPress={() => this.decrease(changeAmount)}/>
+                      size={adjustSize(25)} onPress={() => this.decrease(changeAmount)}/>
                 <Text>{value}</Text>
                 <Icon name="arrow-circle-right" color={buttonColor}
-                      size={25} onPress={() => this.increase(changeAmount)}/>
+                      size={adjustSize(25)} onPress={() => this.increase(changeAmount)}/>
             </View>
         );
     }
@@ -45,13 +46,13 @@ export default class IntegerQuantitySelector extends React.Component {
 
 const styles = StyleSheet.create({
     container: {
-        width: 100,
-        height: 35,
+        width: adjustSize(100),
+        height: adjustSize(35),
         flexDirection: 'row',
         justifyContent: 'space-around',
         alignItems: 'center',
-        paddingLeft: 5,
-        paddingRight: 5,
+        paddingLeft: adjustSize(5),
+        paddingRight: adjustSize(5),
     }
 });
 //edit flag

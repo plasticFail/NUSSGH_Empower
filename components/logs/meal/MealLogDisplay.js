@@ -1,7 +1,8 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import ReadOnlyMealDisplay from "./ReadOnlyMealDisplay";
-import Moment from 'moment';
+import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
+
 
 const MealLogDisplay = (props) => {
     console.log(props.data);
@@ -30,7 +31,7 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: '#fff',
         width: '100%',
-        borderRadius: 20,
+        borderRadius: adjustSize(20),
         padding: '4%',
         alignItems: 'center',
         marginBottom: '5%'
@@ -46,7 +47,7 @@ const styles = StyleSheet.create({
         elevation: 5,
     },
     textStyle: {
-        fontSize: 17,
+        fontSize: adjustSize(17),
     },
     bold: {
         fontWeight: '700',
