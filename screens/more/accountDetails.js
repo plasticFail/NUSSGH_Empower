@@ -162,7 +162,7 @@ const AccountDetailScreen = (props) => {
           openModal={() => setPasswordModalVisible(true)}
           closeModal={() => setPasswordModalVisible(false)}
         />
-
+        {/*
         <Clickable
           heading="Security Qns [Onboard]"
           content=""
@@ -173,7 +173,7 @@ const AccountDetailScreen = (props) => {
           closeModal={() => {}}
           modalVisible={false}
         />
-        {/*
+        
         <Clickable
           heading="Medication Plan"
           content=""

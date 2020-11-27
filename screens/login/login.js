@@ -31,6 +31,7 @@ import loginStyles, {loginLogoStyle} from '../../styles/loginStyles';
 import Logo from '../../resources/images/Patient-Icons/SVG/icon-color-empower.svg';
 import {role_patient, role_caregiver} from '../../commonFunctions/common';
 import {Colors} from '../../styles/colors';
+import {getSecurityQnByUsername} from '../../netcalls/requestsSecurityQn';
 
 const tabs = [role_patient, role_caregiver];
 
@@ -78,9 +79,15 @@ class Login extends Component {
       await storePassword(this.state.password);
       await storeToken(token);
       await storeRole(role);
-      this.props.login();
-
-      console.log('login success!');
+      let formatUsername = String(this.state.username).toLowerCase();
+      let qn = await getSecurityQnByUsername(formatUsername);
+      if (qn?.qnList.length === 0) {
+        console.log('start onboarding!');
+        this.props.navigation.navigate('OnboardingWizard');
+      } else {
+        this.props.login();
+        console.log('login success!');
+      }
     } else {
       Alert.alert('Error', 'Invalid username/password combination.', [
         {text: 'Got It'},

@@ -22,7 +22,7 @@ import Logout from './more/logout';
 //components
 import ContactUs from './contactUs';
 import PatientRoot from './patientRoot';
-import {getRole} from '../storage/asyncStorageFunctions';
+import {getRole, getUsername} from '../storage/asyncStorageFunctions';
 import {role_patient, role_caregiver} from '../commonFunctions/common';
 import CaregiverRoot from './caregiverRoot';
 import LoadingScreen from '../components/account/initLoadingScreen';
@@ -34,6 +34,8 @@ import {
 } from '../components/notification/PushNotifHandler';
 import PushNotification from 'react-native-push-notification';
 import QnVerifcationScreen from './login/qnVerificationScreen';
+import OnboardingWizard from './onboarding/onboardingWizard';
+import {getSecurityQnByUsername} from '../netcalls/requestsSecurityQn';
 
 const Stack = createStackNavigator();
 
@@ -50,14 +52,15 @@ class AppRoot extends Component {
     this.props = props;
     this.state = {
       user: '',
+      firstLogin: false,
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     console.log('in mount----');
     Linking.addEventListener('url', this.handleRedirectUrl);
     this.setState({role: this.props.role});
-    this.initrole().then(() => {});
+    await this.initrole();
   }
 
   componentDidUpdate(prevProp, prevState) {
@@ -68,10 +71,27 @@ class AppRoot extends Component {
     });
   }
 
+  checkFirstTime = async () => {
+    let username = await getUsername();
+    let formattedUsername = String(username).toLowerCase();
+    let qn = await getSecurityQnByUsername(formattedUsername);
+    return qn;
+  };
+
+  //called from onboard page
+  fromOnboard = () => {
+    this.checkFirstTime().then((rsp) => {
+      if (rsp?.qnList.length != 0) {
+        this.props.login();
+      }
+    });
+  };
+
   componentWillUnmount() {
     console.log('unmounting -------');
     Linking.removeAllListeners('url');
     this.setState({role: ''});
+    this.setState({qnList: []});
   }
 
   async initrole() {
@@ -97,7 +117,7 @@ class AppRoot extends Component {
   };
 
   render() {
-    const {user} = this.state;
+    const {user, firstLogin} = this.state;
     return (
       <>
         <NavigationContainer ref={appRootNavigation} onReady={this.onReady}>
@@ -114,7 +134,7 @@ class AppRoot extends Component {
             })}>
             {this.props.isLogin ? (
               <>
-                {/* View depending on user role */}
+                {/* View depending on user role and first login */}
                 {user === role_patient ? (
                   <Stack.Screen
                     name="PatientDashBoard"
@@ -154,6 +174,13 @@ class AppRoot extends Component {
                   name="Login"
                   component={Login}
                   options={{headerShown: false}}
+                />
+                <Stack.Screen
+                  name="OnboardingWizard"
+                  options={{header: () => <View />}}
+                  children={() => (
+                    <OnboardingWizard fromOnboard={this.fromOnboard} />
+                  )}
                 />
                 <Stack.Screen
                   name="ContactUsScreen"
