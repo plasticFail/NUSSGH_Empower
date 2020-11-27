@@ -26,6 +26,7 @@ import {isEmpty} from '../../commonFunctions/common';
 import {
   unassignCaregiver,
   sendReqPermission,
+  patientSetPermission,
 } from '../../netcalls/requestsMyCaregiver';
 import DeleteBin from '../deleteBin';
 import diaryStyles from '../../styles/diaryStyles';
@@ -75,7 +76,7 @@ const AddViewCaregiverModal = (props) => {
         setAccessAppt(true);
       }
     }
-  }, [visible, permissions]);
+  }, [visible]);
 
   const authorise = () => {
     if (!isEmpty(patient) && getPermissionsArr().length > 0) {
@@ -141,6 +142,20 @@ const AddViewCaregiverModal = (props) => {
     });
   };
 
+  const editPermissionByPatient = () => {
+    patientSetPermission(getPermissionsArr()).then((rsp) => {
+      if (rsp === 200) {
+        Alert.alert('Permissions updated successfully!', '', [
+          {text: 'Got It', onPress: () => closeModal()},
+        ]);
+      } else {
+        Alert.alert('Unexpected Error!', 'Please try again later!', [
+          {text: 'Got It'},
+        ]);
+      }
+    });
+  };
+
   return (
     <Modal
       visible={visible}
@@ -188,7 +203,10 @@ const AddViewCaregiverModal = (props) => {
             mainheader={"Patient's Appointment"}
             subheader={'Personal Information'}
             onSelect={() => {
-              if (from === 'caregiver' && isEmpty(pendingCaregiver)) {
+              if (
+                (from === 'caregiver' && isEmpty(pendingCaregiver)) ||
+                caregiver != null
+              ) {
                 setAccessAppt(!accessAppt);
               }
             }}
@@ -198,7 +216,10 @@ const AddViewCaregiverModal = (props) => {
             mainheader={"Patient's Report & Diary"}
             subheader={'Health Information'}
             onSelect={() => {
-              if (from === 'caregiver' && isEmpty(pendingCaregiver)) {
+              if (
+                (from === 'caregiver' && isEmpty(pendingCaregiver)) ||
+                caregiver != null
+              ) {
                 setAccessRd(!accessRD);
               }
             }}
@@ -208,7 +229,10 @@ const AddViewCaregiverModal = (props) => {
             mainheader={"Patient's Lab Results"}
             subheader={'Health Information'}
             onSelect={() => {
-              if (from === 'caregiver' && isEmpty(pendingCaregiver)) {
+              if (
+                (from === 'caregiver' && isEmpty(pendingCaregiver)) ||
+                caregiver != null
+              ) {
                 setAccessLr(!accessLr);
               }
             }}
@@ -235,7 +259,7 @@ const AddViewCaregiverModal = (props) => {
             />
             <TouchableOpacity
               style={logStyles.enableEditButton}
-              onPress={() => closeModal()}>
+              onPress={() => editPermissionByPatient()}>
               <Text style={globalStyles.actionButtonText}>Done</Text>
             </TouchableOpacity>
           </View>

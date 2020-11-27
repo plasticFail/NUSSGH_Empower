@@ -25,7 +25,12 @@ import {AuthoriseFitbit} from '../../../commonFunctions/AuthoriseFitbit';
 import {STATUS} from './Status';
 import ResponseModal from './ResponseModal';
 import {Colors} from '../../../styles/colors';
-import FitbitLogo from '../../../resources/images/Patient-Icons/2x/icon-white-fitbit-2x.png';
+import FitbitLogo from '../../../resources/images/Patient-Icons/SVG/icon-white-fitbit.svg';
+
+const iconstyle = {
+  width: adjustSize(90),
+  height: adjustSize(90),
+};
 
 const qs = require('qs');
 
@@ -159,11 +164,7 @@ const FitbitComponent = (props) => {
                 styles.fitbitIconStyle,
                 {transform: [{scale}], justifyContent: 'center'},
               ]}>
-              <Image
-                source={FitbitLogo}
-                resizeMode="contain"
-                style={{height: adjustSize(20), width: adjustSize(90)}}
-              />
+              <FitbitLogo {...iconstyle} />
             </Animated.View>
           </View>
         </TouchableOpacity>
