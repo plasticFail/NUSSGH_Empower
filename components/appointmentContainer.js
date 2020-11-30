@@ -86,6 +86,7 @@ const styles = StyleSheet.create({
     borderRadius: 4.1,
     padding: '3%',
     width: '15%',
+    justifyContent: 'center',
   },
   textBold: {
     fontFamily: 'SFProDisplay-Bold',
