@@ -61,6 +61,14 @@ class AppRoot extends Component {
     Linking.addEventListener('url', this.handleRedirectUrl);
     this.setState({role: this.props.role});
     await this.initrole();
+
+    this.checkFirstTime().then((rsp) => {
+      if (rsp?.qnList.length === 0) {
+        navigate('Login');
+      } else {
+        this.props.login();
+      }
+    });
   }
 
   componentDidUpdate(prevProp, prevState) {

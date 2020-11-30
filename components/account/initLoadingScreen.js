@@ -1,16 +1,14 @@
 import React, {useEffect} from 'react';
 import {ActivityIndicator, StyleSheet, View} from 'react-native';
-import {
-  getToken,
-  getUsername,
-} from '../../storage/asyncStorageFunctions';
+import {getToken, getUsername} from '../../storage/asyncStorageFunctions';
 import {isTokenValidRequest} from '../../netcalls/requestsAuth';
 import {connect} from 'react-redux';
 import {mapDispatchToProps, mapStateToProps} from '../../redux/reduxMapping';
 import {getPusherToken} from '../../netcalls/notif/requestsPusher';
 import {initPusherNotif} from '../../commonFunctions/AuthorisePusherNotif';
 import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
-
+import {getSecurityQnByUsername} from '../../netcalls/requestsSecurityQn';
+import {navigate} from '../../screens/appRoot';
 
 const init = async (props, finishHandler) => {
   const token = await getToken();
@@ -21,7 +19,8 @@ const init = async (props, finishHandler) => {
       const pusherToken = await getPusherToken(token);
       const username = await getUsername();
       initPusherNotif(username.toLowerCase(), pusherToken.token);
-      props.login();
+
+      console.log('here---');
     }
   }
   console.log('token : ' + token);

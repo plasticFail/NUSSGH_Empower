@@ -5,16 +5,53 @@ import {Colors} from '../../../styles/colors';
 import {useNavigation} from '@react-navigation/native';
 
 import {adjustSize} from '../../../commonFunctions/autoResizeFuncs';
-
+import {
+  requestGetOverview,
+  requestGetRewardOverview,
+} from '../../../netcalls/gameCenterEndPoints/requestGameCenter';
 
 const GameCollapse = (props) => {
-  const {points, chances, reward} = props;
   const [open, setOpen] = useState(true);
   const [minHeight, setMinHeight] = useState(0);
   const [maxHeight, setMaxHeight] = useState(0);
   const dropDownAnimation = useRef(new Animated.Value(1)).current;
+  const [chances, setChances] = useState(0);
+  const [reedemable, setRedeemable] = useState(0);
+  const [points, setPoints] = useState(0);
+
+  const [availableItems, setAvailableItems] = useState([]);
+  const [allItems, setAllItems] = useState([]);
 
   const navigation = useNavigation();
+
+  useEffect(() => {
+    async function getData() {
+      let responseObj = await requestGetOverview();
+      setChances(responseObj?.chances);
+      setPoints(responseObj?.points);
+    }
+
+    async function getAwards() {
+      let responseObj2 = await requestGetRewardOverview();
+      setAllItems(responseObj2?.all_items);
+      setAvailableItems(responseObj2?.available_items);
+    }
+
+    getData();
+    getAwards();
+  }, []);
+
+  useEffect(() => {
+    let count = 0;
+    for (var x of availableItems) {
+      for (var y of allItems) {
+        if (y._id === x._id && y?.points <= points) {
+          count++;
+        }
+      }
+    }
+    setRedeemable(count);
+  }, [availableItems, allItems, points]);
 
   const toggle = (visible) => {
     if (visible) {
@@ -80,7 +117,7 @@ const GameCollapse = (props) => {
             </TouchableOpacity>
             <TouchableOpacity>
               <Text style={styles.paramText}>Reedemable</Text>
-              <Text style={styles.valueText}>{chances} Rewards</Text>
+              <Text style={styles.valueText}>{reedemable} Reward(s)</Text>
             </TouchableOpacity>
           </View>
         </Animated.View>
