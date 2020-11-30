@@ -13,7 +13,7 @@ const low = 'Low';
 
 const Collapsible = (props) => {
   const {title, detailArr} = props;
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const dropDownAnimation = useRef(new Animated.Value(1)).current;
   const [minHeight, setMinHeight] = useState(0);
   const [maxHeight, setMaxHeight] = useState(0);
@@ -44,7 +44,8 @@ const Collapsible = (props) => {
   };
 
   const openAndSetModalContent = (finalValue, item) => {
-    item.results = finalValue;
+    item.results = finalValue?.result;
+    item.reference = finalValue?.reference;
     setModalContent(item);
     setShowModal(true);
   };
@@ -115,18 +116,91 @@ export default Collapsible;
 
 function evaluateValue(item) {
   if (item?.comparator === '<=') {
-    if (item?.value >= item?.target) {
-      return high;
-    } else {
-      return '';
+    if (item?.value > item?.target[0]) {
+      return {
+        result: high,
+        reference:
+          'less than or equals to ' + item?.target[0] + ' ' + item?.units,
+      };
     }
   } else if (item?.comparator === '>=') {
-    if (item?.value <= item?.target) {
-      return low;
-    } else {
-      return '';
+    if (item?.value < item?.target[0]) {
+      return {
+        result: low,
+        reference:
+          'more than or equals to ' + item?.target[0] + ' ' + item?.units,
+      };
+    }
+  } else if (item?.comparator === '>') {
+    if (item?.value <= item?.target[0]) {
+      return {
+        result: low,
+        reference: 'more than ' + item?.target[0] + ' ' + item?.units,
+      };
+    }
+  } else if (item?.comparator === '<') {
+    if (item?.value >= item?.target) {
+      return {
+        result: high,
+        reference: 'less than ' + item?.target[0] + ' ' + item?.units,
+      };
+    }
+  } else if (item?.comparator === '<>') {
+    if (item?.value <= item?.target[0]) {
+      return {
+        result: low,
+        reference:
+          'between ' +
+          item?.target[0] +
+          '-' +
+          item?.target[1] +
+          ' ' +
+          item?.units +
+          ' exclusively',
+      };
+    }
+    if (item?.value >= item?.target[1]) {
+      return {
+        result: high,
+        reference:
+          'between ' +
+          item?.target[0] +
+          '-' +
+          item?.target[1] +
+          ' ' +
+          item?.units +
+          ' exclusively',
+      };
+    }
+  } else if (item?.comparator === '=<>=') {
+    if (item?.value < item?.target[0]) {
+      return {
+        result: low,
+        reference:
+          'between ' +
+          item?.target[0] +
+          '-' +
+          item?.target[1] +
+          ' ' +
+          item?.units +
+          ' inclusively',
+      };
+    }
+    if (item?.value > item?.target[1]) {
+      return {
+        result: high,
+        reference:
+          'between ' +
+          item?.target[0] +
+          '-' +
+          item?.target[1] +
+          ' ' +
+          item?.units +
+          ' inclusively',
+      };
     }
   }
+  return '';
 }
 
 class MoreInfo extends React.Component {
@@ -147,9 +221,7 @@ class MoreInfo extends React.Component {
             <Text style={[styles.bold, {color: '#ff0844'}]}>
               {modalContent.results}
             </Text>
-            , the reference range is{' '}
-            {modalContent?.comparator === '<=' ? 'less than' : 'more than '} or
-            equals to {modalContent?.target} {modalContent?.units}.
+            , the reference range is {modalContent.reference}.
           </Text>
 
           <View style={{paddingBottom: '10%'}} />

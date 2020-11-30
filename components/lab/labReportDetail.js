@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, Text, TouchableOpacity, Animated} from 'react-native';
 //third party lib
 import Modal from 'react-native-modal';
@@ -11,10 +11,38 @@ import Collapsible from './collapsible';
 //third part lib
 import moment from 'moment';
 import {getDateObj} from '../../commonFunctions/diaryFunctions';
+import {ScrollView} from 'react-native-gesture-handler';
 
 const LabReportDetail = (props) => {
-  const {visible, date, diabeticArr, lipidArr, cardiacArr} = props;
+  const {visible, date, labResults} = props;
   const {close} = props;
+
+  const [keysArr, setKeysArr] = useState([]);
+
+  useEffect(() => {
+    let keyList = prepareProfile();
+    setKeysArr(keyList);
+  }, [labResults]);
+
+  //assuming profile keys come in the form of xxx_profile
+  const formatkeyNaming = (name) => {
+    let arr = String(name).split('_');
+    let type =
+      arr[0].substr(0, 1).toUpperCase() + arr[0].substring(1, arr[0].length);
+    return type + ' Profile';
+  };
+
+  //get profile keys
+  const prepareProfile = () => {
+    let keys = [];
+
+    for (const key of Object.keys(labResults)) {
+      if (key != 'date' && !keys.includes(key)) {
+        keys.push(key);
+      }
+    }
+    return keys;
+  };
 
   return (
     <Modal
@@ -34,9 +62,15 @@ const LabReportDetail = (props) => {
           {moment(getDateObj(date)).format('DD MMM YYYY')}
         </Text>
         <Text style={globalStyles.pageDetails}>Medical Report</Text>
-        <Collapsible title="Diabetic Profile" detailArr={diabeticArr} />
-        <Collapsible title="Lipid Profile" detailArr={lipidArr} />
-        <Collapsible title="Cardiac Profile" detailArr={cardiacArr} />
+        <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
+          {keysArr.map((item, index) => (
+            <Collapsible
+              title={formatkeyNaming(item)}
+              key={index}
+              detailArr={labResults[item]}
+            />
+          ))}
+        </ScrollView>
       </View>
     </Modal>
   );

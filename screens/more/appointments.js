@@ -65,9 +65,10 @@ const AppointmentScreen = (props) => {
               key={index}
               date={item.start}
               title={item.title + ' with ' + item?.physician}
-              startTime={Moment(getDateObj(item.start)).format('hh:mm a')}
-              endTime={Moment(getDateObj(item.end)).format('hh:mm a')}
-              sessionId={item.sessionId}
+              startTime={item?.start}
+              endTime={item?.end}
+              location={item?.location}
+              sessionId={item?.session_id}
               type={'chat'}
             />
           ))

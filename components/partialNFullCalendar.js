@@ -1,4 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
+import EvilIcon from 'react-native-vector-icons/EvilIcons';
 import {View, StyleSheet, Text, TouchableOpacity, Animated} from 'react-native';
 import {Calendar} from 'react-native-calendars';
 import CalendarDay2Component from './diary/calendarDay_2';
@@ -86,12 +87,17 @@ const PartialNFullCalendar = (props) => {
           <Calendar
             dayComponent={CalendarDay2Component}
             maxDate={maxDate}
-            hideArrows={false}
-            selectAll={false}
             markedDates={calendarselect}
             onDayPress={(day) => {
               selectDate(day.dateString);
             }}
+            renderArrow={(direction) =>
+              direction === 'left' ? (
+                <EvilIcon name="chevron-left" size={30} />
+              ) : (
+                <EvilIcon name="chevron-right" size={30} />
+              )
+            }
             theme={{
               calendarBackground: Colors.backgroundColor,
               'stylesheet.calendar.header': {

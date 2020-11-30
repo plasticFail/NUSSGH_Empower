@@ -5,10 +5,28 @@ import Moment from 'moment';
 import {getDateObj} from '../commonFunctions/diaryFunctions';
 import {adjustSize} from '../commonFunctions/autoResizeFuncs';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import {Colors} from '../styles/colors';
 
 const AppointmentContainer = (props) => {
-  const {date, title, startTime, endTime, sessionId, type} = props;
+  const {date, title, startTime, endTime, sessionId, type, location} = props;
   const {onClick} = props;
+  const start = Moment(getDateObj(startTime));
+  const end = Moment(getDateObj(endTime));
+
+  const now = Moment(new Date());
+
+  const showChatBtn = () => {
+    if (start.format('YYYY-MM-DD') === now.format('YYYY-MM-DD')) {
+      let starttime = Number(start.format('hhmm'));
+      let endtime = Number(end.format('HHmm'));
+      let nowtime = Number(now.format('HHmm'));
+
+      if (starttime <= nowtime && nowtime <= endtime) {
+        return true;
+      }
+    }
+    return false;
+  };
 
   return (
     <View style={styles.container}>
@@ -21,18 +39,33 @@ const AppointmentContainer = (props) => {
         <View style={{margin: '3%'}}>
           <Text style={styles.textBold}>{title}</Text>
           <Text style={styles.text}>
-            {startTime} - {endTime}
+            {Moment(start).format('hh:mm a')} - {Moment(end).format('hh:mm a')}
           </Text>
+          {location?.length != 0 && <Text style={styles.text}>{location}</Text>}
         </View>
       </View>
-      <View style={{flexDirection: 'row', marginTop: '2%'}}>
-        <Text style={[styles.text, {opacity: 0.5, flex: 1}]}>
-          Session ID: {sessionId}
-        </Text>
-        <TouchableOpacity style={styles.chatButton}>
-          <Text style={styles.buttonText}>Chat Now</Text>
-        </TouchableOpacity>
-      </View>
+      {location.length === 0 && (
+        <View style={{flexDirection: 'row', marginTop: '2%'}}>
+          <Text style={[styles.text, {opacity: 0.5, flex: 1}]}>
+            Session ID: {sessionId}
+          </Text>
+          {showChatBtn() ? (
+            <TouchableOpacity style={styles.chatButton}>
+              <Text style={styles.buttonText}>Chat Now</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              style={[
+                styles.chatButton,
+                {backgroundColor: Colors.lastLogValueColor},
+              ]}>
+              <Text style={styles.buttonText}>
+                {start.isBefore(now) ? 'Ended' : 'Upcoming'}
+              </Text>
+            </TouchableOpacity>
+          )}
+        </View>
+      )}
     </View>
   );
 };
