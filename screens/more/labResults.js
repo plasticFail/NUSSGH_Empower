@@ -87,6 +87,7 @@ const styles = StyleSheet.create({
   reportContainer: {
     flexDirection: 'row',
     margin: '3%',
+    marginBottom: '1%',
     backgroundColor: 'white',
     padding: '3%',
     borderRadius: 20,

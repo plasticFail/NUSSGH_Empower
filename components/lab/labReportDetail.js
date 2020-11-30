@@ -61,7 +61,9 @@ const LabReportDetail = (props) => {
         <Text style={globalStyles.pageHeader}>
           {moment(getDateObj(date)).format('DD MMM YYYY')}
         </Text>
-        <Text style={globalStyles.pageDetails}>Medical Report</Text>
+        <Text style={globalStyles.pageDetails}>
+          {labResults?.title != null ? labResults?.title : 'Medical Report'}
+        </Text>
         <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
           {keysArr.map((item, index) => (
             <Collapsible
