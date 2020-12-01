@@ -11,35 +11,16 @@ import {
 } from '../../../netcalls/gameCenterEndPoints/requestGameCenter';
 
 const GameCollapse = (props) => {
+  const {availableItems, allItems, points, chances} = props;
   const [open, setOpen] = useState(true);
   const [minHeight, setMinHeight] = useState(0);
   const [maxHeight, setMaxHeight] = useState(0);
   const dropDownAnimation = useRef(new Animated.Value(1)).current;
-  const [chances, setChances] = useState(0);
   const [reedemable, setRedeemable] = useState(0);
-  const [points, setPoints] = useState(0);
-
-  const [availableItems, setAvailableItems] = useState([]);
-  const [allItems, setAllItems] = useState([]);
 
   const navigation = useNavigation();
 
-  useEffect(() => {
-    async function getData() {
-      let responseObj = await requestGetOverview();
-      setChances(responseObj?.chances);
-      setPoints(responseObj?.points);
-    }
-
-    async function getAwards() {
-      let responseObj2 = await requestGetRewardOverview();
-      setAllItems(responseObj2?.all_items);
-      setAvailableItems(responseObj2?.available_items);
-    }
-
-    getData();
-    getAwards();
-  }, []);
+  useEffect(() => {}, []);
 
   useEffect(() => {
     let count = 0;
