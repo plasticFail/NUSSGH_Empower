@@ -10,7 +10,7 @@ import {adjustSize} from '../../commonFunctions/autoResizeFuncs';
 import {getSecurityQnByUsername} from '../../netcalls/requestsSecurityQn';
 import {navigate} from '../../screens/appRoot';
 
-const init = async (props, finishHandler, logout) => {
+const init = async (props, finishHandler, login, logout) => {
   const token = await getToken();
   if (token !== null && token !== '') {
     //console.log('token : ' + token);
@@ -19,9 +19,14 @@ const init = async (props, finishHandler, logout) => {
       const pusherToken = await getPusherToken(token);
       const username = await getUsername();
       initPusherNotif(username.toLowerCase(), pusherToken.token);
+
+      let qn = await getSecurityQnByUsername(username.toLowerCase());
+      if (qn?.qnList?.length === 0) {
+        logout();
+      } else {
+        login();
+      }
     }
-  } else {
-    logout();
   }
   console.log('token : ' + token);
 
@@ -32,7 +37,7 @@ const init = async (props, finishHandler, logout) => {
 
 const LoadingScreen = (props) => {
   useEffect(() => {
-    init(props, props.finishHandler, props.logout);
+    init(props, props.finishHandler, props?.login, props?.logout);
   });
 
   return (
